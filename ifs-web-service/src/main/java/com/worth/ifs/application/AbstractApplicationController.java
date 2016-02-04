@@ -220,8 +220,7 @@ public abstract class AbstractApplicationController {
             }
         }else if(currentSection.isPresent()){
             Section section = currentSection.get();
-            List<Question> questions = section.getQuestions();
-            questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
+            questionAssignees = questionService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(getQuestionIds(section.getQuestions()), application.getId(), userOrganisation.getId());
         }else{
             questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
         }
@@ -232,6 +231,10 @@ public abstract class AbstractApplicationController {
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         model.addAttribute("questionAssignees", questionAssignees);
         model.addAttribute("notifications", notifications);
+    }
+
+    private List<Long> getQuestionIds(final List<Question> questions){
+        return questions.stream().map(Question::getId).collect(Collectors.toList());
     }
 
     protected void addOrganisationFinanceDetails(Model model, ApplicationResource application, Long userId, Form form) {

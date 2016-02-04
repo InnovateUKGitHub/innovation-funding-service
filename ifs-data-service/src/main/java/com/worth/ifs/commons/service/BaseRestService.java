@@ -16,9 +16,9 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
@@ -64,6 +64,12 @@ public abstract class BaseRestService {
         return responseEntity.getBody();
     }
 
+    protected <T> T restGet(String path, Class<T> c, Map<String, String> urlVariables) {
+        log.debug("restGetEntity: "+path);
+        ResponseEntity<T> responseEntity = restGetEntity(path, c, urlVariables);
+        return responseEntity.getBody();
+    }
+
     /**
      * restGet is a generic method that performs a RESTful GET request.
      *
@@ -75,6 +81,11 @@ public abstract class BaseRestService {
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
         log.debug("restGetEntity: "+path);
         return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), c);
+    }
+
+    protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, Map<String, String> urlVariables) {
+        log.debug("restGetEntity: "+path);
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), c, urlVariables);
     }
 
     protected  <T> ResponseEntity<T> restGetParameterizedType(String path, ParameterizedTypeReference<T> responseType){

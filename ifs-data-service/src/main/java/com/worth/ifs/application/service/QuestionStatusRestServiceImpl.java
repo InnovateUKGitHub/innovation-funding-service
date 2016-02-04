@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -42,8 +44,9 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
   }
 
   @Override
-  public List<QuestionStatus> getByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId) {
-    return Arrays.asList(restGet(questionStatusRestURL + "/getByQuestionIdAndApplicationIdsAndOrganisationId/" + questionIds + "/" + applicationId + "/" + organisationId, QuestionStatus[].class));
+  public List<QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId) {
+    Map<String, String> urlVariables = questionIds.stream().collect(Collectors.toMap((q) -> "questionId", (q) -> q.toString()));
+    return Arrays.asList(restGet(questionStatusRestURL + "/findByQuestionIdsAndApplicationIdAndOrganisationId/" + applicationId + "/" + organisationId, QuestionStatusResource[].class, urlVariables));
   }
 
   public List<QuestionStatus> getByIds(List<Long> ids){

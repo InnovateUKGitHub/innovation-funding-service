@@ -111,7 +111,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<QuestionStatus> getByQuestionIds(List<Long> questionIds, Long applicationId, Long organisationId){
-        return questionStatusRestService.getByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId);
+    public Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId){
+        return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId));
     }
 }

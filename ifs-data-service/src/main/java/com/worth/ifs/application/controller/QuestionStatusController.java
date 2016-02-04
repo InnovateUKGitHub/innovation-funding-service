@@ -7,6 +7,7 @@ import com.worth.ifs.application.resource.QuestionStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -35,6 +36,12 @@ public class QuestionStatusController {
     @RequestMapping("/findByQuestionAndApplicationAndOrganisation/{questionId}/{applicationId}/{organisationId}")
     private List<QuestionStatusResource> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeOrganisationId(questionId, applicationId, organisationId);
+        return simpleMap(questionStatuses, questionStatusMapper :: mapQuestionStatusToPopulatedResource);
+    }
+
+    @RequestMapping(value = "/findByQuestionIdsAndApplicationIdAndOrganisationId/{applicationId}/{organisationId}", params = "questionIds")
+    private List<QuestionStatusResource> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(@RequestParam List<Long> questionIds, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdIsInAndApplicationIdAndAssigneeOrganisationId(questionIds, applicationId, organisationId);
         return simpleMap(questionStatuses, questionStatusMapper :: mapQuestionStatusToPopulatedResource);
     }
 
