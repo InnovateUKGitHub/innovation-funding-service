@@ -75,12 +75,12 @@ public class FormInputResponseFileUploadController {
                 andWithDefaultFailure(internalServerErrorRestFailure("Error creating file")).perform(() -> {
 
                     return validContentLengthHeader(contentLength).
-                        map(lengthFromHeader -> validContentTypeHeader(contentType).
-                        map(typeFromHeader -> validFilename(originalFilename).
-                        map(filenameParameter -> validContentLength(lengthFromHeader).
-                        map(validLength -> validMediaType(typeFromHeader).
-                        map(validType -> createFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request).
-                        map(fileEntryPair -> serviceSuccess(fileEntryPair.getValue())))))));
+                            andOnSuccess(lengthFromHeader -> validContentTypeHeader(contentType).
+                            andOnSuccess(typeFromHeader -> validFilename(originalFilename).
+                            andOnSuccess(filenameParameter -> validContentLength(lengthFromHeader).
+                            andOnSuccess(validLength -> validMediaType(typeFromHeader).
+                            andOnSuccess(validType -> createFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request).
+                            andOnSuccess(fileEntryPair -> serviceSuccess(fileEntryPair.getValue())))))));
                 });
     }
 
@@ -101,12 +101,12 @@ public class FormInputResponseFileUploadController {
                 perform(() -> {
 
             return validContentLengthHeader(contentLength).
-                   map(lengthFromHeader -> validContentTypeHeader(contentType).
-                   map(typeFromHeader -> validFilename(originalFilename).
-                   map(filenameParameter -> validContentLength(lengthFromHeader).
-                   map(validLength -> validMediaType(typeFromHeader).
-                   map(validType -> updateFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request).
-                   map(ServiceResult::serviceSuccess)
+                    andOnSuccess(lengthFromHeader -> validContentTypeHeader(contentType).
+                    andOnSuccess(typeFromHeader -> validFilename(originalFilename).
+                    andOnSuccess(filenameParameter -> validContentLength(lengthFromHeader).
+                    andOnSuccess(validLength -> validMediaType(typeFromHeader).
+                    andOnSuccess(validType -> updateFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request).
+                    andOnSuccess(ServiceResult::serviceSuccess)
             )))));
         });
     }
@@ -122,7 +122,7 @@ public class FormInputResponseFileUploadController {
 
             ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result = doGetFile(formInputId, applicationId, processRoleId);
 
-            return result.mapLeftOrRight(
+            return result.handleFailureOrSuccess(
                     failure -> {
                         RestErrorEnvelope errorResponse = new RestErrorEnvelope(failure.getErrors());
                         return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
@@ -156,7 +156,7 @@ public class FormInputResponseFileUploadController {
 
             ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result = doGetFile(formInputId, applicationId, processRoleId);
 
-            return result.mapLeftOrRight(
+            return result.handleFailureOrSuccess(
                     failure -> {
                         RestErrorEnvelope errorResponse = new RestErrorEnvelope(failure.getErrors());
                         return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
@@ -211,7 +211,7 @@ public class FormInputResponseFileUploadController {
 
         FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, mediaType, length);
         FormInputResponseFileEntryResource formInputResponseFile = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
-        return applicationService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request)).map(result -> serviceSuccess(result.getRight()));
+        return applicationService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request)).andOnSuccess(result -> serviceSuccess(result.getRight()));
     }
 
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {

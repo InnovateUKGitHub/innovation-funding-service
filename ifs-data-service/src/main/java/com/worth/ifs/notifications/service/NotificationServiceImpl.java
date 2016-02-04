@@ -43,14 +43,14 @@ public class NotificationServiceImpl implements NotificationService {
             Set<NotificationMedium> allMediaToSendNotificationBy = new LinkedHashSet<>(combineLists(notificationMedium, otherNotificationMedia));
 
             List<ServiceResult<Notification>> results = simpleMap(allMediaToSendNotificationBy, medium ->
-                    getNotificationSender(medium).map(serviceForMedium ->
+                    getNotificationSender(medium).andOnSuccess(serviceForMedium ->
                             serviceForMedium.sendNotification(notification)));
 
-            return anyFailures(results, serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)), serviceSuccess(notification));
+            return processAnyFailuresOrSucceed(results, serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)), serviceSuccess(notification));
         });
     }
 
     private ServiceResult<NotificationSender> getNotificationSender(NotificationMedium medium) {
-        return nonNull(servicesByMedia.get(medium), notFoundError(NotificationMedium.class, medium));
+        return getNonNullValue(servicesByMedia.get(medium), notFoundError(NotificationMedium.class, medium));
     }
 }

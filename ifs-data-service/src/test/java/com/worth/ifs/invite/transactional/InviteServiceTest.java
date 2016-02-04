@@ -113,7 +113,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
         List<ServiceResult<Notification>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
         assertEquals(1, results.size());
-        assertTrue(results.get(0).isRight());
+        assertTrue(results.get(0).isSuccess());
     }
 
     @Test
@@ -131,6 +131,6 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
         List<ServiceResult<Notification>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
         assertEquals(1, results.size());
-        assertTrue(results.get(0).isLeft());
+        assertTrue(results.get(0).isFailure());
     }
 }

@@ -43,11 +43,35 @@ public class ServiceResult<T> {
         this.result = result;
     }
 
-    public <T1> T1 mapLeftOrRight(Function<? super ServiceFailure, ? extends T1> lFunc, Function<? super T, ? extends T1> rFunc) {
+    public <T1> T1 handleFailureOrSuccess(Function<? super ServiceFailure, ? extends T1> failureHandler, Function<? super T, ? extends T1> successHandler) {
+        return mapLeftOrRight(failureHandler, successHandler);
+    }
+
+    public <R> ServiceResult<R> andOnSuccess(Function<? super T, ServiceResult<R>> successHandler) {
+        return map(successHandler);
+    }
+
+    public boolean isSuccess() {
+        return isRight();
+    }
+
+    public boolean isFailure() {
+        return isLeft();
+    }
+
+    public ServiceFailure getFailure() {
+        return getLeft();
+    }
+
+    public T getSuccessObject() {
+        return getRight();
+    }
+
+    private <T1> T1 mapLeftOrRight(Function<? super ServiceFailure, ? extends T1> lFunc, Function<? super T, ? extends T1> rFunc) {
         return result.mapLeftOrRight(lFunc, rFunc);
     }
 
-    public <R> ServiceResult<R> map(Function<? super T, ServiceResult<R>> rFunc) {
+    private <R> ServiceResult<R> map(Function<? super T, ServiceResult<R>> rFunc) {
 
         if (result.isLeft()) {
             return serviceFailure(result.getLeft());
@@ -56,24 +80,20 @@ public class ServiceResult<T> {
         return rFunc.apply(result.getRight());
     }
 
-    public boolean isLeft() {
+    private boolean isLeft() {
         return result.isLeft();
     }
 
-    public boolean isRight() {
+    private boolean isRight() {
         return result.isRight();
     }
 
-    public ServiceFailure getLeft() {
+    private ServiceFailure getLeft() {
         return result.getLeft();
     }
 
-    public T getRight() {
+    private T getRight() {
         return result.getRight();
-    }
-
-    public static <T1> T1 getLeftOrRight(Either<T1, T1> either) {
-        return Either.getLeftOrRight(either);
     }
 
     public static <T> ServiceResult<T> serviceSuccess(T successfulResult) {
@@ -88,7 +108,7 @@ public class ServiceResult<T> {
         return new ServiceResult<>(new ServiceFailure(singletonList(error)));
     }
 
-    public static <T> ServiceResult<T> nonNull(T value, Error error) {
+    public static <T> ServiceResult<T> getNonNullValue(T value, Error error) {
 
         if (value == null) {
             return serviceFailure(error);
@@ -97,12 +117,8 @@ public class ServiceResult<T> {
         return serviceSuccess(value);
     }
 
-    public static <T> ServiceResult<T> fromEither(Either<ServiceFailure, T> value) {
-        return new ServiceResult<>(value);
-    }
-
-    public static <T, R> ServiceResult<T> anyFailures(List<ServiceResult<R>> results, ServiceResult<T> failureResponse, ServiceResult<T> successResponse) {
-        return results.stream().anyMatch(ServiceResult::isLeft) ? failureResponse : successResponse;
+    public static <T, R> ServiceResult<T> processAnyFailuresOrSucceed(List<ServiceResult<R>> results, ServiceResult<T> failureResponse, ServiceResult<T> successResponse) {
+        return results.stream().anyMatch(ServiceResult::isFailure) ? failureResponse : successResponse;
     }
 
     /**
@@ -112,9 +128,12 @@ public class ServiceResult<T> {
      * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
      * type GENERAL_UNEXPECTED_ERROR.
      *
-     * @param serviceCode
-     * @param <T>
-     * @return
+     * @param serviceCode - code that performs some process and returns a successful or failing ServiceResult, the state
+     *                      of which then allows this wrapper to perform additional actions
+     *
+     * @param <T> - the successful return type of the ServiceResult
+     * @return the original ServiceResult returned from the serviceCode, or a generic ServiceResult failure if an exception
+     * was thrown in serviceCode
      */
     public static <T> ServiceResult<T> handlingErrors(Supplier<ServiceResult<T>> serviceCode) {
         return handlingErrors(Errors.internalServerErrorError(), serviceCode);
@@ -131,15 +150,17 @@ public class ServiceResult<T> {
          * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
          * type GENERAL_UNEXPECTED_ERROR.
          *
-         * @param <T>
-         * @param serviceCode
-         * @return
+         * @param <T> - the successful return type of the ServiceResult
+         * @param serviceCode - code that performs some process and returns a successful or failing ServiceResult, the state
+         *                      of which then allows this wrapper to perform additional actions
+         * @return the original ServiceResult returned from the serviceCode, or a generic ServiceResult failure if an exception
+         * was thrown in serviceCode
          */
     public static <T> ServiceResult<T> handlingErrors(Error catchAllError, Supplier<ServiceResult<T>> serviceCode) {
         try {
             ServiceResult<T> response = serviceCode.get();
 
-            if (response.isLeft()) {
+            if (response.isFailure()) {
                 LOG.debug("Service failure encountered - performing transaction rollback");
                 rollbackTransaction();
             }

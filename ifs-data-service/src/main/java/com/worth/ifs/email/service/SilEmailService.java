@@ -34,7 +34,7 @@ public class SilEmailService implements EmailService {
             SilEmailBody plainTextBody = new SilEmailBody("text/plain", plainTextBodyContent);
             SilEmailBody htmlBody = new SilEmailBody("text/html", htmlBodyContent);
 
-            return endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).map(successfullySent -> serviceSuccess(to));
+            return endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).andOnSuccess(successfullySent -> serviceSuccess(to));
         });
     }
 }

@@ -49,12 +49,12 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
         return handlingErrors(new Error(FILES_UNABLE_TO_CREATE_FILE), () ->
 
-            createTemporaryFileForValidation(inputStreamSupplier).map(validationFile -> {
+            createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
                 try {
-                    return validateMediaType(validationFile, MediaType.parseMediaType(resource.getMediaType())).map(tempFile ->
-                           validateContentLength(resource.getFilesizeBytes(), tempFile)).map(tempFile ->
-                           saveFileEntry(resource).map(savedFileEntry ->
-                           createFileForFileEntry(savedFileEntry, tempFile)).map(
+                    return validateMediaType(validationFile, MediaType.parseMediaType(resource.getMediaType())).andOnSuccess(tempFile ->
+                           validateContentLength(resource.getFilesizeBytes(), tempFile)).andOnSuccess(tempFile ->
+                           saveFileEntry(resource).andOnSuccess(savedFileEntry ->
+                           createFileForFileEntry(savedFileEntry, tempFile)).andOnSuccess(
                            ServiceResult::serviceSuccess)
                     );
                 } finally {
@@ -68,9 +68,9 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     public ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
         return handlingErrors(notFoundError(FileEntry.class, fileEntryId), () ->
                 findFileEntry(fileEntryId).
-                map(this::findFile).
-                map(this::getInputStreamSuppier).
-                map(ServiceResult::serviceSuccess)
+                        andOnSuccess(this::findFile).
+                        andOnSuccess(this::getInputStreamSuppier).
+                        andOnSuccess(ServiceResult::serviceSuccess)
         );
     }
 
@@ -79,12 +79,12 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
         return handlingErrors(new Error(FILES_UNABLE_TO_UPDATE_FILE, FileEntry.class, updatedFile.getId()), () ->
 
-                createTemporaryFileForValidation(inputStreamSupplier).map(validationFile -> {
+                createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
                     try {
-                        return validateMediaType(validationFile, MediaType.parseMediaType(updatedFile.getMediaType())).map(tempFile ->
-                               validateContentLength(updatedFile.getFilesizeBytes(), tempFile)).map(tempFile ->
-                               updateFileEntry(updatedFile).map(updatedFileEntry ->
-                               updateFileForFileEntry(updatedFileEntry, tempFile).map(
+                        return validateMediaType(validationFile, MediaType.parseMediaType(updatedFile.getMediaType())).andOnSuccess(tempFile ->
+                               validateContentLength(updatedFile.getFilesizeBytes(), tempFile)).andOnSuccess(tempFile ->
+                               updateFileEntry(updatedFile).andOnSuccess(updatedFileEntry ->
+                               updateFileForFileEntry(updatedFileEntry, tempFile).andOnSuccess(
                                ServiceResult::serviceSuccess
                         )));
                     } finally {
@@ -100,8 +100,8 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         return handlingErrors(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, fileEntryId), () ->
 
             findFileEntry(fileEntryId).
-            map(fileEntry -> findFile(fileEntry).
-            map(file -> {
+            andOnSuccess(fileEntry -> findFile(fileEntry).
+            andOnSuccess(file -> {
 
                 fileEntryRepository.delete(fileEntry);
 
@@ -126,14 +126,14 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
 
-        return updateFileForFileEntry(pathElements, filename, tempFile).map(file -> serviceSuccess(Pair.of(file, existingFileEntry)));
+        return updateFileForFileEntry(pathElements, filename, tempFile).andOnSuccess(file -> serviceSuccess(Pair.of(file, existingFileEntry)));
     }
 
     private ServiceResult<File> createTemporaryFileForValidation(Supplier<InputStream> inputStreamSupplier) {
 
         return createTemporaryFile("filevalidation", new Error(FILES_UNABLE_TO_CREATE_FILE)).
-                map(tempFile -> updateFileWithContents(tempFile, inputStreamSupplier)).
-                map(this::pathToFile);
+                andOnSuccess(tempFile -> updateFileWithContents(tempFile, inputStreamSupplier)).
+                andOnSuccess(this::pathToFile);
     }
 
     private ServiceResult<File> validateContentLength(long filesizeBytes, File tempFile) {
@@ -191,7 +191,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         Pair<List<String>, String> absoluteFilePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
-        return createFileForFileEntry(pathElements, filename, tempFile).map(file -> serviceSuccess(Pair.of(file, savedFileEntry)));
+        return createFileForFileEntry(pathElements, filename, tempFile).andOnSuccess(file -> serviceSuccess(Pair.of(file, savedFileEntry)));
     }
 
     private ServiceResult<FileEntry> saveFileEntry(FileEntryResource resource) {
@@ -221,7 +221,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         Path foldersPath = pathElementsToPath(absolutePathElements);
 
         return createFolders(foldersPath).
-                map(createdFolders -> copyTempFileToTargetFile(createdFolders, filename, tempFile));
+                andOnSuccess(createdFolders -> copyTempFileToTargetFile(createdFolders, filename, tempFile));
     }
 
     private ServiceResult<File> updateFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {

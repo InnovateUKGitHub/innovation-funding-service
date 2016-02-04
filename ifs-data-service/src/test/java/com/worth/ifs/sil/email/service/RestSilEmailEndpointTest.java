@@ -48,8 +48,8 @@ public class RestSilEmailEndpointTest extends BaseRestServiceUnitTest<RestSilEma
 
         ServiceResult<SilEmailMessage> sendMailResult = service.sendEmail(silEmail);
 
-        assertTrue(sendMailResult.isRight());
-        assertEquals(silEmail, sendMailResult.getRight());
+        assertTrue(sendMailResult.isSuccess());
+        assertEquals(silEmail, sendMailResult.getSuccessObject());
     }
 
     @Test
@@ -68,8 +68,8 @@ public class RestSilEmailEndpointTest extends BaseRestServiceUnitTest<RestSilEma
 
         ServiceResult<SilEmailMessage> sendMailResult = service.sendEmail(silEmail);
 
-        assertTrue(sendMailResult.isLeft());
-        assertTrue(sendMailResult.getLeft().is(EMAILS_NOT_SENT_MULTIPLE));
+        assertTrue(sendMailResult.isFailure());
+        assertTrue(sendMailResult.getFailure().is(EMAILS_NOT_SENT_MULTIPLE));
     }
 
     @Test
@@ -81,8 +81,8 @@ public class RestSilEmailEndpointTest extends BaseRestServiceUnitTest<RestSilEma
 
         ServiceResult<SilEmailMessage> sendMailResult = service.sendEmail(silEmail);
 
-        assertTrue(sendMailResult.isLeft());
-        assertTrue(sendMailResult.getLeft().is(internalServerErrorError()));
+        assertTrue(sendMailResult.isFailure());
+        assertTrue(sendMailResult.getFailure().is(internalServerErrorError()));
     }
 
 }
