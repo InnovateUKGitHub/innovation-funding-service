@@ -1,7 +1,8 @@
 package com.worth.ifs.finance.controller;
 
 import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.finance.repository.CostFieldRepository;
+import com.worth.ifs.finance.mapper.CostFieldMapper;
+import com.worth.ifs.finance.transactional.CostFieldService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -18,7 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class CostFieldControllerTest {
     @Mock
-    CostFieldRepository costFieldRepository;
+    CostFieldService costFieldService;
+
+    @Mock
+    CostFieldMapper costFieldMapper;
 
     private MockMvc mockMvc;
 
@@ -34,12 +38,12 @@ public class CostFieldControllerTest {
 
     @Test
     public void findAllShouldReturnListOfCostFields() throws Exception{
-        when(costFieldRepository.findAll()).thenReturn(Arrays.asList(new CostField(), new CostField()));
+        when(costFieldService.findAll()).thenReturn(Arrays.asList(new CostField(), new CostField()));
 
         mockMvc.perform(get("/costfield/findAll/"))
                 .andExpect(status().isOk());
 
-        verify(costFieldRepository, times(1)).findAll();
-        verifyNoMoreInteractions(costFieldRepository);
+        verify(costFieldService, times(1)).findAll();
+        verifyNoMoreInteractions(costFieldService);
     }
 }

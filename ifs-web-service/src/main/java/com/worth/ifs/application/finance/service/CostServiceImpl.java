@@ -1,7 +1,6 @@
 package com.worth.ifs.application.finance.service;
 
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.service.CostFieldRestService;
 import com.worth.ifs.finance.service.CostRestService;
@@ -26,7 +25,7 @@ public class CostServiceImpl implements CostService {
     CostFieldRestService costFieldRestService;
 
     @Override
-    public List<CostField> getCostFields() {
+    public List<CostFieldResource> getCostFields() {
         return costFieldRestService.getCostFields();
     }
 

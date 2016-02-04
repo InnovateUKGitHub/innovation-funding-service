@@ -102,6 +102,7 @@ the user clicks the begin application
 
 the user should be in the application overview page
     page should contain    Application overview
+    Page Should Contain    Technology Inspired - Application number 0000
 
 the user clicks the Not on company house link
     Click Element    name=not-in-company-house
