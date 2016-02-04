@@ -14,26 +14,33 @@
     <div class="hgroup no-margin-top" style="padding-top: 20px;">
         <h1 class="heading-xlarge no-margin-bottom">Join an application</h1>
 
-        <p>You have been invited to join a new application into the competition '<span th:text="${currentCompetition.name}"></span>'.<br/>
+        <p>You have been invited to join a new application into the competition '<span th:text="${competitionName}"></span>'.<br/>
             Sign up to a new account, or sign in to an existing account to continue.</p>
     </div>
 
     <div class="grid-row">
         <section class="column-half">
-            <h1 class="heading-large">New to this service?</h1>
+            <div th:unless="${emailAddressRegistered}">
+                <h1 class="heading-large">New to this service?</h1>
 
-            <p>If you haven’t used this service before you must <a href="/application/create/find-business">create an account</a>,
-                even if you already have an existing account with "Innovate UK".</p>
+                <p>If you haven’t used this service before you must <a href="/application/create/find-business">create an account</a>,
+                    even if you already have an existing account with "Innovate UK".</p>
 
-            <p>Creating an account allows you to:</p>
-            <ul class="list-bullet">
-                <li>Apply for a competition</li>
-                <li>Track your competition applications</li>
-                <li>View application feedback</li>
-                <li>Setup successful project</li>
-            </ul>
+                <p>Creating an account allows you to:</p>
+                <ul class="list-bullet">
+                    <li>Apply for a competition</li>
+                    <li>Track your competition applications</li>
+                    <li>View application feedback</li>
+                    <li>Setup successful project</li>
+                </ul>
 
-            <a href="/application/create/find-business" class="button" value="create-account" type="submit">Create</a></section>
+                <a href="/application/create/find-business" class="button" value="create-account" type="submit">Create</a>
+            </div>
+            <div th:if="${emailAddressRegistered}">
+                <h1 class="heading-large">We found a user account with the invited email address</h1>
+                <p>Please login with your existing account.</p>
+            </div>
+        </section>
         <section class="column-half">
             <h1 class="heading-large">Sign in</h1>
 
