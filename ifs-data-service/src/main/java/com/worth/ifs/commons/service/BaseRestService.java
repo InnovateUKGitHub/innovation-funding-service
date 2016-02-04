@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
@@ -114,7 +114,7 @@ public abstract class BaseRestService {
             if (asList(expectedSuccessCodes).contains(response.getStatusCode())) {
 
                 return fromJson(response.getBody(), c).mapLeftOrRight(
-                        failure -> RestResult.<T> restFailure(INTERNAL_SERVER_ERROR, "Unable to process JSON response as type " + c, INTERNAL_SERVER_ERROR),
+                        failure -> RestResult.<T> restFailure(internalServerErrorError("Unable to process JSON response as type " + c)),
                         success -> RestResult.<T> restSuccess(success, response.getStatusCode())
                 );
             } else {
@@ -124,7 +124,7 @@ public abstract class BaseRestService {
         } catch (HttpStatusCodeException e) {
 
             return fromJson(e.getResponseBodyAsString(), RestErrorEnvelope.class).mapLeftOrRight(
-                    failure -> RestResult.<T> restFailure(INTERNAL_SERVER_ERROR, "Unable to process JSON response as type " + RestErrorEnvelope.class, INTERNAL_SERVER_ERROR),
+                    failure -> RestResult.<T> restFailure(internalServerErrorError("Unable to process JSON response as type " + RestErrorEnvelope.class.getSimpleName())),
                     success -> RestResult.<T> restFailure(success.getErrors(), e.getStatusCode())
             );
         }
