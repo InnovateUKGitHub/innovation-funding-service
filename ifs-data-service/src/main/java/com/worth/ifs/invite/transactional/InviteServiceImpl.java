@@ -18,10 +18,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.Notifications.INVITE_COLLABORATOR;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -48,6 +45,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         validator = new LocalValidatorFactoryBean();
         validator.setProviderClass(HibernateValidator.class);
         validator.afterPropertiesSet();
+    }
+
+    @Override
+    public Optional<Invite> getInviteByHash(String hash){
+        return inviteRepository.getByHash(hash);
     }
 
     @Override

@@ -36,6 +36,7 @@ public class InviteResource {
     }
 
     public InviteResource(Invite i) {
+        this.id = i.getId();
         this.name = i.getName();
         this.email = i.getEmail();
         this.applicationId = i.getApplication().getId();
