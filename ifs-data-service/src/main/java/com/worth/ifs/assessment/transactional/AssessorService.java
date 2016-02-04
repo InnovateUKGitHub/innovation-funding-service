@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.assessment.dto.Feedback;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 

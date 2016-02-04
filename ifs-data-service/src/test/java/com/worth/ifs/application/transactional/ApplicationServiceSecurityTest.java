@@ -9,9 +9,9 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.security.FormInputResponseFileUploadLookupStrategies;
 import com.worth.ifs.application.security.FormInputResponseFileUploadRules;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
@@ -27,8 +27,8 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
-import static com.worth.ifs.transactional.ServiceResult.success;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
@@ -284,7 +284,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         @Override
         public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
-            return success(Pair.of(new File("", ""), new FormInputResponseFileEntryResource()));
+            return serviceSuccess(Pair.of(new File("", ""), new FormInputResponseFileEntryResource()));
         }
 
         @Override

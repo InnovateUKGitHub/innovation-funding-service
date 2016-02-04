@@ -222,7 +222,7 @@ public class CollectionFunctions {
     }
 
     /**
-     * A map collector that preserves order
+     * A andOnSuccess collector that preserves order
      * @param keyMapper
      * @param valueMapper
      * @param <T>
@@ -274,7 +274,7 @@ public class CollectionFunctions {
     }
 
     /**
-     * A collector that maps a collection of pairs into a map.
+     * A collector that maps a collection of pairs into a andOnSuccess.
      * @param <R>
      * @param <T>
      * @return
@@ -284,7 +284,7 @@ public class CollectionFunctions {
     }
 
     /**
-     * Function that takes a map entry and returns the value. Useful for collecting over collections of entry sets
+     * Function that takes a andOnSuccess entry and returns the value. Useful for collecting over collections of entry sets
      * @param <R>
      * @param <T>
      * @return
@@ -334,5 +334,19 @@ public class CollectionFunctions {
             return "";
         }
         return list.stream().map(element -> element != null ? element.toString() : "").collect(joining(joinString));
+    }
+
+    /**
+     * Return the one and only element from the list supplied, or throw an IllegalArgumentException
+     *
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static <T> T onlyElement(List<T> list) {
+        if (list.size() == 1) {
+            return list.get(0);
+        }
+        throw new IllegalArgumentException("Only expected a single element, but found " + list.size() + " - " + list);
     }
 }

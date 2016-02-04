@@ -4,6 +4,8 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.commons.error.ErrorTemplate;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -12,22 +14,23 @@ import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.NoTransactionException;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.function.Supplier;
 
-import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.ServiceFailures.*;
-import static com.worth.ifs.transactional.ServiceFailure.error;
+import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.util.EntityLookupCallbacks.getProcessRoleById;
 import static com.worth.ifs.util.EntityLookupCallbacks.getResponseById;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * This class represents the base class for transactional services.  Method calls within this service will have
  * transaction boundaries provided to allow for safe atomic operations and persistence cascading.  Code called
  * within a {@link #handlingErrors(Supplier)} supplier will have its exceptions converted into ServiceFailures
- * of type UNEXPECTED_ERROR and the transaction rolled back.
+ * of type GENERAL_UNEXPECTED_ERROR and the transaction rolled back.
  *
  * Created by dwatson on 06/10/15.
  */
@@ -35,18 +38,6 @@ import static com.worth.ifs.util.EntityLookupCallbacks.getResponseById;
 public abstract class BaseTransactionalService  {
 
     private static final Log log = LogFactory.getLog(BaseTransactionalService.class);
-
-    public enum Failures {
-        UNEXPECTED_ERROR, //
-        ROLE_NOT_FOUND, //
-        RESPONSE_NOT_FOUND, //
-        FORM_INPUT_RESPONSE_NOT_FOUND, //
-        APPLICATION_NOT_FOUND, //
-        FORM_INPUT_NOT_FOUND, //
-        PROCESS_ROLE_NOT_FOUND, //
-        PROCESS_ROLE_INCORRECT_TYPE, //
-        PROCESS_ROLE_INCORRECT_APPLICATION, //
-    }
 
     @Autowired
     protected ResponseRepository responseRepository;
@@ -76,7 +67,7 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected ServiceResult<Response> getResponse(Long responseId) {
-        return getResponseById(responseId, responseRepository, RESPONSE_NOT_FOUND);
+        return getResponseById(responseId, responseRepository, notFoundError(Response.class, responseId));
     }
 
     /**
@@ -86,41 +77,6 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected ServiceResult<ProcessRole> getProcessRole(Long processRoleId) {
-        return getProcessRoleById(processRoleId, processRoleRepository, PROCESS_ROLE_NOT_FOUND);
-    }
-
-    /**
-     * Create a Right of T, to indicate a success.
-     *
-     * @param response
-     * @param <T>
-     * @return
-     */
-    protected static <T> ServiceResult<T> successResponse(T response) {
-        return ServiceResult.success(response);
-    }
-
-    /**
-     * Create a Left of ServiceFailure, to indicate a failure.
-     *
-     * @param error
-     * @param <T>
-     * @return
-     */
-    protected static <T> ServiceResult<T> failureResponse(Enum<?> error) {
-        return ServiceResult.failure(error(error));
-    }
-
-
-
-    /**
-     * Create a Left of ServiceFailure, to indicate a failure.
-     *
-     * @param error
-     * @param <T>
-     * @return
-     */
-    protected static <T> ServiceResult<T> failureResponse(Enum<?> error, Throwable e) {
-        return ServiceResult.failure(error(error, e));
+        return getProcessRoleById(processRoleId, processRoleRepository, notFoundError(ProcessRole.class, processRoleId));
     }
 }
