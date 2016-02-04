@@ -37,11 +37,39 @@ public class RestResult<T> {
         this.result = result;
     }
 
-    public <T1> T1 mapLeftOrRight(Function<? super RestFailure, ? extends T1> lFunc, Function<? super RestSuccess<T>, ? extends T1> rFunc) {
+    public <T1> T1 handleSuccessOrFailure(Function<? super RestFailure, ? extends T1> failureHandler, Function<? super RestSuccess<T>, ? extends T1> successHandler) {
+        return mapLeftOrRight(failureHandler, successHandler);
+    }
+
+    public <R> RestResult<R> andOnSuccess(Function<? super RestSuccess<T>, RestResult<R>> rFunc) {
+        return map(rFunc);
+    }
+
+    public boolean isFailure() {
+        return isLeft();
+    }
+
+    public boolean isSuccess() {
+        return isRight();
+    }
+
+    public RestFailure getFailure() {
+        return getLeft();
+    }
+
+    public RestSuccess<T> getSuccess() {
+        return getRight();
+    }
+
+    public HttpStatus getStatusCode() {
+        return handleSuccessOrFailure(RestFailure::getStatusCode, RestSuccess::getStatusCode);
+    }
+
+    private <T1> T1 mapLeftOrRight(Function<? super RestFailure, ? extends T1> lFunc, Function<? super RestSuccess<T>, ? extends T1> rFunc) {
         return result.mapLeftOrRight(lFunc, rFunc);
     }
 
-    public <R> RestResult<R> map(Function<? super RestSuccess<T>, RestResult<R>> rFunc) {
+    private <R> RestResult<R> map(Function<? super RestSuccess<T>, RestResult<R>> rFunc) {
 
         if (result.isLeft()) {
             return restFailure(result.getLeft());
@@ -50,15 +78,15 @@ public class RestResult<T> {
         return rFunc.apply(result.getRight());
     }
 
-    public boolean isLeft() {
+    private boolean isLeft() {
         return result.isLeft();
     }
 
-    public boolean isRight() {
+    private boolean isRight() {
         return result.isRight();
     }
 
-    public RestFailure getLeft() {
+    private RestFailure getLeft() {
 
         if (bodiless) {
             throw new IllegalStateException("Unable to get the body from a bodiless (Void) RestResult");
@@ -67,7 +95,7 @@ public class RestResult<T> {
         return result.getLeft();
     }
 
-    public RestSuccess<T> getRight() {
+    private RestSuccess<T> getRight() {
 
         if (bodiless) {
             throw new IllegalStateException("Unable to get the body from a bodiless (Void) RestResult");
@@ -76,12 +104,8 @@ public class RestResult<T> {
         return result.getRight();
     }
 
-    public HttpStatus getStatusCode() {
-        return mapLeftOrRight(RestFailure::getStatusCode, RestSuccess::getStatusCode);
-    }
-
-    public RestResult<Void> bodiless() {
-        RestResult<Void> result = mapLeftOrRight((Function<RestFailure, RestResult<Void>>) RestResult::new, success -> new RestResult<>(new RestSuccess(null, getStatusCode())));
+    private RestResult<Void> bodiless() {
+        RestResult<Void> result = handleSuccessOrFailure((Function<RestFailure, RestResult<Void>>) RestResult::new, success -> new RestResult<>(new RestSuccess(null, getStatusCode())));
         result.bodiless = true;
         return result;
     }
