@@ -111,10 +111,6 @@
         if (!jQuery.parseHTML(this.element.html())) {
           this.element.html(this.options.placeholder);
           jQuery(this.element).addClass('inPlaceholderMode');
-          this.element.css({
-            'min-width': this.element.innerWidth(),
-            'min-height': this.element.innerHeight()
-          });
         }
         if (!this.bound) {
           this.element.on("focus", this, this._activated);
