@@ -80,8 +80,8 @@ public class RestResult<T> implements FailingOrSucceedingResult<T, RestFailure> 
         FailingOrSucceedingResult<R, RestFailure> successResult = rFunc.apply(result.getRight().getResult());
 
         return successResult.handleSuccessOrFailure(
-                failure -> restFailure(failure),
-                success -> restSuccess(success, success instanceof RestResult ? ((RestResult) success).getStatusCode() : OK)
+                failure -> RestResult.<R> restFailure(failure),
+                success -> RestResult.<R> restSuccess(success, success instanceof RestResult ? ((RestResult) success).getStatusCode() : OK)
         );
     }
 
@@ -112,7 +112,9 @@ public class RestResult<T> implements FailingOrSucceedingResult<T, RestFailure> 
     }
 
     private RestResult<Void> bodiless() {
-        RestResult<Void> result = handleSuccessOrFailure((Function<RestFailure, RestResult<Void>>) RestResult::new, success -> new RestResult<>(new RestSuccess<>(null, getStatusCode())));
+        RestResult<Void> result = handleSuccessOrFailure(
+                failure -> new RestResult<Void>(failure),
+                success -> new RestResult<Void>(new RestSuccess<Void>(null, getStatusCode())));
         result.bodiless = true;
         return result;
     }
