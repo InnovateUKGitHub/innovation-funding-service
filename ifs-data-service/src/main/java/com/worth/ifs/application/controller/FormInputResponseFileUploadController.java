@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.Errors.*;
 import static com.worth.ifs.commons.rest.RestFailures.internalServerErrorRestFailure;
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestResultHandler;
+import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 import static com.worth.ifs.commons.rest.RestSuccesses.createdRestSuccess;
 import static com.worth.ifs.commons.rest.RestSuccesses.noContentRestSuccess;
 import static com.worth.ifs.commons.rest.RestSuccesses.okRestSuccess;
@@ -69,7 +69,7 @@ public class FormInputResponseFileUploadController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) throws IOException {
 
-        RestResultBuilder<FormInputResponseFileEntryResource, FormInputResponseFileEntryCreatedResponse> handler = newRestResultHandler();
+        RestResultBuilder<FormInputResponseFileEntryResource, FormInputResponseFileEntryCreatedResponse> handler = newRestHandler();
         return handler.
                 andOnSuccess(resource -> createdRestSuccess(new FormInputResponseFileEntryCreatedResponse(resource.getFileEntryResource().getId()))).
                 andWithDefaultFailure(internalServerErrorRestFailure("Error creating file")).perform(() -> {
@@ -94,7 +94,7 @@ public class FormInputResponseFileUploadController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) throws IOException {
 
-        RestResultBuilder<FormInputResponseFileEntryResource, Void> handler = newRestResultHandler();
+        RestResultBuilder<FormInputResponseFileEntryResource, Void> handler = newRestHandler();
         return handler.
                 andOnSuccess(okRestSuccess()).
                 andWithDefaultFailure(internalServerErrorRestFailure("Error updating file")).
@@ -180,7 +180,7 @@ public class FormInputResponseFileUploadController {
             @RequestParam("applicationId") long applicationId,
             @RequestParam("processRoleId") long processRoleId) throws IOException {
 
-        RestResultBuilder<FormInputResponse, Void> handler = newRestResultHandler();
+        RestResultBuilder<FormInputResponse, Void> handler = newRestHandler();
         return handler.andOnSuccess(noContentRestSuccess()).
                andWithDefaultFailure(internalServerErrorRestFailure("Error deleting file")).
                perform(() -> {
