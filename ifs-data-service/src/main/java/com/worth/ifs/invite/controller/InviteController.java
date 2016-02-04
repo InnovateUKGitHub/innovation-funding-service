@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
@@ -15,7 +16,6 @@ import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.invite.transactional.InviteService;
 import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import org.apache.commons.logging.Log;
@@ -73,6 +73,19 @@ public class InviteController {
         return resourceEnvelope;
     }
 
+    @RequestMapping("/getInviteByHash/{hash}")
+    public ResourceEnvelope<InviteResource> getInviteByHash(@PathVariable("hash") String hash) {
+        Optional<Invite> invite = inviteRepository.getByHash(hash);
+        if(invite.isPresent()){
+            InviteResource inviteResource = new InviteResource(invite.get());
+            ResourceEnvelope<InviteResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), inviteResource);
+            return resourceEnvelope;
+        }
+
+        ResourceEnvelope<InviteResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), null);
+        return resourceEnvelope;
+    }
+
     @RequestMapping("/getInvitesByApplicationId/{applicationId}")
     public Collection<InviteOrganisationResource> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
         Map<Long, InviteOrganisationResource> results = new LinkedHashMap<>();
@@ -101,8 +114,8 @@ public class InviteController {
         }
         List<ServiceResult<Notification>> results = inviteService.inviteCollaborators(baseUrl, invites);
 
-        long failures = results.stream().filter(r -> r.isLeft()).count();
-        long successes = results.stream().filter(r -> r.isRight()).count();
+        long failures = results.stream().filter(r -> r.isFailure()).count();
+        long successes = results.stream().filter(r -> r.isSuccess()).count();
         log.info(String.format("Invite sending requests %s Success: %s Failures: %s", invites.size(), successes, failures));
 
         InviteResultsResource resource = new InviteResultsResource();

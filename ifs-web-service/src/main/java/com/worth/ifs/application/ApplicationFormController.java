@@ -14,10 +14,8 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.form.service.FormInputService;
-import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,8 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -242,14 +242,14 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/deletecost/{sectionId}/{costId}/{renderQuestionId}", params = "singleFragment=true", produces = "application/json")
-    public @ResponseBody JsonStatusResponse deleteCostWithFragmentResponse(Model model, @PathVariable("applicationId") final Long applicationId,
+    @ResponseStatus(OK)
+    public void deleteCostWithFragmentResponse(Model model, @PathVariable("applicationId") final Long applicationId,
                                           @PathVariable("sectionId") final Long sectionId,
                                           @PathVariable("costId") final Long costId,
                                           @PathVariable("renderQuestionId") final Long renderQuestionId,
                                           HttpServletRequest request) {
 
         doDeleteCost(costId);
-        return JsonStatusResponse.ok();
     }
 
     private void doDeleteCost(@PathVariable("costId") Long costId) {

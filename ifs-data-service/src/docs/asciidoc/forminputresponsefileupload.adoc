@@ -74,7 +74,6 @@ include::{snippets}/forminputresponsefileupload/file_fileUpdate/request-fields.a
 
 ===== Response
 include::{snippets}/forminputresponsefileupload/file_fileUpdate/http-response.adoc[]
-include::{snippets}/forminputresponsefileupload/file_fileUpdate/response-fields.adoc[]
 
 ===== Curl Example
 include::{snippets}/forminputresponsefileupload/file_fileUpdate/curl-request.adoc[]

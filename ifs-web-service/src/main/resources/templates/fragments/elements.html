@@ -64,8 +64,8 @@
 
 <!-- =========================== Element: Application Title =========================== -->
 <div th:fragment="application-title (application, competition) ">
-    <h2 class="subtitle" th:if="${application.getName() != ''}" th:text="${application.getName()} +' - Application number ' + ${application.getId()} "/>
-    <h2 class="subtitle" th:unless="${application.getName() != ''}" th:text="${competition.getName()} +' - Application number ' + ${application.getId()} "/>
+    <p class="subtitle" th:if="${application.getName() != ''}" th:text="${application.getName()} +' - Application number ' + ${application.getId()} "/>
+    <p class="subtitle" th:unless="${application.getName() != ''}" th:text="${competition.getName()} +' - Application number ' + ${application.getId()} "/>
 </div>
 <!-- =========================== Element: Pie chart =========================== -->
 <div th:fragment="pie-small">
@@ -103,29 +103,32 @@
 
 <!-- =========================== Element: Notification / event =========================== -->
 <div th:fragment="notification">
-    <div class="event-alert is-open" th:if="${notifications} and ${!notifications.isEmpty()}" th:with="notification=${notifications.get(0)}, questions=${notifications?.size()>1 ? 'questions' : 'a question'}">
-        <p>
-            <span th:text="${notification?.assignedBy?.user?.name + ' has assigned ' + questions + ' to you'}"></span>
-        </p>
+    <div class="event-alert" th:if="${notifications} and ${!notifications.isEmpty()}" th:with="notification=${notifications.get(0)}, questions=${notifications?.size()>1 ? 'questions' : 'a question'}">
+        <p><span th:text="${notification?.assignedBy?.user?.name + ' has assigned ' + questions + ' to you'}"></span></p>
     </div>
 
-    <div th:if="${applicationSaved}" th:unless="${assignedQuestion}" class="event-alert" th:classappend="is-open">
-        <p>
-            <span>You have saved your field successfully</span>
-        </p>
+    <div th:if="${applicationSaved}" th:unless="${assignedQuestion}" class="event-alert" >
+        <p><span>You have saved your field successfully</span></p>
     </div>
 
-    <div th:if="${assignedQuestion}" class="event-alert" th:classappend="is-open">
-        <p>
-            <span>Question assigned successfully</span>
-        </p>
+    <div th:if="${assignedQuestion}" class="event-alert" >
+        <p><span>Question assigned successfully</span></p>
     </div>
 
-    <div th:if="${invitesSend}" class="event-alert" th:classappend="is-open">
-        <p>
-            <span>Invites send!</span>
-        </p>
+    <div th:if="${invitesSend}" class="event-alert">
+        <p><span>Invites send!</span></p>
     </div>
+
+    <div th:if="${inviteNotValid}" class="event-alert">
+        <p><span>Invite not valid or expired</span></p>
+    </div>
+    <div th:if="${inviteAlreadyAccepted}" class="event-alert">
+        <p><span>Invite already accepted</span></p>
+    </div>
+
+
+
+
 </div>
 
 <!-- =========================== Element: Formatted Date =========================== -->

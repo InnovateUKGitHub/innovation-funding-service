@@ -1,7 +1,7 @@
 package com.worth.ifs.sil.email.service;
 
 import com.worth.ifs.sil.email.resource.SilEmailMessage;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.service.ServiceResult;
 
 /**
  * Represents the communication with the SIL endpoint for sending outbound emails from the application

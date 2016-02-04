@@ -11,17 +11,18 @@ import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.assessment.viewmodel.AssessmentDashboardModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentDashboardModel.AssessmentWithApplicationAndScore;
 import com.worth.ifs.assessment.viewmodel.AssessmentSubmitReviewModel;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
-import com.worth.ifs.util.JsonStatusResponse;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,13 +30,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -121,22 +123,19 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/response/{responseId}", method = RequestMethod.PUT, produces = "application/json")
-    public @ResponseBody JsonStatusResponse updateQuestionAssessmentFeedback(Model model, @PathVariable("competitionId") final Long competitionId,
-                                               @PathVariable("applicationId") final Long applicationId,
-                                               @PathVariable("responseId") final Long responseId,
-                                               @RequestParam("feedbackValue") final Optional<String> feedbackValueParam,
-                                               @RequestParam("feedbackText") final Optional<String> feedbackTextParam,
-                                               HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> updateQuestionAssessmentFeedback(@PathVariable("responseId") final Long responseId,
+                                                              @RequestParam("feedbackValue") final Optional<String> feedbackValueParam,
+                                                              @RequestParam("feedbackText") final Optional<String> feedbackTextParam,
+                                                              HttpServletRequest request) {
 
         Long userId = getLoggedUser(request).getId();
-        Boolean success = responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackValueParam, feedbackTextParam);
+        RestResult<Void> result = responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackValueParam, feedbackTextParam);
 
-        if (success) {
-            return JsonStatusResponse.ok();
-        } else {
-            return JsonStatusResponse.badRequest("Unable to update feedback", response);
-        }
-
+        // TODO DW - INFUND-854 - develop a handler in the web layer for RestResults
+        return result.mapLeftOrRight(
+            failure -> new ResponseEntity<>(BAD_REQUEST),
+            success -> new ResponseEntity<>(OK)
+        );
     }
 
     private String solvePageForApplicationAssessment(Model model, Long competitionId, Long applicationId, Optional<Long> sectionId, Long userId) {

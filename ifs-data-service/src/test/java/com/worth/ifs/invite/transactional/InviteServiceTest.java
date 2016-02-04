@@ -3,12 +3,12 @@ package com.worth.ifs.invite.transactional;
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.builder.ApplicationBuilder;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.builder.InviteBuilder;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
@@ -52,7 +53,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     @Before
     public void setup() {
         when(inviteRepositoryMock.save(any(Invite.class))).thenReturn(new Invite());
-        ServiceResult<Notification> result = ServiceResult.success(new Notification());
+        ServiceResult<Notification> result = serviceSuccess(new Notification());
         when(notificationService.sendNotification(any(), eq(NotificationMedium.EMAIL))).thenReturn(result);
 
         localValidatorFactory = new LocalValidatorFactoryBean();
@@ -112,7 +113,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
         List<ServiceResult<Notification>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
         assertEquals(1, results.size());
-        assertTrue(results.get(0).isRight());
+        assertTrue(results.get(0).isSuccess());
     }
 
     @Test
@@ -130,6 +131,6 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
         List<ServiceResult<Notification>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
         assertEquals(1, results.size());
-        assertTrue(results.get(0).isLeft());
+        assertTrue(results.get(0).isFailure());
     }
 }

@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.BuilderAmendFunctions.clearUniqueIds;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -28,6 +29,7 @@ public class ApplicationFinanceResourceTest {
 
     @Before
     public void setUp() throws Exception {
+        clearUniqueIds();
         id = 0L;
         organisation = 1L;
         application = 1L;
