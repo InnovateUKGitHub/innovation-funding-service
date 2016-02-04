@@ -14,6 +14,7 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
