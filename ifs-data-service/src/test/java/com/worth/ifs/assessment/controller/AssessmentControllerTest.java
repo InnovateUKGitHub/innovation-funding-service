@@ -22,6 +22,7 @@ import static com.worth.ifs.BuilderAmendFunctions.description;
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
@@ -193,7 +194,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
                 .put("suitableFeedback", "feedback");
         String json = mapper.writeValueAsString(jsonNode);
 
-        when(processRoleController.findByUserApplication(assessorId, applicationId)).thenReturn(processRole);
+        when(processRoleController.findByUserApplication(assessorId, applicationId)).thenReturn(restSuccess(processRole));
         when(assessmentHandler.getOneByProcessRole(processRole.getId())).thenReturn(assessment);
         when(assessmentHandler.getRecommendedValueFromString(suitableValue)).thenReturn(RecommendedValue.YES);
 

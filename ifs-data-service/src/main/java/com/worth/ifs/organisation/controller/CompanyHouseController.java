@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestResultHandler;
+import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 
 /**
  * CompanyHouseController exposes CompanyHouse data and operations through a REST API.

@@ -3,6 +3,7 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 /**
  * Service that encompasses functions that relate to users and their roles
  */
+@Service
 public class UsersRolesServiceImpl extends BaseTransactionalService implements UsersRolesService {
 
     @Override
