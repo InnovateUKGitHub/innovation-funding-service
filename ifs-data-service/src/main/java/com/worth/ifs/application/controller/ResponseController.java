@@ -90,8 +90,9 @@ public class ResponseController {
             Response response = responseRepository.findOne(responseId);
             Application application = response.getApplication();
 
-            return getOrFail(() -> roleRepository.findByName(ASSESSOR.getName()), assessorRoleNotFoundError).map(assessorRole ->
-                   getOrFail(() -> processRoleRepository.findByUserIdAndRoleAndApplicationId(assessorUserId, onlyElement(assessorRole), application.getId()), processRoleNotFoundError).map(assessorProcessRole -> {
+            return getOrFail(() -> roleRepository.findByName(ASSESSOR.getName()), assessorRoleNotFoundError).
+                   andOnSuccess(assessorRole -> getOrFail(() -> processRoleRepository.findByUserIdAndRoleAndApplicationId(assessorUserId, onlyElement(assessorRole), application.getId()), processRoleNotFoundError).
+                   andOnSuccess(assessorProcessRole -> {
 
                        Feedback feedback = new Feedback().setResponseId(response.getId()).
                                setAssessorProcessRoleId(onlyElement(assessorProcessRole).getId()).
@@ -108,7 +109,7 @@ public class ResponseController {
                                                @PathVariable("assessorProcessRoleId") Long assessorProcessRoleId){
         ServiceResult<Feedback> feedback = assessorService.getFeedback(new Feedback.Id().setAssessorProcessRoleId(assessorProcessRoleId).setResponseId(responseId));
         // TODO DW - how do we return a generic envelope to be consumed? failure is currently simply returning null.
-        return feedback.mapLeftOrRight(l -> null, r -> r);
+        return feedback.handleFailureOrSuccess(l -> null, r -> r);
     }
 
 

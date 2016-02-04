@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
@@ -105,10 +104,6 @@ public class RestResult<T> {
 
     public static <T> RestResult<T> restSuccess(T result, HttpStatus statusCode) {
         return new RestResult<>(new RestSuccess<>(result, statusCode));
-    }
-
-    public static <T> Supplier<RestResult<T>> successSupplier(RestSuccess<T> successfulResult) {
-        return () -> restSuccess(successfulResult);
     }
 
     public static <T> RestResult<T> restFailure(RestFailure failure) {

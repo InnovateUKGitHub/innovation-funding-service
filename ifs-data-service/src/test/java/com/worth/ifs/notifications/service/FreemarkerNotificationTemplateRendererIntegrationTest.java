@@ -44,8 +44,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         );
 
         ServiceResult<String> renderResult = renderer.renderTemplate(notificationSource, notificationTarget, "notifications" + separator + "email" + separator + "invite_collaborator_text_plain.txt", templateArguments);
-        assertTrue(renderResult.isRight());
-        String processedTemplate = renderResult.getRight();
+        assertTrue(renderResult.isSuccess());
+        String processedTemplate = renderResult.getSuccessObject();
 
         List<String> expectedMessageLines = Files.readAllLines(new File(Thread.currentThread().getContextClassLoader().getResource("expectedtemplates" + separator + "notifications" + separator + "email" + separator + "invite_collaborator_text_plain.txt").toURI()).toPath());
         String expectedMessage = simpleJoiner(expectedMessageLines, "\n");

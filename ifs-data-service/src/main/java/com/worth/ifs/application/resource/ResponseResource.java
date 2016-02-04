@@ -81,7 +81,7 @@ public class ResponseResource {
 
     public AssessorFeedback getOrCreateResponseAssessorFeedback(ProcessRole assessor) {
         Optional<AssessorFeedback> existingFeedback = getResponseAssessmentForAssessor(assessor);
-        return existingFeedback.map(Function.identity()).orElseGet(() -> {
+        return existingFeedback.andOnSuccess(Function.identity()).orElseGet(() -> {
             AssessorFeedback feedback = createForResponseAndAssessor(this, assessor);
             responseAssessmentFeedbacks.add(feedback);
             return feedback;

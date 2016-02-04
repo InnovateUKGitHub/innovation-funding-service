@@ -54,8 +54,8 @@ public class SilEmailServiceTest extends BaseServiceUnitTest<SilEmailService> {
         when(endpointMock.sendEmail(expectedMessageToSend)).thenReturn(serviceSuccess(expectedMessageToSend));
 
         ServiceResult<List<EmailAddress>> emailResult = service.sendEmail(from, to, "A subject", "Some plain text", "Some HTML");
-        assertTrue(emailResult.isRight());
-        assertEquals(to, emailResult.getRight());
+        assertTrue(emailResult.isSuccess());
+        assertEquals(to, emailResult.getSuccessObject());
 
         verify(endpointMock).sendEmail(expectedMessageToSend);
     }
@@ -77,8 +77,8 @@ public class SilEmailServiceTest extends BaseServiceUnitTest<SilEmailService> {
         when(endpointMock.sendEmail(expectedMessageToSend)).thenReturn(serviceFailure(internalServerErrorError()));
 
         ServiceResult<List<EmailAddress>> emailResult = service.sendEmail(from, to, "A subject", "Some plain text", "Some HTML");
-        assertTrue(emailResult.isLeft());
-        assertTrue(emailResult.getLeft().is(internalServerErrorError()));
+        assertTrue(emailResult.isFailure());
+        assertTrue(emailResult.getFailure().is(internalServerErrorError()));
     }
 
     @Test
@@ -98,8 +98,8 @@ public class SilEmailServiceTest extends BaseServiceUnitTest<SilEmailService> {
         when(endpointMock.sendEmail(expectedMessageToSend)).thenThrow(new IllegalArgumentException("No sending!"));
 
         ServiceResult<List<EmailAddress>> emailResult = service.sendEmail(from, to, "A subject", "Some plain text", "Some HTML");
-        assertTrue(emailResult.isLeft());
-        assertTrue(emailResult.getLeft().is(internalServerErrorError()));
+        assertTrue(emailResult.isFailure());
+        assertTrue(emailResult.getFailure().is(internalServerErrorError()));
     }
 
 }

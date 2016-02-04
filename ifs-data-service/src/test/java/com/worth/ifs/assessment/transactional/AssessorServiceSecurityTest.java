@@ -41,7 +41,7 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
         when(feedbackRules.assessorCanReadTheirOwnFeedback(feedback, getLoggedInUser())).thenReturn(true);
 
         // call the method under test
-        assertEquals("Security tested!", service.getFeedback(id).getRight().getValue().get());
+        assertEquals("Security tested!", service.getFeedback(id).getSuccessObject().getValue().get());
 
         verify(feedbackRules).assessorCanReadTheirOwnFeedback(feedback, getLoggedInUser());
         verify(feedbackLookup).getFeedback(id);
@@ -73,7 +73,7 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
         when(feedbackRules.assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser())).thenReturn(true);
 
         // call the method under test
-        assertEquals("Security tested!", service.updateAssessorFeedback(feedback).getRight().getValue().get());
+        assertEquals("Security tested!", service.updateAssessorFeedback(feedback).getSuccessObject().getValue().get());
 
         verify(feedbackRules).assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser());
     }

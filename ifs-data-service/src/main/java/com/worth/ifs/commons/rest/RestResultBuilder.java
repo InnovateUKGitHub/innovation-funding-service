@@ -72,7 +72,7 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
 
             try {
                 ServiceResult<ProcessResultType> response = serviceResult.get();
-                return response.mapLeftOrRight(failure -> {
+                return response.handleFailureOrSuccess(failure -> {
 
                     RestResult<ReturnType> handled = handleServiceFailure(failure);
 

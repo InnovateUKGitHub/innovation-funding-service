@@ -151,7 +151,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 return serviceFailure(new Error(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, existingResponse.getFileEntry().getId()));
             } else {
 
-                return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).map(successfulFile -> {
+                return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).andOnSuccess(successfulFile -> {
 
                     FileEntry fileEntry = successfulFile.getValue();
 
@@ -165,9 +165,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                     } else {
 
                         return getProcessRole(processRoleId).
-                                map(processRole -> getFormInput(formInputId).
-                                map(formInput -> getApplication(applicationId).
-                                map(application -> {
+                                andOnSuccess(processRole -> getFormInput(formInputId).
+                                andOnSuccess(formInput -> getApplication(applicationId).
+                                andOnSuccess(application -> {
+
                                     FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
                                     formInputResponseRepository.save(newFormInputResponse);
                                     FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
@@ -186,7 +187,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
             ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
                     getFormInputResponseFileUpload(formInputResponseFile.getCompoundId());
-            return existingFileResult.map(existingFile -> {
+            return existingFileResult.andOnSuccess(existingFile -> {
 
                 FormInputResponseFileEntryResource existingFormInputResource = existingFile.getKey();
 
@@ -194,7 +195,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 FileEntryResource updatedFileDetails = formInputResponseFile.getFileEntryResource();
                 FileEntryResource updatedFileDetailsWithId = new FileEntryResource(existingFileResource.getId(), updatedFileDetails.getName(), updatedFileDetails.getMediaType(), updatedFileDetails.getFilesizeBytes());
 
-                return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).map(updatedFile ->
+                return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).andOnSuccess(updatedFile ->
                         serviceSuccess(Pair.of(updatedFile.getKey(), existingFormInputResource))
                 );
             });
@@ -209,15 +210,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
                     getFormInputResponseFileUpload(formInputResponseFileId);
 
-            return existingFileResult.map(existingFile -> {
+            return existingFileResult.andOnSuccess(existingFile -> {
 
                 FormInputResponseFileEntryResource formInputFileEntryResource = existingFile.getKey();
                 Long fileEntryId = formInputFileEntryResource.getFileEntryResource().getId();
 
                 return fileService.deleteFile(fileEntryId).
-                    map(deletedFile -> getFormInputResponse(formInputFileEntryResource.getCompoundId()).
-                    map(this::unlinkFileEntryFromFormInputResponse).
-                    map(ServiceResult::serviceSuccess)
+                        andOnSuccess(deletedFile -> getFormInputResponse(formInputFileEntryResource.getCompoundId()).
+                        andOnSuccess(this::unlinkFileEntryFromFormInputResponse).
+                        andOnSuccess(ServiceResult::serviceSuccess)
                 );
             });
         });
@@ -234,8 +235,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return handlingErrors(notFoundError(FileEntry.class, fileEntryId.getFormInputId(), fileEntryId.getApplicationId(), fileEntryId.getProcessRoleId()), () ->
 
                 getFormInputResponse(fileEntryId).
-                map(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
-                map(inputStreamSupplier -> serviceSuccess(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier))
+                        andOnSuccess(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
+                        andOnSuccess(inputStreamSupplier -> serviceSuccess(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier))
         )));
     }
 
