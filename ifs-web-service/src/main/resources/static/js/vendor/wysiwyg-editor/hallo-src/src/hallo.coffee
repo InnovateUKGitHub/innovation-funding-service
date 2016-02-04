@@ -174,13 +174,12 @@ http://hallojs.org
         element.removeAttr 'href'
 
       @element.attr "contentEditable", true
-
       unless jQuery.parseHTML(@element.html())
         @element.html this.options.placeholder
         jQuery(@element).addClass 'inPlaceholderMode'
-        @element.css
-          'min-width': @element.innerWidth()
-          'min-height': @element.innerHeight()
+        # @element.css
+        #   'min-width': @element.innerWidth()
+        #   'min-height': @element.innerHeight()
 
       unless @bound
         @element.on "focus", this, @_activated
