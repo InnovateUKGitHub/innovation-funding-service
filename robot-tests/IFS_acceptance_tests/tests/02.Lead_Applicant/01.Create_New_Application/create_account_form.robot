@@ -2,8 +2,8 @@
 Documentation     -INFUND-885: As an applicant I want to be able to submit a username (email address) and password combination to create a new profile so I can log into the system
 ...
 ...               -INFUND-886:As an applicant I want the system to recognise an existing user profile if I try to create a new account with matching details so that I am prevented from creating a new duplicate profile
-Suite Setup        The guest user opens the browser
-Suite Teardown     TestTeardown User closes the browser
+Suite Setup       The guest user opens the browser
+Suite Teardown    TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -146,7 +146,6 @@ Password is too long
 Valid account creation
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    # tagged as pending due to bug INFUND-1496.
     Given the user follows the standard path to the account creation page
     When the user inputs a first name
     And the user inputs a last name
@@ -162,7 +161,6 @@ Valid account creation
 Email duplication check
     [Documentation]    INFUND-886
     [Tags]    Account    Validations
-    # tagged as pending due to bug INFUND-1496.
     Given the user follows the standard path to the account creation page
     When the user inputs a first name
     And the user inputs a last name
@@ -176,13 +174,13 @@ Email duplication check
 *** Keywords ***
 the user follows the standard path to the account creation page
     Go To    ${SERVER}/application/create/selected-business/05063042
-    Select Checkbox         id=address-same
-    Select Checkbox         name=useCompanyHouseAddress
-    # Select Radio Button     organisationSize    SMALL
+    Select Checkbox    id=address-same
+    Select Checkbox    name=useCompanyHouseAddress
+    # Select Radio Button    organisationSize    SMALL
     # organisation size has been moved to another page, so have commented this step out
-    Click Button            Save organisation and continue
-    Sleep   1s
-    Page Should Contain     The profile that you are creating will be linked to the following organisation
+    Click Button    Save organisation and continue
+    Sleep    1s
+    Page Should Contain    The profile that you are creating will be linked to the following organisation
 
 the user inputs a first name
     Input Text    id=firstName    John
@@ -290,11 +288,10 @@ the user can login with their new details
     Input Text    id=id_email    ${valid_email}
     Input Password    id=id_password    ${correct_password}
     Submit Form
-    Page Should Not Contain     something has gone wrong
+    Page Should Not Contain    something has gone wrong
 
 the user can logout
     logout as user
-
 
 the user should see an error for the email duplication
     Page Should Contain    We were unable to create your account

@@ -135,7 +135,7 @@ public class AssessmentController extends AbstractApplicationController {
         RestResult<Void> result = responseService.saveQuestionResponseAssessorFeedback(userId, responseId, feedbackValueParam, feedbackTextParam);
 
         // TODO DW - INFUND-854 - develop a handler in the web layer for RestResults
-        return result.mapLeftOrRight(
+        return result.handleSuccessOrFailure(
             failure -> new ResponseEntity<>(BAD_REQUEST),
             success -> new ResponseEntity<>(OK)
         );

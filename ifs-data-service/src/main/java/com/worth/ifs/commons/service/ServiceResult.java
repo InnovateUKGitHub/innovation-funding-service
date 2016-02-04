@@ -21,7 +21,7 @@ import static java.util.Collections.singletonList;
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a ServiceFailure, and a
  * success will result in a T.  Additionally, these can be mapped to produce new ServiceResults that either fail or succeed.
  */
-public class ServiceResult<T> {
+public class ServiceResult<T> implements FailingOrSucceedingResult<T, ServiceFailure> {
 
     private static final Log LOG = LogFactory.getLog(ServiceResult.class);
 
@@ -47,7 +47,12 @@ public class ServiceResult<T> {
         return mapLeftOrRight(failureHandler, successHandler);
     }
 
-    public <R> ServiceResult<R> andOnSuccess(Function<? super T, ServiceResult<R>> successHandler) {
+    @Override
+    public <R> R handleSuccessOrFailure(Function<? super ServiceFailure, ? extends R> failureHandler, Function<? super T, ? extends R> successHandler) {
+        return mapLeftOrRight(failureHandler, successHandler);
+    }
+
+    public <R> ServiceResult<R> andOnSuccess(Function<? super T, FailingOrSucceedingResult<R, ServiceFailure>> successHandler) {
         return map(successHandler);
     }
 
@@ -71,13 +76,18 @@ public class ServiceResult<T> {
         return result.mapLeftOrRight(lFunc, rFunc);
     }
 
-    private <R> ServiceResult<R> map(Function<? super T, ServiceResult<R>> rFunc) {
+    private <R> ServiceResult<R> map(Function<? super T, FailingOrSucceedingResult<R, ServiceFailure>> rFunc) {
 
         if (result.isLeft()) {
             return serviceFailure(result.getLeft());
         }
 
-        return rFunc.apply(result.getRight());
+        FailingOrSucceedingResult<R, ServiceFailure> successResult = rFunc.apply(result.getRight());
+
+        return successResult.handleSuccessOrFailure(
+                failure -> ServiceResult.<R> serviceFailure(failure),
+                success -> ServiceResult.<R> serviceSuccess(success)
+        );
     }
 
     private boolean isLeft() {
