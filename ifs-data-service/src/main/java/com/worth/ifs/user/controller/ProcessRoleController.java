@@ -1,11 +1,10 @@
 package com.worth.ifs.user.controller;
 
-import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.RestResultBuilder;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.transactional.UsersRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +30,7 @@ public class ProcessRoleController {
     private UsersRolesService usersRolesService;
 
     @Autowired
-    private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
-    ApplicationMapper applicationMapper;
+    private ApplicationService applicationService;
 
     @RequestMapping("/{id}")
     public RestResult<ProcessRole> findOne(@PathVariable("id") final Long id) {
@@ -70,11 +66,8 @@ public class ProcessRoleController {
     }
 
     @RequestMapping("{id}/application")
-    public ApplicationResource findByProcessRole(@PathVariable("id") final Long id){
-        ProcessRole processRole = processRoleRepository.findOne(id);
-        if (processRole != null && processRole.getApplication() != null){
-               return applicationMapper.mapApplicationToResource(processRole.getApplication());
-        }
-        return null;
+    public RestResult<ApplicationResource> findByProcessRole(@PathVariable("id") final Long id){
+
+        return newRestHandler(ApplicationResource.class).perform(() -> applicationService.findByProcessRole(id));
     }
 }
