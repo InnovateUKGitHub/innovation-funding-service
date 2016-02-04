@@ -110,14 +110,13 @@ public class Invite {
         this.status = status;
     }
 
-    public boolean generateHash() {
+    public String generateHash() {
         if(StringUtils.isEmpty(hash)){
             StandardPasswordEncoder encoder = new StandardPasswordEncoder(HASH_SALT);
             int random = (int) Math.ceil(Math.random() * 100); // random number from 1 to 100
             hash = String.format("%s==%s==%s", id, email, random);
             hash = encoder.encode(hash);
-            return true;
         }
-        return false;
+        return hash;
     }
 }
