@@ -107,7 +107,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private String getInviteUrl(String baseUrl, Invite invite) {
-        return String.format("%s/accept-invite/%s/%s", baseUrl, invite.getApplication().getId(), invite.getHash());
+        return String.format("%s/accept-invite/%s/%s", baseUrl, invite.getApplication().getCompetition().getId(), invite.getHash());
     }
 
     @Override

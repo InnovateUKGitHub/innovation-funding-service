@@ -18,13 +18,13 @@
 
         <div class="grid-row">
             <div class="column-third">
-                <p><span class="heading-medium">6</span> Completed</p>
+                <p><span class="heading-medium">6</span> Submitted</p>
             </div>
             <div class="column-third">
-                <p><span class="heading-medium">6</span> In progress</p>
+                <p><span class="heading-medium">6</span> In progress <small>(50% completed)</small></p>
             </div>
             <div class="column-third">
-                <p><span class="heading-medium">24</span> Started</p>
+                <p><span class="heading-medium">24</span> Open</p>
             </div>
         </div>
     </section>
@@ -108,6 +108,26 @@
                         </select>
                     </div>
 
+                    <div th:if="${filterTitle == 'assessors'}" th:remove="tag">
+                        <div class="column-third">
+                            <label class="form-label" for="filterType">Type</label>
+                            <select class="form-control" id="filterType" name="filterType">
+                                
+                                <option th:if="${param.filterType != null}" th:remove="tag">
+                                    <option th:text="${param.filterType[0]}" selected="selected">TEST</option>
+                                </option>
+                                
+                                <option th:if="${param.filterType == null}" th:remove="tag">
+                                    <option selected="selected">---</option>
+                                </option>
+
+                                <option value="Industry">Industry</option>
+                                <option value="Academic">Academic</option>
+
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="column-third">
                         <label class="form-label" for="filterSearch">Search</label>
                         <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
@@ -117,7 +137,7 @@
                         <input type="hidden" id="title" name="title" th:value="${param.title[0]}" />
                     </div>
 
-                    <div class="column-third alignright">
+                    <div class="column-one alignright-button">
                         <button class="button">Filter</button>
                     </div>
                 </div>
