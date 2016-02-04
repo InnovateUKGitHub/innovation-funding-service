@@ -1,11 +1,13 @@
 package com.worth.ifs.workflow.resource;
 
+import com.worth.ifs.workflow.domain.Process;
+
 public class ProcessOutcomeResource {
     private Long id;
     private String outcome;
     private String description;
     private String comment;
-    private Long process;
+    private Process process;
 
     public Long getId() {
         return this.id;
@@ -39,11 +41,11 @@ public class ProcessOutcomeResource {
         this.comment = comment;
     }
 
-    public Long getProcess() {
+    public Process getProcess() {
         return this.process;
     }
 
-    public void setProcess(Long process) {
+    public void setProcess(Process process) {
         this.process = process;
     }
 }
