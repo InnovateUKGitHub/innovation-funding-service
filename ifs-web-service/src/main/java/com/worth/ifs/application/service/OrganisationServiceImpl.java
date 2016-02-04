@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * through the RestService {@link com.worth.ifs.user.service.OrganisationRestService}.
  */
 @Service
-public class OrganisationServiceImpl  implements OrganisationService {
+public class OrganisationServiceImpl implements OrganisationService {
     @Autowired
     OrganisationRestService organisationRestService;
 
@@ -37,7 +37,7 @@ public class OrganisationServiceImpl  implements OrganisationService {
 
     public TreeSet<Organisation> getApplicationOrganisations(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
+            .map(processRoleService::getById)
             .collect(Collectors.toList());
 
         Comparator<Organisation> compareById =
@@ -52,7 +52,7 @@ public class OrganisationServiceImpl  implements OrganisationService {
 
     public Optional<Organisation> getApplicationLeadOrganisation(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
+            .map(processRoleService::getById)
             .collect(Collectors.toList());
 
         return userApplicationRoles.stream()
@@ -63,7 +63,7 @@ public class OrganisationServiceImpl  implements OrganisationService {
 
     public Optional<Organisation> getUserOrganisation(ApplicationResource application, Long userId) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
+            .map(processRoleService::getById)
             .collect(Collectors.toList());
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().getId().equals(userId))
