@@ -1,13 +1,13 @@
 package com.worth.ifs.finance.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.resource.CostFieldResource;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import static com.worth.ifs.finance.builder.CostFieldBuilder.newCostField;
+import static com.worth.ifs.finance.builder.CostFieldResourceBuilder.newCostFieldResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -32,12 +32,12 @@ public class CostFieldRestServiceMocksTest extends BaseRestServiceUnitTest<CostF
     public void test_getCostFields() {
 
         String expectedUrl = dataServicesUrl + costFieldRestURL + "/findAll/";
-        CostField[] returnedResponse = newCostField().buildArray(3, CostField.class);
-        ResponseEntity<CostField[]> returnedEntity = new ResponseEntity<>(returnedResponse, OK);
+        CostFieldResource[] returnedResponse = newCostFieldResource().buildArray(3, CostFieldResource.class);
+        ResponseEntity<CostFieldResource[]> returnedEntity = new ResponseEntity<>(returnedResponse, OK);
 
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), CostField[].class)).thenReturn(returnedEntity);
+        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), CostFieldResource[].class)).thenReturn(returnedEntity);
 
-        List<CostField> costFields = service.getCostFields();
+        List<CostFieldResource> costFields = service.getCostFields();
         assertNotNull(costFields);
         assertEquals(returnedResponse[0], costFields.get(0));
         assertEquals(returnedResponse[1], costFields.get(1));

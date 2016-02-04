@@ -13,6 +13,9 @@ public class ProcessOutcome {
     private String outcome;
     private String description;
     private String comment;
+    @ManyToOne
+    @JoinColumn(name="processId", referencedColumnName="id")
+    private Process process;
 
     public ProcessOutcome() {
     }
@@ -22,10 +25,6 @@ public class ProcessOutcome {
         this.description = description;
         this.comment = comment;
     }
-
-    @ManyToOne
-    @JoinColumn(name="processId", referencedColumnName="id")
-    private Process process;
 
     @JsonIgnore
     public Process getProcess() {
@@ -73,5 +72,9 @@ public class ProcessOutcome {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

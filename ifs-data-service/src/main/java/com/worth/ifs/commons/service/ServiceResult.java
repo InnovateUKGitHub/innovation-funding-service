@@ -85,8 +85,8 @@ public class ServiceResult<T> implements FailingOrSucceedingResult<T, ServiceFai
         FailingOrSucceedingResult<R, ServiceFailure> successResult = rFunc.apply(result.getRight());
 
         return successResult.handleSuccessOrFailure(
-                failure -> serviceFailure(failure),
-                success -> serviceSuccess(success)
+                failure -> ServiceResult.<R> serviceFailure(failure),
+                success -> ServiceResult.<R> serviceSuccess(success)
         );
     }
 
