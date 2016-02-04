@@ -27,6 +27,12 @@ subprojects {
         }
     }
 
+    task codeCoverage {
+        dependsOn cleanTest
+        dependsOn test
+        dependsOn jacocoTestReport
+    }
+
     dependencies {
         compile "org.springframework.boot:spring-boot-starter-web"
         compile "com.fasterxml.jackson.core:jackson-databind"

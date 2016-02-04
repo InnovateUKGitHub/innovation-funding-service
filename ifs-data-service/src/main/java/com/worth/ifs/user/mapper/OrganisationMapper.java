@@ -45,6 +45,9 @@ public abstract class OrganisationMapper {
     }
 
     public Organisation mapIdToOrganisation(Long id) {
-        return repository.findOne(id);
+        if (id != null){
+            return repository.findOne(id);
+        }
+        return null;
     }
 }
