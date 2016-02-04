@@ -28,7 +28,7 @@ import static org.springframework.http.HttpStatus.OK;
 /**
  *
  */
-public class CustomRestResultHandlingHttpMessageConverterIntegrationTest extends BaseWebIntegrationTest {
+public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseWebIntegrationTest {
 
     @Value("${ifs.data.service.rest.baseURL}")
     private String dataUrl;

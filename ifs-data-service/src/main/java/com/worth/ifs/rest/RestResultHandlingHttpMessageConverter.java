@@ -49,7 +49,7 @@ public class RestResultHandlingHttpMessageConverter extends MappingJackson2HttpM
         } else {
 
             if (!restResult.isBodiless()) {
-                super.writeInternal(restResult.getSuccess().getResult(), type, outputMessage);
+                super.writeInternal(restResult.getSuccessObject(), type, outputMessage);
             }
         }
     }

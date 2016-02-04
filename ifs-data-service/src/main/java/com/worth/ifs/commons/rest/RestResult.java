@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.rest;
 
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.util.Either;
 import org.springframework.http.HttpStatus;
 
@@ -10,12 +11,13 @@ import java.util.function.Function;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Collections.singletonList;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Represents the result of a Rest Controller action, that will be either a failure or a success.  A failure will result in a RestFailure, and a
  * success will result in a T.  Additionally, these can be mapped to produce new RestResults that either fail or succeed.
  */
-public class RestResult<T> {
+public class RestResult<T> implements FailingOrSucceedingResult<T, RestFailure> {
 
     private Either<RestFailure, RestSuccess<T>> result;
     private boolean bodiless = false;
@@ -37,12 +39,12 @@ public class RestResult<T> {
         this.result = result;
     }
 
-    public <T1> T1 handleSuccessOrFailure(Function<? super RestFailure, ? extends T1> failureHandler, Function<? super RestSuccess<T>, ? extends T1> successHandler) {
+    public <T1> T1 handleSuccessOrFailure(Function<? super RestFailure, ? extends T1> failureHandler, Function<? super T, ? extends T1> successHandler) {
         return mapLeftOrRight(failureHandler, successHandler);
     }
 
-    public <R> RestResult<R> andOnSuccess(Function<? super RestSuccess<T>, RestResult<R>> rFunc) {
-        return map(rFunc);
+    public <R> RestResult<R> andOnSuccess(Function<? super T, FailingOrSucceedingResult<R, RestFailure>> successHandler) {
+        return map(successHandler);
     }
 
     public boolean isFailure() {
@@ -57,25 +59,30 @@ public class RestResult<T> {
         return getLeft();
     }
 
-    public RestSuccess<T> getSuccess() {
-        return getRight();
+    public T getSuccessObject() {
+        return getRight().getResult();
     }
 
     public HttpStatus getStatusCode() {
-        return handleSuccessOrFailure(RestFailure::getStatusCode, RestSuccess::getStatusCode);
+        return isLeft() ? result.getLeft().getStatusCode() : result.getRight().getStatusCode();
     }
 
-    private <T1> T1 mapLeftOrRight(Function<? super RestFailure, ? extends T1> lFunc, Function<? super RestSuccess<T>, ? extends T1> rFunc) {
-        return result.mapLeftOrRight(lFunc, rFunc);
+    private <T1> T1 mapLeftOrRight(Function<? super RestFailure, ? extends T1> lFunc, Function<? super T, ? extends T1> rFunc) {
+        return result.mapLeftOrRight(lFunc, restSuccess -> rFunc.apply(restSuccess.getResult()));
     }
 
-    private <R> RestResult<R> map(Function<? super RestSuccess<T>, RestResult<R>> rFunc) {
+    private <R> RestResult<R> map(Function<? super T, FailingOrSucceedingResult<R, RestFailure>> rFunc) {
 
         if (result.isLeft()) {
             return restFailure(result.getLeft());
         }
 
-        return rFunc.apply(result.getRight());
+        FailingOrSucceedingResult<R, RestFailure> successResult = rFunc.apply(result.getRight().getResult());
+
+        return successResult.handleSuccessOrFailure(
+                failure -> restFailure(failure),
+                success -> restSuccess(success, success instanceof RestResult ? ((RestResult) success).getStatusCode() : OK)
+        );
     }
 
     private boolean isLeft() {
@@ -105,7 +112,7 @@ public class RestResult<T> {
     }
 
     private RestResult<Void> bodiless() {
-        RestResult<Void> result = handleSuccessOrFailure((Function<RestFailure, RestResult<Void>>) RestResult::new, success -> new RestResult<>(new RestSuccess(null, getStatusCode())));
+        RestResult<Void> result = handleSuccessOrFailure((Function<RestFailure, RestResult<Void>>) RestResult::new, success -> new RestResult<>(new RestSuccess<>(null, getStatusCode())));
         result.bodiless = true;
         return result;
     }

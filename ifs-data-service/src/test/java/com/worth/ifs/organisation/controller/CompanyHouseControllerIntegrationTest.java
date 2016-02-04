@@ -25,14 +25,14 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
     public void testSearchCompanyHouseName() throws Exception {
         RestResult<List<CompanyHouseBusiness>> companies = controller.searchCompanyHouse("Batman Robin");
         assertTrue(companies.isSuccess());
-        assertEquals(1, companies.getSuccess().getResult().size());
+        assertEquals(1, companies.getSuccessObject().size());
     }
     @Test
     public void testSearchCompanyHouseNumber() throws Exception {
         RestResult<List<CompanyHouseBusiness>> companies = controller.searchCompanyHouse(COMPANY_ID);
         assertTrue(companies.isSuccess());
-        assertEquals(1, companies.getSuccess().getResult().size());
-        CompanyHouseBusiness company = companies.getSuccess().getResult().get(0);
+        assertEquals(1, companies.getSuccessObject().size());
+        CompanyHouseBusiness company = companies.getSuccessObject().get(0);
 
         assertNotNull(company);
         assertEquals(COMPANY_NAME, company.getName());
@@ -49,7 +49,7 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
     public void testGetCompanyHouse() throws Exception {
         RestResult<CompanyHouseBusiness> companyResult = controller.getCompanyHouse(COMPANY_ID);
         assertTrue(companyResult.isSuccess());
-        CompanyHouseBusiness company = companyResult.getSuccess().getResult();
+        CompanyHouseBusiness company = companyResult.getSuccessObject();
 
         assertNotNull(company);
         assertEquals(COMPANY_NAME, company.getName());
