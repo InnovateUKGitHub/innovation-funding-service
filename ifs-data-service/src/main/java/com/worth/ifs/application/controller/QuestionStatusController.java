@@ -7,9 +7,9 @@ import com.worth.ifs.application.resource.QuestionStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -39,9 +39,9 @@ public class QuestionStatusController {
         return simpleMap(questionStatuses, questionStatusMapper :: mapQuestionStatusToPopulatedResource);
     }
 
-    @RequestMapping(value = "/findByQuestionIdsAndApplicationIdAndOrganisationId/{applicationId}/{organisationId}", params = "questionIds")
-    private List<QuestionStatusResource> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(@RequestParam List<Long> questionIds, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
-        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdIsInAndApplicationIdAndAssigneeOrganisationId(questionIds, applicationId, organisationId);
+    @RequestMapping(value = "/findByQuestionIdsAndApplicationIdAndOrganisationId/{questionIds}/{applicationId}/{organisationId}")
+    private List<QuestionStatusResource> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(@PathVariable Long[] questionIds, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdIsInAndApplicationIdAndAssigneeOrganisationId(Arrays.asList(questionIds), applicationId, organisationId);
         return simpleMap(questionStatuses, questionStatusMapper :: mapQuestionStatusToPopulatedResource);
     }
 

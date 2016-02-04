@@ -1,5 +1,6 @@
 package com.worth.ifs.application.service;
 
+import com.google.common.base.Joiner;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.service.BaseRestService;
@@ -8,8 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -45,8 +44,7 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
 
   @Override
   public List<QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId) {
-    Map<String, String> urlVariables = questionIds.stream().collect(Collectors.toMap((q) -> "questionId", (q) -> q.toString()));
-    return Arrays.asList(restGet(questionStatusRestURL + "/findByQuestionIdsAndApplicationIdAndOrganisationId/" + applicationId + "/" + organisationId, QuestionStatusResource[].class, urlVariables));
+    return Arrays.asList(restGet(questionStatusRestURL + "/findByQuestionIdsAndApplicationIdAndOrganisationId/" + Joiner.on(",").join(questionIds) + "/" + applicationId + "/" + organisationId, QuestionStatusResource[].class));
   }
 
   public List<QuestionStatus> getByIds(List<Long> ids){
