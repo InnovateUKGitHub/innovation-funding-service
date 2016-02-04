@@ -8,7 +8,6 @@ import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
-import com.worth.ifs.transactional.ServiceLocator;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -50,18 +49,13 @@ public class FormInputResponseController {
     @Autowired
     FormInputRepository formInputRepository;
 
-
-    @Autowired
-    ServiceLocator serviceLocator;
-
     QuestionController questionController = new QuestionController();
 
     private final Log log = LogFactory.getLog(getClass());
 
     @RequestMapping("/findResponsesByApplication/{applicationId}")
     public List<FormInputResponse> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
-        List<FormInputResponse> responses = formInputResponseRepository.findByApplicationId(applicationId);
-        return responses;
+        return formInputResponseRepository.findByApplicationId(applicationId);
     }
 
     private FormInputResponse getOrCreateResponse(Long applicationId, Long userId, Long formInputId) {

@@ -1,11 +1,12 @@
 package com.worth.ifs.file.transactional;
 
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.repository.FileEntryRepository;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.transactional.ServiceResult;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,9 +22,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
-import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.transactional.ServiceFailureKeys.*;
+import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
 import static com.worth.ifs.util.FileFunctions.pathElementsToPath;
@@ -37,17 +38,6 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     private static final Log log = LogFactory.getLog(FileServiceImpl.class);
 
-    public enum ServiceFailures {
-        UNABLE_TO_CREATE_FOLDERS, //
-        UNABLE_TO_CREATE_FILE, //
-        UNABLE_TO_UPDATE_FILE, //
-        UNABLE_TO_DELETE_FILE, //
-        DUPLICATE_FILE_CREATED, //
-        UNABLE_TO_FIND_FILE, //
-        INCORRECTLY_REPORTED_MEDIA_TYPE, //
-        INCORRECTLY_REPORTED_FILESIZE, //
-    }
-
     @Autowired
     private FileStorageStrategy fileStorageStrategy;
 
@@ -57,7 +47,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     @Override
     public ServiceResult<Pair<File, FileEntry>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
 
-        return handlingErrors(UNABLE_TO_CREATE_FILE, () ->
+        return handlingErrors(new Error(FILES_UNABLE_TO_CREATE_FILE), () ->
 
             createTemporaryFileForValidation(inputStreamSupplier).map(validationFile -> {
                 try {
@@ -65,7 +55,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                            validateContentLength(resource.getFilesizeBytes(), tempFile)).map(tempFile ->
                            saveFileEntry(resource).map(savedFileEntry ->
                            createFileForFileEntry(savedFileEntry, tempFile)).map(
-                           BaseTransactionalService::successResponse)
+                           ServiceResult::serviceSuccess)
                     );
                 } finally {
                     deleteFile(validationFile);
@@ -76,18 +66,18 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     @Override
     public ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
-        return handlingErrors(UNABLE_TO_FIND_FILE, () ->
+        return handlingErrors(notFoundError(FileEntry.class, fileEntryId), () ->
                 findFileEntry(fileEntryId).
                 map(this::findFile).
                 map(this::getInputStreamSuppier).
-                map(BaseTransactionalService::successResponse)
+                map(ServiceResult::serviceSuccess)
         );
     }
 
     @Override
     public ServiceResult<Pair<File, FileEntry>> updateFile(FileEntryResource updatedFile, Supplier<InputStream> inputStreamSupplier) {
 
-        return handlingErrors(UNABLE_TO_UPDATE_FILE, () ->
+        return handlingErrors(new Error(FILES_UNABLE_TO_UPDATE_FILE, FileEntry.class, updatedFile.getId()), () ->
 
                 createTemporaryFileForValidation(inputStreamSupplier).map(validationFile -> {
                     try {
@@ -95,7 +85,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                                validateContentLength(updatedFile.getFilesizeBytes(), tempFile)).map(tempFile ->
                                updateFileEntry(updatedFile).map(updatedFileEntry ->
                                updateFileForFileEntry(updatedFileEntry, tempFile).map(
-                               BaseTransactionalService::successResponse
+                               ServiceResult::serviceSuccess
                         )));
                     } finally {
                         deleteFile(validationFile);
@@ -107,7 +97,8 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     @Override
     public ServiceResult<FileEntry> deleteFile(long fileEntryId) {
 
-        return handlingErrors(UNABLE_TO_DELETE_FILE, () ->
+        return handlingErrors(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, fileEntryId), () ->
+
             findFileEntry(fileEntryId).
             map(fileEntry -> findFile(fileEntry).
             map(file -> {
@@ -117,16 +108,16 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                 boolean fileDeletedSuccessfully = file.delete();
 
                 if (fileDeletedSuccessfully) {
-                    return successResponse(fileEntry);
+                    return serviceSuccess(fileEntry);
                 } else {
-                    return failureResponse(UNABLE_TO_DELETE_FILE);
+                    return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, fileEntryId));
                 }
             })));
     }
 
     private ServiceResult<FileEntry> updateFileEntry(FileEntryResource updatedFileDetails) {
         FileEntry updated = fileEntryRepository.save(FileEntryResourceAssembler.valueOf(updatedFileDetails));
-        return success(updated);
+        return serviceSuccess(updated);
     }
 
     private ServiceResult<Pair<File, FileEntry>> updateFileForFileEntry(FileEntry existingFileEntry, File tempFile) {
@@ -135,12 +126,12 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
 
-        return updateFileForFileEntry(pathElements, filename, tempFile).map(file -> success(Pair.of(file, existingFileEntry)));
+        return updateFileForFileEntry(pathElements, filename, tempFile).map(file -> serviceSuccess(Pair.of(file, existingFileEntry)));
     }
 
     private ServiceResult<File> createTemporaryFileForValidation(Supplier<InputStream> inputStreamSupplier) {
 
-        return createTemporaryFile("filevalidation", UNABLE_TO_CREATE_FILE).
+        return createTemporaryFile("filevalidation", new Error(FILES_UNABLE_TO_CREATE_FILE)).
                 map(tempFile -> updateFileWithContents(tempFile, inputStreamSupplier)).
                 map(this::pathToFile);
     }
@@ -148,10 +139,10 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     private ServiceResult<File> validateContentLength(long filesizeBytes, File tempFile) {
 
         if (tempFile.length() == filesizeBytes) {
-            return success(tempFile);
+            return serviceSuccess(tempFile);
         } else {
             log.error("Reported filesize was " + filesizeBytes + " bytes but actual file is " + tempFile.length() + " bytes");
-            return failureResponse(INCORRECTLY_REPORTED_FILESIZE);
+            return serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_FILESIZE, tempFile.length()));
         }
     }
 
@@ -161,31 +152,31 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             detectedContentType = Files.probeContentType(file.toPath());
         } catch (IOException e) {
             log.error("Unable to probe file for Content Type", e);
-            return failureResponse(INCORRECTLY_REPORTED_MEDIA_TYPE);
+            return serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE));
         }
 
         if (detectedContentType == null) {
             log.warn("Content Type of file " + file + " could not be determined - returning as valid because not explicitly detectable");
-            return success(file);
+            return serviceSuccess(file);
         } else if (mediaType.toString().equals(detectedContentType)) {
-            return success(file);
+            return serviceSuccess(file);
         } else {
             log.warn("Content Type of file has been detected as " + detectedContentType + " but was reported as being " + mediaType);
-            return failureResponse(INCORRECTLY_REPORTED_MEDIA_TYPE);
+            return serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE, detectedContentType));
         }
     }
 
-    private ServiceResult<Path> createTemporaryFile(String prefix, Enum<?> errorMessage) {
+    private ServiceResult<Path> createTemporaryFile(String prefix, Error errorMessage) {
         try {
-            return success(Files.createTempFile(prefix, ""));
+            return serviceSuccess(Files.createTempFile(prefix, ""));
         } catch (IOException e) {
             log.error("Error creating temporary file for " + prefix, e);
-            return failureResponse(errorMessage);
+            return serviceFailure(errorMessage);
         }
     }
 
     private ServiceResult<Supplier<InputStream>> getInputStreamSuppier(File file) {
-        return success(() -> {
+        return serviceSuccess(() -> {
             try {
                 return new FileInputStream(file);
             } catch (FileNotFoundException e) {
@@ -200,16 +191,16 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         Pair<List<String>, String> absoluteFilePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
-        return createFileForFileEntry(pathElements, filename, tempFile).map(file -> success(Pair.of(file, savedFileEntry)));
+        return createFileForFileEntry(pathElements, filename, tempFile).map(file -> serviceSuccess(Pair.of(file, savedFileEntry)));
     }
 
     private ServiceResult<FileEntry> saveFileEntry(FileEntryResource resource) {
         FileEntry fileEntry = FileEntryResourceAssembler.valueOf(resource);
-        return success(fileEntryRepository.save(fileEntry));
+        return serviceSuccess(fileEntryRepository.save(fileEntry));
     }
 
     private ServiceResult<FileEntry> findFileEntry(Long fileEntryId) {
-        return getOrFail(() -> fileEntryRepository.findOne(fileEntryId), UNABLE_TO_FIND_FILE);
+        return getOrFail(() -> fileEntryRepository.findOne(fileEntryId), notFoundError(FileEntry.class, fileEntryId));
     }
 
     private ServiceResult<File> findFile(FileEntry fileEntry) {
@@ -222,7 +213,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             File expectedFile = new File(pathElementsToFile(pathElements), filename);
             return expectedFile.exists() ? expectedFile : null;
 
-        }, UNABLE_TO_FIND_FILE);
+        }, notFoundError(FileEntry.class, fileEntry.getId()));
     }
 
     private ServiceResult<File> createFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
@@ -245,14 +236,14 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
             if (fileToCreate.exists()) {
                 log.error("File " + targetFilename + " already existed in target path " + targetFolder + ".  Cannot create a new one here.");
-                return failureResponse(DUPLICATE_FILE_CREATED);
+                return serviceFailure(new Error(FILES_DUPLICATE_FILE_CREATED));
             }
 
             Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename));
-            return success(targetFile.toFile());
+            return serviceSuccess(targetFile.toFile());
         } catch (IOException e) {
             log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
-            return failureResponse(UNABLE_TO_CREATE_FILE);
+            return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
         }
     }
 
@@ -262,28 +253,28 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
             if (!fileToCreate.exists()) {
                 log.error("File " + targetFilename + " doesn't exist in target path " + targetFolder + ".  Cannot update one here.");
-                return failureResponse(UNABLE_TO_FIND_FILE);
+                return serviceFailure(notFoundError(File.class));
             }
 
             Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename), StandardCopyOption.REPLACE_EXISTING);
-            return success(targetFile.toFile());
+            return serviceSuccess(targetFile.toFile());
         } catch (IOException e) {
             log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
-            return failureResponse(UNABLE_TO_UPDATE_FILE);
+            return serviceFailure(new Error(FILES_UNABLE_TO_UPDATE_FILE));
         }
     }
 
     private ServiceResult<Path> createFolders(Path path) {
         try {
-            return success(Files.createDirectories(path));
+            return serviceSuccess(Files.createDirectories(path));
         } catch (IOException e) {
             log.error("Error creating folders " + path, e);
-            return failureResponse(UNABLE_TO_CREATE_FOLDERS, e);
+            return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FOLDERS));
         }
     }
 
     private ServiceResult<File> pathToFile(Path path) {
-        return success(path.toFile());
+        return serviceSuccess(path.toFile());
     }
 
     private ServiceResult<Path> updateFileWithContents(Path file, Supplier<InputStream> inputStreamSupplier) {
@@ -292,15 +283,15 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             try (InputStream sourceInputStream = inputStreamSupplier.get()) {
                 try {
                     Files.copy(sourceInputStream, file, StandardCopyOption.REPLACE_EXISTING);
-                    return success(file);
+                    return serviceSuccess(file);
                 } catch (IOException e) {
                     log.error("Could not write data to file " + file, e);
-                    return failureResponse(UNABLE_TO_CREATE_FILE, e);
+                    return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
                 }
             }
         } catch (IOException e) {
             log.error("Error closing file stream for file " + file, e);
-            return failureResponse(UNABLE_TO_CREATE_FILE, e);
+            return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
         }
     }
 

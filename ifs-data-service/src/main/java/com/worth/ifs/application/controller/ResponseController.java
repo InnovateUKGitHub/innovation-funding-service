@@ -8,34 +8,29 @@ import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.application.transactional.ResponseService;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.transactional.AssessorService;
-import com.worth.ifs.commons.controller.ServiceFailureToJsonResponseHandler;
-import com.worth.ifs.commons.controller.SimpleServiceFailureToJsonResponseHandler;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.RestResultBuilder;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.CustomPermissionEvaluator;
-import com.worth.ifs.transactional.ServiceLocator;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
-import com.worth.ifs.util.JsonStatusResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.commons.controller.ControllerErrorHandlingUtil.handleServiceFailure;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.rest.RestResultBuilder.newRestResultHandler;
+import static com.worth.ifs.commons.rest.RestSuccesses.okRestSuccess;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
-import static com.worth.ifs.util.EntityLookupCallbacks.withProcessRoleReturnJsonResponse;
-import static com.worth.ifs.util.JsonStatusResponse.internalServerError;
-import static com.worth.ifs.util.JsonStatusResponse.notFound;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
+import static com.worth.ifs.util.CollectionFunctions.onlyElement;
+import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -44,12 +39,8 @@ import static java.util.Collections.singletonList;
 @RequestMapping("/response")
 public class ResponseController {
 
-    private List<ServiceFailureToJsonResponseHandler> serviceFailureHandlers = asList(
-
-        new SimpleServiceFailureToJsonResponseHandler(singletonList(ROLE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find file", response)),
-        new SimpleServiceFailureToJsonResponseHandler(singletonList(APPLICATION_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Application", response)),
-        new SimpleServiceFailureToJsonResponseHandler(singletonList(PROCESS_ROLE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Process Role", response))
-    );
+    private static final Error processRoleNotFoundError = notFoundError(ProcessRole.class, ASSESSOR.getName());
+    private static final Error assessorRoleNotFoundError = notFoundError(Role.class, ASSESSOR.getName());
 
     @Autowired
     ApplicationRepository applicationRepository;
@@ -78,12 +69,7 @@ public class ResponseController {
     @Autowired
     ResponseService responseService;
 
-    @Autowired
-    ServiceLocator serviceLocator;
-
     QuestionController questionController = new QuestionController();
-
-    private final Log log = LogFactory.getLog(getClass());
 
     @RequestMapping("/findResponsesByApplication/{applicationId}")
     public List<Response> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
@@ -91,33 +77,37 @@ public class ResponseController {
     }
 
     @RequestMapping(value = "/saveQuestionResponse/{responseId}/assessorFeedback", params="assessorUserId", method = RequestMethod.PUT, produces = "application/json")
-    public @ResponseBody JsonStatusResponse saveQuestionResponseAssessorScore(@PathVariable("responseId") Long responseId,
-                                                    @RequestParam("assessorUserId") Long assessorUserId,
-                                                    @RequestParam("feedbackValue") Optional<String> feedbackValue,
-                                                    @RequestParam("feedbackText") Optional<String> feedbackText,
-                                                    HttpServletResponse httpResponse) {
+    public RestResult<Void> saveQuestionResponseAssessorScore(@PathVariable("responseId") Long responseId,
+                                                              @RequestParam("assessorUserId") Long assessorUserId,
+                                                              @RequestParam("feedbackValue") Optional<String> feedbackValue,
+                                                              @RequestParam("feedbackText") Optional<String> feedbackText) {
 
-        Response response = responseRepository.findOne(responseId);
+        RestResultBuilder<Feedback, Void> handler = newRestResultHandler();
+        return handler.
+                andOnSuccess(okRestSuccess()).
+                perform(() -> {
 
-        Application application = response.getApplication();
+            Response response = responseRepository.findOne(responseId);
+            Application application = response.getApplication();
 
-        ServiceResult<JsonStatusResponse> result =
-                withProcessRoleReturnJsonResponse(assessorUserId, ASSESSOR, application.getId(), serviceLocator, assessorProcessRole -> {
+            return getOrFail(() -> roleRepository.findByName(ASSESSOR.getName()), assessorRoleNotFoundError).map(assessorRole ->
+                   getOrFail(() -> processRoleRepository.findByUserIdAndRoleAndApplicationId(assessorUserId, onlyElement(assessorRole), application.getId()), processRoleNotFoundError).map(assessorProcessRole -> {
 
-            assessorService.updateAssessorFeedback(new Feedback().setResponseId(response.getId()).setAssessorProcessRoleId(assessorProcessRole.getId()).setValue(feedbackValue).setText(feedbackText));
-            return success(JsonStatusResponse.ok());
+                       Feedback feedback = new Feedback().setResponseId(response.getId()).
+                               setAssessorProcessRoleId(onlyElement(assessorProcessRole).getId()).
+                               setValue(feedbackValue).
+                               setText(feedbackText);
+                       return assessorService.updateAssessorFeedback(feedback);
+                   }
+            ));
         });
-
-        return result.mapLeftOrRight(
-                failure -> handleServiceFailure(failure, serviceFailureHandlers, httpResponse).orElseGet(() -> internalServerError("Unable to save question response", httpResponse)),
-                success -> success);
     }
 
     @RequestMapping(value= "/assessorFeedback/{responseId}/{assessorProcessRoleId}", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody Feedback getFeedback(@PathVariable("responseId") Long responseId,
                                                @PathVariable("assessorProcessRoleId") Long assessorProcessRoleId){
         ServiceResult<Feedback> feedback = assessorService.getFeedback(new Feedback.Id().setAssessorProcessRoleId(assessorProcessRoleId).setResponseId(responseId));
-        // TODO how do we return a generic envelope to be consumed? failure is currently simply returning null.
+        // TODO DW - how do we return a generic envelope to be consumed? failure is currently simply returning null.
         return feedback.mapLeftOrRight(l -> null, r -> r);
     }
 

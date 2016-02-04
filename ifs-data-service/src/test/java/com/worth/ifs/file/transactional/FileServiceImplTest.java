@@ -2,11 +2,11 @@ package com.worth.ifs.file.transactional;
 
 import com.google.common.io.Files;
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.domain.builders.FileEntryBuilder;
 import com.worth.ifs.file.repository.FileEntryRepository;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.transactional.ServiceResult;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -25,9 +25,10 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
+import static com.worth.ifs.transactional.ServiceFailureKeys.*;
+import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
-import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
 import static com.worth.ifs.util.FileFunctions.pathElementsToPathString;
@@ -201,7 +202,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
             assertTrue(result1.isRight());
             assertTrue(result2.isLeft());
-            assertTrue(result2.getLeft().is(DUPLICATE_FILE_CREATED));
+            assertTrue(result2.getLeft().is(FILES_DUPLICATE_FILE_CREATED));
 
         } finally {
             FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
@@ -216,6 +217,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
                 with(names((i, resource) -> "fileEntry" + i)).
                 withFilesizeBytes(17).
                 build(2);
+
 
         List<FileEntry> persistedFiles = newFileEntry().
                 with(incrementingIds()).
@@ -287,7 +289,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         try {
             ServiceResult<Pair<File, FileEntry>> result = service.createFile(fileResource, fakeInputStreamSupplier());
             assertTrue(result.isLeft());
-            assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FOLDERS));
+            assertTrue(result.getLeft().is(FILES_UNABLE_TO_CREATE_FOLDERS));
         } finally {
             tempFolder.setWritable(true);
         }
@@ -319,7 +321,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         try {
             ServiceResult<Pair<File, FileEntry>> result = service.createFile(fileResource, fakeInputStreamSupplier());
             assertTrue(result.isLeft());
-            assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FILE));
+            assertTrue(result.getLeft().is(FILES_UNABLE_TO_CREATE_FILE));
         } finally {
             targetFolder.setWritable(true);
         }
@@ -334,7 +336,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntryResource file = newFileEntryResource().with(id(null)).withFilesizeBytes(17).build();
         ServiceResult<Pair<File, FileEntry>> result = service.createFile(file, fakeInputStreamSupplier());
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(UNABLE_TO_CREATE_FILE));
+        assertTrue(result.getLeft().is(FILES_UNABLE_TO_CREATE_FILE));
     }
 
     @Test
@@ -407,7 +409,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
             assertNotNull(result);
             assertTrue(result.isLeft());
-            assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+            assertTrue(result.getLeft().is(notFoundError(File.class)));
 
         } finally {
 
@@ -421,23 +423,23 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         int incorrectFilesize = 1234;
 
         FileEntryResource fileResource = newFileEntryResource().
-                with(id(null)).
+                with(id(456L)).
                 withFilesizeBytes(incorrectFilesize).
                 build();
 
-        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(incorrectFilesize);
+        FileEntryBuilder fileBuilder = newFileEntry().with(id(456L)).withFilesizeBytes(incorrectFilesize);
 
-        FileEntry unpersistedFile = fileBuilder.with(id(456L)).build();
-        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
+        FileEntry originalFile = fileBuilder.build();
+        FileEntry persistedFile = fileBuilder.build();
 
         List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
 
-        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
+        when(fileEntryRepository.save(originalFile)).thenReturn(persistedFile);
         when(fileStorageStrategyMock.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
 
         ServiceResult<Pair<File, FileEntry>> result = service.updateFile(fileResource, fakeInputStreamSupplier());
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(INCORRECTLY_REPORTED_FILESIZE));
+        assertTrue(result.getLeft().is(FILES_INCORRECTLY_REPORTED_FILESIZE, 17));
     }
 
     @Test
@@ -464,7 +466,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Pair<File, FileEntry>> result = service.updateFile(fileResource, fakeInputStreamSupplier());
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(INCORRECTLY_REPORTED_MEDIA_TYPE));
+        assertTrue(result.getLeft().is(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE, "text/plain"));
     }
 
     @Test
@@ -521,7 +523,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
             ServiceResult<FileEntry> result = service.deleteFile(456L);
             assertNotNull(result);
             assertTrue(result.isLeft());
-            assertTrue(result.getLeft().is(UNABLE_TO_DELETE_FILE));
+            assertTrue(result.getLeft().is(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, 456L));
 
             assertTrue(existingFileToDelete.exists());
             verify(fileEntryRepository).delete(fileEntryToDelete);
@@ -548,7 +550,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
             ServiceResult<FileEntry> result = service.deleteFile(456L);
             assertNotNull(result);
             assertTrue(result.isLeft());
-            assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+            assertTrue(result.getLeft().is(notFoundError(FileEntry.class, 456L)));
 
         } finally {
 
@@ -564,7 +566,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<FileEntry> result = service.deleteFile(456L);
         assertNotNull(result);
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+        assertTrue(result.getLeft().is(notFoundError(FileEntry.class, 456L)));
     }
 
     @Test
@@ -610,7 +612,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
             ServiceResult<Supplier<InputStream>> result = service.getFileByFileEntryId(123L);
             assertTrue(result.isLeft());
-            assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+            assertTrue(result.getLeft().is(notFoundError(FileEntry.class, 123L)));
 
         } finally {
             pathElementsToFile(fullPathPlusFilename).delete();
@@ -629,7 +631,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Supplier<InputStream>> result = service.getFileByFileEntryId(123L);
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(UNABLE_TO_FIND_FILE));
+        assertTrue(result.getLeft().is(notFoundError(FileEntry.class, 123L)));
     }
 
     @Test
@@ -654,7 +656,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Pair<File, FileEntry>> result = service.createFile(fileResource, fakeInputStreamSupplier());
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(INCORRECTLY_REPORTED_FILESIZE));
+        assertTrue(result.getLeft().is(FILES_INCORRECTLY_REPORTED_FILESIZE, 17));
     }
 
     @Test
@@ -681,7 +683,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Pair<File, FileEntry>> result = service.createFile(fileResource, fakeInputStreamSupplier());
         assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(INCORRECTLY_REPORTED_MEDIA_TYPE));
+        assertTrue(result.getLeft().is(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE, "text/plain"));
     }
 
     private Supplier<InputStream> fakeInputStreamSupplier() {

@@ -131,7 +131,8 @@
 <!-- ===========================Place: main <header>  =========================== -->
 
 <div th:fragment="global-header">
-    <header role="banner" id="global-header" class="">
+    <header role="banner" id="global-header">
+      <div th:include="fragments/elements :: notification" th:remove="tag" />
       <div class="header-wrapper">
         <div class="header-global">
 

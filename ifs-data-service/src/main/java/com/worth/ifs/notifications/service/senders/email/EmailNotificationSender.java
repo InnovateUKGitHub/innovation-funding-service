@@ -1,5 +1,7 @@
 package com.worth.ifs.notifications.service.senders.email;
 
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.email.resource.EmailAddress;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.notifications.resource.Notification;
@@ -7,17 +9,16 @@ import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.resource.NotificationTarget;
 import com.worth.ifs.notifications.service.NotificationSender;
 import com.worth.ifs.notifications.service.NotificationTemplateRenderer;
-import com.worth.ifs.transactional.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.worth.ifs.transactional.ServiceFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.notifications.service.senders.email.EmailAddressResolver.fromNotificationSource;
 import static com.worth.ifs.notifications.service.senders.email.EmailAddressResolver.fromNotificationTarget;
-import static com.worth.ifs.notifications.service.senders.email.EmailNotificationSender.ServiceFailures.EMAILS_NOT_SENT;
-import static com.worth.ifs.transactional.ServiceResult.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
@@ -30,10 +31,6 @@ import static java.util.Arrays.asList;
 public class EmailNotificationSender implements NotificationSender {
 
     static final String EMAIL_NOTIFICATION_TEMPLATES_PATH = "notifications" + separator + "email" + separator;
-
-    public enum ServiceFailures {
-        EMAILS_NOT_SENT
-    }
 
     @Autowired
     private EmailService emailService;
@@ -49,7 +46,7 @@ public class EmailNotificationSender implements NotificationSender {
     @Override
     public ServiceResult<Notification> sendNotification(Notification notification) {
 
-        return handlingErrors(EMAILS_NOT_SENT, () -> {
+        return handlingErrors(new Error(EMAILS_NOT_SENT_MULTIPLE), () -> {
 
             EmailAddress from = fromNotificationSource(notification.getFrom());
 
@@ -61,7 +58,7 @@ public class EmailNotificationSender implements NotificationSender {
                 )))
             );
 
-            return anyFailures(results, failureSupplier(EMAILS_NOT_SENT), successSupplier(notification));
+            return anyFailures(results, serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE)), serviceSuccess(notification));
         });
     }
 

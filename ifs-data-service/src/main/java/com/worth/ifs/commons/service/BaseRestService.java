@@ -1,18 +1,30 @@
 package com.worth.ifs.commons.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worth.ifs.commons.rest.RestErrorEnvelope;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.security.NotSecured;
+import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-
+import com.worth.ifs.commons.error.Error;
+import java.io.IOException;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
+import static com.worth.ifs.util.Either.left;
+import static com.worth.ifs.util.Either.right;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * BaseRestService provides a base for all Service classes.
@@ -92,6 +104,47 @@ public abstract class BaseRestService {
 
     protected <T> ResponseEntity<T> restPutEntity(String path, Class<T> c){
         return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.PUT, jsonEntity(""), c);
+    }
+
+    protected <T> RestResult<T> putWithRestResult(String path, Class<T> c, HttpStatus... expectedSuccessCodes){
+
+        try {
+            ResponseEntity<String> response = getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.PUT, jsonEntity(""), String.class);
+
+            if (asList(expectedSuccessCodes).contains(response.getStatusCode())) {
+
+                return fromJson(response.getBody(), c).mapLeftOrRight(
+                        failure -> restFailure(INTERNAL_SERVER_ERROR, "Unable to process JSON response as type " + c, INTERNAL_SERVER_ERROR),
+                        success -> restSuccess(success, response.getStatusCode())
+                );
+            } else {
+
+                return restFailure(new Error(INTERNAL_SERVER_ERROR, "Unexpected status code " + response.getStatusCode(), INTERNAL_SERVER_ERROR));
+            }
+        } catch (HttpStatusCodeException e) {
+
+            return fromJson(e.getResponseBodyAsString(), RestErrorEnvelope.class).mapLeftOrRight(
+                    failure -> restFailure(INTERNAL_SERVER_ERROR, "Unable to process JSON response as type " + RestErrorEnvelope.class, INTERNAL_SERVER_ERROR),
+                    success -> restFailure(success.getErrors(), e.getStatusCode())
+            );
+        }
+    }
+
+    private <T> Either<Void, T> fromJson(String json, Class<T> clazz) {
+
+        if (Void.class.equals(clazz)) {
+            return right(null);
+        }
+
+        if (String.class.equals(clazz)) {
+            return Either.<Void, T> right((T) json);
+        }
+
+        try {
+            return right(new ObjectMapper().readValue(json, clazz));
+        } catch (IOException e) {
+            return left();
+        }
     }
 
     protected void restPut(String path, Object entity) {

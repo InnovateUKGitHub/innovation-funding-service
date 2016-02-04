@@ -335,4 +335,18 @@ public class CollectionFunctions {
         }
         return list.stream().map(element -> element != null ? element.toString() : "").collect(joining(joinString));
     }
+
+    /**
+     * Return the one and only element from the list supplied, or throw an IllegalArgumentException
+     *
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static <T> T onlyElement(List<T> list) {
+        if (list.size() == 1) {
+            return list.get(0);
+        }
+        throw new IllegalArgumentException("Only expected a single element, but found " + list.size() + " - " + list);
+    }
 }

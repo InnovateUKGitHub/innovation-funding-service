@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public Boolean saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, Optional<String> feedbackValue, Optional<String> feedbackText) {
+    public RestResult<Void> saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, Optional<String> feedbackValue, Optional<String> feedbackText) {
         return responseRestService.saveQuestionResponseAssessorFeedback(assessorUserId, responseId, feedbackValue, feedbackText);
     }
 }

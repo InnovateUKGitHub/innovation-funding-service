@@ -1,5 +1,8 @@
-package com.worth.ifs.transactional;
+package com.worth.ifs.commons.service;
 
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorTemplate;
+import com.worth.ifs.commons.error.Errors;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -10,9 +13,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.ServiceFailures.UNEXPECTED_ERROR;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
+import static java.util.Collections.singletonList;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a ServiceFailure, and a
@@ -23,6 +26,10 @@ public class ServiceResult<T> {
     private static final Log LOG = LogFactory.getLog(ServiceResult.class);
 
     private Either<ServiceFailure, T> result;
+
+    protected ServiceResult(ServiceResult<T> original) {
+        this.result = original.result;
+    }
 
     private ServiceResult(T success) {
         this(right(success));
@@ -43,7 +50,7 @@ public class ServiceResult<T> {
     public <R> ServiceResult<R> map(Function<? super T, ServiceResult<R>> rFunc) {
 
         if (result.isLeft()) {
-            return failure(result.getLeft());
+            return serviceFailure(result.getLeft());
         }
 
         return rFunc.apply(result.getRight());
@@ -69,45 +76,33 @@ public class ServiceResult<T> {
         return Either.getLeftOrRight(either);
     }
 
-    public static <T> ServiceResult<T> success(T successfulResult) {
+    public static <T> ServiceResult<T> serviceSuccess(T successfulResult) {
         return new ServiceResult<>(successfulResult);
     }
 
-    public static <T> Supplier<ServiceResult<T>> successSupplier(T successfulResult) {
-        return () -> success(successfulResult);
-    }
-
-    public static <T> ServiceResult<T> failure(ServiceFailure failure) {
+    public static <T> ServiceResult<T> serviceFailure(ServiceFailure failure) {
         return new ServiceResult<>(failure);
     }
 
-    public static <T> ServiceResult<T> failure(Enum<?> failureKey) {
-        return new ServiceResult<>(ServiceFailure.error(failureKey));
+    public static <T> ServiceResult<T> serviceFailure(Error error) {
+        return new ServiceResult<>(new ServiceFailure(singletonList(error)));
     }
 
-    public static <T> ServiceResult<T> failure(String failureMessage) {
-        return new ServiceResult<>(ServiceFailure.error(failureMessage));
-    }
-
-    public static <T> Supplier<ServiceResult<T>> failureSupplier(Enum<?> failureKey) {
-        return () -> failure(failureKey);
-    }
-
-    public static <T> ServiceResult<T> nonNull(T value, Enum<?> failureKey) {
+    public static <T> ServiceResult<T> nonNull(T value, Error error) {
 
         if (value == null) {
-            return failure(failureKey);
+            return serviceFailure(error);
         }
 
-        return success(value);
+        return serviceSuccess(value);
     }
 
     public static <T> ServiceResult<T> fromEither(Either<ServiceFailure, T> value) {
         return new ServiceResult<>(value);
     }
 
-    public static <T, R> ServiceResult<T> anyFailures(List<ServiceResult<R>> results, Supplier<ServiceResult<T>> failureSupplier, Supplier<ServiceResult<T>> successSupplier) {
-        return results.stream().anyMatch(ServiceResult::isLeft) ? failureSupplier.get() : successSupplier.get();
+    public static <T, R> ServiceResult<T> anyFailures(List<ServiceResult<R>> results, ServiceResult<T> failureResponse, ServiceResult<T> successResponse) {
+        return results.stream().anyMatch(ServiceResult::isLeft) ? failureResponse : successResponse;
     }
 
     /**
@@ -115,28 +110,32 @@ public class ServiceResult<T> {
      * response (an Either with a left of ServiceFailure).
      *
      * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
-     * type UNEXPECTED_ERROR.
+     * type GENERAL_UNEXPECTED_ERROR.
      *
      * @param serviceCode
      * @param <T>
      * @return
      */
     public static <T> ServiceResult<T> handlingErrors(Supplier<ServiceResult<T>> serviceCode) {
-        return handlingErrors(UNEXPECTED_ERROR, serviceCode);
+        return handlingErrors(Errors.internalServerErrorError(), serviceCode);
     }
 
-    /**
-     * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
-     * response (an Either with a left of ServiceFailure).
-     *
-     * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
-     * type UNEXPECTED_ERROR.
-     *
-     * @param <T>
-     * @param serviceCode
-     * @return
-     */
-    public static <T> ServiceResult<T> handlingErrors(Enum<?> catchAllError, Supplier<ServiceResult<T>> serviceCode) {
+    public static <T> ServiceResult<T> handlingErrors(ErrorTemplate catchAllErrorTemplate, Supplier<ServiceResult<T>> serviceCode) {
+        return handlingErrors(new Error(catchAllErrorTemplate), serviceCode);
+    }
+
+        /**
+         * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
+         * response (an Either with a left of ServiceFailure).
+         *
+         * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
+         * type GENERAL_UNEXPECTED_ERROR.
+         *
+         * @param <T>
+         * @param serviceCode
+         * @return
+         */
+    public static <T> ServiceResult<T> handlingErrors(Error catchAllError, Supplier<ServiceResult<T>> serviceCode) {
         try {
             ServiceResult<T> response = serviceCode.get();
 
@@ -148,7 +147,7 @@ public class ServiceResult<T> {
         } catch (Exception e) {
             LOG.warn("Uncaught exception encountered while performing service call.  Performing transaction rollback and returning ServiceFailure", e);
             rollbackTransaction();
-            return failure(catchAllError);
+            return serviceFailure(catchAllError);
         }
     }
 

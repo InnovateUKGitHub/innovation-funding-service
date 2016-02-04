@@ -5,14 +5,14 @@ import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.dto.Feedback.Id;
 import com.worth.ifs.assessment.security.FeedbackLookup;
 import com.worth.ifs.assessment.security.FeedbackRules;
-import com.worth.ifs.transactional.ServiceResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.Optional;
 
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
@@ -119,12 +119,12 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
 
         @Override
         public ServiceResult<Feedback> updateAssessorFeedback(Feedback feedback) {
-            return success(new Feedback().setValue(Optional.of("Security tested!")));
+            return serviceSuccess(new Feedback().setValue(Optional.of("Security tested!")));
         }
 
         @Override
         public ServiceResult<Feedback> getFeedback(Feedback.Id id) {
-            return success(new Feedback().setValue(Optional.of("Security tested!")));
+            return serviceSuccess(new Feedback().setValue(Optional.of("Security tested!")));
         }
     }
 
