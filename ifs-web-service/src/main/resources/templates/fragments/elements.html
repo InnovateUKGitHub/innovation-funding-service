@@ -118,6 +118,17 @@
     <div th:if="${invitesSend}" class="event-alert">
         <p><span>Invites send!</span></p>
     </div>
+
+    <div th:if="${inviteNotValid}" class="event-alert">
+        <p><span>Invite not valid or expired</span></p>
+    </div>
+    <div th:if="${inviteAlreadyAccepted}" class="event-alert">
+        <p><span>Invite already accepted</span></p>
+    </div>
+
+
+
+
 </div>
 
 <!-- =========================== Element: Formatted Date =========================== -->
