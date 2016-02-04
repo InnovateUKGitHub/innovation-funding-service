@@ -24,15 +24,15 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
     @Test
     public void testSearchCompanyHouseName() throws Exception {
         RestResult<List<CompanyHouseBusiness>> companies = controller.searchCompanyHouse("Batman Robin");
-        assertTrue(companies.isRight());
-        assertEquals(1, companies.getRight().getResult().size());
+        assertTrue(companies.isSuccess());
+        assertEquals(1, companies.getSuccessObject().size());
     }
     @Test
     public void testSearchCompanyHouseNumber() throws Exception {
         RestResult<List<CompanyHouseBusiness>> companies = controller.searchCompanyHouse(COMPANY_ID);
-        assertTrue(companies.isRight());
-        assertEquals(1, companies.getRight().getResult().size());
-        CompanyHouseBusiness company = companies.getRight().getResult().get(0);
+        assertTrue(companies.isSuccess());
+        assertEquals(1, companies.getSuccessObject().size());
+        CompanyHouseBusiness company = companies.getSuccessObject().get(0);
 
         assertNotNull(company);
         assertEquals(COMPANY_NAME, company.getName());
@@ -48,8 +48,8 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
     @Test
     public void testGetCompanyHouse() throws Exception {
         RestResult<CompanyHouseBusiness> companyResult = controller.getCompanyHouse(COMPANY_ID);
-        assertTrue(companyResult.isRight());
-        CompanyHouseBusiness company = companyResult.getRight().getResult();
+        assertTrue(companyResult.isSuccess());
+        CompanyHouseBusiness company = companyResult.getSuccessObject();
 
         assertNotNull(company);
         assertEquals(COMPANY_NAME, company.getName());
@@ -65,6 +65,6 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
     @Test
     public void testGetCompanyHouseNotExisting() throws Exception {
         RestResult<CompanyHouseBusiness> company = controller.getCompanyHouse(String.valueOf(Integer.MAX_VALUE));
-        assertTrue(company.isLeft());
+        assertTrue(company.isFailure());
     }
 }

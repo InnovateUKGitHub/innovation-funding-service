@@ -114,8 +114,8 @@ public class InviteController {
         }
         List<ServiceResult<Notification>> results = inviteService.inviteCollaborators(baseUrl, invites);
 
-        long failures = results.stream().filter(r -> r.isLeft()).count();
-        long successes = results.stream().filter(r -> r.isRight()).count();
+        long failures = results.stream().filter(r -> r.isFailure()).count();
+        long successes = results.stream().filter(r -> r.isSuccess()).count();
         log.info(String.format("Invite sending requests %s Success: %s Failures: %s", invites.size(), successes, failures));
 
         InviteResultsResource resource = new InviteResultsResource();

@@ -51,14 +51,14 @@ public class EmailNotificationSender implements NotificationSender {
             EmailAddress from = fromNotificationSource(notification.getFrom());
 
             List<ServiceResult<List<EmailAddress>>> results = simpleMap(notification.getTo(), recipient ->
-                getSubject(notification, recipient).map(subject ->
-                getPlainTextBody(notification, recipient).map(plainTextBody ->
-                getHtmlBody(notification, recipient).map(htmlBody ->
+                getSubject(notification, recipient).andOnSuccess(subject ->
+                getPlainTextBody(notification, recipient).andOnSuccess(plainTextBody ->
+                getHtmlBody(notification, recipient).andOnSuccess(htmlBody ->
                     emailService.sendEmail(from, asList(fromNotificationTarget(recipient)), subject, plainTextBody, htmlBody)
                 )))
             );
 
-            return anyFailures(results, serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE)), serviceSuccess(notification));
+            return processAnyFailuresOrSucceed(results, serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE)), serviceSuccess(notification));
         });
     }
 

@@ -51,7 +51,7 @@ public class CompanyHouseApi extends BaseRestService {
     @NotSecured("These services are not secured because the company house api are open to use for everyone.")
     public ServiceResult<List<CompanyHouseBusiness>> searchOrganisations(String encodedSearchText) {
 
-        return handlingErrors(() -> decodeString(encodedSearchText).map(decodedSearchText -> {
+        return handlingErrors(() -> decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
 
             // encoded in the web-services.
             JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + decodedSearchText, JsonNode.class);

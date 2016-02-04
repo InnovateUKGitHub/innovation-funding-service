@@ -4,6 +4,8 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.builder.ApplicationBuilder;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.builder.CompetitionBuilder;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.builder.InviteBuilder;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.notifications.resource.Notification;
@@ -100,7 +102,8 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testInviteCollaborators() throws Exception {
-        Application application = ApplicationBuilder.newApplication().withName("AppName").build();
+        Competition competition = CompetitionBuilder.newCompetition().build();
+        Application application = ApplicationBuilder.newApplication().withCompetition(competition).withName("AppName").build();
         Role role1 = new Role(1L, "leadapplicant", null);
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
@@ -113,7 +116,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
         List<ServiceResult<Notification>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
         assertEquals(1, results.size());
-        assertTrue(results.get(0).isRight());
+        assertTrue(results.get(0).isSuccess());
     }
 
     @Test
@@ -131,6 +134,6 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
         List<ServiceResult<Notification>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
         assertEquals(1, results.size());
-        assertTrue(results.get(0).isLeft());
+        assertTrue(results.get(0).isFailure());
     }
 }

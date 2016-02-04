@@ -121,8 +121,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
-        assertTrue(result.isRight());
-        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getRight();
+        assertTrue(result.isSuccess());
+        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getSuccessObject();
         assertEquals(fileFound, resultParts.getKey());
         assertEquals(Long.valueOf(999), resultParts.getValue().getFileEntryResource().getId());
 
@@ -147,8 +147,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, "987"));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, "987"));
     }
 
     @Test
@@ -164,8 +164,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(internalServerErrorError("no files for you...")));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(internalServerErrorError("no files for you...")));
     }
 
     @Test
@@ -187,8 +187,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
-        assertTrue(result.isRight());
-        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getRight();
+        assertTrue(result.isSuccess());
+        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getSuccessObject();
         assertEquals(fileFound, resultParts.getKey());
         assertEquals(Long.valueOf(999), resultParts.getValue().getFileEntryResource().getId());
 
@@ -214,8 +214,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(notFoundError(ProcessRole.class, 789L)));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(ProcessRole.class, 789L)));
     }
 
     @Test
@@ -238,8 +238,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(notFoundError(FormInput.class, 123L)));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(FormInput.class, 123L)));
     }
 
     @Test
@@ -263,8 +263,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(notFoundError(Application.class, 456L)));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(Application.class, 456L)));
     }
 
     @Test
@@ -288,8 +288,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(FILES_UNABLE_TO_CREATE_FILE));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(FILES_UNABLE_TO_CREATE_FILE));
     }
 
     @Test
@@ -315,8 +315,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(FILES_UNABLE_TO_CREATE_FILE));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(FILES_UNABLE_TO_CREATE_FILE));
     }
 
     @Test
@@ -341,8 +341,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.updateFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
-        assertTrue(result.isRight());
-        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getRight();
+        assertTrue(result.isSuccess());
+        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getSuccessObject();
         assertEquals(fileFound, resultParts.getKey());
         assertEquals(Long.valueOf(999), resultParts.getValue().getFileEntryResource().getId());
 
@@ -369,8 +369,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.updateFormInputResponseFileUpload(formInputFileEntry, inputStreamSupplier);
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(internalServerErrorError("no files for you...")));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(internalServerErrorError("no files for you...")));
     }
 
     @Test
@@ -393,8 +393,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
-        assertTrue(result.isRight());
-        assertEquals(unlinkedFormInputFileEntry, result.getRight());
+        assertTrue(result.isSuccess());
+        assertEquals(unlinkedFormInputFileEntry, result.getSuccessObject());
         assertNull(existingFormInputResponse.getFileEntry());
         verify(formInputResponseRepositoryMock, times(2)).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
         verify(formInputResponseRepositoryMock).save(existingFormInputResponse);
@@ -417,8 +417,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(internalServerErrorError("no deleting for you...")));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(internalServerErrorError("no deleting for you...")));
     }
 
     @Test
@@ -432,8 +432,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(notFoundError(FormInputResponse.class, 456L, 789L, 123L)));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(FormInputResponse.class, 456L, 789L, 123L)));
     }
 
     @Test
@@ -450,8 +450,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<FormInputResponse> result = service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(notFoundError(File.class, 999L)));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(File.class, 999L)));
     }
 
     @Test
@@ -471,8 +471,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(FILES_UNABLE_TO_DELETE_FILE));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(FILES_UNABLE_TO_DELETE_FILE));
     }
 
 
@@ -489,11 +489,11 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
-        assertTrue(result.isRight());
-        assertEquals(inputStreamSupplier, result.getRight().getValue());
+        assertTrue(result.isSuccess());
+        assertEquals(inputStreamSupplier, result.getSuccessObject().getValue());
 
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(321L)).build();
-        FormInputResponseFileEntryResource formInputResponseFile = result.getRight().getKey();
+        FormInputResponseFileEntryResource formInputResponseFile = result.getSuccessObject().getKey();
 
         assertEquals(fileEntryResource.getId(), formInputResponseFile.getFileEntryResource().getId());
         assertEquals(123L, formInputResponseFile.getCompoundId().getFormInputId());
@@ -513,8 +513,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(internalServerErrorError("no files for you...")));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(internalServerErrorError("no files for you...")));
     }
 
     @Test
@@ -529,8 +529,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(notFoundError(FileEntry.class, 123L, 456L, 789L)));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 123L, 456L, 789L)));
     }
 
 
@@ -542,7 +542,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(notFoundError(FormInputResponse.class, 456L, 789L, 123L)));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(FormInputResponse.class, 456L, 789L, 123L)));
     }
 }

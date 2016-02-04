@@ -69,7 +69,7 @@ public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<Respon
         RestResult<Void> success = service.saveQuestionResponseAssessorFeedback(2L, 1L, Optional.of("value"), Optional.of("text"));
 
         // verify
-        assertTrue(success.isRight());
+        assertTrue(success.isSuccess());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<Respon
         RestResult<Void> failure = service.saveQuestionResponseAssessorFeedback(2L, 1L, Optional.of("value"), Optional.of("text"));
 
         // verify
-        assertTrue(failure.isLeft());
+        assertTrue(failure.isFailure());
         assertEquals(BAD_REQUEST, failure.getStatusCode());
     }
 

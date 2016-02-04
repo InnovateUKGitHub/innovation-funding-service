@@ -74,7 +74,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 ServiceResult<Notification> iR = serviceFailure(internalServerErrorError("Validation errors"));
 
                 results.add(iR);
-                iR.mapLeftOrRight(
+                iR.handleFailureOrSuccess(
                         failure -> handleInviteError(i, failure),
                         success -> handleInviteSuccess(i)
                 );
@@ -86,7 +86,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 ServiceResult<Notification> inviteResult = inviteCollaboratorToApplication(baseUrl, i);
 
                 results.add(inviteResult);
-                inviteResult.mapLeftOrRight(
+                inviteResult.handleFailureOrSuccess(
                         failure -> handleInviteError(i, failure),
                         success -> handleInviteSuccess(i)
                 );
@@ -107,7 +107,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private String getInviteUrl(String baseUrl, Invite invite) {
-        return String.format("%s/accept-invite/%s/%s", baseUrl, invite.getApplication().getId(), invite.getHash());
+        return String.format("%s/accept-invite/%s/%s", baseUrl, invite.getApplication().getCompetition().getId(), invite.getHash());
     }
 
     @Override

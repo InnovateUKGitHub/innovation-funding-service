@@ -44,10 +44,10 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
         };
 
         return handlingErrors(() -> getResponse(feedback.getResponseId()).
-            map(response -> getProcessRole(feedback.getAssessorProcessRoleId()).
-            map(processRole -> validateProcessRoleCorrectType(processRole, UserRoleType.ASSESSOR).
-            map(assessorRole -> validateProcessRoleInApplication(response, processRole).
-            map(roleInApplication -> updateFeedback.apply(assessorRole, response))
+                andOnSuccess(response -> getProcessRole(feedback.getAssessorProcessRoleId()).
+                andOnSuccess(processRole -> validateProcessRoleCorrectType(processRole, UserRoleType.ASSESSOR).
+                andOnSuccess(assessorRole -> validateProcessRoleInApplication(response, processRole).
+                andOnSuccess(roleInApplication -> updateFeedback.apply(assessorRole, response))
         ))));
     }
 

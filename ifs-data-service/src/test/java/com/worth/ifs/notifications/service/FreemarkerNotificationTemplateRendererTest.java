@@ -52,8 +52,8 @@ public class FreemarkerNotificationTemplateRendererTest extends BaseServiceUnitT
         when(freemarkerConfigurationMock.getTemplate("/path/to/template")).thenReturn(freemarkerTemplateMock);
 
         ServiceResult<String> renderResult = service.renderTemplate(from, to, "/path/to/template", asMap("arg1", "1", "arg2", 2L));
-        assertTrue(renderResult.isRight());
-        assertEquals("", renderResult.getRight());
+        assertTrue(renderResult.isSuccess());
+        assertEquals("", renderResult.getSuccessObject());
 
         Map<String, Object> expectedTemplateArguments = asMap("notificationSource", from, "notificationTarget", to, "arg1", "1", "arg2", 2L);
         verify(freemarkerTemplateMock).process(eq(expectedTemplateArguments), isA(Writer.class));
@@ -68,8 +68,8 @@ public class FreemarkerNotificationTemplateRendererTest extends BaseServiceUnitT
         when(freemarkerConfigurationMock.getTemplate("/path/to/template")).thenThrow(new IllegalArgumentException("no templates!"));
 
         ServiceResult<String> renderResult = service.renderTemplate(from, to, "/path/to/template", asMap("arg1", "1", "arg2", 2L));
-        assertTrue(renderResult.isLeft());
-        assertTrue(renderResult.getLeft().is(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE));
+        assertTrue(renderResult.isFailure());
+        assertTrue(renderResult.getFailure().is(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE));
     }
 
     @Test
@@ -82,8 +82,8 @@ public class FreemarkerNotificationTemplateRendererTest extends BaseServiceUnitT
         doThrow(new IllegalArgumentException("No processing!")).when(freemarkerTemplateMock).process(isA(Map.class), isA(Writer.class));
 
         ServiceResult<String> renderResult = service.renderTemplate(from, to, "/path/to/template", asMap("arg1", "1", "arg2", 2L));
-        assertTrue(renderResult.isLeft());
-        assertTrue(renderResult.getLeft().is(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE));
+        assertTrue(renderResult.isFailure());
+        assertTrue(renderResult.getFailure().is(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class FreemarkerNotificationTemplateRendererTest extends BaseServiceUnitT
         doThrow(new TemplateException("No processing!", null)).when(freemarkerTemplateMock).process(isA(Map.class), isA(Writer.class));
 
         ServiceResult<String> renderResult = service.renderTemplate(from, to, "/path/to/template", asMap("arg1", "1", "arg2", 2L));
-        assertTrue(renderResult.isLeft());
-        assertTrue(renderResult.getLeft().is(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE));
+        assertTrue(renderResult.isFailure());
+        assertTrue(renderResult.getFailure().is(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE));
     }
 }

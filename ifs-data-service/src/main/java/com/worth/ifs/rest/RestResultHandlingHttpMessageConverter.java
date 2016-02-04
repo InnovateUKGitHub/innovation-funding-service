@@ -43,13 +43,13 @@ public class RestResultHandlingHttpMessageConverter extends MappingJackson2HttpM
         ServerHttpResponse serverHttpResponse = (ServerHttpResponse) outputMessage;
         serverHttpResponse.setStatusCode(restResult.getStatusCode());
 
-        if (restResult.isLeft()) {
-            List<Error> errors = restResult.getLeft().getErrors();
+        if (restResult.isFailure()) {
+            List<Error> errors = restResult.getFailure().getErrors();
             super.writeInternal(new RestErrorEnvelope(errors), type, outputMessage);
         } else {
 
             if (!restResult.isBodiless()) {
-                super.writeInternal(restResult.getRight().getResult(), type, outputMessage);
+                super.writeInternal(restResult.getSuccessObject(), type, outputMessage);
             }
         }
     }

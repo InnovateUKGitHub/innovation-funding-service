@@ -55,7 +55,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
 
         ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
-        assertTrue(result.isRight());
+        assertTrue(result.isSuccess());
 
         verify(mockEmailNotificationSender).sendNotification(notificationToSend);
         verify(mockLoggingNotificationSender, never()).sendNotification(notificationToSend);
@@ -70,7 +70,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         when(mockLoggingNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
 
         ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL, LOGGING);
-        assertTrue(result.isRight());
+        assertTrue(result.isSuccess());
 
         verify(mockEmailNotificationSender).sendNotification(notificationToSend);
         verify(mockLoggingNotificationSender).sendNotification(notificationToSend);
@@ -84,7 +84,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceSuccess(notificationToSend));
 
         ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL, EMAIL);
-        assertTrue(result.isRight());
+        assertTrue(result.isSuccess());
 
         verify(mockEmailNotificationSender, times(1)).sendNotification(notificationToSend);
         verify(mockLoggingNotificationSender, never()).sendNotification(notificationToSend);
@@ -100,8 +100,8 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
 
         Notification notificationToSend = newNotification().build();
         ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
     }
 
     @Test
@@ -112,8 +112,8 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenReturn(serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE, INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
     }
 
     @Test
@@ -124,7 +124,7 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenThrow(new IllegalArgumentException("No sending!"));
 
         ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
-        assertTrue(result.isLeft());
-        assertTrue(result.getLeft().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
     }
 }
