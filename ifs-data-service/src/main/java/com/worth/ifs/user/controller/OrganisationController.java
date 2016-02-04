@@ -3,11 +3,10 @@ package com.worth.ifs.user.controller;
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.repository.AddressRepository;
 import com.worth.ifs.security.NotSecured;
-import com.worth.ifs.user.domain.AddressType;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.mapper.OrganisationMapper;
 import com.worth.ifs.user.repository.OrganisationRepository;
+import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.logging.Log;
@@ -32,6 +31,8 @@ public class OrganisationController {
 
     @Autowired
     OrganisationRepository organisationRepository;
+    @Autowired
+    OrganisationTypeRepository organisationTypeRepository;
     @Autowired
     AddressRepository addressRepository;
     @Autowired
@@ -58,6 +59,9 @@ public class OrganisationController {
     public OrganisationResource create(@RequestBody Organisation organisation){
         log.debug("OrganisationController , create method");
         log.debug("OrganisationController , create method " + organisation.getName());
+        if(organisation.getOrganisationType()==null){
+            organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
+        }
         organisation = organisationRepository.save(organisation);
         return organisationMapper.mapOrganisationToResource(organisation);
     }
@@ -67,6 +71,9 @@ public class OrganisationController {
     public OrganisationResource saveResource(@RequestBody OrganisationResource organisationResource){
         log.debug("OrganisationController , create method");
         Organisation organisation = organisationMapper.resourceToOrganisation(organisationResource);
+        if(organisation.getOrganisationType()==null){
+            organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
+        }
         log.debug("OrganisationController , create method " + organisation.getName());
 
         organisation = organisationRepository.save(organisation);
