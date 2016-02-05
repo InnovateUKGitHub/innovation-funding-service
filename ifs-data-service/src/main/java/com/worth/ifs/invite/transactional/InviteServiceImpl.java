@@ -129,4 +129,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     }
 
+    @Override
+    public Invite findOne(Long id) {
+        return inviteRepository.findOne(id);
+    }
+
 }
