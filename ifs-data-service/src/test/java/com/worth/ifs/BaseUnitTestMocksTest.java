@@ -17,6 +17,7 @@ import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -96,6 +97,8 @@ public abstract class BaseUnitTestMocksTest {
     @Mock
     protected OrganisationService organisationServiceMock;
 
+    @Mock
+    protected UserService userServiceMock;
 
     @Before
     public void setupMockInjection() {

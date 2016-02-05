@@ -81,7 +81,7 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
 
             try {
                 ServiceResult<ProcessResultType> response = serviceResult.get();
-                return response.handleFailureOrSuccess(failure -> {
+                return response.handleSuccessOrFailure(failure -> {
 
                     RestResult<ReturnType> handled = handleServiceFailure(failure);
 

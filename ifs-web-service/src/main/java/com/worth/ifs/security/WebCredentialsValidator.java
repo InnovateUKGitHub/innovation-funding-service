@@ -1,5 +1,6 @@
 package com.worth.ifs.security;
 
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.CredentialsValidator;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.service.UserRestService;
@@ -7,7 +8,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
+
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 
 @Component
 public class WebCredentialsValidator implements CredentialsValidator {
@@ -18,19 +20,14 @@ public class WebCredentialsValidator implements CredentialsValidator {
     @Autowired
     UserRestService userRestService;
 
+    // TODO DW - INFUND-1555 - user rest service should be returning rest results
     @Override
-    public User retrieveUserByEmailAndPassword(String emailAddress, String password) {
-        User user = userRestService.retrieveUserByEmailAndPassword(emailAddress, password);
-        return user;
+    public RestResult<User> retrieveUserByEmailAndPassword(String emailAddress, String password) {
+        return restSuccess(userRestService.retrieveUserByEmailAndPassword(emailAddress, password));
     }
 
     @Override
-    public User retrieveUserByToken(String token) {
-        try {
-            return userRestService.retrieveUserByToken(token);
-        } catch (HttpClientErrorException e) {
-            log.error(e);
-            return null;
-        }
+    public RestResult<User> retrieveUserByToken(String token) {
+        return restSuccess(userRestService.retrieveUserByToken(token));
     }
 }

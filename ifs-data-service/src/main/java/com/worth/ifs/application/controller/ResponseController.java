@@ -109,7 +109,7 @@ public class ResponseController {
                                                @PathVariable("assessorProcessRoleId") Long assessorProcessRoleId){
         ServiceResult<Feedback> feedback = assessorService.getFeedback(new Feedback.Id().setAssessorProcessRoleId(assessorProcessRoleId).setResponseId(responseId));
         // TODO DW - how do we return a generic envelope to be consumed? failure is currently simply returning null.
-        return feedback.handleFailureOrSuccess(l -> null, r -> r);
+        return feedback.handleSuccessOrFailure(l -> null, r -> r);
     }
 
 

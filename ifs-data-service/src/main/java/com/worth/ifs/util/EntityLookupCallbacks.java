@@ -12,7 +12,9 @@ import org.apache.commons.logging.LogFactory;
 import java.util.Collection;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -49,5 +51,12 @@ public class EntityLookupCallbacks {
         }
 
         return ofNullable(getterResult).map(ServiceResult::serviceSuccess).orElse(serviceFailure(failureResponse));
+    }
+
+    public static <T> ServiceResult<T> getOnlyElementOrFail(Collection<T> list) {
+        if (list == null || list.size() != 1) {
+            return serviceFailure(internalServerErrorError("Found multiple entries in list but expected only 1 - " + list));
+        }
+        return serviceSuccess(list.iterator().next());
     }
 }
