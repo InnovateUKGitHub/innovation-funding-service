@@ -69,8 +69,12 @@ public abstract class BaseRestService {
         return responseEntity.getBody();
     }
 
-    protected <T> RestResult<T> getWithRestResult(String path) {
-        return exchangeWithRestResult(path, GET);
+    protected <T> RestResult<T> getWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
+        return exchangeWithRestResult(path, GET, returnType);
+    }
+
+    protected <T> RestResult<T> getWithRestResult(String path, Class<T> returnType) {
+        return exchangeWithRestResult(path, GET, returnType);
     }
 
     /**
@@ -86,9 +90,9 @@ public abstract class BaseRestService {
         return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), c);
     }
 
-    protected  <T> ResponseEntity<T> restGet(String path){
+    protected  <T> ResponseEntity<T> restGet(String path, ParameterizedTypeReference<T> returnType){
         log.debug("restGetParameterizedType: "+path);
-        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), returnType());
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), returnType);
     }
 
 
@@ -114,18 +118,33 @@ public abstract class BaseRestService {
         return getRestTemplate().exchange(getDataRestServiceURL() + path, PUT, jsonEntity(""), c);
     }
 
-    protected <T> RestResult<T> putWithRestResult(String path) {
-        return exchangeWithRestResult(path, PUT);
+    protected <T> RestResult<T> putWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
+        return exchangeWithRestResult(path, PUT, returnType);
     }
 
-    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method) {
-        return exchangeWithRestResult(path, method, OK);
+    protected <T> RestResult<T> putWithRestResult(String path, Class<T> returnType) {
+        return exchangeWithRestResult(path, PUT, returnType);
     }
 
-    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, ParameterizedTypeReference<T> returnType) {
+        return exchangeWithRestResult(path, method, returnType, OK);
+    }
+
+    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, Class<T> returnType) {
+        return exchangeWithRestResult(path, method, returnType, OK);
+    }
+
+    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, ParameterizedTypeReference<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        return exchangeWithRestResult(() -> getRestTemplate().exchange(getDataRestServiceURL() + path, method, jsonEntity(""), returnType), expectedSuccessCode, otherExpectedStatusCodes);
+    }
+
+    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        return exchangeWithRestResult(() -> getRestTemplate().exchange(getDataRestServiceURL() + path, method, jsonEntity(""), returnType), expectedSuccessCode, otherExpectedStatusCodes);
+    }
+
+    private <T> RestResult<T> exchangeWithRestResult(Supplier<ResponseEntity<T>> exchangeFn, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         try {
-            ParameterizedTypeReference<T> responseType = returnType();
-            ResponseEntity<T> response = getRestTemplate().exchange(getDataRestServiceURL() + path, method, jsonEntity(""), responseType);
+            ResponseEntity<T> response = exchangeFn.get();
             List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
 
             if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
@@ -214,11 +233,6 @@ public abstract class BaseRestService {
             headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         }
         return new HttpEntity<>(entity, headers);
-    }
-
-    @NotSecured("Simple utility method")
-    public static <T> ParameterizedTypeReference<T> returnType() {
-        return new ParameterizedTypeReference<T>() {};
     }
 
     protected RestTemplate getRestTemplate() {

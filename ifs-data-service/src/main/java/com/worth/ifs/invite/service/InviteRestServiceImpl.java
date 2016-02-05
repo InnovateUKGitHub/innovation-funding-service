@@ -9,6 +9,7 @@ import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +64,7 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
 
     @Override
     public Optional<InviteResource> getInviteByHash(String hash) {
-        ResponseEntity<ResourceEnvelope<InviteResource>> resource = restGet(inviteRestUrl + "/getInviteByHash/" + hash);
+        ResponseEntity<ResourceEnvelope<InviteResource>> resource = restGet(inviteRestUrl + "/getInviteByHash/" + hash, new ParameterizedTypeReference<ResourceEnvelope<InviteResource>>() {});
 
         if(ResourceEnvelopeConstants.OK.getName().equals(resource.getBody().getStatus())){
             return Optional.ofNullable(resource.getBody().getEntity());

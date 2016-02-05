@@ -34,6 +34,6 @@ public class ResponseRestServiceImpl extends BaseRestService implements Response
                 "&feedbackValue=" + feedbackValue.orElse("") +
                 "&feedbackText=" + feedbackText.orElse("");
 
-        return putWithRestResult(url);
+        return putWithRestResult(url, Void.class);
     }
 }

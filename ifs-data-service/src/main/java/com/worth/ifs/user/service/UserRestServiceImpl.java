@@ -9,6 +9,7 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.resource.UserResourceEnvelope;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -80,17 +81,21 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<ProcessRole> findProcessRole(Long userId, Long applicationId) {
-        return getWithRestResult(processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId);
+        return getWithRestResult(processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, ProcessRole.class);
     }
 
     @Override
     public RestResult<ProcessRole> findProcessRoleById(Long processRoleId) {
-        return getWithRestResult(processRoleRestURL + "/"+ processRoleId);
+        return getWithRestResult(processRoleRestURL + "/"+ processRoleId, ProcessRole.class);
     }
 
     @Override
     public RestResult<List<ProcessRole>> findProcessRole(Long applicationId) {
-        return getWithRestResult(processRoleRestURL + "/findByUserApplication/" + applicationId);
+        return getWithRestResult(processRoleRestURL + "/findByUserApplication/" + applicationId, processRoleListType());
+    }
+
+    private ParameterizedTypeReference<List<ProcessRole>> processRoleListType() {
+        return new ParameterizedTypeReference<List<ProcessRole>>() {};
     }
 
     @Override
@@ -102,7 +107,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<List<ProcessRole>> findAssignableProcessRoles(Long applicationId){
-        return getWithRestResult(processRoleRestURL + "/findAssignable/" + applicationId);
+        return getWithRestResult(processRoleRestURL + "/findAssignable/" + applicationId, processRoleListType());
     }
 
     @Override

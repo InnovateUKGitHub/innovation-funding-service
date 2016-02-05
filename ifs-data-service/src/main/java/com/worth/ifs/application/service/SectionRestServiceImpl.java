@@ -5,6 +5,7 @@ import com.worth.ifs.commons.service.BaseRestService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,7 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     @Override
     public Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId) {
 
-        ResponseEntity<Map<Long, Set<Long>>> resource = restGet(sectionRestURL + "/getCompletedSectionsByOrganisation/" + applicationId);
+        ResponseEntity<Map<Long, Set<Long>>> resource = restGet(sectionRestURL + "/getCompletedSectionsByOrganisation/" + applicationId, new ParameterizedTypeReference<Map<Long, Set<Long>>>() {});
         return resource.getBody();
 
     }
