@@ -61,7 +61,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetition());
-        this.addFormAttributes(application, competition, Optional.empty(), user.getId(), model, form, Optional.empty());
+        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        this.addFormAttributes(application, competition, Optional.empty(), user.getId(), model, form, Optional.empty(),
+                userApplicationRoles);
         return "application-form";
     }
 
@@ -99,16 +101,22 @@ public class ApplicationFormController extends AbstractApplicationController {
         Section section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetition());
+        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
-        this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form, Optional.ofNullable(question));
+        this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
+                Optional.ofNullable(question), userApplicationRoles);
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
         return "application-form";
     }
 
-    private void addFormAttributes(ApplicationResource application, Competition competition, Optional<Section> section,
-                                   Long userId, Model model, ApplicationForm form, Optional<Question> question){
-        addApplicationDetails(application, competition, userId, section, Optional.ofNullable(question.get().getId()), model, form);
+    private void addFormAttributes(ApplicationResource application,
+                                   Competition competition,
+                                   Optional<Section> section,
+                                   Long userId, Model model,
+                                   ApplicationForm form, Optional<Question> question,
+                                   List<ProcessRole> userApplicationRoles){
+        addApplicationDetails(application, competition, userId, section, Optional.ofNullable(question.get().getId()), model, form, userApplicationRoles);
         addNavigation(question.get(), application.getId(), model);
         model.addAttribute("currentQuestion", question.get());
     }
@@ -127,6 +135,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         Section section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetition());
+        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
         /* Start save action */
         bindingResult = saveApplicationForm(form, applicationId, null, question, request, response, bindingResult);
@@ -142,7 +151,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         /* End save action */
 
         if(bindingResult.hasErrors()){
-            this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form, Optional.ofNullable(question));
+            this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
+                    Optional.ofNullable(question), userApplicationRoles);
             return "application-form";
         }else{
             return getRedirectUrl(request, applicationId);

@@ -7,6 +7,7 @@ import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
+import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.service.*;
@@ -28,6 +29,7 @@ import org.springframework.ui.Model;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -122,18 +124,19 @@ public abstract class AbstractApplicationController {
                                                         Optional<Section> section,
                                                         Optional<Long> currentQuestionId,
                                                         Model model,
-                                                        ApplicationForm form) {
+                                                        ApplicationForm form,
+                                                        List<ProcessRole> userApplicationRoles) {
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
 
-        Optional<Organisation> userOrganisation = organisationService.getUserOrganisation(application, userId);
+        Optional<Organisation> userOrganisation = getUserOrganisation(userId, userApplicationRoles);
 
         if(form == null){
             form = new ApplicationForm();
         }
         form.application = application;
 
-        addOrganisationDetails(model, application, userOrganisation);
+        addOrganisationDetails(model, application, userOrganisation, userApplicationRoles);
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
@@ -141,7 +144,7 @@ public abstract class AbstractApplicationController {
         userOrganisation.ifPresent(org ->
             addAssigneableDetails(model, application, org, userId, section, currentQuestionId)
         );
-        addMappedSectionsDetails(model, application, competition, section, userOrganisation);
+        addMappedSectionsDetails(model, application, competition, section, userOrganisation, userApplicationRoles);
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         return application;
     }
@@ -158,12 +161,14 @@ public abstract class AbstractApplicationController {
         form.setFormInput(formInputs);
     }
 
-    protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation) {
+    protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation,
+                                          List<ProcessRole> userApplicationRoles) {
+
 
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
-        model.addAttribute("applicationOrganisations", organisationService.getApplicationOrganisations(application));
+        model.addAttribute("applicationOrganisations", getApplicationOrganisations(userApplicationRoles));
 
-        Optional<Organisation> leadOrganisation = organisationService.getApplicationLeadOrganisation(application);
+        Optional<Organisation> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
         leadOrganisation.ifPresent(org ->
             model.addAttribute("leadOrganisation", org)
         );
@@ -272,7 +277,8 @@ public abstract class AbstractApplicationController {
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, Competition competition,
                                             Optional<Section> currentSection,
-                                            Optional<Organisation> userOrganisation) {
+                                            Optional<Organisation> userOrganisation,
+                                            List<ProcessRole> userApplicationRoles) {
         List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
         Section previousSection = sectionService.getPreviousSection(currentSection);
         Section nextSection = sectionService.getNextSection(currentSection);
@@ -291,7 +297,7 @@ public abstract class AbstractApplicationController {
         Set<Long> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
 
-        TreeSet<Organisation> organisations = organisationService.getApplicationOrganisations(application);
+        TreeSet<Organisation> organisations = getApplicationOrganisations(userApplicationRoles);
         Set<Long> questionsCompletedByAllOrganisation = new TreeSet<>(getMarkedAsCompleteDetails(application, Optional.ofNullable(organisations.first())));
         // only keep the questionIDs of questions that are complete by all organisations
         organisations.forEach(o -> questionsCompletedByAllOrganisation.retainAll(getMarkedAsCompleteDetails(application, Optional.ofNullable(o))));
@@ -344,7 +350,9 @@ public abstract class AbstractApplicationController {
                                                                              Model model,
                                                                              ApplicationForm form) {
 
-        application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form);
+        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+
+        application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles);
 
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
         addSectionDetails(model, section);
@@ -359,5 +367,30 @@ public abstract class AbstractApplicationController {
         addOrganisationFinanceDetails(model, application, userId, form);
         addFinanceDetails(model, application);
         return application;
+    }
+
+    public TreeSet<Organisation> getApplicationOrganisations(List<ProcessRole> userApplicationRoles) {
+        Comparator<Organisation> compareById =
+                Comparator.comparingLong(Organisation::getId);
+        Supplier<TreeSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
+
+        return userApplicationRoles.stream()
+                .filter(uar -> (uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName())))
+                .map(ProcessRole::getOrganisation)
+                .collect(Collectors.toCollection(supplier));
+    }
+
+    public Optional<Organisation> getApplicationLeadOrganisation(List<ProcessRole> userApplicationRoles) {
+        return userApplicationRoles.stream()
+                .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
+                .map(ProcessRole::getOrganisation)
+                .findFirst();
+    }
+
+    public Optional<Organisation> getUserOrganisation(Long userId, List<ProcessRole> userApplicationRoles) {
+        return userApplicationRoles.stream()
+                .filter(uar -> uar.getUser().getId().equals(userId))
+                .map(ProcessRole::getOrganisation)
+                .findFirst();
     }
 }

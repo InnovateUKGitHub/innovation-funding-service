@@ -81,7 +81,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     public List<ProcessRole> findProcessRole(Long applicationId) {
-        ResponseEntity<ProcessRole[]> responseEntity = restGetEntity(processRoleRestURL + "/findByUserApplication/" + applicationId, ProcessRole[].class);
+        ResponseEntity<ProcessRole[]> responseEntity = restGetEntity(processRoleRestURL + "/findByApplicationId/" + applicationId, ProcessRole[].class);
         ProcessRole[] processRole = responseEntity.getBody();
         return Arrays.asList(processRole);
     }

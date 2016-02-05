@@ -108,7 +108,8 @@ public class AssessmentController extends AbstractApplicationController {
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
         model.addAttribute("form", form);
-        return solvePageForApplicationAssessment(model, competitionId, applicationId, empty(), userId);
+        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        return solvePageForApplicationAssessment(model, competitionId, applicationId, empty(), userId, userApplicationRoles);
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/section/{sectionId}", method = RequestMethod.GET)
@@ -121,7 +122,8 @@ public class AssessmentController extends AbstractApplicationController {
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
         model.addAttribute("form", form);
-        return solvePageForApplicationAssessment(model, competitionId, applicationId, Optional.of(sectionId), userId);
+        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        return solvePageForApplicationAssessment(model, competitionId, applicationId, Optional.of(sectionId), userId, userApplicationRoles);
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/response/{responseId}", method = RequestMethod.PUT, produces = "application/json")
@@ -136,12 +138,18 @@ public class AssessmentController extends AbstractApplicationController {
 
         // TODO DW - INFUND-854 - develop a handler in the web layer for RestResults
         return result.handleSuccessOrFailure(
-            failure -> new ResponseEntity<>(BAD_REQUEST),
-            success -> new ResponseEntity<>(OK)
+                failure -> new ResponseEntity<>(BAD_REQUEST),
+                success -> new ResponseEntity<>(OK)
         );
     }
 
-    private String solvePageForApplicationAssessment(Model model, Long competitionId, Long applicationId, Optional<Long> sectionId, Long userId) {
+    private String solvePageForApplicationAssessment(
+            Model model,
+            Long competitionId,
+            Long applicationId,
+            Optional<Long> sectionId,
+            Long userId,
+            List<ProcessRole> userApplicationRoles) {
         ProcessRole assessorProcessRole = processRoleService.findProcessRole(userId, applicationId);
         boolean invalidAssessor = assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName());
         if (invalidAssessor) {
@@ -163,17 +171,23 @@ public class AssessmentController extends AbstractApplicationController {
 
         boolean pendingApplication = assessment.getProcessStatus().equals(AssessmentStates.PENDING.getState());
         if (pendingApplication) {
-            return showApplicationReviewView(model, competitionId, userId, application);
+            return showApplicationReviewView(model, competitionId, userId, application, userApplicationRoles);
         }
 
-        return showReadOnlyApplicationFormView(model, sectionId, userId, assessorProcessRole, application);
+        return showReadOnlyApplicationFormView(model, sectionId, userId, assessorProcessRole, application, userApplicationRoles);
     }
 
 
-    private String showReadOnlyApplicationFormView(Model model, Optional<Long> sectionId, Long userId, ProcessRole assessorProcessRole, ApplicationResource application) {
+    private String showReadOnlyApplicationFormView(
+            Model model,
+            Optional<Long> sectionId,
+            Long userId,
+            ProcessRole assessorProcessRole,
+            ApplicationResource application,
+            List<ProcessRole> userApplicationRoles) {
         Competition competition = competitionService.getById(application.getCompetition());
         Optional<Section> currentSection = getSection(competition.getSections(), sectionId, true);
-        addApplicationDetails(application, competition, userId, currentSection, Optional.empty(), model, null);
+        addApplicationDetails(application, competition, userId, currentSection, Optional.empty(), model, null, userApplicationRoles);
         addSectionDetails(model, currentSection);
         List<Response> questionResponses = responseService.getByApplication(application.getId());
         Map<Long, Response> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
@@ -190,9 +204,10 @@ public class AssessmentController extends AbstractApplicationController {
         return assessorDashboard;
     }
 
-    private String showApplicationReviewView(Model model, Long competitionId, Long userId, ApplicationResource application) {
+    private String showApplicationReviewView(Model model, Long competitionId, Long userId, ApplicationResource application,
+                                             List<ProcessRole> userApplicationRoles) {
         Competition competition = competitionService.getById(application.getCompetition());
-        addApplicationDetails(application, competition, userId, empty(), Optional.empty(), model, null);
+        addApplicationDetails(application, competition, userId, empty(), Optional.empty(), model, null, userApplicationRoles);
         getAndPassAssessmentDetails(competitionId, application.getId(), userId, model);
         Set<String> partners = application.getProcessRoles().stream().
                 map(processRoleService::getById).

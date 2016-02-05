@@ -154,10 +154,10 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}", competition.getId(), application.getId()))
                 .andExpect(view().name(assessmentDetails))
-                .andExpect(model().attribute("userOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItems(organisations.get(0), organisations.get(1))))
-                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
+                .andExpect(model().attribute("userOrganisation", application3Organisations.get(0)))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application3Organisations.size())))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItems(application3Organisations.get(0))))
+                .andExpect(model().attribute("leadOrganisation", application3Organisations.get(0)))
                 .andExpect(model().attribute("currentApplication", application))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(application.getCompetition())));
     }

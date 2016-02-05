@@ -10,6 +10,7 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -186,12 +187,19 @@ public class ApplicationController extends AbstractApplicationController {
         return doAssignQuestionAndReturnSectionFragment(model, applicationId, sectionId, request, response, form);
     }
 
-    private String doAssignQuestionAndReturnSectionFragment(Model model, @PathVariable("applicationId") Long applicationId, @RequestParam("sectionId") Long sectionId, HttpServletRequest request, HttpServletResponse response, ApplicationForm form) {
+    private String doAssignQuestionAndReturnSectionFragment(Model model,
+                                                            @PathVariable("applicationId") Long applicationId,
+                                                            @RequestParam("sectionId") Long sectionId,
+                                                            HttpServletRequest request,
+                                                            HttpServletResponse response,
+                                                            ApplicationForm form) {
         doAssignQuestion(applicationId, request, response);
 
         ApplicationResource application = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Competition competition = competitionService.getById(application.getCompetition());
+        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+
         Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), true);
         //super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), currentSection, Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         super.addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
@@ -203,7 +211,7 @@ public class ApplicationController extends AbstractApplicationController {
 
         model.addAttribute("question", question);
 
-        Organisation userOrganisation = organisationService.getUserOrganisation(application, user.getId()).get();
+        Organisation userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles).get();
 
         Map<Long, QuestionStatusResource> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(applicationId, userOrganisation.getId());
 
