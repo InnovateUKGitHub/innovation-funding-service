@@ -8,6 +8,7 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.service.CookieService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -36,6 +37,9 @@ public class ApplicationContributorController extends AbstractApplicationControl
     private final Log log = LogFactory.getLog(getClass());
     @Autowired
     private InviteRestService inviteRestService;
+
+    @Autowired
+    private CookieService cookieService;
 
     @Autowired
     private Validator validator;
@@ -123,7 +127,8 @@ public class ApplicationContributorController extends AbstractApplicationControl
     }
 
     private void mergeAndValidateCookieData(HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, ContributorsForm contributorsForm, Long applicationId, ApplicationResource application, User leadApplicant) {
-        String json = ApplicationCreationController.getFromCookie(request, CONTRIBUTORS_COOKIE);
+
+        String json = cookieService.getCookieValue(request, CONTRIBUTORS_COOKIE);
 
         if (json != null && !json.equals("")) {
             ContributorsForm contributorsFormCookie = ApplicationCreationController.getObjectFromJson(json, ContributorsForm.class);
@@ -132,7 +137,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
                     // if the form was saved, validate and update cookie.
                     contributorsFormCookie.setTriedToSave(false);
                     String jsonState = ApplicationCreationController.getSerializedObject(contributorsFormCookie);
-                    ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
+                    cookieService.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
 
                     contributorsForm.merge(contributorsFormCookie);
                     validator.validate(contributorsForm, bindingResult);
@@ -183,7 +188,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
             if (!bindingResult.hasErrors()) {
                 saveContributors(applicationId, contributorsForm, response);
                 // empty cookie, since the invites are saved.
-                ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
+                cookieService.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
 
                 if (newApplication != null) {
                     return ApplicationController.redirectToApplication(application);
@@ -264,7 +269,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
     private void saveFormValuesToCookie(HttpServletResponse response, ContributorsForm contributorsForm, Long applicationId) {
         contributorsForm.setApplicationId(applicationId);
         String jsonState = ApplicationCreationController.getSerializedObject(contributorsForm);
-        ApplicationCreationController.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
+        cookieService.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
     }
 
     private void removePersonRow(ContributorsForm contributorsForm, String organisationAndPerson) {

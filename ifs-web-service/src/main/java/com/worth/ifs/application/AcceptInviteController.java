@@ -18,13 +18,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class AcceptInviteController extends AbstractApplicationController {
+    public static final String INVITE_HASH = "invite_hash";
     private final Log log = LogFactory.getLog(getClass());
     @Autowired
+    private CookieService cookieService;
+    @Autowired
     private InviteRestService inviteRestService;
-
+    @Autowired
+    private OrganisationTypeRestService organisationTypeRestService;
 
 
     @RequestMapping(value = "/accept-invite/{hash}", method = RequestMethod.GET)
@@ -51,7 +56,8 @@ public class AcceptInviteController extends AbstractApplicationController {
 
                 model.addAttribute("invite", invite.get());
                 model.addAttribute("loginForm", loginForm);
-                return "accept-invite";
+                cookieService.saveToCookie(response, INVITE_HASH, hash);
+                return "application-contributors/invite/accept-invite";
             }else{
                 cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
                 return "redirect:/login";

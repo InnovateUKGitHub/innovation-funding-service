@@ -1,15 +1,15 @@
 package com.worth.ifs.registration;
 
-import com.worth.ifs.application.ApplicationCreationController;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.commons.resource.ResourceError;
 import com.worth.ifs.commons.security.TokenAuthenticationService;
-import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.login.LoginController;
+import com.worth.ifs.service.CookieService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -47,6 +47,9 @@ public class RegistrationController {
 
     @Autowired
     protected UserAuthenticationService userAuthenticationService;
+
+    @Autowired
+    protected CookieService cookieService;
 
 
     private final Log log = LogFactory.getLog(getClass());
@@ -145,7 +148,7 @@ public class RegistrationController {
     }
 
     private void loginUser(UserResource userResource, HttpServletResponse response) {
-        ApplicationCreationController.saveToCookie(response, "userId", String.valueOf(userResource.getId()));
+        cookieService.saveToCookie(response, "userId", String.valueOf(userResource.getId()));
         tokenAuthenticationService.addAuthentication(response, userResource);
     }
 
