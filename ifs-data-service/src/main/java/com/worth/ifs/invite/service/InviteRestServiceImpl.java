@@ -24,8 +24,9 @@ import java.util.Optional;
 @Service
 public class InviteRestServiceImpl extends BaseRestService implements InviteRestService {
     private String inviteRestUrl;
+
     @Autowired
-    OrganisationRestService organisationRestService;
+    private OrganisationRestService organisationRestService;
 
     @Value("${ifs.data.service.rest.invite}")
     void setInviteRestUrl(String inviteRestUrl) {
