@@ -24,7 +24,7 @@ IFS.formValidation = (function(){
                 fields : '[type="email"]',
                 messageInvalid : "Please enter a valid emailaddress"
             },
-            typeTimeout : 800
+            typeTimeout : 1000
         },
         init : function(){
             s = this.settings;
