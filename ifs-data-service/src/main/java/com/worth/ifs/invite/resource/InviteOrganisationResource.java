@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class InviteOrganisationResource {
     private Long id;
     private String organisationName;
-    private Long organisationId;
+    private Long organisation;
 
     List<InviteResource> inviteResources;
 
@@ -24,7 +24,7 @@ public class InviteOrganisationResource {
     public InviteOrganisationResource(Long id, String organisationName, Organisation organisation, List<InviteResource> inviteResources) {
         this.id = id;
         this.organisationName = organisationName;
-        this.organisationId = organisation.getId();
+        this.organisation = organisation.getId();
         this.inviteResources = inviteResources;
     }
 
@@ -32,7 +32,7 @@ public class InviteOrganisationResource {
         this.id = invite.getId();
         this.organisationName = invite.getOrganisationName();
         if(invite.getOrganisation() != null && invite.getOrganisation().getId() != null){
-            this.organisationId = invite.getOrganisation().getId();
+            this.organisation = invite.getOrganisation().getId();
         }
         this.setInviteResources(invite.getInvites().stream().map(i -> new InviteResource(i)).collect(Collectors.toList()));
     }
@@ -60,11 +60,11 @@ public class InviteOrganisationResource {
         this.inviteResources = inviteResources;
     }
 
-    public Long getOrganisationId() {
-        return organisationId;
+    public Long getOrganisation() {
+        return organisation;
     }
 
-    public void setOrganisationId(Long organisationId) {
-        this.organisationId = organisationId;
+    public void setOrganisation(Long organisation) {
+        this.organisation = organisation;
     }
 }
