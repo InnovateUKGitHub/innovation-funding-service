@@ -99,7 +99,7 @@ public class Response {
     }
 
     public Optional<AssessorFeedback> getResponseAssessmentForAssessor(ProcessRole assessor) {
-        return responseAssessmentFeedbacks.stream().filter(r -> r.getAssessorId().equals(assessor.getId())).findFirst();
+        return responseAssessmentFeedbacks.stream().filter(r -> r.getAssessorIdOrAssessor().equals(assessor.getId())).findFirst();
     }
 
     public AssessorFeedback getOrCreateResponseAssessorFeedback(ProcessRole assessor) {
