@@ -1,7 +1,6 @@
 package com.worth.ifs.invite.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.resource.InviteResource;
 
 import java.util.List;
@@ -38,8 +37,8 @@ public class InviteResourceBuilder extends BaseBuilder<InviteResource, InviteRes
         return withArray((name, inviteResource) -> setField("name", name, inviteResource), names);
     }
 
-    public InviteResourceBuilder withApplicationId(final Long... applicationIds) {
-        return withArray((applicationId, inviteResource) -> setField("applicationId", applicationId, inviteResource), applicationIds);
+    public InviteResourceBuilder withApplication(final Long... applicationIds) {
+        return withArray((applicationId, inviteResource) -> setField("application", applicationId, inviteResource), applicationIds);
     }
 
     @Override

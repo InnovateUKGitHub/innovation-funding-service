@@ -48,7 +48,7 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
     @Test
     public void postingOrganisationInviteResourceContainingInviteResourcesShouldInitiateSaveCalls() throws Exception {
         List<InviteResource> inviteResources = newInviteResource()
-                .withApplicationId(1L)
+                .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail")
                 .build(5);
@@ -68,14 +68,14 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
                 .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.OK.getName())))
                 .andDo(document("invite/createApplicationInvites"));
 
-        verify(inviteRepositoryMock, times(1)).save(Matchers.anyListOf(Invite.class));
+        verify(inviteService, times(1)).save(Matchers.anyListOf(Invite.class));
         verify(inviteOrganisationRepositoryMock, times(1)).save(Matchers.isA(InviteOrganisation.class));
     }
 
     @Test
     public void validInviteOrganisationResourceWithOrganisationNameShouldReturnSuccessMessage() throws Exception {
         List<InviteResource> inviteResources = newInviteResource()
-                .withApplicationId(1L)
+                .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail")
                 .build(5);
@@ -99,14 +99,14 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
     @Test
     public void validInviteOrganisationResourceWithOrganisationIdShouldReturnSuccessMessage() throws Exception {
         List<InviteResource> inviteResources = newInviteResource()
-                .withApplicationId(1L)
+                .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail")
                 .build(5);
 
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
                 .withInviteResources(inviteResources)
-                .withOrganisationId(1L)
+                .withOrganisation(1L)
                 .build();
 
         ObjectMapper mapper = new ObjectMapper();
@@ -123,7 +123,7 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
     @Test
     public void invalidInviteOrganisationResourceMissingOrganisationNameAndIdShouldReturnErrorMessage() throws Exception {
         List<InviteResource> inviteResources = newInviteResource()
-                .withApplicationId(1L)
+                .withApplication(1L)
                 .withName("testname")
                 .withEmail("testemail")
                 .build(5);
@@ -146,7 +146,7 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
     @Test
     public void validOrganisationResourceWithInvalidInviteResourceMissingNameShouldReturnError() throws Exception {
         List<InviteResource> invalidInviteResourceMissingName = newInviteResource()
-                .withApplicationId(1L)
+                .withApplication(1L)
                 .withEmail("testemail")
                 .build(1);
 
@@ -169,7 +169,7 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
     @Test
     public void validOrganisationResourceWithInvalidInviteResourceMissingEmailShouldReturnError() throws Exception {
         List<InviteResource> invalidInviteResourceMissingEmail = newInviteResource()
-                .withApplicationId(1L)
+                .withApplication(1L)
                 .withName("testName")
                 .build(1);
 
