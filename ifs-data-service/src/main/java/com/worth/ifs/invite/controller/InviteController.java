@@ -120,8 +120,8 @@ public class InviteController {
 
     private InviteOrganisation assembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource) {
         Organisation organisation = null;
-        if (inviteOrganisationResource.getOrganisationId() != null) {
-            organisation = organisationRepository.findOne(inviteOrganisationResource.getOrganisationId());
+        if (inviteOrganisationResource.getOrganisation() != null) {
+            organisation = organisationRepository.findOne(inviteOrganisationResource.getOrganisation());
         } else {
             log.error("organisationId = null");
         }
@@ -144,9 +144,9 @@ public class InviteController {
     }
 
     private Invite mapInviteResourceToInvite(InviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
-        Application application = applicationRepository.findOne(inviteResource.getApplicationId());
-        if (newInviteOrganisation == null && inviteResource.getInviteOrganisationId() != null) {
-            newInviteOrganisation = inviteOrganisationRepository.findOne(inviteResource.getInviteOrganisationId());
+        Application application = applicationRepository.findOne(inviteResource.getApplication());
+        if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
+            newInviteOrganisation = inviteOrganisationRepository.findOne(inviteResource.getInviteOrganisation());
         }
         Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatusConstants.CREATED);
 
@@ -169,7 +169,7 @@ public class InviteController {
         if ((inviteOrganisationResource.getOrganisationName() == null ||
                 inviteOrganisationResource.getOrganisationName().isEmpty())
                 &&
-                inviteOrganisationResource.getOrganisationId() == null) {
+                inviteOrganisationResource.getOrganisation() == null) {
             return false;
         } else {
             return true;
@@ -189,7 +189,7 @@ public class InviteController {
 
     private boolean inviteResourceIsValid(InviteResource inviteResource) {
 
-        if (StringUtils.isEmpty(inviteResource.getEmail()) || StringUtils.isEmpty(inviteResource.getName()) || inviteResource.getApplicationId() == null) {
+        if (StringUtils.isEmpty(inviteResource.getEmail()) || StringUtils.isEmpty(inviteResource.getName()) || inviteResource.getApplication() == null) {
             return false;
         }
 
