@@ -19,4 +19,12 @@ public interface InviteService {
     ServiceResult<Notification> inviteCollaboratorToApplication(String baseUrl, Invite invite);
     @NotSecured("TODO")
     Invite findOne(Long id);
+    @NotSecured("TODO")
+    List<Invite> findByApplicationId(Long applicationId);
+    @NotSecured("TODO")
+    Optional<Invite> getByHash(String hash);
+    @NotSecured("TODO")
+    Invite save(Invite invite);
+    @NotSecured("TODO")
+    Iterable<Invite> save(Iterable<Invite> invite);
 }

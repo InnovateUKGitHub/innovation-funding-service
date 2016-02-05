@@ -38,7 +38,11 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
         this.serviceResult = existingBuilder.serviceResult;
     }
 
-    public static <T, R> RestResultBuilder<R, T> newRestResultHandler() {
+    public static <S> RestResultBuilder<S, S> newRestHandler(Class<S> clazz) {
+        return newRestHandler();
+    }
+
+    public static <T, R> RestResultBuilder<R, T> newRestHandler() {
         return new RestResultBuilder<>();
     }
 
