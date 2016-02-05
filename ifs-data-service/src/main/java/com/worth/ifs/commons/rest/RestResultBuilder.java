@@ -5,6 +5,7 @@ import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.function.Function;
 
@@ -39,6 +40,10 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
     }
 
     public static <S> RestResultBuilder<S, S> newRestHandler(Class<S> clazz) {
+        return newRestHandler();
+    }
+
+    public static <S> RestResultBuilder<S, S> newRestHandler(ParameterizedTypeReference<S> type) {
         return newRestHandler();
     }
 
