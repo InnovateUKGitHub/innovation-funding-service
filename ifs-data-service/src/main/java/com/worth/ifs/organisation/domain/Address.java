@@ -139,5 +139,7 @@ public class Address {
         this.organisations = organisations;
     }
 
-
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

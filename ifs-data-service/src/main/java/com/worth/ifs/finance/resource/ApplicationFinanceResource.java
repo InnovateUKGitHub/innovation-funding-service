@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostType;
@@ -147,5 +148,10 @@ public class ApplicationFinanceResource {
     public BigDecimal getTotalOtherFunding() {
         CostCategory otherFundingCategory = getFinanceOrganisationDetails(CostType.OTHER_FUNDING);
         return (otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO);
+    }
+
+    @JsonIgnore
+    public Log getLog() {
+        return this.log;
     }
 }

@@ -71,4 +71,8 @@ public class ProcessRoleResource {
     public void setResponses(List<Response> responses) {
         this.responses = responses;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
