@@ -1,7 +1,7 @@
 package com.worth.ifs.invite.resource;
 
-import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.domain.Invite;
 
 /*
 * InviteResource is a DTO which enables to application to transfer Invite entities.
@@ -11,40 +11,40 @@ public class InviteResource {
     private Long id;
     private String name;
     private String email;
-    private Long applicationId;
+    private Long application;
     private String competitionName;
     private String applicationName;
-    private Long inviteOrganisationId;
+    private Long inviteOrganisation;
     private String hash;
     private InviteStatusConstants status;
 
     public InviteResource() {}
 
 
-    public InviteResource(Long id, String name, String email, Long applicationId, Long inviteOrganisationId, String hash, InviteStatusConstants status) {
+    public InviteResource(Long id, String name, String email, Long application, Long inviteOrganisation, String hash, InviteStatusConstants status) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.applicationId = applicationId;
-        this.inviteOrganisationId = inviteOrganisationId;
+        this.application = application;
+        this.inviteOrganisation = inviteOrganisation;
         this.hash = hash;
         this.status = status;
     }
 
-    public InviteResource(String name, String email, Long applicationId) {
+    public InviteResource(String name, String email, Long application) {
         this.name = name;
         this.email = email;
-        this.applicationId = applicationId;
+        this.application = application;
     }
 
     public InviteResource(Invite i) {
         this.id = i.getId();
         this.name = i.getName();
         this.email = i.getEmail();
-        this.applicationId = i.getApplication().getId();
+        this.application = i.getApplication().getId();
         this.applicationName = i.getApplication().getName();
         this.competitionName = i.getApplication().getCompetition().getName();
-        this.inviteOrganisationId = i.getInviteOrganisation().getId();
+        this.inviteOrganisation = i.getInviteOrganisation().getId();
         this.hash = i.getHash();
         this.status = i.getStatus();
     }
@@ -73,20 +73,20 @@ public class InviteResource {
         this.email = email;
     }
 
-    public Long getApplicationId() {
-        return applicationId;
+    public Long getApplication() {
+        return application;
     }
 
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
+    public void setApplication(Long application) {
+        this.application = application;
     }
 
-    public Long getInviteOrganisationId() {
-        return inviteOrganisationId;
+    public Long getInviteOrganisation() {
+        return inviteOrganisation;
     }
 
-    public void setInviteOrganisationId(Long inviteOrganisationId) {
-        this.inviteOrganisationId = inviteOrganisationId;
+    public void setInviteOrganisation(Long inviteOrganisation) {
+        this.inviteOrganisation = inviteOrganisation;
     }
 
     public String getHash() {
