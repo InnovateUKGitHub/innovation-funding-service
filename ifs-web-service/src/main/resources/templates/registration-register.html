@@ -31,8 +31,7 @@
             <h2 class="heading-medium">Your details</h2>
 
 
-            <fieldset>
-                <legend class="visuallyhidden">Your details</legend>
+
                 <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
                     <label class="form-label" for="title">
                         <span class="form-label-bold">Title</span>
@@ -49,33 +48,41 @@
                 <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
                     <label class="form-label" for="firstName">
                         <span class="form-label-bold">First name</span>
-                        <span class="error-message" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+                        <span th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
+                        </span>
                     </label>
-                    <input class="form-control" type="text" th:field="*{firstName}"/>
+                    <input th:class="${#fields.hasErrors('firstName') ? 'form-control field-error' : 'form-control'}" class="form-control" type="text" th:field="*{firstName}" required="required" data-required-errormessage="Please enter a first name"/>
                 </div>
 
                 <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
                     <label class="form-label" for="lastName">
                         <span class="form-label-bold">Last name</span>
-                        <span class="error-message" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+                        <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
+                        </span>
                     </label>
-                    <input class="form-control" id="lastName" name="lastName" type="text" th:field="*{lastName}"/>
+                    <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-error' : 'form-control'}"  id="lastName" name="lastName" type="text" th:field="*{lastName}" required="required" data-required-errormessage="Please enter a last name"/>
                 </div>
                 <div th:class="${#fields.hasErrors('phoneNumber')}? 'form-group error':'form-group'">
                     <label class="form-label" for="phoneNumber">
                         <span class="form-label-bold">Phone number</span>
                         <span class="form-hint">We may use this to contact you about the application</span>
-                        <span class="error-message" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
-                    </label>
-                    <input class="form-control" type="text" th:field="*{phoneNumber}"/>
+                        <span th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
+                        </span>
+                     </label>
+                    <input th:class="${#fields.hasErrors('phoneNumber') ? 'form-control field-error' : 'form-control'}"  type="text" th:field="*{phoneNumber}" required="required" data-required-errormessage="Please enter a phone number"/>
                 </div>
                 <div th:class="${#fields.hasErrors('email')}? 'form-group error':'form-group'">
                     <label class="form-label" for="email">
                         <span class="form-label-bold">Email</span>
                         <span class="form-hint">You will need this to sign into your account</span>
-                        <span th:errorclass="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-                    </label>
-                    <input class="form-control" type="email" th:field="*{email}"/>
+                        <span th:if="${#fields.hasErrors('email')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}" />
+                        </span>
+                   </label>
+                    <input th:class="${#fields.hasErrors('email') ? 'form-control field-error' : 'form-control'}" type="email" th:field="*{email}"  required="required" data-required-errormessage="Please enter your email" />
                 </div>
                 <div th:class="${#fields.hasErrors('password')}? 'form-group error':'form-group'">
                     <label class="form-label" for="password">
@@ -85,23 +92,30 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input class="form-control" type="password" th:field="*{password}"/>
+                    <input th:class="${#fields.hasErrors('password') ? 'form-control field-error' : 'form-control'}" type="password" th:field="*{password}" required="required" data-required-errormessage="Please enter your password" minlength="6" data-minlength-errormessage="Password size should be between 6 and 30 characters"/>
                 </div>
                 <div th:class="${#fields.hasErrors('retypedPassword')}? 'form-group error':'form-group'">
                     <label class="form-label" for="retypedPassword">
                         <span class="form-label-bold">Re-type password</span>
-                        <span class="error-message" th:if="${#fields.hasErrors('retypedPassword')}" th:errors="*{retypedPassword}"></span>
+                        <span th:if="${#fields.hasErrors('password')}" th:remove="tag">
+                              <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
+                        </span>
                     </label>
-                    <input class="form-control" type="password" th:field="*{retypedPassword}"/>
+                    <input th:class="${#fields.hasErrors('retypedPassword') ? 'form-control field-error' : 'form-control'}" type="password" th:field="*{retypedPassword}" required="required" data-required-errormessage="Please re-type your password" minlength="6" data-minlength-errormessage="Password size should be between 6 and 30 characters" />
                 </div>
                 <div th:class="${#fields.hasErrors('termsAndConditions')}? 'form-group error':'form-group'">
-                    <label class="block-label" for="termsAndConditions">
-                        <input id="termsAndConditions" value="1" type="checkbox" th:field="*{termsAndConditions}"/>
-                        I agree to the <a href="#">terms and conditions</a>
-                    </label>
-                    <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
+                  <fieldset>
+                      <legend>
+                        <span class="visuallyhidden">Terms and conditions</span>
+                        <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
+                      </legend>
+                      <label class="block-label" for="termsAndConditions">
+                          <input id="termsAndConditions" value="1" type="checkbox" th:field="*{termsAndConditions}" required="required" data-required-errormessage="In order to register an account you have to agree to the Terms and Conditions" />
+                          I agree to the <a href="#">terms and conditions</a>
+                      </label>
+                  </fieldset>
                 </div>
-            </fieldset>
+
             <button class="button button-large" name="create-account" type="submit">Create account</button>
         </form>
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>

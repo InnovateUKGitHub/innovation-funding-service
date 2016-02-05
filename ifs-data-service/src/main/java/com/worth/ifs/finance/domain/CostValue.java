@@ -61,4 +61,8 @@ public class CostValue {
     }
 
     public CostValueId getId(){ return new CostValueId(this.cost.getId(), this.costField.getId());}
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

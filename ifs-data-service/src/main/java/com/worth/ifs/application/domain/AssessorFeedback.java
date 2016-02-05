@@ -74,11 +74,12 @@ public class AssessorFeedback {
     }
 
     public Long getAssessorId() {
-        return assessor != null ? assessor.getId() : assessorId;
+        return assessorId;
     }
 
     void setAssessor(ProcessRole assessor) {
         this.assessor = assessor;
+        this.assessorId = assessor.getId();
     }
 
     @JsonIgnore
@@ -139,5 +140,9 @@ public class AssessorFeedback {
             .append(assessmentValue)
             .append(assessmentFeedback)
             .toHashCode();
+    }
+
+    public Long getAssessorIdOrAssessor() {
+        return assessor == null ? assessorId : assessor.getId();
     }
 }

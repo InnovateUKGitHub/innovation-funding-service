@@ -39,7 +39,7 @@
         </h2>
         <h2 class="heading-medium"  th:unless="${organisationStats.index == 0}">
           <div th:remove="tag" th:text="${organisationInviteResource.organisationName}" />
-          <small th:unless="${organisationInviteResource.organisationId}">(pending)</small>
+          <small th:unless="${organisationInviteResource.organisation}">(pending)</small>
         </h2>
         <ul class="list-bullet">
             <li th:if="${organisationStats.index == 0}">

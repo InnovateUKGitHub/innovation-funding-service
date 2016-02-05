@@ -91,7 +91,7 @@ public abstract class BaseRestService {
     }
 
     protected  <T> ResponseEntity<T> restGet(String path, ParameterizedTypeReference<T> returnType){
-        log.debug("restGetParameterizedType: "+path);
+        log.debug("restGet: "+path);
         return getRestTemplate().exchange(getDataRestServiceURL() + path, GET, jsonEntity(""), returnType);
     }
 
