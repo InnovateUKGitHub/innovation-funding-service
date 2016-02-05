@@ -141,4 +141,8 @@ public class AssessorFeedback {
             .append(assessmentFeedback)
             .toHashCode();
     }
+
+    public Long getAssessorIdOrAssessor() {
+        return assessor == null ? assessorId : assessor.getId();
+    }
 }
