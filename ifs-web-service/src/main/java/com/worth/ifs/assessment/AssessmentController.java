@@ -63,6 +63,7 @@ public class AssessmentController extends AbstractApplicationController {
         return "/assessor/competitions/" + competitionID + "/applications";
     }
 
+    // TODO DW - INFUND-1555 - get below code to use the RestResults
     @RequestMapping(value = "/competitions/{competitionId}/applications", method = RequestMethod.GET)
     public ModelAndView competitionAssessmentDashboard(Model model, @PathVariable("competitionId") final Long competitionId,
                                                  HttpServletRequest request) {
@@ -76,7 +77,7 @@ public class AssessmentController extends AbstractApplicationController {
         List<AssessmentWithApplicationAndScore> assessments = allAssessments.stream()
                 .filter(a -> !a.isSubmitted())
                 .map(a -> {
-                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId());
+                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObject();
                     Score score = assessmentRestService.getScore(a.getId());
                     return new AssessmentWithApplicationAndScore(a, ar, score);
                 }).collect(toList());
@@ -86,7 +87,7 @@ public class AssessmentController extends AbstractApplicationController {
         List<AssessmentWithApplicationAndScore> submittedAssessments = allAssessments.stream()
                 .filter(Assessment::isSubmitted)
                 .map(a -> {
-                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId());
+                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObject();
                     Score score = assessmentRestService.getScore(a.getId());
                     return new AssessmentWithApplicationAndScore(a, ar, score);
                 })
