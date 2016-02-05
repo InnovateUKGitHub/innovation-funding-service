@@ -20,7 +20,8 @@ public class InviteResource {
     private String hash;
     private InviteStatusConstants status;
 
-    public InviteResource() {}
+    public InviteResource() {
+    }
 
 
     public InviteResource(Long id, String name, String email, Long application, Long inviteOrganisation, String hash, InviteStatusConstants status) {
@@ -113,22 +114,31 @@ public class InviteResource {
         return competitionName;
     }
 
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
+
     public String getApplicationName() {
         return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
     }
 
     public String getLeadOrganisation() {
         return leadOrganisation;
     }
 
+    public void setLeadOrganisation(String leadOrganisation) {
+        this.leadOrganisation = leadOrganisation;
+    }
+
     public String getLeadApplicant() {
         return leadApplicant;
     }
-    public void setCompetitionName(String competitionName) {
-        this.competitionName = competitionName;
-    }
 
-    public void setApplicationName(String applicationName) {
-        this.applicationName = applicationName;
+    public void setLeadApplicant(String leadApplicant) {
+        this.leadApplicant = leadApplicant;
     }
 }
