@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.rest;
 
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.util.Either;
 import org.springframework.http.HttpStatus;
@@ -11,112 +12,66 @@ import java.util.function.Function;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Collections.singletonList;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Represents the result of a Rest Controller action, that will be either a failure or a success.  A failure will result in a RestFailure, and a
  * success will result in a T.  Additionally, these can be mapped to produce new RestResults that either fail or succeed.
  */
-public class RestResult<T> implements FailingOrSucceedingResult<T, RestFailure> {
+public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
-    private Either<RestFailure, RestSuccess<T>> result;
     private boolean bodiless = false;
+    private HttpStatus successfulStatusCode;
 
-    protected RestResult(RestResult<T> original) {
-        this.result = original.result;
+    public RestResult(RestResult<T> original) {
+        super(original);
         this.bodiless = original.bodiless;
+        this.successfulStatusCode = original.successfulStatusCode;
     }
 
-    private RestResult(RestSuccess<T> success) {
-        this(right(success));
+    public RestResult(Either<RestFailure, T> result, boolean bodiless, HttpStatus successfulStatusCode) {
+        super(result);
+        this.bodiless = bodiless;
+        this.successfulStatusCode = successfulStatusCode;
     }
 
-    private RestResult(RestFailure failure) {
-        this(left(failure));
-    }
-
-    private RestResult(Either<RestFailure, RestSuccess<T>> result) {
-        this.result = result;
-    }
-
-    public <T1> T1 handleSuccessOrFailure(Function<? super RestFailure, ? extends T1> failureHandler, Function<? super T, ? extends T1> successHandler) {
-        return mapLeftOrRight(failureHandler, successHandler);
-    }
-
+    @Override
     public <R> RestResult<R> andOnSuccess(Function<? super T, FailingOrSucceedingResult<R, RestFailure>> successHandler) {
-        return map(successHandler);
+        return (RestResult<R>) super.andOnSuccess(successHandler);
     }
 
-    public boolean isFailure() {
-        return isLeft();
+    @Override
+    protected <R> RestResult<R> createSuccess(FailingOrSucceedingResult<R, RestFailure> success) {
+
+        if (success instanceof RestResult) {
+            return new RestResult<>((RestResult<R>) success);
+        }
+
+        return restSuccess(success.getSuccessObject());
     }
 
-    public boolean isSuccess() {
-        return isRight();
-    }
+    @Override
+    protected <R> RestResult<R> createFailure(FailingOrSucceedingResult<R, RestFailure> failure) {
 
-    public RestFailure getFailure() {
-        return getLeft();
-    }
+        if (failure instanceof RestResult) {
+            return new RestResult<>((RestResult<R>) failure);
+        }
 
-    public T getSuccessObject() {
-        return getRight().getResult();
+        return (RestResult<R>) restFailure(INTERNAL_SERVER_ERROR);
     }
 
     public HttpStatus getStatusCode() {
-        return isLeft() ? result.getLeft().getStatusCode() : result.getRight().getStatusCode();
+        return isFailure() ? result.getLeft().getStatusCode() : successfulStatusCode;
     }
 
-    private <T1> T1 mapLeftOrRight(Function<? super RestFailure, ? extends T1> lFunc, Function<? super T, ? extends T1> rFunc) {
-        return result.mapLeftOrRight(lFunc, restSuccess -> rFunc.apply(restSuccess.getResult()));
-    }
-
-    private <R> RestResult<R> map(Function<? super T, FailingOrSucceedingResult<R, RestFailure>> rFunc) {
-
-        if (result.isLeft()) {
-            return restFailure(result.getLeft());
-        }
-
-        FailingOrSucceedingResult<R, RestFailure> successResult = rFunc.apply(result.getRight().getResult());
-
-        return successResult.handleSuccessOrFailure(
-                failure -> RestResult.<R> restFailure(failure),
-                success -> RestResult.<R> restSuccess(success, success instanceof RestResult ? ((RestResult) success).getStatusCode() : OK)
-        );
-    }
-
-    private boolean isLeft() {
-        return result.isLeft();
-    }
-
-    private boolean isRight() {
-        return result.isRight();
-    }
-
-    private RestFailure getLeft() {
+    @Override
+    public T getSuccessObject() {
 
         if (bodiless) {
-            throw new IllegalStateException("Unable to get the body from a bodiless (Void) RestResult");
+            throw new IllegalStateException("RestResult is bodiless and so no success object is available to get");
         }
-
-        return result.getLeft();
-    }
-
-    private RestSuccess<T> getRight() {
-
-        if (bodiless) {
-            throw new IllegalStateException("Unable to get the body from a bodiless (Void) RestResult");
-        }
-
-        return result.getRight();
-    }
-
-    private RestResult<Void> bodiless() {
-        RestResult<Void> result = handleSuccessOrFailure(
-                failure -> new RestResult<Void>(failure),
-                success -> new RestResult<Void>(new RestSuccess<Void>(null, getStatusCode())));
-        result.bodiless = true;
-        return result;
+        return super.getSuccessObject();
     }
 
     public boolean isBodiless() {
@@ -128,35 +83,23 @@ public class RestResult<T> implements FailingOrSucceedingResult<T, RestFailure> 
     }
 
     public static RestResult<Void> restSuccess(HttpStatus statusCode) {
-        return restSuccess("", statusCode).bodiless();
+        return restSuccess(null, statusCode);
     }
 
-    public static <T> RestResult<T> restSuccess(RestSuccess<T> successfulResult) {
-        return new RestResult<>(successfulResult);
+    public static <T> RestResult<T> restSuccess(T successfulResult) {
+        return restSuccess(successfulResult, OK);
     }
 
     public static <T> RestResult<T> restSuccess(T result, HttpStatus statusCode) {
-        return new RestResult<>(new RestSuccess<>(result, statusCode));
+        return new RestResult<>(right(result), result == null, statusCode);
     }
 
     public static <T> RestResult<T> restFailure(RestFailure failure) {
-        return new RestResult<>(failure);
+        return new RestResult<>(left(failure), false, null);
     }
 
     public static RestResult<Void> restFailure(HttpStatus statusCode) {
-        return restFailure("", statusCode);
-    }
-
-    public static <T> RestResult<T> restFailure(Enum<?> failureKey, HttpStatus statusCode) {
-        return restFailure(failureKey.name(), statusCode);
-    }
-
-    public static <T> RestResult<T> restFailure(Enum<?> failureKey, String failureMessage, HttpStatus statusCode) {
-        return new RestResult<>(RestFailure.error(failureKey.name(), failureMessage, statusCode));
-    }
-
-    public static <T> RestResult<T> restFailure(String failureMessage, HttpStatus statusCode) {
-        return new RestResult<>(RestFailure.error(failureMessage, statusCode));
+        return restFailure(null, statusCode);
     }
 
     public static <T> RestResult<T> restFailure(Error error) {
@@ -164,10 +107,10 @@ public class RestResult<T> implements FailingOrSucceedingResult<T, RestFailure> 
     }
 
     public static <T> RestResult<T> restFailure(List<Error> errors) {
-        return new RestResult<>(RestFailure.error(errors));
+        return new RestResult<>(left(RestFailure.error(errors)), false, null);
     }
 
     public static <T> RestResult<T> restFailure(List<Error> errors, HttpStatus statusCode) {
-        return new RestResult<>(RestFailure.error(errors, statusCode));
+        return new RestResult<>(left(RestFailure.error(errors, statusCode)), false, null);
     }
 }

@@ -46,4 +46,16 @@ public class CostValueResource {
     }
 
     public CostValueId getId(){ return new CostValueId(this.cost, this.costField);}
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public void setCost(Long cost) {
+        this.cost = cost;
+    }
+
+    public void setCostField(Long costField) {
+        this.costField = costField;
+    }
 }

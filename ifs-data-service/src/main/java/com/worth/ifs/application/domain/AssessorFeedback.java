@@ -47,7 +47,6 @@ public class AssessorFeedback {
         return new AssessorFeedback(response, assessor);
     }
 
-    @SuppressWarnings("unused")
     public AssessorFeedback() {
     }
 
@@ -55,10 +54,8 @@ public class AssessorFeedback {
         return id;
     }
 
-    @SuppressWarnings("unused")
     public String getAssessmentValue() { return assessmentValue; }
 
-    @SuppressWarnings("unused")
     public String getAssessmentFeedback() {
         return assessmentFeedback;
     }
@@ -77,11 +74,12 @@ public class AssessorFeedback {
     }
 
     public Long getAssessorId() {
-        return assessor != null ? assessor.getId() : assessorId;
+        return assessorId;
     }
 
     void setAssessor(ProcessRole assessor) {
         this.assessor = assessor;
+        this.assessorId = assessor.getId();
     }
 
     @JsonIgnore
@@ -94,6 +92,21 @@ public class AssessorFeedback {
         return 350 - this.getWordCount();
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setResponse(Response response) {
+        this.response = response;
+    }
+
+    public ProcessRole getAssessor() {
+        return this.assessor;
+    }
+
+    public void setAssessorId(Long assessorId) {
+        this.assessorId = assessorId;
+    }
 
     @Override
     public boolean equals(Object obj) {

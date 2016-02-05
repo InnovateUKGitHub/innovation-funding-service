@@ -124,4 +124,11 @@ public class InviteResource {
     public String getLeadApplicant() {
         return leadApplicant;
     }
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
 }

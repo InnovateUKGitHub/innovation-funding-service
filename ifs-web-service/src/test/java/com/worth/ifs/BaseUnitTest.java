@@ -27,8 +27,8 @@ import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
-import com.worth.ifs.user.domain.*;
 import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.user.domain.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mockito.ArgumentCaptor;
@@ -54,6 +54,7 @@ import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newAppl
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
@@ -313,9 +314,9 @@ public class BaseUnitTest {
         ProcessRole processRole9 = newProcessRole().with(id(9L)).withApplication(applicationList.get(3)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
 
         assessorProcessRoles = asList(processRole6, processRole7, processRole8, processRole9);
-        processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8);
+        processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8, processRole9);
 
-        organisation1.setProcessRoles(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8));
+        organisation1.setProcessRoles(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8, processRole8));
         organisation2.setProcessRoles(singletonList(processRole5));
         applicationList.forEach(competition::addApplication);
 
@@ -353,6 +354,7 @@ public class BaseUnitTest {
         when(processRoleService.findProcessRole(assessor.getId(), applicationList.get(1).getId())).thenReturn(processRole6);
         when(processRoleService.findProcessRole(assessor.getId(), applicationList.get(2).getId())).thenReturn(processRole7);
         when(processRoleService.findProcessRole(assessor.getId(), applicationList.get(0).getId())).thenReturn(processRole8);
+        when(processRoleService.findProcessRole(assessor.getId(), applicationList.get(3).getId())).thenReturn(processRole9);
 
 		Map<Long, Set<Long>> completedMap = new HashMap<>();
         completedMap.put(organisation1.getId(), new TreeSet<>());
@@ -361,7 +363,7 @@ public class BaseUnitTest {
         when(sectionService.getCompletedSectionsByOrganisation(applicationList.get(1).getId())).thenReturn(completedMap);
         when(sectionService.getCompletedSectionsByOrganisation(applicationList.get(2).getId())).thenReturn(completedMap);
 
-        processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(idsToApplicationResources.get(pr.getApplication().getId())));
+        processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(restSuccess(idsToApplicationResources.get(pr.getApplication().getId()))));
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
 

@@ -12,6 +12,7 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
@@ -91,6 +92,10 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected InviteRepository inviteRepositoryMock;
+
+    @Mock
+    protected OrganisationService organisationServiceMock;
+
 
     @Before
     public void setupMockInjection() {
