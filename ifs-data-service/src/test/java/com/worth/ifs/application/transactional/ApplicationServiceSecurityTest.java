@@ -351,5 +351,10 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         public Application createApplicationByApplicationNameForUserIdAndCompetitionId(Long competitionId, Long userId, JsonNode jsonObj) {
             return null;
         }
+
+        @Override
+        public ServiceResult<ApplicationResource> findByProcessRole(Long id) {
+            return null;
+        }
     }
 }

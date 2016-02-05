@@ -8,6 +8,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -27,7 +28,6 @@ import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.*;
-import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
@@ -51,9 +51,9 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.transactional.ServiceFailureKeys.*;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.transactional.ServiceFailureKeys.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 
@@ -73,28 +73,28 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private FormInputRepository formInputRepository;
 
     @Autowired
-    ApplicationRepository applicationRepository;
+    private ApplicationRepository applicationRepository;
 
     @Autowired
-    ProcessRoleRepository processRoleRepository;
+    private ProcessRoleRepository processRoleRepository;
 
     @Autowired
-    ApplicationStatusRepository applicationStatusRepository;
+    private ApplicationStatusRepository applicationStatusRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
 
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    OrganisationRepository organisationRepository;
+    private CompetitionRepository competitionRepository;
 
     @Autowired
-    CompetitionRepository competitionRepository;
+    private ApplicationMapper applicationMapper;
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -434,5 +434,13 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         processRoleRepository.save(processRole);
 
         return application;
+    }
+
+    @Override
+    public ServiceResult<ApplicationResource> findByProcessRole(final Long id){
+
+        return getOrFail(() -> processRoleRepository.findOne(id), notFoundError(ProcessRole.class, id)).andOnSuccess(processRole ->
+            serviceSuccess(applicationMapper.mapApplicationToResource(processRole.getApplication()))
+        );
     }
 }
