@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static org.springframework.http.HttpStatus.OK;
 
 /**
  * ResponseRestServiceImpl is a utility for CRUD operations on {@link Response}'s.
@@ -35,6 +34,6 @@ public class ResponseRestServiceImpl extends BaseRestService implements Response
                 "&feedbackValue=" + feedbackValue.orElse("") +
                 "&feedbackText=" + feedbackText.orElse("");
 
-        return putWithRestResult(url, Void.class, OK);
+        return putWithRestResult(url);
     }
 }

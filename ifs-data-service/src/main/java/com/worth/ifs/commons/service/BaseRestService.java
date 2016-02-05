@@ -16,15 +16,20 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
+import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * BaseRestService provides a base for all Service classes.
@@ -64,6 +69,9 @@ public abstract class BaseRestService {
         return responseEntity.getBody();
     }
 
+    protected <T> RestResult<T> getWithRestResult(String path) {
+        return exchangeWithRestResult(path, GET);
+    }
 
     /**
      * restGet is a generic method that performs a RESTful GET request.
@@ -78,9 +86,9 @@ public abstract class BaseRestService {
         return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), c);
     }
 
-    protected  <T> ResponseEntity<T> restGetParameterizedType(String path, ParameterizedTypeReference<T> responseType){
+    protected  <T> ResponseEntity<T> restGet(String path){
         log.debug("restGetParameterizedType: "+path);
-        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), responseType);
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), returnType());
     }
 
 
@@ -103,22 +111,26 @@ public abstract class BaseRestService {
     }
 
     protected <T> ResponseEntity<T> restPutEntity(String path, Class<T> c){
-        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.PUT, jsonEntity(""), c);
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, PUT, jsonEntity(""), c);
     }
 
-    protected <T> RestResult<T> putWithRestResult(String path, Class<T> c, HttpStatus... expectedSuccessCodes){
+    protected <T> RestResult<T> putWithRestResult(String path) {
+        return exchangeWithRestResult(path, PUT);
+    }
 
+    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method) {
+        return exchangeWithRestResult(path, method, OK);
+    }
+
+    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         try {
-            ResponseEntity<String> response = getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.PUT, jsonEntity(""), String.class);
+            ParameterizedTypeReference<T> responseType = returnType();
+            ResponseEntity<T> response = getRestTemplate().exchange(getDataRestServiceURL() + path, method, jsonEntity(""), responseType);
+            List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
 
-            if (asList(expectedSuccessCodes).contains(response.getStatusCode())) {
-
-                return fromJson(response.getBody(), c).mapLeftOrRight(
-                        failure -> RestResult.<T> restFailure(internalServerErrorError("Unable to process JSON response as type " + c)),
-                        success -> RestResult.<T> restSuccess(success, response.getStatusCode())
-                );
+            if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
+                return RestResult.<T> restSuccess(response.getBody(), response.getStatusCode());
             } else {
-
                 return RestResult.<T> restFailure(new Error(INTERNAL_SERVER_ERROR, "Unexpected status code " + response.getStatusCode(), INTERNAL_SERVER_ERROR));
             }
         } catch (HttpStatusCodeException e) {
@@ -148,11 +160,11 @@ public abstract class BaseRestService {
     }
 
     protected void restPut(String path, Object entity) {
-        getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.PUT, jsonEntity(entity), Void.class);
+        getRestTemplate().exchange(getDataRestServiceURL() + path, PUT, jsonEntity(entity), Void.class);
     }
 
     protected <T> ResponseEntity<T> restPut(String path, Object entity, Class<T> c) {
-        return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.PUT, jsonEntity(entity), c);
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, PUT, jsonEntity(entity), c);
     }
 
     protected void restDelete(String path) {
@@ -194,7 +206,6 @@ public abstract class BaseRestService {
         return getJSONHeaders();
     }
 
-
     protected <T> HttpEntity<T> jsonEntity(T entity){
         HttpHeaders headers = getHeaders();
         if (SecurityContextHolder.getContext() != null &&
@@ -203,6 +214,11 @@ public abstract class BaseRestService {
             headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         }
         return new HttpEntity<>(entity, headers);
+    }
+
+    @NotSecured("Simple utility method")
+    public static <T> ParameterizedTypeReference<T> returnType() {
+        return new ParameterizedTypeReference<T>() {};
     }
 
     protected RestTemplate getRestTemplate() {

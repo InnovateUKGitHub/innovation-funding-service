@@ -8,6 +8,7 @@ import com.worth.ifs.commons.error.Errors;
 import com.worth.ifs.commons.rest.RestErrorEnvelope;
 import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Test;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpServerErrorException;
 
@@ -18,6 +19,8 @@ import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.PUT;
@@ -62,8 +65,8 @@ public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<Respon
         String expectedUrl = dataServicesUrl + responseRestURL +
                 "/saveQuestionResponse/1/assessorFeedback?assessorUserId=2&feedbackValue=value&feedbackText=text";
 
-        ResponseEntity<String> response = new ResponseEntity<>(OK);
-        when(mockRestTemplate.exchange(expectedUrl, PUT, httpEntityForRestCall(), String.class)).thenReturn(response);
+        ResponseEntity<Void> response = new ResponseEntity<>(OK);
+        when(mockRestTemplate.exchange(eq(expectedUrl), eq(PUT), eq(httpEntityForRestCall()), (ParameterizedTypeReference<Void>) isA(ParameterizedTypeReference.class))).thenReturn(response);
 
         // now run the method under test
         RestResult<Void> success = service.saveQuestionResponseAssessorFeedback(2L, 1L, Optional.of("value"), Optional.of("text"));
@@ -79,7 +82,7 @@ public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<Respon
                 "/saveQuestionResponse/1/assessorFeedback?assessorUserId=2&feedbackValue=value&feedbackText=text";
 
         RestErrorEnvelope restErrorEnvelope = new RestErrorEnvelope(asList(Errors.badRequestError("Bad!"), Errors.internalServerErrorError("Bang!")));
-        when(mockRestTemplate.exchange(expectedUrl, PUT, httpEntityForRestCall(), String.class)).thenThrow(new HttpServerErrorException(BAD_REQUEST, "Bad!", toJsonBytes(restErrorEnvelope), defaultCharset()));
+        when(mockRestTemplate.exchange(eq(expectedUrl), eq(PUT), eq(httpEntityForRestCall()), isA(ParameterizedTypeReference.class))).thenThrow(new HttpServerErrorException(BAD_REQUEST, "Bad!", toJsonBytes(restErrorEnvelope), defaultCharset()));
 
         // now run the method under test
         RestResult<Void> failure = service.saveQuestionResponseAssessorFeedback(2L, 1L, Optional.of("value"), Optional.of("text"));
