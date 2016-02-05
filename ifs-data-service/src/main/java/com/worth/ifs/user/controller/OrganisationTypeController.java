@@ -19,6 +19,6 @@ public class OrganisationTypeController {
 
     @RequestMapping("/{id}")
     public OrganisationTypeResource findById(@PathVariable("id") final Long id) {
-        return mapper.mapOrganisationTypeToResource(service.findOne(id));
+        return mapper.mapToResource(service.findOne(id));
     }
 }
