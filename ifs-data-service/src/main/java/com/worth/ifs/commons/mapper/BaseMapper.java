@@ -9,5 +9,7 @@ public abstract class BaseMapper<D, R>{
 //    public abstract void setRepository(CrudRepository repository);
 
     public abstract R mapToResource(D domain);
+    public abstract Iterable<R> mapToResource(Iterable<D> domain);
     public abstract D mapToDomain(R resource);
+    public abstract Iterable<D> mapToDomain(Iterable<R> resource);
 }
