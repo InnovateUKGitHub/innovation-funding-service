@@ -1,12 +1,9 @@
 package com.worth.ifs.organisation.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.organisation.domain.OrganisationAddress;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 public class AddressResource {
     private Long id;
@@ -128,9 +125,11 @@ public class AddressResource {
         return organisations;
     }
 
-    public void setOrganisations(List<OrganisationAddress> organisations) {
-        this.organisations = simpleMap(organisations, OrganisationAddress::getId);
+    public void setId(Long id) {
+        this.id = id;
     }
 
-
+    public void setOrganisations(List<Long> organisations) {
+        this.organisations = organisations;
+    }
 }

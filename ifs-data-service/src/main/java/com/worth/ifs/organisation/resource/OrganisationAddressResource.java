@@ -49,4 +49,15 @@ public class OrganisationAddressResource {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setOrganisation(Long organisation) {
+        this.organisation = organisation;
+    }
+
+    public void setAddress(Long address) {
+        this.address = address;
+    }
 }
