@@ -1,8 +1,7 @@
-package com.worth.ifs.service;
+package com.worth.ifs.util;
 
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.Cookie;
@@ -10,17 +9,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-@Service
 @Configurable
-public class CookieService {
+public class CookieUtil {
 
     @Value("${server.session.cookie.secure}")
-    private boolean cookieSecure;
+    private static boolean cookieSecure;
 
     @Value("${server.session.cookie.http-only}")
-    private boolean cookieHttpOnly;
+    private static boolean cookieHttpOnly;
 
-    public void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue) {
+    public static void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue) {
         if (fieldName != null) {
             Cookie cookie = new Cookie(fieldName, fieldValue);
             cookie.setSecure(cookieSecure);
@@ -31,12 +29,12 @@ public class CookieService {
         }
     }
 
-    public Optional<Cookie> getCookie(HttpServletRequest request, String fieldName) {
+    public static Optional<Cookie> getCookie(HttpServletRequest request, String fieldName) {
         return Optional.ofNullable(WebUtils.getCookie(request, fieldName));
     }
 
-    public String getCookieValue(HttpServletRequest request, String fieldName){
-        Optional<Cookie> cookie = this.getCookie(request, fieldName);
+    public static String getCookieValue(HttpServletRequest request, String fieldName){
+        Optional<Cookie> cookie = getCookie(request, fieldName);
         if(cookie.isPresent()){
             return cookie.get().getValue();
         }

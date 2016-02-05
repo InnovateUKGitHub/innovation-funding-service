@@ -5,7 +5,7 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.login.LoginForm;
-import com.worth.ifs.service.CookieService;
+import com.worth.ifs.util.CookieUtil;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
@@ -28,8 +28,6 @@ import java.util.stream.Collectors;
 public class AcceptInviteController extends AbstractApplicationController {
     public static final String INVITE_HASH = "invite_hash";
     private final Log log = LogFactory.getLog(getClass());
-    @Autowired
-    private CookieService cookieService;
     @Autowired
     private InviteRestService inviteRestService;
     @Autowired
@@ -60,7 +58,7 @@ public class AcceptInviteController extends AbstractApplicationController {
 
                 model.addAttribute("invite", invite.get());
                 model.addAttribute("loginForm", loginForm);
-                cookieService.saveToCookie(response, INVITE_HASH, hash);
+                CookieUtil.saveToCookie(response, INVITE_HASH, hash);
                 return "application-contributors/invite/accept-invite";
             }else{
                 cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
@@ -78,7 +76,7 @@ public class AcceptInviteController extends AbstractApplicationController {
                                          HttpServletResponse response,
                                          Model model
     ){
-        String hash = cookieService.getCookieValue(request, INVITE_HASH);
+        String hash = CookieUtil.getCookieValue(request, INVITE_HASH);
         Optional<InviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if(invite.isPresent() && InviteStatusConstants.SEND.equals(invite.get().getStatus())){
