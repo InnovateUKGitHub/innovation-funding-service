@@ -60,5 +60,15 @@ public class InviteCollaboratorResource {
                 .toHashCode();
     }
 
+    public void setRecipientName(String recipientName) {
+        this.recipientName = recipientName;
+    }
 
+    public void setRecipientEmail(String recipientEmail) {
+        this.recipientEmail = recipientEmail;
+    }
+
+    public void setRecipientInviteLink(String recipientInviteLink) {
+        this.recipientInviteLink = recipientInviteLink;
+    }
 }

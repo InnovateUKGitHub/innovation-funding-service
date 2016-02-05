@@ -100,10 +100,6 @@ public class CompetitionResource{
         this.questions = questions;
     }
 
-    public void setApplications(List<Application> applications) {
-        this.applications = applications.stream().map(Application::getId).collect(Collectors.toList());
-    }
-
     @JsonIgnore
     public long getDaysLeft(){
         return getDaysBetween(LocalDate.now(), this.endDate);
@@ -167,5 +163,29 @@ public class CompetitionResource{
 
     public void setMaxResearchRatio(Integer maxResearchRatio) {
         this.maxResearchRatio = maxResearchRatio;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setApplications(List<Long> applications) {
+        this.applications = applications;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 }

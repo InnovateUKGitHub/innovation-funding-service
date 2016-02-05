@@ -112,4 +112,12 @@ public class InviteResource {
     public String getApplicationName() {
         return applicationName;
     }
+
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
 }

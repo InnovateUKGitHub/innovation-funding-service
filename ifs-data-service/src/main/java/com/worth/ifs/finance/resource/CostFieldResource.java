@@ -31,4 +31,24 @@ public class CostFieldResource {
     public String getType() {
         return type;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<CostValueId> getCostValues() {
+        return this.costValues;
+    }
+
+    public void setCostValues(List<CostValueId> costValues) {
+        this.costValues = costValues;
+    }
 }
