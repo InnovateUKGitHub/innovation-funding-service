@@ -130,4 +130,12 @@ public class UserResource {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<Long> getOrganisationIds() {
+        return this.organisationIds;
+    }
+
+    public void setOrganisationIds(List<Long> organisationIds) {
+        this.organisationIds = organisationIds;
+    }
 }
