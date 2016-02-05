@@ -12,6 +12,8 @@ public class InviteResource {
     private String name;
     private String email;
     private Long applicationId;
+    private String competitionName;
+    private String applicationName;
     private Long inviteOrganisationId;
     private String hash;
     private InviteStatusConstants status;
@@ -40,6 +42,8 @@ public class InviteResource {
         this.name = i.getName();
         this.email = i.getEmail();
         this.applicationId = i.getApplication().getId();
+        this.applicationName = i.getApplication().getName();
+        this.competitionName = i.getApplication().getCompetition().getName();
         this.inviteOrganisationId = i.getInviteOrganisation().getId();
         this.hash = i.getHash();
         this.status = i.getStatus();
@@ -99,5 +103,13 @@ public class InviteResource {
 
     public void setStatus(InviteStatusConstants status) {
         this.status = status;
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
     }
 }

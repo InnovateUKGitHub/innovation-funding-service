@@ -18,11 +18,11 @@ import com.worth.ifs.invite.transactional.InviteService;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,10 +35,9 @@ import java.util.*;
 @RestController
 @RequestMapping("/invite")
 public class InviteController {
+    private final Log log = LogFactory.getLog(getClass());
     @Value("${ifs.web.baseURL}")
     String webBaseUrl;
-    private final Log log = LogFactory.getLog(getClass());
-
     @Autowired
     InviteOrganisationRepository inviteOrganisationRepository;
 
@@ -63,7 +62,7 @@ public class InviteController {
         if (inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
             InviteOrganisation newInviteOrganisation = assembleInviteOrganisationFromResource(inviteOrganisationResource);
             List<Invite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
-            InviteOrganisation createdInviteOrganisation = inviteOrganisationRepository.save(newInviteOrganisation);
+            inviteOrganisationRepository.save(newInviteOrganisation);
             inviteRepository.save(newInvites);
             resourceEnvelope = sendInvites(newInvites);
         } else {
@@ -76,7 +75,7 @@ public class InviteController {
     @RequestMapping("/getInviteByHash/{hash}")
     public ResourceEnvelope<InviteResource> getInviteByHash(@PathVariable("hash") String hash) {
         Optional<Invite> invite = inviteRepository.getByHash(hash);
-        if(invite.isPresent()){
+        if (invite.isPresent()) {
             InviteResource inviteResource = new InviteResource(invite.get());
             ResourceEnvelope<InviteResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), inviteResource);
             return resourceEnvelope;
@@ -106,13 +105,7 @@ public class InviteController {
     }
 
     private ResourceEnvelope<InviteResultsResource> sendInvites(List<Invite> invites) {
-        String baseUrl;
-        if(StringUtils.isEmpty(webBaseUrl)){
-            baseUrl = "http://localhost:8080";
-        }else{
-            baseUrl = webBaseUrl;
-        }
-        List<ServiceResult<Notification>> results = inviteService.inviteCollaborators(baseUrl, invites);
+        List<ServiceResult<Notification>> results = inviteService.inviteCollaborators(webBaseUrl, invites);
 
         long failures = results.stream().filter(r -> r.isFailure()).count();
         long successes = results.stream().filter(r -> r.isSuccess()).count();
@@ -152,7 +145,7 @@ public class InviteController {
 
     private Invite mapInviteResourceToInvite(InviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
         Application application = applicationRepository.findOne(inviteResource.getApplicationId());
-        if(newInviteOrganisation == null && inviteResource.getInviteOrganisationId() != null){
+        if (newInviteOrganisation == null && inviteResource.getInviteOrganisationId() != null) {
             newInviteOrganisation = inviteOrganisationRepository.findOne(inviteResource.getInviteOrganisationId());
         }
         Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatusConstants.CREATED);
@@ -196,13 +189,7 @@ public class InviteController {
 
     private boolean inviteResourceIsValid(InviteResource inviteResource) {
 
-        if (inviteResource.getEmail() == null || inviteResource.getEmail().isEmpty()) {
-            return false;
-        }
-        if (inviteResource.getName() == null || inviteResource.getName().isEmpty()) {
-            return false;
-        }
-        if (inviteResource.getApplicationId() == null) {
+        if (StringUtils.isEmpty(inviteResource.getEmail()) || StringUtils.isEmpty(inviteResource.getName()) || inviteResource.getApplicationId() == null) {
             return false;
         }
 

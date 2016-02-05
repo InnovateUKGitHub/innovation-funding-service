@@ -4,7 +4,7 @@
 Controlled with javascript, an alternative standard html page should be used for non-js users
 ```
 <div class="modal-overlay js-close"></div>
-<div class="modal-reject-assessment" role="dialog" aria-hidden="false" style="margin-top: -100px;">  
+<div class="modal-reject-assessment" role="dialog" aria-hidden="false" style="margin-top: -100px;">
 	<button class="js-close close" aria-label="Close Popup">X</button>
         <div>
 			<form method="post" action="#">
@@ -42,8 +42,8 @@ Controlled with javascript, an alternative standard html page should be used for
 	z-index: 20;
 	@include transition-property(top,margin);
 	@include transition-duration(300ms);
-	
-	
+
+
 	.close {
 		background:none;
 		border:1px solid #000;
@@ -68,7 +68,7 @@ Controlled with javascript, an alternative standard html page should be used for
 		cursor:pointer;
 	}
 	&.hidden {
-		background-color:transparent;
+		background:transparent;
 		height: 0;
 	}
 	@include transition-property(background);
@@ -78,8 +78,8 @@ Controlled with javascript, an alternative standard html page should be used for
 	height: 100%;
 	left:0;
 	top:0;
-	background-color: #000;
-	background-color: rgba(0,0,0,0.5);
-	z-index: 9 ; 
-} 
-
+	//in fallback order
+	background: url("../images/000000-0.5.png");
+	background: rgba(0,0,0,0.5);
+	z-index: 9; 
+}

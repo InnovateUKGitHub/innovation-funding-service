@@ -6,6 +6,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.repository.InviteRepository;
+import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
@@ -22,7 +23,6 @@ import java.util.*;
 
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.invite.transactional.InviteServiceImpl.Notifications.INVITE_COLLABORATOR;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static java.util.Collections.singletonList;
 
@@ -56,39 +56,40 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public Optional<Invite> getInviteByHash(String hash){
-        return inviteRepository.getByHash(hash);
+    public Optional<InviteResource> getInviteByHash(String hash){
+        Optional<Invite> invite = inviteRepository.getByHash(hash);
+        if(invite.isPresent()){
+            return Optional.ofNullable(new InviteResource(invite.get()));
+        }
+        return Optional.empty();
     }
 
     @Override
     public List<ServiceResult<Notification>> inviteCollaborators(String baseUrl, List<Invite> invites) {
         List<ServiceResult<Notification>> results = new ArrayList<>();
-        invites.stream().forEach(i -> {
-            log.error("run validator");
-            Errors errors = new BeanPropertyBindingResult(i, i.getClass().getName());
-            validator.validate(i, errors);
-            log.error("did run validator " +errors.getAllErrors().size());
+        invites.stream().forEach(invite -> {
+            Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
+            validator.validate(invite, errors);
 
             if(errors.hasErrors()){
                 errors.getFieldErrors().stream().peek(e -> log.debug(String.format("Field error: %s ", e.getField())));
-                ServiceResult<Notification> iR = serviceFailure(internalServerErrorError("Validation errors"));
-
-                results.add(iR);
-                iR.handleFailureOrSuccess(
-                        failure -> handleInviteError(i, failure),
-                        success -> handleInviteSuccess(i)
-                );
-            }else{
-                if(i.generateHash()){
-                    inviteRepository.save(i);
-                }
-
-                ServiceResult<Notification> inviteResult = inviteCollaboratorToApplication(baseUrl, i);
+                ServiceResult<Notification> inviteResult = serviceFailure(internalServerErrorError("Validation errors"));
 
                 results.add(inviteResult);
                 inviteResult.handleFailureOrSuccess(
-                        failure -> handleInviteError(i, failure),
-                        success -> handleInviteSuccess(i)
+                        failure -> handleInviteError(invite, failure),
+                        success -> handleInviteSuccess(invite)
+                );
+            }else{
+                invite.generateHash();
+                inviteRepository.save(invite);
+
+                ServiceResult<Notification> inviteResult = inviteCollaboratorToApplication(baseUrl, invite);
+
+                results.add(inviteResult);
+                inviteResult.handleFailureOrSuccess(
+                        failure -> handleInviteError(invite, failure),
+                        success -> handleInviteSuccess(invite)
                 );
             }
         });
@@ -107,7 +108,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private String getInviteUrl(String baseUrl, Invite invite) {
-        return String.format("%s/accept-invite/%s/%s", baseUrl, invite.getApplication().getCompetition().getId(), invite.getHash());
+        return String.format("%s/accept-invite/%s", baseUrl, invite.getHash());
     }
 
     @Override
@@ -123,11 +124,14 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         notificationArguments.put("leadApplicant", invite.getApplication().getLeadApplicant().get().getName());
         notificationArguments.put("leadApplicantEmail", invite.getApplication().getLeadApplicant().get().getEmail());
 
-        Notification notification = new Notification(from, singletonList(to), INVITE_COLLABORATOR, notificationArguments);
-        log.warn(String.format("Send notification email to : %s <%s>", invite.getName(), invite.getEmail()));
-        log.warn(String.format("Send notification with link : %s ", getInviteUrl(baseUrl, invite)));
+        Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_COLLABORATOR, notificationArguments);
         return notificationService.sendNotification(notification, EMAIL);
 
+    }
+
+    @Override
+    public Invite findOne(Long id) {
+        return inviteRepository.findOne(id);
     }
 
 }
