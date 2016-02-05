@@ -15,9 +15,7 @@ public interface QuestionStatusRepository extends CrudRepository<QuestionStatus,
     QuestionStatus findByQuestionIdAndApplicationIdAndMarkedAsCompleteById(Long questionId, Long applicationId, Long markAsCompleteById);
     QuestionStatus findByQuestionIdAndApplicationIdAndAssigneeId(@Param("questionId") Long questionId, @Param("applicationId") Long applicationId, @Param("assigneeId") Long assigneeId);
     List<QuestionStatus> findByQuestionIdAndApplicationId(@Param("questionId") Long questionId, @Param("applicationId") Long applicationId);
-    List<QuestionStatus> findByQuestionIdAndApplicationIdAndAssigneeOrganisationId(@Param("questionId") Long questionId, @Param("applicationId") Long applicationId, @Param("organisationId") Long organisationId);
-    List<QuestionStatus> findByQuestionIdIsInAndApplicationIdAndAssigneeOrganisationId(@Param("questionIds") List<Long> questionIds, @Param("applicationId") Long applicationId, @Param("organisationId") Long organisationId);
-    List<QuestionStatus> findByApplicationIdAndAssigneeOrganisationId(@Param("applicationId") Long applicationId, @Param("organisationId") Long organisationId);
+    List<QuestionStatus> findByQuestionIdIsInAndApplicationId(@Param("questionIds") List<Long> questionIds, @Param("applicationId") Long applicationId);
     List<QuestionStatus> findByApplicationId(@Param("applicationId") Long applicationId);
     List<QuestionStatus> findByApplicationIdAndAssigneeId(@Param("applicationId") Long applicationId, @Param("assigneeId") Long assigneeId);
     int countByApplicationIdAndAssigneeId(@Param("applicationId") Long applicationId, @Param("assigneeId") Long assigneeId);
