@@ -21,4 +21,9 @@ public class OrganisationTypeController {
     public OrganisationTypeResource findById(@PathVariable("id") final Long id) {
         return mapper.mapToResource(service.findOne(id));
     }
+
+    @RequestMapping("/getAll")
+    public Iterable<OrganisationTypeResource> findAll() {
+        return mapper.mapToResource(service.findAll());
+    }
 }

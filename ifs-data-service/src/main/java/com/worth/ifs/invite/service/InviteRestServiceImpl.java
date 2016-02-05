@@ -73,6 +73,17 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
         return Optional.empty();
     }
 
+    @Override
+    public Optional<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
+        ParameterizedTypeReference<ResourceEnvelope<InviteOrganisationResource>> typeReference = new ParameterizedTypeReference<ResourceEnvelope<InviteOrganisationResource>>() {};
+        ResponseEntity<ResourceEnvelope<InviteOrganisationResource>> resource = restGetParameterizedType(inviteRestUrl + "/getInviteOrganisationByHash/"+hash, typeReference);
+
+        if(ResourceEnvelopeConstants.OK.getName().equals(resource.getBody().getStatus())){
+            return Optional.ofNullable(resource.getBody().getEntity());
+        }
+        return Optional.empty();
+    }
+
 
     @Override
     public List<InviteOrganisationResource> getInvitesByApplication(Long applicationId) {

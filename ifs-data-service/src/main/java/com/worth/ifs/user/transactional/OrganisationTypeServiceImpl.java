@@ -14,4 +14,9 @@ public class OrganisationTypeServiceImpl implements OrganisationTypeService {
     public OrganisationType findOne(Long id) {
         return repository.findOne(id);
     }
+
+    @Override
+    public Iterable<OrganisationType> findAll() {
+        return repository.findAll();
+    }
 }
