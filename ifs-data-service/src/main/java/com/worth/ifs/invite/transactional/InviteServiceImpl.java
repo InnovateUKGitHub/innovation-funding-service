@@ -134,4 +134,24 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return inviteRepository.findOne(id);
     }
 
+    @Override
+    public List<Invite> findByApplicationId(Long applicationId) {
+        return inviteRepository.findByApplicationId(applicationId);
+    }
+
+    @Override
+    public Optional<Invite> getByHash(String hash) {
+        return inviteRepository.getByHash(hash);
+    }
+
+    @Override
+    public Invite save(Invite invite) {
+        return inviteRepository.save(invite);
+    }
+
+    @Override
+    public Iterable<Invite> save(Iterable<Invite> invites) {
+        return inviteRepository.save(invites);
+    }
+
 }

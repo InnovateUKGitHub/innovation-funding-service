@@ -9,11 +9,9 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
-import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
-import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.invite.transactional.InviteService;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.user.domain.Organisation;
@@ -42,16 +40,11 @@ public class InviteController {
     InviteOrganisationRepository inviteOrganisationRepository;
 
     @Autowired
-    InviteRepository inviteRepository;
-
-    @Autowired
     OrganisationRepository organisationRepository;
 
     @Autowired
     ApplicationRepository applicationRepository;
 
-    @Autowired
-    InviteRestService inviteRestService;
     @Autowired
     InviteService inviteService;
 
@@ -63,7 +56,7 @@ public class InviteController {
             InviteOrganisation newInviteOrganisation = assembleInviteOrganisationFromResource(inviteOrganisationResource);
             List<Invite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
             inviteOrganisationRepository.save(newInviteOrganisation);
-            inviteRepository.save(newInvites);
+            inviteService.save(newInvites);
             resourceEnvelope = sendInvites(newInvites);
         } else {
             resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new InviteResultsResource());
@@ -74,7 +67,7 @@ public class InviteController {
 
     @RequestMapping("/getInviteByHash/{hash}")
     public ResourceEnvelope<InviteResource> getInviteByHash(@PathVariable("hash") String hash) {
-        Optional<Invite> invite = inviteRepository.getByHash(hash);
+        Optional<Invite> invite = inviteService.getByHash(hash);
         if (invite.isPresent()) {
             InviteResource inviteResource = new InviteResource(invite.get());
             ResourceEnvelope<InviteResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), inviteResource);
@@ -88,7 +81,7 @@ public class InviteController {
     @RequestMapping("/getInvitesByApplicationId/{applicationId}")
     public Collection<InviteOrganisationResource> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
         Map<Long, InviteOrganisationResource> results = new LinkedHashMap<>();
-        List<Invite> invites = inviteRepository.findByApplicationId(applicationId);
+        List<Invite> invites = inviteService.findByApplicationId(applicationId);
         invites.stream().forEach(i -> {
             results.put(i.getInviteOrganisation().getId(), new InviteOrganisationResource(i.getInviteOrganisation()));
         });
@@ -99,7 +92,7 @@ public class InviteController {
     public ResourceEnvelope<InviteResultsResource> saveInvites(@RequestBody List<InviteResource> inviteResources, HttpServletRequest request) {
         List<Invite> invites = new ArrayList<>();
         inviteResources.stream().forEach(iR -> invites.add(mapInviteResourceToInvite(iR, null)));
-        inviteRepository.save(invites);
+        inviteService.save(invites);
         return sendInvites(invites);
 
     }

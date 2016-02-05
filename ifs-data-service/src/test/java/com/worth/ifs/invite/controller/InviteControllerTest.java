@@ -68,7 +68,7 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
                 .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.OK.getName())))
                 .andDo(document("invite/createApplicationInvites"));
 
-        verify(inviteRepositoryMock, times(1)).save(Matchers.anyListOf(Invite.class));
+        verify(inviteService, times(1)).save(Matchers.anyListOf(Invite.class));
         verify(inviteOrganisationRepositoryMock, times(1)).save(Matchers.isA(InviteOrganisation.class));
     }
 
