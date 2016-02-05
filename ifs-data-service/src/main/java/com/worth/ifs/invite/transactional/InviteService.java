@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface InviteService {
 
-    @NotSecured("This methods is not secured, since the person accepting the invite, is not yet registered. This resource should only contain the most basic data like competition name and application name.")
+    @NotSecured("This method is not secured, since the person accepting the invite, is not yet registered. This resource should only contain the most basic data like competition name and application name.")
     Optional<InviteResource> getInviteByHash(String hash);
 
     @NotSecured("TODO")

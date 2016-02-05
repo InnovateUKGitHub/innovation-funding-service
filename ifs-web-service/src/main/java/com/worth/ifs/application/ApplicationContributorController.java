@@ -189,7 +189,6 @@ public class ApplicationContributorController extends AbstractApplicationControl
                     return ApplicationController.redirectToApplication(application);
                 }
                 return String.format("redirect:/application/%d/contributors", applicationId);
-
             } else {
                 saveFormValuesToCookie(response, contributorsForm, applicationId);
             }
