@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.UserRoleType;
 
 import java.util.List;
@@ -19,5 +20,5 @@ public interface ApplicationRestService{
     void updateApplicationStatus(Long applicationId, Long statusId);
     Double getCompleteQuestionsPercentage(Long applicationId);
     Integer getAssignedQuestionsCount(Long applicationId, Long assigneeId);
-    ApplicationResource findByProcessRoleId(Long id);
+    RestResult<ApplicationResource> findByProcessRoleId(Long id);
 }
