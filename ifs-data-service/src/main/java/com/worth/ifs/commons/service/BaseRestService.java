@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorEnvelope;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,13 +44,11 @@ public abstract class BaseRestService {
         return dataRestServiceURL;
     }
 
-    @NotSecured("")
     @Value("${ifs.data.service.rest.baseURL}")
     public void setDataRestServiceUrl(String dataRestServiceURL) {
         this.dataRestServiceURL = dataRestServiceURL;
     }
 
-    @NotSecured("")
     public void setRestTemplateSupplier(Supplier<RestTemplate> restTemplateSupplier) {
         this.restTemplateSupplier = restTemplateSupplier;
     }
@@ -243,7 +240,6 @@ public abstract class BaseRestService {
         return restTemplate.postForEntity(getDataRestServiceURL() + path, entity, responseType);
     }
 
-    @NotSecured("")
     public static HttpHeaders getJSONHeaders() {
         //set your headers
         HttpHeaders headers = new HttpHeaders();
@@ -252,7 +248,6 @@ public abstract class BaseRestService {
         return headers;
     }
 
-    @NotSecured("")
     public HttpHeaders getHeaders(){
         return getJSONHeaders();
     }
