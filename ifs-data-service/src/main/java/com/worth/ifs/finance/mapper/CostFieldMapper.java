@@ -8,7 +8,10 @@ import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
-    config = GlobalMapperConfig.class
+    config = GlobalMapperConfig.class,
+    uses = {
+        CostValueMapper.class
+    }
 )
 public abstract class CostFieldMapper {
 

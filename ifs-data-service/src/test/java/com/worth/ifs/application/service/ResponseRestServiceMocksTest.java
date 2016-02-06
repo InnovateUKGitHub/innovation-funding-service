@@ -62,8 +62,8 @@ public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<Respon
         String expectedUrl = dataServicesUrl + responseRestURL +
                 "/saveQuestionResponse/1/assessorFeedback?assessorUserId=2&feedbackValue=value&feedbackText=text";
 
-        ResponseEntity<String> response = new ResponseEntity<>(OK);
-        when(mockRestTemplate.exchange(expectedUrl, PUT, httpEntityForRestCall(), String.class)).thenReturn(response);
+        ResponseEntity<Void> response = new ResponseEntity<>(OK);
+        when(mockRestTemplate.exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class)).thenReturn(response);
 
         // now run the method under test
         RestResult<Void> success = service.saveQuestionResponseAssessorFeedback(2L, 1L, Optional.of("value"), Optional.of("text"));
@@ -79,7 +79,7 @@ public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<Respon
                 "/saveQuestionResponse/1/assessorFeedback?assessorUserId=2&feedbackValue=value&feedbackText=text";
 
         RestErrorEnvelope restErrorEnvelope = new RestErrorEnvelope(asList(Errors.badRequestError("Bad!"), Errors.internalServerErrorError("Bang!")));
-        when(mockRestTemplate.exchange(expectedUrl, PUT, httpEntityForRestCall(), String.class)).thenThrow(new HttpServerErrorException(BAD_REQUEST, "Bad!", toJsonBytes(restErrorEnvelope), defaultCharset()));
+        when(mockRestTemplate.exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class)).thenThrow(new HttpServerErrorException(BAD_REQUEST, "Bad!", toJsonBytes(restErrorEnvelope), defaultCharset()));
 
         // now run the method under test
         RestResult<Void> failure = service.saveQuestionResponseAssessorFeedback(2L, 1L, Optional.of("value"), Optional.of("text"));

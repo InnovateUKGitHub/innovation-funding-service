@@ -2,20 +2,25 @@ package com.worth.ifs.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
-import org.mockito.Matchers;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.transactional.ServiceFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,7 +47,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         users.add(testUser2);
         users.add(testUser3);
 
-        when(userRepositoryMock.findAll()).thenReturn(users);
+        when(userServiceMock.findAll()).thenReturn(serviceSuccess(users));
         mockMvc.perform(get("/user/findAll/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]id", is((Number) testUser1.getId().intValue())))
@@ -64,7 +69,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void userControllerShouldReturnUserById() throws Exception {
         User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null);
 
-        when(userRepositoryMock.findOne(testUser1.getId())).thenReturn(testUser1);
+        when(userServiceMock.getUserById(testUser1.getId())).thenReturn(serviceSuccess(testUser1));
         mockMvc.perform(get("/user/id/" + testUser1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is((Number) testUser1.getId().intValue())))
@@ -78,9 +83,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void userControllerShouldReturnUserByToken() throws Exception {
         User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "testToken123abc", "test/image/url/1", null);
 
-        List<User> userList = singletonList(testUser1);
-
-        when(userRepositoryMock.findByToken(testUser1.getToken())).thenReturn(userList);
+        when(userServiceMock.getUserByToken(testUser1.getToken())).thenReturn(serviceSuccess(testUser1));
 
         mockMvc.perform(get("/user/token/" + testUser1.getToken()))
                 .andExpect(status().isOk())
@@ -96,6 +99,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     public void userControllerReturnUserResourceOfCreatedUserAfterUserCreation() throws Exception {
 
         UserResource userResource = newUserResource().withEmail("testemail@email.email")
+                .withName("testFirstName testLastName")
                 .withFirstName("testFirstName")
                 .withLastName("testLastName")
                 .withPhoneNumber("1234567890")
@@ -107,18 +111,8 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         String applicationJsonString = mapper.writeValueAsString(userResource);
 
         Long organisationId = 1L;
-        Long roleId = 1L;
 
-        User user = new User();
-        user.setEmail("testemail@email.email");
-        user.setFirstName("testFirstName");
-        user.setLastName("testLastName");
-        user.setPhoneNumber("testPhoneNumber");
-        user.setPassword("testPassword");
-        user.setName("testFirstName testLastName");
-        user.setTitle("Mr");
-
-        when(userRepositoryMock.save(Matchers.isA(User.class))).thenReturn(user);
+        when(userServiceMock.createUser(organisationId, userResource)).thenReturn(serviceSuccess(new ResourceEnvelope<>("OK", null, userResource)));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/" + organisationId, "json")
                 .contentType(APPLICATION_JSON)
@@ -131,10 +125,8 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("$.entity.title", notNullValue()))
                 .andExpect(jsonPath("$.entity.password", notNullValue()))
                 .andExpect(jsonPath("$.entity.email", notNullValue()))
-                .andExpect(jsonPath("$.entity.name", is(user.getFirstName() + " " + user.getLastName()))
+                .andExpect(jsonPath("$.entity.name", is(userResource.getFirstName() + " " + userResource.getLastName()))
                 );
-
-        verify(userRepositoryMock, times(2)).save(Matchers.isA(User.class));
     }
 
     @Test
@@ -148,10 +140,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         user.setName("testFirstName testLastName");
         user.setTitle("Mr");
 
-        List<User> users = new ArrayList<>();
-        users.add(user);
-
-        when(userRepositoryMock.findByEmail(user.getEmail())).thenReturn(users);
+        when(userServiceMock.findByEmail(user.getEmail())).thenReturn(serviceSuccess(singletonList(new UserResource(user))));
 
         mockMvc.perform(get("/user/findByEmail/" + user.getEmail() + "/", "json")
                 .contentType(APPLICATION_JSON))
@@ -159,24 +148,19 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("[0].email", is(user.getEmail())))
                 .andExpect(jsonPath("[1].email").doesNotExist()
                 );
-
-
     }
 
     @Test
     public void userControllerShouldReturnEmptyListWhenNoUserIsFoundByEmail() throws Exception {
-        List<User> users = new ArrayList<>();
 
         String email = "testemail@email.com";
 
-        when(userRepositoryMock.findByEmail(email)).thenReturn(users);
+        when(userServiceMock.findByEmail(email)).thenReturn(serviceSuccess(emptyList()));
 
         mockMvc.perform(get("/user/findByEmail/" + email + "/", "json")
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
-
-
     }
 
     @Test
@@ -194,22 +178,12 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         String applicationJsonString = mapper.writeValueAsString(userResource);
 
         Long organisationId = 1L;
-        Long roleId = 1L;
 
-        User user = new User();
-
-        List<User> users = new ArrayList<User>();
-        users.add(user);
-
-        when(userRepositoryMock.findByEmail(userResource.getEmail())).thenReturn(users);
+        when(userServiceMock.createUser(organisationId, userResource)).thenReturn(serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS)));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/" + organisationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(applicationJsonString))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.ERROR.getName()))
-                );
-
-        verify(userRepositoryMock, times(0)).save(Matchers.isA(User.class));
+                .andExpect(status().isConflict());
     }
 }

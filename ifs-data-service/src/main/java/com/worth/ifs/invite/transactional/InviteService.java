@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface InviteService {
 
-    @NotSecured("This methods is not secured, since the person accepting the invite, is not yet registered. This resource should only contain the most basic data like competition name and application name.")
+    @NotSecured("This method is not secured, since the person accepting the invite, is not yet registered. This resource should only contain the most basic data like competition name and application name.")
     Optional<InviteResource> getInviteByHash(String hash);
     @NotSecured("TODO")
     List<ServiceResult<Notification>> inviteCollaborators(String baseUrl, List<Invite> invites);
@@ -19,4 +19,12 @@ public interface InviteService {
     ServiceResult<Notification> inviteCollaboratorToApplication(String baseUrl, Invite invite);
     @NotSecured("TODO")
     Invite findOne(Long id);
+    @NotSecured("TODO")
+    List<Invite> findByApplicationId(Long applicationId);
+    @NotSecured("TODO")
+    Optional<Invite> getByHash(String hash);
+    @NotSecured("TODO")
+    Invite save(Invite invite);
+    @NotSecured("TODO")
+    Iterable<Invite> save(Iterable<Invite> invite);
 }

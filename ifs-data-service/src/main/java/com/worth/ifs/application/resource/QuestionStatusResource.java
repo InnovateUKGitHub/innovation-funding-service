@@ -95,4 +95,36 @@ public class QuestionStatusResource {
     public Long getApplication() {
         return this.application;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setMarkedAsComplete(Boolean markedAsComplete) {
+        this.markedAsComplete = markedAsComplete;
+    }
+
+    public void setMarkedAsCompleteBy(Long markedAsCompleteBy) {
+        this.markedAsCompleteBy = markedAsCompleteBy;
+    }
+
+    public void setQuestion(Long question) {
+        this.question = question;
+    }
+
+    public void setAssignee(Long assignee) {
+        this.assignee = assignee;
+    }
+
+    public void setAssignedDate(LocalDateTime assignedDate) {
+        this.assignedDate = assignedDate;
+    }
+
+    public void setApplication(Long application) {
+        this.application = application;
+    }
+
+    public void setAssignedBy(Long assignedBy) {
+        this.assignedBy = assignedBy;
+    }
 }

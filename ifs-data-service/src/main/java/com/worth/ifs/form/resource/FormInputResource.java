@@ -97,4 +97,7 @@ public class FormInputResource {
     public void setIncludedInApplicationSummary(Boolean includedInApplicationSummary) {
         this.includedInApplicationSummary = includedInApplicationSummary;
     }
+
+
 }
+

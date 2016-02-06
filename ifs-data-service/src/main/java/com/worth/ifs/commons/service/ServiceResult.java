@@ -21,101 +21,44 @@ import static java.util.Collections.singletonList;
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a ServiceFailure, and a
  * success will result in a T.  Additionally, these can be mapped to produce new ServiceResults that either fail or succeed.
  */
-public class ServiceResult<T> implements FailingOrSucceedingResult<T, ServiceFailure> {
+public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> {
 
     private static final Log LOG = LogFactory.getLog(ServiceResult.class);
 
-    private Either<ServiceFailure, T> result;
-
-    protected ServiceResult(ServiceResult<T> original) {
-        this.result = original.result;
-    }
-
-    private ServiceResult(T success) {
-        this(right(success));
-    }
-
-    private ServiceResult(ServiceFailure failure) {
-        this(left(failure));
-    }
-
     private ServiceResult(Either<ServiceFailure, T> result) {
-        this.result = result;
-    }
-
-    public <T1> T1 handleFailureOrSuccess(Function<? super ServiceFailure, ? extends T1> failureHandler, Function<? super T, ? extends T1> successHandler) {
-        return mapLeftOrRight(failureHandler, successHandler);
+        super(result);
     }
 
     @Override
     public <R> R handleSuccessOrFailure(Function<? super ServiceFailure, ? extends R> failureHandler, Function<? super T, ? extends R> successHandler) {
-        return mapLeftOrRight(failureHandler, successHandler);
+        return super.handleSuccessOrFailure(failureHandler, successHandler);
     }
 
+    @Override
     public <R> ServiceResult<R> andOnSuccess(Function<? super T, FailingOrSucceedingResult<R, ServiceFailure>> successHandler) {
-        return map(successHandler);
+        return (ServiceResult<R>) super.andOnSuccess(successHandler);
     }
 
-    public boolean isSuccess() {
-        return isRight();
+    @Override
+    protected <R> BaseEitherBackedResult<R, ServiceFailure> createSuccess(FailingOrSucceedingResult<R, ServiceFailure> success) {
+        return serviceSuccess(success.getSuccessObject());
     }
 
-    public boolean isFailure() {
-        return isLeft();
-    }
-
-    public ServiceFailure getFailure() {
-        return getLeft();
-    }
-
-    public T getSuccessObject() {
-        return getRight();
-    }
-
-    private <T1> T1 mapLeftOrRight(Function<? super ServiceFailure, ? extends T1> lFunc, Function<? super T, ? extends T1> rFunc) {
-        return result.mapLeftOrRight(lFunc, rFunc);
-    }
-
-    private <R> ServiceResult<R> map(Function<? super T, FailingOrSucceedingResult<R, ServiceFailure>> rFunc) {
-
-        if (result.isLeft()) {
-            return serviceFailure(result.getLeft());
-        }
-
-        FailingOrSucceedingResult<R, ServiceFailure> successResult = rFunc.apply(result.getRight());
-
-        return successResult.handleSuccessOrFailure(
-                failure -> ServiceResult.<R> serviceFailure(failure),
-                success -> ServiceResult.<R> serviceSuccess(success)
-        );
-    }
-
-    private boolean isLeft() {
-        return result.isLeft();
-    }
-
-    private boolean isRight() {
-        return result.isRight();
-    }
-
-    private ServiceFailure getLeft() {
-        return result.getLeft();
-    }
-
-    private T getRight() {
-        return result.getRight();
+    @Override
+    protected <R> BaseEitherBackedResult<R, ServiceFailure> createFailure(FailingOrSucceedingResult<R, ServiceFailure> failure) {
+        return serviceFailure(failure.getFailure());
     }
 
     public static <T> ServiceResult<T> serviceSuccess(T successfulResult) {
-        return new ServiceResult<>(successfulResult);
+        return new ServiceResult<>(right(successfulResult));
     }
 
     public static <T> ServiceResult<T> serviceFailure(ServiceFailure failure) {
-        return new ServiceResult<>(failure);
+        return new ServiceResult<>(left(failure));
     }
 
     public static <T> ServiceResult<T> serviceFailure(Error error) {
-        return new ServiceResult<>(new ServiceFailure(singletonList(error)));
+        return new ServiceResult<>(left(new ServiceFailure(singletonList(error))));
     }
 
     public static <T> ServiceResult<T> getNonNullValue(T value, Error error) {

@@ -1,5 +1,6 @@
 package com.worth.ifs.invite.mapper;
 
+import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.transactional.InviteService;
@@ -9,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Mapper(
     componentModel = "spring",
     uses = {
-
+        ApplicationMapper.class,
+        InviteOrganisationMapper.class
     }
 )
 public abstract class InviteMapper {

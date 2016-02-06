@@ -25,8 +25,8 @@
           cssClass: @options.buttonCssClass
         buttonset.append buttonElement
 
-      buttonize "Ordered", "OL" if @options.lists.ordered
-      buttonize "Unordered", "UL" if @options.lists.unordered
+      buttonize "Ordered", "ordered list" if @options.lists.ordered
+      buttonize "Unordered", "unordered list" if @options.lists.unordered
 
       buttonset.hallobuttonset()
       toolbar.append buttonset

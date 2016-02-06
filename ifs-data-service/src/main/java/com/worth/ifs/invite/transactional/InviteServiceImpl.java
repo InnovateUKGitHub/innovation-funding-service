@@ -76,7 +76,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 ServiceResult<Notification> inviteResult = serviceFailure(internalServerErrorError("Validation errors"));
 
                 results.add(inviteResult);
-                inviteResult.handleFailureOrSuccess(
+                inviteResult.handleSuccessOrFailure(
                         failure -> handleInviteError(invite, failure),
                         success -> handleInviteSuccess(invite)
                 );
@@ -87,7 +87,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 ServiceResult<Notification> inviteResult = inviteCollaboratorToApplication(baseUrl, invite);
 
                 results.add(inviteResult);
-                inviteResult.handleFailureOrSuccess(
+                inviteResult.handleSuccessOrFailure(
                         failure -> handleInviteError(invite, failure),
                         success -> handleInviteSuccess(invite)
                 );
@@ -132,6 +132,26 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Override
     public Invite findOne(Long id) {
         return inviteRepository.findOne(id);
+    }
+
+    @Override
+    public List<Invite> findByApplicationId(Long applicationId) {
+        return inviteRepository.findByApplicationId(applicationId);
+    }
+
+    @Override
+    public Optional<Invite> getByHash(String hash) {
+        return inviteRepository.getByHash(hash);
+    }
+
+    @Override
+    public Invite save(Invite invite) {
+        return inviteRepository.save(invite);
+    }
+
+    @Override
+    public Iterable<Invite> save(Iterable<Invite> invites) {
+        return inviteRepository.save(invites);
     }
 
 }

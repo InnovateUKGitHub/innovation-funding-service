@@ -88,6 +88,21 @@ public class ResponseResource {
         });
     }*/
 
+    public void setUpdatedBy(Long updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public void setQuestion(Long question) {
+        this.question = question;
+    }
+
+    public void setApplication(Long application) {
+        this.application = application;
+    }
+
+    public void setResponseAssessmentFeedbacks(List<Long> responseAssessmentFeedbacks) {
+        this.responseAssessmentFeedbacks = responseAssessmentFeedbacks;
+    }
 
     @Override
     public boolean equals(Object obj) {

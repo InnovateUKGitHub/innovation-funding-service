@@ -566,10 +566,10 @@
           return buttonset.append(buttonElement);
         };
         if (this.options.lists.ordered) {
-          buttonize("Ordered", "OL");
+          buttonize("Ordered", "ordered list");
         }
         if (this.options.lists.unordered) {
-          buttonize("Unordered", "UL");
+          buttonize("Unordered", "unordered list");
         }
         buttonset.hallobuttonset();
         return toolbar.append(buttonset);
