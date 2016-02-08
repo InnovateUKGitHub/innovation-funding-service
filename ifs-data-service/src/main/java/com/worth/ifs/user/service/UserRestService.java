@@ -12,18 +12,18 @@ import java.util.List;
  * Interface for CRUD operations on {@link User} related data.
  */
 public interface UserRestService {
-    User retrieveUserByToken(String token);
-    User retrieveUserByEmailAndPassword(String email, String password);
-    User retrieveUserById(Long id);
+    RestResult<User> retrieveUserByToken(String token);
+    RestResult<User> retrieveUserByEmailAndPassword(String email, String password);
+    RestResult<User> retrieveUserById(Long id);
 
-    List<User> findAll();
+    RestResult<List<User>> findAll();
     RestResult<ProcessRole> findProcessRole(Long userId, Long applicationId);
     RestResult<List<ProcessRole>> findProcessRole(Long applicationId);
-    List<User> findAssignableUsers(Long applicationId);
-    List<UserResource> findUserByEmail(String email);
+    RestResult<List<User>> findAssignableUsers(Long applicationId);
+    RestResult<List<UserResource>> findUserByEmail(String email);
     RestResult<List<ProcessRole>> findAssignableProcessRoles(Long applicationId);
-    List<User> findRelatedUsers(Long applicationId);
+    RestResult<List<User>> findRelatedUsers(Long applicationId);
     RestResult<ProcessRole> findProcessRoleById(Long processRoleId);
-    ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
-    ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber);
+    RestResult<ResourceEnvelope<UserResource>> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
+    RestResult<ResourceEnvelope<UserResource>> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber);
 }

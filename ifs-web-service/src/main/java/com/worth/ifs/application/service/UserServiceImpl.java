@@ -30,10 +30,12 @@ public class UserServiceImpl implements UserService {
     ProcessRoleService processRoleService;
 
     @Override
+    // TODO DW - INFUND-1555 - get service to return RestResult
     public List<User> getAssignable(Long applicationId) {
-        return userRestService.findAssignableUsers(applicationId);
+        return userRestService.findAssignableUsers(applicationId).getSuccessObject();
     }
 
+    @Override
     public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = simpleMap(application.getProcessRoles(),id -> processRoleService.getById(id));
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRole().getName()
@@ -41,6 +43,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
     public ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = simpleMap(application.getProcessRoles(),id -> processRoleService.getById(id));
         for(final ProcessRole processRole : userApplicationRoles){
@@ -51,6 +54,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
     public Set<User> getAssignableUsers(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
             .map(id -> processRoleService.getById(id))
@@ -61,6 +65,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
     }
 
+    @Override
     public Set<User> getApplicationUsers(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
             .map(id -> processRoleService.getById(id))
@@ -70,17 +75,22 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
     }
 
+    @Override
+    // TODO DW - INFUND-1555 - get service to return RestResult
     public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
-        ResourceEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
+        ResourceEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId).getSuccessObject();
         return userResourceResourceStatusEnvelope;
     }
 
     @Override
+    // TODO DW - INFUND-1555 - get service to return RestResult
     public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
-        return userRestService.updateDetails(email, firstName, lastName, title, phoneNumber);
+        return userRestService.updateDetails(email, firstName, lastName, title, phoneNumber).getSuccessObject();
     }
 
+    @Override
+    // TODO DW - INFUND-1555 - get service to return RestResult
     public List<UserResource> findUserByEmail(String email) {
-        return userRestService.findUserByEmail(email);
+        return userRestService.findUserByEmail(email).getSuccessObject();
     }
 }

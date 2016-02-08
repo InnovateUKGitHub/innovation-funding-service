@@ -73,7 +73,6 @@ public class ApplicationCreationController extends AbstractApplicationController
     private static final Log log = LogFactory.getLog(ApplicationCreationController.class);
     Validator validator;
 
-    @Autowired
     CookieUtil cookieUtil;
 
     public static String getSerializedObject(Object object) {
