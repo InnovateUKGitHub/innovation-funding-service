@@ -1,5 +1,6 @@
 package com.worth.ifs.security;
 
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.CredentialsValidator;
 import com.worth.ifs.user.controller.UserController;
 import com.worth.ifs.user.domain.User;
@@ -14,14 +15,12 @@ public class DataCredentialsValidator implements CredentialsValidator {
     UserController userController;
 
     @Override
-    public User retrieveUserByEmailAndPassword(String emailAddress, String password) {
-        User user = userController.getUserByEmailandPassword(emailAddress, password);
-        return user;
+    public RestResult<User> retrieveUserByEmailAndPassword(String emailAddress, String password) {
+        return userController.getUserByEmailandPassword(emailAddress, password);
     }
 
     @Override
-    public User retrieveUserByToken(String token) {
-        User user = userController.getUserByToken(token);
-        return user;
+    public RestResult<User> retrieveUserByToken(String token) {
+        return userController.getUserByToken(token);
   }
 }

@@ -122,7 +122,7 @@ public class FormInputResponseFileUploadController {
 
             ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result = doGetFile(formInputId, applicationId, processRoleId);
 
-            return result.handleFailureOrSuccess(
+            return result.handleSuccessOrFailure(
                     failure -> {
                         RestErrorEnvelope errorResponse = new RestErrorEnvelope(failure.getErrors());
                         return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
@@ -156,7 +156,7 @@ public class FormInputResponseFileUploadController {
 
             ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result = doGetFile(formInputId, applicationId, processRoleId);
 
-            return result.handleFailureOrSuccess(
+            return result.handleSuccessOrFailure(
                     failure -> {
                         RestErrorEnvelope errorResponse = new RestErrorEnvelope(failure.getErrors());
                         return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());

@@ -1,22 +1,10 @@
 package com.worth.ifs.security;
 
 import com.worth.ifs.BaseIntegrationTest;
-import com.worth.ifs.application.service.*;
-import com.worth.ifs.assessment.service.AssessmentRestServiceImpl;
 import com.worth.ifs.commons.security.StatelessAuthenticationFilter;
 import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.competition.service.CompetitionsRestServiceImpl;
 import com.worth.ifs.file.transactional.FileServiceImpl;
-import com.worth.ifs.finance.service.ApplicationFinanceRestServiceImpl;
-import com.worth.ifs.finance.service.CostFieldRestServiceImpl;
-import com.worth.ifs.finance.service.CostRestServiceImpl;
-import com.worth.ifs.form.service.FormInputResponseRestServiceImpl;
-import com.worth.ifs.form.service.FormInputRestServiceImpl;
-import com.worth.ifs.invite.service.InviteRestServiceImpl;
-import com.worth.ifs.organisation.service.CompanyHouseRestServiceImpl;
-import com.worth.ifs.user.service.OrganisationRestServiceImpl;
-import com.worth.ifs.user.service.UserRestServiceImpl;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -33,6 +21,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
 
 public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
@@ -42,28 +31,9 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
 
     List<Class<?>> excludedClasses
             = Arrays.asList(
-                    BaseRestService.class,
-                    UserRestServiceImpl.class,
-                    OrganisationRestServiceImpl.class,
-                    FormInputResponseRestServiceImpl.class,
-                    CompetitionsRestServiceImpl.class,
-                    CostRestServiceImpl.class,
-                    ApplicationFinanceRestServiceImpl.class,
-                    CostFieldRestServiceImpl.class,
-                    AssessmentRestServiceImpl.class,
-                    SectionRestServiceImpl.class,
-                    QuestionRestServiceImpl.class,
-                    ApplicationRestServiceImpl.class,
-                    CompanyHouseRestServiceImpl.class,
-                    ResponseRestServiceImpl.class,
                     TokenAuthenticationService.class,
                     StatelessAuthenticationFilter.class,
-                    QuestionStatusRestServiceImpl.class,
-                    FileServiceImpl.class,
-                    FormInputRestServiceImpl.class,
-                    InviteRestServiceImpl.class,
-                    FileServiceImpl.class,
-                    ApplicationStatusRestServiceImpl.class
+                    FileServiceImpl.class
             );
 
     List<Class<? extends Annotation>> securityAnnotations
@@ -77,7 +47,7 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
 
     @Test
     public void testServiceMethodsHaveSecurityAnnotations() throws Exception {
-        Collection<Object> services = unwrapProxies(servicesToTest());
+        Collection<Object> services = simpleFilter(unwrapProxies(servicesToTest()), service -> !BaseRestService.class.isAssignableFrom(service.getClass()));
 
         // Assert that we actually have some services.
         assertNotNull(services);
@@ -123,7 +93,7 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
         return services;
     }
 
-    private Collection<Object> unwrapProxies(Collection<Object> services) throws Exception {
+    private List<Object> unwrapProxies(Collection<Object> services) throws Exception {
         List<Object> unwrappedProxies = new ArrayList<>();
         for (Object service : services) {
             if (AopUtils.isJdkDynamicProxy(service)) {

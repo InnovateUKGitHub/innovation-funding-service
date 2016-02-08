@@ -3,7 +3,6 @@ package com.worth.ifs.user.service;
 import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -46,7 +45,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         return restGet(userRestURL + "/token/" + token, User.class);
     }
 
-    @NotSecured("Method should be able to be called by a web service for guest user that is creating his account to check for duplicate email")
     @Override
     public List<UserResource> findUserByEmail(String email) {
         if(StringUtils.isEmpty(email))
@@ -117,7 +115,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         return Arrays.asList(users);
     }
 
-    @NotSecured("Method should be able to be called by a web service for guest user to create an account")
     @Override
     public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
         UserResource user = new UserResource();

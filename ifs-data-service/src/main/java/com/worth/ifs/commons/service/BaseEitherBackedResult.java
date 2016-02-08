@@ -20,12 +20,7 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
         this.result = result;
     }
 
-    public <T1> T1 handleFailureOrSuccess(Function<? super FailureType, ? extends T1> failureHandler, Function<? super T, ? extends T1> successHandler) {
-        return mapLeftOrRight(failureHandler, successHandler);
-    }
-
-    @Override
-    public <R> R handleSuccessOrFailure(Function<? super FailureType, ? extends R> failureHandler, Function<? super T, ? extends R> successHandler) {
+    public <T1> T1 handleSuccessOrFailure(Function<? super FailureType, ? extends T1> failureHandler, Function<? super T, ? extends T1> successHandler) {
         return mapLeftOrRight(failureHandler, successHandler);
     }
 
