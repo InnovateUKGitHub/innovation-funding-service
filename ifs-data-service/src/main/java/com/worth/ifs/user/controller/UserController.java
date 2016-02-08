@@ -6,11 +6,11 @@ import com.worth.ifs.commons.rest.RestResultBuilder;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.UserService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Set;
@@ -28,16 +28,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    private final Log log = LogFactory.getLog(getClass());
-
-    @ExceptionHandler(Exception.class)
-    @ResponseBody
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public String handleException(Exception e) {
-        log.error(e.getStackTrace());
-        return "return error object instead";
-    }
 
     @RequestMapping("/token/{token}")
     public RestResult<User> getUserByToken(@PathVariable("token") final String token) {

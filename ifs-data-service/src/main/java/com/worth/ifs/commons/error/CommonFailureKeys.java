@@ -1,7 +1,5 @@
-package com.worth.ifs.transactional;
+package com.worth.ifs.commons.error;
 
-import com.worth.ifs.commons.error.ErrorTemplate;
-import com.worth.ifs.commons.error.ErrorTemplateImpl;
 import org.springframework.http.HttpStatus;
 
 import static org.springframework.http.HttpStatus.*;
@@ -10,7 +8,7 @@ import static org.springframework.http.HttpStatus.*;
  * A set of failure cases for Service code, including general catch-all errors and more specific use-case errors that potentially
  * span different services
  */
-public enum ServiceFailureKeys implements ErrorTemplate {
+public enum CommonFailureKeys implements ErrorTemplate {
 
     /**
      * General
@@ -51,7 +49,7 @@ public enum ServiceFailureKeys implements ErrorTemplate {
 
     private ErrorTemplate errorTemplate;
 
-    ServiceFailureKeys(String errorMessage, HttpStatus category) {
+    CommonFailureKeys(String errorMessage, HttpStatus category) {
         this.errorTemplate = new ErrorTemplateImpl(name(), errorMessage, category);
     }
 

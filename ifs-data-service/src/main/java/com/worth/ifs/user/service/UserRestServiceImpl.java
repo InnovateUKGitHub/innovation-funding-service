@@ -13,6 +13,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
 import static java.util.Collections.emptyList;
@@ -41,7 +43,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<User> retrieveUserByToken(String token) {
         if(StringUtils.isEmpty(token))
-            return null;
+            return restFailure(notFoundError(User.class, token));
 
         return getWithRestResult(userRestURL + "/token/" + token, User.class);
     }
@@ -58,15 +60,16 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<User> retrieveUserByEmailAndPassword(String email, String password) {
         if(StringUtils.isEmpty(email) || StringUtils.isEmpty(password))
-            return null;
+            return restFailure(notFoundError(User.class, email));
 
         return getWithRestResult(userRestURL + "/email/" + email + "/password/" + password, User.class);
     }
 
     @Override
     public RestResult<User> retrieveUserById(Long id) {
-        if(id == null || id.equals(0L))
-            return null;
+        if(id == null || id.equals(0L)) {
+            return restFailure(notFoundError(User.class, id));
+        }
 
         return getWithRestResult(userRestURL + "/id/" + id, User.class);
     }

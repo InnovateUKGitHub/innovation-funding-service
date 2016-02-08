@@ -29,7 +29,7 @@ import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.commons.error.Errors.payloadTooLargeError;
-import static com.worth.ifs.transactional.ServiceFailureKeys.*;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
