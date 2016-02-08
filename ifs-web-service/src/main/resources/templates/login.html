@@ -20,7 +20,7 @@
             </h1>
 
                 <ul class="error-summary-list">
-                    <li th:each="err, index : ${#fields.errors('*')}" th:text="${index}"  th:unless="${#strings.startsWith(err,'Your username/password')}" />
+                    <li th:each="err, index : ${#fields.errors('*')}" th:text="${err}"  th:unless="${#strings.startsWith(err,'Your username/password')}" />
                     <li th:each="err, index : ${#fields.errors('*')}" th:if="${(#strings.startsWith(err,'Your username/password')) and index.index == 0}">Your username/password combination doesn't seem to work</li>
                 </ul>
         </section>
@@ -39,7 +39,7 @@
                                   <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}" />
                             </span>
                         </label>
-                        <input class="form-control form-control-3-4" th:classappend="${#fields.hasErrors('email') ? 'field-error': ''}" type="text" th:field="*{email}" id="id_email" required="required" data-required-errormessage="Please enter your e-mail address" />
+                        <input class="form-control form-control-3-4" th:classappend="${#fields.hasErrors('email') ? 'field-error': ''}" type="email" th:field="*{email}" id="id_email" required="required" data-required-errormessage="Please enter your e-mail address" data-email-errormessage="Please enter a valid e-mail address" />
                     </div>
                     <!-- .form-group -->
 
@@ -50,7 +50,7 @@
                                 <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
                           </span>
                         </label>
-                        <input class="form-control form-control-3-4" th:classappend="${#fields.hasErrors('email') ? 'field-error': ''}" type="password" th:field="*{password}" required="required" data-required-errormessage="Please enter your password"  id="id_password"/>
+                        <input class="form-control form-control-3-4" th:classappend="${#fields.hasErrors('password') ? 'field-error': ''}" type="password" th:field="*{password}" required="required" data-required-errormessage="Please enter your password"  id="id_password"/>
 
                     </div>
                     <!-- .form-group -->
