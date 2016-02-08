@@ -395,7 +395,9 @@
 
                 <div id="overhead-custom-percentage">
                     <h3 class="heading-medium">Custom administration support costs</h3>
-                    <p>For this Beta service only -  For details on how to calculate your custom administration support costs, please contact Innovate UK via email at <a href="mailto:support@innovateuk.gov.uk"><strong>support@innovateuk.gov.uk</strong></a> or phone <strong>0300 321 4357</strong>.</p>
+                    <p>For this Beta service only -  For details on how to calculate your custom administration support costs, please contact Innovate UK via email at <a href="mailto:support@innovateuk.gov.uk"><strong>support@innovateuk.gov.uk</strong></a> or phone <strong>0300 321 4357</strong>.
+                      We will assist you in calculating a unique rate based upon your organisation details.
+                    </p>
                     <div class="form-group alignright inline">
                             <label th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'}">Rate calculated (%)</label>
                             <input type="text"
@@ -421,7 +423,7 @@
 
                 <div id="overhead-special-rate">
                     <h3 class="heading-medium">Special rate agreed with Innovate UK</h3>
-                    <p>I confirm that I will need to justify this rate if this project is granted funding by Innovate UK.</p>
+<p>You should only use this section if you have previously agreed a rate of admin support cost funding with Innovate UK's project finance team. If this project is granted funding then you will need to justify this rate before the project can begin.</p>
                     <div class="form-group alignright inline">
                             <label th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-agreedRate'}">Rate agreed with Innovate UK (%)</label>
                             <input type="text"

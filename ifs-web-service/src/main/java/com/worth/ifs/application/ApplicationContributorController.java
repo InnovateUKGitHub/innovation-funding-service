@@ -79,6 +79,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
                                      Model model) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
+        Competition competition = competitionService.getById(application.getCompetition());
         ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         Organisation leadOrganisation = leadApplicantProcessRole.getOrganisation();
         User leadApplicant = leadApplicantProcessRole.getUser();
@@ -91,6 +92,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
 
         model.addAttribute("authenticatedUser", user);
         model.addAttribute("currentApplication", application);
+        model.addAttribute("currentCompetition", competition);
         model.addAttribute("leadApplicant", leadApplicant);
         model.addAttribute("leadOrganisation", leadOrganisation);
         model.addAttribute("organisationInvites", organisationInvites);
