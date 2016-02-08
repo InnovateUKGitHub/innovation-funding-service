@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  * This class contains methods to retrieve and store {@link ApplicationResource} related data,
  * through the RestService {@link ApplicationRestService}.
  */
+// TODO DW - INFUND-1555 - get service calls to return rest responses
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
 
@@ -27,12 +28,19 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public ApplicationResource getById(Long applicationId, Boolean... hateoas) {
-        return applicationRestService.getApplicationById(applicationId);
+        if (applicationId == null) {
+            return null;
+        }
+        
+        return applicationRestService.getApplicationById(applicationId).handleSuccessOrFailure(
+            failure -> null,
+            success -> success
+        );
     }
 
     @Override
     public List<ApplicationResource> getInProgress(Long userId) {
-        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId);
+        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObject();
         return applications.stream()
                 .filter(a -> (fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("created") || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("submitted")))
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -40,7 +48,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public List<ApplicationResource> getFinished(Long userId) {
-        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId);
+        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObject();
         return applications.stream()
                 .filter(a -> (fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("approved") || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("rejected")))
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -48,13 +56,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Map<Long, Integer> getProgress(Long userId) {
-        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId);
+        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObject();
         Map<Long, Integer> applicationProgress = new HashMap<>();
         applications.stream()
             .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("created"))
             .map(ApplicationResource::getId)
             .forEach(id -> {
-                Double progress = applicationRestService.getCompleteQuestionsPercentage(id);
+                Double progress = applicationRestService.getCompleteQuestionsPercentage(id).getSuccessObject();
                 applicationProgress.put(id, progress.intValue());
             });
         return applicationProgress;
@@ -62,14 +70,14 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public ApplicationResource createApplication(Long competitionId, Long userId, String applicationName) {
-        ApplicationResource application = applicationRestService.createApplication(competitionId, userId, applicationName);
+        ApplicationResource application = applicationRestService.createApplication(competitionId, userId, applicationName).getSuccessObject();
 
         return application;
     }
 
     @Override
     public Boolean isApplicationReadyForSubmit(Long applicationId) {
-        return applicationRestService.isApplicationReadyForSubmit(applicationId);
+        return applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccessObject();
     }
 
     @Override
@@ -79,12 +87,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public int getCompleteQuestionsPercentage(Long applicationId) {
-       return applicationRestService.getCompleteQuestionsPercentage(applicationId).intValue();
+       return applicationRestService.getCompleteQuestionsPercentage(applicationId).getSuccessObject().intValue();
     }
 
     @Override
     public int getAssignedQuestionsCount(Long applicationId, Long processRoleId){
-        return applicationRestService.getAssignedQuestionsCount(applicationId, processRoleId).intValue();
+        return applicationRestService.getAssignedQuestionsCount(applicationId, processRoleId).getSuccessObject().intValue();
     }
 
     @Override

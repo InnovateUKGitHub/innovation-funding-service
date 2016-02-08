@@ -1,6 +1,8 @@
 package com.worth.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.hateoas.core.Relation;
 
 import java.time.LocalDate;
@@ -91,5 +93,41 @@ public class ApplicationResource {
 
     public void setInvites(List<Long> invites) {
         this.invites = invites;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ApplicationResource that = (ApplicationResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(startDate, that.startDate)
+                .append(durationInMonths, that.durationInMonths)
+                .append(processRoles, that.processRoles)
+                .append(applicationFinances, that.applicationFinances)
+                .append(applicationStatus, that.applicationStatus)
+                .append(competition, that.competition)
+                .append(invites, that.invites)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(name)
+                .append(startDate)
+                .append(durationInMonths)
+                .append(processRoles)
+                .append(applicationFinances)
+                .append(applicationStatus)
+                .append(competition)
+                .append(invites)
+                .toHashCode();
     }
 }

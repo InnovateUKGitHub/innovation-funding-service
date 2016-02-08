@@ -55,12 +55,12 @@ public class ApplicationController {
         return newRestHandler(ObjectNode.class).perform(() -> applicationService.getProgressPercentageNodeByApplicationId(applicationId));
     }
 
-    @RequestMapping(value = "/updateApplicationStatus", method = RequestMethod.GET)
+    @RequestMapping(value = "/updateApplicationStatus", method = RequestMethod.PUT)
     public RestResult<Void> updateApplicationStatus(@RequestParam("applicationId") final Long id,
                                                           @RequestParam("statusId") final Long statusId) {
 
         RestResultBuilder<ApplicationResource, Void> handler = newRestHandler();
-        return handler.perform(() ->applicationService.updateApplicationStatus(id, statusId));
+        return handler.perform(() -> applicationService.updateApplicationStatus(id, statusId));
     }
 
 

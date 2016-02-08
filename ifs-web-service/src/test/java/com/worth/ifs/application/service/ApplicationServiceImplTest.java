@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import org.hamcrest.Matchers;
@@ -14,9 +15,10 @@ import java.util.Map;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
 
@@ -43,8 +45,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         applications = newApplicationResource().withApplicationStatus(statuses).build(6);
 
         userId = 1L;
-        when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(applications);
-        when(applicationRestService.getCompleteQuestionsPercentage(applications.get(0).getId())).thenReturn(20.5d);
+        when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(restSuccess(applications));
+        when(applicationRestService.getCompleteQuestionsPercentage(applications.get(0).getId())).thenReturn(restSuccess(20.5d));
         for(ApplicationStatusResource status : statuses) {
             when(applicationStatusRestService.getApplicationStatusById(status.getId())).thenReturn(status);
         }
@@ -61,7 +63,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Long applicationId = 1L;
         List<ApplicationResource> applications = newApplicationResource().withId(applicationId).build(1);
         applications.get(0).setId(applicationId);
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(applications.get(0));
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applications.get(0)));
 
         ApplicationResource returnedApplication = service.getById(applicationId);
         assertEquals(applications.get(0).getId(), returnedApplication.getId());
@@ -69,6 +71,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void testGetByIdNotFound() throws Exception {
         Long applicationId = 5L;
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restFailure(notFoundError(Application.class)));
         ApplicationResource returnedApplication = service.getById(applicationId);
         assertEquals(null, returnedApplication);
     }

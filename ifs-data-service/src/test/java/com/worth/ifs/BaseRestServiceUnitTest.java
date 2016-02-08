@@ -15,6 +15,7 @@ import static com.worth.ifs.commons.service.BaseRestService.getJSONHeaders;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -61,7 +62,7 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
     }
 
     protected HttpEntity<String> httpEntityForRestCall() {
-        return httpEntityForRestCall("");
+        return httpEntityForRestCall(null);
     }
 
     protected HttpEntity<String> httpEntityForRestGetWithoutAuthToken() {
@@ -100,4 +101,19 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         return response;
     }
 
+    protected <T> ResponseEntity<T> setupPutWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, Object requestBody, T responseBody) {
+        return setupPutWithRestResultExpectations(nonBaseUrl, responseType, requestBody, responseBody, OK);
+    }
+
+    protected <T> ResponseEntity<T> setupPutWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, Object requestBody, T responseBody, HttpStatus responseCode) {
+        ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), responseType)).thenReturn(response);
+        return response;
+    }
+
+    protected <T> ResponseEntity<T> setupPutWithRestResultExpectations(String nonBaseUrl, ParameterizedTypeReference<T> responseType, Object requestBody, T responseBody, HttpStatus responseCode) {
+        ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), responseType)).thenReturn(response);
+        return response;
+    }
 }

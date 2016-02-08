@@ -1,5 +1,6 @@
 package com.worth.ifs.commons.service;
 
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -12,6 +13,10 @@ import java.util.List;
  * A utility for commonly used ParameterizedTypeReferences
  */
 public class ParameterizedTypeReferences {
+
+    public static ParameterizedTypeReference<List<ApplicationResource>> applicationResourceListType() {
+        return new ParameterizedTypeReference<List<ApplicationResource>>() {};
+    }
 
     public static ParameterizedTypeReference<List<ProcessRole>> processRoleListType() {
         return new ParameterizedTypeReference<List<ProcessRole>>() {};

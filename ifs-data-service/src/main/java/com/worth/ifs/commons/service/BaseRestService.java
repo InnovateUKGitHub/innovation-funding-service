@@ -85,12 +85,12 @@ public abstract class BaseRestService {
      */
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
         log.debug("restGetEntity: "+path);
-        return getRestTemplate().exchange(getDataRestServiceURL() + path, GET, jsonEntity(""), c);
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, GET, jsonEntity(null), c);
     }
 
     protected  <T> ResponseEntity<T> restGet(String path, ParameterizedTypeReference<T> returnType){
         log.debug("restGet: "+path);
-        return getRestTemplate().exchange(getDataRestServiceURL() + path, GET, jsonEntity(""), returnType);
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, GET, jsonEntity(null), returnType);
     }
 
 
@@ -113,7 +113,7 @@ public abstract class BaseRestService {
     }
 
     protected <T> ResponseEntity<T> restPutEntity(String path, Class<T> c){
-        return getRestTemplate().exchange(getDataRestServiceURL() + path, PUT, jsonEntity(""), c);
+        return getRestTemplate().exchange(getDataRestServiceURL() + path, PUT, jsonEntity(null), c);
     }
 
     protected <T> RestResult<T> postWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
@@ -157,7 +157,7 @@ public abstract class BaseRestService {
     }
 
     private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, ParameterizedTypeReference<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        return exchangeWithRestResult(() -> getRestTemplate().exchange(getDataRestServiceURL() + path, method, jsonEntity(""), returnType), expectedSuccessCode, otherExpectedStatusCodes);
+        return exchangeWithRestResult(() -> getRestTemplate().exchange(getDataRestServiceURL() + path, method, jsonEntity(null), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
 
     private <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, ParameterizedTypeReference<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
@@ -165,7 +165,7 @@ public abstract class BaseRestService {
     }
 
     private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        return exchangeWithRestResult(() -> getRestTemplate().exchange(getDataRestServiceURL() + path, method, jsonEntity(""), returnType), expectedSuccessCode, otherExpectedStatusCodes);
+        return exchangeWithRestResult(() -> getRestTemplate().exchange(getDataRestServiceURL() + path, method, jsonEntity(null), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
 
     private <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
@@ -217,7 +217,7 @@ public abstract class BaseRestService {
     }
 
     protected void restDelete(String path) {
-        getRestTemplate().exchange(getDataRestServiceURL() + path, DELETE, jsonEntity(""), Void.class);
+        getRestTemplate().exchange(getDataRestServiceURL() + path, DELETE, jsonEntity(null), Void.class);
     }
 
 
