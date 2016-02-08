@@ -48,7 +48,9 @@ public class AssessorController {
         User user = getLoggedUser(request);
 
         //for now gets all the competitions to show in the dashboard (assumes user was invited and accepted all)
-        List<Competition> competitions = competitionService.getAll();
+
+        // TODO DW - INFUND-1555 - handle success or failure properly
+        List<Competition> competitions = competitionService.getAll().getSuccessObject();
 
         Map<Long, Integer> competitionsTotalAssignedAssessments = new HashMap<>();
         Map<Long, Integer> competitionsSubmittedAssessments = new HashMap<>();
