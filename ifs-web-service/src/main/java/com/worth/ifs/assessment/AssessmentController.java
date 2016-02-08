@@ -2,6 +2,7 @@ package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
@@ -32,6 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
@@ -65,8 +67,8 @@ public class AssessmentController extends AbstractApplicationController {
 
     // TODO DW - INFUND-1555 - get below code to use the RestResults
     @RequestMapping(value = "/competitions/{competitionId}/applications", method = RequestMethod.GET)
-    public ModelAndView competitionAssessmentDashboard(Model model, @PathVariable("competitionId") final Long competitionId,
-                                                 HttpServletRequest request) {
+    public ModelAndView competitionAssessmentDashboard(@PathVariable("competitionId") final Long competitionId,
+                                                       HttpServletRequest request) {
 
         Competition competition = competitionService.getById(competitionId);
 
@@ -107,7 +109,8 @@ public class AssessmentController extends AbstractApplicationController {
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
         model.addAttribute("form", form);
-        return solvePageForApplicationAssessment(model, competitionId, applicationId, empty(), userId);
+        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        return solvePageForApplicationAssessment(model, competitionId, applicationId, empty(), userId, userApplicationRoles);
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/section/{sectionId}", method = RequestMethod.GET)
@@ -120,11 +123,13 @@ public class AssessmentController extends AbstractApplicationController {
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
         model.addAttribute("form", form);
-        return solvePageForApplicationAssessment(model, competitionId, applicationId, Optional.of(sectionId), userId);
+        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        return solvePageForApplicationAssessment(model, competitionId, applicationId, Optional.of(sectionId), userId, userApplicationRoles);
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/response/{responseId}", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<?> updateQuestionAssessmentFeedback(@PathVariable("responseId") final Long responseId,
+    public ResponseEntity<?> updateQuestionAssessmentFeedback(@PathVariable("competitionId") String competitionId,
+                                                              @PathVariable("responseId") final Long responseId,
                                                               @RequestParam("feedbackValue") final Optional<String> feedbackValueParam,
                                                               @RequestParam("feedbackText") final Optional<String> feedbackTextParam,
                                                               HttpServletRequest request) {
@@ -134,19 +139,28 @@ public class AssessmentController extends AbstractApplicationController {
 
         // TODO DW - INFUND-854 - develop a handler in the web layer for RestResults
         return result.handleSuccessOrFailure(
-            failure -> new ResponseEntity<>(BAD_REQUEST),
-            success -> new ResponseEntity<>(OK)
+                failure -> new ResponseEntity<>(BAD_REQUEST),
+                success -> new ResponseEntity<>(OK)
         );
     }
 
-    private String solvePageForApplicationAssessment(Model model, Long competitionId, Long applicationId, Optional<Long> sectionId, Long userId) {
+    private String solvePageForApplicationAssessment(
+            Model model,
+            Long competitionId,
+            Long applicationId,
+            Optional<Long> sectionId,
+            Long userId,
+            List<ProcessRole> userApplicationRoles) {
         ProcessRole assessorProcessRole = processRoleService.findProcessRole(userId, applicationId);
+        boolean invalidAssessor = assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName());
+        if (invalidAssessor) {
+            log.warn("User is not an Assessor on this application");
+            return showInvalidAssessmentView(model, competitionId, null);
+        }
         Assessment assessment = assessmentRestService.getOneByProcessRole(assessorProcessRole.getId());
-        ApplicationResource application = applicationService.getById(applicationId);
-
         if (assessment == null) {
             log.warn("No assessment could be found for the User " + userId + " and the Application " + applicationId);
-            return showInvalidAssessmentView(model, competitionId, assessment);
+            return showInvalidAssessmentView(model, competitionId, null);
         }
 
         boolean invalidAssessment = assessment.getProcessStatus().equals(AssessmentStates.REJECTED.getState());
@@ -154,27 +168,30 @@ public class AssessmentController extends AbstractApplicationController {
             return showInvalidAssessmentView(model, competitionId, assessment);
         }
 
-        boolean pendingApplication = !invalidAssessment && assessment.getProcessStatus().equals(AssessmentStates.PENDING.getState());
+        ApplicationResource application = applicationService.getById(applicationId);
+
+        boolean pendingApplication = assessment.getProcessStatus().equals(AssessmentStates.PENDING.getState());
         if (pendingApplication) {
-            return showApplicationReviewView(model, competitionId, userId, application);
+            return showApplicationReviewView(model, competitionId, userId, application, userApplicationRoles);
         }
 
-        boolean invalidAssessor = assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName());
-        if (invalidAssessor) {
-            log.warn("User is not an Assessor on this application");
-            return showInvalidAssessmentView(model, competitionId, assessment);
-        }
-
-        return showReadOnlyApplicationFormView(model, sectionId, userId, assessorProcessRole, application);
+        return showReadOnlyApplicationFormView(model, sectionId, userId, assessorProcessRole, application, userApplicationRoles);
     }
 
 
-    private String showReadOnlyApplicationFormView(Model model, Optional<Long> sectionId, Long userId, ProcessRole assessorProcessRole, ApplicationResource application) {
-        addApplicationDetails(application.getId(), userId, sectionId, model, null);
-        addSectionDetails(model, application, sectionId, true);
+    private String showReadOnlyApplicationFormView(
+            Model model,
+            Optional<Long> sectionId,
+            Long userId,
+            ProcessRole assessorProcessRole,
+            ApplicationResource application,
+            List<ProcessRole> userApplicationRoles) {
+        Competition competition = competitionService.getById(application.getCompetition());
+        Optional<Section> currentSection = getSection(competition.getSections(), sectionId, true);
+        addApplicationDetails(application, competition, userId, currentSection, Optional.empty(), model, null, userApplicationRoles);
+        addSectionDetails(model, currentSection);
         List<Response> questionResponses = responseService.getByApplication(application.getId());
         Map<Long, Response> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
-
         model.addAttribute("processRole", assessorProcessRole);
         model.addAttribute("questionResponses", questionResponsesMap);
         addFinanceDetails(model, application);
@@ -188,11 +205,13 @@ public class AssessmentController extends AbstractApplicationController {
         return assessorDashboard;
     }
 
-    private String showApplicationReviewView(Model model, Long competitionId, Long userId, ApplicationResource application) {
-        addApplicationDetails(application.getId(), userId, empty(), model, null);
+    private String showApplicationReviewView(Model model, Long competitionId, Long userId, ApplicationResource application,
+                                             List<ProcessRole> userApplicationRoles) {
+        Competition competition = competitionService.getById(application.getCompetition());
+        addApplicationDetails(application, competition, userId, empty(), Optional.empty(), model, null, userApplicationRoles);
         getAndPassAssessmentDetails(competitionId, application.getId(), userId, model);
         Set<String> partners = application.getProcessRoles().stream().
-                map(id -> processRoleService.getById(id)).
+                map(processRoleService::getById).
                 map(ProcessRole::getOrganisation).
                 map(Organisation::getName).
                 collect(toSet());
@@ -220,18 +239,19 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/summary", method = RequestMethod.GET)
-    public ModelAndView getAssessmentSubmitReview(Model model, @PathVariable("competitionId") final Long competitionId,
-                                            @PathVariable("applicationId") final Long applicationId,
-                                            User user) {
+    public ModelAndView getAssessmentSubmitReview(@PathVariable("competitionId") final Long competitionId,
+                                                  @PathVariable("applicationId") final Long applicationId,
+                                                  User user) {
         ProcessRole assessorProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
-        Assessment assessment = assessmentRestService.getOneByProcessRole(assessorProcessRole.getId());
-        ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(competitionId);
-        List<Response> responses = getResponses(application);
 
         if (assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName())) {
             throw new IllegalStateException("User is not an Assessor on this application");
         }
+
+        Assessment assessment = assessmentRestService.getOneByProcessRole(assessorProcessRole.getId());
+        ApplicationResource application = applicationService.getById(applicationId);
+        Competition competition = competitionService.getById(competitionId);
+        List<Response> responses = getResponses(application);
 
         Score score = assessmentRestService.getScore(assessment.getId());
         AssessmentSubmitReviewModel viewModel = new AssessmentSubmitReviewModel(assessment, responses, application, competition, score);
@@ -241,7 +261,7 @@ public class AssessmentController extends AbstractApplicationController {
 
 
     @RequestMapping(value = "/invitation_answer", method = RequestMethod.POST)
-    public String invitationAnswer(Model model, HttpServletRequest request) {
+    public String invitationAnswer(HttpServletRequest request) {
         Map<String, String[]> params = request.getParameterMap();
         if ( params.containsKey("accept") || params.containsKey("reject") ) {
             sendInvitation(request);
@@ -282,7 +302,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/submit-assessments", method = RequestMethod.POST)
-    public String assessmentsSubmissions(Model model, HttpServletRequest req) {
+    public String assessmentsSubmissions(HttpServletRequest req) {
 
         Map<String, String[]> params = req.getParameterMap();
 
@@ -304,12 +324,12 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/confirm-submit")
-    public String confirmSubmit(Model model, HttpServletRequest req) {
+    public String confirmSubmit() {
         return "assessment-confirm-submit";
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/complete", method = RequestMethod.POST)
-    public String assessmentSummaryComplete(Model model, @PathVariable("competitionId") final Long competitionId,
+    public String assessmentSummaryComplete(@PathVariable("competitionId") final Long competitionId,
                                             @PathVariable("applicationId") final Long applicationId,
                                             HttpServletRequest req)
     {
@@ -333,13 +353,8 @@ public class AssessmentController extends AbstractApplicationController {
         return "redirect:" + competitionAssessmentsURL(competitionId);
     }
 
-    private Set<Long> convertStringListToLongSet(List<String> aList)
-    {
-        Set<Long> converted = new HashSet<>();
-        for ( String value : aList )
-            converted.add(Long.valueOf(value));
-
-        return converted;
+    private Set<Long> convertStringListToLongSet(List<String> aList) {
+        return aList.stream().map(Long::valueOf).collect(Collectors.toSet());
     }
 
     public boolean assessmentSummaryIsValidToSave(String recommendationValue, String feedback) {

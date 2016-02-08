@@ -2,16 +2,13 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.profiling.ProfileExecution;
+import com.worth.ifs.application.resource.QuestionStatusResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -50,60 +47,30 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public HashMap<Long, QuestionStatus> mapAssigneeToQuestion(List<Question> questions, Long userOrganisationId) {
-        HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
-        for(Question question : questions) {
-            for(QuestionStatus questionStatus : question.getQuestionStatuses()) {
-                if(questionStatus.getAssignee()==null)
-                    continue;
-                boolean multipleStatuses = question.hasMultipleStatuses();
-                boolean assigneeIsPartOfOrganisation = questionStatus.getAssignee().getOrganisation().getId().equals(userOrganisationId);
+    public Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId) {
+        return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId));
+    }
 
-                if((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
-                    questionAssignees.put(question.getId(), questionStatus);
-                    break;
-                }
-            }
+    private Map<Long, QuestionStatusResource> mapToQuestionIds(final List<QuestionStatusResource> questionStatusResources){
+
+        final Map questionAssignees = new HashMap<Long, QuestionStatus>();
+
+        for(QuestionStatusResource questionStatusResource : questionStatusResources){
+            questionAssignees.put(questionStatusResource.getQuestion(), questionStatusResource);
         }
+
         return questionAssignees;
     }
 
     @Override
-    public HashMap<Long, QuestionStatus> mapAssigneeToQuestionByApplicationId(List<Question> questions, Long userOrganisationId, Long applicationId) {
-        HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
-        // TODO: improve performance this is slow, check first call in for loop (too many questions)
-        for(Question question : questions) {
-            final List<QuestionStatus> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationId);
-            questionAssignees.putAll(mapAssigneeToQuestion(question, userOrganisationId, questionStatuses));
-        }
-        return questionAssignees;
-    }
-
-    private HashMap<Long, QuestionStatus> mapAssigneeToQuestion(final Question question, Long userOrganisationId, final List<QuestionStatus> questionStatuses){
-        HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
-
-        for(QuestionStatus questionStatus : questionStatuses) {
-            if(questionStatus.getAssignee()==null)
-                continue;
-            boolean multipleStatuses = question.hasMultipleStatuses();
-            boolean assigneeIsPartOfOrganisation = questionStatus.getAssignee().getOrganisation().getId().equals(userOrganisationId);
-
-            // Checking that assignee is part of organisation when there are multiple statuses for a question
-            if((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
-                questionAssignees.put(question.getId(), questionStatus);
-                break;
-            }
-        }
-        return questionAssignees;
+    public List<QuestionStatusResource> getNotificationsForUser(Collection<QuestionStatusResource> questionStatuses, Long userId) {
+        return questionStatuses.stream().
+                filter(qs ->  userId.equals(qs.getAssigneeUserId()) && (qs.getNotified() != null && qs.getNotified().equals(Boolean.FALSE)))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<QuestionStatus> getNotificationsForUser(Collection<QuestionStatus> questionStatuses, Long userId) {
-        return questionStatuses.stream().filter(qs -> qs.getAssignee().getUser().getId().equals(userId) && (qs.getNotified()!=null && qs.getNotified().equals(Boolean.FALSE))).collect(Collectors.toList());
-    }
-
-    @Override
-    public void removeNotifications(List<QuestionStatus> questionStatuses) {
+    public void removeNotifications(List<QuestionStatusResource> questionStatuses) {
         questionStatuses.stream().forEach(qs -> questionRestService.updateNotification(qs.getId(), true));
     }
 
@@ -134,5 +101,19 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Question getNextQuestionBySection(Long sectionId) {
         return questionRestService.getNextQuestionBySection(sectionId);
+    }
+
+    @Override
+    public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
+        List<QuestionStatusResource> questionStatuses = questionStatusRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId);
+        if(questionStatuses == null || questionStatuses.size() == 0){
+            return null;
+        }
+        return questionStatuses.get(0);
+    }
+
+    @Override
+    public Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId){
+        return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId));
     }
 }

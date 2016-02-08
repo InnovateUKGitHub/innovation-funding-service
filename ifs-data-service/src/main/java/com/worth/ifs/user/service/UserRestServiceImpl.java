@@ -91,7 +91,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<List<ProcessRole>> findProcessRole(Long applicationId) {
-        return getWithRestResult(processRoleRestURL + "/findByUserApplication/" + applicationId, processRoleListType());
+        return getWithRestResult(processRoleRestURL + "/findByApplicationId/" + applicationId, processRoleListType());
     }
 
     @Override

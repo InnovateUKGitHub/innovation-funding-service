@@ -37,8 +37,8 @@ public class OrganisationServiceImpl  implements OrganisationService {
 
     public TreeSet<Organisation> getApplicationOrganisations(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList());
+                .map(id -> processRoleService.getById(id))
+                .collect(Collectors.toList());
 
         Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
@@ -46,14 +46,14 @@ public class OrganisationServiceImpl  implements OrganisationService {
 
         return userApplicationRoles.stream()
                 .filter(uar -> (uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName())))
-                        .map(ProcessRole::getOrganisation)
-                        .collect(Collectors.toCollection(supplier));
+                .map(ProcessRole::getOrganisation)
+                .collect(Collectors.toCollection(supplier));
     }
 
     public Optional<Organisation> getApplicationLeadOrganisation(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList());
+                .map(id -> processRoleService.getById(id))
+                .collect(Collectors.toList());
 
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
@@ -63,8 +63,8 @@ public class OrganisationServiceImpl  implements OrganisationService {
 
     public Optional<Organisation> getUserOrganisation(ApplicationResource application, Long userId) {
         List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList());
+                .map(id -> processRoleService.getById(id))
+                .collect(Collectors.toList());
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().getId().equals(userId))
                 .map(ProcessRole::getOrganisation)

@@ -35,9 +35,7 @@
         <div th:include="create-application/fragments :: company-address-details"
              th:with="form=${confirmCompanyDetailsForm}" th:remove="tag"/>
 
-        <button type="submit button-large extra-margin" name="save-company-details" class="button">Save organisation and
-            continue
-        </button>
+        <button type="submit" name="save-company-details" class="button button-large extra-margin">Save organisation and continue</button>
     </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>

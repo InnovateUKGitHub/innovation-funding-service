@@ -129,6 +129,7 @@ public class BaseUnitTest {
     TreeSet<Organisation> organisationSet;
     public List<Assessment> assessments;
     public List<ProcessRole> assessorProcessRoles;
+    public List<ProcessRole> applicantRoles;
     public List<Assessment> submittedAssessments;
     public ApplicationFinanceResource applicationFinanceResource;
     public ApplicationStatusResource submittedApplicationStatus;
@@ -136,6 +137,18 @@ public class BaseUnitTest {
     public ApplicationStatusResource approvedApplicationStatus;
     public ApplicationStatusResource rejectedApplicationStatus;
     public List<ProcessRole> processRoles;
+
+    public List<ProcessRole> application1ProcessRoles;
+    public List<ProcessRole> application2ProcessRoles;
+    public List<ProcessRole> application3ProcessRoles;
+    public List<ProcessRole> application4ProcessRoles;
+
+    public List<Organisation> application1Organisations;
+    public List<Organisation> application2Organisations;
+    public List<Organisation> application3Organisations;
+    public List<Organisation> application4Organisations;
+
+
     private Random randomGenerator;
 
     public InternalResourceViewResolver viewResolver() {
@@ -312,9 +325,20 @@ public class BaseUnitTest {
         ProcessRole processRole7 = newProcessRole().with(id(7L)).withApplication(applicationList.get(2)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
         ProcessRole processRole8 = newProcessRole().with(id(8L)).withApplication(applicationList.get(0)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
         ProcessRole processRole9 = newProcessRole().with(id(9L)).withApplication(applicationList.get(3)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
+        ProcessRole processRole10 = newProcessRole().with(id(10L)).withApplication(applicationList.get(1)).withUser(loggedInUser).withRole(role1).withOrganisation(organisation2).build();
 
         assessorProcessRoles = asList(processRole6, processRole7, processRole8, processRole9);
         processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8, processRole9);
+        applicantRoles = asList(processRole1, processRole2, processRole3, processRole4, processRole5);
+        application1ProcessRoles = asList(processRole1, processRole2, processRole5);
+        application2ProcessRoles = asList(processRole6, processRole10);
+        application3ProcessRoles = asList(processRole3, processRole7);
+        application4ProcessRoles = asList(processRole4, processRole9);
+
+        application1Organisations = asList(organisation1, organisation2);
+        application2Organisations = asList(organisation1, organisation2);
+        application3Organisations = asList(organisation1);
+        application4Organisations = asList(organisation1);
 
         organisation1.setProcessRoles(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8, processRole8));
         organisation2.setProcessRoles(singletonList(processRole5));
@@ -356,6 +380,11 @@ public class BaseUnitTest {
         when(processRoleService.findProcessRole(assessor.getId(), applicationList.get(0).getId())).thenReturn(processRole8);
         when(processRoleService.findProcessRole(assessor.getId(), applicationList.get(3).getId())).thenReturn(processRole9);
 
+        when(processRoleService.findProcessRolesByApplicationId(applicationList.get(0).getId())).thenReturn(application1ProcessRoles);
+        when(processRoleService.findProcessRolesByApplicationId(applicationList.get(1).getId())).thenReturn(application2ProcessRoles);
+        when(processRoleService.findProcessRolesByApplicationId(applicationList.get(2).getId())).thenReturn(application3ProcessRoles);
+        when(processRoleService.findProcessRolesByApplicationId(applicationList.get(3).getId())).thenReturn(application4ProcessRoles);
+
 		Map<Long, Set<Long>> completedMap = new HashMap<>();
         completedMap.put(organisation1.getId(), new TreeSet<>());
         completedMap.put(organisation2.getId(), new TreeSet<>());
@@ -388,6 +417,8 @@ public class BaseUnitTest {
         when(organisationService.getApplicationLeadOrganisation(applications.get(2))).thenReturn(Optional.of(organisation1));
         processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(processRole));
 
+        when(sectionService.getById(1L)).thenReturn(sections.get(0));
+        when(sectionService.getById(3L)).thenReturn(sections.get(2));
     }
 
     public void setupApplicationResponses(){

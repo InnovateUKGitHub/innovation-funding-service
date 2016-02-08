@@ -43,6 +43,10 @@ public class FinanceFormHandler {
 
     public boolean handle(HttpServletRequest request) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
+        if (applicationFinanceResource == null){
+            applicationFinanceResource = financeService.addApplicationFinance(applicationId, userId);
+        }
+
         storeFinancePosition(request, applicationFinanceResource.getId());
 
         List<CostItem> costItems = getCostItems(request);

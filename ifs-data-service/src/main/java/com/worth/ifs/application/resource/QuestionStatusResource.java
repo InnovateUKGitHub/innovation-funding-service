@@ -18,6 +18,13 @@ public class QuestionStatusResource {
     private Long assignedBy;
     private Boolean notified;
 
+    // Following are needed by the view
+    private String assigneeName;
+    private String assignedByName;
+    private Long assigneeUserId;
+    private long assignedByUserId;
+
+
     public QuestionStatusResource() {
     }
 
@@ -69,6 +76,10 @@ public class QuestionStatusResource {
         this.markedAsComplete = false;
     }
 
+    public void setAssignedBy(Long assignedBy) {
+        this.assignedBy = assignedBy;
+    }
+
     public void setAssignee(ProcessRole assignee, ProcessRole assignedBy, LocalDateTime assignedDate) {
         this.assignedDate = assignedDate;
         this.assignee = assignee.getId();
@@ -76,8 +87,8 @@ public class QuestionStatusResource {
         this.notified = false;
     }
 
-    public void setApplication(Application application) {
-        this.application = application.getId();
+    public void setApplication(Long applicationId) {
+        this.application = applicationId;
     }
 
     public Boolean getNotified() {
@@ -96,8 +107,20 @@ public class QuestionStatusResource {
         return this.application;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getAssigneeName() {
+        return assigneeName;
+    }
+
+    public void setAssigneeName(String assigneeName) {
+        this.assigneeName = assigneeName;
+    }
+
+    public Long getAssigneeUserId() {
+        return assigneeUserId;
+    }
+
+    public void setAssigneeUserId(Long assigneeUserId) {
+        this.assigneeUserId = assigneeUserId;
     }
 
     public void setMarkedAsComplete(Boolean markedAsComplete) {
@@ -120,11 +143,23 @@ public class QuestionStatusResource {
         this.assignedDate = assignedDate;
     }
 
-    public void setApplication(Long application) {
-        this.application = application;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setAssignedBy(Long assignedBy) {
-        this.assignedBy = assignedBy;
+    public String getAssignedByName() {
+        return assignedByName;
+    }
+
+    public void setAssignedByName(String assignedByName) {
+        this.assignedByName = assignedByName;
+    }
+
+    public long getAssignedByUserId() {
+        return assignedByUserId;
+    }
+
+    public void setAssignedByUserId(long assignedByUserId) {
+        this.assignedByUserId = assignedByUserId;
     }
 }

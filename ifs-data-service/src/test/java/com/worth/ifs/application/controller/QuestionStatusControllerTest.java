@@ -50,9 +50,9 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         when(questionStatusRepository.findByQuestionIdAndApplicationId(anyLong(), anyLong())).thenReturn(questionStatuses);
 
 
-        mockMvc.perform(get("/questionStatus/findByQuestionAndAplication/1/2"))
+        mockMvc.perform(get("/questionStatus/findByQuestionAndApplication/1/2"))
             .andExpect(status().isOk())
             .andExpect(content().string(new ObjectMapper().writeValueAsString(questionStatuses)))
-            .andDo(document("questionStatus/findByQuestionAndAplication"));
+            .andDo(document("questionStatus/findByQuestionAndApplication"));
     }
 }

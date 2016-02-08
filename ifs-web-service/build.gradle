@@ -33,6 +33,7 @@ dependencies {
     compile 'commons-beanutils:commons-beanutils:1.8.3'
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.springframework.boot:spring-boot-starter-aop"
+    compile "com.google.guava:guava:16.0.1"
 
     // Use this for including the api lib from the data-service.
     compile files('libs/ifs-data-service-api-1.0-SNAPSHOT.jar')
