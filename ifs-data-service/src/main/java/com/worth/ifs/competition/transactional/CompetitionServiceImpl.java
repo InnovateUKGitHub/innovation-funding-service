@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -24,7 +22,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<Competition> getCompetitionById(Long id) {
-        return getOrFail(() -> competitionRepository.findOne(id), notFoundError(Competition.class, id));
+        return super.getCompetition(id);
     }
 
     @Override

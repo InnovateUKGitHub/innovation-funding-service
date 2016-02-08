@@ -1,11 +1,7 @@
 package com.worth.ifs.util;
 
-import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -25,20 +21,6 @@ public class EntityLookupCallbacks {
 
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(EntityLookupCallbacks.class);
-
-    public static ServiceResult<ProcessRole> getProcessRoleById(Long processRoleId,
-            ProcessRoleRepository processRoleRepository,
-            Error noProcessRole) {
-
-        return getOrFail(() -> processRoleRepository.findOne(processRoleId), noProcessRole);
-    }
-
-    public static ServiceResult<Response> getResponseById(Long responseId,
-                                                          ResponseRepository responseRepository,
-                                                          Error noResponseError) {
-
-        return getOrFail(() -> responseRepository.findOne(responseId), noResponseError);
-    }
 
     public static <SuccessType> ServiceResult<SuccessType> getOrFail(
             Supplier<SuccessType> getterFn,

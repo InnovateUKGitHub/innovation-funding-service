@@ -1,24 +1,19 @@
 package com.worth.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.transactional.ApplicationService;
-import com.worth.ifs.application.transactional.SectionService;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.RestResultBuilder;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -28,97 +23,71 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 @RequestMapping("/application")
 public class ApplicationController {
 
-    public static final String READY_FOR_SUBMIT = "readyForSubmit";
-    public static final String PROGRESS = "progress";
-    public static final String RESEARCH_PARTICIPATION = "researchParticipation";
-    public static final String RESEARCH_PARTICIPATION_VALID = "researchParticipationValid";
-    public static final String ALL_SECTION_COMPLETE = "allSectionComplete";
     @Autowired
-    ApplicationFinanceHandler applicationFinanceHandler;
-    @Autowired
-    ApplicationService applicationService;
-    @Autowired
-    SectionService sectionService;
-
-    @Autowired
-    ApplicationMapper applicationMapper;
+    private ApplicationService applicationService;
 
     @RequestMapping("/normal/{id}")
-    public ApplicationResource getApplicationById(@PathVariable("id") final Long id) {
-        Application application = applicationService.getApplicationById(id);
-        ApplicationResource applicationResource = applicationMapper.mapApplicationToResource(application);
-        return applicationResource;
+    public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
+        return newRestHandler(ApplicationResource.class).perform(() -> applicationService.getApplicationById(id));
     }
 
 
     @RequestMapping("/")
-    public List<ApplicationResource> findAll() {
-        return simpleMap(applicationService.findAll(), applicationMapper::mapApplicationToResource);
+    public RestResult<List<ApplicationResource>> findAll() {
+        return applicationResourceHandler().perform(() -> applicationService.findAll());
     }
 
     @RequestMapping("/findByUser/{userId}")
-    public List<ApplicationResource> findByUserId(@PathVariable("userId") final Long userId) {
-        return simpleMap(applicationService.findByUserId(userId), applicationMapper::mapApplicationToResource);
+    public RestResult<List<ApplicationResource>> findByUserId(@PathVariable("userId") final Long userId) {
+        return applicationResourceHandler().perform(() -> applicationService.findByUserId(userId));
     }
 
     @RequestMapping("/saveApplicationDetails/{id}")
-    public ResponseEntity<String> saveApplicationDetails(@PathVariable("id") final Long id,
-                                                         @RequestBody ApplicationResource application) {
-        return applicationService.saveApplicationDetails(id, application);
+    public RestResult<Void> saveApplicationDetails(@PathVariable("id") final Long id,
+                                                   @RequestBody ApplicationResource application) {
+
+        RestResultBuilder<ApplicationResource, Void> handler = newRestHandler();
+        return handler.perform(() -> applicationService.saveApplicationDetails(id, application));
     }
 
     @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")
-    public ObjectNode getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        return applicationService.getProgressPercentageNodeByApplicationId(applicationId);
+    public RestResult<ObjectNode> getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
+        return newRestHandler(ObjectNode.class).perform(() -> applicationService.getProgressPercentageNodeByApplicationId(applicationId));
     }
 
     @RequestMapping(value = "/updateApplicationStatus", method = RequestMethod.GET)
-    public ResponseEntity<String> updateApplicationStatus(@RequestParam("applicationId") final Long id,
+    public RestResult<Void> updateApplicationStatus(@RequestParam("applicationId") final Long id,
                                                           @RequestParam("statusId") final Long statusId) {
 
-        return applicationService.updateApplicationStatus(id, statusId);
+        RestResultBuilder<ApplicationResource, Void> handler = newRestHandler();
+        return handler.perform(() ->applicationService.updateApplicationStatus(id, statusId));
     }
 
 
     @RequestMapping("/applicationReadyForSubmit/{applicationId}")
-    public ObjectNode applicationReadyForSubmit(@PathVariable("applicationId") final Long id){
-        Application application = applicationService.getApplicationById(id);
-        Competition competition = application.getCompetition();
-        double progress = applicationService.getProgressPercentageByApplicationId(id);
-        double researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id).doubleValue();
-        boolean allSectionsComplete = sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null);
-
-        boolean readyForSubmit = false;
-        if(allSectionsComplete &&
-                progress == 100 &&
-                researchParticipation <= competition.getMaxResearchRatio()){
-            readyForSubmit = true;
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-        node.put(READY_FOR_SUBMIT, readyForSubmit);
-        node.put(PROGRESS, progress);
-        node.put(RESEARCH_PARTICIPATION,researchParticipation);
-        node.put(RESEARCH_PARTICIPATION_VALID, (researchParticipation <=competition.getMaxResearchRatio()) );
-        node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
-        return node;
+    public RestResult<ObjectNode> applicationReadyForSubmit(@PathVariable("applicationId") final Long id){
+        return newRestHandler(ObjectNode.class).perform(() -> applicationService.applicationReadyForSubmit(id));
     }
 
 
     @RequestMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
-    public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
+    public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                      @PathVariable("userId") final Long userId,
                                                                      @PathVariable("role") final UserRoleType role) {
-        return simpleMap(applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role), applicationMapper::mapApplicationToResource);
+
+        return applicationResourceHandler().perform(() -> applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role));
     }
 
     @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.POST)
-    public ApplicationResource createApplicationByApplicationNameForUserIdAndCompetitionId(
+    public RestResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {
-        return applicationMapper.mapApplicationToResource(applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, jsonObj));
+
+        return newRestHandler(ApplicationResource.class).perform(() -> applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, jsonObj.get("name").textValue()));
     }
 
+    private RestResultBuilder<List<ApplicationResource>, List<ApplicationResource>> applicationResourceHandler() {
+        return newRestHandler();
+    }
 }

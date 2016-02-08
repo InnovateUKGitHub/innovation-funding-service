@@ -1,30 +1,29 @@
 package com.worth.ifs.transactional;
 
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
-import com.worth.ifs.commons.error.ErrorTemplate;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.util.EntityLookupCallbacks;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
-import static com.worth.ifs.util.EntityLookupCallbacks.getProcessRoleById;
-import static com.worth.ifs.util.EntityLookupCallbacks.getResponseById;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 
 /**
  * This class represents the base class for transactional services.  Method calls within this service will have
@@ -67,7 +66,7 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected ServiceResult<Response> getResponse(Long responseId) {
-        return getResponseById(responseId, responseRepository, notFoundError(Response.class, responseId));
+        return getOrFail(() -> responseRepository.findOne(responseId), notFoundError(Response.class, responseId));
     }
 
     /**
@@ -77,6 +76,22 @@ public abstract class BaseTransactionalService  {
      * @return
      */
     protected ServiceResult<ProcessRole> getProcessRole(Long processRoleId) {
-        return getProcessRoleById(processRoleId, processRoleRepository, notFoundError(ProcessRole.class, processRoleId));
+        return getOrFail(() -> processRoleRepository.findOne(processRoleId), notFoundError(ProcessRole.class, processRoleId));
+    }
+
+    protected ServiceResult<Application> getApplication(final Long id) {
+        return getOrFail(() -> applicationRepository.findOne(id), notFoundError(Application.class, id));
+    }
+
+    protected ServiceResult<User> getUser(final Long id) {
+        return getOrFail(() -> userRepository.findOne(id), notFoundError(User.class, id));
+    }
+
+    protected ServiceResult<Competition> getCompetition(final Long id) {
+        return getOrFail(() -> competitionRepository.findOne(id), notFoundError(Competition.class, id));
+    }
+
+    protected ServiceResult<ApplicationStatus> getApplicationStatus(final Long id) {
+        return getOrFail(() -> applicationStatusRepository.findOne(id), notFoundError(ApplicationStatus.class, id));
     }
 }

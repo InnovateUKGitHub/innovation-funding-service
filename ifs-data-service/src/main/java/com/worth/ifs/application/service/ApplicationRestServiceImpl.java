@@ -90,7 +90,9 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     public Boolean isApplicationReadyForSubmit(Long applicationId) {
         ObjectNode objectNode = restGet(applicationRestURL + "/applicationReadyForSubmit/" + applicationId, ObjectNode.class);
         log.debug(String.format("Application Ready for Submit?   %s ", objectNode.toString()));
-        return objectNode.get(ApplicationController.READY_FOR_SUBMIT).asBoolean(false);
+
+        // TODO DW - INFUND-1555 - remove usages of the ObjectNode from the data side - replace with a dto
+        return objectNode.get("readyForSubmit").asBoolean(false);
     }
 
     @Override
