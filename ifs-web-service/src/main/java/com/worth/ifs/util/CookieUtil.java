@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Configurable
-public class CookieUtil {
+public final class CookieUtil {
+    private CookieUtil(){}
 
     @Value("${server.session.cookie.secure}")
     private static boolean cookieSecure;
