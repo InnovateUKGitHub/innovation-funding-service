@@ -87,7 +87,7 @@
                   <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-title')" th:remove="tag" />
             </label>
             <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-textinput-full-width (id='application_details-title', field='application.name' ,readonly=${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-textinput-full-width (id='application_details-title', field='application.name' ,readonly=${readonly != null ? readonly : question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)})" th:remove="tag" />
         </div>
 
         <fieldset>
@@ -99,8 +99,8 @@
                    <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
                </legend>
 
-            <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)})" th:remove="tag" /><br/>
-            <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', field='application.durationInMonths',readonly=${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly != null ? readonly : question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)})" th:remove="tag" /><br/>
+            <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', field='application.durationInMonths',readonly=${readonly != null ? readonly : question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)})" th:remove="tag" />
         </div>
       </fieldset>
 

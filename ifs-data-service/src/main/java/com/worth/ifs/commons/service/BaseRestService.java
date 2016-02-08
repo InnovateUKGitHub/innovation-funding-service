@@ -26,6 +26,7 @@ import static com.worth.ifs.util.Either.right;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -116,19 +117,19 @@ public abstract class BaseRestService {
     }
 
     protected <T> RestResult<T> postWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
-        return exchangeWithRestResult(path, POST, returnType);
+        return exchangeWithRestResult(path, POST, returnType, OK, CREATED);
     }
 
     protected <T> RestResult<T> postWithRestResult(String path, Class<T> returnType) {
-        return exchangeWithRestResult(path, POST, returnType);
+        return exchangeWithRestResult(path, POST, returnType, OK, CREATED);
     }
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType) {
-        return exchangeObjectWithRestResult(path, POST, objectToSend, returnType);
+        return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, OK, CREATED);
     }
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType) {
-        return exchangeObjectWithRestResult(path, POST, objectToSend, returnType);
+        return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, OK, CREATED);
     }
 
     protected <T> RestResult<T> putWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
