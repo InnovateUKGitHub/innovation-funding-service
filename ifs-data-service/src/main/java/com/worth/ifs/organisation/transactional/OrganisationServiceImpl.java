@@ -93,11 +93,10 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
         return handlingErrors(() -> {
 
-            Address savedAddress = addressRepository.save(address);
             ServiceResult<Organisation> organisationSearch = getOrFail(() -> organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
 
             return organisationSearch.andOnSuccess(organisation -> {
-                organisation.addAddress(savedAddress, addressType);
+                organisation.addAddress(address, addressType);
                 Organisation updatedOrganisation = organisationRepository.save(organisation);
                 return serviceSuccess(organisationMapper.mapOrganisationToResource(updatedOrganisation));
             });

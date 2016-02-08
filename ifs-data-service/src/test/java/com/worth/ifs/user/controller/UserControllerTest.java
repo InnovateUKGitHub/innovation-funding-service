@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.transactional.ServiceFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
+import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
