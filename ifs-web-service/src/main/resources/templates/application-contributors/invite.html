@@ -60,8 +60,8 @@
                   </div>
                 </div>
                 <!--/* all org */-->
-
-                <input type="hidden" class="form-control width-full"  th:field="*{organisations[__${organisationStats.index}__].organisation}"/>
+                <!--<div th:text="${organisationStats.index}"></div>-->
+                <input type="hidden" class="form-control width-full"  th:field="*{organisations[__${organisationStats.index}__].organisationId}"/>
                 <input type="hidden" class="form-control width-full"  th:field="*{organisations[__${organisationStats.index}__].organisationInviteId}"/>
 
                 <table>
@@ -73,7 +73,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="form-group" th:if="${organisationInviteForm.organisation == leadOrganisation.id}">
+                    <tr class="form-group" th:if="${organisationInviteForm.organisationId == leadOrganisation.id}">
                         <td>
                             <input type="text" class="form-control width-full" th:value="${leadApplicant.name}" readonly="readonly"/>
                         </td>
