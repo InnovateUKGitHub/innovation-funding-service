@@ -249,8 +249,8 @@ public class BaseUnitTest {
 
         competitions = singletonList(competition);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(competition);
-        when(competitionRestService.getAll()).thenReturn(competitions);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(competitionRestService.getAll()).thenReturn(restSuccess(competitions));
         when(competitionService.getById(any(Long.class))).thenReturn(competition);
     }
 
