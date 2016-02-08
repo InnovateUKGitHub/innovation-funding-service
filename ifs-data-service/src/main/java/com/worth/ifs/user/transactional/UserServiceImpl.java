@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
-import static com.worth.ifs.transactional.ServiceFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
+import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 import static java.util.stream.Collectors.toSet;
