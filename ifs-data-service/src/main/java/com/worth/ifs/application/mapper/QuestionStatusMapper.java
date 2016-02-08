@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -46,10 +47,17 @@ public abstract class QuestionStatusMapper {
 
     public QuestionStatusResource mapQuestionStatusToPopulatedResource(final QuestionStatus object){
         final QuestionStatusResource resource = this.mapQuestionStatusToResource(object);
-        resource.setAssigneeName(object.getAssignee().getUser().getName());
-        resource.setAssigneeUserId(object.getAssignee().getId());
-        resource.setAssignedByName(object.getAssignedBy().getUser().getName());
-        resource.setAssignedByUserId(object.getAssignedBy().getUser().getId());
+        final ProcessRole assignee = object.getAssignee();
+        if (assignee != null){
+            resource.setAssigneeName(assignee.getUser().getName());
+            resource.setAssigneeUserId(assignee.getId());
+        }
+        final ProcessRole assignedBy = object.getAssignedBy();
+        if (assignedBy != null){
+            resource.setAssignedByName(assignedBy.getUser().getName());
+            resource.setAssignedByUserId(assignedBy.getUser().getId());
+        }
+
         return resource;
     }
 }

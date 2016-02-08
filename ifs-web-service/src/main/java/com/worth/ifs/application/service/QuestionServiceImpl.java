@@ -64,7 +64,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<QuestionStatusResource> getNotificationsForUser(Collection<QuestionStatusResource> questionStatuses, Long userId) {
-        return questionStatuses.stream().filter(qs -> qs.getAssigneeUserId().equals(userId) && (qs.getNotified()!=null && qs.getNotified().equals(Boolean.FALSE))).collect(Collectors.toList());
+        return questionStatuses.stream().
+                filter(qs ->  userId.equals(qs.getAssigneeUserId()) && (qs.getNotified() != null && qs.getNotified().equals(Boolean.FALSE)))
+                .collect(Collectors.toList());
     }
 
     @Override
