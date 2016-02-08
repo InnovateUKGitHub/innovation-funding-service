@@ -1,5 +1,6 @@
 package com.worth.ifs.commons.service;
 
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -22,5 +23,9 @@ public class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<UserResource>> userResourceListType() {
         return new ParameterizedTypeReference<List<UserResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<Competition>> competitionListType() {
+        return new ParameterizedTypeReference<List<Competition>>() {};
     }
 }
