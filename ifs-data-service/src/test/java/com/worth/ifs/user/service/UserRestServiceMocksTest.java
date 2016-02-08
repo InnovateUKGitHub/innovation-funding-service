@@ -4,22 +4,22 @@ import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserResourceEnvelope;
 import org.junit.Test;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userResourceListType;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.OK;
 
 
 public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestServiceImpl> {
@@ -43,11 +43,10 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         User user2 = new User();
         user2.setPassword("user2");
 
-        User[] userList = new User[]{user1, user2};
-        ResponseEntity<User[]> responseEntity = new ResponseEntity<>(userList, HttpStatus.OK);
-        when(mockRestTemplate.exchange(dataServicesUrl + usersUrl + "/findAll/", HttpMethod.GET, httpEntityForRestCall(), User[].class)).thenReturn(responseEntity);
+        List<User> userList = asList(user1, user2);
+        setupGetWithRestResultExpectations(usersUrl + "/findAll/", userListType(), userList, OK);
 
-        List<User> users = service.findAll();
+        List<User> users = service.findAll().getSuccessObject();
         assertEquals(2, users.size());
         assertEquals(user1, users.get(0));
         assertEquals(user2, users.get(1));
@@ -57,11 +56,10 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void findExistingUserByEmailShouldReturnUserResource() {
         UserResource userResource = newUserResource().withEmail("testemail@email.com").build();
 
-        UserResource[] userResourceList = new UserResource[]{userResource};
-        ResponseEntity<UserResource[]> responseEntity = new ResponseEntity<>(userResourceList, HttpStatus.OK);
-        when(mockRestTemplate.exchange(dataServicesUrl + usersUrl + "/findByEmail/" + userResource.getEmail() + "/", HttpMethod.GET, httpEntityForRestCall(), UserResource[].class)).thenReturn(responseEntity);
+        List<UserResource> userResourceList = singletonList(userResource);
+        setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + userResource.getEmail() + "/", userResourceListType(), userResourceList, OK);
 
-        List<UserResource> users = service.findUserByEmail(userResource.getEmail());
+        List<UserResource> users = service.findUserByEmail(userResource.getEmail()).getSuccessObject();
         assertEquals(1, users.size());
         assertEquals(userResource, users.get(0));
     }
@@ -70,29 +68,23 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void findingNonExistingUserByEmailShouldReturnEmptyList() {
         String email = "email@test.test";
 
-        UserResource[] userResourceList = new UserResource[]{};
-        ResponseEntity<UserResource[]> responseEntity = new ResponseEntity<>(userResourceList, HttpStatus.OK);
-        when(mockRestTemplate.exchange(dataServicesUrl + usersUrl + "/findByEmail/" + email + "/", HttpMethod.GET, httpEntityForRestCall(), UserResource[].class)).thenReturn(responseEntity);
+        setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + email + "/", userResourceListType(), emptyList(), OK);
 
-        List<UserResource> users = service.findUserByEmail(email);
+        List<UserResource> users = service.findUserByEmail(email).getSuccessObject();
         assertTrue(users.isEmpty());
     }
 
     @Test
     public void searchingByEmptyUserEmailShouldReturnNull() {
         String email = "";
-
-        UserResource[] userResourceList = new UserResource[]{};
-        ResponseEntity<UserResource[]> responseEntity = new ResponseEntity<>(userResourceList, HttpStatus.OK);
-        when(mockRestTemplate.exchange(dataServicesUrl + usersUrl + "/findByEmail/" + email + "/", HttpMethod.GET, httpEntityForRestCall(), UserResource[].class)).thenReturn(responseEntity);
-
-        List<UserResource> users = service.findUserByEmail(email);
-        assertTrue(users == null);
+        List<UserResource> users = service.findUserByEmail(email).getSuccessObject();
+        assertEquals(0, users.size());
     }
 
     @Test
     public void createLeadApplicantForOrganisation() {
-        UserResource userResource = newUserResource().withId(1L)
+        UserResource userResource = newUserResource()
+                .with(id(null))
                 .withEmail("testemail@test.test")
                 .withTitle("testTitle")
                 .withFirstName("testFirstName")
@@ -104,10 +96,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         Long organisationId = 1L;
 
         ResourceEnvelope<UserResource> userResourceEnvelope = new ResourceEnvelope<>("OK", new ArrayList<>(), userResource);
-        UserResourceEnvelope resourceEnvelope = new UserResourceEnvelope(userResourceEnvelope);
-
-        ResponseEntity<UserResourceEnvelope> responseEntity = new ResponseEntity<>(resourceEnvelope, HttpStatus.OK);
-        when(mockRestTemplate.postForEntity(eq(dataServicesUrl + usersUrl + "/createLeadApplicantForOrganisation/" + organisationId), isA(HttpEntity.class), eq(UserResourceEnvelope.class))).thenReturn(responseEntity);
+        setupPostWithRestResultExpectations(usersUrl + "/createLeadApplicantForOrganisation/" + organisationId, new ParameterizedTypeReference<ResourceEnvelope<UserResource>>() {}, userResource, userResourceEnvelope, OK);
 
         ResourceEnvelope<UserResource> receivedResourceEnvelope = service.createLeadApplicantForOrganisation(userResource.getFirstName(),
                 userResource.getLastName(),
@@ -116,7 +105,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
                 organisationId
-        );
+        ).getSuccessObject();
 
         assertEquals(userResourceEnvelope.getEntity(), receivedResourceEnvelope.getEntity());
     }

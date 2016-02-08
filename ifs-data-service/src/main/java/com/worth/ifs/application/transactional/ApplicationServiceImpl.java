@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
-import static com.worth.ifs.transactional.ServiceFailureKeys.*;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 

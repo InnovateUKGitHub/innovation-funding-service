@@ -8,8 +8,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static com.worth.ifs.transactional.ServiceFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
-import static com.worth.ifs.transactional.ServiceFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.builders.NotificationBuilder.newNotification;
