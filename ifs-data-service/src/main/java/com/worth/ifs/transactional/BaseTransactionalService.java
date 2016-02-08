@@ -59,36 +59,48 @@ public abstract class BaseTransactionalService  {
     @Autowired
     protected ApplicationRepository applicationRepository;
 
-    /**
-     * Code to get a Response and return a Left of ServiceFailure when it's not found.
-     *
-     * @param responseId
-     * @return
-     */
+    protected Supplier<ServiceResult<Response>> response(Long responseId) {
+        return () -> getResponse(responseId);
+    }
+
     protected ServiceResult<Response> getResponse(Long responseId) {
         return getOrFail(() -> responseRepository.findOne(responseId), notFoundError(Response.class, responseId));
     }
 
-    /**
-     * Code to get a ProcessRole and return a Left of ServiceFailure when it's not found.
-     *
-     * @param processRoleId
-     * @return
-     */
+    protected Supplier<ServiceResult<ProcessRole>> processRole(Long processRoleId) {
+        return () -> getProcessRole(processRoleId);
+    }
+
     protected ServiceResult<ProcessRole> getProcessRole(Long processRoleId) {
         return getOrFail(() -> processRoleRepository.findOne(processRoleId), notFoundError(ProcessRole.class, processRoleId));
+    }
+
+    protected Supplier<ServiceResult<Application>> application(final Long id) {
+        return () -> getApplication(id);
     }
 
     protected ServiceResult<Application> getApplication(final Long id) {
         return getOrFail(() -> applicationRepository.findOne(id), notFoundError(Application.class, id));
     }
 
+    protected Supplier<ServiceResult<User>> user(final Long id) {
+        return () -> getUser(id);
+    }
+
     protected ServiceResult<User> getUser(final Long id) {
         return getOrFail(() -> userRepository.findOne(id), notFoundError(User.class, id));
     }
 
+    protected Supplier<ServiceResult<Competition>> competition(final Long id) {
+        return () -> getCompetition(id);
+    }
+
     protected ServiceResult<Competition> getCompetition(final Long id) {
         return getOrFail(() -> competitionRepository.findOne(id), notFoundError(Competition.class, id));
+    }
+
+    protected Supplier<ServiceResult<ApplicationStatus>> applicationStatus(final Long id) {
+        return () -> getApplicationStatus(id);
     }
 
     protected ServiceResult<ApplicationStatus> getApplicationStatus(final Long id) {

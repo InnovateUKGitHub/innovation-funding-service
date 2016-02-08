@@ -33,4 +33,8 @@ public class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<List<Competition>> competitionListType() {
         return new ParameterizedTypeReference<List<Competition>>() {};
     }
+
+    public static ParameterizedTypeReference<List<Long>> longsListType() {
+        return new ParameterizedTypeReference<List<Long>>() {};
+    }
 }

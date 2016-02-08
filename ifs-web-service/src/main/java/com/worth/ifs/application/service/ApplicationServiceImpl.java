@@ -31,7 +31,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         if (applicationId == null) {
             return null;
         }
-        
+
         return applicationRestService.getApplicationById(applicationId).handleSuccessOrFailure(
             failure -> null,
             success -> success
@@ -106,7 +106,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     private ApplicationStatusResource fetchApplicationStatusFromId(Long id){
-        return applicationStatusRestService.getApplicationStatusById(id);
+        return applicationStatusRestService.getApplicationStatusById(id).getSuccessObject();
     }
 
 }

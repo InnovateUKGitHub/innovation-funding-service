@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.Collection;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
@@ -35,10 +36,32 @@ public class EntityLookupCallbacks {
         return ofNullable(getterResult).map(ServiceResult::serviceSuccess).orElse(serviceFailure(failureResponse));
     }
 
+    public static <FinalSuccessType, SuccessType1, SuccessType2> ServiceResultBiFunctionProducer<SuccessType1, SuccessType2> getOrFail(
+            Supplier<ServiceResult<SuccessType1>> getterFn1,
+            Supplier<ServiceResult<SuccessType2>> getterFn2) {
+
+        return new ServiceResultBiFunctionProducer<>(getterFn1, getterFn2);
+    }
+
     public static <T> ServiceResult<T> getOnlyElementOrFail(Collection<T> list) {
         if (list == null || list.size() != 1) {
             return serviceFailure(internalServerErrorError("Found multiple entries in list but expected only 1 - " + list));
         }
         return serviceSuccess(list.iterator().next());
+    }
+
+    public static class ServiceResultBiFunctionProducer<R, S> {
+
+        private Supplier<ServiceResult<R>> getterFn1;
+        private Supplier<ServiceResult<S>> getterFn2;
+
+        public ServiceResultBiFunctionProducer(Supplier<ServiceResult<R>> getterFn1, Supplier<ServiceResult<S>> getterFn2) {
+            this.getterFn1 = getterFn1;
+            this.getterFn2 = getterFn2;
+        }
+
+        public <T> ServiceResult<T> andOnSuccess(BiFunction<R, S, ServiceResult<T>> mainFunction) {
+            return getterFn1.get().andOnSuccess(result1 -> getterFn2.get().andOnSuccess(result2 -> mainFunction.apply(result1, result2)));
+        }
     }
 }

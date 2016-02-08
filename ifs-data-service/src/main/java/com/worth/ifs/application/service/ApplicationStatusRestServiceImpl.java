@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 
 import com.worth.ifs.application.resource.ApplicationStatusResource;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ public class ApplicationStatusRestServiceImpl extends BaseRestService implements
     String applicationStatusRestURL;
 
     @Override
-    public ApplicationStatusResource getApplicationStatusById(Long id) {
-        return restGet(applicationStatusRestURL+"/"+id, ApplicationStatusResource.class);
+    public RestResult<ApplicationStatusResource> getApplicationStatusById(Long id) {
+        return getWithRestResult(applicationStatusRestURL + "/" + id, ApplicationStatusResource.class);
     }
 }

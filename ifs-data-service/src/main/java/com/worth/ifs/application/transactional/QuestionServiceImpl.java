@@ -179,7 +179,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {
-        Section nextSection = sectionService.getNextSection(section);
+        Section nextSection = sectionService.getNextSection(section).getSuccessObject();
         if(nextSection!=null) {
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, nextSection.getId());
         }
@@ -187,11 +187,12 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     }
 
+    // TODO DW - INFUND-1555 - return or handle rest results
     @Override
     public Question getPreviousQuestionBySection(final Long sectionId) {
-        Section section = sectionService.getById(sectionId);
+        Section section = sectionService.getById(sectionId).getSuccessObject();
         if(section!=null && section.getParentSection()!=null) {
-            Section previousSection = sectionService.getPreviousSection(section);
+            Section previousSection = sectionService.getPreviousSection(section).getSuccessObject();
             if(previousSection!=null) {
                 Optional<Question> lastQuestionInSection = previousSection.getQuestions()
                         .stream()
@@ -202,11 +203,12 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return null;
     }
 
+    // TODO DW - INFUND-1555 - return or handle rest results
     @Override
     public Question getNextQuestionBySection(final Long sectionId) {
-        Section section = sectionService.getById(sectionId);
+        Section section = sectionService.getById(sectionId).getSuccessObject();
         if(section!=null && section.getParentSection()!=null) {
-            Section nextSection = sectionService.getNextSection(section);
+            Section nextSection = sectionService.getNextSection(section).getSuccessObject();
             if(nextSection!=null) {
                 Optional<Question> firstQuestionInSection = nextSection.getQuestions()
                         .stream()
@@ -234,7 +236,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private Question getPreviousQuestionBySection(Long section, Long competitionId) {
-        Section previousSection = sectionService.getPreviousSection(section);
+        Section previousSection = sectionService.getPreviousSection(section).getSuccessObject();
 
         if(previousSection!=null) {
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(competitionId, previousSection.getId());

@@ -48,7 +48,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(restSuccess(applications));
         when(applicationRestService.getCompleteQuestionsPercentage(applications.get(0).getId())).thenReturn(restSuccess(20.5d));
         for(ApplicationStatusResource status : statuses) {
-            when(applicationStatusRestService.getApplicationStatusById(status.getId())).thenReturn(status);
+            when(applicationStatusRestService.getApplicationStatusById(status.getId())).thenReturn(restSuccess(status));
         }
 
     }
@@ -78,8 +78,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     @Test
     public void testGetByIdNullValue() throws Exception {
-        Long applicationId = null;
-        ApplicationResource returnedApplication = service.getById(applicationId);
+        ApplicationResource returnedApplication = service.getById(null);
         assertEquals(null, returnedApplication);
     }
 
@@ -88,7 +87,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     public void testGetInProgress() throws Exception {
         List<ApplicationResource> returnedApplications = service.getInProgress(userId);
         returnedApplications.stream().forEach(a ->
-                assertThat(applicationStatusRestService.getApplicationStatusById(a.getApplicationStatus()).getName(), Matchers.either(Matchers.is("submitted")).or(Matchers.is("created")))
+                assertThat(applicationStatusRestService.getApplicationStatusById(a.getApplicationStatus()).getSuccessObject().getName(), Matchers.either(Matchers.is("submitted")).or(Matchers.is("created")))
                 );
     }
 
@@ -96,13 +95,13 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     public void testGetFinished() throws Exception {
         List<ApplicationResource> returnedApplications = service.getFinished(userId);
         returnedApplications.stream().forEach(a ->
-                        assertThat(applicationStatusRestService.getApplicationStatusById(a.getApplicationStatus()).getName(), Matchers.either(Matchers.is("approved")).or(Matchers.is("rejected")))
+                        assertThat(applicationStatusRestService.getApplicationStatusById(a.getApplicationStatus()).getSuccessObject().getName(), Matchers.either(Matchers.is("approved")).or(Matchers.is("rejected")))
         );
     }
     @Test
      public void testGetProgress() throws Exception {
         Map<Long, Integer> progress = service.getProgress(userId);
-        assertEquals(20, progress.get(applications.get(0).getId()).intValue(), 0d);
+        assertEquals(20, progress.get(applications.get(0).getId()), 0d);
     }
     @Test
     public void testGetProgressNull() throws Exception {

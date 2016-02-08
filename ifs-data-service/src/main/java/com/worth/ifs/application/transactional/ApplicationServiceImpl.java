@@ -93,41 +93,39 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         return handlingErrors(() -> {
 
-            return getUser(userId).andOnSuccess(user ->
-                   getCompetition(competitionId).andOnSuccess(competition -> {
+            return getOrFail(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
 
-                       Application application = new Application();
-                       application.setName(applicationName);
-                       LocalDate currentDate = LocalDate.now();
-                       application.setStartDate(currentDate);
+               Application application = new Application();
+               application.setName(applicationName);
+               LocalDate currentDate = LocalDate.now();
+               application.setStartDate(currentDate);
 
-                       String name = ApplicationStatusConstants.CREATED.getName();
+               String name = ApplicationStatusConstants.CREATED.getName();
 
-                       List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
-                       ApplicationStatus applicationStatus = applicationStatusList.get(0);
+               List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
+               ApplicationStatus applicationStatus = applicationStatusList.get(0);
 
-                       application.setApplicationStatus(applicationStatus);
-                       application.setDurationInMonths(3L);
+               application.setApplicationStatus(applicationStatus);
+               application.setDurationInMonths(3L);
 
-                       List<Role> roles = roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName());
-                       Role role = roles.get(0);
+               List<Role> roles = roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName());
+               Role role = roles.get(0);
 
-                       Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+               Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
 
-                       ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+               ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
-                       List<ProcessRole> processRoles = new ArrayList<>();
-                       processRoles.add(processRole);
+               List<ProcessRole> processRoles = new ArrayList<>();
+               processRoles.add(processRole);
 
-                       application.setProcessRoles(processRoles);
-                       application.setCompetition(competition);
+               application.setProcessRoles(processRoles);
+               application.setCompetition(competition);
 
-                       applicationRepository.save(application);
-                       processRoleRepository.save(processRole);
+               applicationRepository.save(application);
+               processRoleRepository.save(processRole);
 
-                       return serviceSuccess(applicationMapper.mapApplicationToResource(application));
-                   }
-            ));
+               return serviceSuccess(applicationMapper.mapApplicationToResource(application));
+           });
         });
     }
 
@@ -306,14 +304,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                                                          final Long statusId) {
         return handlingErrors(() -> {
 
-            return getApplication(id).andOnSuccess(application ->
-                   getApplicationStatus(statusId).andOnSuccess(applicationStatus -> {
+            return getOrFail(application(id), applicationStatus(statusId)).andOnSuccess((application, applicationStatus) -> {
 
-                       application.setApplicationStatus(applicationStatus);
-                       applicationRepository.save(application);
-                       return serviceSuccess(applicationMapper.mapApplicationToResource(application));
-                   }
-            ));
+                application.setApplicationStatus(applicationStatus);
+                applicationRepository.save(application);
+                return serviceSuccess(applicationMapper.mapApplicationToResource(application));
+            });
         });
     }
 
@@ -349,8 +345,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         return handlingErrors(() -> {
 
-            return getUser(userId).andOnSuccess(user ->
-                   getCompetition(competitionId).andOnSuccess(competition -> {
+            return getOrFail(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
 
                Application application = new Application();
                application.setName(applicationName);
@@ -382,7 +377,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                processRoleRepository.save(processRole);
 
                return serviceSuccess(applicationMapper.mapApplicationToResource(createdApplication));
-            }));
+            });
         });
     }
 
@@ -398,30 +393,31 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<ObjectNode> applicationReadyForSubmit(Long id) {
 
-        return getApplication(id).andOnSuccess(application ->
-               getProgressPercentageByApplicationId(id).andOnSuccess(progressPercentage -> {
+        return getOrFail(application(id), () -> getProgressPercentageByApplicationId(id)).andOnSuccess((application, progressPercentage) -> {
 
-               Competition competition = application.getCompetition();
-               double researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id).doubleValue();
-               boolean allSectionsComplete = sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null);
+            return sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccess(allSectionsComplete -> {
 
-               boolean readyForSubmit = false;
-               if(allSectionsComplete &&
-                       progressPercentage == 100 &&
-                       researchParticipation <= competition.getMaxResearchRatio()){
-                   readyForSubmit = true;
-               }
+                Competition competition = application.getCompetition();
+                double researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id).doubleValue();
 
-               ObjectMapper mapper = new ObjectMapper();
-               ObjectNode node = mapper.createObjectNode();
-               node.put(READY_FOR_SUBMIT, readyForSubmit);
-               node.put(PROGRESS, progressPercentage);
-               node.put(RESEARCH_PARTICIPATION,researchParticipation);
-               node.put(RESEARCH_PARTICIPATION_VALID, (researchParticipation <=competition.getMaxResearchRatio()) );
-               node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
-               return serviceSuccess(node);
+                boolean readyForSubmit = false;
+                if (allSectionsComplete &&
+                        progressPercentage == 100 &&
+                        researchParticipation <= competition.getMaxResearchRatio()) {
+                    readyForSubmit = true;
+                }
 
-           }));
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode node = mapper.createObjectNode();
+                node.put(READY_FOR_SUBMIT, readyForSubmit);
+                node.put(PROGRESS, progressPercentage);
+                node.put(RESEARCH_PARTICIPATION, researchParticipation);
+                node.put(RESEARCH_PARTICIPATION_VALID, (researchParticipation <= competition.getMaxResearchRatio()));
+                node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
+                return serviceSuccess(node);
+
+            });
+        });
     }
 
     private ServiceResult<Double> getProgressPercentageByApplicationId(final Long applicationId) {
