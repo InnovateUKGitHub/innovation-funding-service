@@ -78,6 +78,20 @@ public class InviteController {
         return resourceEnvelope;
     }
 
+    @RequestMapping("/getInviteOrganisationByHash/{hash}")
+    public ResourceEnvelope<InviteOrganisationResource> getInviteOrganisationByHash(@PathVariable("hash") String hash) {
+        Optional<Invite> invite = inviteService.getByHash(hash);
+        if (invite.isPresent()) {
+            InviteOrganisationResource inviteResource = new InviteOrganisationResource(invite.get().getInviteOrganisation());
+            ResourceEnvelope<InviteOrganisationResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), inviteResource);
+            return resourceEnvelope;
+        }
+
+        ResourceEnvelope<InviteOrganisationResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), null);
+        return resourceEnvelope;
+    }
+
+
     @RequestMapping("/getInvitesByApplicationId/{applicationId}")
     public Collection<InviteOrganisationResource> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
         Map<Long, InviteOrganisationResource> results = new LinkedHashMap<>();

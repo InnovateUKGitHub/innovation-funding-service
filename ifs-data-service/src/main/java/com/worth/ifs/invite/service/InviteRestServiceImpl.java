@@ -24,8 +24,9 @@ import java.util.Optional;
 @Service
 public class InviteRestServiceImpl extends BaseRestService implements InviteRestService {
     private String inviteRestUrl;
+
     @Autowired
-    OrganisationRestService organisationRestService;
+    private OrganisationRestService organisationRestService;
 
     @Value("${ifs.data.service.rest.invite}")
     void setInviteRestUrl(String inviteRestUrl) {
@@ -64,8 +65,19 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
 
     @Override
     public Optional<InviteResource> getInviteByHash(String hash) {
-        ParameterizedTypeReference<ResourceEnvelope<InviteResource>> typeReference = new ParameterizedTypeReference<ResourceEnvelope<InviteResource>>() {};
-        ResponseEntity<ResourceEnvelope<InviteResource>> resource = restGetParameterizedType(inviteRestUrl + "/getInviteByHash/"+hash, typeReference);
+        ResponseEntity<ResourceEnvelope<InviteResource>> resource = restGet(inviteRestUrl + "/getInviteByHash/" + hash, new ParameterizedTypeReference<ResourceEnvelope<InviteResource>>() {
+        });
+
+        if(ResourceEnvelopeConstants.OK.getName().equals(resource.getBody().getStatus())){
+            return Optional.ofNullable(resource.getBody().getEntity());
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
+        ParameterizedTypeReference<ResourceEnvelope<InviteOrganisationResource>> typeReference = new ParameterizedTypeReference<ResourceEnvelope<InviteOrganisationResource>>() {};
+        ResponseEntity<ResourceEnvelope<InviteOrganisationResource>> resource = restGet(inviteRestUrl + "/getInviteOrganisationByHash/"+hash, typeReference);
 
         if(ResourceEnvelopeConstants.OK.getName().equals(resource.getBody().getStatus())){
             return Optional.ofNullable(resource.getBody().getEntity());

@@ -41,7 +41,13 @@ public enum ServiceFailureKeys implements ErrorTemplate {
     /**
      * Emails
      */
-    EMAILS_NOT_SENT_MULTIPLE("The emails could not be sent", INTERNAL_SERVER_ERROR);
+    EMAILS_NOT_SENT_MULTIPLE("The emails could not be sent", INTERNAL_SERVER_ERROR),
+
+    /**
+     * Users
+     */
+    USERS_DUPLICATE_EMAIL_ADDRESS("This email address is already taken", CONFLICT)
+    ;
 
     private ErrorTemplate errorTemplate;
 

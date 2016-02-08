@@ -29,7 +29,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Test
     public void test_findByEmailAddress() {
-        List<UserResource> users = controller.findByEmail("steve.smith@empire.com");
+        List<UserResource> users = controller.findByEmail("steve.smith@empire.com").getSuccessObject();
         assertEquals(1, users.size());
         assertEquals("steve.smith@empire.com", users.get(0).getEmail());
     }
@@ -37,7 +37,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     public void test_findAll() {
 
-        List<User> users = controller.findAll();
+        List<User> users = controller.findAll().getSuccessObject();
         assertEquals(7, users.size());
 
         //

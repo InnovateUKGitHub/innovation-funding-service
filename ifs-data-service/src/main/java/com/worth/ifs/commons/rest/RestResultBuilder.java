@@ -5,6 +5,7 @@ import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.function.Function;
 
@@ -38,7 +39,15 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
         this.serviceResult = existingBuilder.serviceResult;
     }
 
-    public static <T, R> RestResultBuilder<R, T> newRestResultHandler() {
+    public static <S> RestResultBuilder<S, S> newRestHandler(Class<S> clazz) {
+        return newRestHandler();
+    }
+
+    public static <S> RestResultBuilder<S, S> newRestHandler(ParameterizedTypeReference<S> type) {
+        return newRestHandler();
+    }
+
+    public static <T, R> RestResultBuilder<R, T> newRestHandler() {
         return new RestResultBuilder<>();
     }
 
@@ -72,7 +81,7 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
 
             try {
                 ServiceResult<ProcessResultType> response = serviceResult.get();
-                return response.handleFailureOrSuccess(failure -> {
+                return response.handleSuccessOrFailure(failure -> {
 
                     RestResult<ReturnType> handled = handleServiceFailure(failure);
 

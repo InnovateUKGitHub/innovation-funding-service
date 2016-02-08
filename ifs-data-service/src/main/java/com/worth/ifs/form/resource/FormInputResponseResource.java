@@ -114,4 +114,20 @@ public class FormInputResponseResource {
     public void setFileEntry(FileEntry fileEntry) {
         this.fileEntry = fileEntry.getId();
     }
+
+    public void setUpdatedBy(Long updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public void setFormInput(Long formInput) {
+        this.formInput = formInput;
+    }
+
+    public void setApplication(Long application) {
+        this.application = application;
+    }
+
+    public void setFileEntry(Long fileEntry) {
+        this.fileEntry = fileEntry;
+    }
 }

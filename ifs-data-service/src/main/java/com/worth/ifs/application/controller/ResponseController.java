@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestResultHandler;
+import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 import static com.worth.ifs.commons.rest.RestSuccesses.okRestSuccess;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
 import static com.worth.ifs.util.CollectionFunctions.onlyElement;
@@ -82,7 +82,7 @@ public class ResponseController {
                                                               @RequestParam("feedbackValue") Optional<String> feedbackValue,
                                                               @RequestParam("feedbackText") Optional<String> feedbackText) {
 
-        RestResultBuilder<Feedback, Void> handler = newRestResultHandler();
+        RestResultBuilder<Feedback, Void> handler = newRestHandler();
         return handler.
                 andOnSuccess(okRestSuccess()).
                 perform(() -> {
@@ -109,7 +109,7 @@ public class ResponseController {
                                                @PathVariable("assessorProcessRoleId") Long assessorProcessRoleId){
         ServiceResult<Feedback> feedback = assessorService.getFeedback(new Feedback.Id().setAssessorProcessRoleId(assessorProcessRoleId).setResponseId(responseId));
         // TODO DW - how do we return a generic envelope to be consumed? failure is currently simply returning null.
-        return feedback.handleFailureOrSuccess(l -> null, r -> r);
+        return feedback.handleSuccessOrFailure(l -> null, r -> r);
     }
 
 

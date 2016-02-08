@@ -89,6 +89,8 @@ dependencies {
     compile fileTree(dir: "libs", include: "*.jar")
 
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.0.0.RELEASE"
+    testCompile "com.openpojo:openpojo:0.8.3"
+
 }
 
 test {

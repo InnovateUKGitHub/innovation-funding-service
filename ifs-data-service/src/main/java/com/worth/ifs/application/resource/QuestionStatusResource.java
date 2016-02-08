@@ -76,6 +76,10 @@ public class QuestionStatusResource {
         this.markedAsComplete = false;
     }
 
+    public void setAssignedBy(Long assignedBy) {
+        this.assignedBy = assignedBy;
+    }
+
     public void setAssignee(ProcessRole assignee, ProcessRole assignedBy, LocalDateTime assignedDate) {
         this.assignedDate = assignedDate;
         this.assignee = assignee.getId();
@@ -137,10 +141,6 @@ public class QuestionStatusResource {
 
     public void setAssignedDate(LocalDateTime assignedDate) {
         this.assignedDate = assignedDate;
-    }
-
-    public void setAssignedBy(Long assignedBy) {
-        this.assignedBy = assignedBy;
     }
 
     public void setId(Long id) {

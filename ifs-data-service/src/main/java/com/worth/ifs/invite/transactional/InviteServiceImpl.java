@@ -76,7 +76,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 ServiceResult<Notification> inviteResult = serviceFailure(internalServerErrorError("Validation errors"));
 
                 results.add(inviteResult);
-                inviteResult.handleFailureOrSuccess(
+                inviteResult.handleSuccessOrFailure(
                         failure -> handleInviteError(invite, failure),
                         success -> handleInviteSuccess(invite)
                 );
@@ -87,7 +87,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 ServiceResult<Notification> inviteResult = inviteCollaboratorToApplication(baseUrl, invite);
 
                 results.add(inviteResult);
-                inviteResult.handleFailureOrSuccess(
+                inviteResult.handleSuccessOrFailure(
                         failure -> handleInviteError(invite, failure),
                         success -> handleInviteSuccess(invite)
                 );

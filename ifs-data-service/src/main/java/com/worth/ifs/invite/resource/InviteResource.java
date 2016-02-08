@@ -8,6 +8,8 @@ import com.worth.ifs.invite.domain.Invite;
 * */
 
 public class InviteResource {
+    private String leadOrganisation;
+    private String leadApplicant;
     private Long id;
     private String name;
     private String email;
@@ -18,7 +20,8 @@ public class InviteResource {
     private String hash;
     private InviteStatusConstants status;
 
-    public InviteResource() {}
+    public InviteResource() {
+    }
 
 
     public InviteResource(Long id, String name, String email, Long application, Long inviteOrganisation, String hash, InviteStatusConstants status) {
@@ -44,6 +47,8 @@ public class InviteResource {
         this.application = i.getApplication().getId();
         this.applicationName = i.getApplication().getName();
         this.competitionName = i.getApplication().getCompetition().getName();
+        this.leadOrganisation = i.getApplication().getLeadOrganisation().get().getName();
+        this.leadApplicant = i.getApplication().getLeadApplicant().get().getName();
         this.inviteOrganisation = i.getInviteOrganisation().getId();
         this.hash = i.getHash();
         this.status = i.getStatus();
@@ -109,7 +114,31 @@ public class InviteResource {
         return competitionName;
     }
 
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
+
     public String getApplicationName() {
         return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
+    public String getLeadOrganisation() {
+        return leadOrganisation;
+    }
+
+    public void setLeadOrganisation(String leadOrganisation) {
+        this.leadOrganisation = leadOrganisation;
+    }
+
+    public String getLeadApplicant() {
+        return leadApplicant;
+    }
+
+    public void setLeadApplicant(String leadApplicant) {
+        this.leadApplicant = leadApplicant;
     }
 }

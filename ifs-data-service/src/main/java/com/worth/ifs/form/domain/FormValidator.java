@@ -54,6 +54,10 @@ public class FormValidator {
         this.clazzName = clazzName;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @JsonIgnore
     public void setClazz(Class clazz) {
         this.clazzName = clazz.getName();

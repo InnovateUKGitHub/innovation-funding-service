@@ -79,4 +79,7 @@ public interface ApplicationService {
             final Long competitionId,
             final Long userId,
             JsonNode jsonObj);
+
+    @NotSecured("TODO DW - INFUND-1555 - secure")
+    ServiceResult<ApplicationResource> findByProcessRole(Long id);
 }
