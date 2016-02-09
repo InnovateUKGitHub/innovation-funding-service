@@ -1,4 +1,4 @@
-package com.worth.ifs.profiling;
+package com.worth.ifs.parallel;
 
 import com.worth.ifs.application.service.ListenableFutures;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -11,7 +11,7 @@ import org.springframework.ui.Model;
 @Component
 public class CallFuturesInModelMethodInterceptor implements MethodInterceptor {
 
-    private static final Logger log = LoggerFactory.getLogger(CallFuturesInModelMethodInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CallFuturesInModelMethodInterceptor.class);
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {

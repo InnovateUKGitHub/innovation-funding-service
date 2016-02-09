@@ -1,10 +1,11 @@
-package com.worth.ifs.profiling;
+package com.worth.ifs.parallel;
 
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -14,6 +15,12 @@ import java.lang.reflect.Method;
 public class CallFuturesInModelAdvisor extends AbstractPointcutAdvisor {
 
     private static final long serialVersionUID = 1L;
+
+    public static final int CALL_FUTURES_ORDER = Ordered.LOWEST_PRECEDENCE - 1;
+
+    public CallFuturesInModelAdvisor(){
+        setOrder(CALL_FUTURES_ORDER);
+    }
 
     private final StaticMethodMatcherPointcut pointcut = new
             StaticMethodMatcherPointcut() {
