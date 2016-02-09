@@ -14,16 +14,16 @@ Verify the validation error when the Project title field is empty
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'application details' question
     When the applicant clears the application title field
-    Then The applicant should get a validation error for the title field
+    Then The applicant should get a validation error message    Please enter the full title of the project.
 
 Verify the validation error for an invalid date (Year)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'application details' question
     And the applicant inserts an invalid date "18-11-2015"
-    Then the applicant should get a validation error for the date
+    Then the applicant should get a validation error message    Please enter a future date
     And the Year field is empty
-    Then the applicant should get a validation error for the date
+    Then the applicant should get a validation error message    This field should be a number
     And the applicant inserts "2016" in the Year field(valid date)
     And the applicant should not see the validation error any more
 
@@ -32,13 +32,13 @@ Verify the validation error for an invalid date (day)
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'application details' question
     And the applicant inserts "32" in the day field
-    And the applicant should get a validation error for the date
+    And the applicant should get a validation error message    Please enter a valid date
     When the applicant inserts "0" in the day field
-    And the applicant should get a validation error for the date
+    And the applicant should get a validation error message    Please enter a valid date
     And the applicant inserts "-1" in the day field
-    Then the applicant should get a validation error for the date
+    Then the applicant should get a validation error message    Please enter a valid date
     And the day field is empty
-    And the applicant should get a validation error "Please enter a valid value"
+    Then the applicant should get a validation error message    This field should be a number
     And the applicant inserts 01 in the day
     And the applicant should not see the validation error any more
 
@@ -47,13 +47,13 @@ Verify the validation error for an invalid date (month)
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'application details' question
     And the applicant inserts "0" in the month field
-    And the applicant should get a validation error for the date
+    And the applicant should get a validation error message    Please enter a valid date
     When the applicant inserts "13" in the month field
-    And the applicant should get a validation error for the date
+    And the applicant should get a validation error message    Please enter a valid date
     And the applicant inserts "-1" in the month field
-    Then the applicant should get a validation error for the date
+    Then the applicant should get a validation error message    Please enter a valid date
     And the month field is empty
-    And the applicant should get a validation error for the date
+    And the applicant should get a validation error message    This field should be a number
     And the applicant inserts "01" in the month field
     And the applicant should not see the validation error any more
 
@@ -62,20 +62,20 @@ Verify the validation error for the duration field
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'application details' question
     And the applicant inserts "0" in the duration field
-    And the applicant should get a validation error for the duration
+    And the applicant should get a validation error message    Please enter a valid duration
     When the applicant inserts "-1" in the duration field
-    And the applicant should get a validation error for the duration
+    And the applicant should get a validation error message    Please enter a valid duration
     And the applicant leaves the duration field empty
-    Then the applicant should get a validation error for the empty duration
+    Then the applicant should get a validation error message    This field should be a number
     And the Applicant inserts 01 in the duration field
-    And the Applicant should not see any more the error for the duration
+    And the applicant should not see the validation error any more
 
 Verify the validation error when the text area is empty
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'project summary' question
     When the applicant clears the text area of the "Project Summary"
-    Then the applicant should get a validation error
+    Then the applicant should get a validation error message    Please enter some text
 
 *** Keywords ***
 the applicant inserts "32" in the day field
@@ -116,10 +116,10 @@ the applicant inserts "01" in the month field
 the applicant inserts an invalid date "18-11-2015"
     Clear Element Text    id=application_details-startdate_day
     Input Text    id=application_details-startdate_day    18
-    Clear Element Text    id=application_details-startdate_month
-    Input Text    id=application_details-startdate_month    11
     Clear Element Text    id=application_details-startdate_year
     Input Text    id=application_details-startdate_year    2015
+    Clear Element Text    id=application_details-startdate_month
+    Input Text    id=application_details-startdate_month    11
 
 the applicant inserts "2016" in the Year field(valid date)
     Clear Element Text    id=application_details-startdate_year
@@ -127,13 +127,6 @@ the applicant inserts "2016" in the Year field(valid date)
 
 the Year field is empty
     Clear Element Text    id=application_details-startdate_year
-
-the applicant should get a validation error "Please enter a valid value"
-    #Wait Until Element Is Visible    css=#form-input-9 > div.form-group.error > div.validation-messages > span
-    #Element Should Contain    css=#form-input-9 > div.form-group.error > div.validation-messages > span    Please enter a valid value.
-    Wait Until Element Is Visible    css=.error-message
-    Page Should Contain    This field should be a number
-    Page Should Contain    Please enter a valid date
 
 the applicant inserts "-1" in the day field
     Clear Element Text    id=application_details-startdate_day
@@ -154,16 +147,9 @@ the applicant clears the text area of the "Project Summary"
 the applicant should get a validation error
     Focus    css=.app-submit-btn
     Wait Until Element Is Visible    css=#form-input-11 .error-message
-
 the applicant inserts "0" in the duration field
     Clear Element Text    id=application_details-duration
     Input Text    id=application_details-duration    0
-
-the applicant should get a validation error for the duration
-    Focus    css=.app-submit-btn
-    Sleep    1s
-    Wait Until Element Is Visible    css=.error-message
-    Page Should Contain    Please enter a valid duration
 
 the applicant inserts "-1" in the duration field
     Clear Element Text    id=application_details-duration
@@ -175,24 +161,13 @@ the applicant leaves the duration field empty
 the Applicant inserts 01 in the duration field
     Clear Element Text    id=application_details-duration
     Input Text    id=application_details-duration    1
-
-The Applicant should not see any more the error for the duration
-    Focus    css=.app-submit-btn
-    sleep    2s
-    Wait Until Element Is Not Visible    css=.error-message
+    focus    jQuery=button:contains("Save and")
 
 the applicant clears the application title field
     Clear Element Text    id=application_details-title
 
-The applicant should get a validation error for the title field
-    Wait Until Element Is Visible    css=.error-message
-    page should contain    Please enter the full title of the project.
-
-the applicant should get a validation error for the date
-    Focus    css=.app-submit-btn
-    Wait Until Element Is Visible    css=.error-message
-
-the applicant should get a validation error for the empty duration
-    Wait Until Element Is Visible    css=.error-message
-    Page Should Contain    This field should be a number
-    Page Should Contain    Please enter a valid duration
+The applicant should get a validation error message
+    [Arguments]    ${validation error}
+    focus    jQuery=button:contains("Save and")
+    Wait Until Page Contains    ${validation_error}
+    Element Should Be Visible    css=.error-message
