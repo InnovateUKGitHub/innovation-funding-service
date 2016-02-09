@@ -48,7 +48,7 @@ public class RestResultHandlingHttpMessageConverter extends MappingJackson2HttpM
             super.writeInternal(new RestErrorEnvelope(errors), type, outputMessage);
         } else {
 
-            if (!restResult.isBodiless()) {
+            if (restResult.getSuccessObject() != null) {
                 super.writeInternal(restResult.getSuccessObject(), type, outputMessage);
             }
         }

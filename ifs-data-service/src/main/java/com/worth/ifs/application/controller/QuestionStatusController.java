@@ -1,19 +1,14 @@
 package com.worth.ifs.application.controller;
 
 import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.mapper.QuestionStatusMapper;
-import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.transactional.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * QuestionStatusController exposes question status data and operations through a REST API.
@@ -24,42 +19,30 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public class QuestionStatusController {
 
     @Autowired
-    QuestionStatusRepository questionStatusRepository;
-
-    @Autowired
-    QuestionStatusMapper questionStatusMapper;
+    private QuestionService questionService;
 
     @RequestMapping("/findByQuestionAndApplication/{questionId}/{applicationId}")
-    private List<QuestionStatus> getQuestionStatusByApplicationIdAndAssigneeId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId) {
-            return questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
+    public List<QuestionStatus> getQuestionStatusByApplicationIdAndAssigneeId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId) {
+        return questionService.getQuestionStatusByApplicationIdAndAssigneeId(questionId, applicationId);
     }
 
     @RequestMapping("/findByQuestionAndApplicationAndOrganisation/{questionId}/{applicationId}/{organisationId}")
-    private List<QuestionStatusResource> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId) {
-        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
-        return simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource);
+    public List<QuestionStatusResource> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId) {
+        return questionService.getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(questionId, applicationId, organisationId);
     }
 
     @RequestMapping(value = "/findByQuestionIdsAndApplicationIdAndOrganisationId/{questionIds}/{applicationId}/{organisationId}")
-    private List<QuestionStatusResource> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(@PathVariable Long[] questionIds, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
-        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdIsInAndApplicationId(Arrays.asList(questionIds), applicationId);
-        return simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource);
+    public List<QuestionStatusResource> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(@PathVariable Long[] questionIds, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
+        return questionService.getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId);
     }
 
     @RequestMapping("/findByApplicationAndOrganisation/{applicationId}/{organisationId}")
-    private List<QuestionStatusResource> findByApplicationAndOrganisation(@PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
-        List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationId(applicationId);
-        return simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource);
+    public List<QuestionStatusResource> findByApplicationAndOrganisation(@PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
+        return questionService.findByApplicationAndOrganisation(applicationId, organisationId);
     }
 
     @RequestMapping("/{id}")
-    private QuestionStatus getQuestionStatusResourceById(@PathVariable("id") Long id){
-        return questionStatusRepository.findOne(id);
-    }
-
-    private List<QuestionStatus> filterByOrganisationIdIfHasMultipleStatuses(final List<QuestionStatus> questionStatuses, Long organisationId) {
-        return questionStatuses.stream().
-                filter(qs -> (!qs.getQuestion().hasMultipleStatuses() || (qs.getAssignee() != null && qs.getAssignee().getOrganisation().getId().equals(organisationId))))
-                .collect(Collectors.toList());
+    public QuestionStatus getQuestionStatusResourceById(@PathVariable("id") Long id){
+        return questionService.getQuestionStatusResourceById(id);
     }
 }

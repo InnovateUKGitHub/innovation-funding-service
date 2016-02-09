@@ -21,18 +21,15 @@ import static org.springframework.http.HttpStatus.OK;
  */
 public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
-    private boolean bodiless = false;
     private HttpStatus successfulStatusCode;
 
     public RestResult(RestResult<T> original) {
         super(original);
-        this.bodiless = original.bodiless;
         this.successfulStatusCode = original.successfulStatusCode;
     }
 
-    public RestResult(Either<RestFailure, T> result, boolean bodiless, HttpStatus successfulStatusCode) {
+    public RestResult(Either<RestFailure, T> result, HttpStatus successfulStatusCode) {
         super(result);
-        this.bodiless = bodiless;
         this.successfulStatusCode = successfulStatusCode;
     }
 
@@ -65,19 +62,6 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         return isFailure() ? result.getLeft().getStatusCode() : successfulStatusCode;
     }
 
-    @Override
-    public T getSuccessObject() {
-
-        if (bodiless) {
-            throw new IllegalStateException("RestResult is bodiless and so no success object is available to get");
-        }
-        return super.getSuccessObject();
-    }
-
-    public boolean isBodiless() {
-        return bodiless;
-    }
-
     public static <T1> T1 getLeftOrRight(Either<T1, T1> either) {
         return Either.getLeftOrRight(either);
     }
@@ -91,11 +75,11 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     public static <T> RestResult<T> restSuccess(T result, HttpStatus statusCode) {
-        return new RestResult<>(right(result), result == null, statusCode);
+        return new RestResult<>(right(result), statusCode);
     }
 
     public static <T> RestResult<T> restFailure(RestFailure failure) {
-        return new RestResult<>(left(failure), false, null);
+        return new RestResult<>(left(failure), null);
     }
 
     public static RestResult<Void> restFailure(HttpStatus statusCode) {
@@ -107,10 +91,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     public static <T> RestResult<T> restFailure(List<Error> errors) {
-        return new RestResult<>(left(RestFailure.error(errors)), false, null);
+        return new RestResult<>(left(RestFailure.error(errors)), null);
     }
 
     public static <T> RestResult<T> restFailure(List<Error> errors, HttpStatus statusCode) {
-        return new RestResult<>(left(RestFailure.error(errors, statusCode)), false, null);
+        return new RestResult<>(left(RestFailure.error(errors, statusCode)), null);
     }
 }

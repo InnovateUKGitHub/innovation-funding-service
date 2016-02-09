@@ -98,7 +98,7 @@ tasks.withType(Test) {
     // experiment with different values to see what works best
     // maxParallelForks = 4
     // can also compute dynamically
-    maxParallelForks = Runtime.runtime.availableProcessors() / 2
+    maxParallelForks = Runtime.runtime.availableProcessors()
 }
 
 task cleanDeploy {

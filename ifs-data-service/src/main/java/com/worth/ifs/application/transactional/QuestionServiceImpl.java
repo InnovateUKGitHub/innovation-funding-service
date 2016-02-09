@@ -4,23 +4,25 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.mapper.QuestionStatusMapper;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
+import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
 
@@ -29,7 +31,6 @@ import static java.util.Comparator.comparing;
  */
 @Service
 public class QuestionServiceImpl extends BaseTransactionalService implements QuestionService {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     ProcessRoleRepository processRoleRepository;
@@ -45,6 +46,9 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Autowired
     SectionService sectionService;
+
+    @Autowired
+    private QuestionStatusMapper questionStatusMapper;
 
 
     @Override
@@ -253,6 +257,35 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         }
     }
 
+    @Override
+    public List<QuestionStatus> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId) {
+        return questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
+    }
+
+    @Override
+    public List<QuestionStatusResource> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId) {
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
+        return simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource);
+    }
+
+    @Override
+    public List<QuestionStatusResource> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(Long[] questionIds, Long applicationId, Long organisationId){
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdIsInAndApplicationId(Arrays.asList(questionIds), applicationId);
+        return simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource);
+    }
+
+    @Override
+    public List<QuestionStatusResource> findByApplicationAndOrganisation(Long applicationId, Long organisationId){
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationId(applicationId);
+        return simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource);
+    }
+
+    @Override
+    public QuestionStatus getQuestionStatusResourceById(Long id){
+        return questionStatusRepository.findOne(id);
+    }
+
+
     private Boolean isMarkedAsCompleteForOrganisation(Long questionId, Long applicationId, Long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
 
@@ -289,5 +322,11 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             markedAsComplete = questionStatus.getMarkedAsComplete();
         }
         return Optional.ofNullable(markedAsComplete);
+    }
+
+    private List<QuestionStatus> filterByOrganisationIdIfHasMultipleStatuses(final List<QuestionStatus> questionStatuses, Long organisationId) {
+        return questionStatuses.stream().
+                filter(qs -> (!qs.getQuestion().hasMultipleStatuses() || (qs.getAssignee() != null && qs.getAssignee().getOrganisation().getId().equals(organisationId))))
+                .collect(Collectors.toList());
     }
 }
