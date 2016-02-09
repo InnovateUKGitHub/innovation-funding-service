@@ -16,6 +16,8 @@ import static com.worth.ifs.commons.service.BaseRestService.getJSONHeaders;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * This is the base class for testing REST services with mock components.  In addition to the standard mocks provided,
@@ -65,17 +67,25 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
     }
 
     protected HttpEntity<String> httpEntityForRestCall() {
-        return httpEntityForRestCall("");
+        return httpEntityForRestCall(null);
     }
 
     protected HttpEntity<String> httpEntityForRestGetWithoutAuthToken() {
         return httpEntityForRestCallWithoutAuthToken("");
     }
 
+    protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, T responseBody) {
+        return setupGetWithRestResultExpectations(nonBaseUrl, responseType, responseBody, OK);
+    }
+
     protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, T responseBody, HttpStatus responseCode) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, GET, httpEntityForRestCall(), responseType)).thenReturn(response);
         return response;
+    }
+
+    protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, ParameterizedTypeReference<T> responseType, T responseBody) {
+        return setupGetWithRestResultExpectations(nonBaseUrl, responseType, responseBody, OK);
     }
 
     protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, ParameterizedTypeReference<T> responseType, T responseBody, HttpStatus responseCode) {
@@ -96,4 +106,19 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         return response;
     }
 
+    protected <T> ResponseEntity<T> setupPutWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, Object requestBody, T responseBody) {
+        return setupPutWithRestResultExpectations(nonBaseUrl, responseType, requestBody, responseBody, OK);
+    }
+
+    protected <T> ResponseEntity<T> setupPutWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, Object requestBody, T responseBody, HttpStatus responseCode) {
+        ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), responseType)).thenReturn(response);
+        return response;
+    }
+
+    protected <T> ResponseEntity<T> setupPutWithRestResultExpectations(String nonBaseUrl, ParameterizedTypeReference<T> responseType, Object requestBody, T responseBody, HttpStatus responseCode) {
+        ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), responseType)).thenReturn(response);
+        return response;
+    }
 }

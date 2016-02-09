@@ -45,6 +45,15 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
         return getRight();
     }
 
+    // TODO DW - INFUND-1555 - remove "BACKWARDS COMPATIBILITY" method here (for "not found" nulls)
+
+    /**
+     * @deprecated Should handled either success or failure case explicitly, usually by using handlesuccessorfailure()
+     */
+    public T getSuccessObjectOrNull() {
+        return isRight() ? getRight() : null;
+    }
+
     protected <T1> T1 mapLeftOrRight(Function<? super FailureType, ? extends T1> lFunc, Function<? super T, ? extends T1> rFunc) {
         return result.mapLeftOrRight(lFunc, rFunc);
     }

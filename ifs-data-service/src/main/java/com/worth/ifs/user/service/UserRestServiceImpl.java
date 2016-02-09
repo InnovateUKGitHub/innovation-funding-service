@@ -88,8 +88,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public ListenableFuture<ProcessRole> findProcessRoleById(Long processRoleId) {
-        return adapt(getWithRestResultAsyc(processRoleRestURL + "/" + processRoleId, ProcessRole.class), re -> re.getSuccessObject());
+    public ListenableFuture<RestResult<ProcessRole>> findProcessRoleById(Long processRoleId) {
+        return getWithRestResultAsyc(processRoleRestURL + "/" + processRoleId, ProcessRole.class);
     }
 
     @Override
@@ -103,8 +103,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public ListenableFuture<List<ProcessRole>> findAssignableProcessRoles(Long applicationId){
-        return adapt(getWithRestResultAsyc(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRole[].class), re -> asList(re.getSuccessObject()));
+    public ListenableFuture<RestResult<ProcessRole[]>> findAssignableProcessRoles(Long applicationId){
+        return getWithRestResultAsyc(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRole[].class);
     }
 
     @Override

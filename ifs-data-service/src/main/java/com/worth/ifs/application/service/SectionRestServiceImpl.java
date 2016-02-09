@@ -1,12 +1,10 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 
@@ -14,8 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.worth.ifs.application.service.ListenableFutures.adapt;
-import static java.util.Arrays.asList;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 
 /**
  * SectionRestServiceImpl is a utility for CRUD operations on {@link Section}.
@@ -24,58 +21,52 @@ import static java.util.Arrays.asList;
  */
 @Service
 public class SectionRestServiceImpl extends BaseRestService implements SectionRestService {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Value("${ifs.data.service.rest.section}")
     String sectionRestURL;
 
     @Override
-    public Section getById(Long sectionId) {
-        return restGet(sectionRestURL + "/getById/" + sectionId, Section.class);
-    }
-
-
-    @Override
-    public Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId) {
-
-        ResponseEntity<Map<Long, Set<Long>>> resource = restGet(sectionRestURL + "/getCompletedSectionsByOrganisation/" + applicationId, new ParameterizedTypeReference<Map<Long, Set<Long>>>() {});
-        return resource.getBody();
-
+    public RestResult<Section> getById(Long sectionId) {
+        return getWithRestResult(sectionRestURL + "/getById/" + sectionId, Section.class);
     }
 
     @Override
-    public List<Long> getCompletedSectionIds(Long applicationId, Long organisationId) {
-        return asList(restGet(sectionRestURL + "/getCompletedSections/"+applicationId+"/"+organisationId, Long[].class));
+    public RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(Long applicationId) {
+        return getWithRestResult(sectionRestURL + "/getCompletedSectionsByOrganisation/" + applicationId, new ParameterizedTypeReference<Map<Long, Set<Long>>>() {});
     }
 
     @Override
-    public List<Long> getIncompletedSectionIds(Long applicationId) {
-        return asList(restGet(sectionRestURL + "/getIncompleteSections/"+applicationId, Long[].class));
+    public RestResult<List<Long>> getCompletedSectionIds(Long applicationId, Long organisationId) {
+        return getWithRestResult(sectionRestURL + "/getCompletedSections/" + applicationId + "/" + organisationId, longsListType());
     }
 
     @Override
-    public Section getSection(String name) {
-        return restGet(sectionRestURL + "/findByName/" + name, Section.class);
+    public RestResult<List<Long>> getIncompletedSectionIds(Long applicationId) {
+        return getWithRestResult(sectionRestURL + "/getIncompleteSections/" + applicationId, longsListType());
     }
 
     @Override
-    public Boolean allSectionsMarkedAsComplete(Long applicationId) {
-        return restGet(sectionRestURL + "/allSectionsMarkedAsComplete/" + applicationId, Boolean.class);
+    public RestResult<Section> getSection(String name) {
+        return getWithRestResult(sectionRestURL + "/findByName/" + name, Section.class);
     }
 
     @Override
-    public ListenableFuture<Section> getPreviousSection(Long sectionId) {
-        return adapt(restGetAsync(sectionRestURL + "/getPreviousSection/" + sectionId, Section.class), ResponseEntity::getBody);
+    public RestResult<Boolean> allSectionsMarkedAsComplete(Long applicationId) {
+        return getWithRestResult(sectionRestURL + "/allSectionsMarkedAsComplete/" + applicationId, Boolean.class);
     }
 
     @Override
-    public ListenableFuture<Section> getNextSection(Long sectionId) {
-        return adapt(restGetAsync(sectionRestURL + "/getNextSection/" + sectionId, Section.class), ResponseEntity::getBody);
-
+    public ListenableFuture<RestResult<Section>> getPreviousSection(Long sectionId) {
+        return getWithRestResultAsyc(sectionRestURL + "/getPreviousSection/" + sectionId, Section.class);
     }
 
     @Override
-    public Section getSectionByQuestionId(Long questionId) {
-        return restGet(sectionRestURL + "/getSectionByQuestionId/" + questionId, Section.class);
+    public ListenableFuture<RestResult<Section>> getNextSection(Long sectionId) {
+        return getWithRestResultAsyc(sectionRestURL + "/getNextSection/" + sectionId, Section.class);
+    }
+
+    @Override
+    public RestResult<Section> getSectionByQuestionId(Long questionId) {
+        return getWithRestResult(sectionRestURL + "/getSectionByQuestionId/" + questionId, Section.class);
     }
 }

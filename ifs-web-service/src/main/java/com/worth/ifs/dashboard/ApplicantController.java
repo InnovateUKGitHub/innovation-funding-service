@@ -88,12 +88,13 @@ public class ApplicantController {
         ).mapToLong(applicationResource -> applicationResource.getId()).boxed().collect(Collectors.toList());
     }
 
+    // TODO DW - INFUND-1555 - handle rest result
     private Map<Long, ApplicationStatusResource> createApplicationStatusMap(List<ApplicationResource>... resources){
         return combineLists(resources).stream()
             .collect(
                 Collectors.toMap(
                     ApplicationResource::getId,
-                    application -> applicationStatusService.getApplicationStatusById(application.getApplicationStatus())
+                    application -> applicationStatusService.getApplicationStatusById(application.getApplicationStatus()).getSuccessObjectOrNull()
                 )
             );
     }

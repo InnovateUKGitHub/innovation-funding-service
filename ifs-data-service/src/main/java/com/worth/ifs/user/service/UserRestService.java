@@ -22,9 +22,9 @@ public interface UserRestService {
     RestResult<List<ProcessRole>> findProcessRole(Long applicationId);
     RestResult<List<User>> findAssignableUsers(Long applicationId);
     RestResult<List<UserResource>> findUserByEmail(String email);
-    ListenableFuture<List<ProcessRole>> findAssignableProcessRoles(Long applicationId);
+    ListenableFuture<RestResult<ProcessRole[]>> findAssignableProcessRoles(Long applicationId);
     RestResult<List<User>> findRelatedUsers(Long applicationId);
-    ListenableFuture<ProcessRole> findProcessRoleById(Long processRoleId);
+    ListenableFuture<RestResult<ProcessRole>> findProcessRoleById(Long processRoleId);
     RestResult<ResourceEnvelope<UserResource>> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
     RestResult<ResourceEnvelope<UserResource>> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber);
 

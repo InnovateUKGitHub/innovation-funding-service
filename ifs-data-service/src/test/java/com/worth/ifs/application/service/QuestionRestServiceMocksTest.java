@@ -83,7 +83,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         String expectedUrl = dataServicesUrl + questionRestURL + "/getMarkedAsComplete/1/2";
 
         Long[] questionIds = new Long[]{3L, 4L, 5L};
-        when(mockAsyncRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Long[].class)).thenReturn(settable(new ResponseEntity<>(questionIds, HttpStatus.OK)));
+        when(mockAsyncRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(""), Long[].class)).thenReturn(settable(new ResponseEntity<>(questionIds, HttpStatus.OK)));
 
         // now run the method under test
         Set<Long> returnedQuestionIds = service.getMarkedAsComplete(1L, 2L).get();

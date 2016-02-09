@@ -2,7 +2,6 @@ package com.worth.ifs.user.controller;
 
 import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.rest.RestResultBuilder;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.UserService;
@@ -31,58 +30,51 @@ public class UserController {
 
     @RequestMapping("/token/{token}")
     public RestResult<User> getUserByToken(@PathVariable("token") final String token) {
-        return newRestHandler(User.class).perform(() -> userService.getUserByToken(token));
+        return newRestHandler().perform(() -> userService.getUserByToken(token));
     }
 
     @RequestMapping("/email/{email}/password/{password}")
     public RestResult<User> getUserByEmailandPassword(@PathVariable("email") final String email, @PathVariable("password") final String password) {
-        return newRestHandler(User.class).perform(() -> userService.getUserByEmailandPassword(email, password));
+        return newRestHandler().perform(() -> userService.getUserByEmailandPassword(email, password));
     }
 
     @RequestMapping("/id/{id}")
     public RestResult<User> getUserById(@PathVariable("id") final Long id) {
-        return newRestHandler(User.class).perform(() -> userService.getUserById(id));
+        return newRestHandler().perform(() -> userService.getUserById(id));
     }
 
     @RequestMapping("/name/{name}")
     public RestResult<List<User>> getUserByName(@PathVariable("name") final String name) {
-        RestResultBuilder<List<User>, List<User>> handler = newRestHandler();
-        return handler.perform(() -> userService.getUserByName(name));
+        return newRestHandler().perform(() -> userService.getUserByName(name));
     }
 
     @RequestMapping("/findAll/")
     public RestResult<List<User>> findAll() {
-        RestResultBuilder<List<User>, List<User>> handler = newRestHandler();
-        return handler.perform(() -> userService.findAll());
+        return newRestHandler().perform(() -> userService.findAll());
     }
 
     @RequestMapping("/findByEmail/{email}/")
     public RestResult<List<UserResource>> findByEmail(@PathVariable("email") final String email) {
-        RestResultBuilder<List<UserResource>, List<UserResource>> handler = newRestHandler();
-        return handler.perform(() -> userService.findByEmail(email));
+        return newRestHandler().perform(() -> userService.findByEmail(email));
     }
 
     @RequestMapping("/findAssignableUsers/{applicationId}")
     public RestResult<Set<User>> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
-        RestResultBuilder<Set<User>, Set<User>> handler = newRestHandler();
-        return handler.perform(() -> userService.findAssignableUsers(applicationId));
+        return newRestHandler().perform(() -> userService.findAssignableUsers(applicationId));
     }
 
     @RequestMapping("/findRelatedUsers/{applicationId}")
     public RestResult<Set<User>> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
-        RestResultBuilder<Set<User>, Set<User>> handler = newRestHandler();
-        return handler.perform(() -> userService.findRelatedUsers(applicationId));
+        return newRestHandler().perform(() -> userService.findRelatedUsers(applicationId));
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<ResourceEnvelope<UserResource>> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        RestResultBuilder<ResourceEnvelope<UserResource>, ResourceEnvelope<UserResource>> handler = newRestHandler();
-        return handler.perform(() -> userService.createUser(organisationId, userResource));
+        return newRestHandler().perform(() -> userService.createUser(organisationId, userResource));
     }
 
     @RequestMapping("/updateDetails")
     public RestResult<ResourceEnvelope<UserResource>> createUser(@RequestBody UserResource userResource) {
-        RestResultBuilder<ResourceEnvelope<UserResource>, ResourceEnvelope<UserResource>> handler = newRestHandler();
-        return handler.perform(() -> userService.updateUser(userResource));
+        return newRestHandler().perform(() -> userService.updateUser(userResource));
     }
 }
