@@ -21,10 +21,12 @@ import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -91,7 +93,7 @@ public class AssessmentHandlerTest extends BaseUnitTestMocksTest {
         // Set the mocks
         //
         when(assessmentRepository.findById(assessmentId)).thenReturn(assessment);
-        when(responseService.findResponsesByApplication(applicationId)).thenReturn(allResponses);
+        when(responseService.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(allResponses));
 
         //
         // Call the method under test
@@ -135,13 +137,13 @@ public class AssessmentHandlerTest extends BaseUnitTestMocksTest {
                 build(1);
 
         List<Response> responses = newResponse().withApplication(application).
-                withQuestions(asList(scorableQuestion)).withFeedback(feedback).build(1);
+                withQuestions(singletonList(scorableQuestion)).withFeedback(feedback).build(1);
 
         //
         // Set the mocks
         //
         when(assessmentRepository.findById(assessmentId)).thenReturn(assessment);
-        when(responseService.findResponsesByApplication(applicationId)).thenReturn(responses);
+        when(responseService.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(responses));
 
         //
         // Call the method under test

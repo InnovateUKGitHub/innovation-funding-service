@@ -102,7 +102,7 @@ public class AssessmentHandler {
     public Score getScore(Long id) {
         Assessment assessment = assessmentRepository.findById(id);
         Application application = assessment.getProcessRole().getApplication();
-        List<Response> responses = responseService.findResponsesByApplication(application.getId());
+        List<Response> responses = responseService.findResponsesByApplication(application.getId()).getSuccessObjectOrNull();
         Competition competition = application.getCompetition();
         ProcessRole assessorProcessRole = assessment.getProcessRole();
 

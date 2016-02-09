@@ -11,6 +11,7 @@ import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.util.EntityLookupCallbacks;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
-import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -50,15 +50,15 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<User> getUserByToken(final String token) {
-        return getOrFail(() -> repository.findByToken(token), notFoundError(User.class, token)).
-                andOnSuccess(users -> getOnlyElementOrFail(users));
+        return find(() -> repository.findByToken(token), notFoundError(User.class, token)).
+                andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
     }
 
     @Override
     public ServiceResult<User> getUserByEmailandPassword(final String email, final String password) {
 
-        return getOrFail(() -> repository.findByEmail(email), notFoundError(User.class, email)).
-                andOnSuccess(users -> getOnlyElementOrFail(users)).
+        return find(() -> repository.findByEmail(email), notFoundError(User.class, email)).
+                andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail).
                 andOnSuccess(user -> user.passwordEquals(password) ? serviceSuccess(user) : serviceFailure(notFoundError(User.class)));
     }
 
@@ -69,7 +69,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<List<User>> getUserByName(final String name) {
-        return getOrFail(() -> repository.findByName(name), notFoundError(User.class, name));
+        return find(() -> repository.findByName(name), notFoundError(User.class, name));
     }
 
     @Override

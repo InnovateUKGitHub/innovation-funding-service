@@ -48,7 +48,11 @@ public class ResponseBuilder extends BaseBuilder<Response, ResponseBuilder> {
     }
 
     public ResponseBuilder withUpdatedBy(Builder<ProcessRole, ?> value) {
-        return with(response -> response.setUpdatedBy(value.build()));
+        return withUpdatedBy(value.build());
+    }
+
+    public ResponseBuilder withUpdatedBy(ProcessRole value) {
+        return with(response -> response.setUpdatedBy(value));
     }
 
     public ResponseBuilder withQuestion(Builder<Question, ?> question) {

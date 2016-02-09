@@ -49,7 +49,7 @@ import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -93,7 +93,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         return handlingErrors(() -> {
 
-            return getOrFail(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
+            return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
 
                Application application = new Application();
                application.setName(applicationName);
@@ -236,7 +236,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<FormInput> getFormInput(long formInputId) {
-        return getOrFail(() -> formInputRepository.findOne(formInputId), notFoundError(FormInput.class, formInputId));
+        return find(() -> formInputRepository.findOne(formInputId), notFoundError(FormInput.class, formInputId));
     }
 
     private FormInputResponseFileEntryResource formInputResponseFileEntryResource(FileEntry fileEntry, FormInputResponseFileEntryId fileEntryId) {
@@ -246,7 +246,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private ServiceResult<FormInputResponse> getFormInputResponse(FormInputResponseFileEntryId fileEntry) {
         Error formInputResponseNotFoundError = notFoundError(FormInputResponse.class, fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId());
-        return getOrFail(() -> formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId()), formInputResponseNotFoundError);
+        return find(() -> formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId()), formInputResponseNotFoundError);
     }
 
     @Override
@@ -304,7 +304,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                                                          final Long statusId) {
         return handlingErrors(() -> {
 
-            return getOrFail(application(id), applicationStatus(statusId)).andOnSuccess((application, applicationStatus) -> {
+            return find(application(id), applicationStatus(statusId)).andOnSuccess((application, applicationStatus) -> {
 
                 application.setApplicationStatus(applicationStatus);
                 applicationRepository.save(application);
@@ -345,7 +345,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         return handlingErrors(() -> {
 
-            return getOrFail(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
+            return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
 
                Application application = new Application();
                application.setName(applicationName);
@@ -393,7 +393,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<ObjectNode> applicationReadyForSubmit(Long id) {
 
-        return getOrFail(application(id), () -> getProgressPercentageByApplicationId(id)).andOnSuccess((application, progressPercentage) -> {
+        return find(application(id), () -> getProgressPercentageByApplicationId(id)).andOnSuccess((application, progressPercentage) -> {
 
             return sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccess(allSectionsComplete -> {
 

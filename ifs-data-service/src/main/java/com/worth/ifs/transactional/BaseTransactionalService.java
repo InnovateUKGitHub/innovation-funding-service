@@ -10,33 +10,27 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.util.EntityLookupCallbacks;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * This class represents the base class for transactional services.  Method calls within this service will have
- * transaction boundaries provided to allow for safe atomic operations and persistence cascading.  Code called
- * within a {@link #handlingErrors(Supplier)} supplier will have its exceptions converted into ServiceFailures
- * of type GENERAL_UNEXPECTED_ERROR and the transaction rolled back.
- *
- * Created by dwatson on 06/10/15.
+ * transaction boundaries provided to allow for safe atomic operations and persistence cascading.
  */
 @Transactional
 public abstract class BaseTransactionalService  {
-
-    private static final Log log = LogFactory.getLog(BaseTransactionalService.class);
 
     @Autowired
     protected ResponseRepository responseRepository;
@@ -64,7 +58,7 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<Response> getResponse(Long responseId) {
-        return getOrFail(() -> responseRepository.findOne(responseId), notFoundError(Response.class, responseId));
+        return find(() -> responseRepository.findOne(responseId), notFoundError(Response.class, responseId));
     }
 
     protected Supplier<ServiceResult<ProcessRole>> processRole(Long processRoleId) {
@@ -72,7 +66,7 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<ProcessRole> getProcessRole(Long processRoleId) {
-        return getOrFail(() -> processRoleRepository.findOne(processRoleId), notFoundError(ProcessRole.class, processRoleId));
+        return find(() -> processRoleRepository.findOne(processRoleId), notFoundError(ProcessRole.class, processRoleId));
     }
 
     protected Supplier<ServiceResult<Application>> application(final Long id) {
@@ -80,7 +74,7 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<Application> getApplication(final Long id) {
-        return getOrFail(() -> applicationRepository.findOne(id), notFoundError(Application.class, id));
+        return find(() -> applicationRepository.findOne(id), notFoundError(Application.class, id));
     }
 
     protected Supplier<ServiceResult<User>> user(final Long id) {
@@ -88,7 +82,7 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<User> getUser(final Long id) {
-        return getOrFail(() -> userRepository.findOne(id), notFoundError(User.class, id));
+        return find(() -> userRepository.findOne(id), notFoundError(User.class, id));
     }
 
     protected Supplier<ServiceResult<Competition>> competition(final Long id) {
@@ -96,7 +90,7 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<Competition> getCompetition(final Long id) {
-        return getOrFail(() -> competitionRepository.findOne(id), notFoundError(Competition.class, id));
+        return find(() -> competitionRepository.findOne(id), notFoundError(Competition.class, id));
     }
 
     protected Supplier<ServiceResult<ApplicationStatus>> applicationStatus(final Long id) {
@@ -104,6 +98,15 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<ApplicationStatus> getApplicationStatus(final Long id) {
-        return getOrFail(() -> applicationStatusRepository.findOne(id), notFoundError(ApplicationStatus.class, id));
+        return find(() -> applicationStatusRepository.findOne(id), notFoundError(ApplicationStatus.class, id));
+    }
+
+    protected Supplier<ServiceResult<Role>> role(UserRoleType roleType) {
+        return () -> getRole(roleType);
+    }
+
+    protected ServiceResult<Role> getRole(UserRoleType roleType) {
+        return find(() -> roleRepository.findByName(roleType.getName()), notFoundError(Role.class, roleType.getName())).
+                andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
     }
 }

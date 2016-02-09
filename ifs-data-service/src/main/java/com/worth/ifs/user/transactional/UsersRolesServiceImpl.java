@@ -14,7 +14,7 @@ import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Service that encompasses functions that relate to users and their roles
@@ -29,17 +29,17 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
 
     @Override
     public ServiceResult<List<ProcessRole>> getProcessRolesByApplicationId(Long applicationId) {
-        return getOrFail(() -> processRoleRepository.findByApplicationId(applicationId), notFoundError(ProcessRole.class, "Application", applicationId));
+        return find(() -> processRoleRepository.findByApplicationId(applicationId), notFoundError(ProcessRole.class, "Application", applicationId));
     }
 
     @Override
     public ServiceResult<ProcessRole> getProcessRoleByUserIdAndApplicationId(Long userId, Long applicationId) {
-        return getOrFail(() -> processRoleRepository.findByUserIdAndApplicationId(userId, applicationId), notFoundError(ProcessRole.class, "User", userId, "Application", applicationId));
+        return find(() -> processRoleRepository.findByUserIdAndApplicationId(userId, applicationId), notFoundError(ProcessRole.class, "User", userId, "Application", applicationId));
     }
 
     @Override
     public ServiceResult<List<ProcessRole>> getProcessRolesByUserId(Long userId) {
-        return getOrFail(() -> processRoleRepository.findByUserId(userId), notFoundError(ProcessRole.class, "User", userId));
+        return find(() -> processRoleRepository.findByUserId(userId), notFoundError(ProcessRole.class, "User", userId));
     }
 
     @Override

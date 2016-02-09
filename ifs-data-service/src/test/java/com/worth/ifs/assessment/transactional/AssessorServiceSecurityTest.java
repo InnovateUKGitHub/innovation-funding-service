@@ -12,8 +12,7 @@ import org.springframework.security.access.AccessDeniedException;
 
 import java.util.Optional;
 
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.junit.Assert.assertEquals;
+import static java.util.Optional.empty;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,7 +40,7 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
         when(feedbackRules.assessorCanReadTheirOwnFeedback(feedback, getLoggedInUser())).thenReturn(true);
 
         // call the method under test
-        assertEquals("Security tested!", service.getFeedback(id).getSuccessObject().getValue().get());
+        service.getFeedback(id);
 
         verify(feedbackRules).assessorCanReadTheirOwnFeedback(feedback, getLoggedInUser());
         verify(feedbackLookup).getFeedback(id);
@@ -65,15 +64,33 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
         verify(feedbackRules).assessorCanReadTheirOwnFeedback(feedback, getLoggedInUser());
     }
 
+    @Test
+    public void test_readAssessorFeedback_deniedBecauseFeedbackCouldNotBeFound() {
+
+        Id id = new Id();
+        when(feedbackLookup.getFeedback(id)).thenReturn(null);
+
+        try {
+            service.getFeedback(id);
+            fail("Should have thrown an AccessDeniedException");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
+        }
+
+        verify(feedbackLookup).getFeedback(id);
+    }
+
 
     @Test
     public void test_updateAssessorFeedback_allowedBecauseUserIsAssessorOnAssessment() {
 
         Feedback feedback = new Feedback();
+        Id feedbackId = new Id(123L, 456L);
+
+        when(feedbackLookup.getFeedback(feedbackId)).thenReturn(feedback);
         when(feedbackRules.assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser())).thenReturn(true);
 
-        // call the method under test
-        assertEquals("Security tested!", service.updateAssessorFeedback(feedback).getSuccessObject().getValue().get());
+        service.updateAssessorFeedback(feedbackId, empty(), empty());
 
         verify(feedbackRules).assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser());
     }
@@ -82,10 +99,13 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
     public void test_updateAssessorFeedback_deniedBecauseUserIsNotAssessorOnAssessment() {
 
         Feedback feedback = new Feedback();
+        Id feedbackId = new Id(123L, 456L);
+
+        when(feedbackLookup.getFeedback(feedbackId)).thenReturn(feedback);
         when(feedbackRules.assessorCanUpdateTheirOwnFeedback(feedback, getLoggedInUser())).thenReturn(false);
 
         try {
-            service.updateAssessorFeedback(feedback);
+            service.updateAssessorFeedback(feedbackId, empty(), empty());
             fail("Should have thrown an AccessDeniedException");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -99,10 +119,13 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
 
         setLoggedInUser(null);
         Feedback feedback = new Feedback();
+        Id feedbackId = new Id(123L, 456L);
+
+        when(feedbackLookup.getFeedback(feedbackId)).thenReturn(feedback);
         when(feedbackRules.assessorCanUpdateTheirOwnFeedback(feedback, null)).thenReturn(false);
 
         try {
-            service.updateAssessorFeedback(feedback);
+            service.updateAssessorFeedback(feedbackId, empty(), empty());
             fail("Should have thrown an AccessDeniedException");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -118,13 +141,13 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
     private static class TestAssessmentService implements AssessorService {
 
         @Override
-        public ServiceResult<Feedback> updateAssessorFeedback(Feedback feedback) {
-            return serviceSuccess(new Feedback().setValue(Optional.of("Security tested!")));
+        public ServiceResult<Feedback> updateAssessorFeedback(Id feedbackId, Optional<String> feedbackValue, Optional<String> feedbackText) {
+            return null;
         }
 
         @Override
-        public ServiceResult<Feedback> getFeedback(Feedback.Id id) {
-            return serviceSuccess(new Feedback().setValue(Optional.of("Security tested!")));
+        public ServiceResult<Feedback> getFeedback(Id id) {
+            return null;
         }
     }
 

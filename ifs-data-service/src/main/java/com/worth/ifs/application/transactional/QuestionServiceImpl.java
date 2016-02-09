@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
 
@@ -286,7 +286,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<QuestionStatus> getQuestionStatusResourceById(Long id){
-        return getOrFail(() -> questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id));
+        return find(() -> questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id));
     }
 
     private Boolean isMarkedAsCompleteForOrganisation(Long questionId, Long applicationId, Long organisationId) {

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -77,7 +77,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     public ServiceResult<Set<Long>> getCompletedSections(final Long applicationId,
                                           final Long organisationId) {
 
-        return getOrFail(() -> getApplication(applicationId), () -> getIncompleteSections(applicationId)).
+        return find(() -> getApplication(applicationId), () -> getIncompleteSections(applicationId)).
                 andOnSuccess((application, incomplete) -> {
 
             Set<Long> completedSections = new LinkedHashSet<>();
@@ -132,7 +132,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
     @Override
     public ServiceResult<Section> findByName(final String name) {
-        return getOrFail(() -> sectionRepository.findByName(name), notFoundError(Section.class, name));
+        return find(() -> sectionRepository.findByName(name), notFoundError(Section.class, name));
     }
 
     // TODO DW - INFUND-1555 - work out the getSuccessObject call
@@ -268,11 +268,11 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
     @Override
     public ServiceResult<Section> getSectionByQuestionId(final Long questionId) {
-        return getOrFail(() -> sectionRepository.findByQuestionsId(questionId), notFoundError(Section.class, questionId));
+        return find(() -> sectionRepository.findByQuestionsId(questionId), notFoundError(Section.class, questionId));
     }
 
 
     private ServiceResult<Section> getSection(Long sectionId) {
-        return getOrFail(() -> sectionRepository.findOne(sectionId), notFoundError(Section.class, sectionId));
+        return find(() -> sectionRepository.findOne(sectionId), notFoundError(Section.class, sectionId));
     }
 }
