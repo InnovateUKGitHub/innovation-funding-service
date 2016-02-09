@@ -1,5 +1,6 @@
 package com.worth.ifs;
 
+import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.repository.*;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.ResponseService;
@@ -12,13 +13,13 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.transactional.ServiceLocator;
+import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.transactional.UserService;
 import org.junit.Before;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -36,6 +37,9 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    protected ApplicationMapper applicationMapperMock;
 
     @Mock
     protected ApplicationFinanceRepository applicationFinanceRepository;
@@ -94,8 +98,11 @@ public abstract class BaseUnitTestMocksTest {
     @Mock
     protected InviteRepository inviteRepositoryMock;
 
-    @InjectMocks
-    protected ServiceLocator serviceLocator = new ServiceLocator();
+    @Mock
+    protected OrganisationService organisationServiceMock;
+
+    @Mock
+    protected UserService userServiceMock;
 
     @Before
     public void setupMockInjection() {

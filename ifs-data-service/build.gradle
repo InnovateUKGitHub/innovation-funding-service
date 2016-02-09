@@ -89,6 +89,8 @@ dependencies {
     compile fileTree(dir: "libs", include: "*.jar")
 
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.0.0.RELEASE"
+    testCompile "com.openpojo:openpojo:0.8.3"
+
 }
 
 test {
@@ -143,6 +145,8 @@ task client(type: Jar) {
         include "com/worth/ifs/*/resource/**"
         include "com/worth/ifs/util/**"
         include "com/worth/ifs/commons/security/**"
+        include "com/worth/ifs/commons/rest/**"
+        include "com/worth/ifs/commons/error/**"
         include "com/worth/ifs/mappers/**"
         exclude "com/worth/ifs/notifications/**"
         exclude "com/worth/ifs/sil/**"

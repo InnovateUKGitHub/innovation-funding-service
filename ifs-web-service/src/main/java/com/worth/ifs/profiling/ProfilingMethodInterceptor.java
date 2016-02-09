@@ -1,6 +1,5 @@
 package com.worth.ifs.profiling;
 
-
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
@@ -20,16 +19,12 @@ public class ProfilingMethodInterceptor implements MethodInterceptor {
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         final StopWatch stopWatch = new StopWatch(invocation.getMethod().toGenericString());
-        stopWatch.start("invocation.proceed()");
-
+        stopWatch.start( invocation.getMethod().getDeclaringClass() + "." + invocation.getMethod().getName());
         try {
-            log.info(">>>>>>> START METHOD {} <<<<<<<<<", invocation.getMethod().toGenericString());
             return invocation.proceed();
         } finally {
             stopWatch.stop();
             log.info(stopWatch.prettyPrint());
-            log.info(">>>>>>> END METHOD {} <<<<<<<<<", invocation.getMethod().toGenericString());
         }
-
     }
 }

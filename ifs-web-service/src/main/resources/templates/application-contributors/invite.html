@@ -19,35 +19,34 @@
     </div>
     <!--/* new application text */-->
     <div th:if="${param.newApplication != null}" th:remove="tag">
-      <div class="message-alert" th:if="${leadApplicant.id == authenticatedUser.id}">
+      <section class="message-alert" th:if="${leadApplicant.id == authenticatedUser.id}">
           <h2 class="heading-small">You are the lead applicant</h2>
           <p>
-              You are the lead applicant for this application, meaning
-              you have the ability to invite contributors,<br/>
-              assigning questions, coordinating partners and submitting the application.
+            As the lead for this application you can invite other contributors, assign questions, coordinate partners and submit the completed application.
           </p>
-      </div>
+      </section>
       <h1 class="heading-large">Inviting Contributors</h1>
-      <p>From this page you are able to invite contributors to your application.<br/>You are able to add new contributors at any point during the application process.</p>
+      <h2 class="heading-medium no-margin" th:text="${currentCompetition.getName() + '- New application'}" />
+      <p>You can invite new contributors at any time, but your application must have at least one collaborative partner for this competition.</p>
     </div>
 
 
     <form th:object="${contributorsForm}" method="POST" class="contributorsForm">
-        <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1"/>
+        <button class="hidden-save" type="submit" aria-hidden="true" value="save form" tabindex="-1"/>
         <ul class="boxed-list">
             <li th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
                 <!--/* lead org */-->
                 <div th:if="${organisationStats.index == 0}" th:remove="tag">
-                  <h2 class="heading-medium">
+                  <h3 class="heading-medium">
                     Lead Organisation "<span th:remove="tag" th:text="${organisationInviteForm.organisationName}"/>"
-                  </h2>
+                  </h3>
                    <p>The lead organisation will be the lead partner throughout the application and project.
                       Add members of your own organisation to contribute to this application.
                   </p>
                 </div>
                 <!--/* partner org */-->
                 <div th:unless="${organisationStats.index == 0}" th:remove="tag">
-                  <h2 class="heading-medium">Partner Organisation</h2>
+                  <h3 class="heading-medium">Partner Organisation</h3>
 
                   <div class="form-group">
                     <label class="form-label" th:for="organisations[__${organisationStats.index}__].organisationName">Organisation Name</label>
@@ -60,7 +59,7 @@
                   </div>
                 </div>
                 <!--/* all org */-->
-
+                <!--<div th:text="${organisationStats.index}"></div>-->
                 <input type="hidden" class="form-control width-full"  th:field="*{organisations[__${organisationStats.index}__].organisationId}"/>
                 <input type="hidden" class="form-control width-full"  th:field="*{organisations[__${organisationStats.index}__].organisationInviteId}"/>
 
@@ -129,13 +128,11 @@
             </li>
             <li>
                 <button class="buttonlink" type="submit" name="add_partner" value="">Add partner organisation</button>
-                <p>Add any partner organisations collaborating with you on this project. Partners are responsible for submitting their own finances.</p>
+                <p>Add any partner organisations collaborating with you on this project. Partners are responsible for creating their own account and submitting their finances.</p>
             </li>
         </ul>
-
-        <div class="alignright-button">
-            <button th:text="${param.newApplication != null ? 'Begin application' : 'Save Changes'}" type="submit" name="save_contributors" class="button" />
-        </div>
+        <p class="extra-margin">We will send emails to each of these partners inviting them to join the application.</p>
+          <button th:text="${param.newApplication != null ? 'Begin application' : 'Save Changes'}" type="submit" name="save_contributors" class="button" />
     </form>
 
 

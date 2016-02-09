@@ -110,7 +110,8 @@ public class AssessmentController {
         String comments =  HtmlUtils.htmlUnescape(formData.get("comments").textValue());
 
         // delegates to the handler and returns its operation success
-        ProcessRole processRole = processRoleController.findByUserApplication(assessorId, applicationId);
+        // TODO DW - 1555 - fix the bwlow processrole code to use its serviceresult wrapper
+        ProcessRole processRole = processRoleController.findByUserApplication(assessorId, applicationId).getSuccessObject();
         Assessment assessment = assessmentHandler.getOneByProcessRole(processRole.getId());
         Assessment newAssessment = new Assessment();
         ProcessOutcome processOutcome = new ProcessOutcome();

@@ -1,19 +1,23 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.commons.resource.ResourceEnvelope;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.resource.UserResourceEnvelope;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
 import java.util.List;
+
+import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
+import static java.util.Collections.emptyList;
 
 /**
  * UserRestServiceImpl is a utility for CRUD operations on {@link User}.
@@ -36,76 +40,78 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         this.processRoleRestURL = processRoleRestURL;
     }
 
-    public User retrieveUserByToken(String token) {
+    @Override
+    public RestResult<User> retrieveUserByToken(String token) {
         if(StringUtils.isEmpty(token))
-            return null;
+            return restFailure(notFoundError(User.class, token));
 
-        return restGet(userRestURL + "/token/" + token, User.class);
+        return getWithRestResult(userRestURL + "/token/" + token, User.class);
     }
 
-    @NotSecured("Method should be able to be called by a web service for guest user that is creating his account to check for duplicate email")
-    public List<UserResource> findUserByEmail(String email) {
-        if(StringUtils.isEmpty(email))
-            return null;
-        ResponseEntity<UserResource[]> usersResponse = restGetEntity(userRestURL+"/findByEmail/"+email+"/", UserResource[].class);
-        UserResource[] users = usersResponse.getBody();
-        return Arrays.asList(users);
+    @Override
+    public RestResult<List<UserResource>> findUserByEmail(String email) {
+        if(StringUtils.isEmpty(email)) {
+            return restSuccess(emptyList());
+        }
+
+        return getWithRestResult(userRestURL + "/findByEmail/" + email + "/", userResourceListType());
     }
 
-    public User retrieveUserByEmailAndPassword(String email, String password) {
+    @Override
+    public RestResult<User> retrieveUserByEmailAndPassword(String email, String password) {
         if(StringUtils.isEmpty(email) || StringUtils.isEmpty(password))
-            return null;
+            return restFailure(notFoundError(User.class, email));
 
-        return restGet(userRestURL + "/email/" + email + "/password/" + password, User.class);
+        return getWithRestResult(userRestURL + "/email/" + email + "/password/" + password, User.class);
     }
 
-    public User retrieveUserById(Long id) {
-        if(id == null || id.equals(0L))
-            return null;
+    @Override
+    public RestResult<User> retrieveUserById(Long id) {
+        if(id == null || id.equals(0L)) {
+            return restFailure(notFoundError(User.class, id));
+        }
 
-        return restGet(userRestURL + "/id/" + id, User.class);
+        return getWithRestResult(userRestURL + "/id/" + id, User.class);
     }
 
-    public List<User> findAll() {
-        ResponseEntity<User[]> responseEntity = restGetEntity(userRestURL + "/findAll/", User[].class);
-        User[] users =responseEntity.getBody();
-        return Arrays.asList(users);
+    @Override
+    public RestResult<List<User>> findAll() {
+        return getWithRestResult(userRestURL + "/findAll/", userListType());
     }
 
-    public ProcessRole findProcessRole(Long userId, Long applicationId) {
-        return restGet(processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, ProcessRole.class);
+    @Override
+    public RestResult<ProcessRole> findProcessRole(Long userId, Long applicationId) {
+        return getWithRestResult(processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, ProcessRole.class);
     }
 
-    public ProcessRole findProcessRoleById(Long processRoleId) {
-        return restGet(processRoleRestURL + "/"+ processRoleId, ProcessRole.class);
+    @Override
+    public RestResult<ProcessRole> findProcessRoleById(Long processRoleId) {
+        return getWithRestResult(processRoleRestURL + "/"+ processRoleId, ProcessRole.class);
     }
 
-    public List<ProcessRole> findProcessRole(Long applicationId) {
-        ResponseEntity<ProcessRole[]> responseEntity = restGetEntity(processRoleRestURL + "/findByUserApplication/" + applicationId, ProcessRole[].class);
-        ProcessRole[] processRole = responseEntity.getBody();
-        return Arrays.asList(processRole);
+    @Override
+    public RestResult<List<ProcessRole>> findProcessRole(Long applicationId) {
+        return getWithRestResult(processRoleRestURL + "/findByApplicationId/" + applicationId, processRoleListType());
     }
 
-    public List<User> findAssignableUsers(Long applicationId){
-        ResponseEntity<User[]> responseEntity = restGetEntity(userRestURL + "/findAssignableUsers/" + applicationId, User[].class);
-        User[] users =responseEntity.getBody();
-        return Arrays.asList(users);
+    @Override
+    public RestResult<List<User>> findAssignableUsers(Long applicationId){
+        return getWithRestResult(userRestURL + "/findAssignableUsers/" + applicationId, userListType());
     }
 
-    public List<ProcessRole> findAssignableProcessRoles(Long applicationId){
-        ResponseEntity<ProcessRole[]> responseEntity = restGetEntity(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRole[].class);
-        ProcessRole[] processRoles =responseEntity.getBody();
-        return Arrays.asList(processRoles);
+    @Override
+    public RestResult<List<ProcessRole>> findAssignableProcessRoles(Long applicationId){
+        return getWithRestResult(processRoleRestURL + "/findAssignable/" + applicationId, processRoleListType());
     }
 
-    public List<User> findRelatedUsers(Long applicationId){
-        ResponseEntity<User[]> responseEntity = restGetEntity(getDataRestServiceURL() + userRestURL + "/findRelatedUsers/"+applicationId, User[].class);
-        User[] users =responseEntity.getBody();
-        return Arrays.asList(users);
+    @Override
+    public RestResult<List<User>> findRelatedUsers(Long applicationId){
+        return getWithRestResult(userRestURL + "/findRelatedUsers/"+applicationId, userListType());
     }
 
-    @NotSecured("Method should be able to be called by a web service for guest user to create an account")
-    public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
+    @Override
+    // TODO DW - INFUND-1555 - get rid of ResourceEnvelope
+    public RestResult<ResourceEnvelope<UserResource>> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
         UserResource user = new UserResource();
 
         user.setFirstName(firstName);
@@ -117,11 +123,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
         String url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId;
 
-        return restPost(url, user, UserResourceEnvelope.class);
+        return postWithRestResult(url, user, new ParameterizedTypeReference<ResourceEnvelope<UserResource>>() {});
     }
 
     @Override
-    public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
+    // TODO DW - INFUND-1555 - get rid of ResourceEnvelope
+    public RestResult<ResourceEnvelope<UserResource>> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
         UserResource user = new UserResource();
         user.setEmail(email);
         user.setFirstName(firstName);
@@ -129,6 +136,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setTitle(title);
         user.setPhoneNumber(phoneNumber);
         String url = userRestURL + "/updateDetails";
-        return restPost(url, user, UserResourceEnvelope.class);
+        return postWithRestResult(url, user, new ParameterizedTypeReference<ResourceEnvelope<UserResource>>() {});
     }
 }

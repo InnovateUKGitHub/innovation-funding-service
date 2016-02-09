@@ -1,7 +1,7 @@
 package com.worth.ifs.user.service;
 
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.organisation.domain.Address;
-import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -12,12 +12,10 @@ import java.util.List;
  * Interface for CRUD operations on {@link Organisation} related data.
  */
 public interface OrganisationRestService {
-    public List<Organisation> getOrganisationsByApplicationId(Long applicationId);
-    public Organisation getOrganisationById(Long organisationId);
-    public OrganisationResource save(Organisation organisation);
-    @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
-    public OrganisationResource save(OrganisationResource organisation);
-    public OrganisationResource addAddress(OrganisationResource organisation, Address address, AddressType type);
 
-
+    RestResult<List<Organisation>> getOrganisationsByApplicationId(Long applicationId);
+    RestResult<Organisation> getOrganisationById(Long organisationId);
+    RestResult<OrganisationResource> save(Organisation organisation);
+    RestResult<OrganisationResource> save(OrganisationResource organisation);
+    RestResult<OrganisationResource> addAddress(OrganisationResource organisation, Address address, AddressType type);
 }

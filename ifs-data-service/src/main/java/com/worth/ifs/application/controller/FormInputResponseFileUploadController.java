@@ -3,12 +3,10 @@ package com.worth.ifs.application.controller;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.transactional.ApplicationService;
-import com.worth.ifs.commons.controller.ServiceFailureToJsonResponseHandler;
-import com.worth.ifs.commons.controller.SimpleServiceFailureToJsonResponseHandler;
+import com.worth.ifs.commons.rest.RestErrorEnvelope;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
-import com.worth.ifs.transactional.ServiceResult;
-import com.worth.ifs.util.Either;
-import com.worth.ifs.util.JsonStatusResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -17,33 +15,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.application.controller.FormInputResponseFileEntryJsonStatusResponse.fileEntryCreated;
-import static com.worth.ifs.application.controller.FormInputResponseFileEntryJsonStatusResponse.fileEntryUpdated;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ServiceFailures.UNABLE_TO_FIND_FILE;
-import static com.worth.ifs.commons.controller.ControllerErrorHandlingUtil.*;
-import static com.worth.ifs.file.transactional.FileServiceImpl.ServiceFailures.*;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.*;
-import static com.worth.ifs.util.Either.left;
-import static com.worth.ifs.util.Either.right;
-import static com.worth.ifs.util.JsonStatusResponse.*;
+import static com.worth.ifs.commons.error.Errors.*;
+import static com.worth.ifs.commons.rest.RestFailures.internalServerErrorRestFailure;
+import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
+import static com.worth.ifs.commons.rest.RestSuccesses.createdRestSuccess;
+import static com.worth.ifs.commons.rest.RestSuccesses.noContentRestSuccess;
+import static com.worth.ifs.commons.rest.RestSuccesses.okRestSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.ParsingFunctions.validLong;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.joining;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -64,83 +57,72 @@ public class FormInputResponseFileUploadController {
     @Autowired
     private ApplicationService applicationService;
 
-    private List<ServiceFailureToJsonResponseHandler> serviceFailureHandlers = asList(
-
-            new SimpleServiceFailureToJsonResponseHandler(singletonList(UNABLE_TO_FIND_FILE), (serviceFailure, response) -> notFound("Unable to find file", response)),
-            new SimpleServiceFailureToJsonResponseHandler(singletonList(FORM_INPUT_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Form Input", response)),
-            new SimpleServiceFailureToJsonResponseHandler(singletonList(APPLICATION_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Application", response)),
-            new SimpleServiceFailureToJsonResponseHandler(singletonList(PROCESS_ROLE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Process Role", response)),
-            new SimpleServiceFailureToJsonResponseHandler(singletonList(FORM_INPUT_RESPONSE_NOT_FOUND), (serviceFailure, response) -> notFound("Unable to find Form Input Response", response)),
-            new SimpleServiceFailureToJsonResponseHandler(singletonList(INCORRECTLY_REPORTED_FILESIZE), (serviceFailure, response) -> badRequest("Incorrectly reported filesize", response)),
-            new SimpleServiceFailureToJsonResponseHandler(singletonList(INCORRECTLY_REPORTED_MEDIA_TYPE), (serviceFailure, response) -> unsupportedMediaType("Incorrectly reported Content Type", response)),
-            new SimpleServiceFailureToJsonResponseHandler(singletonList(DUPLICATE_FILE_CREATED), (serviceFailure, response) -> conflict("File already exists", response)),
-            new SimpleServiceFailureToJsonResponseHandler(singletonList(FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE), (serviceFailure, response) -> conflict("File already linked to Form Input Response", response))
-    );
-
     @RequestMapping(value = "/file", method = POST, produces = "application/json")
-    public JsonStatusResponse createFile(
+    public RestResult<FormInputResponseFileEntryCreatedResponse> createFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
             @RequestParam("processRoleId") long processRoleId,
             @RequestParam(value = "filename", required = false) String originalFilename,
-            HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+            HttpServletRequest request) throws IOException {
 
-        Supplier<JsonStatusResponse> internalServerError = () -> internalServerError("Error creating file", response);
+        return newRestHandler().
+                andOnSuccess((FormInputResponseFileEntryResource resource) -> createdRestSuccess(new FormInputResponseFileEntryCreatedResponse(resource.getFileEntryResource().getId()))).
+                andWithDefaultFailure(internalServerErrorRestFailure("Error creating file")).perform(() -> {
 
-        return handlingErrors(internalServerError, () -> validContentLengthHeader(contentLength, response).
-            map(lengthFromHeader -> validContentTypeHeader(contentType, response).
-            map(typeFromHeader -> validFilename(originalFilename, response).
-            map(filenameParameter -> validContentLength(lengthFromHeader, response).
-            map(validLength -> validMediaType(typeFromHeader, response).
-            map(validType -> createFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request, response).
-            map(fileEntry -> returnFileEntryCreatedResponse(fileEntry, response)
-
-        ))))))).mapLeftOrRight(failure -> failure, success -> success);
+                    return validContentLengthHeader(contentLength).
+                            andOnSuccess(lengthFromHeader -> validContentTypeHeader(contentType).
+                            andOnSuccess(typeFromHeader -> validFilename(originalFilename).
+                            andOnSuccess(filenameParameter -> validContentLength(lengthFromHeader).
+                            andOnSuccess(validLength -> validMediaType(typeFromHeader).
+                            andOnSuccess(validType -> createFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request).
+                            andOnSuccess(fileEntryPair -> serviceSuccess(fileEntryPair.getValue())))))));
+                });
     }
 
     @RequestMapping(value = "/file", method = PUT, produces = "application/json")
-    public JsonStatusResponse updateFile(
+    public RestResult<Void> updateFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
             @RequestParam("processRoleId") long processRoleId,
             @RequestParam(value = "filename", required = false) String originalFilename,
-            HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+            HttpServletRequest request) throws IOException {
 
-        Supplier<JsonStatusResponse> internalServerError = () -> internalServerError("Error updating file", response);
+        return newRestHandler().
+                andOnSuccess(okRestSuccess()).
+                andWithDefaultFailure(internalServerErrorRestFailure("Error updating file")).
+                perform(() -> {
 
-        return handlingErrors(internalServerError, () -> validContentLengthHeader(contentLength, response).
-            map(lengthFromHeader -> validContentTypeHeader(contentType, response).
-            map(typeFromHeader -> validFilename(originalFilename, response).
-            map(filenameParameter -> validContentLength(lengthFromHeader, response).
-            map(validLength -> validMediaType(typeFromHeader, response).
-            map(validType -> updateFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request, response).
-            map(fileEntry -> returnFileEntryUpdatedResponse(fileEntry, response)
-        ))))))).mapLeftOrRight(failure -> failure, success -> success);
+            return validContentLengthHeader(contentLength).
+                    andOnSuccess(lengthFromHeader -> validContentTypeHeader(contentType).
+                    andOnSuccess(typeFromHeader -> validFilename(originalFilename).
+                    andOnSuccess(filenameParameter -> validContentLength(lengthFromHeader).
+                    andOnSuccess(validLength -> validMediaType(typeFromHeader).
+                    andOnSuccess(validType -> updateFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request).
+                    andOnSuccess(ServiceResult::serviceSuccess)
+            )))));
+        });
     }
 
     @RequestMapping(value = "/file", method = GET)
     public @ResponseBody ResponseEntity<?> getFileContents(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
-            @RequestParam("processRoleId") long processRoleId,
-            HttpServletResponse response) throws IOException {
+            @RequestParam("processRoleId") long processRoleId) throws IOException {
 
-        Supplier<JsonStatusResponse> internalServerError = () -> internalServerError("Error retrieving file", response);
+        // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
+        try {
 
-        return handlingErrorsWithResponseEntity(internalServerError, () -> {
+            ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result = doGetFile(formInputId, applicationId, processRoleId);
 
-            Either<JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
-                    doGetFile(formInputId, applicationId, processRoleId, response);
-
-            return result.mapLeftOrRight(
-                    failure ->
-                        Either. <ResponseEntity<JsonStatusResponse>, ResponseEntity<?>> left(new ResponseEntity<>(failure, failure.getStatus())),
+            return result.handleSuccessOrFailure(
+                    failure -> {
+                        RestErrorEnvelope errorResponse = new RestErrorEnvelope(failure.getErrors());
+                        return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
+                    },
                     success -> {
                         FormInputResponseFileEntryResource fileEntry = success.getKey();
                         InputStream inputStream = success.getValue().get();
@@ -148,110 +130,83 @@ public class FormInputResponseFileUploadController {
                         HttpHeaders httpHeaders = new HttpHeaders();
                         httpHeaders.setContentLength(fileEntry.getFileEntryResource().getFilesizeBytes());
                         httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getFileEntryResource().getMediaType()));
-                        return Either. <ResponseEntity<JsonStatusResponse>, ResponseEntity<?>> right(new ResponseEntity<>(inputStreamResource, httpHeaders, HttpStatus.OK));
+                        return new ResponseEntity<>(inputStreamResource, httpHeaders, OK);
                     }
             );
 
-        }).mapLeftOrRight(failure -> failure, success -> success);
+        } catch (Exception e) {
+
+            LOG.error("Error retrieving file", e);
+            return new ResponseEntity<>(new RestErrorEnvelope(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(value = "/fileentry", method = GET, produces = "application/json")
     public @ResponseBody ResponseEntity<?> getFileEntryDetails(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
-            @RequestParam("processRoleId") long processRoleId,
-            HttpServletResponse response) throws IOException {
+            @RequestParam("processRoleId") long processRoleId) throws IOException {
 
-        Supplier<JsonStatusResponse> internalServerError = () -> internalServerError("Error retrieving file", response);
+        // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
+        try {
 
-        return handlingErrorsWithResponseEntity(internalServerError, () -> {
+            ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result = doGetFile(formInputId, applicationId, processRoleId);
 
-            Either<JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
-                    doGetFile(formInputId, applicationId, processRoleId, response);
-
-            return result.mapLeftOrRight(
-                    failure ->
-                            Either. <ResponseEntity<JsonStatusResponse>, ResponseEntity<?>> left(new ResponseEntity<>(failure, failure.getStatus())),
+            return result.handleSuccessOrFailure(
+                    failure -> {
+                        RestErrorEnvelope errorResponse = new RestErrorEnvelope(failure.getErrors());
+                        return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
+                    },
                     success -> {
                         FormInputResponseFileEntryResource fileEntry = success.getKey();
-                        return Either. <ResponseEntity<JsonStatusResponse>, ResponseEntity<?>> right(new ResponseEntity<>(fileEntry, HttpStatus.OK));
+                        return new ResponseEntity<>(fileEntry, OK);
                     }
             );
 
-        }).mapLeftOrRight(failure -> failure, success -> success);
+        } catch (Exception e) {
+
+            LOG.error("Error retrieving file details", e);
+            return new ResponseEntity<>(new RestErrorEnvelope(internalServerErrorError("Error retrieving file details")), INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(value = "/file", method = DELETE, produces = "application/json")
-    public @ResponseBody JsonStatusResponse deleteFileEntry(
+    public RestResult<Void> deleteFileEntry(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
-            @RequestParam("processRoleId") long processRoleId,
-            HttpServletResponse response) throws IOException {
+            @RequestParam("processRoleId") long processRoleId) throws IOException {
 
-        Supplier<JsonStatusResponse> internalServerError = () -> internalServerError("Error deleting file", response);
-
-        return handlingErrors(internalServerError, () -> {
+        return newRestHandler().andOnSuccess(noContentRestSuccess()).
+               andWithDefaultFailure(internalServerErrorRestFailure("Error deleting file")).
+               perform(() -> {
 
             FormInputResponseFileEntryId compoundId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
-
-            return applicationService.deleteFormInputResponseFileUpload(compoundId).mapLeftOrRight(
-                    failure -> Either.<JsonStatusResponse, JsonStatusResponse> left(handleServiceFailure(failure, serviceFailureHandlers, response).orElseGet(internalServerError)),
-                    success -> Either.<JsonStatusResponse, JsonStatusResponse> right(noContent("File deleted successfully", response)));
-
-        }).mapLeftOrRight(failure -> failure, success -> success);
+            return applicationService.deleteFormInputResponseFileUpload(compoundId);
+        });
     }
 
-    private Either<JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> doGetFile(long formInputId, long applicationId, long processRoleId, HttpServletResponse response) {
+    private ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> doGetFile(long formInputId, long applicationId, long processRoleId) {
 
         FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
-
-        ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> file =
-                applicationService.getFormInputResponseFileUpload(formInputResponseFileEntryId);
-
-        return file.mapLeftOrRight(
-                failure ->
-                        Either. <JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> left(handleServiceFailure(failure, serviceFailureHandlers, response).orElseGet(() -> internalServerError("Error retrieving file", response))),
-                success ->
-                        Either. <JsonStatusResponse, Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> right(success)
-        );
+        return applicationService.getFormInputResponseFileUpload(formInputResponseFileEntryId);
     }
 
-    private Either<JsonStatusResponse, JsonStatusResponse> returnFileEntryCreatedResponse(FormInputResponseFileEntryResource fileEntry, HttpServletResponse response) {
-        return right(fileEntryCreated(fileEntry.getFileEntryResource().getId(), response));
-    }
-
-    private Either<JsonStatusResponse, JsonStatusResponse> returnFileEntryUpdatedResponse(FormInputResponseFileEntryResource fileEntry, HttpServletResponse response) {
-        return right(fileEntryUpdated(fileEntry.getFileEntryResource().getId(), response));
-    }
-
-    private Either<JsonStatusResponse, FormInputResponseFileEntryResource> createFormInputResponseFile(MediaType mediaType, long length, String originalFilename, long formInputId, long applicationId, long processRoleId, HttpServletRequest request, HttpServletResponse response) {
+    private ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFile(MediaType mediaType, long length, String originalFilename, long formInputId, long applicationId, long processRoleId, HttpServletRequest request) {
 
         LOG.debug("Creating file with filename - " + originalFilename + "; Content Type - " + mediaType + "; Content Length - " + length);
 
         FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, mediaType, length);
         FormInputResponseFileEntryResource formInputResponseFile = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
-        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> creationResult = applicationService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request));
-
-        return creationResult.mapLeftOrRight(
-                failure ->
-                        Either. <JsonStatusResponse, FormInputResponseFileEntryResource> left(handleServiceFailure(failure, serviceFailureHandlers, response).orElseGet(() -> internalServerError("Error creating file", response))),
-                success ->
-                        Either. <JsonStatusResponse, FormInputResponseFileEntryResource> right(success.getValue()));
+        return applicationService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request));
     }
 
-    private Either<JsonStatusResponse, FormInputResponseFileEntryResource> updateFormInputResponseFile(MediaType mediaType, long length, String originalFilename, long formInputId, long applicationId, long processRoleId, HttpServletRequest request, HttpServletResponse response) {
+    private ServiceResult<FormInputResponseFileEntryResource> updateFormInputResponseFile(MediaType mediaType, long length, String originalFilename, long formInputId, long applicationId, long processRoleId, HttpServletRequest request) {
 
         LOG.debug("Updating file with filename - " + originalFilename + "; Content Type - " + mediaType + "; Content Length - " + length);
 
         FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, mediaType, length);
         FormInputResponseFileEntryResource formInputResponseFile = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
-        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> creationResult = applicationService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request));
-
-        return creationResult.mapLeftOrRight(
-                failure ->
-                        Either. <JsonStatusResponse, FormInputResponseFileEntryResource> left(handleServiceFailure(failure, serviceFailureHandlers, response).orElseGet(() -> internalServerError("Error updating file", response))),
-                success ->
-                        Either. <JsonStatusResponse, FormInputResponseFileEntryResource> right(success.getValue()));
+        return applicationService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request)).andOnSuccess(result -> serviceSuccess(result.getRight()));
     }
 
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
@@ -265,37 +220,36 @@ public class FormInputResponseFileUploadController {
         };
     }
 
-    private Either<JsonStatusResponse, Long> validContentLengthHeader(String contentLengthHeader, HttpServletResponse response) {
+    private ServiceResult<Long> validContentLengthHeader(String contentLengthHeader) {
 
-        return validLong(contentLengthHeader).map(length -> Either.<JsonStatusResponse, Long> right(length)).
-                orElseGet(() -> left(lengthRequired("Please supply a valid Content-Length HTTP header.  Maximum " + maxFilesizeBytes, response)));
+        return validLong(contentLengthHeader).map(ServiceResult::serviceSuccess).
+                orElseGet(() -> serviceFailure(lengthRequiredError(maxFilesizeBytes)));
     }
 
-    private Either<JsonStatusResponse, String> validContentTypeHeader(String contentTypeHeader, HttpServletResponse response) {
-        return !StringUtils.isBlank(contentTypeHeader) ? right(contentTypeHeader) :
-                left(unsupportedMediaType("Please supply a valid Content-Type HTTP header.  Valid types are " + validMediaTypes.stream().collect(joining(", ")), response));
+    private ServiceResult<String> validContentTypeHeader(String contentTypeHeader) {
+        return !StringUtils.isBlank(contentTypeHeader) ? serviceSuccess(contentTypeHeader) : serviceFailure(unsupportedMediaTypeError(validMediaTypes));
     }
 
-    private Either<JsonStatusResponse, Long> validContentLength(long length, HttpServletResponse response) {
+    private ServiceResult<Long> validContentLength(long length) {
         if (length > maxFilesizeBytes) {
-            return left(payloadTooLarge("File upload was too large for FormInputResponse.  Max filesize in bytes is " + maxFilesizeBytes, response));
+            return serviceFailure(payloadTooLargeError(maxFilesizeBytes));
         }
-        return right(length);
+        return serviceSuccess(length);
     }
 
-    private Either<JsonStatusResponse, String> validFilename(String filename, HttpServletResponse response) {
-        return checkParameterIsPresent(filename, "Please supply an original filename as a \"filename\" HTTP Request Parameter", response);
+    private ServiceResult<String> validFilename(String filename) {
+        return checkParameterIsPresent(filename, "Please supply an original filename as a \"filename\" HTTP Request Parameter");
     }
 
-    private Either<JsonStatusResponse, MediaType> validMediaType(String contentType, HttpServletResponse response) {
+    private ServiceResult<MediaType> validMediaType(String contentType) {
         if (!validMediaTypes.contains(contentType)) {
-            return left(unsupportedMediaType("Please supply a valid Content-Type HTTP header.  Valid types are " + validMediaTypes.stream().collect(joining(", ")), response));
+            return serviceFailure(unsupportedMediaTypeError(validMediaTypes));
         }
-        return right(MediaType.valueOf(contentType));
+        return serviceSuccess(MediaType.valueOf(contentType));
     }
 
-    private Either<JsonStatusResponse, String> checkParameterIsPresent(String parameterValue, String failureMessage, HttpServletResponse response) {
-        return !StringUtils.isBlank(parameterValue) ? right(parameterValue) : left(badRequest(failureMessage, response));
+    private ServiceResult<String> checkParameterIsPresent(String parameterValue, String failureMessage) {
+        return !StringUtils.isBlank(parameterValue) ? serviceSuccess(parameterValue) : serviceFailure(badRequestError(failureMessage));
     }
 
     void setMaxFilesizeBytes(Long maxFilesizeBytes) {

@@ -4,8 +4,8 @@ import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.security.FeedbackLookup;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
@@ -15,9 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.BiFunction;
 
-import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.ServiceFailures.PROCESS_ROLE_INCORRECT_APPLICATION;
-import static com.worth.ifs.assessment.transactional.AssessorServiceImpl.ServiceFailures.PROCESS_ROLE_INCORRECT_TYPE;
-import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
+import static com.worth.ifs.commons.error.Errors.incorrectTypeError;
+import static com.worth.ifs.commons.service.ServiceResult.*;
 
 /**
  * Service to handle crosscutting business processes related to Assessors and their role within the system.
@@ -33,14 +32,6 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(AssessorServiceImpl.class);
 
-    public enum ServiceFailures {
-        UNEXPECTED_ERROR, //
-        RESPONSE_NOT_FOUND, //
-        PROCESS_ROLE_NOT_FOUND, //
-        PROCESS_ROLE_INCORRECT_TYPE, //
-        PROCESS_ROLE_INCORRECT_APPLICATION, //
-    }
-
     @Override
     public ServiceResult<Feedback> updateAssessorFeedback(Feedback feedback) {
 
@@ -49,14 +40,14 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
             responseFeedback.setAssessmentValue(feedback.getValue().orElse(null));
             responseFeedback.setAssessmentFeedback(feedback.getText().orElse(null));
             responseRepository.save(response);
-            return successResponse(feedback);
+            return serviceSuccess(feedback);
         };
 
         return handlingErrors(() -> getResponse(feedback.getResponseId()).
-            map(response -> getProcessRole(feedback.getAssessorProcessRoleId()).
-            map(processRole -> validateProcessRoleCorrectType(processRole, UserRoleType.ASSESSOR).
-            map(assessorRole -> validateProcessRoleInApplication(response, processRole).
-            map(roleInApplication -> updateFeedback.apply(assessorRole, response))
+                andOnSuccess(response -> getProcessRole(feedback.getAssessorProcessRoleId()).
+                andOnSuccess(processRole -> validateProcessRoleCorrectType(processRole, UserRoleType.ASSESSOR).
+                andOnSuccess(assessorRole -> validateProcessRoleInApplication(response, processRole).
+                andOnSuccess(roleInApplication -> updateFeedback.apply(assessorRole, response))
         ))));
     }
 
@@ -64,7 +55,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     public ServiceResult<Feedback> getFeedback(Feedback.Id id) {
         return handlingErrors(() -> {
             Feedback feedback = feedbackLookup.getFeedback(id);
-            return successResponse(feedback);
+            return serviceSuccess(feedback);
         });
     }
 
@@ -76,7 +67,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
      * @return
      */
     private ServiceResult<ProcessRole> validateProcessRoleInApplication(Response response, ProcessRole processRole) {
-        return response.getApplication().getId().equals(processRole.getApplication().getId()) ? successResponse(processRole) : failureResponse(PROCESS_ROLE_INCORRECT_APPLICATION);
+        return response.getApplication().getId().equals(processRole.getApplication().getId()) ? serviceSuccess(processRole) : serviceFailure(incorrectTypeError(ProcessRole.class, processRole.getId()));
     }
 
     /**
@@ -87,6 +78,6 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
      * @return
      */
     private ServiceResult<ProcessRole> validateProcessRoleCorrectType(ProcessRole processRole, UserRoleType type) {
-        return processRole.getRole().getName().equals(type.getName()) ? successResponse(processRole) : failureResponse(PROCESS_ROLE_INCORRECT_TYPE);
+        return processRole.getRole().getName().equals(type.getName()) ? serviceSuccess(processRole) : serviceFailure(incorrectTypeError(ProcessRole.class, processRole.getId()));
     }
 }

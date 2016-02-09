@@ -4,9 +4,13 @@
     <!-- ===========================Form: Textinput =========================== -->
 
     <div th:fragment="textinput" class="form-group " th:classappend="${#fields.hasErrors(validationId)} ? adminclass : userclass">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+
+        <label class="form-label form-label-bold" th:for="${formInput.getId()}">
+          <span th:if="${question.getName()}" th:text="question.getName()" />
+          <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+          <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+        </label>
+
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-textinput (id=${formInput.getId()}, response=${responses?.get(formInput.getId())?.getValue()})" th:remove="tag" />
     </div>
@@ -16,50 +20,58 @@
 
     <div th:fragment="textarea"  class="form-group" th:id="${formInputIndex}"  th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
 
-      <div th:if="${readonly}" th:include="question-type/form-elements :: form-label (name=${question.name}, id=${formInput.getId()}, bold=true)" th:remove="tag"  />
-      <div th:remove="tag" th:unless="${readonly}">
-        <div th:include="question-type/form-elements :: form-label (name=${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}, id=${formInput.getId()}, bold=true)" th:remove="tag"  />
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag"  />
-        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"  />
-      </div>
-
-      <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+      <label class="form-label form-label-bold" th:for="${formInput.getId()}">
+        <span th:if="${readonly} and ${question.getName()}" th:text="${question.name}" />
+        <span th:unless="${readonly}" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
+        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag"  />
+        <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+      </label>
+      <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag"  />
       <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
     </div>
 
+    <!-- Brent : textarea wordcount only gets used in assesment as far as I could find -->
+
     <div th:fragment="textarea-wordcount (name, id, inputName, hint, maxWords, value)"  class="form-group">
-        <div th:include="question-type/form-elements :: form-label (name=${name}, id=${id}, bold=true)" th:remove="tag"  />
-        <div th:include="question-type/form-elements :: form-validation-messages (id=${id})" th:remove="tag"  />
-        <div th:include="question-type/form-elements :: form-hint (hint=${hint})" th:remove="tag"  />
+        <label class="form-label form-label-bold" th:for="${id}">
+            <span th:if="${name}" th:text="${name}" />
+            <div th:include="question-type/form-elements :: form-hint (hint=${hint})" th:remove="tag"  />
+            <div th:include="question-type/form-elements :: form-validation-messages (id=${id})" th:remove="tag"  />
+        </label>
         <div th:include="question-type/form-elements :: form-textarea-wordcount (id=${id}, name=${inputName}, value=${value},readonly=false, maxWords=${maxWords})" th:remove="tag" />
     </div>
-
 
     <!-- ===========================Form: Date input =========================== -->
 
     <div th:fragment="date" class="form-group">
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+        <label class="form-label form-label-bold" th:for="${formInput.getId()}">
+          <span th:if="${question.getName()}" th:text="${question.name}" />
+          <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+          <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+        </label>
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-dateinput (id=${formInput.getId()}, day='', month='', year='')" th:remove="tag" />
     </div>
 
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="form-group">
-        <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=true)" th:remove="tag" />
+        <label th:if="${formInputIndex == 0}" class="form-label form-label-bold" th:for="${formInput.getId()}">
+            <span th:if="${question.getName() != null}" th:text="${question.name}" />
+            <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+        </label>
+        <div th:if="${formInputIndex == 0}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
         <input type="file" th:id="${formInput.getId()}" />
     </div>
 
     <!-- ===========================Form: Percentage =========================== -->
 
     <div th:fragment="percentage" class="form-group">
-        <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-label (name=${question.getName()}, id=${formInput.getId()}, bold=false)" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+        <label class="form-label" th:for="${formInput.getId()}">
+          <span th:if="${question.getName()}" th:text="${question.name}" />
+          <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+          <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+        </label>
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-number-extra-small (id=${formInput.getId()}, field=${field})" th:remove="tag" />
         <span>%</span>
@@ -69,25 +81,28 @@
 
     <div th:fragment="application_details" th:remove="tag">
         <div class="form-group">
-            <div th:include="question-type/form-elements :: form-label (name='Project title', id='application_details-title',bold=true) " th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-title')" th:remove="tag" />
-            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
+            <label class="form-label form-label-bold" th:for="application_details-title">
+                  <span>Project title</span>
+                  <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
+                  <div th:include="question-type/form-elements :: form-validation-messages (id='application_details-title')" th:remove="tag" />
+            </label>
             <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-textinput-full-width (id='application_details-title', field='application.name' )" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-textinput-full-width (id='application_details-title', field='application.name' ,readonly=${readonly != null ? readonly : question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)})" th:remove="tag" />
         </div>
 
-        <div class="form-group">
+        <fieldset>
+          <div class="form-group">
+               <legend>
+                   <span class="form-label form-label-bold">Estimated timescales</span>
+                   <span>Project start date</span>
+                   <div th:include="question-type/form-elements :: form-validation-messages (id='details-application-timescale')" th:remove="tag" />
+                   <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
+               </legend>
 
-            <div th:include="question-type/form-elements :: form-label (name='Estimated timescales', id='details-application-timescale',bold=true)" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-validation-messages (id='details-application-timescale')" th:remove="tag" />
-
-            Project start date
-            <br/>
-
-            <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate')" th:remove="tag" /><br/>
-            <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', field='application.durationInMonths')" th:remove="tag" />
+            <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly != null ? readonly : question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)})" th:remove="tag" /><br/>
+            <div th:include="question-type/form-elements :: form-duration (id='application_details-duration', field='application.durationInMonths',readonly=${readonly != null ? readonly : question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)})" th:remove="tag" />
         </div>
+      </fieldset>
 
         <div class="form-group">
             <h2 class="heading-medium">Lead organisation</h2>
@@ -120,8 +135,8 @@
 
     <div th:fragment="finance">
         <div th:class="form-group" th:classappend="${organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}? 'error'">
-            <label class="form-label" for="cost-financegrantclaim">
-                <div class="heading-medium" th:text="${question.name}" />
+            <label class="form-label form-label-bold" for="cost-financegrantclaim">
+                <div th:text="${question.name}" />
                 <span class="form-hint" th:text="${question.description}" />
                 <span th:if="${organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}" class="error-message">This field should be <span th:remove="tag" th:text="${organisationFinanceSize?.getMaxGrantClaimPercentage()}" />% or lower</span>
             </label>
@@ -140,19 +155,22 @@
 
     <!-- ===========================Form: organisation_size =========================== -->
     <div th:fragment="organisation_size" th:if="${organisationType?.name == 'Business'}" th:remove="tag">
-        <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
-        <div class="form-group">
-          <h2 class="heading-medium" th:text="${question.name}" />
-          <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-          <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-          <fieldset>
-            <legend class="visuallyhidden" th:text="${question.name}"/>
-            <label class="block-label" th:each="size : ${T(com.worth.ifs.user.domain.OrganisationSize).values()}">
-                  <input type="radio"  th:disabled="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" th:id="'financePosition-organisationSize-'+${size}" th:name="'financePosition-organisationSize'" th:value="${size}" th:checked="${size == organisationFinanceSize}"/>
-                  <span th:text="${size.name}" />
+          <div class="form-group">
+            <fieldset>
+              <legend>
+                <span class="form-label form-label-bold" th:text="${question.name}"/>
+                <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+                <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+              </legend>
+              <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+
+              <label class="block-label" th:each="size : ${T(com.worth.ifs.user.domain.OrganisationSize).values()}">
+                    <input type="radio"  th:disabled="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" th:id="'financePosition-organisationSize-'+${size}" th:name="'financePosition-organisationSize'" th:value="${size}" th:checked="${size == organisationFinanceSize}"/>
+                    <span th:text="${size.name}" />
               </label>
-          </fieldset>
-      </div>
+            </fieldset>
+        </div>
+
     </div>
 
     <!-- ===========================Form: your_finance =========================== -->
@@ -190,24 +208,18 @@
     <div th:fragment="labour (complete)" th:remove="tag">
         <div th:remove="tag" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))},type=${formInputType.title}">
             <div class="form-group" th:attr="data-repeatable-container=${question.getId()}" th:if="${costCategory!=null}">
-                <table>
-                    <tbody>
-                    <tr>
-                        <th class="width-large" scope="row">
-                            <div th:include="question-type/form-elements :: form-label (name='Working Days per Year', id=${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays'}, bold=false)" th:remove="tag" />
-                        </th>
-                        <td>
-                            <input type="number"
-                                   class="form-control"
-                                   th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays'}"
-                                   th:name="${type + '-workingDays-' + question.id + '-' + costCategory.workingDaysPerYearCostItem?.id}"
-                                   th:value="${costCategory.workingDaysPerYear}"
-                                   th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                            />
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="form-group inline">
+                    <label th:for="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays'}">
+                            <span>Working Days per Year</span>
+                    </label>
+                    <input type="number"
+                           class="form-control"
+                           th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays'}"
+                           th:name="${type + '-workingDays-' + question.id + '-' + costCategory.workingDaysPerYearCostItem?.id}"
+                           th:value="${costCategory.workingDaysPerYear}"
+                           th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"  />
+                </div>
+
                 <div class="form-group">
                     <table class="labour-costs-table">
                         <thead>
@@ -286,24 +298,20 @@
                         </div>
                         </tbody>
                     </table>
-
                     <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
                         <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}?expand=true&amp;panel=collapsible-0(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0-1">Add another role</a>
                     </p>
                 </div>
-
-                <div class="form-group form-group--align-right alignright">
-                    <label>
-                        Total labour costs
-                        <input class="form-control form-control-1-4 alignright"
-                               data-calculation-fields="[id*=labourTotalCost]"
-                               data-calculation-operations="+"
-                               th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
-                               readonly="readonly"
-                               type="text"
-                               th:id="${'section-total-'+subSection.id}"
-                               th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
-                    </label>
+                <div class="form-group alignright inline">
+                    <label th:for="${'section-total-'+subSection.id}">Total labour costs</label>
+                    <input class="form-control form-control-1-4"
+                           data-calculation-fields="[id*=labourTotalCost]"
+                           data-calculation-operations="+"
+                           th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                           readonly="readonly"
+                           type="text"
+                           th:id="${'section-total-'+subSection.id}"
+                           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                 </div>
                 <div class="alignright-button">
                     <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
@@ -318,7 +326,7 @@
         <div th:remove="tag" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))},type=${formInputType.title}">
             <div th:remove="tag" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(com.worth.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" >
                 <fieldset>
-                    <legend></legend>
+                    <legend class="visuallyhidden">Overhead costs</legend>
                     <div class="form-group"  th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
 
                       <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}" data-target="overhead-none">
@@ -369,9 +377,10 @@
                 </div>
                 <div id="overhead-default-percentage">
                     <h3 class="heading-medium">20% of labour costs</h3>
-                    <div class="form-group form-group--align-right alignright">
-                        <label>
-                            Total administration support cost
+                    <div class="form-group alignright inline">
+                            <label th:for="${'section-total-'+subSection.id+'-default'}">
+                                Total administration support cost
+                            </label>
                             <input type="text"
                                    th:name="${'overheads-totalCosts-' + question.id + '-'+overheadCosts?.id}"
                                    class="form-control form-control-1-4 alignright"
@@ -381,16 +390,16 @@
                                    data-calculation-operations="*"
                                    th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"
                                     />
-                        </label>
                     </div>
                 </div>
 
                 <div id="overhead-custom-percentage">
                     <h3 class="heading-medium">Custom administration support costs</h3>
-                    <p>For this Beta service only -  For details on how to calculate your custom administration support costs, please contact Innovate UK via email at <a href="mailto:support@innovateuk.gov.uk"><strong>support@innovateuk.gov.uk</strong></a> or phone <strong>0300 321 4357</strong>.</p>
-                    <div class="form-group alignright">
-                        <label>
-                            Rate calculated (%)
+                    <p>For this Beta service only -  For details on how to calculate your custom administration support costs, please contact Innovate UK via email at <a href="mailto:support@innovateuk.gov.uk"><strong>support@innovateuk.gov.uk</strong></a> or phone <strong>0300 321 4357</strong>.
+                      We will assist you in calculating a unique rate based upon your organisation details.
+                    </p>
+                    <div class="form-group alignright inline">
+                            <label th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'}">Rate calculated (%)</label>
                             <input type="text"
                                    th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                                    th:name="${'overheads-customRate-' + question.id + '-'+overheadCosts?.id}"
@@ -398,11 +407,9 @@
                                    data-calculation-input="overhead-rate"
                                    class="form-control form-control-1-4 alignright"
                                    th:value="${overheadCosts?.getRate()!=null and overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? ${overheadCosts?.getRate()} : 0" />
-                        </label>
                     </div>
-                    <div class="form-group form-group--align-right alignright">
-                        <label>
-                            Total administration support cost
+                    <div class="form-group alignright inline">
+                            <label th:for="${'section-total-'+subSection.id+'-custom'}">Total administration support cost</label>
                             <input type="text"
                                    th:name="${'overheads-totalCosts-' + question.id + '-'+overheadCosts?.id}"
                                    class="form-control form-control-1-4 alignright"
@@ -411,16 +418,14 @@
                                    th:attr="data-calculation-fields='#section-total-9,100,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                    data-calculation-operations="/,*"
                                    th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"/>
-                        </label>
                     </div>
                 </div>
 
                 <div id="overhead-special-rate">
                     <h3 class="heading-medium">Special rate agreed with Innovate UK</h3>
-                    <p>I confirm that I will need to justify this rate if this project is granted funding by Innovate UK.</p>
-                    <div class="form-group alignright">
-                        <label>
-                            Rate agreed with Innovate UK (%)
+<p>You should only use this section if you have previously agreed a rate of admin support cost funding with Innovate UK's project finance team. If this project is granted funding then you will need to justify this rate before the project can begin.</p>
+                    <div class="form-group alignright inline">
+                            <label th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-agreedRate'}">Rate agreed with Innovate UK (%)</label>
                             <input type="text"
                                    th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                                    th:name="${'overheads-agreedRate-' + question.id + '-' + overheadCosts?.id}"
@@ -428,22 +433,19 @@
                                    data-calculation-input="overhead-agreedRate"
                                    class="form-control form-control-1-4 alignright"
                                    th:value="${overheadCosts?.getRate()!=null and overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)} ? ${overheadCosts?.getRate()} : 0" />
-                        </label>
                     </div>
-                    <div class="form-group form-group--align-right alignright">
-                        <label>
-                            Total overhead costs
-                            <input type="text"
-                                   th:name="${'overheads-totalCosts-' + question.id + '-' + overheadCosts?.id}"
-                                   class="form-control form-control-1-4 alignright"
-                                   readonly="readonly"
-                                   th:id="${'section-total-'+subSection.id+'-special'}"
-                                   th:attr="data-calculation-fields='#section-total-9,100,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-agreedRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
-                                   data-calculation-operations="/,*"
-                                   th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.total,0, 'COMMA', 0, 'POINT')} : '£ 0'"
-                                   />
+                    <div class="form-group alignright inline">
+                          <label th:for="${'section-total-'+subSection.id+'-special'}">Total overhead costs</label>
+                          <input type="text"
+                                 th:name="${'overheads-totalCosts-' + question.id + '-' + overheadCosts?.id}"
+                                 class="form-control form-control-1-4"
+                                 readonly="readonly"
+                                 th:id="${'section-total-'+subSection.id+'-special'}"
+                                 th:attr="data-calculation-fields='#section-total-9,100,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-agreedRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                                 data-calculation-operations="/,*"
+                                 th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.total,0, 'COMMA', 0, 'POINT')} : '£ 0'"
+                                 />
 
-                        </label>
                     </div>
                 </div>
 
@@ -525,10 +527,9 @@
                     <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another materials cost</a>
                 </p>
             </div>
-            <div class="form-group form-group--align-right alignright">
-                <label>
-                    Total materials costs
-                    <input class="form-control alignright form-control-1-4 calculation-total-materials-row-js calculation-result-js"
+            <div class="form-group alignright inline">
+                <label th:for="${'section-total-'+subSection.id}">Total materials costs</label>
+                <input class="form-control alignright form-control-1-4"
                            readonly="readonly" type="text" id="material-costs-total-field"
                            data-calculation-fields="[id*=materialTotal]"
                            data-calculation-operations="+"
@@ -536,7 +537,6 @@
                            th:attr="data-calculation-rawvalue=${costCategory.total}"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
 
-                </label>
             </div>
             <div class="alignright-button">
                 <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
@@ -638,22 +638,20 @@
                                th:name="${type + '-netCost-' + question.id + '-' + capitalUsage.id}"
                                th:value="'£ ' + ${#numbers.formatDecimal(capitalUsage.total, 0, 0)}"/>
                     </div>
-                    <a  th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"  class="delete-row" th:attr="data-cost-row=${capitalUsage.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{capitalUsage}(capitalUsage=${capitalUsage.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                    <a th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"  class="delete-row" th:attr="data-cost-row=${capitalUsage.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{capitalUsage}(capitalUsage=${capitalUsage.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
 
                 </div>
             </div>
             <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
                 <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another asset</a>
             </p>
-            <div class="form-group form-group--align-right alignright">
-                <label>
-                    Total capital usage costs
-                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text"
-                           th:id="${'section-total-'+subSection.id}"
-                           data-calculation-fields="[id*=netCost]"
-                           data-calculation-operations="+"
-                           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
-                </label>
+            <div class="form-group alignright inline">
+                <label th:for="${'section-total-'+subSection.id}">Total capital usage costs</label>
+                <input class="form-control form-control-1-4" readonly="readonly" type="text"
+                       th:id="${'section-total-'+subSection.id}"
+                       data-calculation-fields="[id*=netCost]"
+                       data-calculation-operations="+"
+                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
             </div>
             <div class="alignright-button">
                 <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
@@ -702,18 +700,16 @@
             <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
                 <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another subcontractor</a>
             </p>
-            <div class="form-group form-group--align-right alignright">
-                <label>
-                    Total subcontracting costs
-                    <input class="form-control form-control-1-4 alignright"
-                           readonly="readonly"
-                           type="text"
-                           th:id="${'section-total-'+subSection.id}"
-                           data-calculation-fields="[id*=subcontractingCost]"
-                           data-calculation-operations="+"
-                           th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
-                           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
-                </label>
+            <div class="form-group alignright">
+                <label th:for="${'section-total-'+subSection.id}">Total subcontracting costs</label>
+                <input class="form-control form-control-1-4"
+                       readonly="readonly"
+                       type="text"
+                       th:id="${'section-total-'+subSection.id}"
+                       data-calculation-fields="[id*=subcontractingCost]"
+                       data-calculation-operations="+"
+                       th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
             </div>
             <div class="alignright-button">
                 <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
@@ -788,16 +784,14 @@
                     <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another travel cost</a>
                 </p>
             </div>
-            <div class="form-group form-group--align-right alignright">
-                <label>
-                    Total travel &amp; subsistence costs
-                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="travel-costs-total-field"
+            <div class="form-group alignright inline">
+                <label th:for="${'section-total-'+subSection.id}">Total travel &amp; subsistence costs</label>
+                <input class="form-control form-control-1-4" readonly="readonly" type="text"
                            data-calculation-fields="[id*=travelCostTotal]"
                            data-calculation-operations="+"
                            th:id="${'section-total-'+subSection.id}"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"
                            title="Total travel and subsistence costs" />
-                </label>
             </div>
             <div class="alignright-button">
                 <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
@@ -839,15 +833,14 @@
                     <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another cost</a>
                 </p>
             </div>
-            <div class="form-group form-group--align-right alignright">
-                <label>
-                    Total other costs
-                    <input class="form-control form-control-1-4 alignright" readonly="readonly" type="text" id="other-costs-total-field"
-                          th:id="${'section-total-'+subSection.id}"
-                           data-calculation-fields="[id*=otherCost]"
-                           data-calculation-operations="+"
-                           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
-                </label>
+            <div class="form-group alignright inline">
+                <label th:for="${'section-total-'+subSection.id}"> Total other costs</label>
+                <input class="form-control form-control-1-4 alignright"
+                       readonly="readonly" type="text"
+                       th:id="${'section-total-'+subSection.id}"
+                       data-calculation-fields="[id*=otherCost]"
+                       data-calculation-operations="+"
+                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
             </div>
             <div class="alignright-button">
                 <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
@@ -866,8 +859,8 @@
                                costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))}
                      ,type=${formInputType.title}">
         <fieldset class="inline" id="otherFundingShowHideToggle">
+            <legend class="visuallyhidden" th:text="${question.getName()}" />
             <div class="form-block inline">
-                <legend class="visuallyhidden" th:text="${question.getName()}" />
 
                 <label th:class="${'block-label'  + (costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
                        th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
@@ -925,10 +918,9 @@
                     <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
                         <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another source of funding</a>
                     </p>
-                                    </div>
-                    <div class="form-group form-group--align-right alignright">
-                      <label>
-                          Total other funding
+                    </div>
+                    <div class="form-group alignright inline">
+                        <label for="other-funding-total">Total other funding</label>
                           <input class="form-control form-control-1-4 alignright"
                                 data-calculation-fields="[id*=fundingAmount]"
                                 data-calculation-operations="+"
@@ -938,7 +930,6 @@
                                 type="text"
                                 th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
 
-                      </label>
                     </div>
 
                     <!-- <details>

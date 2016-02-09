@@ -6,6 +6,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
+import com.worth.ifs.invite.mapper.InviteMapper;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
         ProcessRoleMapper.class,
         ApplicationFinanceMapper.class,
         ApplicationStatusMapper.class,
-        CompetitionMapper.class
+        CompetitionMapper.class,
+        InviteMapper.class
     }
 )
 public abstract class ApplicationMapper {

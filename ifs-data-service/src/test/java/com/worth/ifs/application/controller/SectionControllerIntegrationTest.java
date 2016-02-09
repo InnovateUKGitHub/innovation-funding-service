@@ -69,10 +69,10 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
 
     @Test
     public void testGetById() throws Exception {
-        Section section = controller.getById(sectionId);
+        Section section = controller.getById(sectionId).getSuccessObject();
         assertEquals("Details", section.getName());
 
-        section = controller.getById(2L);
+        section = controller.getById(2L).getSuccessObject();
         assertEquals("Application questions", section.getName());
     }
 
@@ -87,16 +87,16 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         assertEquals("Your finances", section.getName());
         assertTrue(section.hasChildSections());
         assertEquals(7, section.getChildSections().size());
-        assertTrue(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections));
-        assertEquals(8, controller.getCompletedSections(applicationId, 3L).size());
+        assertTrue(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());
+        assertEquals(8, controller.getCompletedSections(applicationId, 3L).getSuccessObject().size());
 
         // Mark one question as incomplete.
         questionService.markAsInComplete(28L, applicationId, leadApplicantProcessRole);
         assertFalse(questionService.isMarkedAsComplete(questionService.getQuestionById(21L), applicationId, leadApplicantOrganisationId));
 
-        assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections));
-        assertEquals(7, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).size());
-        assertEquals(8, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).size());
+        assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());
+        assertEquals(7, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccessObject().size());
+        assertEquals(8, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).getSuccessObject().size());
 
         section = sectionRepository.findOne(11L);
         assertEquals("Materials", section.getName());

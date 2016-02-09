@@ -26,7 +26,7 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
 
     @Test
     public void findQuestionStatusesByQuestionAndApplicationIdTest() {
-        String expectedUrl = dataServicesUrl + questionStatusRestURL + "/findByQuestionAndAplication/1/2";
+        String expectedUrl = dataServicesUrl + questionStatusRestURL + "/findByQuestionAndApplication/1/2";
 
         QuestionStatus[] questionStatuses = newQuestionStatus().buildArray(3, QuestionStatus.class);
         ResponseEntity<QuestionStatus[]> response = new ResponseEntity<>(questionStatuses, HttpStatus.OK);

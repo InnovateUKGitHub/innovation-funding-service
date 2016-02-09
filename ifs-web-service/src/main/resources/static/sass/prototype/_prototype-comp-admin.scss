@@ -25,6 +25,12 @@ table{
 	}
 }
 
+.show-applications{
+	.hide-allocate-assessor{
+		display: none;
+	}
+}
+
 
 /*----- Remove help links for comp admin / internal pages ----*/
 .comp-assessors,
@@ -35,6 +41,79 @@ table{
 		& + p{
 			display: none;
 		}
+	}
+}
+
+
+/*----- Creating fixed info panels for widescreen views ----*/
+
+
+#sticky-zone{
+	@extend .cf;
+}
+
+
+@include media($min-width: 1200px){
+	.full-width{
+
+		.info-area{
+			float: left;
+			width: 24%;
+			margin-right: 10px;
+			padding: 0%;
+			max-height: 90%;
+			overflow: auto;
+			box-sizing: border-box;
+
+			//position: fixed;
+			//font-size: 12px;
+			position: relative;
+
+			li{
+				padding-bottom: 10px;
+			}
+
+			.boxed{
+				padding: 15px;
+				margin-bottom: 20px;
+				margin-right: 1px;
+
+				.column-half,
+				.column-third{
+					padding-left: 0;
+				}
+			}
+
+			.grid-row{
+				margin: 0;
+			}
+
+			.column-quarter,
+			.column-third{
+				width: 50%;
+				//clear: both;
+			}
+		}
+
+		.data-area{
+			float: right;
+			width: 73%;
+
+			& > .heading-large:first-child{
+				margin-top: 0;
+			}
+		}
+
+		.fixed .info-area{
+			position: fixed;
+			top: 0;
+			width: 23%;
+			background: white;
+			z-index: 10;
+			box-sizing: border-box;
+			float: none;
+		}
+
 	}
 }
 

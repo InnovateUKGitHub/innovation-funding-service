@@ -18,6 +18,21 @@ subprojects {
     apply plugin: 'war'
     apply plugin: "jacoco"
 
+    jacocoTestReport {
+        afterEvaluate {
+            classDirectories = files(classDirectories.files.collect {
+                fileTree(dir: it,
+                        exclude: ['**/*Mapper**'])
+            })
+        }
+    }
+
+    task codeCoverage {
+        dependsOn cleanTest
+        dependsOn test
+        dependsOn jacocoTestReport
+    }
+
     dependencies {
         compile "org.springframework.boot:spring-boot-starter-web"
         compile "com.fasterxml.jackson.core:jackson-databind"
@@ -79,7 +94,13 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.5'
 }
 
+tasks.withType(Test) {
+    // experiment with different values to see what works best
+    // maxParallelForks = 4
+    // can also compute dynamically
+    maxParallelForks = Runtime.runtime.availableProcessors()
+}
+
 task cleanDeploy {
     println "Starting clean deploy"
 }
-

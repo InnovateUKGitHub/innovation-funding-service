@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.UserRoleType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -12,6 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Application defines database relations and a model to use client side and server side.
@@ -138,4 +142,30 @@ public class Application {
         this.applicationFinances = applicationFinances;
     }
 
+    @JsonIgnore
+    public Optional<User> getLeadApplicant(){
+        Optional<ProcessRole> role = this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
+        if(role.isPresent()){
+            return Optional.ofNullable(role.get().getUser());
+        }
+        return Optional.empty();
+    }
+
+    @JsonIgnore
+    public Optional<Organisation> getLeadOrganisation(){
+        Optional<ProcessRole> role = this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
+        if(role.isPresent()){
+            return Optional.ofNullable(role.get().getOrganisation());
+        }
+        return Optional.empty();
+    }
+
+    @JsonIgnore
+    public List<Invite> getInvites() {
+        return this.invites;
+    }
+
+    public void setInvites(List<Invite> invites) {
+        this.invites = invites;
+    }
 }

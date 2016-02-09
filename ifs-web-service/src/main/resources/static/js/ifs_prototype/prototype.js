@@ -100,12 +100,13 @@ jQuery(document).ready(function(){
     //---- COMP ADMIN ASSIGN ASSESSORS -----//
 
 
-    function addRow(assessor, skills, type, applications){
+    function addRow(assessor, skills, type, applications, innovationArea){
         //alert(assessor+' '+skills+' '+type+' '+applications);
         jQuery('#assessor-assigned').append(
             "<tr><th>"+ assessor +"</th>" +
-            "<td>"+ skills +"</td>" +
             "<td>"+ type +"</td>" +
+            "<td>"+ innovationArea +"</td>" +
+            "<td>"+ skills +"</td>" +
             "<td>"+ applications +"</td>" +
             "<td><a href='#' class='view-assessor'>View</a>" +
             "<td class='full-view'></td>" +
@@ -125,6 +126,11 @@ jQuery(document).ready(function(){
             "<td>"+ category +"</td>" +
             "<td>"+ assessors +"</td>" +
             "<td><a href='#' class='view-application'>View</a>" +
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
             "<td class='alignright'><a href='#' class='undo-application'>Undo</a>" +
             "</tr>"
             );
@@ -152,9 +158,10 @@ jQuery(document).ready(function(){
         counter ++;
 
         var assessor = jQuery(this).parent().parent().find('th').text();
-        var skills = jQuery(this).parent().parent().find('td:eq(0)').text();
-        var type = jQuery(this).parent().parent().find('td:eq(1)').text();
-        var applications = jQuery(this).parent().parent().find('td:eq(2)').text();
+        var type = jQuery(this).parent().parent().find('td:eq(0)').text();
+        var innovationArea = jQuery(this).parent().parent().find('td:eq(1)').text();
+        var skills = jQuery(this).parent().parent().find('td:eq(2)').text();
+        var applications = jQuery(this).parent().parent().find('td:eq(3)').text();
 
         jQuery(this).parent().parent().hide();
         jQuery('.assigned-count').html('('+counter+')');
@@ -166,7 +173,7 @@ jQuery(document).ready(function(){
             jQuery('#added-assessors').show();
         }
 
-        addRow(assessor, skills, type, applications);
+        addRow(assessor, skills, type, applications, innovationArea);
         //alert(counter);
     });
 
@@ -245,6 +252,5 @@ jQuery(document).ready(function(){
         addRowApplication(appNumber, projectTitle, lead, category, assessors);
         //alert(skills);
     });
-
 
 });

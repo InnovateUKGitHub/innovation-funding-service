@@ -13,14 +13,14 @@
 
 .fa-bold    { @include fa-sprite(bold); }
 .fa-italic  { @include fa-sprite(italic); }
-.fa-list-ol { @include fa-sprite(list-ol); }
-.fa-list-ul { @include fa-sprite(list-ul); }
+.fa-list-ordered { @include fa-sprite(list-ol); }
+.fa-list-unordered { @include fa-sprite(list-ul); }
 
 button.ui-state-active {
 	.fa-bold    { @include fa-sprite(bold-b);}
 	.fa-italic  { @include fa-sprite(italic-b);}
-	.fa-list-ol { @include fa-sprite(list-ol-b);}
-	.fa-list-ul { @include fa-sprite(list-ul-b);}
+	.fa-list-ordered { @include fa-sprite(list-ol-b);}
+	.fa-list-unordered { @include fa-sprite(list-ul-b);}
 }
 
 //retina support
@@ -30,7 +30,7 @@ button.ui-state-active {
    	button.ui-state-active .fa.fa  {
  		background-image: sprite-url($retina);
 		background-size: 12px 96px;
- 	} 
+ 	}
 }
 
 [contenteditable="true"],
@@ -83,4 +83,3 @@ button.ui-state-active {
 		background: #000;
 	}
 }
-

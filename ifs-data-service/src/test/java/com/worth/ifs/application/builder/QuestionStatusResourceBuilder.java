@@ -27,7 +27,7 @@ public class QuestionStatusResourceBuilder extends BaseBuilder<QuestionStatusRes
 
     public QuestionStatusResourceBuilder withApplication(Application application) {
         return with(questionStatus -> {
-            questionStatus.setApplication(application);
+            questionStatus.setApplication(application.getId());
         });
     }
 

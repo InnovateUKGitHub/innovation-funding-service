@@ -81,13 +81,28 @@ public class ResponseResource {
 
     public AssessorFeedback getOrCreateResponseAssessorFeedback(ProcessRole assessor) {
         Optional<AssessorFeedback> existingFeedback = getResponseAssessmentForAssessor(assessor);
-        return existingFeedback.map(Function.identity()).orElseGet(() -> {
+        return existingFeedback.andOnSuccess(Function.identity()).orElseGet(() -> {
             AssessorFeedback feedback = createForResponseAndAssessor(this, assessor);
             responseAssessmentFeedbacks.add(feedback);
             return feedback;
         });
     }*/
 
+    public void setUpdatedBy(Long updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public void setQuestion(Long question) {
+        this.question = question;
+    }
+
+    public void setApplication(Long application) {
+        this.application = application;
+    }
+
+    public void setResponseAssessmentFeedbacks(List<Long> responseAssessmentFeedbacks) {
+        this.responseAssessmentFeedbacks = responseAssessmentFeedbacks;
+    }
 
     @Override
     public boolean equals(Object obj) {

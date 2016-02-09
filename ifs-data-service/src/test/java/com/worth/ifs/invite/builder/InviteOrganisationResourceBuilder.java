@@ -1,7 +1,6 @@
 package com.worth.ifs.invite.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 
@@ -39,8 +38,8 @@ public class InviteOrganisationResourceBuilder extends BaseBuilder<InviteOrganis
         return with(inviteOrganisationResource -> inviteOrganisationResource.setInviteResources(inviteResource));
     }
 
-    public InviteOrganisationResourceBuilder withOrganisationId(final Long... organisationIds) {
-        return withArray((organisationId, inviteResource) -> setField("organisationId", organisationId, inviteResource), organisationIds);
+    public InviteOrganisationResourceBuilder withOrganisation(final Long... organisationIds) {
+        return withArray((organisationId, inviteResource) -> setField("organisation", organisationId, inviteResource), organisationIds);
     }
 
     @Override

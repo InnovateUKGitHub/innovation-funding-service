@@ -1,5 +1,8 @@
 package com.worth.ifs.application.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.hateoas.core.Relation;
 
 import java.time.LocalDate;
@@ -12,14 +15,15 @@ public class ApplicationResource {
     private Long id;
     private String name;
     private LocalDate startDate;
-    private Long durationInMonths; // in months
+    private Long durationInMonths;
     private List<Long> processRoles = new ArrayList<>();
     private List<Long> applicationFinances = new ArrayList<>();
     private Long applicationStatus;
     private Long competition;
+    private List<Long> invites;
 
     public Long getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(Long id) {
@@ -27,7 +31,7 @@ public class ApplicationResource {
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public void setName(String name) {
@@ -35,7 +39,7 @@ public class ApplicationResource {
     }
 
     public LocalDate getStartDate() {
-        return this.startDate;
+        return startDate;
     }
 
     public void setStartDate(LocalDate startDate) {
@@ -43,7 +47,7 @@ public class ApplicationResource {
     }
 
     public Long getDurationInMonths() {
-        return this.durationInMonths;
+        return durationInMonths;
     }
 
     public void setDurationInMonths(Long durationInMonths) {
@@ -51,7 +55,7 @@ public class ApplicationResource {
     }
 
     public List<Long> getProcessRoles() {
-        return this.processRoles;
+        return processRoles;
     }
 
     public void setProcessRoles(List<Long> processRoles) {
@@ -59,7 +63,7 @@ public class ApplicationResource {
     }
 
     public List<Long> getApplicationFinances() {
-        return this.applicationFinances;
+        return applicationFinances;
     }
 
     public void setApplicationFinances(List<Long> applicationFinances) {
@@ -67,7 +71,7 @@ public class ApplicationResource {
     }
 
     public Long getApplicationStatus() {
-        return this.applicationStatus;
+        return applicationStatus;
     }
 
     public void setApplicationStatus(Long applicationStatus) {
@@ -75,10 +79,55 @@ public class ApplicationResource {
     }
 
     public Long getCompetition() {
-        return this.competition;
+        return competition;
     }
 
     public void setCompetition(Long competition) {
         this.competition = competition;
+    }
+
+    @JsonIgnore
+    public List<Long> getInvites() {
+        return invites;
+    }
+
+    public void setInvites(List<Long> invites) {
+        this.invites = invites;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ApplicationResource that = (ApplicationResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(startDate, that.startDate)
+                .append(durationInMonths, that.durationInMonths)
+                .append(processRoles, that.processRoles)
+                .append(applicationFinances, that.applicationFinances)
+                .append(applicationStatus, that.applicationStatus)
+                .append(competition, that.competition)
+                .append(invites, that.invites)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(name)
+                .append(startDate)
+                .append(durationInMonths)
+                .append(processRoles)
+                .append(applicationFinances)
+                .append(applicationStatus)
+                .append(competition)
+                .append(invites)
+                .toHashCode();
     }
 }

@@ -1,19 +1,14 @@
 package com.worth.ifs.application.transactional;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
-import com.worth.ifs.application.resource.InviteCollaboratorResource;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.security.NotSecured;
-import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -28,7 +23,7 @@ import java.util.function.Supplier;
 public interface ApplicationService {
 
     @PreAuthorize("hasAuthority('applicant')")
-    Application createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
+    ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, final Long competitionId, final Long userId);
 
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
     ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier);
@@ -43,43 +38,42 @@ public interface ApplicationService {
     ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId);
 
     @NotSecured("TODO")
-    Application getApplicationById(final Long id);
+    ServiceResult<ApplicationResource> getApplicationById(final Long id);
 
     @NotSecured("TODO")
-    List<Application> findAll();
+    ServiceResult<List<ApplicationResource>> findAll();
 
     @NotSecured("TODO")
-    List<Application> findByUserId(final Long userId);
+    ServiceResult<List<ApplicationResource>> findByUserId(final Long userId);
 
     /**
      * This method saves only a few application attributes that
      * the user is able to modify on the application form.
      */
     @NotSecured("TODO")
-    ResponseEntity<String> saveApplicationDetails(final Long id, ApplicationResource application);
+    ServiceResult<ApplicationResource> saveApplicationDetails(final Long id, ApplicationResource application);
 
     @NotSecured("TODO")
-    double getProgressPercentageByApplicationId(Long applicationId);
+    ServiceResult<ObjectNode> getProgressPercentageNodeByApplicationId(final Long applicationId);
 
     @NotSecured("TODO")
-    ObjectNode getProgressPercentageNodeByApplicationId(final Long applicationId);
+    ServiceResult<ApplicationResource> updateApplicationStatus(final Long id,
+                                                               final Long statusId);
 
     @NotSecured("TODO")
-    ResponseEntity<String> updateApplicationStatus(final Long id,
-                                                   final Long statusId);
+    ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
+                                                                                     final Long userId,
+                                                                                     final UserRoleType role);
 
     @NotSecured("TODO")
-    List<Application> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
-                                                                      final Long userId,
-                                                                      final UserRoleType role);
-
-    @NotSecured("TODO")
-    Application createApplicationByApplicationNameForUserIdAndCompetitionId(
+    ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
             final Long competitionId,
             final Long userId,
-            JsonNode jsonObj);
+            String applicationName);
 
+    @NotSecured("TODO DW - INFUND-1555 - secure")
+    ServiceResult<ApplicationResource> findByProcessRole(Long id);
 
-    @NotSecured("TODO")
-    ServiceResult<Notification> inviteCollaboratorToApplication(Long applicationId, InviteCollaboratorResource invite);
+    @NotSecured("TODO DW - INFUND-1555 - secure")
+    ServiceResult<ObjectNode> applicationReadyForSubmit(final Long id);
 }

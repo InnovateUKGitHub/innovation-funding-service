@@ -31,7 +31,7 @@ table{
 
 .full-width{
 	#content{
-		max-width: 90%;
+		max-width: 95%;
 		min-width: 960px;
 	}
 }
@@ -147,5 +147,22 @@ ul.underline{
 	@extend %hidden-blocks-js;
 }
 
+/*--- Clearfix ---*/
 
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
 
+.cf:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.cf {
+    *zoom: 1;
+}

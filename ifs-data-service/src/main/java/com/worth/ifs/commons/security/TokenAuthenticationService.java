@@ -39,12 +39,10 @@ public class TokenAuthenticationService implements UserAuthenticationService {
      * Authenticate the user by email address and password
      */
     public User authenticate(String emailAddress, String password) {
-        User user = credentialsValidator.retrieveUserByEmailAndPassword(emailAddress, password);
-        if ( user != null ) {
-            return user;
-        } else {
-            throw new BadCredentialsException("Invalid username password combination");
-        }
+        return credentialsValidator.retrieveUserByEmailAndPassword(emailAddress, password).handleSuccessOrFailure(
+                failure -> { throw new BadCredentialsException("Invalid username password combination"); },
+                success -> success
+        );
     }
 
     /**
@@ -60,8 +58,10 @@ public class TokenAuthenticationService implements UserAuthenticationService {
 
     public Authentication getAuthentication(HttpServletRequest request) {
         final String token = tokenSupplier.getToken(request);
-        User user = credentialsValidator.retrieveUserByToken(token);
-        return user != null ? new UserAuthentication(user) : null;
+        return credentialsValidator.retrieveUserByToken(token).handleSuccessOrFailure(
+            noUser -> null,
+            user -> new UserAuthentication(user)
+        );
     }
 
     /**

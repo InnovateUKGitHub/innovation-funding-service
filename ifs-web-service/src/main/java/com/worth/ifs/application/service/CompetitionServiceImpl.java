@@ -11,6 +11,7 @@ import java.util.List;
  * This class contains methods to retrieve and store {@link Competition} related data,
  * through the RestService {@link CompetitionsRestService}.
  */
+// TODO DW - INFUND-1555 - get this service to return RestResults
 @Service
 public class CompetitionServiceImpl implements CompetitionService {
 
@@ -19,11 +20,11 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public Competition getById(Long competitionId){
-        return competitionsRestService.getCompetitionById(competitionId);
+        return competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrNull();
     }
 
     @Override
     public List<Competition> getAllCompetitions() {
-        return competitionsRestService.getAll();
+        return competitionsRestService.getAll().getSuccessObjectOrNull();
    }
 }

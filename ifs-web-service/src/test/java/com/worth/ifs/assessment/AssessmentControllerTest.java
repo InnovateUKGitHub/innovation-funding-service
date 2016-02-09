@@ -26,11 +26,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -42,7 +46,6 @@ public class AssessmentControllerTest extends BaseUnitTest {
     private AssessmentController assessmentController;
 
     /* pages */
-    private final String competitionAssessments = "assessor-competition-applications";
     private final String assessorDashboard = "assessor-dashboard";
     private final String assessmentDetails = "assessment-details";
     private final String assessmentSubmitReview = "assessment-submit-review";
@@ -151,10 +154,10 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}", competition.getId(), application.getId()))
                 .andExpect(view().name(assessmentDetails))
-                .andExpect(model().attribute("userOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItems(organisations.get(0), organisations.get(1))))
-                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
+                .andExpect(model().attribute("userOrganisation", application3Organisations.get(0)))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application3Organisations.size())))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItems(application3Organisations.get(0))))
+                .andExpect(model().attribute("leadOrganisation", application3Organisations.get(0)))
                 .andExpect(model().attribute("currentApplication", application))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(application.getCompetition())));
     }
@@ -167,7 +170,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         when(responseService.saveQuestionResponseAssessorFeedback(assessor.getId(), 26L,
                 Optional.of("Some Feedback Value"), Optional.of("Some Feedback Text")))
-                .thenReturn(true);
+                .thenReturn(restSuccess(OK));
 
         mockMvc.perform(
                 put("/assessor/competitions/{competitionId}/applications/{applicationId}/response/{responseId}"
@@ -177,8 +180,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
                         .param("feedbackText", "Some Feedback Text")
                         .accept(MediaType.APPLICATION_JSON)
         )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -187,7 +189,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         when(responseService.saveQuestionResponseAssessorFeedback(assessor.getId(), 26L,
                 Optional.of("Some Feedback Value"), Optional.of("Some Feedback Text")))
-                .thenReturn(false);
+                .thenReturn(restFailure(BAD_REQUEST));
 
         mockMvc.perform(
                 put("/assessor/competitions/{competitionId}/applications/{applicationId}/response/{responseId}"

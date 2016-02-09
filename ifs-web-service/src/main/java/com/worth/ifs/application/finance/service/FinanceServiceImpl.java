@@ -16,6 +16,7 @@ import java.util.List;
 /**
  * {@code FinanceServiceImpl} implements {@link FinanceService} handles the finances for each of the organisations.
  */
+// TODO DW - INFUND-1555 - get the service calls below to use RestResults
 @Service
 public class FinanceServiceImpl implements FinanceService {
     private final Log log = LogFactory.getLog(getClass());
@@ -30,7 +31,7 @@ public class FinanceServiceImpl implements FinanceService {
     ApplicationFinanceRestService applicationFinanceRestService;
 
     public ApplicationFinanceResource addApplicationFinance(Long applicationId, Long userId) {
-        ProcessRole processRole = userRestService.findProcessRole(userId, applicationId);
+        ProcessRole processRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrNull();
 
         if(processRole.getOrganisation()!=null) {
             return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisation().getId());
@@ -39,12 +40,12 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     public ApplicationFinanceResource getApplicationFinance(Long applicationId, Long userId) {
-        ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId);
+        ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrNull();
         return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
     }
 
     public ApplicationFinanceResource getApplicationFinanceDetails(Long applicationId, Long userId) {
-        ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId);
+        ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrNull();
         return applicationFinanceRestService.getFinanceDetails(applicationId, userApplicationRole.getOrganisation().getId());
     }
 

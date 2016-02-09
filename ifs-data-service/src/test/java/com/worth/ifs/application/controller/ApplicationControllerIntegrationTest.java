@@ -34,13 +34,11 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     private QuestionController questionController;
     private Long leadApplicantProcessRole;
     private Long leadApplicantId;
-    private Long leadApplicantOrganisationId;
 
     @Before
     public void setUp() throws Exception {
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
-        leadApplicantOrganisationId = 3L;
         List<ProcessRole> proccessRoles = new ArrayList<>();
         proccessRoles.add(
             new ProcessRole(
@@ -80,13 +78,13 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         String originalTitle= "A novel solution to an old problem";
         String newTitle = "A new title";
 
-        ApplicationResource application = controller.getApplicationById(APPLICATION_ID);
+        ApplicationResource application = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
         assertEquals(originalTitle, application.getName());
 
         application.setName(newTitle);
         controller.saveApplicationDetails(APPLICATION_ID, application);
 
-        ApplicationResource updated = controller.getApplicationById(APPLICATION_ID);
+        ApplicationResource updated = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
         assertEquals(newTitle, updated.getName());
 
     }
@@ -96,14 +94,14 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
      */
     @Test
     public void testGetProgressPercentageByApplicationId() throws Exception {
-        ObjectNode response = controller.getProgressPercentageByApplicationId(APPLICATION_ID);
+        ObjectNode response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccessObject();
         double completedPercentage = response.get("completedPercentage").asDouble();
         double delta = 0.10;
         assertEquals(51.21, completedPercentage, delta);
 
         questionController.markAsInComplete(28L, APPLICATION_ID, leadApplicantProcessRole);
 
-        response = controller.getProgressPercentageByApplicationId(APPLICATION_ID);
+        response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccessObject();
         completedPercentage = response.get("completedPercentage").asDouble();
         assertEquals(48.78, completedPercentage, delta);
     }
@@ -111,16 +109,16 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     @Test
     public void testUpdateApplicationStatus() throws Exception {
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.APPROVED.getId());
-        assertEquals(ApplicationStatusConstants.APPROVED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getApplicationStatus()).getName());
+        assertEquals(ApplicationStatusConstants.APPROVED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
 
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.REJECTED.getId());
-        assertEquals(ApplicationStatusConstants.REJECTED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getApplicationStatus()).getName());
+        assertEquals(ApplicationStatusConstants.REJECTED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
 
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.CREATED.getId());
-        assertEquals(ApplicationStatusConstants.CREATED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getApplicationStatus()).getName());
+        assertEquals(ApplicationStatusConstants.CREATED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
 
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.SUBMITTED.getId());
-        assertEquals(ApplicationStatusConstants.SUBMITTED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getApplicationStatus()).getName());
+        assertEquals(ApplicationStatusConstants.SUBMITTED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
     }
 
     @Test
@@ -128,7 +126,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         Long competitionId = 1L;
         Long userId = 1L ;
         UserRoleType role = UserRoleType.LEADAPPLICANT;
-        List<ApplicationResource> applications = controller.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role);
+        List<ApplicationResource> applications = controller.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).getSuccessObject();
 
         assertEquals(5, applications.size());
         Optional<ApplicationResource> application = applications.stream().filter(a -> a.getId().equals(APPLICATION_ID)).findAny();

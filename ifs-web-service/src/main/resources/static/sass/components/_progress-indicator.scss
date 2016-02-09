@@ -90,9 +90,28 @@ Progress indicator
 	@include border-radius(15px 0 0 15px);
 	text-indent:-9999px;
 
-	&[style*="width:100%"] {
+	&[aria-valuenow="1"]:after,
+	&[aria-valuenow="2"]:after,
+	&[aria-valuenow="3"]:after,
+	&[aria-valuenow="4"]:after,
+	&[aria-valuenow="5"]:after{
+			content: '';
+			background: $grey-2;
+			width:400%;
+			left:100%;
+			height: 100%;
+			position: absolute;
+	}
+	&[aria-valuenow="95"],
+	&[aria-valuenow="96"],
+	&[aria-valuenow="97"],
+	&[aria-valuenow="98"],
+	&[aria-valuenow="99"],
+	&[aria-valuenow="100"]{
 		@include border-radius(15px);
 	}
+
+
 }
 .progress div {
 	position: absolute;
