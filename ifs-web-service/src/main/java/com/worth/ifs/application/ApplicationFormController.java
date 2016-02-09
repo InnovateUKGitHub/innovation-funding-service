@@ -37,7 +37,6 @@ import javax.validation.Valid;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -250,7 +249,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         model.addAttribute("markedAsComplete", markedAsComplete);
         model.addAttribute("type", type);
         model.addAttribute("question", questionService.getById(questionId));
-        model.addAttribute("cost", costItem);
+        model.addAttribute("materialCost", costItem);
         return String.format("question-type/types :: %s_row", type);
     }
 
@@ -259,30 +258,16 @@ public class ApplicationFormController extends AbstractApplicationController {
                          @PathVariable("applicationId") final Long applicationId,
                          @PathVariable("costId") final Long costId,
                          HttpServletRequest request) throws JsonProcessingException {
-        log.error("Remove Cost row");
         costService.delete(costId);
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
     }
 
-
-    private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request, ApplicationForm form) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationResource application = super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.of(sectionId), model, form, selectFirstSectionIfNoneCurrentlySelected);
-        Competition competition = competitionService.getById(application.getCompetition());
-        Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), false);
-        Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(renderQuestionId)).collect(Collectors.toList()).get(0);
-        model.addAttribute("question", question);
-        return "single-question";
-    }
-
-
     private CostItem addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
         return costService.add(applicationFinance.getId(), questionId, null);
-//        return financeService.addCost(applicationFinance.getId(), questionId);
     }
 
     private BindingResult saveApplicationForm(ApplicationForm form, Model model, Long userId,

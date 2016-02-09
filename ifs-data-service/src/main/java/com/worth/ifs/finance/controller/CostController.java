@@ -141,8 +141,12 @@ public class CostController {
     @RequestMapping("/findById/{id}")
     public CostItem findById(@PathVariable("id") final Long id) {
         Cost cost =  costRepository.findOne(id);
-        CostItem costItem = organisationFinanceHandler.costToCostItem(cost);
-        return costItem;
+        if(cost!=null){
+            CostItem costItem = organisationFinanceHandler.costToCostItem(cost);
+            return costItem;
+        }else{
+            return null;
+        }
     }
 
     @Transactional
