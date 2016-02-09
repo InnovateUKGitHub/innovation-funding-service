@@ -42,7 +42,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<Question> findByCompetition(Long competitionId) {
-        return questionRestService.findByCompetition(competitionId);
+        return questionRestService.findByCompetition(competitionId).getSuccessObjectOrNull();
     }
 
     @Override
@@ -79,27 +79,27 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question getById(Long questionId) {
-        return questionRestService.findById(questionId);
+        return questionRestService.findById(questionId).getSuccessObjectOrNull();
     }
 
     @Override
     public Question getNextQuestion(Long questionId) {
-        return questionRestService.getNextQuestion(questionId);
+        return questionRestService.getNextQuestion(questionId).getSuccessObjectOrNull();
     }
 
     @Override
     public Question getPreviousQuestion(Long questionId) {
-        return questionRestService.getPreviousQuestion(questionId);
+        return questionRestService.getPreviousQuestion(questionId).getSuccessObjectOrNull();
     }
 
     @Override
     public Question getPreviousQuestionBySection(Long sectionId) {
-        return questionRestService.getPreviousQuestionBySection(sectionId);
+        return questionRestService.getPreviousQuestionBySection(sectionId).getSuccessObjectOrNull();
     }
 
     @Override
     public Question getNextQuestionBySection(Long sectionId) {
-        return questionRestService.getNextQuestionBySection(sectionId);
+        return questionRestService.getNextQuestionBySection(sectionId).getSuccessObjectOrNull();
     }
 
     @Override

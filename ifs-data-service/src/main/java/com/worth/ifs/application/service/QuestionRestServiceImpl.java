@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.application.service.ListenableFutures.adapt;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionListType;
 import static java.util.Arrays.asList;
 
 /**
@@ -19,33 +21,33 @@ import static java.util.Arrays.asList;
  * through a REST call.
  */
 @Service
-public class QuestionRestServiceImpl extends BaseRestService implements  QuestionRestService {
+public class QuestionRestServiceImpl extends BaseRestService implements QuestionRestService {
     @Value("${ifs.data.service.rest.question}")
     String questionRestURL;
 
     @Override
-    public void markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById) {
-        restPut(questionRestURL + "/markAsComplete/"+questionId + "/" + applicationId + "/" + markedAsCompleteById);
+    public RestResult<Void> markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById) {
+        return putWithRestResult(questionRestURL + "/markAsComplete/" + questionId + "/" + applicationId + "/" + markedAsCompleteById, Void.class);
     }
 
     @Override
-    public void markAsInComplete(Long questionId, Long applicationId, Long markedAsInCompleteById) {
-        restPut(questionRestURL + "/markAsInComplete/" + questionId + "/" + applicationId + "/" + markedAsInCompleteById);
+    public RestResult<Void> markAsInComplete(Long questionId, Long applicationId, Long markedAsInCompleteById) {
+        return putWithRestResult(questionRestURL + "/markAsInComplete/" + questionId + "/" + applicationId + "/" + markedAsInCompleteById, Void.class);
     }
 
     @Override
-    public void assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
-        restPut(questionRestURL + "/assign/" + questionId + "/" + applicationId + "/" + assigneeId + "/" + assignedById);
+    public RestResult<Void> assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
+        return putWithRestResult(questionRestURL + "/assign/" + questionId + "/" + applicationId + "/" + assigneeId + "/" + assignedById, Void.class);
     }
 
     @Override
-    public List<Question> findByCompetition(Long competitionId) {
-        return asList(restGet(questionRestURL + "/findByCompetition/" + competitionId, Question[].class));
+    public RestResult<List<Question>> findByCompetition(Long competitionId) {
+        return getWithRestResult(questionRestURL + "/findByCompetition/" + competitionId, questionListType());
     }
 
     @Override
-    public void updateNotification(Long questionStatusId, Boolean notify) {
-        restPut(questionRestURL + "/updateNotification/" + questionStatusId + "/" + notify);
+    public RestResult<Void> updateNotification(Long questionStatusId, Boolean notify) {
+        return putWithRestResult(questionRestURL + "/updateNotification/" + questionStatusId + "/" + notify, Void.class);
     }
 
     @Override
@@ -54,27 +56,27 @@ public class QuestionRestServiceImpl extends BaseRestService implements  Questio
     }
 
     @Override
-    public Question findById(Long questionId) {
-        return restGet(questionRestURL + "/id/" + questionId, Question.class);
+    public RestResult<Question> findById(Long questionId) {
+        return getWithRestResult(questionRestURL + "/id/" + questionId, Question.class);
     }
 
     @Override
-    public Question getNextQuestion(Long questionId) {
-        return restGet(questionRestURL + "/getNextQuestion/"+questionId, Question.class);
+    public RestResult<Question> getNextQuestion(Long questionId) {
+        return getWithRestResult(questionRestURL + "/getNextQuestion/"+questionId, Question.class);
     }
 
     @Override
-    public Question getPreviousQuestion(Long questionId) {
-        return restGet(questionRestURL + "/getPreviousQuestion/"+questionId, Question.class);
+    public RestResult<Question> getPreviousQuestion(Long questionId) {
+        return getWithRestResult(questionRestURL + "/getPreviousQuestion/"+questionId, Question.class);
     }
 
     @Override
-    public Question getPreviousQuestionBySection(Long sectionId) {
-        return restGet(questionRestURL + "/getPreviousQuestionBySection/"+sectionId, Question.class);
+    public RestResult<Question> getPreviousQuestionBySection(Long sectionId) {
+        return getWithRestResult(questionRestURL + "/getPreviousQuestionBySection/"+sectionId, Question.class);
     }
 
     @Override
-    public Question getNextQuestionBySection(Long sectionId) {
-        return restGet(questionRestURL + "/getNextQuestionBySection/"+sectionId, Question.class);
+    public RestResult<Question> getNextQuestionBySection(Long sectionId) {
+        return getWithRestResult(questionRestURL + "/getNextQuestionBySection/"+sectionId, Question.class);
     }
 }

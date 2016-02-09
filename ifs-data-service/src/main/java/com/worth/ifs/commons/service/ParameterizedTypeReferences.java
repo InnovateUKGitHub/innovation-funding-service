@@ -1,5 +1,6 @@
 package com.worth.ifs.commons.service;
 
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -51,5 +52,9 @@ public class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<Response>> responseListType() {
         return new ParameterizedTypeReference<List<Response>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<Question>> questionListType() {
+        return new ParameterizedTypeReference<List<Question>>() {};
     }
 }
