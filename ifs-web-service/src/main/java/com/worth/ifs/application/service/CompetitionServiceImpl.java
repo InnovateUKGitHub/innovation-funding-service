@@ -20,11 +20,11 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public Competition getById(Long competitionId){
-        return competitionsRestService.getCompetitionById(competitionId).getSuccessObject();
+        return competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrNull();
     }
 
     @Override
     public List<Competition> getAllCompetitions() {
-        return competitionsRestService.getAll().getSuccessObject();
+        return competitionsRestService.getAll().getSuccessObjectOrNull();
    }
 }

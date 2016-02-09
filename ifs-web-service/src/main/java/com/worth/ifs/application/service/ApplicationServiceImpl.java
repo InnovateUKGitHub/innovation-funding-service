@@ -40,7 +40,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public List<ApplicationResource> getInProgress(Long userId) {
-        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObject();
+        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrNull();
         return applications.stream()
                 .filter(a -> (fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("created") || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("submitted")))
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -48,7 +48,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public List<ApplicationResource> getFinished(Long userId) {
-        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObject();
+        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrNull();
         return applications.stream()
                 .filter(a -> (fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("approved") || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("rejected")))
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -56,13 +56,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Map<Long, Integer> getProgress(Long userId) {
-        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObject();
+        List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrNull();
         Map<Long, Integer> applicationProgress = new HashMap<>();
         applications.stream()
             .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("created"))
             .map(ApplicationResource::getId)
             .forEach(id -> {
-                Double progress = applicationRestService.getCompleteQuestionsPercentage(id).getSuccessObject();
+                Double progress = applicationRestService.getCompleteQuestionsPercentage(id).getSuccessObjectOrNull();
                 applicationProgress.put(id, progress.intValue());
             });
         return applicationProgress;
@@ -70,14 +70,14 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public ApplicationResource createApplication(Long competitionId, Long userId, String applicationName) {
-        ApplicationResource application = applicationRestService.createApplication(competitionId, userId, applicationName).getSuccessObject();
+        ApplicationResource application = applicationRestService.createApplication(competitionId, userId, applicationName).getSuccessObjectOrNull();
 
         return application;
     }
 
     @Override
     public Boolean isApplicationReadyForSubmit(Long applicationId) {
-        return applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccessObject();
+        return applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccessObjectOrNull();
     }
 
     @Override
@@ -87,12 +87,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public int getCompleteQuestionsPercentage(Long applicationId) {
-       return applicationRestService.getCompleteQuestionsPercentage(applicationId).getSuccessObject().intValue();
+       return applicationRestService.getCompleteQuestionsPercentage(applicationId).getSuccessObjectOrNull().intValue();
     }
 
     @Override
     public int getAssignedQuestionsCount(Long applicationId, Long processRoleId){
-        return applicationRestService.getAssignedQuestionsCount(applicationId, processRoleId).getSuccessObject().intValue();
+        return applicationRestService.getAssignedQuestionsCount(applicationId, processRoleId).getSuccessObjectOrNull().intValue();
     }
 
     @Override
@@ -106,7 +106,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     private ApplicationStatusResource fetchApplicationStatusFromId(Long id){
-        return applicationStatusRestService.getApplicationStatusById(id).getSuccessObject();
+        return applicationStatusRestService.getApplicationStatusById(id).getSuccessObjectOrNull();
     }
 
 }

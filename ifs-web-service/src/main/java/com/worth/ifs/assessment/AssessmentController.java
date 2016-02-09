@@ -79,7 +79,7 @@ public class AssessmentController extends AbstractApplicationController {
         List<AssessmentWithApplicationAndScore> assessments = allAssessments.stream()
                 .filter(a -> !a.isSubmitted())
                 .map(a -> {
-                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObject();
+                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObjectOrNull();
                     Score score = assessmentRestService.getScore(a.getId());
                     return new AssessmentWithApplicationAndScore(a, ar, score);
                 }).collect(toList());
@@ -89,7 +89,7 @@ public class AssessmentController extends AbstractApplicationController {
         List<AssessmentWithApplicationAndScore> submittedAssessments = allAssessments.stream()
                 .filter(Assessment::isSubmitted)
                 .map(a -> {
-                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObject();
+                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObjectOrNull();
                     Score score = assessmentRestService.getScore(a.getId());
                     return new AssessmentWithApplicationAndScore(a, ar, score);
                 })
