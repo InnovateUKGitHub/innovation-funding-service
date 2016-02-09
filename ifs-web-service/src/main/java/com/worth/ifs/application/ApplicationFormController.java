@@ -250,7 +250,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         model.addAttribute("markedAsComplete", markedAsComplete);
         model.addAttribute("type", type);
         model.addAttribute("question", questionService.getById(questionId));
-        model.addAttribute("materialCost", costItem);
+        model.addAttribute("cost", costItem);
         return String.format("question-type/types :: %s_row", type);
     }
 
@@ -260,7 +260,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                          @PathVariable("costId") final Long costId,
                          HttpServletRequest request) throws JsonProcessingException {
         log.error("Remove Cost row");
-//        costService.delete(costId);
+        costService.delete(costId);
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
