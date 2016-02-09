@@ -3,8 +3,6 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.resource.QuestionStatusResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +13,9 @@ import java.util.stream.Collectors;
  * This class contains methods to retrieve and store {@link Question} related data,
  * through the RestService {@link QuestionRestService}.
  */
+// TODO DW - INFUND-1555 - handle rest results
 @Service
 public class QuestionServiceImpl implements QuestionService {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     QuestionRestService questionRestService;
@@ -48,7 +46,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId) {
-        return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId));
+        return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId).getSuccessObjectOrNull());
     }
 
     private Map<Long, QuestionStatusResource> mapToQuestionIds(final List<QuestionStatusResource> questionStatusResources){
@@ -105,7 +103,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
-        List<QuestionStatusResource> questionStatuses = questionStatusRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId);
+        List<QuestionStatusResource> questionStatuses = questionStatusRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId).getSuccessObjectOrNull();
         if(questionStatuses == null || questionStatuses.size() == 0){
             return null;
         }
@@ -114,6 +112,6 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId){
-        return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId));
+        return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccessObjectOrNull());
     }
 }
