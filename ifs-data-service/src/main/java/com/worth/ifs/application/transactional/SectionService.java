@@ -1,6 +1,7 @@
 package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 
 import java.util.List;
@@ -14,43 +15,43 @@ public interface SectionService {
 
 
     @NotSecured("TODO")
-    Section getById(final Long sectionId);
+    ServiceResult<Section> getById(final Long sectionId);
 
     @NotSecured("TODO")
-    Map<Long, Set<Long>> getCompletedSections(Long applicationId);
+    ServiceResult<Map<Long, Set<Long>>> getCompletedSections(Long applicationId);
 
     @NotSecured("TODO")
-    Set<Long> getCompletedSections(final Long applicationId,
+    ServiceResult<Set<Long>> getCompletedSections(final Long applicationId,
                                    final Long organisationId);
 
     @NotSecured("TODO")
-    List<Long> getIncompleteSections(final Long applicationId);
+    ServiceResult<List<Long>> getIncompleteSections(final Long applicationId);
 
     @NotSecured("TODO")
-    Section findByName(final String name);
+    ServiceResult<Section> findByName(final String name);
 
     /**
      * get questions for the sections and filter out the ones that have marked as completed turned on
      */
     @NotSecured("TODO")
-    boolean isMainSectionComplete(Section section, Long applicationId, Long organisationId, boolean ignoreOtherOrganisations);
+    ServiceResult<Boolean> isMainSectionComplete(Section section, Long applicationId, Long organisationId, boolean ignoreOtherOrganisations);
 
     @NotSecured("TODO")
-    boolean childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection);
+    ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection);
 
     @NotSecured("TODO")
-    Section getNextSection(final Long sectionId);
+    ServiceResult<Section> getNextSection(final Long sectionId);
 
     @NotSecured("TODO")
-    Section getNextSection(Section section);
+    ServiceResult<Section> getNextSection(Section section);
 
     @NotSecured("TODO")
-    Section getPreviousSection(final Long sectionId);
+    ServiceResult<Section> getPreviousSection(final Long sectionId);
 
     @NotSecured("TODO")
-    Section getPreviousSection(Section section);
+    ServiceResult<Section> getPreviousSection(Section section);
 
     @NotSecured("TODO")
-    Section getSectionByQuestionId(final Long questionId);
+    ServiceResult<Section> getSectionByQuestionId(final Long questionId);
 
 }

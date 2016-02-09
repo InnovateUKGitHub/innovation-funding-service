@@ -24,7 +24,7 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
 
     @Override
     public ServiceResult<ProcessRole> getProcessRoleById(Long id) {
-        return getOrFail(() -> processRoleRepository.findOne(id), notFoundError(ProcessRole.class, id));
+        return super.getProcessRole(id);
     }
 
     @Override

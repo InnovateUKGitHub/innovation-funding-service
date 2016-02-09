@@ -1,6 +1,5 @@
 package com.worth.ifs.application.transactional;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -9,36 +8,30 @@ import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.mapper.ApplicationMapper;
-import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.file.transactional.FileService;
+import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.*;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
-import com.worth.ifs.user.repository.RoleRepository;
-import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -51,17 +44,26 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
-import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Transactional and secured service focused around the processing of Applications
  */
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
+
+    // TODO DW - INFUND-1555 - put into a DTO
+    public static final String READY_FOR_SUBMIT = "readyForSubmit";
+    public static final String PROGRESS = "progress";
+    public static final String RESEARCH_PARTICIPATION = "researchParticipation";
+    public static final String RESEARCH_PARTICIPATION_VALID = "researchParticipationValid";
+    public static final String ALL_SECTION_COMPLETE = "allSectionComplete";
 
     @Autowired
     private FileService fileService;
@@ -73,67 +75,58 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private FormInputRepository formInputRepository;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
-    private ApplicationStatusRepository applicationStatusRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private QuestionService questionService;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private CompetitionRepository competitionRepository;
 
     @Autowired
     private ApplicationMapper applicationMapper;
 
+    @Autowired
+    private ApplicationFinanceHandler applicationFinanceHandler;
+
+    @Autowired
+    private SectionService sectionService;
+
     private final Log log = LogFactory.getLog(getClass());
 
     @Override
-    public Application createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
+    public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
 
-        User user = userRepository.findOne(userId);
+        return handlingErrors(() -> {
 
-        Application application = new Application();
-        application.setName(applicationName);
-        LocalDate currentDate = LocalDate.now();
-        application.setStartDate(currentDate);
+            return getOrFail(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
 
-        String name = ApplicationStatusConstants.CREATED.getName();
+               Application application = new Application();
+               application.setName(applicationName);
+               LocalDate currentDate = LocalDate.now();
+               application.setStartDate(currentDate);
 
-        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
-        ApplicationStatus applicationStatus = applicationStatusList.get(0);
+               String name = ApplicationStatusConstants.CREATED.getName();
 
-        application.setApplicationStatus(applicationStatus);
-        application.setDurationInMonths(3L);
+               List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
+               ApplicationStatus applicationStatus = applicationStatusList.get(0);
 
-        List<Role> roles = roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName());
-        Role role = roles.get(0);
+               application.setApplicationStatus(applicationStatus);
+               application.setDurationInMonths(3L);
 
-        Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+               List<Role> roles = roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName());
+               Role role = roles.get(0);
 
-        Competition competition = competitionRepository.findOne(competitionId);
-        ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+               Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
 
-        List<ProcessRole> processRoles = new ArrayList<>();
-        processRoles.add(processRole);
+               ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
-        application.setProcessRoles(processRoles);
-        application.setCompetition(competition);
+               List<ProcessRole> processRoles = new ArrayList<>();
+               processRoles.add(processRole);
 
-        applicationRepository.save(application);
-        processRoleRepository.save(processRole);
+               application.setProcessRoles(processRoles);
+               application.setCompetition(competition);
 
-        return application;
+               applicationRepository.save(application);
+               processRoleRepository.save(processRole);
+
+               return serviceSuccess(applicationMapper.mapApplicationToResource(application));
+           });
+        });
     }
 
     @Override
@@ -187,6 +180,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
             ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
                     getFormInputResponseFileUpload(formInputResponseFile.getCompoundId());
+
             return existingFileResult.andOnSuccess(existingFile -> {
 
                 FormInputResponseFileEntryResource existingFormInputResource = existingFile.getKey();
@@ -225,11 +219,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Application> getApplication(long applicationId) {
-        return getOrFail(() -> applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));
-    }
-
-    @Override
     public ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
 
         return handlingErrors(notFoundError(FileEntry.class, fileEntryId.getFormInputId(), fileEntryId.getApplicationId(), fileEntryId.getProcessRoleId()), () ->
@@ -261,126 +250,80 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public Application getApplicationById(final Long id) {
-        return applicationRepository.findOne(id);
+    public ServiceResult<ApplicationResource> getApplicationById(final Long id) {
+        return super.getApplication(id).andOnSuccess(application ->
+            serviceSuccess(applicationMapper.mapApplicationToResource(application))
+        );
     }
 
     @Override
-    public List<Application> findAll() {
-        return applicationRepository.findAll();
+    public ServiceResult<List<ApplicationResource>> findAll() {
+        return serviceSuccess(applicationsToResources(applicationRepository.findAll()));
     }
 
     @Override
-    public List<Application> findByUserId(final Long userId) {
-        User user = userRepository.findOne(userId);
-        List<ProcessRole> roles = processRoleRepository.findByUser(user);
-        return simpleMap(roles, ProcessRole::getApplication);
+    public ServiceResult<List<ApplicationResource>> findByUserId(final Long userId) {
+        return getUser(userId).andOnSuccess(user -> {
+            List<ProcessRole> roles = processRoleRepository.findByUser(user);
+            List<Application> applications = simpleMap(roles, ProcessRole::getApplication);
+            return serviceSuccess(applicationsToResources(applications));
+        });
     }
 
     @Override
-    public ResponseEntity<String> saveApplicationDetails(final Long id,
-                                                         ApplicationResource application) {
+    public ServiceResult<ApplicationResource> saveApplicationDetails(final Long id, ApplicationResource application) {
 
-        Application applicationDb = applicationRepository.findOne(id);
-        HttpStatus status;
+        return handlingErrors(() -> {
 
-        if (applicationDb != null) {
-            applicationDb.setName(application.getName());
-            applicationDb.setDurationInMonths(application.getDurationInMonths());
-            applicationDb.setStartDate(application.getStartDate());
-            applicationRepository.save(applicationDb);
+            return getApplication(id).andOnSuccess(existingApplication -> {
 
-            status = HttpStatus.OK;
-
-        } else {
-            log.error("NOT_FOUND " + id);
-            status = HttpStatus.NOT_FOUND;
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        return new ResponseEntity<>(headers, status);
+                existingApplication.setName(application.getName());
+                existingApplication.setDurationInMonths(application.getDurationInMonths());
+                existingApplication.setStartDate(application.getStartDate());
+                Application savedApplication = applicationRepository.save(existingApplication);
+                return serviceSuccess(applicationMapper.mapApplicationToResource(savedApplication));
+            });
+        });
     }
 
-
+    // TODO DW - INFUND-1555 - try to remove ObjectNode usage
     @Override
-    public double getProgressPercentageByApplicationId(final Long applicationId) {
-        Application application = applicationRepository.findOne(applicationId);
-        List<Section> sections = application.getCompetition().getSections();
+    public ServiceResult<ObjectNode> getProgressPercentageNodeByApplicationId(final Long applicationId) {
 
-        List<Question> questions = sections.stream()
-                .flatMap(section -> section.getQuestions().stream())
-                .filter(Question::isMarkAsCompletedEnabled)
-                .collect(Collectors.toList());
+        return getProgressPercentageByApplicationId(applicationId).andOnSuccess(percentage -> {
 
-        List<ProcessRole> processRoles = application.getProcessRoles();
-        Set<Organisation> organisations = processRoles.stream()
-                .filter(p -> p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
-                .map(ProcessRole::getOrganisation).collect(Collectors.toSet());
-
-        Long countMultipleStatusQuestionsCompleted = organisations.stream()
-                .mapToLong(org -> questions.stream()
-                        .filter(Question::getMarkAsCompletedEnabled)
-                        .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, org.getId())).count())
-                .sum();
-        Long countSingleStatusQuestionsCompleted = questions.stream()
-                .filter(Question::getMarkAsCompletedEnabled)
-                .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, 0L)).count();
-        Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
-
-        Long totalMultipleStatusQuestions = questions.stream().filter(Question::hasMultipleStatuses).count() * organisations.size();
-        Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
-
-        Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
-        log.info("Total questions" + totalQuestions);
-        log.info("Total completed questions" + countCompleted);
-
-        double percentageCompleted;
-        if (questions.isEmpty()) {
-            percentageCompleted = 0;
-        } else {
-            percentageCompleted = (100.0 / totalQuestions) * countCompleted;
-        }
-        return percentageCompleted;
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("completedPercentage", percentage);
+            return serviceSuccess(node);
+        });
     }
 
     @Override
-    public ObjectNode getProgressPercentageNodeByApplicationId(final Long applicationId) {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-        node.put("completedPercentage", getProgressPercentageByApplicationId(applicationId));
-        return node;
-    }
+    public ServiceResult<ApplicationResource> updateApplicationStatus(final Long id,
+                                                         final Long statusId) {
+        return handlingErrors(() -> {
 
-    @Override
-    public ResponseEntity<String> updateApplicationStatus(final Long id,
-                                                          final Long statusId) {
+            return getOrFail(application(id), applicationStatus(statusId)).andOnSuccess((application, applicationStatus) -> {
 
-        Application application = applicationRepository.findOne(id);
-        ApplicationStatus applicationStatus = applicationStatusRepository.findOne(statusId);
-        application.setApplicationStatus(applicationStatus);
-        applicationRepository.save(application);
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpStatus status = HttpStatus.OK;
-        return new ResponseEntity<>(headers, status);
-
+                application.setApplicationStatus(applicationStatus);
+                applicationRepository.save(application);
+                return serviceSuccess(applicationMapper.mapApplicationToResource(application));
+            });
+        });
     }
 
 
     @Override
-    public List<Application> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
+    public ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                              final Long userId,
                                                                              final UserRoleType role) {
 
         List<Application> allApps = applicationRepository.findAll();
-        return allApps.stream()
-                .filter(app -> app.getCompetition().getId().equals(competitionId) && applicationContainsUserRole(app.getProcessRoles(), userId, role))
-                .collect(Collectors.toList());
+        List<Application> filtered = simpleFilter(allApps, app -> app.getCompetition().getId().equals(competitionId) &&
+                applicationContainsUserRole(app.getProcessRoles(), userId, role));
+        List<ApplicationResource> filteredResource = applicationsToResources(filtered);
+        return serviceSuccess(filteredResource);
     }
 
     private static boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
@@ -395,52 +338,133 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public Application createApplicationByApplicationNameForUserIdAndCompetitionId(
+    public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
             final Long competitionId,
             final Long userId,
-            JsonNode jsonObj) {
+            final String applicationName) {
 
-        User user = userRepository.findOne(userId);
+        return handlingErrors(() -> {
 
-        String applicationName = jsonObj.get("name").textValue();
-        Application application = new Application();
-        application.setName(applicationName);
-        LocalDate currentDate = LocalDate.now();
-        application.setStartDate(currentDate);
+            return getOrFail(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
 
-        String name = ApplicationStatusConstants.CREATED.getName();
+               Application application = new Application();
+               application.setName(applicationName);
+               LocalDate currentDate = LocalDate.now();
+               application.setStartDate(currentDate);
 
-        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
-        ApplicationStatus applicationStatus = applicationStatusList.get(0);
+               String name = ApplicationStatusConstants.CREATED.getName();
 
-        application.setApplicationStatus(applicationStatus);
-        application.setDurationInMonths(3L);
+               List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
+               ApplicationStatus applicationStatus = applicationStatusList.get(0);
 
-        List<Role> roles = roleRepository.findByName("leadapplicant");
-        Role role = roles.get(0);
+               application.setApplicationStatus(applicationStatus);
+               application.setDurationInMonths(3L);
 
-        Organisation userOrganisation = user.getOrganisations().get(0);
+               List<Role> roles = roleRepository.findByName("leadapplicant");
+               Role role = roles.get(0);
 
-        Competition competition = competitionRepository.findOne(competitionId);
-        ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+               Organisation userOrganisation = user.getOrganisations().get(0);
 
-        List<ProcessRole> processRoles = new ArrayList<>();
-        processRoles.add(processRole);
+               ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
-        application.setProcessRoles(processRoles);
-        application.setCompetition(competition);
+               List<ProcessRole> processRoles = new ArrayList<>();
+               processRoles.add(processRole);
 
-        applicationRepository.save(application);
-        processRoleRepository.save(processRole);
+               application.setProcessRoles(processRoles);
+               application.setCompetition(competition);
 
-        return application;
+               Application createdApplication = applicationRepository.save(application);
+               processRoleRepository.save(processRole);
+
+               return serviceSuccess(applicationMapper.mapApplicationToResource(createdApplication));
+            });
+        });
     }
 
     @Override
     public ServiceResult<ApplicationResource> findByProcessRole(final Long id){
 
-        return getOrFail(() -> processRoleRepository.findOne(id), notFoundError(ProcessRole.class, id)).andOnSuccess(processRole ->
+        return getProcessRole(id).andOnSuccess(processRole ->
             serviceSuccess(applicationMapper.mapApplicationToResource(processRole.getApplication()))
         );
+    }
+
+    // TODO DW - INFUND-1555 - try to remove the usage of ObjectNode
+    @Override
+    public ServiceResult<ObjectNode> applicationReadyForSubmit(Long id) {
+
+        return getOrFail(application(id), () -> getProgressPercentageByApplicationId(id)).andOnSuccess((application, progressPercentage) -> {
+
+            return sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccess(allSectionsComplete -> {
+
+                Competition competition = application.getCompetition();
+                double researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id).doubleValue();
+
+                boolean readyForSubmit = false;
+                if (allSectionsComplete &&
+                        progressPercentage == 100 &&
+                        researchParticipation <= competition.getMaxResearchRatio()) {
+                    readyForSubmit = true;
+                }
+
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode node = mapper.createObjectNode();
+                node.put(READY_FOR_SUBMIT, readyForSubmit);
+                node.put(PROGRESS, progressPercentage);
+                node.put(RESEARCH_PARTICIPATION, researchParticipation);
+                node.put(RESEARCH_PARTICIPATION_VALID, (researchParticipation <= competition.getMaxResearchRatio()));
+                node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
+                return serviceSuccess(node);
+
+            });
+        });
+    }
+
+    private ServiceResult<Double> getProgressPercentageByApplicationId(final Long applicationId) {
+
+        return getApplication(applicationId).andOnSuccess(application -> {
+
+            List<Section> sections = application.getCompetition().getSections();
+
+            List<Question> questions = sections.stream()
+                    .flatMap(section -> section.getQuestions().stream())
+                    .filter(Question::isMarkAsCompletedEnabled)
+                    .collect(toList());
+
+            List<ProcessRole> processRoles = application.getProcessRoles();
+
+            Set<Organisation> organisations = processRoles.stream()
+                    .filter(p -> p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
+                    .map(ProcessRole::getOrganisation).collect(Collectors.toSet());
+
+            Long countMultipleStatusQuestionsCompleted = organisations.stream()
+                    .mapToLong(org -> questions.stream()
+                            .filter(Question::getMarkAsCompletedEnabled)
+                            .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, org.getId())).count())
+                    .sum();
+
+            Long countSingleStatusQuestionsCompleted = questions.stream()
+                    .filter(Question::getMarkAsCompletedEnabled)
+                    .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, 0L)).count();
+
+            Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
+
+            Long totalMultipleStatusQuestions = questions.stream().filter(Question::hasMultipleStatuses).count() * organisations.size();
+            Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
+
+            Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
+            log.info("Total questions" + totalQuestions);
+            log.info("Total completed questions" + countCompleted);
+
+            if (questions.isEmpty()) {
+                return serviceSuccess(Double.valueOf(0));
+            } else {
+                return serviceSuccess((100.0 / totalQuestions) * countCompleted);
+            }
+        });
+    }
+
+    private List<ApplicationResource> applicationsToResources(List<Application> filtered) {
+        return simpleMap(filtered, application -> applicationMapper.mapApplicationToResource(application));
     }
 }

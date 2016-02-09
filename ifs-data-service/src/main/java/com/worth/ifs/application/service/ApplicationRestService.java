@@ -11,14 +11,14 @@ import java.util.List;
  * Interface for CRUD operations on {@link Application} related data.
  */
 public interface ApplicationRestService{
-    ApplicationResource getApplicationById(Long applicationId);
-    List<ApplicationResource> getApplicationsByUserId(Long userId);
-    Boolean isApplicationReadyForSubmit(Long applicationId);
-    List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, UserRoleType role);
-    void saveApplication(ApplicationResource application);
-    ApplicationResource createApplication(Long competitionId, Long userId, String applicationName);
-    void updateApplicationStatus(Long applicationId, Long statusId);
-    Double getCompleteQuestionsPercentage(Long applicationId);
-    Integer getAssignedQuestionsCount(Long applicationId, Long assigneeId);
+    RestResult<ApplicationResource> getApplicationById(Long applicationId);
+    RestResult<List<ApplicationResource>> getApplicationsByUserId(Long userId);
+    RestResult<Boolean> isApplicationReadyForSubmit(Long applicationId);
+    RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, UserRoleType role);
+    RestResult<Void> saveApplication(ApplicationResource application);
+    RestResult<ApplicationResource> createApplication(Long competitionId, Long userId, String applicationName);
+    RestResult<Void> updateApplicationStatus(Long applicationId, Long statusId);
+    RestResult<Double> getCompleteQuestionsPercentage(Long applicationId);
+    RestResult<Integer> getAssignedQuestionsCount(Long applicationId, Long assigneeId);
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
 }

@@ -7,16 +7,13 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.UserRoleType;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 
 /**
  * ApplicationRestServiceImpl is a utility for CRUD operations on {@link Application}.
@@ -32,86 +29,60 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Value("${ifs.data.service.rest.processrole}")
     String processRoleRestURL;
 
-    private final Log log = LogFactory.getLog(getClass());
-
     @Override
-    public ApplicationResource getApplicationById(Long applicationId) {
-        return restGet(applicationRestURL + "/normal/" + applicationId, ApplicationResource.class);
+    public RestResult<ApplicationResource> getApplicationById(Long applicationId) {
+        return getWithRestResult(applicationRestURL + "/normal/" + applicationId, ApplicationResource.class);
     }
 
     @Override
-    public List<ApplicationResource> getApplicationsByUserId(Long userId) {
-        return asList(restGet(applicationRestURL + "/findByUser/" + userId, ApplicationResource[].class));
+    public RestResult<List<ApplicationResource>> getApplicationsByUserId(Long userId) {
+        return getWithRestResult(applicationRestURL + "/findByUser/" + userId, applicationResourceListType());
     }
 
     @Override
-    public void saveApplication(ApplicationResource application) {
-        log.debug("ApplicationRestRestService.saveApplication " + application.getId());
-
-        ResponseEntity<String> response =
-                restPostWithEntity(applicationRestURL + "/saveApplicationDetails/" + application.getId(), application, String.class);
-
-        logResponse(response);
+    public RestResult<Void> saveApplication(ApplicationResource application) {
+        return postWithRestResult(applicationRestURL + "/saveApplicationDetails/" + application.getId(), application, Void.class);
     }
 
     @Override
-    public void updateApplicationStatus(Long applicationId, Long statusId) {
-
-        ResponseEntity<String> response =
-                restGetEntity(applicationRestURL + "/updateApplicationStatus?applicationId=" + applicationId + "&statusId=" + statusId, String.class);
-
-        log.debug("ApplicationRestRestService.updateApplicationStatus sending for applicationId " + applicationId);
-
-        logResponse(response);
+    public RestResult<Void> updateApplicationStatus(Long applicationId, Long statusId) {
+        return putWithRestResult(applicationRestURL + "/updateApplicationStatus?applicationId=" + applicationId + "&statusId=" + statusId, Void.class);
     }
 
-    private void logResponse(ResponseEntity<String> response){
-        if (response.getStatusCode() == HttpStatus.OK) {
-            log.info("ApplicationRestRestService, save == ok : " + response.getBody());
-        } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-            //  bad credentials?
-            log.info("Unauthorized request.");
-        } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
-            log.info("Status code not_found .....");
-        }
+    // TODO DW - INFUND-1555 - remove usage of ObjectNode if possible
+    @Override
+    public RestResult<Double> getCompleteQuestionsPercentage(Long applicationId) {
+        RestResult<ObjectNode> result = getWithRestResult(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
+        return result.andOnSuccess(jsonResponse -> restSuccess(jsonResponse.get("completedPercentage").asDouble()));
+    }
+
+    // TODO DW - INFUND-1555 - remove usages of the ObjectNode from the data side - replace with a dto
+    @Override
+    public RestResult<Boolean> isApplicationReadyForSubmit(Long applicationId) {
+        RestResult<ObjectNode> result = getWithRestResult(applicationRestURL + "/applicationReadyForSubmit/" + applicationId, ObjectNode.class);
+        return result.andOnSuccess(jsonResponse -> restSuccess(jsonResponse.get("readyForSubmit").asBoolean(false)));
     }
 
     @Override
-    public Double getCompleteQuestionsPercentage(Long applicationId) {
-        if (applicationId == null) {
-            log.error("No application and/org organisation id!!");
-        }
-
-        ObjectNode jsonResponse = restGet(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
-        return jsonResponse.get("completedPercentage").asDouble();
+    public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userID, UserRoleType role) {
+        return getWithRestResult(applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role, applicationResourceListType());
     }
 
     @Override
-    public Boolean isApplicationReadyForSubmit(Long applicationId) {
-        ObjectNode objectNode = restGet(applicationRestURL + "/applicationReadyForSubmit/" + applicationId, ObjectNode.class);
-        log.debug(String.format("Application Ready for Submit?   %s ", objectNode.toString()));
-        return objectNode.get(ApplicationController.READY_FOR_SUBMIT).asBoolean(false);
+    public RestResult<Integer> getAssignedQuestionsCount(Long applicationId, Long assigneeId) {
+        RestResult<String> count = getWithRestResult("/questionStatuses/search/countByApplicationIdAndAssigneeId?applicationId=" + applicationId + "&assigneeId=" + assigneeId, String.class);
+        return count.andOnSuccess(number -> restSuccess(Integer.valueOf(number)));
     }
 
     @Override
-    public List<ApplicationResource> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userID, UserRoleType role) {
-        return asList(restGet(applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role, ApplicationResource[].class));
-    }
+    public RestResult<ApplicationResource> createApplication(Long competitionId, Long userId, String applicationName) {
 
-    @Override
-    public Integer getAssignedQuestionsCount(Long applicationId, Long assigneeId) {
-        String count = restGet("/questionStatuses/search/countByApplicationIdAndAssigneeId?applicationId=" + applicationId + "&assigneeId=" + assigneeId, String.class);
-        return Integer.valueOf(count);
-    }
-
-    @Override
-    public ApplicationResource createApplication(Long competitionId, Long userId, String applicationName) {
+        // TODO DW - INFUND-1555 - heavy way to send just a single string...
         ApplicationResource application = new ApplicationResource();
         application.setName(applicationName);
-
         String url = applicationRestURL + "/createApplicationByName/" + competitionId + "/" + userId;
 
-        return restPost(url, application, ApplicationResource.class);
+        return postWithRestResult(url, application, ApplicationResource.class);
     }
 
 

@@ -94,6 +94,13 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.5'
 }
 
+tasks.withType(Test) {
+    // experiment with different values to see what works best
+    // maxParallelForks = 4
+    // can also compute dynamically
+    maxParallelForks = Runtime.runtime.availableProcessors()
+}
+
 task cleanDeploy {
     println "Starting clean deploy"
 }

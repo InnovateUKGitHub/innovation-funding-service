@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
@@ -72,7 +73,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
         List<ApplicationResource> progressMap = applications.subList(0,1);
         when(applicationService.getInProgress(applicant.getId())).thenReturn(progressMap);
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
-        when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(new ApplicationStatusResource(1L,"CREATED"));
+        when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(restSuccess(new ApplicationStatusResource(1L,"CREATED")));
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
@@ -95,7 +96,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
 
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
         when(processRoleService.findProcessRole(this.users.get(1).getId(), progressMap.get(0).getId())).thenReturn(processRoles.get(0));
-        when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(new ApplicationStatusResource(1L,"CREATED"));
+        when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(restSuccess(new ApplicationStatusResource(1L,"CREATED")));
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())

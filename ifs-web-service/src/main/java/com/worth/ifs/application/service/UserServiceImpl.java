@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     @Override
     // TODO DW - INFUND-1555 - get service to return RestResult
     public List<User> getAssignable(Long applicationId) {
-        return userRestService.findAssignableUsers(applicationId).getSuccessObject();
+        return userRestService.findAssignableUsers(applicationId).getSuccessObjectOrNull();
     }
 
     @Override
@@ -78,19 +78,19 @@ public class UserServiceImpl implements UserService {
     @Override
     // TODO DW - INFUND-1555 - get service to return RestResult
     public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
-        ResourceEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId).getSuccessObject();
+        ResourceEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId).getSuccessObjectOrNull();
         return userResourceResourceStatusEnvelope;
     }
 
     @Override
     // TODO DW - INFUND-1555 - get service to return RestResult
     public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
-        return userRestService.updateDetails(email, firstName, lastName, title, phoneNumber).getSuccessObject();
+        return userRestService.updateDetails(email, firstName, lastName, title, phoneNumber).getSuccessObjectOrNull();
     }
 
     @Override
     // TODO DW - INFUND-1555 - get service to return RestResult
     public List<UserResource> findUserByEmail(String email) {
-        return userRestService.findUserByEmail(email).getSuccessObject();
+        return userRestService.findUserByEmail(email).getSuccessObjectOrNull();
     }
 }

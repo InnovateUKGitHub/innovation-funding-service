@@ -1,5 +1,6 @@
 package com.worth.ifs;
 
+import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.repository.*;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.ResponseService;
@@ -36,6 +37,9 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    protected ApplicationMapper applicationMapperMock;
 
     @Mock
     protected ApplicationFinanceRepository applicationFinanceRepository;

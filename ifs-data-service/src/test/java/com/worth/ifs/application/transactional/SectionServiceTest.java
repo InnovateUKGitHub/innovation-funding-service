@@ -24,7 +24,7 @@ public class SectionServiceTest extends BaseUnitTestMocksTest {
         Section section = newSection().with(name("testname")).build();
         when(sectionRepositoryMock.findByName(section.getName())).thenReturn(section);
 
-        assertEquals(section, sectionService.findByName(section.getName()));
+        assertEquals(section, sectionService.findByName(section.getName()).getSuccessObject());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class SectionServiceTest extends BaseUnitTestMocksTest {
                 section.getCompetition().getId(), section.getPriority()
         )).thenReturn(nextSection);
 
-        Section returnSection = sectionService.getNextSection(section.getId());
+        Section returnSection = sectionService.getNextSection(section.getId()).getSuccessObject();
         assertEquals(nextSection, returnSection);
     }
 
@@ -49,7 +49,7 @@ public class SectionServiceTest extends BaseUnitTestMocksTest {
                 section.getCompetition().getId(), section.getPriority()
         )).thenReturn(previousSection);
 
-        Section returnSection = sectionService.getPreviousSection(section.getId());
+        Section returnSection = sectionService.getPreviousSection(section.getId()).getSuccessObject();
         assertEquals(previousSection, returnSection);
     }
 
@@ -63,7 +63,7 @@ public class SectionServiceTest extends BaseUnitTestMocksTest {
                 section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority()
         )).thenReturn(siblingSection);
 
-        Section returnSection = sectionService.getNextSection(section.getId());
+        Section returnSection = sectionService.getNextSection(section.getId()).getSuccessObject();
         assertEquals(siblingSection, returnSection);
     }
 
@@ -77,7 +77,7 @@ public class SectionServiceTest extends BaseUnitTestMocksTest {
                 section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority()
         )).thenReturn(siblingSection);
 
-        Section returnSection = sectionService.getPreviousSection(section.getId());
+        Section returnSection = sectionService.getPreviousSection(section.getId()).getSuccessObject();
         assertEquals(siblingSection, returnSection);
     }
 }

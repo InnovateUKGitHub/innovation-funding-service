@@ -1,9 +1,7 @@
 package com.worth.ifs.application.transactional;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
@@ -16,7 +14,6 @@ import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
 
@@ -25,16 +22,12 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.BuilderAmendFunctions.name;
-import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -56,8 +49,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     public void test_createApplicationByAppNameForUserIdAndCompetitionId_allowedIfGlobalApplicationRole() {
 
         setLoggedInUser(newUser().withRolesGlobal(newRole().withType(APPLICANT).build()).build());
-        Application newApplication = service.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
-        assertEquals("An application", newApplication.getName());
+        service.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
     }
 
     @Test
@@ -278,22 +270,12 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     private static class TestApplicationService implements ApplicationService {
 
         @Override
-        public Application createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
-            return newApplication().with(name(applicationName)).build();
-        }
-
-        @Override
-        public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
-            return serviceSuccess(Pair.of(new File("", ""), new FormInputResponseFileEntryResource()));
-        }
-
-        @Override
-        public ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
+        public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
             return null;
         }
 
         @Override
-        public ServiceResult<Application> getApplication(long applicationId) {
+        public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
             return null;
         }
 
@@ -303,57 +285,62 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
+        public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId) {
             return null;
         }
 
         @Override
-        public Application getApplicationById(Long id) {
+        public ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId) {
             return null;
         }
 
         @Override
-        public List<Application> findAll() {
+        public ServiceResult<ApplicationResource> getApplicationById(Long id) {
             return null;
         }
 
         @Override
-        public List<Application> findByUserId(Long userId) {
+        public ServiceResult<List<ApplicationResource>> findAll() {
             return null;
         }
 
         @Override
-        public ResponseEntity<String> saveApplicationDetails(Long id, ApplicationResource application) {
+        public ServiceResult<List<ApplicationResource>> findByUserId(Long userId) {
             return null;
         }
 
         @Override
-        public double getProgressPercentageByApplicationId(Long applicationId) {
-            return 0;
-        }
-
-        @Override
-        public ObjectNode getProgressPercentageNodeByApplicationId(Long applicationId) {
+        public ServiceResult<ApplicationResource> saveApplicationDetails(Long id, ApplicationResource application) {
             return null;
         }
 
         @Override
-        public ResponseEntity<String> updateApplicationStatus(Long id, Long statusId) {
+        public ServiceResult<ObjectNode> getProgressPercentageNodeByApplicationId(Long applicationId) {
             return null;
         }
 
         @Override
-        public List<Application> getApplicationsByCompetitionIdAndUserId(Long competitionId, Long userId, UserRoleType role) {
+        public ServiceResult<ApplicationResource> updateApplicationStatus(Long id, Long statusId) {
             return null;
         }
 
         @Override
-        public Application createApplicationByApplicationNameForUserIdAndCompetitionId(Long competitionId, Long userId, JsonNode jsonObj) {
+        public ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionId, Long userId, UserRoleType role) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(Long competitionId, Long userId, String applicationName) {
             return null;
         }
 
         @Override
         public ServiceResult<ApplicationResource> findByProcessRole(Long id) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ObjectNode> applicationReadyForSubmit(Long id) {
             return null;
         }
     }

@@ -262,8 +262,8 @@ public class BaseUnitTest {
 
         competitions = singletonList(competition);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(competition);
-        when(competitionRestService.getAll()).thenReturn(competitions);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(competitionRestService.getAll()).thenReturn(restSuccess(competitions));
         when(competitionService.getById(any(Long.class))).thenReturn(competition);
     }
 
@@ -394,7 +394,7 @@ public class BaseUnitTest {
 
         processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(restSuccess(idsToApplicationResources.get(pr.getApplication().getId()))));
 
-        when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(applications));
 
         when(applicationService.getById(applications.get(0).getId())).thenReturn(applications.get(0));
         when(applicationService.getById(applications.get(1).getId())).thenReturn(applications.get(1));

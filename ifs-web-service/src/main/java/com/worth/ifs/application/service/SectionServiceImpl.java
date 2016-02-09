@@ -2,8 +2,6 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,36 +12,36 @@ import java.util.stream.Collectors;
  * This class contains methods to retrieve and store {@link Section} related data,
  * through the RestService {@link SectionRestService}.
  */
+// TODO DW - INFUND-1555 - return RestResults
 @Service
 public class SectionServiceImpl implements SectionService {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    SectionRestService sectionRestService;
+    private SectionRestService sectionRestService;
 
     @Override
     public Section getById(Long sectionId) {
-        return sectionRestService.getById(sectionId);
+        return sectionRestService.getById(sectionId).getSuccessObjectOrNull();
     }
 
     @Override
     public List<Long> getInCompleted(Long applicationId) {
-        return sectionRestService.getIncompletedSectionIds(applicationId);
+        return sectionRestService.getIncompletedSectionIds(applicationId).getSuccessObjectOrNull();
     }
 
     @Override
     public List<Long> getCompleted(Long applicationId, Long organisationId) {
-        return sectionRestService.getCompletedSectionIds(applicationId, organisationId);
+        return sectionRestService.getCompletedSectionIds(applicationId, organisationId).getSuccessObjectOrNull();
     }
 
     @Override
     public Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId) {
-        return sectionRestService.getCompletedSectionsByOrganisation(applicationId);
+        return sectionRestService.getCompletedSectionsByOrganisation(applicationId).getSuccessObjectOrNull();
     }
 
     @Override
     public Boolean allSectionsMarkedAsComplete(Long applicationId) {
-        return sectionRestService.allSectionsMarkedAsComplete(applicationId);
+        return sectionRestService.allSectionsMarkedAsComplete(applicationId).getSuccessObjectOrNull();
     }
 
     @Override
@@ -60,18 +58,16 @@ public class SectionServiceImpl implements SectionService {
     }
 
     private List<Section> getChildSections(List<Section> sections, List<Section>children) {
-        for(Section section : sections) {
-            if(section.getChildSections()!=null) {
-                children.addAll(section.getChildSections());
-                getChildSections(section.getChildSections(), children);
-            }
-        }
+        sections.stream().filter(section -> section.getChildSections() != null).forEach(section -> {
+            children.addAll(section.getChildSections());
+            getChildSections(section.getChildSections(), children);
+        });
         return children;
     }
 
     @Override
     public Section getByName(String name) {
-        return sectionRestService.getSection(name);
+        return sectionRestService.getSection(name).getSuccessObjectOrNull();
     }
 
     public void removeSectionsQuestionsWithType(Section section, String name) {
@@ -100,7 +96,7 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public Section getPreviousSection(Optional<Section> section) {
         if(section!=null && section.isPresent()) {
-            return sectionRestService.getPreviousSection(section.get().getId());
+            return sectionRestService.getPreviousSection(section.get().getId()).getSuccessObjectOrNull();
         }
         return null;
     }
@@ -108,14 +104,13 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public Section getNextSection(Optional<Section> section) {
         if(section!=null && section.isPresent()) {
-            Section nextSection = sectionRestService.getNextSection(section.get().getId());
-            return nextSection;
+            return sectionRestService.getNextSection(section.get().getId()).getSuccessObjectOrNull();
         }
         return null;
     }
 
     @Override
     public Section getSectionByQuestionId(Long questionId) {
-        return sectionRestService.getSectionByQuestionId(questionId);
+        return sectionRestService.getSectionByQuestionId(questionId).getSuccessObjectOrNull();
     }
 }
