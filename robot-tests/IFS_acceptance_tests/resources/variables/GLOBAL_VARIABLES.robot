@@ -44,3 +44,5 @@ ${CHECK_ELIGIBILITY}    ${SERVER}/application/create/check-eligibility/1
 ${YOUR_DETAILS}    ${SERVER}/application/create/your-details
 ${POSTCODE_LOOKUP_URL}    ${SERVER}/application/create/selected-business/05063042#
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
+${APPLICATION_TEAM_URL}    ${SERVER}/application/1/contributors
+${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/1/contributors/invite

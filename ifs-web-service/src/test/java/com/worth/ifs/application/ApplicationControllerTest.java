@@ -16,10 +16,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.application.service.ListenableFutures.settable;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -57,7 +59,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
        // when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
-
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         System.out.println("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId()))
@@ -74,6 +76,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
         ApplicationResource app = applications.get(0);
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         mockMvc.perform(get("/application/" + app.getId()+"/summary"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-summary"))
@@ -108,6 +111,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         System.out.println("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId() +"/section/"+ section.getId()))
@@ -130,6 +134,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
             //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
             when(applicationService.getById(app.getId())).thenReturn(app);
+            when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
             mockMvc.perform(get("/application/1/confirm-submit"))
                     .andExpect(view().name("application-confirm-submit"))
@@ -145,6 +150,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         MvcResult result = mockMvc.perform(get("/application/1/submit"))
                 .andExpect(view().name("application-submitted"))

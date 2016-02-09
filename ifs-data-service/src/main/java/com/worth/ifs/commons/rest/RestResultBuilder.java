@@ -5,7 +5,6 @@ import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.function.Function;
 
@@ -21,66 +20,49 @@ import static org.springframework.http.HttpStatus.OK;
  *
  * It also provides handy mechanisms for integrating directly with ServiceResults being returned from the Service layer.
  */
-public class RestResultBuilder<ProcessResultType, ReturnType> {
+public class RestResultBuilder {
 
     private static final Log LOG = LogFactory.getLog(RestResultBuilder.class);
 
     private static RestResult<?> fallbackFailureResult = internalServerErrorRestFailure();
-    private Function<ProcessResultType, RestResult<ReturnType>> successResult;
-    private RestResult<ReturnType> defaultFailureResult;
-    private Supplier<ServiceResult<ProcessResultType>> serviceResult;
+    private Function<? super Object, RestResult<?>> successResult;
+    private RestResult<?> defaultFailureResult;
 
     private RestResultBuilder() {
     }
 
-    private RestResultBuilder(RestResultBuilder<ProcessResultType, ReturnType> existingBuilder) {
+    private RestResultBuilder(RestResultBuilder existingBuilder) {
         this.successResult = existingBuilder.successResult;
         this.defaultFailureResult = existingBuilder.defaultFailureResult;
-        this.serviceResult = existingBuilder.serviceResult;
     }
 
-    public static <S> RestResultBuilder<S, S> newRestHandler(Class<S> clazz) {
-        return newRestHandler();
+    public static RestResultBuilder newRestHandler() {
+        return new RestResultBuilder();
     }
 
-    public static <S> RestResultBuilder<S, S> newRestHandler(ParameterizedTypeReference<S> type) {
-        return newRestHandler();
-    }
-
-    public static <T, R> RestResultBuilder<R, T> newRestHandler() {
-        return new RestResultBuilder<>();
-    }
-
-    public RestResultBuilder<ProcessResultType, ReturnType> andOnSuccess(RestResult<ReturnType> successResult) {
+    public RestResultBuilder andOnSuccess(RestResult<?> successResult) {
         return andOnSuccess(success -> successResult);
     }
 
-    public RestResultBuilder<ProcessResultType, ReturnType> andOnSuccess(Function<ProcessResultType, RestResult<ReturnType>> successResult) {
-        RestResultBuilder<ProcessResultType, ReturnType> newBuilder = new RestResultBuilder<>(this);
-        newBuilder.successResult = successResult;
+    public <T> RestResultBuilder andOnSuccess(Function<T, RestResult<?>> successResult) {
+        RestResultBuilder newBuilder = new RestResultBuilder(this);
+        newBuilder.successResult = result -> successResult.apply((T) result);
         return newBuilder;
     }
 
     @SuppressWarnings("unchecked")
-    public RestResultBuilder<ProcessResultType, ReturnType> andWithDefaultFailure(RestResult<?> failureResult) {
-        RestResultBuilder<ProcessResultType, ReturnType> newBuilder = new RestResultBuilder<>(this);
-        newBuilder.defaultFailureResult = (RestResult<ReturnType>) failureResult;
+    public RestResultBuilder andWithDefaultFailure(RestResult<?> failureResult) {
+        RestResultBuilder newBuilder = new RestResultBuilder(this);
+        newBuilder.defaultFailureResult = failureResult;
         return newBuilder;
     }
 
-    public RestResult<ReturnType> perform(Supplier<ServiceResult<ProcessResultType>> serviceResult) {
-        RestResultBuilder<ProcessResultType, ReturnType> newBuilder = new RestResultBuilder<>(this);
-        newBuilder.serviceResult = serviceResult;
-        return newBuilder.perform();
-    }
-
-    @SuppressWarnings("unchecked")
-    private RestResult<ReturnType> perform() {
+    public <ReturnType> RestResult<ReturnType> perform(Supplier<ServiceResult<?>> serviceResult) {
 
         if (serviceResult != null) {
 
             try {
-                ServiceResult<ProcessResultType> response = serviceResult.get();
+                ServiceResult<?> response = serviceResult.get();
                 return response.handleSuccessOrFailure(failure -> {
 
                     RestResult<ReturnType> handled = handleServiceFailure(failure);
@@ -90,13 +72,13 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
                     }
 
                     if (defaultFailureResult != null) {
-                        return defaultFailureResult;
+                        return (RestResult<ReturnType>) defaultFailureResult;
                     } else {
                         return (RestResult<ReturnType>) fallbackFailureResult;
                     }
                 }, success -> {
                     if (successResult != null) {
-                        return successResult.apply(success);
+                        return (RestResult<ReturnType>) successResult.apply(success);
                     } else {
                         return (RestResult<ReturnType>) restSuccess(success, OK);
                     }
@@ -106,7 +88,7 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
                 LOG.warn("Uncaught exception encountered while performing RestResult processing - returning catch-all error", e);
 
                 if (defaultFailureResult != null) {
-                    return defaultFailureResult;
+                    return (RestResult<ReturnType>) defaultFailureResult;
                 }
 
                 return (RestResult<ReturnType>) fallbackFailureResult;
@@ -116,7 +98,7 @@ public class RestResultBuilder<ProcessResultType, ReturnType> {
         return null;
     }
 
-    private RestResult<ReturnType> handleServiceFailure(ServiceFailure failure) {
+    private <ReturnType> RestResult<ReturnType> handleServiceFailure(ServiceFailure failure) {
         return restFailure(failure.getErrors());
     }
 }

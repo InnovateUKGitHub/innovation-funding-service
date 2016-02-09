@@ -174,7 +174,7 @@ IFS.formValidation = (function(){
                       case 'min':
                       case 'max':
                       case 'minlength':
-                        s[type].messageInvalid.replace('%'+type+'%',field.attr(type));
+                        errorMessage = s[type].messageInvalid.replace('%'+type+'%',field.attr(type));
                         break;
                       default:
                         errorMessage = s[type].messageInvalid;

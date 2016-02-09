@@ -64,7 +64,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<User> getUserById(final Long id) {
-        return getOrFail(() -> repository.findOne(id), notFoundError(User.class, id));
+        return super.getUser(id);
     }
 
     @Override

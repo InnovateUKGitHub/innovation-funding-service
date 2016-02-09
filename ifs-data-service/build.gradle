@@ -84,6 +84,8 @@ dependencies {
     mapstruct 'org.mapstruct:mapstruct-processor:1.0.0.Final'
     compile 'org.freemarker:freemarker:2.3.23'
     compile 'javax.mail:mail:1.4.7'
+    compile "org.apache.httpcomponents:httpasyncclient"
+
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")

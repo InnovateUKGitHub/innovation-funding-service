@@ -35,6 +35,7 @@ import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.application.service.ListenableFutures.call;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -79,7 +80,7 @@ public class AssessmentController extends AbstractApplicationController {
         List<AssessmentWithApplicationAndScore> assessments = allAssessments.stream()
                 .filter(a -> !a.isSubmitted())
                 .map(a -> {
-                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObject();
+                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObjectOrNull();
                     Score score = assessmentRestService.getScore(a.getId());
                     return new AssessmentWithApplicationAndScore(a, ar, score);
                 }).collect(toList());
@@ -89,7 +90,7 @@ public class AssessmentController extends AbstractApplicationController {
         List<AssessmentWithApplicationAndScore> submittedAssessments = allAssessments.stream()
                 .filter(Assessment::isSubmitted)
                 .map(a -> {
-                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObject();
+                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObjectOrNull();
                     Score score = assessmentRestService.getScore(a.getId());
                     return new AssessmentWithApplicationAndScore(a, ar, score);
                 })
@@ -210,8 +211,8 @@ public class AssessmentController extends AbstractApplicationController {
         Competition competition = competitionService.getById(application.getCompetition());
         addApplicationDetails(application, competition, userId, empty(), Optional.empty(), model, null, userApplicationRoles);
         getAndPassAssessmentDetails(competitionId, application.getId(), userId, model);
-        Set<String> partners = application.getProcessRoles().stream().
-                map(processRoleService::getById).
+        Set<String> partners = call(application.getProcessRoles().stream().
+                map(processRoleService::getById)).
                 map(ProcessRole::getOrganisation).
                 map(Organisation::getName).
                 collect(toSet());
@@ -222,7 +223,7 @@ public class AssessmentController extends AbstractApplicationController {
 
     @ModelAttribute
     private User getLoggedUser(HttpServletRequest request) {
-        return userAuthenticationService.getAuthenticatedUser(request);
+        return getUserAuthenticationService().getAuthenticatedUser(request);
     }
 
     private Long getLoggedUserId( HttpServletRequest request) {

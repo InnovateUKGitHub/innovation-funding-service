@@ -81,6 +81,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                         success -> handleInviteSuccess(invite)
                 );
             }else{
+                if(invite.getId()==null){
+                    inviteRepository.save(invite);
+                }
                 invite.generateHash();
                 inviteRepository.save(invite);
 
@@ -119,7 +122,13 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationName", invite.getApplication().getName());
+        notificationArguments.put("competitionName", invite.getApplication().getCompetition().getName());
         notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite));
+        if(invite.getInviteOrganisation().getOrganisation() != null){
+            notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisation().getName());
+        }else{
+            notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisationName());
+        }
         notificationArguments.put("leadOrganisation", invite.getApplication().getLeadOrganisation().get().getName());
         notificationArguments.put("leadApplicant", invite.getApplication().getLeadApplicant().get().getName());
         notificationArguments.put("leadApplicantEmail", invite.getApplication().getLeadApplicant().get().getEmail());
