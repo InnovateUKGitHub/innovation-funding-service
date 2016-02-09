@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.worth.ifs.application.service.ListenableFutures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.util.stream.Collectors.toList;
@@ -113,6 +114,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
         ApplicationResource application = applications.get(1);
         Assessment assessment = getAssessment(application);
         when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());
@@ -148,6 +150,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
         when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
 
         when(applicationService.getById(anyLong())).thenReturn(application);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());

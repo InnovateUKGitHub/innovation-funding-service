@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.application.service.ListenableFutures.call;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -32,12 +33,12 @@ public class UserServiceImpl implements UserService {
     @Override
     // TODO DW - INFUND-1555 - get service to return RestResult
     public List<User> getAssignable(Long applicationId) {
-        return userRestService.findAssignableUsers(applicationId).getSuccessObject();
+        return userRestService.findAssignableUsers(applicationId).getSuccessObjectOrNull();
     }
 
     @Override
     public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = simpleMap(application.getProcessRoles(),id -> processRoleService.getById(id));
+        List<ProcessRole> userApplicationRoles = call(simpleMap(application.getProcessRoles(), id -> processRoleService.getById(id)));
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRole().getName()
                 .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().getId().equals(userId));
 
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = simpleMap(application.getProcessRoles(),id -> processRoleService.getById(id));
+        List<ProcessRole> userApplicationRoles = call(simpleMap(application.getProcessRoles(), id -> processRoleService.getById(id)));
         for(final ProcessRole processRole : userApplicationRoles){
             if(processRole.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())){
                 return processRole;
@@ -56,9 +57,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Set<User> getAssignableUsers(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList());
+        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
+                .map(id -> processRoleService.getById(id))
+                .collect(Collectors.toList()));
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
                 .map(ProcessRole::getUser)
@@ -67,9 +68,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Set<User> getApplicationUsers(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
+        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
             .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()));
         return userApplicationRoles.stream()
                 .map(ProcessRole::getUser)
                 .collect(Collectors.toSet());
@@ -78,19 +79,19 @@ public class UserServiceImpl implements UserService {
     @Override
     // TODO DW - INFUND-1555 - get service to return RestResult
     public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
-        ResourceEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId).getSuccessObject();
+        ResourceEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId).getSuccessObjectOrNull();
         return userResourceResourceStatusEnvelope;
     }
 
     @Override
     // TODO DW - INFUND-1555 - get service to return RestResult
     public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
-        return userRestService.updateDetails(email, firstName, lastName, title, phoneNumber).getSuccessObject();
+        return userRestService.updateDetails(email, firstName, lastName, title, phoneNumber).getSuccessObjectOrNull();
     }
 
     @Override
     // TODO DW - INFUND-1555 - get service to return RestResult
     public List<UserResource> findUserByEmail(String email) {
-        return userRestService.findUserByEmail(email).getSuccessObject();
+        return userRestService.findUserByEmail(email).getSuccessObjectOrNull();
     }
 }

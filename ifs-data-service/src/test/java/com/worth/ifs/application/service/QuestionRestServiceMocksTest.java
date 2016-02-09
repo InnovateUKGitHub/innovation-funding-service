@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.application.service.ListenableFutures.settable;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.verify;
@@ -78,15 +79,14 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     }
 
     @Test
-    public void getMarkedAsCompleteTest() {
+    public void getMarkedAsCompleteTest() throws Exception {
         String expectedUrl = dataServicesUrl + questionRestURL + "/getMarkedAsComplete/1/2";
 
         Long[] questionIds = new Long[]{3L, 4L, 5L};
-        ResponseEntity<Long[]> response = new ResponseEntity<>(questionIds, HttpStatus.OK);
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Long[].class)).thenReturn(response);
+        when(mockAsyncRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(""), Long[].class)).thenReturn(settable(new ResponseEntity<>(questionIds, HttpStatus.OK)));
 
         // now run the method under test
-        Set<Long> returnedQuestionIds = service.getMarkedAsComplete(1L, 2L);
+        Set<Long> returnedQuestionIds = service.getMarkedAsComplete(1L, 2L).get();
 
         // verify
         assertNotNull(questionIds);

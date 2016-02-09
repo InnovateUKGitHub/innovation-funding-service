@@ -7,10 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
-/**
- * @author Maxim Kalina
- * @version $Id$
- */
 @Component
 public class ProfilingMethodInterceptor implements MethodInterceptor {
 
@@ -21,7 +17,9 @@ public class ProfilingMethodInterceptor implements MethodInterceptor {
         final StopWatch stopWatch = new StopWatch(invocation.getMethod().toGenericString());
         stopWatch.start( invocation.getMethod().getDeclaringClass() + "." + invocation.getMethod().getName());
         try {
-            return invocation.proceed();
+            final Object proceed = invocation.proceed();
+            return proceed;
+
         } finally {
             stopWatch.stop();
             log.info(stopWatch.prettyPrint());

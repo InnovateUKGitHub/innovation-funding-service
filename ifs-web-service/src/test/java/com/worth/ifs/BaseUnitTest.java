@@ -54,6 +54,7 @@ import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newAppl
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.application.service.ListenableFutures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -262,8 +263,8 @@ public class BaseUnitTest {
 
         competitions = singletonList(competition);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(competition);
-        when(competitionRestService.getAll()).thenReturn(competitions);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(competitionRestService.getAll()).thenReturn(restSuccess(competitions));
         when(competitionService.getById(any(Long.class))).thenReturn(competition);
     }
 
@@ -394,7 +395,7 @@ public class BaseUnitTest {
 
         processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(restSuccess(idsToApplicationResources.get(pr.getApplication().getId()))));
 
-        when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(applications));
 
         when(applicationService.getById(applications.get(0).getId())).thenReturn(applications.get(0));
         when(applicationService.getById(applications.get(1).getId())).thenReturn(applications.get(1));
@@ -415,7 +416,7 @@ public class BaseUnitTest {
         when(organisationService.getApplicationLeadOrganisation(applications.get(0))).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(applications.get(1))).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(applications.get(2))).thenReturn(Optional.of(organisation1));
-        processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(processRole));
+        processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(settable(processRole)));
 
         when(sectionService.getById(1L)).thenReturn(sections.get(0));
         when(sectionService.getById(3L)).thenReturn(sections.get(2));

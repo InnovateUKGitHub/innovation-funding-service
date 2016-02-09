@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,7 @@ public interface QuestionRestService {
     public void assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById);
     public List<Question> findByCompetition(Long competitionId);
     public void updateNotification(Long questionStatusId, Boolean notify);
-    public Set<Long> getMarkedAsComplete(Long applicationId, Long organisationId);
+    public ListenableFuture<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId);
     public Question findById(Long questionId);
     public Question getNextQuestion(Long questionId);
     public Question getPreviousQuestion(Long questionId);
