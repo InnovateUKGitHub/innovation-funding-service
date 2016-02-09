@@ -82,7 +82,6 @@ public abstract class AbstractApplicationController {
     @Autowired
     protected CompetitionService competitionService;
 
-
     protected Long extractAssigneeProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
         Long assigneeId = null;
         Map<String, String[]> params = request.getParameterMap();
@@ -395,5 +394,9 @@ public abstract class AbstractApplicationController {
                 .filter(uar -> uar.getUser().getId().equals(userId))
                 .map(ProcessRole::getOrganisation)
                 .findFirst();
+    }
+
+    public UserAuthenticationService getUserAuthenticationService() {
+        return userAuthenticationService;
     }
 }
