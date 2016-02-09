@@ -6,6 +6,8 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,8 +27,13 @@ public class CostRestServiceImpl extends BaseRestService implements CostRestServ
     String costRestURL;
 
     @Override
-    public void add(Long applicationFinanceId, Long questionId, CostItem costItem) {
-        restPut(costRestURL + "/add/" + applicationFinanceId + "/" + questionId, costItem);
+    public CostItem add(Long applicationFinanceId, Long questionId, CostItem costItem) {
+        ResponseEntity<CostItem> response = restPut(costRestURL + "/add/" + applicationFinanceId + "/" + questionId, costItem, CostItem.class);
+        if(response.getStatusCode().equals(HttpStatus.OK)){
+            return response.getBody();
+        }else{
+            return null;
+        }
     }
 
     @Override

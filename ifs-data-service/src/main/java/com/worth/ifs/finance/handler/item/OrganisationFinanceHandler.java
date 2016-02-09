@@ -6,7 +6,6 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 
 /**
  * Action to retrieve the finances of the organisations
@@ -15,4 +14,5 @@ public interface OrganisationFinanceHandler {
     EnumMap<CostType,CostCategory> getOrganisationFinances(Long applicationFinanceId);
     EnumMap<CostType,CostCategory> getOrganisationFinanceTotals(Long id);
     Cost costItemToCost(CostItem costItem);
+    CostItem costToCostItem(Cost cost);
 }

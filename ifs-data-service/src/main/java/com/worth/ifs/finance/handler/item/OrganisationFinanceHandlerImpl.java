@@ -11,11 +11,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -96,6 +94,13 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
         List<CostField> costFields = costFieldRepository.findAll();
         costHandler.setCostFields(costFields);
         return costHandler.toCost(costItem);
+    }
+
+    @Override
+    public CostItem costToCostItem(Cost cost) {
+        CostType costType = CostType.fromString(cost.getQuestion().getFormInputs().get(0).getFormInputType().getTitle());
+        CostHandler costHandler = getCostHandler(costType);
+        return costHandler.toCostItem(cost);
     }
 
     public List<Cost> costItemsToCost(List<CostItem> costItems) {

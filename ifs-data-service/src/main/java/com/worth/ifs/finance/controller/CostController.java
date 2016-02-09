@@ -6,7 +6,6 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.domain.CostValue;
-import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.handler.item.OrganisationFinanceHandler;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostFieldRepository;
@@ -54,24 +53,28 @@ public class CostController {
     OrganisationFinanceHandler organisationFinanceHandler;
 
     @RequestMapping("/add/{applicationFinanceId}/{questionId}")
-    public void add(
+    public CostItem add(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             @PathVariable("questionId") final Long questionId,
-            @RequestBody(required=false) final CostItem newCostItem) {
+            @RequestBody(required = false) final CostItem newCostItem) {
         ApplicationFinance applicationFinance = applicationFinanceRepository.findOne(applicationFinanceId);
         Question question = questionRepository.findOne(questionId);
-
+        Cost cost;
         if(newCostItem!=null) {
-            addCostItem(applicationFinance, question, newCostItem);
+            cost = addCostItem(applicationFinance, question, newCostItem);
         } else {
-            Cost cost = new Cost("", "", 0, BigDecimal.ZERO, applicationFinance, question);
-            costRepository.save(cost);
+            cost = new Cost("", "", 0, BigDecimal.ZERO, applicationFinance, question);
+            cost = costRepository.save(cost);
         }
+
+
+        // RETURN 201 STATUS
+        return organisationFinanceHandler.costToCostItem(cost);
     }
 
     @RequestMapping("/update/{id}")
-    public void update(@PathVariable("id") final Long id,
-            @RequestBody final CostItem newCostItem) {
+    public Cost update(@PathVariable("id") final Long id,
+                       @RequestBody final CostItem newCostItem) {
         if(id!=null && costRepository.exists(id)) {
             Cost newCost = organisationFinanceHandler.costItemToCost(newCostItem);
             Cost updatedCost = mapCost(id, newCost);
@@ -82,20 +85,22 @@ public class CostController {
                 .filter(c -> c.getValue() != null)
                 .filter(c -> !c.getValue().equals("null"))
                 .forEach(costValue -> updateCostValue(costValue, savedCost));
+            return newCost;
         } else {
             log.info("DOES NOT EXIST");
         }
+        return null;
     }
 
-    private void addCostItem(ApplicationFinance applicationFinance, Question question, CostItem newCostItem) {
+    private Cost addCostItem(ApplicationFinance applicationFinance, Question question, CostItem newCostItem) {
         Cost existingCost = costRepository.findOneByApplicationFinanceIdAndQuestionId(applicationFinance.getId(), question.getId());
         if(existingCost == null) {
             Cost cost = organisationFinanceHandler.costItemToCost(newCostItem);
             cost.setQuestion(question);
             cost.setApplicationFinance(applicationFinance);
-            costRepository.save(cost);
+            return costRepository.save(cost);
         } else {
-            update(existingCost.getId(), newCostItem);
+            return update(existingCost.getId(), newCostItem);
         }
     }
 
@@ -134,8 +139,10 @@ public class CostController {
     }
 
     @RequestMapping("/findById/{id}")
-    public Cost findById(@PathVariable("id") final Long id) {
-        return costRepository.findOne(id);
+    public CostItem findById(@PathVariable("id") final Long id) {
+        Cost cost =  costRepository.findOne(id);
+        CostItem costItem = organisationFinanceHandler.costToCostItem(cost);
+        return costItem;
     }
 
     @Transactional

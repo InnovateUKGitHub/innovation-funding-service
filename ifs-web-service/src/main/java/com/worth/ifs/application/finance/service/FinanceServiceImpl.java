@@ -59,7 +59,7 @@ public class FinanceServiceImpl implements FinanceService {
        return costRestService.getCosts(applicationFinanceId);
     }
 
-    public void addCost(Long applicationFinanceId, Long questionId) {
-        costRestService.add(applicationFinanceId, questionId, null);
+    public CostItem addCost(Long applicationFinanceId, Long questionId) {
+        return costRestService.add(applicationFinanceId, questionId, null);
     }
 }

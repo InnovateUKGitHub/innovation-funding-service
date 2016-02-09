@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
+
+<!-- ===========================Form: Add row button =========================== -->
+<div th:fragment="add_row(text, question)">
+    <button type="submit"
+            name="add_cost"
+            th:value="${question.id}"
+            th:class="'buttonlink'"
+            class="add-another-row buttonlink"
+            th:attrappend="formaction='&#35;question-'+${question.getId()}"
+            th:text="${text}"
+            >
+    </button>
+</div>
+
+
     <!-- ===========================Form: Textinput =========================== -->
 
     <div th:fragment="textinput" class="form-group " th:classappend="${#fields.hasErrors(validationId)} ? adminclass : userclass">
@@ -277,7 +292,12 @@
                                             />
                                 </td>
                                 <td rowspan="2" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                                  <a class="delete-row control" th:attr="data-cost-row=${labourCost.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{labourCostId}(labourCostId=${labourCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                    <button type="submit"
+                                            name="remove_cost"
+                                            th:value="${labourCost.id}"
+                                            th:class="'buttonlink'"
+                                            th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+                                    </button>
                                 </td>
                             </tr>
                             <tr th:attr="data-cost-row=${labourCost.id}">
@@ -299,7 +319,7 @@
                         </tbody>
                     </table>
                     <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                        <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}?expand=true&amp;panel=collapsible-0(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0-1">Add another role</a>
+                        <div th:include="question-type/types :: add_row(text='Add another role', question=${question})" th:remove="tag"/>
                     </p>
                 </div>
                 <div class="form-group alignright inline">
@@ -474,55 +494,13 @@
                     </thead>
                     <tbody>
                     <div th:each="materialCost, iteration : ${costCategory.costs}" th:with="formInputType=${question.formInputs.get(0).formInputType},type=${formInputType.title}">
-                        <tr th:attr="data-cost-row=${materialCost.id}">
-                            <td>
-                                <input type="text"
-                                       class="form-control width-full"
-                                       th:name="${type +'-item-' + question.id + '-' + materialCost.id}"
-                                       th:id="${'cost-materials-'+materialCost.id+'-item'}"
-                                       th:value="${materialCost.getItem()}"
-                                       th:title="'Row '+${iteration.count}+' : Item'"
-                                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
-                            </td>
-                            <td>
-                                <input type="number"
-                                       class="form-control width-full"
-                                       th:name="${type +'-quantity-' + question.id + '-' + materialCost.id}"
-                                       th:id="${'cost-materials-'+materialCost.id+'-quantity'}"
-                                       th:value="${materialCost.getQuantity()}"
-                                       th:title="'Row '+${iteration.count}+' : Quantity'"
-                                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
-                            </td>
-                            <td>
-                                <input type="number"
-                                       class="form-control width-full"
-                                       th:name="${type +'-cost-' + question.id + '-' + materialCost.id}"
-                                       th:id="${'cost-materials-'+materialCost.id+'-cost'}"
-                                       th:value="${#numbers.formatDecimal(materialCost.getCost(),0,0)}"
-                                       th:title="'Row '+${iteration.count}+' : Cost per Item'"
-                                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
-                            </td>
-                            <td>
-                                <input type="text"
-                                       class="alignright form-control width-full"
-                                       th:name="${type +'-total-' + question.id + '-' + materialCost.id}"
-                                       th:attr="data-calculation-fields='#'+${'cost-materials-'+materialCost.id+'-quantity'}+',#'+${'cost-materials-'+materialCost.id+'-cost'},data-calculation-rawvalue=${materialCost.total}"
-                                       th:id="${'cost-materials-'+materialCost.id+'-materialTotal'}"
-                                       data-calculation-operations="*"
-                                       readonly="readonly"
-                                       th:value="'£ ' + ${#numbers.formatDecimal(materialCost.total, 0, 0)}"
-                                       th:title="'Total costs for row '+${iteration.count}" />
-                            </td>
-                            <td class="alignright remove" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                                <a class="delete-row" th:attr="data-cost-row=${materialCost.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{materialCost}(materialCost=${materialCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
-                            </td>
-                        </tr>
+                        <div th:include="question-type/types :: materials_row" th:with="iterationIndex=${iteration.count}" th:remove="tag"/>
                     </div>
                     </tbody>
                 </table>
 
                 <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                    <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another materials cost</a>
+                    <div th:include="question-type/types :: add_row(text='Add another materials cost', question=${question})" th:remove="tag"/>
                 </p>
             </div>
             <div class="form-group alignright inline">
@@ -540,6 +518,58 @@
                 <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
             </div>
         </div>
+    </div>
+
+    <div th:fragment="materials_row" th:remove="tag">
+        <tr th:attr="data-cost-row=${materialCost.id}">
+            <td>
+                <input type="text"
+                       class="form-control width-full"
+                       th:name="${type +'-item-' + question.id + '-' + materialCost.id}"
+                       th:id="${'cost-materials-'+materialCost.id+'-item'}"
+                       th:value="${materialCost.getItem()}"
+                       th:title="'Row '+${iterationIndex}+' : Item'"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+            </td>
+            <td>
+                <input type="number"
+                       class="form-control width-full"
+                       th:name="${type +'-quantity-' + question.id + '-' + materialCost.id}"
+                       th:id="${'cost-materials-'+materialCost.id+'-quantity'}"
+                       th:value="${materialCost.getQuantity()}"
+                       th:title="'Row '+${iterationIndex}+' : Quantity'"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+            </td>
+            <td>
+                <input type="number"
+                       class="form-control width-full"
+                       th:name="${type +'-cost-' + question.id + '-' + materialCost.id}"
+                       th:id="${'cost-materials-'+materialCost.id+'-cost'}"
+                       th:value="${#numbers.formatDecimal(materialCost.getCost(),0,0)}"
+                       th:title="'Row '+${iterationIndex}+' : Cost per Item'"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+            </td>
+            <td>
+                <input type="text"
+                       class="alignright form-control width-full"
+                       th:name="${type +'-total-' + question.id + '-' + materialCost.id}"
+                       th:attr="data-calculation-fields='#'+${'cost-materials-'+materialCost.id+'-quantity'}+',#'+${'cost-materials-'+materialCost.id+'-cost'},data-calculation-rawvalue=${materialCost.total}"
+                       th:id="${'cost-materials-'+materialCost.id+'-materialTotal'}"
+                       data-calculation-operations="*"
+                       readonly="readonly"
+                       th:value="'£ ' + ${#numbers.formatDecimal(materialCost.total, 0, 0)}"
+                       th:title="'Total costs for row '+${iterationIndex}" />
+            </td>
+            <td class="alignright remove" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <button type="submit"
+                        name="remove_cost"
+                        th:value="${materialCost.id}"
+                        th:class="'buttonlink'"
+                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+                </button>
+            </td>
+        </tr>
+
     </div>
 
     <!-- ===========================Form: capital usage =========================== -->
@@ -636,12 +666,22 @@
                                th:name="${type + '-netCost-' + question.id + '-' + capitalUsage.id}"
                                th:value="'£ ' + ${#numbers.formatDecimal(capitalUsage.total, 0, 0)}"/>
                     </div>
-                    <a th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"  class="delete-row" th:attr="data-cost-row=${capitalUsage.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{capitalUsage}(capitalUsage=${capitalUsage.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
 
+                    <button type="submit"
+                            name="remove_cost"
+                            th:value="${capitalUsage.id}"
+                            th:class="'buttonlink'"
+                            th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+                    </button>
                 </div>
             </div>
             <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another asset</a>
+                <button type="submit"
+                        name="add_cost"
+                        th:value="${question.id}"
+                        th:class="'buttonlink'"
+                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Add another asset
+                </button>
             </p>
             <div class="form-group alignright inline">
                 <label th:for="${'section-total-'+subSection.id}">Total capital usage costs</label>
@@ -692,11 +732,20 @@
                            th:value="${#numbers.formatDecimal(subContractingCost.cost,0,0)}"
                            th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
                 </div>
-                <a class="delete-row" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"  th:attr="data-cost-row=${subContractingCost.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{subContractingCost}(subContractingCost=${subContractingCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
-
+                <button th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" type="submit"
+                        name="remove_cost"
+                        th:value="${subContractingCost.id}"
+                        th:class="'buttonlink'"
+                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+                </button>
             </div>
             <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another subcontractor</a>
+                <button type="submit"
+                        name="add_cost"
+                        th:value="${question.id}"
+                        th:class="'buttonlink'"
+                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Add another subcontractor
+                </button>
             </p>
             <div class="form-group alignright">
                 <label th:for="${'section-total-'+subSection.id}">Total subcontracting costs</label>
@@ -771,7 +820,12 @@
                                        th:value="'£ ' + ${#numbers.formatDecimal(travelCost.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                             </td>
                             <td th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" >
-                                <a class="delete-row" th:attr="data-cost-row=${travelCost.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{travelCost}(travelCost=${travelCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                <button type="submit"
+                                        name="remove_cost"
+                                        th:value="${travelCost.id}"
+                                        th:class="'buttonlink'"
+                                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+                                </button>
                             </td>
                         </tr>
                     </div>
@@ -779,7 +833,7 @@
                 </table>
 
                 <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                    <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another travel cost</a>
+                    <div th:include="question-type/types :: add_row(text='Add another travel cost', question=${question})" th:remove="tag"/>
                 </p>
             </div>
             <div class="form-group alignright inline">
@@ -820,7 +874,12 @@
                                 <input th:title="'Row '+${iteration.count}+' : estimated cost (£)'" type="number" th:name="${type +'-otherCost-' + question.id + '-' + otherCost.id}" class="form-control" th:id="${'cost-'+type+'-'+otherCost.id+'-otherCost'}" th:value="${#numbers.formatDecimal(otherCost.getCost(),0,0)}" th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"/>
                             </td>
                             <td th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                                <a class="delete-row" th:attr="data-cost-row=${otherCost.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{otherCost}(otherCost=${otherCost.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                <button type="submit"
+                                        name="remove_cost"
+                                        th:value="${otherCost.id}"
+                                        th:class="'buttonlink'"
+                                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+                                </button>
                             </td>
                         </tr>
                     </div>
@@ -828,7 +887,7 @@
                 </table>
 
                 <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                    <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another cost</a>
+                    <div th:include="question-type/types :: add_row(text='Add another cost', question=${question})" th:remove="tag"/>
                 </p>
             </div>
             <div class="form-group alignright inline">
@@ -908,13 +967,18 @@
                                     <input class="form-control width-medium" type="number" th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" th:name="${type +'-fundingAmount-' + question.id + '-' + otherFunding.id}"  th:id="${'cost-'+type+'-'+otherFunding.id+'-fundingAmount'}" th:value="${#numbers.formatDecimal(otherFunding.fundingAmount,0,0)}" />
                                 </td>
                                 <td th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                                    <a class="delete-row control" th:attr="data-cost-row=${otherFunding.id}" th:href="@{/application/{applicationId}/form/deletecost/{sectionId}/{otherFundingId}(otherFundingId=${otherFunding.id},sectionId=${currentSectionId},applicationId=${applicationId})}">Remove</a>
+                                    <button type="submit"
+                                            name="remove_cost"
+                                            th:value="${otherFunding.id}"
+                                            th:class="'buttonlink'"
+                                            th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                        <a th:href="@{/application/{applicationId}/form/addcost/{sectionId}/{id}(id=${question.id},sectionId=${currentSectionId},applicationId=${applicationId})}" class="add-another-row" data-clone-rows="0">Add another source of funding</a>
+                        <div th:include="question-type/types :: add_row(text='Add another source of funding', question=${question})" th:remove="tag"/>
                     </p>
                     </div>
                     <div class="form-group alignright inline">

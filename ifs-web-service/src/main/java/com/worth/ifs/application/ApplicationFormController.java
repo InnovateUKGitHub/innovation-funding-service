@@ -1,9 +1,11 @@
 package com.worth.ifs.application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.AjaxResult;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
@@ -13,12 +15,14 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -35,8 +39,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.HttpStatus.OK;
-
 /**
  * This controller will handle all requests that are related to the application form.
  */
@@ -44,6 +46,8 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/application/{applicationId}/form")
 public class ApplicationFormController extends AbstractApplicationController {
     private static final Log log = LogFactory.getLog(ApplicationFormController.class);
+    public static final String MARK_AS_COMPLETE = "mark_as_complete";
+    public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
     private boolean selectFirstSectionIfNoneCurrentlySelected = true;
 
     @Autowired
@@ -147,8 +151,10 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private String getRedirectUrl(HttpServletRequest request, Long applicationId){
         if(request.getParameter("assign_question") != null ||
-            request.getParameter("mark_as_incomplete") != null ||
-            request.getParameter("mark_as_complete") != null) {
+            request.getParameter(MARK_AS_INCOMPLETE) != null ||
+            request.getParameter("add_cost") != null ||
+            request.getParameter("remove_cost") != null ||
+            request.getParameter(MARK_AS_COMPLETE) != null) {
             // user did a action, just display the same page.
             log.info("redirect: "+ request.getRequestURI());
             return "redirect:"+ request.getRequestURI();
@@ -232,40 +238,34 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    @RequestMapping(value = "/deletecost/{sectionId}/{costId}")
-    public String deleteCost(Model model, @PathVariable("applicationId") final Long applicationId,
-                             @PathVariable("sectionId") final Long sectionId,
-                             @PathVariable("costId") final Long costId, HttpServletRequest request) {
+    @RequestMapping(value = "/add_cost/{questionId}")
+    public String addCostRow(@ModelAttribute("form") ApplicationForm form, Model model,
+                             @PathVariable("applicationId") final Long applicationId,
+                             @PathVariable("questionId") final Long questionId,
+                             HttpServletRequest request){
+        CostItem costItem = addCost(applicationId, questionId, request);
+        String type = costItem.getCostType().getType();
 
-        doDeleteCost(costId);
-        return "redirect:/application/" + applicationId + "/form" + "/section/" + sectionId;
+        Set<Long> markedAsComplete = new TreeSet<>();
+        model.addAttribute("markedAsComplete", markedAsComplete);
+        model.addAttribute("type", type);
+        model.addAttribute("question", questionService.getById(questionId));
+        model.addAttribute("materialCost", costItem);
+        return String.format("question-type/types :: %s_row", type);
     }
 
-    @RequestMapping(value = "/deletecost/{sectionId}/{costId}/{renderQuestionId}", params = "singleFragment=true", produces = "application/json")
-    @ResponseStatus(OK)
-    public void deleteCostWithFragmentResponse(Model model, @PathVariable("applicationId") final Long applicationId,
-                                          @PathVariable("sectionId") final Long sectionId,
-                                          @PathVariable("costId") final Long costId,
-                                          @PathVariable("renderQuestionId") final Long renderQuestionId,
-                                          HttpServletRequest request) {
-
-        doDeleteCost(costId);
+    @RequestMapping(value = "/remove_cost/{costId}")
+    public @ResponseBody String removeCostRow(@ModelAttribute("form") ApplicationForm form, Model model,
+                         @PathVariable("applicationId") final Long applicationId,
+                         @PathVariable("costId") final Long costId,
+                         HttpServletRequest request) throws JsonProcessingException {
+        log.error("Remove Cost row");
+//        costService.delete(costId);
+        AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
     }
 
-    private void doDeleteCost(@PathVariable("costId") Long costId) {
-        costService.delete(costId);
-    }
-
-    @RequestMapping(value = "/addcost/{sectionId}/{questionId}/{renderQuestionId}", params = "singleFragment=true")
-    public String addAnotherWithFragmentResponse(@Valid @ModelAttribute("form") ApplicationForm form, Model model,
-                                                 @PathVariable("applicationId") final Long applicationId,
-                                                 @PathVariable("sectionId") final Long sectionId,
-                                                 @PathVariable("questionId") final Long questionId,
-                                                 @PathVariable("renderQuestionId") final Long renderQuestionId,
-                                                 HttpServletRequest request) {
-        addCost(applicationId, questionId, request);
-        return renderSingleQuestionHtml(model, applicationId, sectionId, renderQuestionId, request, form);
-    }
 
     private String renderSingleQuestionHtml(Model model, Long applicationId, Long sectionId, Long renderQuestionId, HttpServletRequest request, ApplicationForm form) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
@@ -277,20 +277,12 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "single-question";
     }
 
-    @RequestMapping(value = "/addcost/{sectionId}/{questionId}")
-    public String addAnother(@ModelAttribute("form") ApplicationForm form, Model model,
-                             @PathVariable("applicationId") final Long applicationId,
-                             @PathVariable("sectionId") final Long sectionId,
-                             @PathVariable("questionId") final Long questionId,
-                             HttpServletRequest request) {
-        addCost(applicationId, questionId, request);
-        return "redirect:/application/" + applicationId + "/form" +  "/section/" + sectionId;
-    }
 
-    private void addCost(Long applicationId, Long questionId, HttpServletRequest request) {
+    private CostItem addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
-        financeService.addCost(applicationFinance.getId(), questionId);
+        return costService.add(applicationFinance.getId(), questionId, null);
+//        return financeService.addCost(applicationFinance.getId(), questionId);
     }
 
     private BindingResult saveApplicationForm(ApplicationForm form, Model model, Long userId,
@@ -390,8 +382,8 @@ public class ApplicationFormController extends AbstractApplicationController {
             return false;
         }
         boolean success = false;
-        if (params.containsKey("mark_as_complete")) {
-            Long questionId = Long.valueOf(request.getParameter("mark_as_complete"));
+        if (params.containsKey(MARK_AS_COMPLETE)) {
+            Long questionId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
 
             if(errors.containsKey(questionId) && !errors.get(questionId).isEmpty()){
                 List<String> fieldErrors = errors.get(questionId);
@@ -401,8 +393,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                 success= true;
             }
         }
-        if (params.containsKey("mark_as_incomplete")) {
-            Long questionId = Long.valueOf(request.getParameter("mark_as_incomplete"));
+        if (params.containsKey(MARK_AS_INCOMPLETE)) {
+            Long questionId = Long.valueOf(request.getParameter(MARK_AS_INCOMPLETE));
             questionService.markAsInComplete(questionId, applicationId, processRole.getId());
             success= true;
 

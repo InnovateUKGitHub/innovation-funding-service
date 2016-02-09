@@ -45,8 +45,29 @@ public class FinanceFormHandler {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
         storeFinancePosition(request, applicationFinanceResource.getId());
 
+
         List<CostItem> costItems = getCostItems(request);
-        return storeCostItems(costItems);
+        boolean storingResult = storeCostItems(costItems);
+
+        addRemoveCostRows(request, applicationId, userId, applicationFinanceResource.getId());
+
+        return storingResult;
+    }
+
+    private void addRemoveCostRows(HttpServletRequest request, Long applicationId, Long userId, Long applicationFinanceId) {
+        log.error(String.format("Got the Add / Remove Cost Param ????? " ));
+        Map<String, String[]> requestParams = request.getParameterMap();
+        if(requestParams.containsKey("add_cost")){
+            String addCostParam = request.getParameter("add_cost");
+            log.error(String.format("Got the Add Cost Param with id: %s", addCostParam ));
+            ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(applicationId, userId);
+            financeService.addCost(applicationFinance.getId(), Long.valueOf(addCostParam));
+        }
+        if(requestParams.containsKey("remove_cost")){
+            String removeCostParam = request.getParameter("remove_cost");
+            log.error(String.format("Got the REMOVE cost Param with id: %s", removeCostParam ));
+            costService.delete(Long.valueOf(removeCostParam));
+        }
     }
 
     private void storeFinancePosition(HttpServletRequest request, @NotNull Long applicationFinanceId) {
