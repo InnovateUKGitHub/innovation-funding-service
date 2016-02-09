@@ -4,8 +4,8 @@ import com.worth.ifs.application.finance.model.CostFormField;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.item.*;
-import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
@@ -43,6 +43,10 @@ public class FinanceFormHandler {
 
     public boolean handle(HttpServletRequest request) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
+        if (applicationFinanceResource == null){
+            applicationFinanceResource = financeService.addApplicationFinance(applicationId, userId);
+        }
+
         storeFinancePosition(request, applicationFinanceResource.getId());
 
         List<CostItem> costItems = getCostItems(request);
@@ -80,11 +84,11 @@ public class FinanceFormHandler {
     }
 
     private List<CostItem> getCostItems(HttpServletRequest request) {
-        List<CostField> costFields = costService.getCostFields();
+        List<CostFieldResource> costFields = costService.getCostFields();
         return mapRequestParametersToCostItems(request, costFields);
     }
 
-    private List<CostItem> mapRequestParametersToCostItems(HttpServletRequest request, List<CostField> costFields) {
+    private List<CostItem> mapRequestParametersToCostItems(HttpServletRequest request, List<CostFieldResource> costFields) {
         List<CostItem> costItems = new ArrayList<>();
         for(CostType costType : CostType.values()) {
             List<String> costTypeKeys = request.getParameterMap().keySet().stream().

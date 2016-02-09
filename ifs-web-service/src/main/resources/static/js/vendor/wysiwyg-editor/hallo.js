@@ -111,10 +111,6 @@
         if (!jQuery.parseHTML(this.element.html())) {
           this.element.html(this.options.placeholder);
           jQuery(this.element).addClass('inPlaceholderMode');
-          this.element.css({
-            'min-width': this.element.innerWidth(),
-            'min-height': this.element.innerHeight()
-          });
         }
         if (!this.bound) {
           this.element.on("focus", this, this._activated);
@@ -570,10 +566,10 @@
           return buttonset.append(buttonElement);
         };
         if (this.options.lists.ordered) {
-          buttonize("Ordered", "OL");
+          buttonize("Ordered", "ordered list");
         }
         if (this.options.lists.unordered) {
-          buttonize("Unordered", "UL");
+          buttonize("Unordered", "unordered list");
         }
         buttonset.hallobuttonset();
         return toolbar.append(buttonset);

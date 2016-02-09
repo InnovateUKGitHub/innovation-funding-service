@@ -11,7 +11,6 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/application/{id}/(id=${currentApplication.getId()})},currentApplication=${currentApplication}" th:remove="tag" />
-    <div th:include="fragments/elements :: notification" th:remove="tag" />
 
     <div class="page-title">
         <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
@@ -33,15 +32,15 @@
         </li>
       </ul>
     </div>
-
     <div th:each="organisationInviteResource, organisationStats : ${ organisationInvites }">
-
         <h2 class="heading-medium" th:if="${organisationStats.index == 0}" >
           <span th:remove="tag" th:text="${leadOrganisation.name}"/>
           <small>(Lead organisation)</small>
         </h2>
-        <h2 class="heading-medium"  th:unless="${organisationStats.index == 0}" th:text="${organisationInviteResource.organisationName}" />
-
+        <h2 class="heading-medium"  th:unless="${organisationStats.index == 0}">
+          <div th:remove="tag" th:text="${organisationInviteResource.organisationName}" />
+          <small th:unless="${organisationInviteResource.organisation}">(pending)</small>
+        </h2>
         <ul class="list-bullet">
             <li th:if="${organisationStats.index == 0}">
               <a th:href="${leadApplicant.email}" th:text="${leadApplicant.name}" />

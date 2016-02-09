@@ -18,8 +18,6 @@ public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryInteg
 
     private long questionId;
     private long applicationId;
-    private long assigneeId;
-    private long organisationId;
 
 
     @Autowired
@@ -35,18 +33,16 @@ public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryInteg
     public void setup(){
         questionId = 13L;
         applicationId = 1L;
-        assigneeId = 1L;
-        organisationId = 3L;
     }
 
     @Test
     public void test_findByQuestionIdAndApplicationIdAndAssigneeIdAndOrganisationId() {
-        List<QuestionStatus> questionStatuses = repository.findByQuestionIdAndApplicationIdAndAssigneeOrganisationId(questionId, applicationId, organisationId);
+        List<QuestionStatus> questionStatuses = repository.findByQuestionIdAndApplicationId(questionId, applicationId);
         assertEquals(1, questionStatuses.size());
     }
 
     public void test_findByApplicationIdAndAssigneeOrganisationId(){
-        List<QuestionStatus> questionStatuses = repository.findByApplicationIdAndAssigneeOrganisationId(applicationId, organisationId);
+        List<QuestionStatus> questionStatuses = repository.findByApplicationId(applicationId);
         assertEquals(13, questionStatuses.size());
     }
 }

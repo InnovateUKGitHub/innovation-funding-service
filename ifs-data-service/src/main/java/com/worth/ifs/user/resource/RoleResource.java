@@ -33,10 +33,6 @@ public class RoleResource {
         return processRoles;
     }
 
-    public void setProcessRoles(List<ProcessRole> processRoles) {
-        this.processRoles = simpleMap(processRoles, ProcessRole::getId);
-    }
-
     public Long getId() {
         return id;
     }
@@ -49,6 +45,21 @@ public class RoleResource {
         this.name = name;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setProcessRoles(List<Long> processRoles) {
+        this.processRoles = processRoles;
+    }
+
+    public List<User> getUsers() {
+        return this.users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 
     @Override
     public boolean equals(Object obj) {

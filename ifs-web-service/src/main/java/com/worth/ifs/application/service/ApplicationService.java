@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
@@ -20,5 +21,5 @@ public interface ApplicationService {
     void save(ApplicationResource application);
     Map<Long, Integer> getProgress(Long userId);
     int getAssignedQuestionsCount(Long applicantId, Long processRoleId);
-    ApplicationResource findByProcessRoleId(Long id);
+    RestResult<ApplicationResource> findByProcessRoleId(Long id);
 }

@@ -10,6 +10,7 @@ import java.util.List;
  */
 public interface ProcessRoleService {
     ProcessRole findProcessRole(Long userId, Long applicationId);
+    List<ProcessRole> findProcessRolesByApplicationId(Long applicationId);
     ListenableFuture<List<ProcessRole>> findAssignableProcessRoles(Long applicationId);
     ListenableFuture<ProcessRole> getById(Long id);
 }

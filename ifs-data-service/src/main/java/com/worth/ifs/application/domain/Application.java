@@ -160,4 +160,12 @@ public class Application {
         return Optional.empty();
     }
 
+    @JsonIgnore
+    public List<Invite> getInvites() {
+        return this.invites;
+    }
+
+    public void setInvites(List<Invite> invites) {
+        this.invites = invites;
+    }
 }

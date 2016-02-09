@@ -21,7 +21,7 @@ Verify the validation error for an invalid date (Year)
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'application details' question
     And the applicant inserts an invalid date "18-11-2015"
-    When the applicant should get a validation error for the date
+    Then the applicant should get a validation error for the date
     And the Year field is empty
     Then the applicant should get a validation error for the date
     And the applicant inserts "2016" in the Year field(valid date)
@@ -66,7 +66,7 @@ Verify the validation error for the duration field
     When the applicant inserts "-1" in the duration field
     And the applicant should get a validation error for the duration
     And the applicant leaves the duration field empty
-    Then the applicant should get a validation error for the duration
+    Then the applicant should get a validation error for the empty duration
     And the Applicant inserts 01 in the duration field
     And the Applicant should not see any more the error for the duration
 
@@ -100,7 +100,7 @@ the applicant inserts 01 in the day
 the applicant should not see the validation error any more
     sleep    1s
     Focus    css=.app-submit-btn
-    Wait Until Element Is Not Visible    css=#form-input-9 > div.form-group.error > div.validation-messages > span
+    Wait Until Element Is Not Visible    css=.error-message
 
 the applicant inserts "13" in the month field
     Clear Element Text    id=application_details-startdate_month
@@ -111,7 +111,7 @@ the month field is empty
 
 the applicant inserts "01" in the month field
     Clear Element Text    id=application_details-startdate_month
-    Input Text    id=application_details-startdate_month    01
+    Input Text    id=application_details-startdate_month    09
 
 the applicant inserts an invalid date "18-11-2015"
     Clear Element Text    id=application_details-startdate_day
@@ -131,7 +131,9 @@ the Year field is empty
 the applicant should get a validation error "Please enter a valid value"
     #Wait Until Element Is Visible    css=#form-input-9 > div.form-group.error > div.validation-messages > span
     #Element Should Contain    css=#form-input-9 > div.form-group.error > div.validation-messages > span    Please enter a valid value.
-    Wait Until Element Is Visible    css=#form-input-9 > div.form-group.error > label > span
+    Wait Until Element Is Visible    css=.error-message
+    Page Should Contain    This field should be a number
+    Page Should Contain    Please enter a valid date
 
 the applicant inserts "-1" in the day field
     Clear Element Text    id=application_details-startdate_day
@@ -160,7 +162,8 @@ the applicant inserts "0" in the duration field
 the applicant should get a validation error for the duration
     Focus    css=.app-submit-btn
     Sleep    1s
-    Wait Until Element Is Visible    css=#form-input-9 > div:nth-child(2) > div.form-group.error > label > span
+    Wait Until Element Is Visible    css=.error-message
+    Page Should Contain    Please enter a valid duration
 
 the applicant inserts "-1" in the duration field
     Clear Element Text    id=application_details-duration
@@ -176,14 +179,20 @@ the Applicant inserts 01 in the duration field
 The Applicant should not see any more the error for the duration
     Focus    css=.app-submit-btn
     sleep    2s
-    Wait Until Element Is Not Visible    css=#form-input-9 > div:nth-child(2) > div.form-group.error > label > span
+    Wait Until Element Is Not Visible    css=.error-message
 
 the applicant clears the application title field
     Clear Element Text    id=application_details-title
 
 The applicant should get a validation error for the title field
-    Wait Until Element Is Visible    css=#form-input-9 > .form-group.error > div.validation-messages
+    Wait Until Element Is Visible    css=.error-message
+    page should contain    Please enter the full title of the project.
 
 the applicant should get a validation error for the date
     Focus    css=.app-submit-btn
-    Wait Until Element Is Visible    css=#form-input-9 > .form-group.error > div.validation-messages
+    Wait Until Element Is Visible    css=.error-message
+
+the applicant should get a validation error for the empty duration
+    Wait Until Element Is Visible    css=.error-message
+    Page Should Contain    This field should be a number
+    Page Should Contain    Please enter a valid duration

@@ -1,7 +1,6 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import org.springframework.util.concurrent.ListenableFuture;
 
@@ -28,5 +27,5 @@ public interface QuestionService {
     public Question getNextQuestionBySection(Long sectionId);
     public Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId);
     public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId);
-    public List<QuestionStatus> getByQuestionIds(List<Long> questionIds, Long applicationId, Long organisationId);
+    public Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId);
 }

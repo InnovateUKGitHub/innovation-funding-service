@@ -18,13 +18,13 @@
 
         <div class="grid-row">
             <div class="column-third">
-                <p><span class="heading-medium">6</span> Completed</p>
+                <p><span class="heading-medium">6</span> Submitted</p>
             </div>
             <div class="column-third">
-                <p><span class="heading-medium">6</span> In progress</p>
+                <p><span class="heading-medium">6</span> In progress <small>(50% completed)</small></p>
             </div>
             <div class="column-third">
-                <p><span class="heading-medium">24</span> Started</p>
+                <p><span class="heading-medium">24</span> Open</p>
             </div>
         </div>
     </section>
@@ -108,6 +108,26 @@
                         </select>
                     </div>
 
+                    <div th:if="${filterTitle == 'assessors'}" th:remove="tag">
+                        <div class="column-third">
+                            <label class="form-label" for="filterType">Type</label>
+                            <select class="form-control" id="filterType" name="filterType">
+                                
+                                <option th:if="${param.filterType != null}" th:remove="tag">
+                                    <option th:text="${param.filterType[0]}" selected="selected">TEST</option>
+                                </option>
+                                
+                                <option th:if="${param.filterType == null}" th:remove="tag">
+                                    <option selected="selected">---</option>
+                                </option>
+
+                                <option value="Industry">Industry</option>
+                                <option value="Academic">Academic</option>
+
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="column-third">
                         <label class="form-label" for="filterSearch">Search</label>
                         <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
@@ -117,7 +137,7 @@
                         <input type="hidden" id="title" name="title" th:value="${param.title[0]}" />
                     </div>
 
-                    <div class="column-third alignright">
+                    <div class="column-one alignright-button">
                         <button class="button">Filter</button>
                     </div>
                 </div>
@@ -519,7 +539,7 @@
                     <th scope="col" class="full-view hide-assigned">% spread</th>
                     <th scope="col" class="full-view">On scope</th>
                     <th scope="col" class="full-view">Recommended</th>
-                    <th scope="col" id="action">Action</th>
+                    <th scope="col" id="action" th:text="${(applicationAssign != null ? 'Allocate applications' : 'Allocate assessors')}">ALLOCATE TITLE</th>
                 </tr>
             </thead>
             <tbody>
@@ -539,7 +559,7 @@
                     <td class="full-view">2</td>
                     <td>
                         <div th:if="${applicationAssign == null}" th:remove="tag">
-                             <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Machine learning in robots' : '/prototypes/1382-application-allocate-assessors?title=Machine learning in robots')}">Allocate assessors</a>
+                             <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Machine learning in robots' : '/prototypes/1382-application-allocate-assessors?title=Machine learning in robots')}">Allocate</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
                              <a href="#" class="assign-application">Assign</a>
@@ -563,7 +583,7 @@
                     <td class="full-view">1</td>
                     <td>
                         <div th:if="${applicationAssign == null}" th:remove="tag">
-                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Robots that learn' : '/prototypes/1382-application-allocate-assessors?title=Robots that learn')}">Allocate assessors</a>
+                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Robots that learn' : '/prototypes/1382-application-allocate-assessors?title=Robots that learn')}">Allocate</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
                              <a href="#" class="assign-application">Assign</a>
@@ -587,7 +607,7 @@
                     <td class="full-view">-</td>
                     <td>
                         <div th:if="${applicationAssign == null}" th:remove="tag">
-                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Ai in learning' : '/prototypes/1382-application-allocate-assessors?title=Ai in learning')}">Allocate assessors</a>
+                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Ai in learning' : '/prototypes/1382-application-allocate-assessors?title=Ai in learning')}">Allocate</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
                              <a href="#" class="assign-application">Assign</a>
@@ -611,7 +631,7 @@
                     <td class="full-view">-</td>
                     <td>
                         <div th:if="${applicationAssign == null}" th:remove="tag">
-                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Progressive machines' : '/prototypes/1382-application-allocate-assessors?title=Progressive machines')}">Allocate assessors</a>
+                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Progressive machines' : '/prototypes/1382-application-allocate-assessors?title=Progressive machines')}">Allocate</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
                              <a href="#" class="assign-application">Assign</a>
@@ -635,7 +655,7 @@
                     <td class="full-view">-</td>
                     <td>
                         <div th:if="${applicationAssign == null}" th:remove="tag">
-                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate assessors</a>
+                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
                              <a href="#" class="assign-application">Assign</a>
@@ -659,7 +679,7 @@
                     <td class="full-view">-</td>
                     <td>
                         <div th:if="${applicationAssign == null}" th:remove="tag">
-                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate assessors</a>
+                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
                              <a href="#" class="assign-application">Assign</a>
@@ -683,7 +703,7 @@
                     <td class="full-view">-</td>
                     <td>
                         <div th:if="${applicationAssign == null}" th:remove="tag">
-                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate assessors</a>
+                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
                              <a href="#" class="assign-application">Assign</a>
@@ -707,7 +727,7 @@
                     <td class="full-view">-</td>
                     <td>
                         <div th:if="${applicationAssign == null}" th:remove="tag">
-                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate assessors</a>
+                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
                              <a href="#" class="assign-application">Assign</a>
@@ -731,7 +751,7 @@
                     <td class="full-view">-</td>
                     <td>
                         <div th:if="${applicationAssign == null}" th:remove="tag">
-                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate assessors</a>
+                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
                              <a href="#" class="assign-application">Assign</a>
@@ -755,7 +775,7 @@
                     <td class="full-view">-</td>
                     <td>
                         <div th:if="${applicationAssign == null}" th:remove="tag">
-                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate assessors</a>
+                            <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate</a>
                         </div>
                         <div th:if="${applicationAssign != null}" th:remove="tag">
                              <a href="#" class="assign-application">Assign</a>
@@ -878,7 +898,7 @@
                 <th scope="col">Assessment category (innovation area)</th>
                 <th scope="col">Assessors</th>
                 <th scope="col">Details</th>
-                <th scope="col" class="hide-assigned" id="action">Action</th>
+                <th scope="col" class="full-view hide-assigned" id="action">Action</th>
                 <th scope="col" class="full-view">Accepted</th>
                 <th scope="col" class="full-view">Started</th>
                 <th scope="col" class="full-view">Completed</th>
@@ -896,7 +916,7 @@
                     <td>Example area</td>
                     <td>5</td>
                     <td><a href="#" class="view-application">View</a></td>
-                    <td class="hide-assigned"></td>
+                    <td class="full-view hide-assigned"></td>
                     <td class="full-view"><span class="yes">yes</span></td>
                     <td class="full-view"><span class="yes">yes</span></td>
                     <td class="full-view"><span class="yes">yes</span></td>
@@ -913,7 +933,7 @@
                     <td>Example area</td>
                     <td>5</td>
                     <td><a href="#" class="view-application">View</a></td>
-                    <td class="hide-assigned"></td>
+                    <td class="full-view hide-assigned"></td>
                     <td class="full-view"></td>
                     <td class="full-view"></td>
                     <td class="full-view"></td>
@@ -930,7 +950,7 @@
                     <td>Example area</td>
                     <td>5</td>
                     <td><a href="#" class="view-application">View</a></td>
-                    <td class="hide-assigned"></td>
+                    <td class="full-view hide-assigned"></td>
                     <td class="full-view"><span class="yes">yes</span></td>
                     <td class="full-view"><span class="yes">yes</span></td>
                     <td class="full-view"></td>
@@ -961,7 +981,7 @@
                     <th class="full-view">Accepted</th>
                     <th class="full-view">Started</th>
                     <th class="full-view">Completed</th>
-                    <th class="alignright" scope="col">Action</th>
+                    <th class="alignright" scope="col">Allocate Assessors</th>
                 </tr>
             </thead>
             <tbody>

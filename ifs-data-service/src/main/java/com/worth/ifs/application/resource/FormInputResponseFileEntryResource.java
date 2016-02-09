@@ -34,6 +34,14 @@ public class FormInputResponseFileEntryResource {
         return compoundId;
     }
 
+    public void setFileEntryResource(FileEntryResource fileEntryResource) {
+        this.fileEntryResource = fileEntryResource;
+    }
+
+    public void setCompoundId(FormInputResponseFileEntryId compoundId) {
+        this.compoundId = compoundId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

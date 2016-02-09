@@ -6,6 +6,10 @@
 	@include grid-column( 3/12 );
 }
 
+.column-one{
+	@include grid-column( 12/12 );
+}
+
 .no-pad{
 	padding: 0;
 

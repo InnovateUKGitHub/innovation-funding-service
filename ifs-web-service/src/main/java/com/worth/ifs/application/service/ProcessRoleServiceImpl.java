@@ -12,6 +12,7 @@ import java.util.List;
  * This class contains methods to retrieve and store {@link ProcessRole} related data,
  * through the RestService {@link UserRestService}.
  */
+// TODO DW - INFUND-1555 - return RestResults from this Service
 @Service
 public class ProcessRoleServiceImpl implements ProcessRoleService {
     @Autowired
@@ -19,7 +20,12 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
 
     @Override
     public ProcessRole findProcessRole(Long userId, Long applicationId) {
-        return userRestService.findProcessRole(userId, applicationId);
+        return userRestService.findProcessRole(userId, applicationId).getSuccessObject();
+    }
+
+    @Override
+    public List<ProcessRole> findProcessRolesByApplicationId(Long applicationId) {
+        return userRestService.findProcessRole(applicationId).getSuccessObject();
     }
 
     @Override

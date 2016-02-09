@@ -2,6 +2,7 @@ package com.worth.ifs.finance.service;
 
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.resource.CostFieldResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class CostFieldRestServiceImpl extends BaseRestService implements CostFie
     @Value("${ifs.data.service.rest.costfield}")
     String costFieldRestURL;
 
-    public List<CostField> getCostFields() {
-        return asList(restGet(costFieldRestURL + "/findAll/", CostField[].class));
+    public List<CostFieldResource> getCostFields() {
+        return asList(restGet(costFieldRestURL + "/findAll/", CostFieldResource[].class));
     }
 }

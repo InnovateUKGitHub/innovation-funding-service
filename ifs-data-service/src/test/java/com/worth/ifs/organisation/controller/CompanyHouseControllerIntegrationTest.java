@@ -1,6 +1,7 @@
 package com.worth.ifs.organisation.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import org.hamcrest.text.IsEqualIgnoringCase;
 import org.junit.Test;
@@ -23,14 +24,16 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
 
     @Test
     public void testSearchCompanyHouseName() throws Exception {
-        List<CompanyHouseBusiness> companies = controller.searchCompanyHouse("Batman Robin");
-        assertEquals(1, companies.size());
+        RestResult<List<CompanyHouseBusiness>> companies = controller.searchCompanyHouse("Batman Robin");
+        assertTrue(companies.isSuccess());
+        assertEquals(1, companies.getSuccessObject().size());
     }
     @Test
     public void testSearchCompanyHouseNumber() throws Exception {
-        List<CompanyHouseBusiness> companies = controller.searchCompanyHouse(COMPANY_ID);
-        assertEquals(1, companies.size());
-        CompanyHouseBusiness company = companies.get(0);
+        RestResult<List<CompanyHouseBusiness>> companies = controller.searchCompanyHouse(COMPANY_ID);
+        assertTrue(companies.isSuccess());
+        assertEquals(1, companies.getSuccessObject().size());
+        CompanyHouseBusiness company = companies.getSuccessObject().get(0);
 
         assertNotNull(company);
         assertEquals(COMPANY_NAME, company.getName());
@@ -45,7 +48,10 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
 
     @Test
     public void testGetCompanyHouse() throws Exception {
-        CompanyHouseBusiness company = controller.getCompanyHouse(COMPANY_ID);
+        RestResult<CompanyHouseBusiness> companyResult = controller.getCompanyHouse(COMPANY_ID);
+        assertTrue(companyResult.isSuccess());
+        CompanyHouseBusiness company = companyResult.getSuccessObject();
+
         assertNotNull(company);
         assertEquals(COMPANY_NAME, company.getName());
         assertEquals(COMPANY_ID, company.getCompanyNumber());
@@ -59,7 +65,7 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
 
     @Test
     public void testGetCompanyHouseNotExisting() throws Exception {
-        CompanyHouseBusiness company = controller.getCompanyHouse(String.valueOf(Integer.MAX_VALUE));
-        assertNull(company);
+        RestResult<CompanyHouseBusiness> company = controller.getCompanyHouse(String.valueOf(Integer.MAX_VALUE));
+        assertTrue(company.isFailure());
     }
 }

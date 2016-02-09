@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.springframework.util.concurrent.ListenableFuture;
 
@@ -20,5 +21,5 @@ public interface ApplicationRestService{
     void updateApplicationStatus(Long applicationId, Long statusId);
     ListenableFuture<Double> getCompleteQuestionsPercentage(Long applicationId);
     Integer getAssignedQuestionsCount(Long applicationId, Long assigneeId);
-    ApplicationResource findByProcessRoleId(Long id);
+    RestResult<ApplicationResource> findByProcessRoleId(Long id);
 }

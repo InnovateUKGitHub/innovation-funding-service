@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -34,14 +36,20 @@ public class QuestionStatusController {
 
     @RequestMapping("/findByQuestionAndApplicationAndOrganisation/{questionId}/{applicationId}/{organisationId}")
     private List<QuestionStatusResource> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId) {
-        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeOrganisationId(questionId, applicationId, organisationId);
-        return simpleMap(questionStatuses, questionStatusMapper :: mapQuestionStatusToPopulatedResource);
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
+        return simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource);
+    }
+
+    @RequestMapping(value = "/findByQuestionIdsAndApplicationIdAndOrganisationId/{questionIds}/{applicationId}/{organisationId}")
+    private List<QuestionStatusResource> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(@PathVariable Long[] questionIds, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdIsInAndApplicationId(Arrays.asList(questionIds), applicationId);
+        return simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource);
     }
 
     @RequestMapping("/findByApplicationAndOrganisation/{applicationId}/{organisationId}")
     private List<QuestionStatusResource> findByApplicationAndOrganisation(@PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
-        List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndAssigneeOrganisationId(applicationId, organisationId);
-        return simpleMap(questionStatuses, questionStatusMapper :: mapQuestionStatusToPopulatedResource);
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationId(applicationId);
+        return simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource);
     }
 
     @RequestMapping("/{id}")
@@ -49,5 +57,9 @@ public class QuestionStatusController {
         return questionStatusRepository.findOne(id);
     }
 
-
+    private List<QuestionStatus> filterByOrganisationIdIfHasMultipleStatuses(final List<QuestionStatus> questionStatuses, Long organisationId) {
+        return questionStatuses.stream().
+                filter(qs -> (!qs.getQuestion().hasMultipleStatuses() || (qs.getAssignee() != null && qs.getAssignee().getOrganisation().getId().equals(organisationId))))
+                .collect(Collectors.toList());
+    }
 }

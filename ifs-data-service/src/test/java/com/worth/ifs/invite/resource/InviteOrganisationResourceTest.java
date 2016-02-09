@@ -30,7 +30,7 @@ public class InviteOrganisationResourceTest {
         setInviteOrganisationResource.setId(id);
         setInviteOrganisationResource.setInviteResources(invites);
         setInviteOrganisationResource.setOrganisationName(name);
-        setInviteOrganisationResource.setOrganisationId(organisation.getId());
+        setInviteOrganisationResource.setOrganisation(organisation.getId());
 
         constructedInviteOrganisationResource = new InviteOrganisationResource(id, name, organisation, invites);
     }
@@ -40,7 +40,7 @@ public class InviteOrganisationResourceTest {
         Assert.assertEquals(id, setInviteOrganisationResource.getId());
         Assert.assertEquals(invites, setInviteOrganisationResource.getInviteResources());
         Assert.assertEquals(name, setInviteOrganisationResource.getOrganisationName());
-        Assert.assertEquals(organisation.getId(), setInviteOrganisationResource.getOrganisationId());
+        Assert.assertEquals(organisation.getId(), setInviteOrganisationResource.getOrganisation());
     }
 
     @Test
@@ -48,6 +48,6 @@ public class InviteOrganisationResourceTest {
         Assert.assertEquals(id, constructedInviteOrganisationResource.getId());
         Assert.assertEquals(invites, constructedInviteOrganisationResource.getInviteResources());
         Assert.assertEquals(name, constructedInviteOrganisationResource.getOrganisationName());
-        Assert.assertEquals(organisation.getId(), constructedInviteOrganisationResource.getOrganisationId());
+        Assert.assertEquals(organisation.getId(), constructedInviteOrganisationResource.getOrganisation());
     }
 }

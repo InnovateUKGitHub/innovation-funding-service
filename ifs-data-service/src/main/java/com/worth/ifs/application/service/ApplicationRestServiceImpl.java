@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
@@ -115,8 +116,8 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
 
     @Override
-    public ApplicationResource findByProcessRoleId(Long id) {
-        return restGet(processRoleRestURL + "/" + id + "/application", ApplicationResource.class);
+    public RestResult<ApplicationResource> findByProcessRoleId(Long id) {
+        return getWithRestResult(processRoleRestURL + "/" + id + "/application", ApplicationResource.class);
     }
 
 

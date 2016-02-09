@@ -218,8 +218,8 @@
 
 	</div>
 
-	<h2 class="heading-medium no-margin-bottom">Application details</h2>
-	<p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
+	<h2 th:class="(${param.internal != null} ? 'heading-medium' : 'heading-medium no-margin-bottom')">Application details</h2>
+	<p class="form-hint" th:unless="${param.internal != null}">Assessors do not provide scores on these sections of the application.</p>
 
 	<div th:include="prototypes/fragments/applicant-view :: prototype-application-details-panel" th:remove="tag" />
 
@@ -267,8 +267,8 @@
 		</li>
 	</ul>
 	
-	<h2 class="heading-medium no-margin-bottom">Application questions</h2>
-	<p class="form-hint">Each of these questions has been assessed by several independent assessors, who have provided a score out of 10 and written feedback.</p>
+	<h2 th:class="(${param.internal != null} ? 'heading-medium' : 'heading-medium no-margin-bottom')">Application questions</h2>
+	<p class="form-hint" th:unless="${param.internal != null}">Each of these questions has been assessed by several independent assessors, who have provided a score out of 10 and written feedback.</p>
 	<ul class="list-overview">
 		<li class="section-status">
 			<div class="grid-row">

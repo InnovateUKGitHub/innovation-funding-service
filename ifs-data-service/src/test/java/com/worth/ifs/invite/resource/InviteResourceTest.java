@@ -5,8 +5,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class InviteResourceTest {
     InviteResource setInviteResource;
     InviteResource constructedInviteResource;
@@ -33,9 +31,9 @@ public class InviteResourceTest {
         setInviteResource.setId(inviteId);
         setInviteResource.setName(name);
         setInviteResource.setEmail(email);
-        setInviteResource.setApplicationId(applicationId);
+        setInviteResource.setApplication(applicationId);
         setInviteResource.setHash(hash);
-        setInviteResource.setInviteOrganisationId(inviteOrganisationId);
+        setInviteResource.setInviteOrganisation(inviteOrganisationId);
         setInviteResource.setStatus(status);
 
         constructedInviteResource = new InviteResource(inviteId, name, email, applicationId, inviteOrganisationId, hash, status);
@@ -46,9 +44,9 @@ public class InviteResourceTest {
         Assert.assertEquals(inviteId, setInviteResource.getId());
         Assert.assertEquals(name, setInviteResource.getName());
         Assert.assertEquals(email, setInviteResource.getEmail());
-        Assert.assertEquals(applicationId, setInviteResource.getApplicationId());
+        Assert.assertEquals(applicationId, setInviteResource.getApplication());
         Assert.assertEquals(hash, setInviteResource.getHash());
-        Assert.assertEquals((Long)inviteOrganisationId, setInviteResource.getInviteOrganisationId());
+        Assert.assertEquals((Long)inviteOrganisationId, setInviteResource.getInviteOrganisation());
         Assert.assertEquals(status, setInviteResource.getStatus());
     }
 
@@ -57,9 +55,9 @@ public class InviteResourceTest {
         Assert.assertEquals(inviteId, constructedInviteResource.getId());
         Assert.assertEquals(name, constructedInviteResource.getName());
         Assert.assertEquals(email, constructedInviteResource.getEmail());
-        Assert.assertEquals(applicationId, constructedInviteResource.getApplicationId());
+        Assert.assertEquals(applicationId, constructedInviteResource.getApplication());
         Assert.assertEquals(hash, constructedInviteResource.getHash());
-        Assert.assertEquals((Long)inviteOrganisationId, constructedInviteResource.getInviteOrganisationId());
+        Assert.assertEquals((Long)inviteOrganisationId, constructedInviteResource.getInviteOrganisation());
         Assert.assertEquals(status, constructedInviteResource.getStatus());
     }
 
