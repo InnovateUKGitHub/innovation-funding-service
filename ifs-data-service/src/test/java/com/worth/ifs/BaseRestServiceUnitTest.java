@@ -8,6 +8,7 @@ import org.springframework.http.*;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
@@ -30,6 +31,9 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
     @Mock
     protected RestTemplate mockRestTemplate;
 
+    @Mock
+    protected AsyncRestTemplate mockAsyncRestTemplate;
+
     protected ServiceType service;
 
     protected abstract ServiceType registerRestServiceUnderTest();
@@ -44,6 +48,7 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         service = registerRestServiceUnderTest();
         service.setDataRestServiceUrl(dataServicesUrl);
         service.setRestTemplateSupplier(() -> mockRestTemplate);
+        service.setAsyncRestTemplate(() -> mockAsyncRestTemplate);
 
         SecurityContextImpl securityContext = new SecurityContextImpl();
         securityContext.setAuthentication(new TestingAuthenticationToken("A_PRINCIPAL", VALID_AUTH_TOKEN));

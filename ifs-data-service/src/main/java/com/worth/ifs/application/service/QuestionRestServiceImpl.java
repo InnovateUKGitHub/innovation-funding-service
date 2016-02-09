@@ -4,11 +4,14 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.worth.ifs.application.service.ListenableFutures.adapt;
+import static java.util.Arrays.asList;
 
 /**
  * QuestionRestServiceImpl is a utility for CRUD operations on {@link Question}.
@@ -37,7 +40,7 @@ public class QuestionRestServiceImpl extends BaseRestService implements  Questio
 
     @Override
     public List<Question> findByCompetition(Long competitionId) {
-        return Arrays.asList(restGet(questionRestURL + "/findByCompetition/" + competitionId, Question[].class));
+        return asList(restGet(questionRestURL + "/findByCompetition/" + competitionId, Question[].class));
     }
 
     @Override
@@ -46,8 +49,8 @@ public class QuestionRestServiceImpl extends BaseRestService implements  Questio
     }
 
     @Override
-    public Set<Long> getMarkedAsComplete(Long applicationId, Long organisationId) {
-        return new HashSet(Arrays.asList(restGet(questionRestURL + "/getMarkedAsComplete/" + applicationId + "/" + organisationId, Long[].class)));
+    public ListenableFuture<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
+        return adapt(restGetAsync(questionRestURL + "/getMarkedAsComplete/" + applicationId + "/" + organisationId, Long[].class), re -> new HashSet<>(asList(re.getBody())));
     }
 
     @Override

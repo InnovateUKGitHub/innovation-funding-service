@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worth.ifs.application.service.ListenableFutures;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorEnvelope;
 import com.worth.ifs.commons.rest.RestResult;
@@ -11,6 +12,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,18 +30,17 @@ import static com.worth.ifs.util.Either.right;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpMethod.*;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 /**
  * BaseRestService provides a base for all Service classes.
  */
 public abstract class BaseRestService {
-    private final Log log = LogFactory.getLog(getClass());
+    private final static Log LOG = LogFactory.getLog(BaseRestService.class);
 
     private Supplier<RestTemplate> restTemplateSupplier = RestTemplate::new;
+    private Supplier<AsyncRestTemplate> asyncRestTemplateSupplier = AsyncRestTemplate::new;
 
     private String dataRestServiceURL;
 
@@ -53,6 +56,34 @@ public abstract class BaseRestService {
     public void setRestTemplateSupplier(Supplier<RestTemplate> restTemplateSupplier) {
         this.restTemplateSupplier = restTemplateSupplier;
     }
+
+
+    public void setAsyncRestTemplate(Supplier<AsyncRestTemplate> asyncRestTemplateSupplier) {
+        this.asyncRestTemplateSupplier = asyncRestTemplateSupplier;
+    }
+
+    public <T> ListenableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz){
+         return withEmptyCallback(getAsyncRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), clazz));
+    }
+
+    private static final <T> ListenableFuture<ResponseEntity<T>> withEmptyCallback(ListenableFuture<ResponseEntity<T>> toAddTo){
+        // If we do not add a callback then the behaviour of calling get on the future becomes serial instead of parallel.
+        // I.e. the future will not start execution until get is called. However if an empty callback is added the future
+        // will start execution immediately (or as soon as a thread is available) and we can then call get.
+        toAddTo.addCallback(new ListenableFutureCallback<ResponseEntity<T>>() {
+            @Override
+            public void onFailure(final Throwable ex) {
+                LOG.error("Failure in the empty callback: " + ex);
+            }
+
+            @Override
+            public void onSuccess(final ResponseEntity<T> result) {
+                // Do nothing
+            }
+        });
+        return toAddTo;
+    }
+
 
     /**
      * restGet is a generic method that performs a RESTful GET request.
@@ -75,6 +106,10 @@ public abstract class BaseRestService {
         return exchangeWithRestResult(path, GET, returnType);
     }
 
+    protected <T> ListenableFuture<RestResult<T>> getWithRestResultAsyc(String path, Class<T> returnType) {
+        return exchangeWithRestResultAsync(path, GET, returnType);
+    }
+
     /**
      * restGet is a generic method that performs a RESTful GET request.
      *
@@ -84,12 +119,12 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
-        log.debug("restGetEntity: "+path);
+        LOG.debug("restGetEntity: "+path);
         return getRestTemplate().exchange(getDataRestServiceURL() + path, GET, jsonEntity(null), c);
     }
 
     protected  <T> ResponseEntity<T> restGet(String path, ParameterizedTypeReference<T> returnType){
-        log.debug("restGet: "+path);
+        LOG.debug("restGet: "+path);
         return getRestTemplate().exchange(getDataRestServiceURL() + path, GET, jsonEntity(null), returnType);
     }
 
@@ -103,12 +138,12 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> T restPost(String path, Object postEntity, Class<T> c) {
-        log.debug("restPostWithEntity: "+path);
+        LOG.debug("restPostWithEntity: "+path);
         return restPostWithEntity(path, postEntity, c).getBody();
     }
 
     protected void restPut(String path) {
-        log.debug("restPutEntity: "+path);
+        LOG.debug("restPutEntity: "+path);
         restPutEntity(path, Void.class);
     }
 
@@ -152,6 +187,10 @@ public abstract class BaseRestService {
         return exchangeWithRestResult(path, method, returnType, OK);
     }
 
+    private <T> ListenableFuture<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, Class<T> returnType) {
+        return exchangeWithRestResultAsync(path, method, returnType, OK);
+    }
+
     private <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, Class<T> returnType) {
         return exchangeObjectWithRestResult(path, method, objectToSend, returnType, OK);
     }
@@ -168,9 +207,15 @@ public abstract class BaseRestService {
         return exchangeWithRestResult(() -> getRestTemplate().exchange(getDataRestServiceURL() + path, method, jsonEntity(null), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
 
+    private <T> ListenableFuture<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        return exchangeWithRestResultAsync(() -> getAsyncRestTemplate().exchange(getDataRestServiceURL() + path, method, jsonEntity(null), returnType), expectedSuccessCode, otherExpectedStatusCodes);
+    }
+
     private <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         return exchangeWithRestResult(() -> getRestTemplate().exchange(getDataRestServiceURL() + path, method, jsonEntity(objectToSend), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
+
+
 
     private <T> RestResult<T> exchangeWithRestResult(Supplier<ResponseEntity<T>> exchangeFn, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         try {
@@ -185,10 +230,32 @@ public abstract class BaseRestService {
         } catch (HttpStatusCodeException e) {
 
             return fromJson(e.getResponseBodyAsString(), RestErrorEnvelope.class).mapLeftOrRight(
-                    failure -> RestResult.<T> restFailure(internalServerErrorError("Unable to process JSON response as type " + RestErrorEnvelope.class.getSimpleName())),
+                    failure -> RestResult.<T>restFailure(internalServerErrorError("Unable to process JSON response as type " + RestErrorEnvelope.class.getSimpleName())),
                     success -> RestResult.<T> restFailure(success.getErrors(), e.getStatusCode())
             );
         }
+    }
+
+    private <T> ListenableFuture<RestResult<T>> exchangeWithRestResultAsync(Supplier<ListenableFuture<ResponseEntity<T>>> exchangeFn, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        ListenableFuture<ResponseEntity<T>> responseEntityListenableFuture = withEmptyCallback(exchangeFn.get());
+        ListenableFuture<RestResult<T>> adapt = ListenableFutures.adapt(responseEntityListenableFuture, response -> {
+            try {
+                List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
+
+                if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
+                    return RestResult.<T>restSuccess(response.getBody(), response.getStatusCode());
+                } else {
+                    return RestResult.<T>restFailure(new Error(INTERNAL_SERVER_ERROR, "Unexpected status code " + response.getStatusCode(), INTERNAL_SERVER_ERROR));
+                }
+            } catch (HttpStatusCodeException e) {
+
+                return fromJson(e.getResponseBodyAsString(), RestErrorEnvelope.class).mapLeftOrRight(
+                        failure -> RestResult.<T>restFailure(internalServerErrorError("Unable to process JSON response as type " + RestErrorEnvelope.class.getSimpleName())),
+                        success -> RestResult.<T>restFailure(success.getErrors(), e.getStatusCode())
+                );
+            }
+        });
+        return adapt;
     }
 
     private <T> Either<Void, T> fromJson(String json, Class<T> clazz) {
@@ -219,7 +286,6 @@ public abstract class BaseRestService {
     protected void restDelete(String path) {
         getRestTemplate().exchange(getDataRestServiceURL() + path, DELETE, jsonEntity(null), Void.class);
     }
-
 
     /**
      * restPost is a generic method that performs a RESTful POST request.
@@ -265,6 +331,10 @@ public abstract class BaseRestService {
 
     protected RestTemplate getRestTemplate() {
         return restTemplateSupplier.get();
+    }
+
+    protected AsyncRestTemplate getAsyncRestTemplate() {
+        return asyncRestTemplateSupplier.get();
     }
 }
 

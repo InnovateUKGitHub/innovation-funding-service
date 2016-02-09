@@ -6,6 +6,7 @@ import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
 import java.util.Map;
@@ -55,13 +56,13 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     }
 
     @Override
-    public RestResult<Section> getPreviousSection(Long sectionId) {
-        return getWithRestResult(sectionRestURL + "/getPreviousSection/" + sectionId, Section.class);
+    public ListenableFuture<RestResult<Section>> getPreviousSection(Long sectionId) {
+        return getWithRestResultAsyc(sectionRestURL + "/getPreviousSection/" + sectionId, Section.class);
     }
 
     @Override
-    public RestResult<Section> getNextSection(Long sectionId) {
-        return getWithRestResult(sectionRestURL + "/getNextSection/" + sectionId, Section.class);
+    public ListenableFuture<RestResult<Section>> getNextSection(Long sectionId) {
+        return getWithRestResultAsyc(sectionRestURL + "/getNextSection/" + sectionId, Section.class);
     }
 
     @Override
