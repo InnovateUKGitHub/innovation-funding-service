@@ -237,8 +237,7 @@ public abstract class BaseRestService {
     }
 
     private <T> ListenableFuture<RestResult<T>> exchangeWithRestResultAsync(Supplier<ListenableFuture<ResponseEntity<T>>> exchangeFn, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-
-            ListenableFuture<ResponseEntity<T>> responseEntityListenableFuture = exchangeFn.get();
+        ListenableFuture<ResponseEntity<T>> responseEntityListenableFuture = withEmptyCallback(exchangeFn.get());
         ListenableFuture<RestResult<T>> adapt = ListenableFutures.adapt(responseEntityListenableFuture, response -> {
             try {
                 List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
