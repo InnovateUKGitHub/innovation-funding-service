@@ -71,7 +71,8 @@ the guest user inserts wrong password
     Input Password    id=id_password    testtest
 
 the guest user should get an error message
-    Element Should Be Visible    css=.error-message
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
     Page Should Not Contain Element    link=Logout
 
 the guest user inserts applicant user name
