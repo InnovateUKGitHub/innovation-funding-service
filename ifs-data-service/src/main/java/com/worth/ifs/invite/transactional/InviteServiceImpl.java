@@ -119,7 +119,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationName", invite.getApplication().getName());
+        notificationArguments.put("competitionName", invite.getApplication().getCompetition().getName());
         notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite));
+        notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisationName());
         notificationArguments.put("leadOrganisation", invite.getApplication().getLeadOrganisation().get().getName());
         notificationArguments.put("leadApplicant", invite.getApplication().getLeadApplicant().get().getName());
         notificationArguments.put("leadApplicantEmail", invite.getApplication().getLeadApplicant().get().getEmail());
