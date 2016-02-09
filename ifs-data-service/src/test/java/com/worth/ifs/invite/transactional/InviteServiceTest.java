@@ -8,6 +8,7 @@ import com.worth.ifs.competition.builder.CompetitionBuilder;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.builder.InviteBuilder;
 import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationMedium;
 import com.worth.ifs.notifications.service.NotificationService;
@@ -113,6 +114,8 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         Invite invite = InviteBuilder.newInvite().withApplication(application).build();
         invite.setName("Nico");
         invite.setEmail("nico@test.nl");
+        InviteOrganisation inviteOrganisation = new InviteOrganisation("SomeOrg", null, Arrays.asList(invite));
+        invite.setInviteOrganisation(inviteOrganisation);
 
         List<ServiceResult<Notification>> results = inviteService.inviteCollaborators("http:localhost:189809", Arrays.asList(invite));
         assertEquals(1, results.size());
