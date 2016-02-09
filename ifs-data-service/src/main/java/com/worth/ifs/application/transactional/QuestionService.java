@@ -3,6 +3,7 @@ package com.worth.ifs.application.transactional;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 
 import java.util.List;
@@ -60,17 +61,17 @@ public interface QuestionService {
     Boolean isMarkedAsComplete(Question question, Long applicationId, Long organisationId);
 
     @NotSecured("TODO DW - implement when permissions available")
-    List<QuestionStatus> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId);
+    ServiceResult<List<QuestionStatus>> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId);
 
     @NotSecured("TODO DW - implement when permissions available")
-    List<QuestionStatusResource> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId);
+    ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId);
 
     @NotSecured("TODO DW - implement when permissions available")
-    List<QuestionStatusResource> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(Long[] questionIds, Long applicationId, Long organisationId);
+    ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(Long[] questionIds, Long applicationId, Long organisationId);
 
     @NotSecured("TODO DW - implement when permissions available")
-    List<QuestionStatusResource> findByApplicationAndOrganisation(Long applicationId, Long organisationId);
+    ServiceResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(Long applicationId, Long organisationId);
 
     @NotSecured("TODO DW - implement when permissions available")
-    QuestionStatus getQuestionStatusResourceById(Long id);
+    ServiceResult<QuestionStatus> getQuestionStatusResourceById(Long id);
 }

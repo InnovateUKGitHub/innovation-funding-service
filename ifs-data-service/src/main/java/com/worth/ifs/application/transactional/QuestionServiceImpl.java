@@ -9,6 +9,7 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -22,7 +23,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
 import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
 
@@ -115,7 +119,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                 .filter(q -> q.isMarkAsCompletedEnabled() && questionStatusRepository.findByQuestionIdAndApplicationId(q.getId(), applicationId)
                         .stream()
                         .anyMatch(qs ->
-                                (q.hasMultipleStatuses() && isMarkedAsCompleteForOrganisation(qs, applicationId, organisationId).orElse(Boolean.FALSE)) ||
+                                (q.hasMultipleStatuses() && isMarkedAsCompleteForOrganisation(qs, organisationId).orElse(Boolean.FALSE)) ||
                                         (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(Boolean.FALSE))))
                 .map(Question::getId).collect(Collectors.toSet());
     }
@@ -216,7 +220,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             if(nextSection!=null) {
                 Optional<Question> firstQuestionInSection = nextSection.getQuestions()
                         .stream()
-                        .min(comparing(question -> question.getPriority()));
+                        .min(comparing(Question::getPriority));
                 return firstQuestionInSection.orElse(null);
             }
         }
@@ -258,39 +262,38 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public List<QuestionStatus> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId) {
-        return questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
+    public ServiceResult<List<QuestionStatus>> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId) {
+        return serviceSuccess(questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId));
     }
 
     @Override
-    public List<QuestionStatusResource> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId) {
+    public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
-        return simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource);
+        return serviceSuccess(simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource));
     }
 
     @Override
-    public List<QuestionStatusResource> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(Long[] questionIds, Long applicationId, Long organisationId){
+    public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(Long[] questionIds, Long applicationId, Long organisationId){
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdIsInAndApplicationId(Arrays.asList(questionIds), applicationId);
-        return simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource);
+        return serviceSuccess(simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource));
     }
 
     @Override
-    public List<QuestionStatusResource> findByApplicationAndOrganisation(Long applicationId, Long organisationId){
+    public ServiceResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(Long applicationId, Long organisationId){
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationId(applicationId);
-        return simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource);
+        return serviceSuccess(simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper :: mapQuestionStatusToPopulatedResource));
     }
 
     @Override
-    public QuestionStatus getQuestionStatusResourceById(Long id){
-        return questionStatusRepository.findOne(id);
+    public ServiceResult<QuestionStatus> getQuestionStatusResourceById(Long id){
+        return getOrFail(() -> questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id));
     }
-
 
     private Boolean isMarkedAsCompleteForOrganisation(Long questionId, Long applicationId, Long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
 
         for(QuestionStatus questionStatus : questionStatuses) {
-            Optional<Boolean> markedAsComplete = isMarkedAsCompleteForOrganisation(questionStatus, applicationId, organisationId);
+            Optional<Boolean> markedAsComplete = isMarkedAsCompleteForOrganisation(questionStatus, organisationId);
             if(markedAsComplete.isPresent()) {
                 return markedAsComplete.get();
             }
@@ -307,7 +310,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
 
-    private Optional<Boolean> isMarkedAsCompleteForOrganisation(QuestionStatus questionStatus, Long applicationId, Long organisationId) {
+    private Optional<Boolean> isMarkedAsCompleteForOrganisation(QuestionStatus questionStatus, Long organisationId) {
         Boolean markedAsComplete = null;
         if (questionStatus.getMarkedAsCompleteBy() != null &&
                 questionStatus.getMarkedAsCompleteBy().getOrganisation().getId().equals(organisationId)) {

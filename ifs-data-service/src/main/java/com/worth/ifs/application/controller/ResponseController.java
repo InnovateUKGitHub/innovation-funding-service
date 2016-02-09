@@ -10,7 +10,6 @@ import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.rest.RestResultBuilder;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.CustomPermissionEvaluator;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -82,10 +81,7 @@ public class ResponseController {
                                                               @RequestParam("feedbackValue") Optional<String> feedbackValue,
                                                               @RequestParam("feedbackText") Optional<String> feedbackText) {
 
-        RestResultBuilder<Feedback, Void> handler = newRestHandler();
-        return handler.
-                andOnSuccess(okRestSuccess()).
-                perform(() -> {
+        return newRestHandler().andOnSuccess(okRestSuccess()).perform(() -> {
 
             Response response = responseRepository.findOne(responseId);
             Application application = response.getApplication();

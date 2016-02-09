@@ -1,7 +1,6 @@
 package com.worth.ifs.competition.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.rest.RestResultBuilder;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
@@ -28,18 +27,17 @@ public class CompetitionController {
 
     @RequestMapping("/findById/{id}")
     public RestResult<Competition> getCompetitionById(@PathVariable("id") final Long id) {
-        return newRestHandler(Competition.class).perform(() -> competitionService.getCompetitionById(id));
+        return newRestHandler().perform(() -> competitionService.getCompetitionById(id));
     }
 
     // TODO DW - INFUND-1555 - do we really need this route AND the above route?
     @RequestMapping("/id/{id}")
     public RestResult<Competition> getApplicationById(@PathVariable("id") final Long id) {
-        return newRestHandler(Competition.class).perform(() -> competitionService.getCompetitionById(id));
+        return newRestHandler().perform(() -> competitionService.getCompetitionById(id));
     }
 
     @RequestMapping("/findAll")
     public RestResult<List<Competition>> findAll() {
-        RestResultBuilder<List<Competition>, List<Competition>> handler = newRestHandler();
-        return handler.perform(() -> competitionService.findAll());
+        return newRestHandler().perform(() -> competitionService.findAll());
     }
 }

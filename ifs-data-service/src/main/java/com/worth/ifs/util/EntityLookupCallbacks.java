@@ -36,11 +36,16 @@ public class EntityLookupCallbacks {
         return ofNullable(getterResult).map(ServiceResult::serviceSuccess).orElse(serviceFailure(failureResponse));
     }
 
-    public static <FinalSuccessType, SuccessType1, SuccessType2> ServiceResultBiFunctionProducer<SuccessType1, SuccessType2> getOrFail(
+    /**
+     * This getOrFail() method, given 2 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
+     * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
+     * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
+     */
+    public static <FinalSuccessType, SuccessType1, SuccessType2> ServiceResultTuple2Handler<SuccessType1, SuccessType2> getOrFail(
             Supplier<ServiceResult<SuccessType1>> getterFn1,
             Supplier<ServiceResult<SuccessType2>> getterFn2) {
 
-        return new ServiceResultBiFunctionProducer<>(getterFn1, getterFn2);
+        return new ServiceResultTuple2Handler<>(getterFn1, getterFn2);
     }
 
     public static <T> ServiceResult<T> getOnlyElementOrFail(Collection<T> list) {
@@ -50,12 +55,20 @@ public class EntityLookupCallbacks {
         return serviceSuccess(list.iterator().next());
     }
 
-    public static class ServiceResultBiFunctionProducer<R, S> {
+    /**
+     * This class is produced by the getOrFail() method, which given 2 ServiceResult suppliers, is able to execute the ServiceResults
+     * in a chain and fail early if necessary.  Assuming that they are all successes, a supplied BiFunction can then be called
+     * with the 2 successful ServiceResult values as its 2 inputs
+     *
+     * @param <R>
+     * @param <S>
+     */
+    public static class ServiceResultTuple2Handler<R, S> {
 
         private Supplier<ServiceResult<R>> getterFn1;
         private Supplier<ServiceResult<S>> getterFn2;
 
-        public ServiceResultBiFunctionProducer(Supplier<ServiceResult<R>> getterFn1, Supplier<ServiceResult<S>> getterFn2) {
+        public ServiceResultTuple2Handler(Supplier<ServiceResult<R>> getterFn1, Supplier<ServiceResult<S>> getterFn2) {
             this.getterFn1 = getterFn1;
             this.getterFn2 = getterFn2;
         }

@@ -12,6 +12,7 @@ import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.QuestionStatusBuilder.newQuestionStatus;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.when;
@@ -36,7 +37,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
         QuestionStatus questionStatus = newQuestionStatus().withApplication(application).build();
         List<QuestionStatus> questionStatuses = singletonList(questionStatus);
 
-        when(questionService.getQuestionStatusByApplicationIdAndAssigneeId(1L, 2L)).thenReturn(questionStatuses);
+        when(questionService.getQuestionStatusByApplicationIdAndAssigneeId(1L, 2L)).thenReturn(serviceSuccess(questionStatuses));
 
         mockMvc.perform(get("/questionStatus/findByQuestionAndApplication/1/2"))
             .andExpect(status().isOk())
