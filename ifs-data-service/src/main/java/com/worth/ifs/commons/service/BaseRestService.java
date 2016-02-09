@@ -8,6 +8,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,7 +21,7 @@ import static java.util.Collections.singletonList;
  * BaseRestService provides a base for all Service classes.
  */
 public abstract class BaseRestService {
-    private final Log log = LogFactory.getLog(getClass());
+    private final static Log LOG = LogFactory.getLog(BaseRestService.class);
 
     private Supplier<RestTemplate> restTemplateSupplier = RestTemplate::new;
     private Supplier<AsyncRestTemplate> asyncRestTemplateSupplier = AsyncRestTemplate::new;
@@ -45,7 +46,25 @@ public abstract class BaseRestService {
     }
 
     public <T> ListenableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz){
-         return getAsyncRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), clazz);
+         return withEmptyCallback(getAsyncRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), clazz));
+    }
+
+    private static final <T> ListenableFuture<ResponseEntity<T>> withEmptyCallback(ListenableFuture<ResponseEntity<T>> toAddTo){
+        // If we do not add a callback then the behaviour of calling get on the future becomes serial instead of parallel.
+        // I.e. the future will not start execution until get is called. However if an empty callback is added the future
+        // will start execution immediately (or as soon as a thread is available) and we can then call get.
+        toAddTo.addCallback(new ListenableFutureCallback<ResponseEntity<T>>() {
+            @Override
+            public void onFailure(final Throwable ex) {
+                LOG.error("Failure in the empty callback: " + ex);
+            }
+
+            @Override
+            public void onSuccess(final ResponseEntity<T> result) {
+                // Do nothing
+            }
+        });
+        return toAddTo;
     }
 
     /**
@@ -70,12 +89,12 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
-        log.debug("restGetEntity: "+path);
+        LOG.debug("restGetEntity: "+path);
         return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), c);
     }
 
     protected  <T> ResponseEntity<T> restGetParameterizedType(String path, ParameterizedTypeReference<T> responseType){
-        log.debug("restGetParameterizedType: "+path);
+        LOG.debug("restGetParameterizedType: "+path);
         return getRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), responseType);
     }
 
@@ -88,12 +107,12 @@ public abstract class BaseRestService {
      * @return
      */
     protected <T> T restPost(String path, Object postEntity, Class<T> c) {
-        log.debug("restPostWithEntity: "+path);
+        LOG.debug("restPostWithEntity: "+path);
         return restPostWithEntity(path, postEntity, c).getBody();
     }
 
     protected void restPut(String path) {
-        log.debug("restPutEntity: "+path);
+        LOG.debug("restPutEntity: "+path);
         restPutEntity(path, Void.class);
     }
 
