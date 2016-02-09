@@ -73,6 +73,20 @@ public class EntityLookupCallbacks {
         return new ServiceResultTuple3Handler<>(getterFn1, getterFn2, getterFn3);
     }
 
+    /**
+     * This find() method, given 2 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
+     * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
+     * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
+     */
+    public static <FinalSuccessType, SuccessType1, SuccessType2, SuccessType3, SuccessType4> ServiceResultTuple4Handler<SuccessType1, SuccessType2, SuccessType3, SuccessType4> find(
+            Supplier<ServiceResult<SuccessType1>> getterFn1,
+            Supplier<ServiceResult<SuccessType2>> getterFn2,
+            Supplier<ServiceResult<SuccessType3>> getterFn3,
+            Supplier<ServiceResult<SuccessType4>> getterFn4) {
+
+        return new ServiceResultTuple4Handler<>(getterFn1, getterFn2, getterFn3, getterFn4);
+    }
+
     public static <T> ServiceResult<T> getOnlyElementOrFail(Collection<T> list) {
         if (list == null || list.size() != 1) {
             return serviceFailure(internalServerErrorError("Found multiple entries in list but expected only 1 - " + list));
@@ -151,9 +165,46 @@ public class EntityLookupCallbacks {
         }
     }
 
+    /**
+     * This class is produced by the find() method, which given 2 ServiceResult suppliers, is able to execute the ServiceResults
+     * in a chain and fail early if necessary.  Assuming that they are all successes, a supplied BiFunction can then be called
+     * with the 2 successful ServiceResult values as its 2 inputs
+     *
+     * @param <R>
+     * @param <S>
+     */
+    public static class ServiceResultTuple4Handler<R, S, T, U> {
+
+        private Supplier<ServiceResult<R>> getterFn1;
+        private Supplier<ServiceResult<S>> getterFn2;
+        private Supplier<ServiceResult<T>> getterFn3;
+        private Supplier<ServiceResult<U>> getterFn4;
+
+        public ServiceResultTuple4Handler(Supplier<ServiceResult<R>> getterFn1, Supplier<ServiceResult<S>> getterFn2, Supplier<ServiceResult<T>> getterFn3, Supplier<ServiceResult<U>> getterFn4) {
+            this.getterFn1 = getterFn1;
+            this.getterFn2 = getterFn2;
+            this.getterFn3 = getterFn3;
+            this.getterFn4 = getterFn4;
+        }
+
+        public <A> ServiceResult<A> andOnSuccess(QuadFunction<R, S, T, U, ServiceResult<A>> mainFunction) {
+            return getterFn1.get().
+                    andOnSuccess(result1 -> getterFn2.get().
+                            andOnSuccess(result2 -> getterFn3.get().
+                                    andOnSuccess(result3 -> getterFn4.get().
+                                            andOnSuccess(result4 -> mainFunction.apply(result1, result2, result3, result4)))));
+        }
+    }
+
     @FunctionalInterface
     public interface TriFunction<R, S, T, A> {
 
         A apply(R r, S s, T t);
+    }
+
+    @FunctionalInterface
+    public interface QuadFunction<R, S, T, U, A> {
+
+        A apply(R r, S s, T t, U u);
     }
 }

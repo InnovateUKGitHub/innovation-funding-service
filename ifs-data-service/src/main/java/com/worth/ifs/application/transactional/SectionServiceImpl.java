@@ -165,7 +165,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
             if (!question.isMarkAsCompletedEnabled())
                 continue;
 
-            boolean questionMarkedAsComplete = questionService.isMarkedAsComplete(question, applicationId, organisationId);
+            boolean questionMarkedAsComplete = questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccessObject();
             // if one of the questions is incomplete then the whole section is incomplete
             if (!questionMarkedAsComplete) {
                 sectionIsComplete = false;

@@ -49,6 +49,10 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         return serviceFailure(failure.getFailure());
     }
 
+    public static ServiceResult<Void> serviceSuccess() {
+        return new ServiceResult<>(right(null));
+    }
+
     public static <T> ServiceResult<T> serviceSuccess(T successfulResult) {
         return new ServiceResult<>(right(successfulResult));
     }

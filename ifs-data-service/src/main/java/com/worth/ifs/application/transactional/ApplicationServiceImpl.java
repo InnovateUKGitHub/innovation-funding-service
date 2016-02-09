@@ -420,6 +420,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         });
     }
 
+    // TODO DW - INFUND-1555 - deal with rest results
     private ServiceResult<Double> getProgressPercentageByApplicationId(final Long applicationId) {
 
         return getApplication(applicationId).andOnSuccess(application -> {
@@ -440,12 +441,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             Long countMultipleStatusQuestionsCompleted = organisations.stream()
                     .mapToLong(org -> questions.stream()
                             .filter(Question::getMarkAsCompletedEnabled)
-                            .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, org.getId())).count())
+                            .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, org.getId()).getSuccessObject()).count())
                     .sum();
 
             Long countSingleStatusQuestionsCompleted = questions.stream()
                     .filter(Question::getMarkAsCompletedEnabled)
-                    .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, 0L)).count();
+                    .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, 0L).getSuccessObject()).count();
 
             Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 

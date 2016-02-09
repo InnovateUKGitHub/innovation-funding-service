@@ -40,7 +40,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
                 question.getCompetition().getId(), question.getSection().getId(), question.getPriority()))
                 .thenReturn(nextQuestion);
         // Method under test
-        assertEquals(nextQuestion, questionService.getNextQuestion(question.getId()));
+        assertEquals(nextQuestion, questionService.getNextQuestion(question.getId()).getSuccessObject());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
                 question.getCompetition().getId(), question.getSection().getId(), question.getPriority()))
                 .thenReturn(previousQuestion);
         // Method under test
-        assertEquals(previousQuestion, questionService.getPreviousQuestion(question.getId()));
+        assertEquals(previousQuestion, questionService.getPreviousQuestion(question.getId()).getSuccessObject());
     }
 
     @Test
@@ -68,7 +68,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         when(questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
             question.getCompetition().getId(), question.getSection().getId(), question.getPriority())).thenReturn(nextQuestion);
         // Method under test
-        assertEquals(nextQuestion, questionService.getNextQuestion(question.getId()));
+        assertEquals(nextQuestion, questionService.getNextQuestion(question.getId()).getSuccessObject());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
             .thenReturn(previousQuestion);
 
         // Method under test
-        assertEquals(previousQuestion, questionService.getPreviousQuestion(question.getId()));
+        assertEquals(previousQuestion, questionService.getPreviousQuestion(question.getId()).getSuccessObject());
 
     }
 
@@ -101,7 +101,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         when(sectionService.getById(currentSection.getId())).thenReturn(serviceSuccess(currentSection));
         when(sectionService.getPreviousSection(currentSection)).thenReturn(serviceSuccess(previousSection));
         // Method under test
-        assertEquals(previousSectionQuestion, questionService.getPreviousQuestionBySection(currentSection.getId()));
+        assertEquals(previousSectionQuestion, questionService.getPreviousQuestionBySection(currentSection.getId()).getSuccessObject());
 
 
     }
