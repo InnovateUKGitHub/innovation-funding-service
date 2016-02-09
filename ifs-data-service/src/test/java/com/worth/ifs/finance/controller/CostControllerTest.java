@@ -6,10 +6,16 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.handler.item.OrganisationFinanceHandler;
+import com.worth.ifs.finance.handler.item.OrganisationFinanceHandlerImpl;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.repository.CostValueRepository;
+import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.Materials;
+import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,6 +31,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
+import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
@@ -52,9 +60,13 @@ public class CostControllerTest {
     private MockMvc mockMvc;
 
     private BigDecimal value;
+    private Integer quantity;
 
     @InjectMocks
     private CostController costController;
+
+    @Mock
+    OrganisationFinanceHandler organisationFinanceHandler = new OrganisationFinanceHandlerImpl();
 
 
     @Before
@@ -64,6 +76,7 @@ public class CostControllerTest {
                 .build();
 
         value = new BigDecimal(1000);
+        quantity = new Integer(25);
     }
 
     //@Test
@@ -216,13 +229,21 @@ public class CostControllerTest {
 
     @Test
     public void findOneCostAPICallShouldReturnCostOnKnownId() throws Exception {
-        when(costRepository.findOne(1L)).thenReturn(new Cost(1L, "item", "desc", 1, value,
-                new ApplicationFinance(), new Question()));
+        FormInputType formInputType = new FormInputType(5L, "materials");
+        FormInput formInput = newFormInput().build();
+        formInput.setFormInputType(formInputType);
+        Question question = newQuestion().withFormInputs(Arrays.asList(formInput)).build();
+        Cost cost = new Cost(1L, "item", "", 1, value, new ApplicationFinance(), question);
+        when(costRepository.findOne(1L)).thenReturn(cost);
+        CostItem costItem = new Materials(1L, "item", value, quantity);
+        when(organisationFinanceHandler.costToCostItem(cost)).thenReturn(costItem);
 
         mockMvc.perform(get("/cost/findById/{id}", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.item", is("item")))
-                .andExpect(jsonPath("$.description", is("desc")));
+                .andExpect(jsonPath("$.cost", is(value.intValue())))
+                .andExpect(jsonPath("$.quantity", is(quantity.intValue())))
+                .andExpect(jsonPath("$.total", is(value.multiply(BigDecimal.valueOf(quantity)).intValue())));
 
         verify(costRepository, times(1)).findOne(1L);
         verifyNoMoreInteractions(costRepository);

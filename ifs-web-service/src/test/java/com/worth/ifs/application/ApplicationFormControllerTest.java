@@ -5,7 +5,9 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.finance.resource.category.CostCategory;
+import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
+import com.worth.ifs.finance.resource.cost.Materials;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.hamcrest.Matchers;
@@ -147,30 +149,48 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     }
 
     @Test
-    public void costControllerShouldRedirectToCorrectLocationAfterCostDelete() throws Exception {
-
-        doNothing().when(costService).delete(costId);
-
-        mockMvc.perform(get("/application/" + application.getId() + "/form/deletecost/" + sectionId + "/0"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId() + "/form/section/" + sectionId));;
-    }
-
-    @Test
     public void testAddAnother() throws Exception {
         mockMvc.perform(
-                get(
-                        "/application/{applicationId}/form/addcost/{sectionId}/{questionId}",
-                        application.getId(),
-                        sectionId,
-                        questionId
-                )
-        )
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
+                        .param("add_cost", String.valueOf(questionId)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/"+application.getId()+"/form/section/" + sectionId));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId() + "/form/section/" + sectionId));
+
+
 
         // verify that the method is called to send the data to the data services.
         Mockito.inOrder(financeService).verify(financeService, calls(1)).addCost(applicationFinanceResource.getId(), questionId);
+    }
+
+
+    @Test
+    public void testAjaxAddCost() throws Exception {
+        CostItem costItem = new Materials();
+        when(costService.add(anyLong(),anyLong(), any())).thenReturn(costItem);
+        MvcResult result = mockMvc.perform(
+                get("/application/{applicationId}/form/add_cost/{questionId}", application.getId(), questionId)
+        ).andReturn();
+
+        System.out.println("AjaxAddRow");
+        System.out.println(result.getResponse().getContentAsString());
+
+        // verify that the method is called to send the data to the data services.
+        Mockito.inOrder(costService).verify(costService, calls(1)).add(eq(applicationFinanceResource.getId()), eq(questionId), any());
+    }
+
+    @Test
+    public void testAjaxRemoveCost() throws Exception {
+        CostItem costItem = new Materials();
+        when(costService.add(anyLong(),anyLong(), any())).thenReturn(costItem);
+        MvcResult result = mockMvc.perform(
+                get("/application/{applicationId}/form/remove_cost/{costId}", application.getId(), costId)
+        ).andReturn();
+
+        System.out.println("AjaxRemoveRow");
+        System.out.println(result.getResponse().getContentAsString());
+
+        // verify that the method is called to send the data to the data services.
+        Mockito.inOrder(costService).verify(costService, calls(1)).delete(eq(costId));
     }
 
     @Test
@@ -436,7 +456,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     }
 
     //TODO: Change this to AutosaveElementException
-//    (expected = NestedServletException.class)
     @Test
      public void testSaveFormElementApplicationAttributeInvalidDay() throws Exception {
         String questionId= "application_details-startdate_day";
@@ -504,71 +523,15 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String sectionId = "1";
         Long costId = 1L;
 
+
         mockMvc.perform(
-                get(
-                        "/application/{applicationId}/form/deletecost/{sectionId}/{costId}",
-                        application.getId(),
-                        sectionId,
-                        costId
-                )
-        )
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
+                        .param("remove_cost", String.valueOf(costId)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/application/"+application.getId()+"/form/section/" + sectionId));
 
         // verify that the method is called to send the data to the data services.
         Mockito.inOrder(costService).verify(costService, calls(1)).delete(costId);
-    }
-
-    @Test
-    public void testDeleteCostWithFragmentResponse() throws Exception {
-        mockMvc.perform(
-                get(
-                        "/application/{applicationId}/form/deletecost/{sectionId}/{costId}/{renderQuestionId}",
-                        application.getId(),
-                        sectionId,
-                        costId,
-                        questionId
-                ).param("singleFragment", "true")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-        )
-                .andExpect(status().isOk());
-
-        // verify that the method is called to send the data to the data services.
-        Mockito.inOrder(costService).verify(costService, calls(1)).delete(costId);
-    }
-
-    @Test
-    public void testDeleteCostWithFragmentResponseNullValue() throws Exception {
-        mockMvc.perform(
-                get(
-                        "/application/{applicationId}/form/deletecost/{sectionId}/{costId}/{renderQuestionId}",
-                        application.getId(),
-                        sectionId,
-                        null,
-                        questionId
-                ).param("singleFragment", "true")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-        )
-                .andExpect(status().is3xxRedirection());
-        //  TODO: also test if there is an error thrown when using null value, or negative number.
-    }
-
-    @Test
-    public void testAddAnotherWithFragmentResponse() throws Exception {
-        mockMvc.perform(
-                get(
-                        "/application/{applicationId}/form/addcost/{sectionId}/{costId}/{renderQuestionId}",
-                        application.getId(),
-                        sectionId,
-                        costId,
-                        questionId
-                ).param("singleFragment", "true")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-        )
-                .andExpect(status().isOk()).andExpect(view().name("single-question"));
     }
 
 //    @Test
