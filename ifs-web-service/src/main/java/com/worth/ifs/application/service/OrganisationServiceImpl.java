@@ -20,7 +20,7 @@ import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.service.ListenableFutures.call;
+import static com.worth.ifs.application.service.Futures.call;
 
 /**
  * This class contains methods to retrieve and store {@link Organisation} related data,

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.worth.ifs.application.service.ListenableFutures.settable;
+import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.util.stream.Collectors.toList;

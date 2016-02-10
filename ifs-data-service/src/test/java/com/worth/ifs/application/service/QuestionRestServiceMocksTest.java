@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
-import static com.worth.ifs.application.service.ListenableFutures.settable;
+import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionListType;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
