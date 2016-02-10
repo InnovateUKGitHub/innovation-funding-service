@@ -5,13 +5,16 @@ import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.application.service.ListenableFutures.call;
+import static java.util.stream.Collectors.toMap;
+import static java.util.Map.Entry;
 /**
  * This class contains methods to retrieve and store {@link ApplicationResource} related data,
  * through the RestService {@link ApplicationRestService}.
@@ -57,15 +60,12 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public Map<Long, Integer> getProgress(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrNull();
-        Map<Long, Integer> applicationProgress = new HashMap<>();
-        applications.stream()
-            .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("created"))
-            .map(ApplicationResource::getId)
-            .forEach(id -> {
-                Double progress = applicationRestService.getCompleteQuestionsPercentage(id).getSuccessObjectOrNull();
-                applicationProgress.put(id, progress.intValue());
-            });
-        return applicationProgress;
+        return call(applications.stream()
+                .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("created"))
+                .map(ApplicationResource::getId)
+                .collect(toMap(id -> id, id -> applicationRestService.getCompleteQuestionsPercentage(id))))
+                .entrySet().stream()
+                .collect(toMap(Entry::getKey, entry -> entry.getValue().getSuccessObjectOrNull().intValue()));
     }
 
     @Override
@@ -86,8 +86,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public int getCompleteQuestionsPercentage(Long applicationId) {
-       return applicationRestService.getCompleteQuestionsPercentage(applicationId).getSuccessObjectOrNull().intValue();
+    public ListenableFuture<Integer> getCompleteQuestionsPercentage(Long applicationId) {
+       return ListenableFutures.adapt(applicationRestService.getCompleteQuestionsPercentage(applicationId), re -> re.getSuccessObject().intValue());
     }
 
     @Override

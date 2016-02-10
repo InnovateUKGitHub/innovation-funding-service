@@ -9,9 +9,11 @@ import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
 
+import static com.worth.ifs.application.service.ListenableFutures.adapt;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 
@@ -51,9 +53,9 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     // TODO DW - INFUND-1555 - remove usage of ObjectNode if possible
     @Override
-    public RestResult<Double> getCompleteQuestionsPercentage(Long applicationId) {
-        RestResult<ObjectNode> result = getWithRestResult(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
-        return result.andOnSuccess(jsonResponse -> restSuccess(jsonResponse.get("completedPercentage").asDouble()));
+    public ListenableFuture<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId) {
+        ListenableFuture<RestResult<ObjectNode>> result = getWithRestResultAsyc(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
+        return adapt(result, n -> n.andOnSuccess(jsonResponse -> restSuccess(jsonResponse.get("completedPercentage").asDouble())));
     }
 
     // TODO DW - INFUND-1555 - remove usages of the ObjectNode from the data side - replace with a dto

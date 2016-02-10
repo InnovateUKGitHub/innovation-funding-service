@@ -65,6 +65,9 @@ Applicant goes to the Your finances section
 Applicant goes to the finance overview
     Go To    ${FINANCES_OVERVIEW_URL}
 
+Application goes to the Application Team page
+    Go To    ${APPLICATION_TEAM_URL}
+
 Applicant edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor

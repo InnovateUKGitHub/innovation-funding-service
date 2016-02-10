@@ -1,18 +1,14 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.mapper.QuestionStatusMapper;
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +17,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
 
@@ -37,91 +34,88 @@ import static java.util.Comparator.comparing;
 public class QuestionServiceImpl extends BaseTransactionalService implements QuestionService {
 
     @Autowired
-    ProcessRoleRepository processRoleRepository;
+    private QuestionStatusRepository questionStatusRepository;
 
     @Autowired
-    QuestionStatusRepository questionStatusRepository;
+    private QuestionRepository questionRepository;
 
     @Autowired
-    QuestionRepository questionRepository;
-
-    @Autowired
-    ApplicationRepository applicationRepository;
-
-    @Autowired
-    SectionService sectionService;
+    private SectionService sectionService;
 
     @Autowired
     private QuestionStatusMapper questionStatusMapper;
 
-
     @Override
-    public Question getQuestionById(final Long id) {
-        return questionRepository.findOne(id);
+    public ServiceResult<Question> getQuestionById(final Long id) {
+        return getQuestion(id);
     }
 
     @Override
-    public void markAsComplete(final Long questionId,
+    public ServiceResult<Void> markAsComplete(final Long questionId,
                                final Long applicationId,
                                final Long markedAsCompleteById){
-        setComplete(questionId, applicationId, markedAsCompleteById, true);
+        return setComplete(questionId, applicationId, markedAsCompleteById, true);
     }
 
     @Override
-    public void markAsInComplete(final Long questionId,
+    public ServiceResult<Void> markAsInComplete(final Long questionId,
                                  final Long applicationId,
                                  final Long markedAsInCompleteById){
-        setComplete(questionId, applicationId, markedAsInCompleteById, false);
+        return setComplete(questionId, applicationId, markedAsInCompleteById, false);
     }
 
-    private void setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
-        ProcessRole markedAsCompleteBy = processRoleRepository.findOne(processRoleId);
-        Application application = applicationRepository.findOne(applicationId);
-        Question question = questionRepository.findOne(questionId);
-        QuestionStatus questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
-        if (questionStatus == null) {
-            questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
-        } else if (markAsComplete) {
-            questionStatus.markAsComplete();
-        } else {
-            questionStatus.markAsInComplete();
-        }
-        questionStatusRepository.save(questionStatus);
-    }
+    private ServiceResult<Void> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
 
-    @Override
-    public void assign(final Long questionId,
-                       final Long applicationId,
-                       final Long assigneeId,
-                       final Long assignedById) {
-        Question question = questionRepository.findOne(questionId);
-        Application application = applicationRepository.findOne(applicationId);
-        ProcessRole assignee = processRoleRepository.findOne(assigneeId);
-        ProcessRole assignedBy = processRoleRepository.findOne(assignedById);
+        return find(processRole(processRoleId), application(applicationId), question(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
 
-        QuestionStatus questionStatus = getQuestionStatusByApplicationIdAndAssigneeId(question, applicationId, assigneeId);
-
-        if(questionStatus==null) {
-            questionStatus = new QuestionStatus(question, application, assignee, assignedBy, now());
-        } else {
-            questionStatus.setAssignee(assignee, assignedBy, LocalDateTime.now());
-        }
-        questionStatusRepository.save(questionStatus);
+            QuestionStatus questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
+            if (questionStatus == null) {
+                questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
+            } else if (markAsComplete) {
+                questionStatus.markAsComplete();
+            } else {
+                questionStatus.markAsInComplete();
+            }
+            questionStatusRepository.save(questionStatus);
+            return serviceSuccess();
+        });
     }
 
     @Override
-    public Set<Long> getMarkedAsComplete(Long applicationId,
+    public ServiceResult<Void> assign(final Long questionId, final Long applicationId, final Long assigneeId, final Long assignedById) {
+
+        return find(question(questionId), application(applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
+
+            QuestionStatus questionStatus = getQuestionStatusByApplicationIdAndAssigneeId(question, applicationId, assigneeId);
+
+            if(questionStatus==null) {
+                questionStatus = new QuestionStatus(question, application, assignee, assignedBy, now());
+            } else {
+                questionStatus.setAssignee(assignee, assignedBy, LocalDateTime.now());
+            }
+            questionStatusRepository.save(questionStatus);
+            return serviceSuccess();
+        });
+    }
+
+    @Override
+    public ServiceResult<Set<Long>> getMarkedAsComplete(Long applicationId,
                                          Long organisationId) {
-        Application application = applicationRepository.findOne(applicationId);
-        List<Question> questions = questionRepository.findByCompetitionId(application.getCompetition().getId());
-        return questions
-                .stream()
-                .filter(q -> q.isMarkAsCompletedEnabled() && questionStatusRepository.findByQuestionIdAndApplicationId(q.getId(), applicationId)
-                        .stream()
-                        .anyMatch(qs ->
-                                (q.hasMultipleStatuses() && isMarkedAsCompleteForOrganisation(qs, organisationId).orElse(Boolean.FALSE)) ||
-                                        (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(Boolean.FALSE))))
-                .map(Question::getId).collect(Collectors.toSet());
+
+        return find(application(applicationId)).andOnSuccess(application -> {
+
+            List<Question> questions = questionRepository.findByCompetitionId(application.getCompetition().getId());
+            Set<Long> markedAsCompleteQuestions = questions
+                    .stream()
+                    .filter(q -> q.isMarkAsCompletedEnabled() && questionStatusRepository.findByQuestionIdAndApplicationId(q.getId(), applicationId)
+                            .stream()
+                            .anyMatch(qs ->
+                                    (q.hasMultipleStatuses() && isMarkedAsCompleteForOrganisation(qs, organisationId).orElse(Boolean.FALSE)) ||
+                                            (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(Boolean.FALSE))))
+                    .map(Question::getId).collect(Collectors.toSet());
+            return serviceSuccess(markedAsCompleteQuestions);
+        });
+
     }
 
 
@@ -150,26 +144,30 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public void updateNotification(final Long questionStatusId,
+    public ServiceResult<Void> updateNotification(final Long questionStatusId,
                                    final Boolean notify) {
-        QuestionStatus questionStatus = questionStatusRepository.findOne(questionStatusId);
-        questionStatus.setNotified(notify);
-        questionStatusRepository.save(questionStatus);
+
+        return find(() -> questionStatusRepository.findOne(questionStatusId), notFoundError(QuestionStatus.class, questionStatusId)).andOnSuccess(questionStatus -> {
+            questionStatus.setNotified(notify);
+            questionStatusRepository.save(questionStatus);
+            return serviceSuccess();
+        });
     }
 
     @Override
-    public List<Question> findByCompetition(final Long competitionId) {
-        return questionRepository.findByCompetitionId(competitionId);
+    public ServiceResult<List<Question>> findByCompetition(final Long competitionId) {
+        return serviceSuccess(questionRepository.findByCompetitionId(competitionId));
     }
 
+    // TODO DW - INFUND-1555 - in situation where next / prev question not found, should this be a 404?
     @Override
-    public Question getNextQuestion(final Long questionId) {
-        Question question = questionRepository.findOne(questionId);
-        Question nextQuestion = null;
-        if(question!=null) {
+    public ServiceResult<Question> getNextQuestion(final Long questionId) {
+
+        return find(question(questionId)).andOnSuccess(question -> {
+
             // retrieve next question within current section
-            nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
-                question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
+            Question nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
+                    question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
 
             // retrieve next question in following section
             if(nextQuestion == null) {
@@ -179,11 +177,11 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             // retrieve next question in any other section, but with higher priority
             if(nextQuestion == null) {
                 nextQuestion = questionRepository.findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(
-                    question.getCompetition().getId(), question.getPriority());
+                        question.getCompetition().getId(), question.getPriority());
             }
-        }
 
-        return nextQuestion;
+            return serviceSuccess(nextQuestion);
+        });
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {
@@ -195,52 +193,61 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     }
 
-    // TODO DW - INFUND-1555 - return or handle rest results
+    // TODO DW - INFUND-1555 - in situation where next / prev question not found, should this be a 404?
     @Override
-    public Question getPreviousQuestionBySection(final Long sectionId) {
-        Section section = sectionService.getById(sectionId).getSuccessObject();
-        if(section!=null && section.getParentSection()!=null) {
-            Section previousSection = sectionService.getPreviousSection(section).getSuccessObject();
-            if(previousSection!=null) {
-                Optional<Question> lastQuestionInSection = previousSection.getQuestions()
-                        .stream()
-                        .max(comparing(Question::getPriority));
-                return lastQuestionInSection.orElse(null);
+    public ServiceResult<Question> getPreviousQuestionBySection(final Long sectionId) {
+
+        return sectionService.getById(sectionId).andOnSuccess(section -> {
+
+            if (section.getParentSection() != null) {
+                Section previousSection = sectionService.getPreviousSection(section).getSuccessObjectOrNull();
+                if (previousSection != null) {
+                    Optional<Question> lastQuestionInSection = previousSection.getQuestions()
+                            .stream()
+                            .max(comparing(Question::getPriority));
+                    return serviceSuccess(lastQuestionInSection.orElse(null));
+                }
             }
-        }
-        return null;
+            return serviceSuccess(null);
+        });
     }
 
-    // TODO DW - INFUND-1555 - return or handle rest results
+    // TODO DW - INFUND-1555 - in situation where next / prev question not found, should this be a 404?
     @Override
-    public Question getNextQuestionBySection(final Long sectionId) {
-        Section section = sectionService.getById(sectionId).getSuccessObject();
-        if(section!=null && section.getParentSection()!=null) {
-            Section nextSection = sectionService.getNextSection(section).getSuccessObject();
-            if(nextSection!=null) {
-                Optional<Question> firstQuestionInSection = nextSection.getQuestions()
-                        .stream()
-                        .min(comparing(Question::getPriority));
-                return firstQuestionInSection.orElse(null);
+    public ServiceResult<Question> getNextQuestionBySection(final Long sectionId) {
+
+        return sectionService.getById(sectionId).andOnSuccess(section -> {
+
+            if (section.getParentSection() != null) {
+                Section nextSection = sectionService.getNextSection(section).getSuccessObjectOrNull();
+                if(nextSection!=null) {
+                    Optional<Question> firstQuestionInSection = nextSection.getQuestions()
+                            .stream()
+                            .min(comparing(Question::getPriority));
+                    return serviceSuccess(firstQuestionInSection.orElse(null));
+                }
             }
-        }
-        return null;
+            return serviceSuccess(null);
+        });
     }
 
     @Override
-    public Question getPreviousQuestion(final Long questionId) {
-        Question question = questionRepository.findOne(questionId);
-        Question previousQuestion = null;
-        if(question!=null) {
-            previousQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
-                question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
+    public ServiceResult<Question> getPreviousQuestion(final Long questionId) {
 
-            if(previousQuestion==null) {
-                previousQuestion = getPreviousQuestionBySection(question.getSection().getId(), question.getCompetition().getId());
+        return find(question(questionId)).andOnSuccess(question -> {
+
+            Question previousQuestion = null;
+            if (question != null) {
+                previousQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
+                        question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
+
+                if (previousQuestion == null) {
+                    previousQuestion = getPreviousQuestionBySection(question.getSection().getId(), question.getCompetition().getId());
+                }
             }
-        }
 
-        return previousQuestion;
+            return serviceSuccess(previousQuestion);
+        });
     }
 
     private Question getPreviousQuestionBySection(Long section, Long competitionId) {
@@ -253,11 +260,11 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public Boolean isMarkedAsComplete(Question question, Long applicationId, Long organisationId) {
+    public ServiceResult<Boolean> isMarkedAsComplete(Question question, Long applicationId, Long organisationId) {
         if(question.hasMultipleStatuses()) {
-            return isMarkedAsCompleteForOrganisation(question.getId(), applicationId, organisationId);
+            return serviceSuccess(isMarkedAsCompleteForOrganisation(question.getId(), applicationId, organisationId));
         } else {
-            return isMarkedAsCompleteForSingleStatus(question.getId(), applicationId);
+            return serviceSuccess(isMarkedAsCompleteForSingleStatus(question.getId(), applicationId));
         }
     }
 
@@ -286,7 +293,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<QuestionStatus> getQuestionStatusResourceById(Long id){
-        return getOrFail(() -> questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id));
+        return find(() -> questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id));
     }
 
     private Boolean isMarkedAsCompleteForOrganisation(Long questionId, Long applicationId, Long organisationId) {
@@ -331,5 +338,13 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return questionStatuses.stream().
                 filter(qs -> (!qs.getQuestion().hasMultipleStatuses() || (qs.getAssignee() != null && qs.getAssignee().getOrganisation().getId().equals(organisationId))))
                 .collect(Collectors.toList());
+    }
+
+    private Supplier<ServiceResult<Question>> question(Long questionId) {
+        return () -> getQuestion(questionId);
+    }
+
+    private ServiceResult<Question> getQuestion(Long questionId) {
+        return find(() -> questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
     }
 }

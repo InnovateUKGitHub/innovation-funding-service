@@ -13,6 +13,7 @@ import java.util.Optional;
  * This class contains methods to retrieve and store {@link Response} related data,
  * through the RestService {@link ResponseRestService}.
  */
+// TODO DW - INFUND-1555 - handle rest results
 @Service
 public class ResponseServiceImpl implements ResponseService {
 
@@ -21,7 +22,7 @@ public class ResponseServiceImpl implements ResponseService {
 
     @Override
     public List<Response> getByApplication(Long applicationId) {
-        return responseRestService.getResponsesByApplicationId(applicationId);
+        return responseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrNull();
     }
 
     @Override

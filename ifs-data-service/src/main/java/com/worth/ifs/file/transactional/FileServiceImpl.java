@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
 import static com.worth.ifs.util.FileFunctions.pathElementsToPath;
 
@@ -200,12 +200,12 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     private ServiceResult<FileEntry> findFileEntry(Long fileEntryId) {
-        return getOrFail(() -> fileEntryRepository.findOne(fileEntryId), notFoundError(FileEntry.class, fileEntryId));
+        return find(() -> fileEntryRepository.findOne(fileEntryId), notFoundError(FileEntry.class, fileEntryId));
     }
 
     private ServiceResult<File> findFile(FileEntry fileEntry) {
 
-        return getOrFail(() -> {
+        return find(() -> {
 
             Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
             List<String> pathElements = filePathAndName.getLeft();

@@ -5,15 +5,20 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import org.junit.Test;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+
+import static com.worth.ifs.application.service.ListenableFutures.settable;
+
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -73,15 +78,15 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     }
 
     @Test
-    public void test_getCompleteQuestionsPercentage() {
+    public void test_getCompleteQuestionsPercentage() throws Exception {
 
-        String expectedUrl = applicationRestURL + "/getProgressPercentageByApplicationId/123";
+        String expectedUrl =  dataServicesUrl + applicationRestURL + "/getProgressPercentageByApplicationId/123";
         ObjectNode returnedDetails = new ObjectMapper().createObjectNode().put("completedPercentage", "60.5");
 
-        setupGetWithRestResultExpectations(expectedUrl, ObjectNode.class, returnedDetails);
+        when(mockAsyncRestTemplate.exchange(expectedUrl, HttpMethod.GET, httpEntityForRestCall(), ObjectNode.class)).thenReturn(settable(new ResponseEntity<>(returnedDetails, OK)));
 
         // now run the method under test
-        Double percentage = service.getCompleteQuestionsPercentage(123L).getSuccessObject();
+        Double percentage = service.getCompleteQuestionsPercentage(123L).get().getSuccessObject();
 
         assertNotNull(percentage);
         assertEquals(Double.valueOf(60.5), percentage);

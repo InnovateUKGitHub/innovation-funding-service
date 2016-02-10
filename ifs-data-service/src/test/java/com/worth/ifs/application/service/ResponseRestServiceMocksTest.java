@@ -15,11 +15,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.responseListType;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
@@ -38,22 +39,15 @@ public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<Respon
 
     @Test
     public void test_getResponsesByApplicationId() {
-        String expectedUrl = dataServicesUrl + responseRestURL + "/findResponsesByApplication/1";
 
+        List<Response> responses = newResponse().build(3);
+        setupGetWithRestResultExpectations(responseRestURL + "/findResponsesByApplication/1", responseListType(), responses);
 
-        Response[] responses = newResponse().buildArray(3, Response.class);
-        ResponseEntity<Response[]> response = new ResponseEntity(responses, OK);
-
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Response[].class)).thenReturn(response);
         // now run the method under test
-        List<Response> returnedResponses = service.getResponsesByApplicationId(1L);
+        List<Response> returnedResponses = service.getResponsesByApplicationId(1L).getSuccessObject();
 
         // verify
-        assertNotNull(returnedResponses);
-        assertEquals(3, returnedResponses.size());
-        assertEquals(responses[0], returnedResponses.get(0));
-        assertEquals(responses[1], returnedResponses.get(1));
-        assertEquals(responses[2], returnedResponses.get(2));
+        assertEquals(responses, returnedResponses);
 
     }
 

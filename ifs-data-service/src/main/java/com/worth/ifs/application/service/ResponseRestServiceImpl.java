@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.responseListType;
 
 /**
  * ResponseRestServiceImpl is a utility for CRUD operations on {@link Response}'s.
@@ -22,8 +22,8 @@ public class ResponseRestServiceImpl extends BaseRestService implements Response
     @Value("${ifs.data.service.rest.response}")
     String responseRestURL;
 
-    public List<Response> getResponsesByApplicationId(Long applicationId) {
-        return asList(restGet(responseRestURL + "/findResponsesByApplication/" + applicationId, Response[].class));
+    public RestResult<List<Response>> getResponsesByApplicationId(Long applicationId) {
+        return getWithRestResult(responseRestURL + "/findResponsesByApplication/" + applicationId, responseListType());
     }
 
     @Override

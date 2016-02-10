@@ -92,7 +92,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
 
         // Mark one question as incomplete.
         questionService.markAsInComplete(28L, applicationId, leadApplicantProcessRole);
-        assertFalse(questionService.isMarkedAsComplete(questionService.getQuestionById(21L), applicationId, leadApplicantOrganisationId));
+        assertFalse(questionService.isMarkedAsComplete(questionService.getQuestionById(21L).getSuccessObject(), applicationId, leadApplicantOrganisationId).getSuccessObject());
 
         assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());
         assertEquals(7, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccessObject().size());

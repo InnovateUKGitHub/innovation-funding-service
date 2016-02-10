@@ -2,11 +2,15 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.worth.ifs.application.service.ListenableFutures.adapt;
 
 /**
  * This class contains methods to retrieve and store {@link Section} related data,
@@ -94,17 +98,17 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public Section getPreviousSection(Optional<Section> section) {
+    public ListenableFuture<Section> getPreviousSection(Optional<Section> section) {
         if(section!=null && section.isPresent()) {
-            return sectionRestService.getPreviousSection(section.get().getId()).getSuccessObjectOrNull();
+            return adapt(sectionRestService.getPreviousSection(section.get().getId()), RestResult::getSuccessObjectOrNull);
         }
         return null;
     }
 
     @Override
-    public Section getNextSection(Optional<Section> section) {
+    public ListenableFuture<Section> getNextSection(Optional<Section> section) {
         if(section!=null && section.isPresent()) {
-            return sectionRestService.getNextSection(section.get().getId()).getSuccessObjectOrNull();
+            return adapt(sectionRestService.getNextSection(section.get().getId()), RestResult::getSuccessObjectOrNull);
         }
         return null;
     }

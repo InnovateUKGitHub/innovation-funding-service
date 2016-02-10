@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.commons.rest.RestResult;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ public interface SectionRestService {
     RestResult<List<Long>> getIncompletedSectionIds(Long applicationId);
     RestResult<Section> getSection(String name);
     RestResult<Boolean> allSectionsMarkedAsComplete(Long applicationId);
-    RestResult<Section> getPreviousSection(Long sectionId);
-    RestResult<Section> getNextSection(Long sectionId);
+    ListenableFuture<RestResult<Section>> getPreviousSection(Long sectionId);
+    ListenableFuture<RestResult<Section>> getNextSection(Long sectionId);
     RestResult<Section> getSectionByQuestionId(Long questionId);
 }

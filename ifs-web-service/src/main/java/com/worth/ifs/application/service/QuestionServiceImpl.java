@@ -3,10 +3,9 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.resource.QuestionStatusResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,9 +14,9 @@ import java.util.stream.Collectors;
  * This class contains methods to retrieve and store {@link Question} related data,
  * through the RestService {@link QuestionRestService}.
  */
+// TODO DW - INFUND-1555 - handle rest results
 @Service
 public class QuestionServiceImpl implements QuestionService {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     QuestionRestService questionRestService;
@@ -43,12 +42,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<Question> findByCompetition(Long competitionId) {
-        return questionRestService.findByCompetition(competitionId);
+        return questionRestService.findByCompetition(competitionId).getSuccessObjectOrNull();
     }
 
     @Override
     public Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId) {
-        return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId));
+        return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId).getSuccessObjectOrNull());
     }
 
     private Map<Long, QuestionStatusResource> mapToQuestionIds(final List<QuestionStatusResource> questionStatusResources){
@@ -74,38 +73,38 @@ public class QuestionServiceImpl implements QuestionService {
         questionStatuses.stream().forEach(qs -> questionRestService.updateNotification(qs.getId(), true));
     }
 
-    public Set<Long> getMarkedAsComplete(Long applicationId, Long organisationId) {
+    public ListenableFuture<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
         return questionRestService.getMarkedAsComplete(applicationId, organisationId);
     }
 
     @Override
     public Question getById(Long questionId) {
-        return questionRestService.findById(questionId);
+        return questionRestService.findById(questionId).getSuccessObjectOrNull();
     }
 
     @Override
     public Question getNextQuestion(Long questionId) {
-        return questionRestService.getNextQuestion(questionId);
+        return questionRestService.getNextQuestion(questionId).getSuccessObjectOrNull();
     }
 
     @Override
     public Question getPreviousQuestion(Long questionId) {
-        return questionRestService.getPreviousQuestion(questionId);
+        return questionRestService.getPreviousQuestion(questionId).getSuccessObjectOrNull();
     }
 
     @Override
     public Question getPreviousQuestionBySection(Long sectionId) {
-        return questionRestService.getPreviousQuestionBySection(sectionId);
+        return questionRestService.getPreviousQuestionBySection(sectionId).getSuccessObjectOrNull();
     }
 
     @Override
     public Question getNextQuestionBySection(Long sectionId) {
-        return questionRestService.getNextQuestionBySection(sectionId);
+        return questionRestService.getNextQuestionBySection(sectionId).getSuccessObjectOrNull();
     }
 
     @Override
     public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
-        List<QuestionStatusResource> questionStatuses = questionStatusRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId);
+        List<QuestionStatusResource> questionStatuses = questionStatusRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId).getSuccessObjectOrNull();
         if(questionStatuses == null || questionStatuses.size() == 0){
             return null;
         }
@@ -114,6 +113,6 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId){
-        return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId));
+        return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccessObjectOrNull());
     }
 }

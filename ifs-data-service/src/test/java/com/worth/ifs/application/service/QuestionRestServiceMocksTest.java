@@ -12,12 +12,11 @@ import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.verify;
+import static com.worth.ifs.application.service.ListenableFutures.settable;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionListType;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.PUT;
 
 public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<QuestionRestServiceImpl> {
 
@@ -33,44 +32,34 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
     @Test
     public void assignTest() {
-        String expectedUrl = dataServicesUrl + questionRestURL + "/assign/1/2/3/4";
+
+        setupPutWithRestResultExpectations(questionRestURL + "/assign/1/2/3/4", Void.class, null, null);
 
         // now run the method under test
-        service.assign(1L, 2L, 3L, 4L);
-
-        // verify
-        verify(mockRestTemplate).exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class);
+        assertTrue(service.assign(1L, 2L, 3L, 4L).isSuccess());
     }
 
     @Test
     public void findByCompetitionTest() {
-        String expectedUrl = dataServicesUrl + questionRestURL + "/findByCompetition/1";
 
-        Question[] questions = newQuestion().buildArray(3, Question.class);
-        ResponseEntity<Question[]> response = new ResponseEntity<>(questions, HttpStatus.OK);
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Question[].class)).thenReturn(response);
+        List<Question> questions = newQuestion().build(3);
+        setupGetWithRestResultExpectations(questionRestURL + "/findByCompetition/1", questionListType(), questions);
 
         // now run the method under test
-        List<Question> returnedQuestions = service.findByCompetition(1L);
+        List<Question> returnedQuestions = service.findByCompetition(1L).getSuccessObject();
 
         // verify
-        assertNotNull(returnedQuestions);
-        assertEquals(3, returnedQuestions.size());
-        assertEquals(questions[0], returnedQuestions.get(0));
-        assertEquals(questions[1], returnedQuestions.get(1));
-        assertEquals(questions[2], returnedQuestions.get(2));
+        assertEquals(questions, returnedQuestions);
     }
 
     @Test
     public void findByIdTest() {
-        String expectedUrl = dataServicesUrl + questionRestURL + "/id/1";
 
         Question question = newQuestion().build();
-        ResponseEntity<Question> response = new ResponseEntity<>(question, HttpStatus.OK);
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Question.class)).thenReturn(response);
+        setupGetWithRestResultExpectations(questionRestURL + "/id/1", Question.class, question);
 
         // now run the method under test
-        Question returnedQuestion = service.findById(1L);
+        Question returnedQuestion = service.findById(1L).getSuccessObject();
 
         // verify
         assertNotNull(returnedQuestion);
@@ -78,15 +67,14 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     }
 
     @Test
-    public void getMarkedAsCompleteTest() {
+    public void getMarkedAsCompleteTest() throws Exception {
         String expectedUrl = dataServicesUrl + questionRestURL + "/getMarkedAsComplete/1/2";
 
         Long[] questionIds = new Long[]{3L, 4L, 5L};
-        ResponseEntity<Long[]> response = new ResponseEntity<>(questionIds, HttpStatus.OK);
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Long[].class)).thenReturn(response);
+        when(mockAsyncRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(""), Long[].class)).thenReturn(settable(new ResponseEntity<>(questionIds, HttpStatus.OK)));
 
         // now run the method under test
-        Set<Long> returnedQuestionIds = service.getMarkedAsComplete(1L, 2L);
+        Set<Long> returnedQuestionIds = service.getMarkedAsComplete(1L, 2L).get();
 
         // verify
         assertNotNull(questionIds);
@@ -96,48 +84,37 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
     @Test
     public void markAsCompleteTest() {
-        String expectedUrl = dataServicesUrl + questionRestURL + "/markAsComplete/1/2/3";
-
-        service.markAsComplete(1L, 2L, 3L);
-        verify(mockRestTemplate).exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class);
+        setupPutWithRestResultExpectations(questionRestURL + "/markAsComplete/1/2/3", Void.class, null, null);
+        assertTrue(service.markAsComplete(1L, 2L, 3L).isSuccess());
     }
 
     @Test
     public void markAsInCompleteTest() {
-        String expectedUrl = dataServicesUrl + questionRestURL + "/markAsInComplete/1/2/3";
-
-        service.markAsInComplete(1L, 2L, 3L);
-        verify(mockRestTemplate).exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class);
+        setupPutWithRestResultExpectations(questionRestURL + "/markAsInComplete/1/2/3", Void.class, null, null);
+        assertTrue(service.markAsInComplete(1L, 2L, 3L).isSuccess());
     }
 
     @Test
     public void updateNotificationTest() {
-        String expectedUrl = dataServicesUrl + questionRestURL + "/updateNotification/1/true";
-        service.updateNotification(1L, true);
-        verify(mockRestTemplate).exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class);
+        setupPutWithRestResultExpectations(questionRestURL + "/updateNotification/1/true", Void.class, null, null);
+        assertTrue(service.updateNotification(1L, true).isSuccess());
     }
 
     @Test
     public void getNextQuestionTest() {
-        String expectedUrl = dataServicesUrl + questionRestURL + "/getNextQuestion/1";
         Question question = newQuestion().build();
+        setupGetWithRestResultExpectations(questionRestURL + "/getNextQuestion/1", Question.class, question);
 
-        ResponseEntity<Question> response = new ResponseEntity<>(question, HttpStatus.OK);
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Question.class)).thenReturn(response);
-
-        Question nextQuestion = service.getNextQuestion(1L);
+        Question nextQuestion = service.getNextQuestion(1L).getSuccessObject();
         assertEquals(question, nextQuestion);
     }
 
     @Test
     public void getPreviousQuestionTest() {
-        String expectedUrl = dataServicesUrl + questionRestURL + "/getPreviousQuestion/2";
         Question question = newQuestion().build();
+        setupGetWithRestResultExpectations(questionRestURL + "/getPreviousQuestion/2", Question.class, question);
 
-        ResponseEntity<Question> response = new ResponseEntity<>(question, HttpStatus.OK);
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Question.class)).thenReturn(response);
-
-        Question nextQuestion = service.getPreviousQuestion(2L);
+        Question nextQuestion = service.getPreviousQuestion(2L).getSuccessObject();
         assertEquals(question, nextQuestion);
     }
 }

@@ -20,6 +20,8 @@ import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.application.service.ListenableFutures.call;
+
 /**
  * This class contains methods to retrieve and store {@link Organisation} related data,
  * through the RestService {@link com.worth.ifs.user.service.OrganisationRestService}.
@@ -36,9 +38,9 @@ public class OrganisationServiceImpl  implements OrganisationService {
     private ProcessRoleService processRoleService;
 
     public TreeSet<Organisation> getApplicationOrganisations(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
+        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
                 .map(id -> processRoleService.getById(id))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
 
         Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
@@ -51,9 +53,9 @@ public class OrganisationServiceImpl  implements OrganisationService {
     }
 
     public Optional<Organisation> getApplicationLeadOrganisation(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
+        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
                 .map(id -> processRoleService.getById(id))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
 
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
@@ -62,9 +64,9 @@ public class OrganisationServiceImpl  implements OrganisationService {
     }
 
     public Optional<Organisation> getUserOrganisation(ApplicationResource application, Long userId) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
+        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
                 .map(id -> processRoleService.getById(id))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().getId().equals(userId))
                 .map(ProcessRole::getOrganisation)
