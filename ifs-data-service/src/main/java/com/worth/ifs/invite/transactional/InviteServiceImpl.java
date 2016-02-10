@@ -141,18 +141,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public Invite findOne(Long id) {
-        return inviteRepository.findOne(id);
-    }
-
-    @Override
-    public List<Invite> findByApplicationId(Long applicationId) {
-        return inviteRepository.findByApplicationId(applicationId);
-    }
-
-    @Override
-    public Optional<Invite> getByHash(String hash) {
-        return inviteRepository.getByHash(hash);
+    public ServiceResult<Invite> findOne(Long id) {
+        return find(() -> inviteRepository.findOne(id), notFoundError(Invite.class, id));
     }
 
     @Override
@@ -171,24 +161,17 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public ServiceResult<InviteResource> getInviteByHash(String hash) {
-        Optional<Invite> invite = getByHash(hash);
-        return invite.map(existingInvite -> serviceSuccess(new InviteResource(existingInvite))).
-                orElse(serviceFailure(notFoundError(Invite.class, hash)));
-    }
-
-    @Override
     public ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
-        Optional<Invite> invite = getByHash(hash);
-        return invite.map(existingInvite -> serviceSuccess(new InviteOrganisationResource(existingInvite.getInviteOrganisation()))).
-                orElse(serviceFailure(notFoundError(Invite.class, hash)));
+        return getByHash(hash).andOnSuccess(invite -> serviceSuccess(new InviteOrganisationResource(invite.getInviteOrganisation())));
     }
 
     @Override
     public ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
-        List<Invite> invites = findByApplicationId(applicationId);
-        List<InviteOrganisationResource> inviteOrganisations = simpleMap(invites, invite -> new InviteOrganisationResource(invite.getInviteOrganisation()));
-        return serviceSuccess(inviteOrganisations);
+
+        return findByApplicationId(applicationId).andOnSuccess(invites -> {
+            List<InviteOrganisationResource> inviteOrganisations = simpleMap(invites, invite -> new InviteOrganisationResource(invite.getInviteOrganisation()));
+            return serviceSuccess(inviteOrganisations);
+        });
     }
 
     @Override
@@ -197,6 +180,19 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         inviteRepository.save(invites);
         return serviceSuccess(sendInvites(invites));
 
+    }
+
+    @Override
+    public ServiceResult<InviteResource> getInviteByHash(String hash) {
+        return getByHash(hash).andOnSuccess(invite -> serviceSuccess(new InviteResource(invite)));
+    }
+
+    private ServiceResult<Invite> getByHash(String hash) {
+        return find(() -> inviteRepository.getByHash(hash), notFoundError(Invite.class, hash));
+    }
+
+    private ServiceResult<List<Invite>> findByApplicationId(Long applicationId) {
+        return serviceSuccess(inviteRepository.findByApplicationId(applicationId));
     }
 
     private InviteResultsResource sendInvites(List<Invite> invites) {

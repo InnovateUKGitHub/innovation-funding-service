@@ -9,7 +9,6 @@ import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.security.NotSecured;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface InviteService {
 
@@ -20,19 +19,10 @@ public interface InviteService {
     ServiceResult<Notification> inviteCollaboratorToApplication(String baseUrl, Invite invite);
 
     @NotSecured("TODO")
-    Invite findOne(Long id);
-
-    @NotSecured("TODO")
-    List<Invite> findByApplicationId(Long applicationId);
-
-    @NotSecured("TODO")
-    Optional<Invite> getByHash(String hash);
+    ServiceResult<Invite> findOne(Long id);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource);
-
-    @NotSecured("This method is not secured, since the person accepting the invite, is not yet registered. This resource should only contain the most basic data like competition name and application name.")
-    ServiceResult<InviteResource> getInviteByHash(String hash);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash);
@@ -42,4 +32,7 @@ public interface InviteService {
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<InviteResultsResource> saveInvites(List<InviteResource> inviteResources);
+
+    @NotSecured("TODO DW - implement when permissions matrix available")
+    ServiceResult<InviteResource> getInviteByHash(String hash);
 }
