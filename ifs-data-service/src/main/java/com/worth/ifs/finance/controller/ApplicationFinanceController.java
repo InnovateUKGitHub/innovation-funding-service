@@ -4,12 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
+import com.worth.ifs.finance.handler.item.OrganisationFinanceHandler;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
+import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import org.apache.commons.logging.Log;
@@ -44,7 +47,13 @@ public class ApplicationFinanceController {
     ApplicationRepository applicationRepository;
 
     @Autowired
+    QuestionService questionService;
+
+
+    @Autowired
     ApplicationFinanceHandler applicationFinanceHandler;
+    @Autowired
+    OrganisationFinanceHandler organisationFinanceHandler;
 
     @Autowired
     CostRepository costRepository;
@@ -63,7 +72,7 @@ public class ApplicationFinanceController {
 
         List<ApplicationFinance> applicationFinances = applicationFinanceRepository.findByApplicationId(applicationId);
         List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();
-        if(applicationFinances!=null) {
+        if (applicationFinances != null) {
             applicationFinances.stream().forEach(af -> applicationFinanceResources.add(new ApplicationFinanceResource(af)));
         }
         return applicationFinanceResources;
@@ -84,16 +93,29 @@ public class ApplicationFinanceController {
         Application application = applicationRepository.findOne(applicationId);
         Organisation organisation = organisationRepository.findOne(organisationId);
         ApplicationFinance applicationFinance = new ApplicationFinance(application, organisation);
-        return new ApplicationFinanceResource(applicationFinanceRepository.save(applicationFinance));
+
+        applicationFinance = applicationFinanceRepository.save(applicationFinance);
+        initialize(applicationFinance);
+        return new ApplicationFinanceResource(applicationFinance);
+    }
+
+    /**
+     * There are some objects that need a default value, and an instance to use in the form,
+     * so there are some objects that need to be created before loading the form.
+     */
+    private void initialize(ApplicationFinance applicationFinance) {
+        for (CostType costType : CostType.values()) {
+            organisationFinanceHandler.initialiseCostType(applicationFinance, costType);
+        }
     }
 
     @RequestMapping("/getById/{applicationFinanceId}")
-    public ApplicationFinanceResource findOne(@PathVariable("applicationFinanceId") final Long applicationFinanceId){
+    public ApplicationFinanceResource findOne(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
         return new ApplicationFinanceResource(applicationFinanceRepository.findOne(applicationFinanceId));
     }
 
     @RequestMapping("/update/{applicationFinanceId}")
-    public ApplicationFinanceResource update(@PathVariable("applicationFinanceId") final Long applicationFinanceId, @RequestBody final ApplicationFinanceResource applicationFinance){
+    public ApplicationFinanceResource update(@PathVariable("applicationFinanceId") final Long applicationFinanceId, @RequestBody final ApplicationFinanceResource applicationFinance) {
         log.error(String.format("ApplicationFinanceController.update(%d)", applicationFinanceId));
         ApplicationFinance dbFinance = applicationFinanceRepository.findOne(applicationFinance.getId());
         dbFinance.merge(applicationFinance);

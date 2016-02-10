@@ -34,6 +34,16 @@ IFS.finance = (function(){
                     });
                   }
                 });
+                //force recalculate, only used for removal of finances
+                jQuery('body').on('recalculateAllFinances',function(){
+                  if(jQuery('[data-calculation-fields]').length){
+                      jQuery('[data-calculation-fields]').each(function(){
+                          var element = jQuery(this);
+                          var fields = element.attr('data-calculation-fields');
+                          IFS.finance.doMath(element,fields.split(','));
+                      });
+                  }
+                });
             },
             getElementValue : function(element){
               var rawValue = jQuery(element).attr("data-calculation-rawvalue");
