@@ -1,7 +1,7 @@
 package com.worth.ifs.commons.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worth.ifs.application.service.Futures;
+import com.worth.ifs.application.service.FutureAdapterWithExceptionHandling;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorEnvelope;
 import com.worth.ifs.commons.rest.RestResult;
@@ -63,11 +63,11 @@ public abstract class BaseRestService {
         this.asyncRestTemplateSupplier = asyncRestTemplateSupplier;
     }
 
-    public <T> ListenableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz){
-         return withEmptyCallback(getAsyncRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), clazz));
+    public <T> ListenableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz) {
+        return withEmptyCallback(getAsyncRestTemplate().exchange(getDataRestServiceURL() + path, HttpMethod.GET, jsonEntity(""), clazz));
     }
 
-    private static final <T> ListenableFuture<ResponseEntity<T>> withEmptyCallback(ListenableFuture<ResponseEntity<T>> toAddTo){
+    private static final <T> ListenableFuture<ResponseEntity<T>> withEmptyCallback(ListenableFuture<ResponseEntity<T>> toAddTo) {
         // If we do not add a callback then the behaviour of calling get on the future becomes serial instead of parallel.
         // I.e. the future will not start execution until get is called. However if an empty callback is added the future
         // will start execution immediately (or as soon as a thread is available) and we can then call get.
@@ -90,7 +90,7 @@ public abstract class BaseRestService {
      * restGet is a generic method that performs a RESTful GET request.
      *
      * @param path - the unified name resource of the request to be made
-     * @param c - the class type of that the requestor wants to get from the request response.
+     * @param c    - the class type of that the requestor wants to get from the request response.
      * @param <T>
      * @return
      */
@@ -115,17 +115,17 @@ public abstract class BaseRestService {
      * restGet is a generic method that performs a RESTful GET request.
      *
      * @param path - the unified name resource of the request to be made
-     * @param c - the class type of that the requestor wants to get from the request response.
+     * @param c    - the class type of that the requestor wants to get from the request response.
      * @param <T>
      * @return
      */
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
-        LOG.debug("restGetEntity: "+path);
+        LOG.debug("restGetEntity: " + path);
         return getRestTemplate().exchange(getDataRestServiceURL() + path, GET, jsonEntity(null), c);
     }
 
-    protected  <T> ResponseEntity<T> restGet(String path, ParameterizedTypeReference<T> returnType){
-        LOG.debug("restGet: "+path);
+    protected <T> ResponseEntity<T> restGet(String path, ParameterizedTypeReference<T> returnType) {
+        LOG.debug("restGet: " + path);
         return getRestTemplate().exchange(getDataRestServiceURL() + path, GET, jsonEntity(null), returnType);
     }
 
@@ -134,21 +134,21 @@ public abstract class BaseRestService {
      * restPost is a generic method that performs a RESTful POST request.
      *
      * @param path - the unified name resource of the request to be made
-     * @param c - the class type of that the requestor wants to get from the request response.
+     * @param c    - the class type of that the requestor wants to get from the request response.
      * @param <T>
      * @return
      */
     protected <T> T restPost(String path, Object postEntity, Class<T> c) {
-        LOG.debug("restPostWithEntity: "+path);
+        LOG.debug("restPostWithEntity: " + path);
         return restPostWithEntity(path, postEntity, c).getBody();
     }
 
     protected void restPut(String path) {
-        LOG.debug("restPutEntity: "+path);
+        LOG.debug("restPutEntity: " + path);
         restPutEntity(path, Void.class);
     }
 
-    protected <T> ResponseEntity<T> restPutEntity(String path, Class<T> c){
+    protected <T> ResponseEntity<T> restPutEntity(String path, Class<T> c) {
         return getRestTemplate().exchange(getDataRestServiceURL() + path, PUT, jsonEntity(null), c);
     }
 
@@ -217,58 +217,44 @@ public abstract class BaseRestService {
     }
 
 
-
-    private <T> RestResult<T> exchangeWithRestResult(Supplier<ResponseEntity<T>> exchangeFn, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+    private <T> RestResult<T> exchangeWithRestResult(final Supplier<ResponseEntity<T>> exchangeFn, final HttpStatus expectedSuccessCode, final HttpStatus... otherExpectedStatusCodes) {
         try {
-            ResponseEntity<T> response = exchangeFn.get();
-            List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
-
-            if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
-                return RestResult.<T> restSuccess(response.getBody(), response.getStatusCode());
-            } else {
-                return RestResult.<T> restFailure(new Error(INTERNAL_SERVER_ERROR, "Unexpected status code " + response.getStatusCode(), INTERNAL_SERVER_ERROR));
-            }
+            return fromResponse(exchangeFn.get(), expectedSuccessCode, otherExpectedStatusCodes);
         } catch (HttpStatusCodeException e) {
+            return fromException(e);
+        }
+    }
 
-            return fromJson(e.getResponseBodyAsString(), RestErrorEnvelope.class).mapLeftOrRight(
-                    failure -> RestResult.<T>restFailure(internalServerErrorError("Unable to process JSON response as type " + RestErrorEnvelope.class.getSimpleName())),
-                    success -> RestResult.<T> restFailure(success.getErrors(), e.getStatusCode())
-            );
+    private <T> RestResult<T> fromException(HttpStatusCodeException e) {
+        return fromJson(e.getResponseBodyAsString(), RestErrorEnvelope.class).mapLeftOrRight(
+                failure -> RestResult.<T>restFailure(internalServerErrorError("Unable to process JSON response as type " + RestErrorEnvelope.class.getSimpleName())),
+                success -> RestResult.<T>restFailure(success.getErrors(), e.getStatusCode())
+        );
+    }
+
+    private <T> RestResult<T> fromResponse(final ResponseEntity<T> response, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
+        if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
+            return RestResult.<T>restSuccess(response.getBody(), response.getStatusCode());
+        } else {
+            return RestResult.<T>restFailure(new Error(INTERNAL_SERVER_ERROR, "Unexpected status code " + response.getStatusCode(), INTERNAL_SERVER_ERROR));
         }
     }
 
     private <T> Future<RestResult<T>> exchangeWithRestResultAsync(Supplier<ListenableFuture<ResponseEntity<T>>> exchangeFn, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        Future<ResponseEntity<T>> responseEntityListenableFuture = withEmptyCallback(exchangeFn.get());
-        Future<RestResult<T>> adapt = Futures.adapt(responseEntityListenableFuture, response -> {
-            try {
-                List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
-
-                if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
-                    return RestResult.<T>restSuccess(response.getBody(), response.getStatusCode());
-                } else {
-                    return RestResult.<T>restFailure(new Error(INTERNAL_SERVER_ERROR, "Unexpected status code " + response.getStatusCode(), INTERNAL_SERVER_ERROR));
-                }
-            } catch (HttpStatusCodeException e) {
-
-                return fromJson(e.getResponseBodyAsString(), RestErrorEnvelope.class).mapLeftOrRight(
-                        failure -> RestResult.<T>restFailure(internalServerErrorError("Unable to process JSON response as type " + RestErrorEnvelope.class.getSimpleName())),
-                        success -> RestResult.<T>restFailure(success.getErrors(), e.getStatusCode())
-                );
-            }
-        });
-        return adapt;
+        Future<ResponseEntity<T>> raw = withEmptyCallback(exchangeFn.get());
+        return new FutureAdapterWithExceptionHandling<>(raw,
+                response -> fromResponse(response, expectedSuccessCode, otherExpectedStatusCodes)
+                , e -> e instanceof HttpStatusCodeException ? right(fromException((HttpStatusCodeException) e)) : left());
     }
 
     private <T> Either<Void, T> fromJson(String json, Class<T> clazz) {
-
         if (Void.class.equals(clazz)) {
             return right(null);
         }
-
         if (String.class.equals(clazz)) {
-            return Either.<Void, T> right((T) json);
+            return Either.<Void, T>right((T) json);
         }
-
         try {
             return right(new ObjectMapper().readValue(json, clazz));
         } catch (IOException e) {
@@ -291,7 +277,7 @@ public abstract class BaseRestService {
     /**
      * restPost is a generic method that performs a RESTful POST request.
      *
-     * @param path - the unified name resource of the request to be made
+     * @param path         - the unified name resource of the request to be made
      * @param responseType - the class type of that the requestor wants to get from the request response.
      * @param <T>
      * @return
@@ -316,15 +302,15 @@ public abstract class BaseRestService {
         return headers;
     }
 
-    public HttpHeaders getHeaders(){
+    public HttpHeaders getHeaders() {
         return getJSONHeaders();
     }
 
-    protected <T> HttpEntity<T> jsonEntity(T entity){
+    protected <T> HttpEntity<T> jsonEntity(T entity) {
         HttpHeaders headers = getHeaders();
         if (SecurityContextHolder.getContext() != null &&
-            SecurityContextHolder.getContext().getAuthentication() != null &&
-            SecurityContextHolder.getContext().getAuthentication().getCredentials() != null) {
+                SecurityContextHolder.getContext().getAuthentication() != null &&
+                SecurityContextHolder.getContext().getAuthentication().getCredentials() != null) {
             headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         }
         return new HttpEntity<>(entity, headers);
