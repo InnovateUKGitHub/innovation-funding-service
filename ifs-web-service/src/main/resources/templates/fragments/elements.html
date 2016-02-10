@@ -73,7 +73,7 @@
         <div class="pie small" th:text="${daysPercentage}+'%'"></div>
         <div class="pie-overlay">
             <div th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</div>
-            <span>Days left</span>
+            <span class="visuallyhidden">Days left</span>
         </div>
     </div>
 </div>

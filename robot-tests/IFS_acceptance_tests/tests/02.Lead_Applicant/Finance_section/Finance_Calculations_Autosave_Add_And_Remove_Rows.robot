@@ -129,7 +129,7 @@ Other Funding
 *** Keywords ***
 the Applicant fills in the Labour costs
     Click Element    css=[aria-controls="collapsible-1"]
-    Click Element    link=Add another role
+    Click Element    jQuery=button:contains('Add another role')
     Sleep    1s
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     Clear Element Text    css=#cost-labour-1-workingDays
@@ -141,10 +141,10 @@ the Applicant fills in the Labour costs
 the calculations of the labour should be correct
     Sleep    1s
     Textfield Value Should Be    css=.labour-costs-table tbody td:nth-of-type(3) input    £ 522
-    Textfield Value Should Be    jquery=#collapsible-1 td:contains("Total costs") input    £ 52,174
+    Textfield Value Should Be    jQuery=#collapsible-1 td:contains("Total costs") input    £ 52,174
 
 the applicant removes one labour row
-    Click Element    Link=Remove
+    Click Element    name=remove_cost
 
 the labour total should be correct again
     sleep    1s
@@ -159,7 +159,7 @@ the total labour cost calculation should be correct
     Element Should Contain    css=[data-mirror="#section-total-9"]    £ 104,348
 
 the applicant fills a second row in the labour costs
-    Click Element    link=Add another role
+    Click Element    jQuery=button:contains('Add another role')
     Sleep    1s
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
@@ -206,7 +206,7 @@ the calculations of the overheads should be correct once more
 
 the Applicant fills the Materials fields
     Click Element    xpath=//*[@aria-controls="collapsible-3"]
-    Click link    Add another materials cost
+    Click Element    jQuery=button:contains('Add another materials cost')
     Wait Until Page Contains Element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
@@ -214,13 +214,13 @@ the Applicant fills the Materials fields
     focus    css=.app-submit-btn
 
 the applicant removes the material rows
-    click element    link=Remove
+    click Element    css=#material-costs-table tbody tr:nth-child(1) button
     sleep    1s
-    click element    link=Remove
+    click Element    css=#material-costs-table tbody tr:nth-child(1) button
     sleep    1s
 
 the applicant fills a second row in the materials section
-    Click link    link=Add another materials cost
+    Click Element    jQuery=button:contains('Add another materials cost')
     Wait Until Page Contains Element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
@@ -236,7 +236,7 @@ the total materials costs calculations should be correct
 
 the applicant edits the Subcontracting costs section
     Click Element    css=[aria-controls="collapsible-5"]
-    Click Link    link=Add another subcontractor
+    Click Element    jQuery=button:contains('Add another subcontractor')
     Wait Until Page Contains Element    css=#collapsible-5 .form-row:nth-child(1)
     Input Text    css=#collapsible-5 .form-row:nth-child(1) input[id$=subcontractingCost]    100
     input text    css=#collapsible-5 .form-row:nth-child(1) input[id$=companyName]    test
@@ -249,7 +249,7 @@ The total subcontracting costs should be correct
     Element Should Contain    css=[aria-controls="collapsible-5"] [data-mirror]    £ 200
 
 the applicant adds a new row in the subcontracting costs
-    Click link    Link=Add another subcontractor
+    Click Element    jQuery=button:contains('Add another subcontractor')
     Wait Until Page Contains Element    css=#collapsible-5 .form-row:nth-child(2)
     Input Text    css=#collapsible-5 .form-row:nth-child(2) input[id$=subcontractingCost]    100
     input text    css=#collapsible-5 .form-row:nth-child(2) input[id$=companyName]    test
@@ -258,8 +258,8 @@ the applicant adds a new row in the subcontracting costs
 
 the applicant fills the 'capital usage' field
     Click Element    css=[aria-controls="collapsible-4"]
-    Click Element    link=Add another asset
-    Wait Until Element Is Visible    link=Remove
+    Click Element    jQuery=button:contains('Add another asset')
+    Wait Until Element Is Visible    css=#capital_usage [name="remove_cost"]
     Input Text    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
     input text    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    900
     input text    css=.form-finances-capital-usage-utilisation    100
@@ -270,7 +270,7 @@ the calculations of the 'capital usage' should be correct
     Textfield Value Should Be    css=#section-total-12    £ 100
 
 the applicant fills a new subcontractor
-    Click Element    link=Add another asset
+    Click Element    jQuery=button:contains('Add another asset')
     Wait Until Element Is Visible    css=.form-row:nth-child(2) .form-finances-capital-usage-npv
     Input Text    css=.form-row:nth-child(2) .form-finances-capital-usage-npv    1000
     input text    css=.form-row:nth-child(2) .form-finances-capital-usage-residual-value    900
@@ -283,14 +283,14 @@ the total calculation of the capital usage should be correct
     Textfield Value Should Be    css=#section-total-12    £ 200
 
 the applicant removes one subcontractor row
-    click element    link=Remove
+    click Element    css=#capital_usage [data-repeatable-row]:nth-child(1) button
 
 the total of the capital usage should be correct again
     sleep    1s
     Textfield Value Should Be    css=#section-total-12    £ 100
 
 the applicant removes one subcontracting row
-    click element    link=Remove
+    click Element    css=#subcontracting_costs [data-repeatable-row]:nth-child(1) button
 
 the total subcontracting total should be correct again
     Sleep    1s
@@ -300,7 +300,7 @@ the total subcontracting total should be correct again
 
 the Applicant fills the Travel fields
     Click Element    css=[aria-controls="collapsible-6"]
-    Click link    Add another travel cost
+    Click Element    jQuery=button:contains('Add another travel cost')
     Wait Until Page Contains Element    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
@@ -314,7 +314,7 @@ the calculations of the Travel and subsistence should be correct
     Textfield Value Should Be    css=#section-total-14    £ 1,000
 
 the applicant fills a second row in the travel and subsistence section
-    Click link    Add another travel cost
+    Click Element    jQuery=button:contains('Add another travel cost')
     Wait Until Page Contains Element    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
@@ -328,16 +328,16 @@ the total travel and subsistence costs calculations should be correct
     Textfield Value Should Be    css=#section-total-14    £ 2,000
 
 the applicant removes one travel and subsistence row
-    click element    link=Remove
+    click Element    css=#travel-costs-table [data-repeatable-row]:nth-child(1) button
 
 the applicant adds one row for the other costs
     Click Element    css=[aria-controls="collapsible-7"]
-    click element    link=Add another cost
+    click Element    jQuery=button:contains('Add another cost')
     Wait Until Element Is Visible    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    100
 
 the applicant adds a second row for the other costs fields
-    click element    link=Add another cost
+    click Element    jQuery=button:contains('Add another cost')
     Wait Until Element Is Visible    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Input Text    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
     Mouse Out    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
@@ -401,13 +401,13 @@ Applicant selects 'No' for other funding
 
 Applicant chooses to add yet another source of funding
     Select Radio button    other_funding-otherPublicFunding-35-54    Yes
-    Click Link    Add another source of funding
+    Click Element    jQuery=button:contains('Add another source of funding')
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Click Element    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
     Sleep    2s
 
 Applicant chooses to add another source of funding
-    Click Link    Add another source of funding
+    Click Element    jQuery=button:contains('Add another source of funding')
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
 
 Applicant selects 'Yes' for other funding

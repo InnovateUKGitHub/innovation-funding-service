@@ -60,6 +60,9 @@ public interface QuestionService {
     @NotSecured("TODO")
     ServiceResult<Boolean> isMarkedAsComplete(Question question, Long applicationId, Long organisationId);
 
+    @NotSecured("TODO")
+    Question getQuestionByFormInputType(String formInputTypeTitle);
+
     @NotSecured("TODO DW - implement when permissions available")
     ServiceResult<List<QuestionStatus>> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId);
 

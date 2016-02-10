@@ -1,15 +1,16 @@
 package com.worth.ifs.finance.service;
 
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.cost.CostItem;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.costItemListType;
+import static java.util.Arrays.asList;
 
 /**
  * CostRestServiceImpl is a utility for CRUD operations on {@link Cost}.
@@ -18,32 +19,33 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.costItem
  */
 @Service
 public class CostRestServiceImpl extends BaseRestService implements CostRestService {
+    private final Log log = LogFactory.getLog(getClass());
 
     @Value("${ifs.data.service.rest.cost}")
     String costRestURL;
 
     @Override
-    public RestResult<Void> add(Long applicationFinanceId, Long questionId, CostItem costItem) {
-        return postWithRestResult(costRestURL + "/add/" + applicationFinanceId + "/" + questionId, costItem, Void.class);
+    public void add(Long applicationFinanceId, Long questionId, CostItem costItem) {
+        restPut(costRestURL + "/add/" + applicationFinanceId + "/" + questionId, costItem);
     }
 
     @Override
-    public RestResult<List<CostItem>> getCosts(Long applicationFinanceId) {
-        return getWithRestResult(costRestURL + "/get/" + applicationFinanceId, costItemListType());
+    public List<CostItem> getCosts(Long applicationFinanceId) {
+        return asList(restGet(costRestURL + "/get/"+applicationFinanceId, CostItem[].class));
     }
 
     @Override
-    public RestResult<Void> update(CostItem costItem) {
-        return putWithRestResult(costRestURL + "/update/" + costItem.getId(), costItem, Void.class);
+    public void update(CostItem costItem) {
+        restPut(costRestURL + "/update/" + costItem.getId(), costItem);
     }
 
     @Override
-    public RestResult<Void> delete(Long costId) {
-        return deleteWithRestResult(costRestURL + "/delete/" + costId, Void.class);
+    public void delete(Long costId) {
+        restDelete(costRestURL + "/delete/"+costId);
     }
 
     @Override
-    public RestResult<CostItem> findById(Long id) {
-        return getWithRestResult(costRestURL + "/findById/" + id, CostItem.class);
+    public CostItem findById(Long id) {
+        return restGet(costRestURL + "/findById/" + id, CostItem.class);
     }
 }
