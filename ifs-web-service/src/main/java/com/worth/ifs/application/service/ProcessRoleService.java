@@ -1,9 +1,9 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.user.domain.ProcessRole;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * Interface for CRUD operations on {@link ProcessRole} related data.
@@ -11,6 +11,6 @@ import java.util.List;
 public interface ProcessRoleService {
     ProcessRole findProcessRole(Long userId, Long applicationId);
     List<ProcessRole> findProcessRolesByApplicationId(Long applicationId);
-    ListenableFuture<List<ProcessRole>> findAssignableProcessRoles(Long applicationId);
-    ListenableFuture<ProcessRole> getById(Long id);
+    Future<List<ProcessRole>> findAssignableProcessRoles(Long applicationId);
+    Future<ProcessRole> getById(Long id);
 }

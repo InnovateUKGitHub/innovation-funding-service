@@ -7,6 +7,8 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.finance.resource.CostFieldResource;
+import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -18,6 +20,23 @@ import java.util.List;
  * A utility for commonly used ParameterizedTypeReferences
  */
 public class ParameterizedTypeReferences {
+
+
+    /**
+     * Basic types
+     */
+
+    public static ParameterizedTypeReference<List<Long>> longsListType() {
+        return new ParameterizedTypeReference<List<Long>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<String>> stringsListType() {
+        return new ParameterizedTypeReference<List<String>>() {};
+    }
+
+    /**
+     * IFS types
+     */
 
     public static ParameterizedTypeReference<List<ApplicationResource>> applicationResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationResource>>() {};
@@ -39,10 +58,6 @@ public class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<Competition>>() {};
     }
 
-    public static ParameterizedTypeReference<List<Long>> longsListType() {
-        return new ParameterizedTypeReference<List<Long>>() {};
-    }
-
     public static ParameterizedTypeReference<List<QuestionStatus>> questionStatusListType() {
         return new ParameterizedTypeReference<List<QuestionStatus>>() {};
     }
@@ -61,5 +76,13 @@ public class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<Assessment>> assessmentListType() {
         return new ParameterizedTypeReference<List<Assessment>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<FormInputResponse>> formInputResponseListType() {
+        return new ParameterizedTypeReference<List<FormInputResponse>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CostFieldResource>> costFieldResourceListType() {
+        return new ParameterizedTypeReference<List<CostFieldResource>>() {};
     }
 }

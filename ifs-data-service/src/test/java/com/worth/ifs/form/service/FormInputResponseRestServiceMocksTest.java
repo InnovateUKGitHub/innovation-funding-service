@@ -5,15 +5,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.form.domain.FormInputResponse;
 import org.junit.Test;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.stringsListType;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -32,32 +31,26 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void test_getResponsesByApplicationId() {
-        String expectedUrl = dataServicesUrl + formInputResponseRestURL + "/findResponsesByApplication/123";
-        FormInputResponse[] returnedResponses = newFormInputResponse().buildArray(3, FormInputResponse.class);
-        ResponseEntity<FormInputResponse[]> returnedEntity = new ResponseEntity<>(returnedResponses, OK);
+        List<FormInputResponse> returnedResponses = newFormInputResponse().build(3);
 
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), FormInputResponse[].class)).thenReturn(returnedEntity);
+        setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponsesByApplication/123", formInputResponseListType(), returnedResponses);
 
-        List<FormInputResponse> responses = service.getResponsesByApplicationId(123L);
-        assertNotNull(responses);
+        List<FormInputResponse> responses = service.getResponsesByApplicationId(123L).getSuccessObject();
+        assertEquals(returnedResponses, responses);
     }
 
     @Test
     public void test_saveQuestionResponse() {
-        String expectedUrl = dataServicesUrl + formInputResponseRestURL + "/saveQuestionResponse/";
 
-        ObjectNode expectedEntity = new ObjectMapper().createObjectNode().
+        ObjectNode entityUpdates = new ObjectMapper().createObjectNode().
                 put("userId", 123L).put("applicationId", 456L).
                 put("formInputId", 789L).put("value", "Very good answer!");
 
-        String[] returnedResponses = new String[] {"A returned string"};
-        ResponseEntity<String[]> returnedEntity = new ResponseEntity<>(returnedResponses, OK);
+        List<String> returnedResponses = asList("A returned string", "A returned string 2");
 
-        when(mockRestTemplate.postForEntity(expectedUrl, httpEntityForRestCall(expectedEntity), String[].class)).thenReturn(returnedEntity);
+        setupPostWithRestResultExpectations(formInputResponseRestURL + "/saveQuestionResponse/", stringsListType(), entityUpdates, returnedResponses, OK);
 
-        List<String> responses = service.saveQuestionResponse(123L, 456L, 789L, "Very good answer!");
-        assertNotNull(responses);
-        assertEquals(1, responses.size());
-        assertEquals("A returned string", responses.get(0));
+        List<String> responses = service.saveQuestionResponse(123L, 456L, 789L, "Very good answer!").getSuccessObject();
+        assertEquals(returnedResponses, responses);
     }
 }

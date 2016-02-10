@@ -3,17 +3,17 @@ package com.worth.ifs.form.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.form.domain.FormInputResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.stringsListType;
 
 /**
  * ResponseRestServiceImpl is a utility for CRUD operations on {@link Response}'s.
@@ -22,24 +22,24 @@ import static java.util.Arrays.asList;
  */
 @Service
 public class FormInputResponseRestServiceImpl extends BaseRestService implements FormInputResponseRestService {
+
     @Value("${ifs.data.service.rest.forminputresponse}")
     String formInputResponseRestURL;
 
-    private final Log log = LogFactory.getLog(getClass());
 
-
-    public List<FormInputResponse> getResponsesByApplicationId(Long applicationId) {
-        return asList(restGet(formInputResponseRestURL + "/findResponsesByApplication/" + applicationId, FormInputResponse[].class));
+    @Override
+    public RestResult<List<FormInputResponse>> getResponsesByApplicationId(Long applicationId) {
+        return getWithRestResult(formInputResponseRestURL + "/findResponsesByApplication/" + applicationId, formInputResponseListType());
     }
 
-    public List<String> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String value) {
+    @Override
+    public RestResult<List<String>> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String value) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("userId", userId);
         node.put("applicationId", applicationId);
         node.put("formInputId", formInputId);
         node.put("value", HtmlUtils.htmlEscape(value));
-        return asList(restPost(formInputResponseRestURL + "/saveQuestionResponse/", node, String[].class));
+        return postWithRestResult(formInputResponseRestURL + "/saveQuestionResponse/", node, stringsListType());
     }
-
 }

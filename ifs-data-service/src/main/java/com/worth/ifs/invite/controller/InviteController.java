@@ -129,8 +129,6 @@ public class InviteController {
         Organisation organisation = null;
         if (inviteOrganisationResource.getOrganisation() != null) {
             organisation = organisationRepository.findOne(inviteOrganisationResource.getOrganisation());
-        } else {
-            log.error("organisationId = null");
         }
         InviteOrganisation newInviteOrganisation = new InviteOrganisation(
                 inviteOrganisationResource.getOrganisationName(),
