@@ -1,16 +1,15 @@
 package com.worth.ifs.application;
 
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.login.LoginForm;
-import com.worth.ifs.util.CookieUtil;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.worth.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,18 +20,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+// TODO DW - INFUND-1555 - handle rest results
 @Controller
 public class AcceptInviteController extends AbstractApplicationController {
+
     public static final String INVITE_HASH = "invite_hash";
-    private final Log log = LogFactory.getLog(getClass());
+
     @Autowired
     private InviteRestService inviteRestService;
+
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
-
 
     @RequestMapping(value = "/accept-invite/{hash}", method = RequestMethod.GET)
     public String displayContributors(
@@ -40,13 +40,14 @@ public class AcceptInviteController extends AbstractApplicationController {
             HttpServletRequest request,
             HttpServletResponse response,
             Model model) {
-        Optional<InviteResource> invite = inviteRestService.getInviteByHash(hash);
+
+        RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
 
 
 //        model.addAttribute("currentApplication", application);
 
-        if(invite.isPresent()){
-            InviteResource inviteResource = invite.get();
+        if(invite.isSuccess()){
+            InviteResource inviteResource = invite.getSuccessObject();
             if(InviteStatusConstants.SEND.equals(inviteResource.getStatus())){
                 LoginForm loginForm = new LoginForm();
 
@@ -56,7 +57,7 @@ public class AcceptInviteController extends AbstractApplicationController {
                     model.addAttribute("emailAddressRegistered", "true");
                 }
 
-                model.addAttribute("invite", invite.get());
+                model.addAttribute("invite", inviteResource);
                 model.addAttribute("loginForm", loginForm);
                 CookieUtil.saveToCookie(response, INVITE_HASH, hash);
                 return "application-contributors/invite/accept-invite";
@@ -77,16 +78,16 @@ public class AcceptInviteController extends AbstractApplicationController {
                                          Model model
     ){
         String hash = CookieUtil.getCookieValue(request, INVITE_HASH);
-        Optional<InviteResource> invite = inviteRestService.getInviteByHash(hash);
+        RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
 
-        if(invite.isPresent() && InviteStatusConstants.SEND.equals(invite.get().getStatus())){
-            Optional<InviteOrganisationResource> inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash);
+        if(invite.isSuccess() && InviteStatusConstants.SEND.equals(invite.getSuccessObject().getStatus())){
+            InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObject();
 
             List<OrganisationTypeResource> types = organisationTypeRestService.getAll();
             types = types.stream().filter(t -> t.getParentOrganisationType() == null).collect(Collectors.toList());
             model.addAttribute("organisationTypes", types);
-            model.addAttribute("inviteOrganisation", inviteOrganisation.get());
-            model.addAttribute("invite", invite.get());
+            model.addAttribute("inviteOrganisation", inviteOrganisation);
+            model.addAttribute("invite", invite.getSuccessObject());
         }else{
             return "redirect:/login";
         }
