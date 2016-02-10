@@ -2,11 +2,11 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.commons.rest.RestResult;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Future;
 
 /**
  * Interface for CRUD operations on {@link Section} related data.
@@ -18,7 +18,7 @@ public interface SectionRestService {
     RestResult<List<Long>> getIncompletedSectionIds(Long applicationId);
     RestResult<Section> getSection(String name);
     RestResult<Boolean> allSectionsMarkedAsComplete(Long applicationId);
-    ListenableFuture<RestResult<Section>> getPreviousSection(Long sectionId);
-    ListenableFuture<RestResult<Section>> getNextSection(Long sectionId);
+    Future<RestResult<Section>> getPreviousSection(Long sectionId);
+    Future<RestResult<Section>> getNextSection(Long sectionId);
     RestResult<Section> getSectionByQuestionId(Long questionId);
 }

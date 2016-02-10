@@ -31,7 +31,7 @@ import java.util.EnumMap;
 import java.util.HashSet;
 
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
-import static com.worth.ifs.application.service.ListenableFutures.settable;
+import static com.worth.ifs.application.service.Futures.settable;
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Matchers.any;

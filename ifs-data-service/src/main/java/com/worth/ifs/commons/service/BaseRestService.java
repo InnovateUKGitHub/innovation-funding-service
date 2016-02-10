@@ -1,7 +1,7 @@
 package com.worth.ifs.commons.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worth.ifs.application.service.ListenableFutures;
+import com.worth.ifs.application.service.Futures;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorEnvelope;
 import com.worth.ifs.commons.rest.RestResult;
@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
@@ -106,7 +107,7 @@ public abstract class BaseRestService {
         return exchangeWithRestResult(path, GET, returnType);
     }
 
-    protected <T> ListenableFuture<RestResult<T>> getWithRestResultAsyc(String path, Class<T> returnType) {
+    protected <T> Future<RestResult<T>> getWithRestResultAsyc(String path, Class<T> returnType) {
         return exchangeWithRestResultAsync(path, GET, returnType);
     }
 
@@ -187,7 +188,7 @@ public abstract class BaseRestService {
         return exchangeWithRestResult(path, method, returnType, OK);
     }
 
-    private <T> ListenableFuture<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, Class<T> returnType) {
+    private <T> Future<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, Class<T> returnType) {
         return exchangeWithRestResultAsync(path, method, returnType, OK);
     }
 
@@ -207,7 +208,7 @@ public abstract class BaseRestService {
         return exchangeWithRestResult(() -> getRestTemplate().exchange(getDataRestServiceURL() + path, method, jsonEntity(null), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
 
-    private <T> ListenableFuture<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+    private <T> Future<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         return exchangeWithRestResultAsync(() -> getAsyncRestTemplate().exchange(getDataRestServiceURL() + path, method, jsonEntity(null), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
 
@@ -236,9 +237,9 @@ public abstract class BaseRestService {
         }
     }
 
-    private <T> ListenableFuture<RestResult<T>> exchangeWithRestResultAsync(Supplier<ListenableFuture<ResponseEntity<T>>> exchangeFn, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        ListenableFuture<ResponseEntity<T>> responseEntityListenableFuture = withEmptyCallback(exchangeFn.get());
-        ListenableFuture<RestResult<T>> adapt = ListenableFutures.adapt(responseEntityListenableFuture, response -> {
+    private <T> Future<RestResult<T>> exchangeWithRestResultAsync(Supplier<ListenableFuture<ResponseEntity<T>>> exchangeFn, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        Future<ResponseEntity<T>> responseEntityListenableFuture = withEmptyCallback(exchangeFn.get());
+        Future<RestResult<T>> adapt = Futures.adapt(responseEntityListenableFuture, response -> {
             try {
                 List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
 

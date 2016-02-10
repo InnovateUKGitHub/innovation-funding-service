@@ -116,7 +116,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<Notification> inviteCollaboratorToApplication(String baseUrl, Invite invite) {
-        log.warn("inviteCollaboratorToApplication");
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
 
