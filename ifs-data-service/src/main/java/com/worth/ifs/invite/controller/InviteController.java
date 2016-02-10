@@ -1,28 +1,16 @@
 package com.worth.ifs.invite.controller;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
-import com.worth.ifs.invite.domain.Invite;
-import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.invite.repository.InviteOrganisationRepository;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.invite.transactional.InviteService;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.repository.OrganisationRepository;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.List;
+
+import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 
 /**
  * InviteController is to handle the REST calls from the web-service and contains the handling of all call involving the Invite and InviteOrganisations.
@@ -31,167 +19,33 @@ import java.util.*;
 @RestController
 @RequestMapping("/invite")
 public class InviteController {
-    private final Log log = LogFactory.getLog(getClass());
-    @Value("${ifs.web.baseURL}")
-    String webBaseUrl;
-    @Autowired
-    InviteOrganisationRepository inviteOrganisationRepository;
 
     @Autowired
-    OrganisationRepository organisationRepository;
-
-    @Autowired
-    ApplicationRepository applicationRepository;
-
-    @Autowired
-    InviteService inviteService;
+    private InviteService inviteService;
 
     @RequestMapping("/createApplicationInvites")
-    public InviteResultsResource createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource, HttpServletRequest request) {
-
-        if (inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
-            InviteOrganisation newInviteOrganisation = assembleInviteOrganisationFromResource(inviteOrganisationResource);
-            List<Invite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
-            inviteOrganisationRepository.save(newInviteOrganisation);
-            inviteService.save(newInvites);
-            return sendInvites(newInvites);
-        } else {
-            // TODO DW - INFUND-1555 - reinstante error case
-//            resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new InviteResultsResource());
-            return null;
-        }
+    public RestResult<InviteResultsResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
+        return newRestHandler().perform(() -> inviteService.createApplicationInvites(inviteOrganisationResource));
     }
 
     @RequestMapping("/getInviteByHash/{hash}")
-    public InviteResource getInviteByHash(@PathVariable("hash") String hash) {
-        Optional<Invite> invite = inviteService.getByHash(hash);
-        if (invite.isPresent()) {
-            return new InviteResource(invite.get());
-        }
-
-        // TODO DW - INFUND-1555 - reinstante error case
-//        ResourceEnvelope<InviteResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), null);
-        return null;
+    public RestResult<InviteResource> getInviteByHash(@PathVariable("hash") String hash) {
+        return newRestHandler().perform(() -> inviteService.getInviteByHash(hash));
     }
 
     @RequestMapping("/getInviteOrganisationByHash/{hash}")
-    public InviteOrganisationResource getInviteOrganisationByHash(@PathVariable("hash") String hash) {
-        Optional<Invite> invite = inviteService.getByHash(hash);
-        if (invite.isPresent()) {
-            return new InviteOrganisationResource(invite.get().getInviteOrganisation());
-        }
-
-        // TODO DW - INFUND-1555 - reinstante error case
-//        ResourceEnvelope<InviteOrganisationResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), null);
-        return null;
+    public RestResult<InviteOrganisationResource> getInviteOrganisationByHash(@PathVariable("hash") String hash) {
+        return newRestHandler().perform(() -> inviteService.getInviteOrganisationByHash(hash));
     }
 
 
     @RequestMapping("/getInvitesByApplicationId/{applicationId}")
-    public Collection<InviteOrganisationResource> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
-        Map<Long, InviteOrganisationResource> results = new LinkedHashMap<>();
-        List<Invite> invites = inviteService.findByApplicationId(applicationId);
-        invites.stream().forEach(i -> {
-            results.put(i.getInviteOrganisation().getId(), new InviteOrganisationResource(i.getInviteOrganisation()));
-        });
-        return results.values();
+    public RestResult<List<InviteOrganisationResource>> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
+        return newRestHandler().perform(() -> inviteService.getInvitesByApplication(applicationId));
     }
 
     @RequestMapping(value = "/saveInvites", method = RequestMethod.POST)
-    public InviteResultsResource saveInvites(@RequestBody List<InviteResource> inviteResources, HttpServletRequest request) {
-        List<Invite> invites = new ArrayList<>();
-        inviteResources.stream().forEach(iR -> invites.add(mapInviteResourceToInvite(iR, null)));
-        inviteService.save(invites);
-        return sendInvites(invites);
-
-    }
-
-    private InviteResultsResource sendInvites(List<Invite> invites) {
-        List<ServiceResult<Notification>> results = inviteService.inviteCollaborators(webBaseUrl, invites);
-
-        long failures = results.stream().filter(r -> r.isFailure()).count();
-        long successes = results.stream().filter(r -> r.isSuccess()).count();
-        log.info(String.format("Invite sending requests %s Success: %s Failures: %s", invites.size(), successes, failures));
-
-        InviteResultsResource resource = new InviteResultsResource();
-        resource.setInvitesSendFailure((int) failures);
-        resource.setInvitesSendSuccess((int) successes);
-        return resource;
-    }
-
-    private InviteOrganisation assembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource) {
-        Organisation organisation = null;
-        if (inviteOrganisationResource.getOrganisation() != null) {
-            organisation = organisationRepository.findOne(inviteOrganisationResource.getOrganisation());
-        }
-        InviteOrganisation newInviteOrganisation = new InviteOrganisation(
-                inviteOrganisationResource.getOrganisationName(),
-                organisation,
-                null
-        );
-
-        return newInviteOrganisation;
-    }
-
-    private List<Invite> assembleInvitesFromInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource, InviteOrganisation newInviteOrganisation) {
-        List<Invite> invites = new ArrayList<>();
-        inviteOrganisationResource.getInviteResources().forEach(inviteResource ->
-                        invites.add(mapInviteResourceToInvite(inviteResource, newInviteOrganisation))
-        );
-
-        return invites;
-    }
-
-    private Invite mapInviteResourceToInvite(InviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
-        Application application = applicationRepository.findOne(inviteResource.getApplication());
-        if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
-            newInviteOrganisation = inviteOrganisationRepository.findOne(inviteResource.getInviteOrganisation());
-        }
-        Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatusConstants.CREATED);
-
-        return invite;
-    }
-
-    private boolean inviteOrganisationResourceIsValid(InviteOrganisationResource inviteOrganisationResource) {
-        if (!inviteOrganisationResourceNameAndIdAreValid(inviteOrganisationResource)) {
-            return false;
-        }
-
-        if (!allInviteResourcesAreValid(inviteOrganisationResource)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean inviteOrganisationResourceNameAndIdAreValid(InviteOrganisationResource inviteOrganisationResource) {
-        if ((inviteOrganisationResource.getOrganisationName() == null ||
-                inviteOrganisationResource.getOrganisationName().isEmpty())
-                &&
-                inviteOrganisationResource.getOrganisation() == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private boolean allInviteResourcesAreValid(InviteOrganisationResource inviteOrganisationResource) {
-        if (inviteOrganisationResource.getInviteResources()
-                .stream()
-                .filter(inviteResource -> !inviteResourceIsValid(inviteResource))
-                .count() > 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private boolean inviteResourceIsValid(InviteResource inviteResource) {
-
-        if (StringUtils.isEmpty(inviteResource.getEmail()) || StringUtils.isEmpty(inviteResource.getName()) || inviteResource.getApplication() == null) {
-            return false;
-        }
-
-        return true;
+    public RestResult<InviteResultsResource> saveInvites(@RequestBody List<InviteResource> inviteResources) {
+        return newRestHandler().perform(() -> inviteService.saveInvites(inviteResources));
     }
 }

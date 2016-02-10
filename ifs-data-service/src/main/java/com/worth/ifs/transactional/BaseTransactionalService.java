@@ -9,10 +9,8 @@ import com.worth.ifs.application.repository.ResponseRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
@@ -52,6 +50,9 @@ public abstract class BaseTransactionalService  {
 
     @Autowired
     protected ApplicationRepository applicationRepository;
+
+    @Autowired
+    protected OrganisationRepository organisationRepository;
 
     protected Supplier<ServiceResult<Response>> response(Long responseId) {
         return () -> getResponse(responseId);
@@ -108,5 +109,13 @@ public abstract class BaseTransactionalService  {
     protected ServiceResult<Role> getRole(UserRoleType roleType) {
         return find(() -> roleRepository.findByName(roleType.getName()), notFoundError(Role.class, roleType.getName())).
                 andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
+    }
+
+    protected Supplier<ServiceResult<Organisation>> organisation(Long id) {
+        return () -> getOrganisation(id);
+    }
+
+    protected ServiceResult<Organisation> getOrganisation(Long id) {
+        return find(() -> organisationRepository.findOne(id), notFoundError(Organisation.class, id));
     }
 }
