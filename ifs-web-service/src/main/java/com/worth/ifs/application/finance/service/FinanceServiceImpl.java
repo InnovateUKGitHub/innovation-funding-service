@@ -62,7 +62,7 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     @Override
-    public void addCost(Long applicationFinanceId, Long questionId) {
-        costRestService.add(applicationFinanceId, questionId, null);
+    public CostItem addCost(Long applicationFinanceId, Long questionId) {
+        return costRestService.add(applicationFinanceId, questionId, null).getSuccessObjectOrNull();
     }
 }

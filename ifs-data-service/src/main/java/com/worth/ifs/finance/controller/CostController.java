@@ -27,7 +27,7 @@ public class CostController {
     private CostService costService;
 
     @RequestMapping("/add/{applicationFinanceId}/{questionId}")
-    public RestResult<Void> add(
+    public RestResult<CostItem> add(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             @PathVariable("questionId") final Long questionId,
             @RequestBody(required=false) final CostItem newCostItem) {

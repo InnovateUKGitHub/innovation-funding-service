@@ -18,7 +18,7 @@ public interface CostService {
     ServiceResult<List<CostFieldResource>> findAll();
 
     @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<Void> add(Long applicationFinanceId, Long questionId, CostItem newCostItem);
+    ServiceResult<CostItem> add(Long applicationFinanceId, Long questionId, CostItem newCostItem);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<Void> update(Long id, CostItem newCostItem);

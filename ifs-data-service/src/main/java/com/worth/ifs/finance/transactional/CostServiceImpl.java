@@ -69,23 +69,27 @@ public class CostServiceImpl implements CostService {
     }
 
     @Override
-    public ServiceResult<Void> add(final Long applicationFinanceId, final Long questionId, final CostItem newCostItem) {
+    public ServiceResult<CostItem> add(final Long applicationFinanceId, final Long questionId, final CostItem newCostItem) {
 
         return find(question(questionId), applicationFinance(applicationFinanceId)).andOnSuccess((question, applicationFinance) -> {
 
             if (newCostItem != null) {
-                addCostItem(applicationFinance, question, newCostItem);
+                Cost newCost = addCostItem(applicationFinance, question, newCostItem);
+                return serviceSuccess(organisationFinanceHandler.costToCostItem(newCost));
             } else {
                 Cost cost = new Cost("", "", 0, BigDecimal.ZERO, applicationFinance, question);
                 costRepository.save(cost);
+                return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
             }
-            return serviceSuccess();
         });
     }
 
     @Override
     public ServiceResult<Void> update(final Long id, final CostItem newCostItem) {
+        return doUpdate(id, newCostItem).andOnSuccess(success -> serviceSuccess());
+    }
 
+    private ServiceResult<Cost> doUpdate(Long id, CostItem newCostItem) {
         return find(() -> costRepository.findOne(id), notFoundError(Cost.class, id)).andOnSuccess(existingCost -> {
 
             Cost newCost = organisationFinanceHandler.costItemToCost(newCostItem);
@@ -98,7 +102,7 @@ public class CostServiceImpl implements CostService {
                     .filter(c -> !c.getValue().equals("null"))
                     .forEach(costValue -> updateCostValue(costValue, savedCost));
 
-            return serviceSuccess();
+            return serviceSuccess(updatedCost);
         });
     }
 
@@ -121,15 +125,16 @@ public class CostServiceImpl implements CostService {
         });
     }
 
-    private void addCostItem(ApplicationFinance applicationFinance, Question question, CostItem newCostItem) {
+    private Cost addCostItem(ApplicationFinance applicationFinance, Question question, CostItem newCostItem) {
         Cost existingCost = costRepository.findOneByApplicationFinanceIdAndQuestionId(applicationFinance.getId(), question.getId());
         if (existingCost == null) {
             Cost cost = organisationFinanceHandler.costItemToCost(newCostItem);
             cost.setQuestion(question);
             cost.setApplicationFinance(applicationFinance);
-            costRepository.save(cost);
+            return costRepository.save(cost);
         } else {
-            update(existingCost.getId(), newCostItem);
+            ServiceResult<Cost> updated = doUpdate(existingCost.getId(), newCostItem);
+            return updated.getSuccessObjectOrNull();
         }
     }
 
