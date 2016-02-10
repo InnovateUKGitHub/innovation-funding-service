@@ -1,9 +1,13 @@
 package com.worth.ifs.finance.controller;
 
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
+import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
@@ -31,6 +35,10 @@ public class ApplicationFinanceControllerTest {
 
     @Mock
     ApplicationRepository applicationRepository;
+    @Mock
+    CostRepository costRepository;
+    @Mock
+    QuestionService questionService;
 
     private ApplicationFinance applicationFinance;
 
@@ -134,6 +142,8 @@ public class ApplicationFinanceControllerTest {
         when(applicationFinanceRepository.save(any(ApplicationFinance.class))).thenReturn(applicationFinance);
         when(applicationRepository.findOne(anyLong())).thenReturn(application);
         when(organisationRepository.findOne(anyLong())).thenReturn(organisation);
+        when(questionService.getQuestionById(anyLong())).thenReturn(new Question());
+        when(costRepository.save(any(Cost.class))).thenReturn(new Cost());
 
         mockMvc.perform(get("/applicationfinance/add/{applicationId}/{organisationId}", "1", "1"))
                 .andExpect(status().isOk());
@@ -143,6 +153,7 @@ public class ApplicationFinanceControllerTest {
         verify(organisationRepository, times(1)).findOne(anyLong());
         verifyNoMoreInteractions(organisationRepository);
         verify(applicationFinanceRepository, times(1)).save(any(ApplicationFinance.class));
+        verify(costRepository, times(4)).save(any(Cost.class));
         verifyNoMoreInteractions(organisationRepository);
     }
 
