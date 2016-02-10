@@ -349,4 +349,18 @@ public class CollectionFunctions {
         }
         throw new IllegalArgumentException("Only expected a single element, but found " + list.size() + " - " + list);
     }
+
+    /**
+     * Return the one and only element from the list supplied, or return null
+     *
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static <T> T onlyElementOrNull(List<T> list) {
+        if (list.size() == 1) {
+            return list.get(0);
+        }
+        return null;
+    }
 }

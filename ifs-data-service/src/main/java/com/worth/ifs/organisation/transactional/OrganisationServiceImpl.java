@@ -22,7 +22,7 @@ import java.util.Set;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.handlingErrors;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.stream.Collectors.toCollection;
 
 /**
@@ -56,7 +56,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<Organisation> findById(final Long organisationId) {
-        return getOrFail(() -> organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
+        return find(() -> organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
         return handlingErrors(() -> {
 
-            ServiceResult<Organisation> organisationSearch = getOrFail(() -> organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
+            ServiceResult<Organisation> organisationSearch = find(() -> organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
 
             return organisationSearch.andOnSuccess(organisation -> {
                 organisation.addAddress(address, addressType);

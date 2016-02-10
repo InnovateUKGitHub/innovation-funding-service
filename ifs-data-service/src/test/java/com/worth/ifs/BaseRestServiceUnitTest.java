@@ -8,13 +8,17 @@ import org.springframework.http.*;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.commons.service.BaseRestService.getJSONHeaders;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * This is the base class for testing REST services with mock components.  In addition to the standard mocks provided,
@@ -27,6 +31,9 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
 
     @Mock
     protected RestTemplate mockRestTemplate;
+
+    @Mock
+    protected AsyncRestTemplate mockAsyncRestTemplate;
 
     protected ServiceType service;
 
@@ -42,6 +49,7 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         service = registerRestServiceUnderTest();
         service.setDataRestServiceUrl(dataServicesUrl);
         service.setRestTemplateSupplier(() -> mockRestTemplate);
+        service.setAsyncRestTemplate(() -> mockAsyncRestTemplate);
 
         SecurityContextImpl securityContext = new SecurityContextImpl();
         securityContext.setAuthentication(new TestingAuthenticationToken("A_PRINCIPAL", VALID_AUTH_TOKEN));
@@ -60,17 +68,25 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
     }
 
     protected HttpEntity<String> httpEntityForRestCall() {
-        return httpEntityForRestCall("");
+        return httpEntityForRestCall(null);
     }
 
     protected HttpEntity<String> httpEntityForRestGetWithoutAuthToken() {
         return httpEntityForRestCallWithoutAuthToken("");
     }
 
+    protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, T responseBody) {
+        return setupGetWithRestResultExpectations(nonBaseUrl, responseType, responseBody, OK);
+    }
+
     protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, T responseBody, HttpStatus responseCode) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, GET, httpEntityForRestCall(), responseType)).thenReturn(response);
         return response;
+    }
+
+    protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, ParameterizedTypeReference<T> responseType, T responseBody) {
+        return setupGetWithRestResultExpectations(nonBaseUrl, responseType, responseBody, OK);
     }
 
     protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, ParameterizedTypeReference<T> responseType, T responseBody, HttpStatus responseCode) {
@@ -91,4 +107,43 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         return response;
     }
 
+    protected ResponseEntity<Void> setupPostWithRestResultExpectations(String nonBaseUrl, Object requestBody, HttpStatus responseCode) {
+        ResponseEntity<Void> response = new ResponseEntity<>(responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, POST, httpEntityForRestCall(requestBody), Void.class)).thenReturn(response);
+        return response;
+    }
+
+    protected <T> void setupPostWithRestResultVerifications(String nonBaseUrl, Class<T> responseType, Object requestBody) {
+        verify(mockRestTemplate).exchange(dataServicesUrl + nonBaseUrl, POST, httpEntityForRestCall(requestBody), responseType);
+    }
+
+    protected <T> void setupPostWithRestResulVerifications(String nonBaseUrl, ParameterizedTypeReference<T> responseType, Object requestBody) {
+        verify(mockRestTemplate).exchange(dataServicesUrl + nonBaseUrl, POST, httpEntityForRestCall(requestBody), responseType);
+    }
+
+    protected ResponseEntity<Void> setupPutWithRestResultExpectations(String nonBaseUrl, Object requestBody) {
+        return setupPutWithRestResultExpectations(nonBaseUrl, requestBody, OK);
+    }
+
+    protected ResponseEntity<Void> setupPutWithRestResultExpectations(String nonBaseUrl, Object requestBody, HttpStatus responseCode) {
+        ResponseEntity<Void> response = new ResponseEntity<>(responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), Void.class)).thenReturn(response);
+        return response;
+    }
+
+    protected <T> ResponseEntity<T> setupPutWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, Object requestBody, T responseBody) {
+        return setupPutWithRestResultExpectations(nonBaseUrl, responseType, requestBody, responseBody, OK);
+    }
+
+    protected <T> ResponseEntity<T> setupPutWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, Object requestBody, T responseBody, HttpStatus responseCode) {
+        ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), responseType)).thenReturn(response);
+        return response;
+    }
+
+    protected <T> ResponseEntity<T> setupPutWithRestResultExpectations(String nonBaseUrl, ParameterizedTypeReference<T> responseType, Object requestBody, T responseBody, HttpStatus responseCode) {
+        ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), responseType)).thenReturn(response);
+        return response;
+    }
 }

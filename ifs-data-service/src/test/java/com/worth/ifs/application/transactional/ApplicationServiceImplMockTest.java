@@ -3,6 +3,7 @@ package com.worth.ifs.application.transactional;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -29,7 +30,9 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.BuilderAmendFunctions.name;
+import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.CREATED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
@@ -74,30 +77,39 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
         ApplicationStatus applicationStatus = newApplicationStatus().withName(CREATED).build();
 
+        ApplicationResource applicationResource = newApplicationResource().build();
+
         when(applicationStatusRepositoryMock.findByName(CREATED.getName())).thenReturn(Collections.singletonList(applicationStatus));
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(roleRepositoryMock.findByName(leadApplicantRole.getName())).thenReturn(Collections.singletonList(leadApplicantRole));
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 
-        Application created =
-                service.createApplicationByApplicationNameForUserIdAndCompetitionId("testApplication", competition.getId(), user.getId());
+        Application applicationExpectations = argThat(lambdaMatches(created -> {
+            assertEquals("testApplication", created.getName());
+            assertEquals(applicationStatus.getId(), created.getApplicationStatus().getId());
+            assertEquals(Long.valueOf(3), created.getDurationInMonths());
+            assertEquals(competition.getId(), created.getCompetition().getId());
+            assertEquals(LocalDate.now(), created.getStartDate());
+
+            assertEquals(1, created.getProcessRoles().size());
+            ProcessRole createdProcessRole = created.getProcessRoles().get(0);
+            assertNull(createdProcessRole.getId());
+            assertNull(createdProcessRole.getApplication().getId());
+            assertEquals(organisation.getId(), createdProcessRole.getOrganisation().getId());
+            assertEquals(leadApplicantRole.getId(), createdProcessRole.getRole().getId());
+            assertEquals(user.getId(), createdProcessRole.getUser().getId());
+
+            return true;
+        }));
+
+        when(applicationMapperMock.mapApplicationToResource(applicationExpectations)).thenReturn(applicationResource);
+
+        ApplicationResource created =
+                service.createApplicationByApplicationNameForUserIdAndCompetitionId("testApplication", competition.getId(), user.getId()).getSuccessObject();
 
         verify(applicationRepositoryMock).save(isA(Application.class));
         verify(processRoleRepositoryMock).save(isA(ProcessRole.class));
-
-        assertEquals("testApplication", created.getName());
-        assertEquals(applicationStatus.getId(), created.getApplicationStatus().getId());
-        assertEquals(Long.valueOf(3), created.getDurationInMonths());
-        assertEquals(competition.getId(), created.getCompetition().getId());
-        assertEquals(LocalDate.now(), created.getStartDate());
-
-        assertEquals(1, created.getProcessRoles().size());
-        ProcessRole createdProcessRole = created.getProcessRoles().get(0);
-        assertNull(createdProcessRole.getId());
-        assertNull(createdProcessRole.getApplication().getId());
-        assertEquals(organisation.getId(), createdProcessRole.getOrganisation().getId());
-        assertEquals(leadApplicantRole.getId(), createdProcessRole.getRole().getId());
-        assertEquals(user.getId(), createdProcessRole.getUser().getId());
+        assertEquals(applicationResource, created);
     }
 
     @Test

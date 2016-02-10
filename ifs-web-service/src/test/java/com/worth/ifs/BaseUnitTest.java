@@ -14,6 +14,7 @@ import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
+import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.commons.security.UserAuthentication;
@@ -54,6 +55,7 @@ import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newAppl
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -129,6 +131,7 @@ public class BaseUnitTest {
     TreeSet<Organisation> organisationSet;
     public List<Assessment> assessments;
     public List<ProcessRole> assessorProcessRoles;
+    public List<ProcessRole> applicantRoles;
     public List<Assessment> submittedAssessments;
     public ApplicationFinanceResource applicationFinanceResource;
     public ApplicationStatusResource submittedApplicationStatus;
@@ -136,6 +139,18 @@ public class BaseUnitTest {
     public ApplicationStatusResource approvedApplicationStatus;
     public ApplicationStatusResource rejectedApplicationStatus;
     public List<ProcessRole> processRoles;
+
+    public List<ProcessRole> application1ProcessRoles;
+    public List<ProcessRole> application2ProcessRoles;
+    public List<ProcessRole> application3ProcessRoles;
+    public List<ProcessRole> application4ProcessRoles;
+
+    public List<Organisation> application1Organisations;
+    public List<Organisation> application2Organisations;
+    public List<Organisation> application3Organisations;
+    public List<Organisation> application4Organisations;
+
+
     private Random randomGenerator;
 
     public InternalResourceViewResolver viewResolver() {
@@ -249,8 +264,8 @@ public class BaseUnitTest {
 
         competitions = singletonList(competition);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(competition);
-        when(competitionRestService.getAll()).thenReturn(competitions);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(competitionRestService.getAll()).thenReturn(restSuccess(competitions));
         when(competitionService.getById(any(Long.class))).thenReturn(competition);
     }
 
@@ -312,9 +327,20 @@ public class BaseUnitTest {
         ProcessRole processRole7 = newProcessRole().with(id(7L)).withApplication(applicationList.get(2)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
         ProcessRole processRole8 = newProcessRole().with(id(8L)).withApplication(applicationList.get(0)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
         ProcessRole processRole9 = newProcessRole().with(id(9L)).withApplication(applicationList.get(3)).withUser(assessor).withRole(assessorRole).withOrganisation(organisation1).build();
+        ProcessRole processRole10 = newProcessRole().with(id(10L)).withApplication(applicationList.get(1)).withUser(loggedInUser).withRole(role1).withOrganisation(organisation2).build();
 
         assessorProcessRoles = asList(processRole6, processRole7, processRole8, processRole9);
         processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8, processRole9);
+        applicantRoles = asList(processRole1, processRole2, processRole3, processRole4, processRole5);
+        application1ProcessRoles = asList(processRole1, processRole2, processRole5);
+        application2ProcessRoles = asList(processRole6, processRole10);
+        application3ProcessRoles = asList(processRole3, processRole7);
+        application4ProcessRoles = asList(processRole4, processRole9);
+
+        application1Organisations = asList(organisation1, organisation2);
+        application2Organisations = asList(organisation1, organisation2);
+        application3Organisations = asList(organisation1);
+        application4Organisations = asList(organisation1);
 
         organisation1.setProcessRoles(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8, processRole8));
         organisation2.setProcessRoles(singletonList(processRole5));
@@ -356,6 +382,11 @@ public class BaseUnitTest {
         when(processRoleService.findProcessRole(assessor.getId(), applicationList.get(0).getId())).thenReturn(processRole8);
         when(processRoleService.findProcessRole(assessor.getId(), applicationList.get(3).getId())).thenReturn(processRole9);
 
+        when(processRoleService.findProcessRolesByApplicationId(applicationList.get(0).getId())).thenReturn(application1ProcessRoles);
+        when(processRoleService.findProcessRolesByApplicationId(applicationList.get(1).getId())).thenReturn(application2ProcessRoles);
+        when(processRoleService.findProcessRolesByApplicationId(applicationList.get(2).getId())).thenReturn(application3ProcessRoles);
+        when(processRoleService.findProcessRolesByApplicationId(applicationList.get(3).getId())).thenReturn(application4ProcessRoles);
+
 		Map<Long, Set<Long>> completedMap = new HashMap<>();
         completedMap.put(organisation1.getId(), new TreeSet<>());
         completedMap.put(organisation2.getId(), new TreeSet<>());
@@ -365,7 +396,7 @@ public class BaseUnitTest {
 
         processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(restSuccess(idsToApplicationResources.get(pr.getApplication().getId()))));
 
-        when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(applications));
 
         when(applicationService.getById(applications.get(0).getId())).thenReturn(applications.get(0));
         when(applicationService.getById(applications.get(1).getId())).thenReturn(applications.get(1));
@@ -386,8 +417,10 @@ public class BaseUnitTest {
         when(organisationService.getApplicationLeadOrganisation(applications.get(0))).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(applications.get(1))).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(applications.get(2))).thenReturn(Optional.of(organisation1));
-        processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(processRole));
+        processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(settable(processRole)));
 
+        when(sectionService.getById(1L)).thenReturn(sections.get(0));
+        when(sectionService.getById(3L)).thenReturn(sections.get(2));
     }
 
     public void setupApplicationResponses(){
@@ -433,8 +466,6 @@ public class BaseUnitTest {
     }
 
     public void setupAssessment(){
-        Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
-        Organisation organisation1 = organisations.get(0);
 
         Assessment assessment1 = new Assessment(assessorProcessRoles.get(2));
         assessment1.setId(1L);
@@ -445,8 +476,8 @@ public class BaseUnitTest {
         Assessment assessment4 = new Assessment(assessorProcessRoles.get(3));
         assessment4.setId(4L);
 
-        when(assessmentRestService.getTotalAssignedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(3);
-        when(assessmentRestService.getTotalSubmittedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(1);
+        when(assessmentRestService.getTotalAssignedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(restSuccess(3));
+        when(assessmentRestService.getTotalSubmittedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(restSuccess(1));
 
         assessment1.setProcessStatus(AssessmentStates.REJECTED.getState());
         assessment2.setProcessStatus(AssessmentStates.PENDING.getState());
@@ -455,16 +486,18 @@ public class BaseUnitTest {
 
         submittedAssessments = singletonList(assessment3);
         assessments = asList(assessment1, assessment2, assessment3, assessment4);
-        when(assessmentRestService.getAllByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(assessments);
+        when(assessmentRestService.getAllByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(restSuccess(assessments));
 
-        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment1);
-        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment2);
-        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment3);
-        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment4);
+        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(restSuccess(assessment1));
+        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(restSuccess(assessment2));
+        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(restSuccess(assessment3));
+        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(restSuccess(assessment4));
 
         when(organisationService.getUserOrganisation(applications.get(0), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
         when(organisationService.getUserOrganisation(applications.get(1), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
         when(organisationService.getUserOrganisation(applications.get(2), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
+
+        assessments.forEach(assessment -> when(assessmentRestService.getScore(assessment.getId())).thenReturn(restSuccess(new Score())));
     }
 
     public ExceptionHandlerExceptionResolver createExceptionResolver() {

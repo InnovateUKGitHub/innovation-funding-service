@@ -30,8 +30,10 @@ import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashSet;
 
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.application.service.Futures.settable;
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Matchers.any;
@@ -122,7 +124,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(application.getId())).thenReturn(application);
-
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         mockMvc.perform(get("/application/1/form/section/1"))
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attribute("currentApplication", application))
@@ -249,7 +251,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         Long userId = loggedInUser.getId();
 
         when(formInputResponseService.save(userId, application.getId(), 1L, "")).thenReturn(asList("Please enter some text"));
-
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
@@ -270,7 +272,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         ArrayList<String> validationErrors = new ArrayList<>();
         validationErrors.add("Please enter some text");
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""))).thenReturn(validationErrors);
-
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         Long userId = loggedInUser.getId();
 
         MvcResult result = mockMvc.perform(

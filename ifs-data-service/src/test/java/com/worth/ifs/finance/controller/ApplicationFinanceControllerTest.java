@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.handler.item.OrganisationFinanceHandler;
@@ -145,7 +146,7 @@ public class ApplicationFinanceControllerTest {
         when(applicationFinanceRepository.save(any(ApplicationFinance.class))).thenReturn(applicationFinance);
         when(applicationRepository.findOne(anyLong())).thenReturn(application);
         when(organisationRepository.findOne(anyLong())).thenReturn(organisation);
-        when(questionService.getQuestionById(anyLong())).thenReturn(new Question());
+        when(questionService.getQuestionById(anyLong())).thenReturn(ServiceResult.serviceSuccess(new Question()));
         when(costRepository.save(any(Cost.class))).thenReturn(new Cost());
 
         mockMvc.perform(get("/applicationfinance/add/{applicationId}/{organisationId}", "1", "1"))

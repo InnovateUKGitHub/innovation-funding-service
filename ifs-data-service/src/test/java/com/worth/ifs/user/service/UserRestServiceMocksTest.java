@@ -44,7 +44,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         user2.setPassword("user2");
 
         List<User> userList = asList(user1, user2);
-        setupGetWithRestResultExpectations(usersUrl + "/findAll/", userListType(), userList, OK);
+        setupGetWithRestResultExpectations(usersUrl + "/findAll/", userListType(), userList);
 
         List<User> users = service.findAll().getSuccessObject();
         assertEquals(2, users.size());
@@ -57,7 +57,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         UserResource userResource = newUserResource().withEmail("testemail@email.com").build();
 
         List<UserResource> userResourceList = singletonList(userResource);
-        setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + userResource.getEmail() + "/", userResourceListType(), userResourceList, OK);
+        setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + userResource.getEmail() + "/", userResourceListType(), userResourceList);
 
         List<UserResource> users = service.findUserByEmail(userResource.getEmail()).getSuccessObject();
         assertEquals(1, users.size());
@@ -68,7 +68,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void findingNonExistingUserByEmailShouldReturnEmptyList() {
         String email = "email@test.test";
 
-        setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + email + "/", userResourceListType(), emptyList(), OK);
+        setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + email + "/", userResourceListType(), emptyList());
 
         List<UserResource> users = service.findUserByEmail(email).getSuccessObject();
         assertTrue(users.isEmpty());

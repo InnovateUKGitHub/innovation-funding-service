@@ -1,7 +1,8 @@
 package com.worth.ifs.form.service;
 
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.form.domain.FormInput;
 
 public interface FormInputRestService {
-    public FormInput getById(Long id);
+    RestResult<FormInput> getById(Long id);
 }

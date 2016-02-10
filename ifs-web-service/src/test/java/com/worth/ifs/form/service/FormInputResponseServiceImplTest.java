@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Map;
 
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static com.worth.ifs.util.CollectionFunctions.reverse;
@@ -32,7 +33,7 @@ public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
     public void test_getByApplication() {
 
         List<FormInputResponse> formInputResponses = newFormInputResponse().build(3);
-        when(restServiceMock.getResponsesByApplicationId(123L)).thenReturn(formInputResponses);
+        when(restServiceMock.getResponsesByApplicationId(123L)).thenReturn(restSuccess(formInputResponses));
 
         List<FormInputResponse> response = service.getByApplication(123L);
         assertEquals(formInputResponses, response);
@@ -57,7 +58,7 @@ public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
     public void test_save() {
 
         when(restServiceMock.saveQuestionResponse(123L, 456L, 789L, "A new value")).
-                thenReturn(asList("an error", "another error"));
+                thenReturn(restSuccess(asList("an error", "another error")));
 
         List<String> responses = service.save(123L, 456L, 789L, "A new value");
         assertEquals(asList("an error", "another error"), responses);

@@ -24,12 +24,12 @@ public class Feedback {
         return this;
     }
 
-    public Long getAssessorProcessRoleId() {
-        return id.getAssessorProcessRoleId();
+    public Long getAssessorUserId() {
+        return id.getAssessorUserId();
     }
 
-    public Feedback setAssessorProcessRoleId(Long assessorProcessRoleId) {
-        id.setAssessorProcessRoleId(assessorProcessRoleId);
+    public Feedback setAssessorUserId(Long assessorProcessRoleId) {
+        id.setAssessorUserId(assessorProcessRoleId);
         return this;
     }
 
@@ -53,7 +53,15 @@ public class Feedback {
 
     public static class Id implements Serializable {
         private Long responseId;
-        private Long assessorProcessRoleId;
+        private Long assessorUserId;
+
+        public Id() {
+        }
+
+        public Id(Long responseId, Long assessorUserId) {
+            this.responseId = responseId;
+            this.assessorUserId = assessorUserId;
+        }
 
         public Long getResponseId() {
             return responseId;
@@ -64,12 +72,12 @@ public class Feedback {
             return this;
         }
 
-        public Long getAssessorProcessRoleId() {
-            return assessorProcessRoleId;
+        public Long getAssessorUserId() {
+            return assessorUserId;
         }
 
-        public Id setAssessorProcessRoleId(Long assessorProcessRoleId) {
-            this.assessorProcessRoleId = assessorProcessRoleId;
+        public Id setAssessorUserId(Long assessorUserId) {
+            this.assessorUserId = assessorUserId;
             return this;
         }
     }

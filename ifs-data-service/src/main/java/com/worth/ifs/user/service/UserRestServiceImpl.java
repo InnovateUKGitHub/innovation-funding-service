@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
@@ -85,13 +86,13 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<ProcessRole> findProcessRoleById(Long processRoleId) {
-        return getWithRestResult(processRoleRestURL + "/"+ processRoleId, ProcessRole.class);
+    public Future<RestResult<ProcessRole>> findProcessRoleById(Long processRoleId) {
+        return getWithRestResultAsyc(processRoleRestURL + "/" + processRoleId, ProcessRole.class);
     }
 
     @Override
     public RestResult<List<ProcessRole>> findProcessRole(Long applicationId) {
-        return getWithRestResult(processRoleRestURL + "/findByUserApplication/" + applicationId, processRoleListType());
+        return getWithRestResult(processRoleRestURL + "/findByApplicationId/" + applicationId, processRoleListType());
     }
 
     @Override
@@ -100,8 +101,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<List<ProcessRole>> findAssignableProcessRoles(Long applicationId){
-        return getWithRestResult(processRoleRestURL + "/findAssignable/" + applicationId, processRoleListType());
+    public Future<RestResult<ProcessRole[]>> findAssignableProcessRoles(Long applicationId){
+        return getWithRestResultAsyc(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRole[].class);
     }
 
     @Override

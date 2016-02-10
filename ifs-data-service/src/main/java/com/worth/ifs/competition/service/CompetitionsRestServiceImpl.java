@@ -1,5 +1,6 @@
 package com.worth.ifs.competition.service;
 
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Competition;
 import org.apache.commons.logging.Log;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionListType;
 
 /**
  * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link Competition}.
@@ -18,17 +19,18 @@ import static java.util.Arrays.asList;
  */
 @Service
 public class CompetitionsRestServiceImpl extends BaseRestService implements CompetitionsRestService {
+
     @Value("${ifs.data.service.rest.competition}")
     String competitionsRestURL;
 
     @SuppressWarnings("unused")
     private final Log log = LogFactory.getLog(getClass());
 
-    public List<Competition> getAll() {
-        return asList(restGet(competitionsRestURL + "/findAll", Competition[].class));
+    public RestResult<List<Competition>> getAll() {
+        return getWithRestResult(competitionsRestURL + "/findAll", competitionListType());
     }
 
-    public Competition getCompetitionById(Long competitionId) {
-        return restGet(competitionsRestURL + "/findById/" + competitionId, Competition.class);
+    public RestResult<Competition> getCompetitionById(Long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/findById/" + competitionId, Competition.class);
     }
 }

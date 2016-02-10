@@ -1,6 +1,9 @@
 package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 
 import java.util.List;
@@ -12,51 +15,66 @@ import java.util.Set;
 public interface QuestionService {
 
     @NotSecured("TODO")
-    Question getQuestionById(final Long id);
+    ServiceResult<Question> getQuestionById(final Long id);
 
     @NotSecured("TODO")
-    void markAsComplete(final Long questionId,
+    ServiceResult<Void> markAsComplete(final Long questionId,
                         final Long applicationId,
                         final Long markedAsCompleteById);
 
 
     @NotSecured("TODO")
-    void markAsInComplete(final Long questionId,
+    ServiceResult<Void> markAsInComplete(final Long questionId,
                           final Long applicationId,
                           final Long markedAsInCompleteById);
 
     @NotSecured("TODO")
-    void assign(final Long questionId,
+    ServiceResult<Void> assign(final Long questionId,
                 final Long applicationId,
                 final Long assigneeId,
                 final Long assignedById);
 
     @NotSecured("TODO")
-    Set<Long> getMarkedAsComplete(Long applicationId,
+    ServiceResult<Set<Long>> getMarkedAsComplete(Long applicationId,
                                   Long organisationId);
 
     @NotSecured("TODO")
-    void updateNotification(final Long questionStatusId,
+    ServiceResult<Void> updateNotification(final Long questionStatusId,
                             final Boolean notify);
 
     @NotSecured("TODO")
-    List<Question> findByCompetition(final Long competitionId);
+    ServiceResult<List<Question>> findByCompetition(final Long competitionId);
 
     @NotSecured("TODO")
-    Question getNextQuestion(final Long questionId);
+    ServiceResult<Question> getNextQuestion(final Long questionId);
 
     @NotSecured("TODO")
-    Question getPreviousQuestionBySection(final Long sectionId);
+    ServiceResult<Question> getPreviousQuestionBySection(final Long sectionId);
 
     @NotSecured("TODO")
-    Question getNextQuestionBySection(final Long sectionId);
+    ServiceResult<Question> getNextQuestionBySection(final Long sectionId);
 
     @NotSecured("TODO")
-    Question getPreviousQuestion(final Long questionId);
+    ServiceResult<Question> getPreviousQuestion(final Long questionId);
 
     @NotSecured("TODO")
-    Boolean isMarkedAsComplete(Question question, Long applicationId, Long organisationId);
+    ServiceResult<Boolean> isMarkedAsComplete(Question question, Long applicationId, Long organisationId);
 
     @NotSecured("TODO")
     Question getQuestionByFormInputType(String formInputTypeTitle);
+
+    @NotSecured("TODO DW - implement when permissions available")
+    ServiceResult<List<QuestionStatus>> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId);
+
+    @NotSecured("TODO DW - implement when permissions available")
+    ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId);
+
+    @NotSecured("TODO DW - implement when permissions available")
+    ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(Long[] questionIds, Long applicationId, Long organisationId);
+
+    @NotSecured("TODO DW - implement when permissions available")
+    ServiceResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(Long applicationId, Long organisationId);
+
+    @NotSecured("TODO DW - implement when permissions available")
+    ServiceResult<QuestionStatus> getQuestionStatusResourceById(Long id);
 }

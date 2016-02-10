@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 
 import java.util.*;
+import java.util.concurrent.Future;
 
 /**
  * Interface for CRUD operations on {@link Section} related data.
@@ -18,7 +19,7 @@ public interface SectionService {
     Section getByName(String name);
     void removeSectionsQuestionsWithType(Section section, String name);
     List<Long> getUserAssignedSections(List<Section> sections, HashMap<Long, QuestionStatus> questionAssignees, Long currentProcessRoleId);
-    Section getPreviousSection(Optional<Long> sectionId);
-    Section getNextSection(Optional<Long> sectionId);
+    Future<Section> getPreviousSection(Optional<Section> sectionId);
+    Future<Section> getNextSection(Optional<Section> sectionId);
     Section getSectionByQuestionId(Long questionId);
 }

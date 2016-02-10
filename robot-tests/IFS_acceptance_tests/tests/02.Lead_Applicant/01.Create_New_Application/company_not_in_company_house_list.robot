@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     -INFUND-888 As an applicant I want to be able to manually add an unverified company as part of registration as I am not yet registered with Companies House so that I can enter a competition as a Start-up company
-Suite Setup        The guest user opens the browser
-Suite Teardown     TestTeardown User closes the browser
+Suite Setup       The guest user opens the browser
+Suite Teardown    TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -41,7 +41,8 @@ Applicant can see the option to manually add the address for a company that isn'
 
 Applicant can manually enter an address for a company that isn't on the Companies House list, and these details pass to the confirmation page
     [Documentation]    INFUND-888
-    [Tags]    Applicant    Company    Companies House
+    [Tags]    Applicant    Company    Companies House    Pending
+    # Pending because of the INFUND-1816
     Given the applicant is on the "Find your organisation on companies House" page
     And the applicant clicks the option to say their company is "Not on Companies House"
     And the applicant clicks the option to enter the address manually

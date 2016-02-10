@@ -48,14 +48,16 @@ public class AssessorController {
         User user = getLoggedUser(request);
 
         //for now gets all the competitions to show in the dashboard (assumes user was invited and accepted all)
-        List<Competition> competitions = competitionService.getAll();
+
+        // TODO DW - INFUND-1555 - handle success or failure properly
+        List<Competition> competitions = competitionService.getAll().getSuccessObjectOrNull();
 
         Map<Long, Integer> competitionsTotalAssignedAssessments = new HashMap<>();
         Map<Long, Integer> competitionsSubmittedAssessments = new HashMap<>();
 
         for ( Competition c : competitions ) {
-            competitionsTotalAssignedAssessments.put(c.getId(), assessmentRestService.getTotalAssignedByAssessorAndCompetition(getLoggedUser(request).getId(), c.getId()));
-            competitionsSubmittedAssessments.put(c.getId(), assessmentRestService.getTotalSubmittedByAssessorAndCompetition(getLoggedUser(request).getId(), c.getId()));
+            competitionsTotalAssignedAssessments.put(c.getId(), assessmentRestService.getTotalAssignedByAssessorAndCompetition(getLoggedUser(request).getId(), c.getId()).getSuccessObjectOrNull());
+            competitionsSubmittedAssessments.put(c.getId(), assessmentRestService.getTotalSubmittedByAssessorAndCompetition(getLoggedUser(request).getId(), c.getId()).getSuccessObjectOrNull());
         }
 
         //pass to view

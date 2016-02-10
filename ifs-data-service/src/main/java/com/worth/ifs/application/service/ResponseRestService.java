@@ -11,7 +11,7 @@ import java.util.Optional;
  */
 public interface ResponseRestService {
 
-    List<Response> getResponsesByApplicationId(Long applicationId);
+    RestResult<List<Response>> getResponsesByApplicationId(Long applicationId);
 
     RestResult<Void> saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, Optional<String> feedbackValue, Optional<String> feedbackText);
 }

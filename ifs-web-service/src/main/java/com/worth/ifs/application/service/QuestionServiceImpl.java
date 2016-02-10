@@ -2,25 +2,21 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.profiling.ProfileExecution;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.worth.ifs.application.resource.QuestionStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
  * This class contains methods to retrieve and store {@link Question} related data,
  * through the RestService {@link QuestionRestService}.
  */
+// TODO DW - INFUND-1555 - handle rest results
 @Service
 public class QuestionServiceImpl implements QuestionService {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     QuestionRestService questionRestService;
@@ -46,93 +42,77 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<Question> findByCompetition(Long competitionId) {
-        return questionRestService.findByCompetition(competitionId);
+        return questionRestService.findByCompetition(competitionId).getSuccessObjectOrNull();
     }
 
     @Override
-    public HashMap<Long, QuestionStatus> mapAssigneeToQuestion(List<Question> questions, Long userOrganisationId) {
-        HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
-        for(Question question : questions) {
-            for(QuestionStatus questionStatus : question.getQuestionStatuses()) {
-                if(questionStatus.getAssignee()==null)
-                    continue;
-                boolean multipleStatuses = question.hasMultipleStatuses();
-                boolean assigneeIsPartOfOrganisation = questionStatus.getAssignee().getOrganisation().getId().equals(userOrganisationId);
+    public Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId) {
+        return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId).getSuccessObjectOrNull());
+    }
 
-                if((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
-                    questionAssignees.put(question.getId(), questionStatus);
-                    break;
-                }
-            }
+    private Map<Long, QuestionStatusResource> mapToQuestionIds(final List<QuestionStatusResource> questionStatusResources){
+
+        final Map questionAssignees = new HashMap<Long, QuestionStatus>();
+
+        for(QuestionStatusResource questionStatusResource : questionStatusResources){
+            questionAssignees.put(questionStatusResource.getQuestion(), questionStatusResource);
         }
+
         return questionAssignees;
     }
 
     @Override
-    public HashMap<Long, QuestionStatus> mapAssigneeToQuestionByApplicationId(List<Question> questions, Long userOrganisationId, Long applicationId) {
-        HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
-        // TODO: improve performance this is slow, check first call in for loop (too many questions)
-        for(Question question : questions) {
-            final List<QuestionStatus> questionStatuses = questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(question.getId(), applicationId);
-            questionAssignees.putAll(mapAssigneeToQuestion(question, userOrganisationId, questionStatuses));
-        }
-        return questionAssignees;
-    }
-
-    private HashMap<Long, QuestionStatus> mapAssigneeToQuestion(final Question question, Long userOrganisationId, final List<QuestionStatus> questionStatuses){
-        HashMap<Long, QuestionStatus> questionAssignees = new HashMap<>();
-
-        for(QuestionStatus questionStatus : questionStatuses) {
-            if(questionStatus.getAssignee()==null)
-                continue;
-            boolean multipleStatuses = question.hasMultipleStatuses();
-            boolean assigneeIsPartOfOrganisation = questionStatus.getAssignee().getOrganisation().getId().equals(userOrganisationId);
-
-            // Checking that assignee is part of organisation when there are multiple statuses for a question
-            if((multipleStatuses && assigneeIsPartOfOrganisation) || !multipleStatuses) {
-                questionAssignees.put(question.getId(), questionStatus);
-                break;
-            }
-        }
-        return questionAssignees;
+    public List<QuestionStatusResource> getNotificationsForUser(Collection<QuestionStatusResource> questionStatuses, Long userId) {
+        return questionStatuses.stream().
+                filter(qs ->  userId.equals(qs.getAssigneeUserId()) && (qs.getNotified() != null && qs.getNotified().equals(Boolean.FALSE)))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<QuestionStatus> getNotificationsForUser(Collection<QuestionStatus> questionStatuses, Long userId) {
-        return questionStatuses.stream().filter(qs -> qs.getAssignee().getUser().getId().equals(userId) && (qs.getNotified()!=null && qs.getNotified().equals(Boolean.FALSE))).collect(Collectors.toList());
-    }
-
-    @Override
-    public void removeNotifications(List<QuestionStatus> questionStatuses) {
+    public void removeNotifications(List<QuestionStatusResource> questionStatuses) {
         questionStatuses.stream().forEach(qs -> questionRestService.updateNotification(qs.getId(), true));
     }
 
-    public Set<Long> getMarkedAsComplete(Long applicationId, Long organisationId) {
+    public Future<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
         return questionRestService.getMarkedAsComplete(applicationId, organisationId);
     }
 
     @Override
     public Question getById(Long questionId) {
-        return questionRestService.findById(questionId);
+        return questionRestService.findById(questionId).getSuccessObjectOrNull();
     }
 
     @Override
     public Question getNextQuestion(Long questionId) {
-        return questionRestService.getNextQuestion(questionId);
+        return questionRestService.getNextQuestion(questionId).getSuccessObjectOrNull();
     }
 
     @Override
     public Question getPreviousQuestion(Long questionId) {
-        return questionRestService.getPreviousQuestion(questionId);
+        return questionRestService.getPreviousQuestion(questionId).getSuccessObjectOrNull();
     }
 
     @Override
     public Question getPreviousQuestionBySection(Long sectionId) {
-        return questionRestService.getPreviousQuestionBySection(sectionId);
+        return questionRestService.getPreviousQuestionBySection(sectionId).getSuccessObjectOrNull();
     }
 
     @Override
     public Question getNextQuestionBySection(Long sectionId) {
-        return questionRestService.getNextQuestionBySection(sectionId);
+        return questionRestService.getNextQuestionBySection(sectionId).getSuccessObjectOrNull();
+    }
+
+    @Override
+    public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
+        List<QuestionStatusResource> questionStatuses = questionStatusRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId).getSuccessObjectOrNull();
+        if(questionStatuses == null || questionStatuses.size() == 0){
+            return null;
+        }
+        return questionStatuses.get(0);
+    }
+
+    @Override
+    public Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId){
+        return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccessObjectOrNull());
     }
 }

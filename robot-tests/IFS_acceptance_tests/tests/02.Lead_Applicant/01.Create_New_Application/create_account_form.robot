@@ -29,7 +29,7 @@ First name left blank
     And the user inputs a valid password
     And the user retypes the password correctly
     And the user submits their information
-    Then the user should see an error
+    Then the user should see an error    Please enter a first name
     And the user cannot login with their new details
 
 Last name left blank
@@ -43,7 +43,7 @@ Last name left blank
     And the user inputs a valid password
     And the user retypes the password correctly
     And the user submits their information
-    Then the user should see an error
+    Then the user should see an error    Please enter a last name
     And the user cannot login with their new details
 
 Phone number left blank
@@ -57,7 +57,7 @@ Phone number left blank
     And the user inputs a valid password
     And the user retypes the password correctly
     And the user submits their information
-    Then the user should see an error
+    Then the user should see an error    Please enter a phone number
     And the user cannot login with their new details
 
 Email left blank
@@ -71,7 +71,7 @@ Email left blank
     And the user inputs a valid password
     And the user retypes the password correctly
     And the user submits their information
-    Then the user should see an error
+    Then the user should see an error    Please enter your email
 
 Password left blank
     [Documentation]    -INFUND-885
@@ -84,7 +84,7 @@ Password left blank
     And the user leaves the password field blank
     And the user retypes the password correctly
     And the user submits their information
-    Then the user should see an error
+    Then the user should see an error    Please enter your password
     And the user cannot login with their new details
 
 Re-type password left blank
@@ -98,7 +98,7 @@ Re-type password left blank
     And the user inputs a valid password
     And the user leaves the re-type password field blank
     And the user submits their information
-    Then the user should see an error
+    Then the user should see an error    Please re-type your password
     And the user cannot login with their new details
 
 Password and re-typed password do not match
@@ -112,7 +112,7 @@ Password and re-typed password do not match
     And the user inputs a valid password
     And the user retypes the password incorrectly
     And the user submits their information
-    Then the user should see an error
+    Then the user should see an error    Passwords must match
     And the user cannot login with either password
 
 Password is too short
@@ -126,7 +126,7 @@ Password is too short
     And the user enters a short password
     And the user re-enters the short password
     And the user submits their information
-    Then the user should see an error
+    Then the user should see an error    Password size should be between 6 and 30 characters
     And the user cannot login with the short password
 
 Password is too long
@@ -140,13 +140,13 @@ Password is too long
     And the user enters a long password
     And the user re-enters the long password
     And the user submits their information
-    Then the user should see an error
+    Then the user should see an error    Password size should be between 6 and 30 characters
     And the user cannot login with the long password
 
 Valid account creation
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
+    Given the user follows the standard path to the account creation page for non registered users
     When the user inputs a first name
     And the user inputs a last name
     And the user inputs a phone number
@@ -154,8 +154,11 @@ Valid account creation
     And the user inputs a valid password
     And the user retypes the password correctly
     And the user submits their information
+    Capture Page Screenshot
     Then the user should be redirected to the login page
+    Capture Page Screenshot
     And the user can login with their new details
+    Capture Page Screenshot
     And the user can logout
 
 Email duplication check
@@ -169,15 +172,13 @@ Email duplication check
     And the user inputs a valid password
     And the user retypes the password correctly
     And the user submits their information
-    Then the user should see an error for the email duplication
+    Then the user should see an error    Email address is already in use
 
 *** Keywords ***
 the user follows the standard path to the account creation page
     Go To    ${SERVER}/application/create/selected-business/05063042
     Select Checkbox    id=address-same
     Select Checkbox    name=useCompanyHouseAddress
-    # Select Radio Button    organisationSize    SMALL
-    # organisation size has been moved to another page, so have commented this step out
     Click Button    Save organisation and continue
     Sleep    1s
     Page Should Contain    The profile that you are creating will be linked to the following organisation
@@ -235,50 +236,49 @@ the user re-enters the long password
 
 the user submits their information
     Select Checkbox    termsAndConditions
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Submit Form
 
 the user should see an error
+    [Arguments]    ${Validation error}
     Page Should Contain    We were unable to create your account
+    page should contain    ${Validation error}
 
 the user cannot login with their new details
     go to    ${LOGIN_URL}
+    Disable browser validations
     Input Text    id=id_email    ${valid_email}
     Input Password    id=id_password    ${correct_password}
     Submit Form
-    Page Should Contain    Please try again
-
-the user cannot login with the invalid email
-    go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${invalid_email}
-    Input Password    id=id_password    ${correct_password}
-    Submit Form
-    Page Should Contain    Please try again
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
 
 the user cannot login with the short password
     go to    ${LOGIN_URL}
     Input Text    id=id_email    ${valid_email}
     Input Password    id=id_password    ${short_password}
     Submit Form
-    Page Should Contain    Please try again
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
 
 the user cannot login with the long password
     go to    ${LOGIN_URL}
     Input Text    id=id_email    ${valid_email}
     Input Password    id=id_password    ${long_password}
     Submit Form
-    Page Should Contain    Please try again
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
 
 the user cannot login with either password
     go to    ${LOGIN_URL}
     Input Text    id=id_email    ${valid_email}
     Input Password    id=id_password    ${correct_password}
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Submit Form
-    Page Should Contain    Please try again
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
     go to    ${LOGIN_URL}
     Input Text    id=id_email    ${valid_email}
     Input Password    id=id_password    ${incorrect_password}
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Submit Form
-    Page Should Contain    Please try again
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
 
 the user should be redirected to the login page
     go to    ${LOGIN_URL}
@@ -293,6 +293,22 @@ the user can login with their new details
 the user can logout
     logout as user
 
+Disable browser validations
+    [Documentation]    This keyword disables the browsers validations in order to test the validation errors in all the browsers
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+
 the user should see an error for the email duplication
     Page Should Contain    We were unable to create your account
     page should contain    Email address is already in use
+
+the user follows the standard path to the account creation page for non registered users
+    go to    ${COMPETITION_DETAILS_URL}
+    click element    jQuery=.column-third .button:contains("Sign in to apply")
+    Click Element    jQuery=.button:contains("Create")
+    Input Text    id=org-name    Innovate
+    Click Element    id=org-search
+    Click element    LINK=INNOVATE LTD
+    Input Text    css=#postcode-check    postcode
+    Click Element    id=postcode-lookup
+    Click Element    css=#select-address-block > button
+    click element    jQuery=.button:contains("Save organisation and")

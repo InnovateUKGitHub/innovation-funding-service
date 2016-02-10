@@ -7,8 +7,6 @@ import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Test;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.ResponseEntity;
 
 import java.util.HashSet;
 import java.util.List;
@@ -16,14 +14,10 @@ import java.util.Set;
 
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
-
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentListType;
 import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpMethod.GET;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -47,10 +41,9 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<Asse
         long competitionId = 456L;
 
         List<Assessment> assessments = newAssessment().build(3);
-        ResponseEntity<Assessment[]> mockResponse = new ResponseEntity<>(assessments.toArray(new Assessment[assessments.size()]), OK);
-        when(mockRestTemplate.exchange(eq(dataServicesUrl + assessmentRestURL + "/findAssessmentsByCompetition/123/456"), eq(GET), any(HttpEntity.class), eq(Assessment[].class))).thenReturn(mockResponse);
+        setupGetWithRestResultExpectations(assessmentRestURL + "/findAssessmentsByCompetition/123/456", assessmentListType(), assessments);
 
-        List<Assessment> results = service.getAllByAssessorAndCompetition(assessorId, competitionId);
+        List<Assessment> results = service.getAllByAssessorAndCompetition(assessorId, competitionId).getSuccessObject();
         assertEquals(3, results.size());
         forEachWithIndex(results, (i, result) -> assertEquals(assessments.get(i), result));
     }
@@ -58,54 +51,45 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<Asse
     @Test
     public void test_acceptAssessmentInvitation() {
 
-        String expectedUrl = dataServicesUrl + assessmentRestURL + "/acceptAssessmentInvitation/123";
         Assessment assessment = newAssessment().build();
-        when(mockRestTemplate.postForEntity(expectedUrl, httpEntityForRestCall(assessment), String.class)).thenReturn(new ResponseEntity<>("Good job!", OK));
+        setupPostWithRestResultExpectations(assessmentRestURL + "/acceptAssessmentInvitation/123", assessment, OK);
 
-        service.acceptAssessmentInvitation(123L, assessment);
-
-        verify(mockRestTemplate).postForEntity(expectedUrl, httpEntityForRestCall(assessment), String.class);
+        assertTrue(service.acceptAssessmentInvitation(123L, assessment).isSuccess());
+        setupPostWithRestResultVerifications(assessmentRestURL + "/acceptAssessmentInvitation/123", Void.class, assessment);
     }
 
     @Test
     public void test_getOneByProcessRole() {
 
-        String expectedUrl = dataServicesUrl + assessmentRestURL + "/findAssessmentByProcessRole/123";
         Assessment assessment = newAssessment().build();
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Assessment.class)).thenReturn(new ResponseEntity<>(assessment, OK));
+        setupGetWithRestResultExpectations(assessmentRestURL + "/findAssessmentByProcessRole/123", Assessment.class, assessment);
 
-        Assessment response = service.getOneByProcessRole(123L);
-        assertNotNull(response);
+        Assessment response = service.getOneByProcessRole(123L).getSuccessObject();
         assertEquals(assessment, response);
     }
 
     @Test
     public void test_getTotalAssignedByAssessorAndCompetition() {
-        String expectedUrl = dataServicesUrl + assessmentRestURL + "/totalAssignedAssessmentsByCompetition/123/456";
         Integer result = 321;
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Integer.class)).thenReturn(new ResponseEntity<>(result, OK));
+        setupGetWithRestResultExpectations(assessmentRestURL + "/totalAssignedAssessmentsByCompetition/123/456", Integer.class, result);
 
-        Integer response = service.getTotalAssignedByAssessorAndCompetition(123L, 456L);
-        assertNotNull(response);
+        Integer response = service.getTotalAssignedByAssessorAndCompetition(123L, 456L).getSuccessObject();
         assertEquals(result, response);
     }
 
     @Test
     public void test_rejectAssessmentInvitation() {
 
-        String expectedUrl = dataServicesUrl + assessmentRestURL + "/rejectAssessmentInvitation/123";
         ProcessOutcome processOutcomeToUpdate = newProcessOutcome().build();
-
-        when(mockRestTemplate.postForEntity(expectedUrl, httpEntityForRestCall(processOutcomeToUpdate), String.class)).thenReturn(new ResponseEntity<>("", OK));
+        setupPostWithRestResultExpectations(assessmentRestURL + "/rejectAssessmentInvitation/123", processOutcomeToUpdate, OK);
 
         service.rejectAssessmentInvitation(123L, processOutcomeToUpdate);
-        verify(mockRestTemplate).postForEntity(expectedUrl, httpEntityForRestCall(processOutcomeToUpdate), String.class);
+        setupPostWithRestResultVerifications(assessmentRestURL + "/rejectAssessmentInvitation/123", Void.class, processOutcomeToUpdate);
     }
 
     @Test
     public void test_respondToAssessmentInvitation() {
 
-        String expectedUrl = dataServicesUrl + assessmentRestURL + "/respondToAssessmentInvitation/";
         ObjectNode toUpdate = new ObjectMapper().createObjectNode().
                 put("assessorId", 123L).
                 put("applicationId", 456L).
@@ -113,15 +97,16 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<Asse
                 put("reason", "Because it's awesome").
                 put("observations", "Some observations");
 
-        when(mockRestTemplate.postForEntity(expectedUrl, httpEntityForRestCall(toUpdate), Boolean.class)).thenReturn(new ResponseEntity<>(Boolean.TRUE, OK));
+        setupPostWithRestResultExpectations(assessmentRestURL + "/respondToAssessmentInvitation/", toUpdate, OK);
 
-        assertTrue(service.respondToAssessmentInvitation(123L, 456L, true, "Because it's awesome", "Some observations"));
+        assertTrue(service.respondToAssessmentInvitation(123L, 456L, true, "Because it's awesome", "Some observations").isSuccess());
+
+        setupPostWithRestResultVerifications(assessmentRestURL + "/respondToAssessmentInvitation/", Void.class, toUpdate);
     }
 
     @Test
     public void test_saveAssessmentSummary() {
 
-        String expectedUrl = dataServicesUrl + assessmentRestURL + "/saveAssessmentSummary/";
         ObjectNode toUpdate = new ObjectMapper().createObjectNode().
                 put("assessorId", 123L).
                 put("applicationId", 456L).
@@ -129,9 +114,11 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<Asse
                 put("suitableFeedback", "Nice feedback").
                 put("comments", "Some comments");
 
-        when(mockRestTemplate.postForEntity(expectedUrl, httpEntityForRestCall(toUpdate), Boolean.class)).thenReturn(new ResponseEntity<>(Boolean.TRUE, OK));
+        setupPostWithRestResultExpectations(assessmentRestURL + "/saveAssessmentSummary/", toUpdate, OK);
 
-        assertTrue(service.saveAssessmentSummary(123L, 456L, "Very suitable value", "Nice feedback", "Some comments"));
+        assertTrue(service.saveAssessmentSummary(123L, 456L, "Very suitable value", "Nice feedback", "Some comments").isSuccess());
+
+        setupPostWithRestResultVerifications(assessmentRestURL + "/saveAssessmentSummary/", Void.class, toUpdate);
     }
 
     @Test
@@ -141,15 +128,16 @@ public class AssessmentRestServiceMocksTest extends BaseRestServiceUnitTest<Asse
         assessmentIdsToUpdate.add(456L);
         assessmentIdsToUpdate.add(789L);
 
-        String expectedUrl = dataServicesUrl + assessmentRestURL + "/submitAssessments/";
         ObjectNode toUpdate = new ObjectMapper().createObjectNode().
                 put("assessorId", 123L);
 
         ArrayNode assessmentsToSubmit = new ObjectMapper().valueToTree(assessmentIdsToUpdate);
         toUpdate.putArray("assessmentsToSubmit").addAll(assessmentsToSubmit);
 
-        when(mockRestTemplate.postForEntity(expectedUrl, httpEntityForRestCall(toUpdate), Boolean.class)).thenReturn(new ResponseEntity<>(Boolean.TRUE, OK));
+        setupPostWithRestResultExpectations(assessmentRestURL + "/submitAssessments/", toUpdate, OK);
 
-        assertTrue(service.submitAssessments(123L, assessmentIdsToUpdate));
+        assertTrue(service.submitAssessments(123L, assessmentIdsToUpdate).isSuccess());
+
+        setupPostWithRestResultVerifications(assessmentRestURL + "/submitAssessments/", Void.class, toUpdate);
     }
 }
