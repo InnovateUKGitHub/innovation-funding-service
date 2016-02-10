@@ -1,5 +1,8 @@
 package com.worth.ifs.finance.handler.item;
 
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.repository.CostFieldRepository;
@@ -26,10 +29,32 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
     EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
 
     @Autowired
+    QuestionService questionService;
+
+    @Autowired
     CostRepository costRepository;
 
     @Autowired
     CostFieldRepository costFieldRepository;
+
+    @Override
+    public void initialiseCostType(ApplicationFinance applicationFinance, CostType costType){
+        Question question = getQuestionByCostType(costType);
+        try{
+            List<Cost> cost = getCostHandler(costType).initializeCost();
+            cost.forEach(c -> {
+                c.setQuestion(question);
+                c.setApplicationFinance(applicationFinance);
+            });
+            costRepository.save(cost);
+        }catch (IllegalArgumentException e){
+            log.error(String.format("No CostHandler for type: ", costType.getType()));
+        }
+    }
+
+    private Question getQuestionByCostType(CostType costType) {
+        return questionService.getQuestionByFormInputType(costType.getType());
+    }
 
     @Override
     public EnumMap<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {

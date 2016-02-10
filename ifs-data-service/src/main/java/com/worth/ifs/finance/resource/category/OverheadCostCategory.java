@@ -15,6 +15,7 @@ import java.util.Optional;
  * Default representation for costs and defaults to summing up the costs.
  */
 public class OverheadCostCategory implements CostCategory {
+    public static final String ACCEPT_RATE = "Accept Rate";
     private final Log log = LogFactory.getLog(getClass());
     List<CostItem> costs = new ArrayList<>();
     BigDecimal total = BigDecimal.ZERO;

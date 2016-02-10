@@ -6,6 +6,7 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.handler.item.OrganisationFinanceHandler;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -39,6 +40,8 @@ public class ApplicationFinanceControllerTest {
     CostRepository costRepository;
     @Mock
     QuestionService questionService;
+    @Mock
+    OrganisationFinanceHandler organisationFinanceHandler;
 
     private ApplicationFinance applicationFinance;
 
@@ -153,8 +156,7 @@ public class ApplicationFinanceControllerTest {
         verify(organisationRepository, times(1)).findOne(anyLong());
         verifyNoMoreInteractions(organisationRepository);
         verify(applicationFinanceRepository, times(1)).save(any(ApplicationFinance.class));
-        verify(costRepository, times(4)).save(any(Cost.class));
-        verifyNoMoreInteractions(organisationRepository);
+        verifyNoMoreInteractions(applicationFinanceRepository);
     }
 
     @Test

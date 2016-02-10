@@ -16,7 +16,6 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
-import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -164,7 +163,7 @@ public abstract class AbstractApplicationController {
 
         Optional<Organisation> leadOrganisation = organisationService.getApplicationLeadOrganisation(application);
         leadOrganisation.ifPresent(org ->
-            model.addAttribute("leadOrganisation", org)
+                        model.addAttribute("leadOrganisation", org)
         );
     }
 
@@ -228,7 +227,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
         model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
         if(applicationFinanceResource.getGrantClaim()!=null) {
-            model.addAttribute("organisationGrantClaimPercentage", applicationFinanceResource.getGrantClaimPercentage());
+            model.addAttribute("organisationGrantClaimPercentage", applicationFinanceResource.getGrantClaim().getGrantClaimPercentage());
             model.addAttribute("organisationgrantClaimPercentageId", applicationFinanceResource.getGrantClaim().getId());
             String formInputKey = "finance-grantclaim-" + applicationFinanceResource.getGrantClaim();
             String formInputValue = applicationFinanceResource.getGrantClaimPercentage() != null ? applicationFinanceResource.getGrantClaimPercentage().toString() : "";

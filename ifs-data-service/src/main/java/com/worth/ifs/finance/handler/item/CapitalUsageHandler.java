@@ -14,11 +14,10 @@ import java.math.BigDecimal;
  * or for sending it over.
  */
 public class CapitalUsageHandler extends CostHandler {
-    private final Log log = LogFactory.getLog(getClass());
-
     public static final String COST_FIELD_EXISTING = "existing";
     public static final String COST_FIELD_RESIDUAL_VALUE = "residual_value";
     public static final String COST_FIELD_UTILISATION = "utilisation";
+    private final Log log = LogFactory.getLog(getClass());
 
     @Override
     public Cost toCost(CostItem costItem) {
@@ -35,13 +34,13 @@ public class CapitalUsageHandler extends CostHandler {
         BigDecimal residualValue = BigDecimal.ZERO;
         Integer utilisation = 0;
 
-        for(CostValue costValue : cost.getCostValues()) {
+        for (CostValue costValue : cost.getCostValues()) {
             String title = costValue.getCostField().getTitle();
-            if(title.equals(COST_FIELD_EXISTING)) {
+            if (title.equals(COST_FIELD_EXISTING)) {
                 existing = costValue.getValue();
-            } else if(title.equals(COST_FIELD_RESIDUAL_VALUE)) {
+            } else if (title.equals(COST_FIELD_RESIDUAL_VALUE)) {
                 residualValue = new BigDecimal(costValue.getValue());
-            } else if(title.equals(COST_FIELD_UTILISATION)) {
+            } else if (title.equals(COST_FIELD_UTILISATION)) {
                 utilisation = Integer.valueOf(costValue.getValue());
             }
         }
@@ -52,7 +51,7 @@ public class CapitalUsageHandler extends CostHandler {
 
     public Cost mapCapitalUsage(CostItem costItem) {
         CapitalUsage capitalUsage = (CapitalUsage) costItem;
-        Cost capitalUsageCost = new Cost(capitalUsage.getId(), "",  capitalUsage.getDescription(), capitalUsage.getDeprecation(),
+        Cost capitalUsageCost = new Cost(capitalUsage.getId(), "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
                 capitalUsage.getNpv(), null, null);
         capitalUsageCost.getCostValues().add(
                 new CostValue(capitalUsageCost, costFields.get(COST_FIELD_EXISTING), capitalUsage.getExisting()));
@@ -63,5 +62,4 @@ public class CapitalUsageHandler extends CostHandler {
 
         return capitalUsageCost;
     }
-
 }

@@ -126,10 +126,13 @@ public class ApplicationFinanceResource {
 
     public Integer getGrantClaimPercentage() {
         CostCategory costCategory = getFinanceOrganisationDetails(CostType.FINANCE);
-        return (costCategory != null ? costCategory.getTotal().intValueExact() : 0);
+        return (costCategory != null && costCategory.getTotal()!= null? costCategory.getTotal().intValueExact() : null);
     }
 
     public BigDecimal getTotalFundingSought() {
+        if (getGrantClaimPercentage() == null) {
+            return new BigDecimal(0);
+        }
         BigDecimal totalFundingSought = getTotal()
                 .multiply(new BigDecimal(getGrantClaimPercentage()))
                 .divide(new BigDecimal(100))

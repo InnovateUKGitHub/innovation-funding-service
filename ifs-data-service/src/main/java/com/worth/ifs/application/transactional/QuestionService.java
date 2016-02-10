@@ -56,4 +56,7 @@ public interface QuestionService {
 
     @NotSecured("TODO")
     Boolean isMarkedAsComplete(Question question, Long applicationId, Long organisationId);
+
+    @NotSecured("TODO")
+    Question getQuestionByFormInputType(String formInputTypeTitle);
 }

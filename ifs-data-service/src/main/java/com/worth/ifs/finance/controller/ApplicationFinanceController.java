@@ -3,19 +3,16 @@ package com.worth.ifs.finance.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
-import com.worth.ifs.finance.handler.item.GrantClaimHandler;
+import com.worth.ifs.finance.handler.item.OrganisationFinanceHandler;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
-import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
-import com.worth.ifs.finance.resource.cost.OverheadRateType;
+import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import org.apache.commons.logging.Log;
@@ -26,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +52,8 @@ public class ApplicationFinanceController {
 
     @Autowired
     ApplicationFinanceHandler applicationFinanceHandler;
+    @Autowired
+    OrganisationFinanceHandler organisationFinanceHandler;
 
     @Autowired
     CostRepository costRepository;
@@ -97,60 +95,18 @@ public class ApplicationFinanceController {
         ApplicationFinance applicationFinance = new ApplicationFinance(application, organisation);
 
         applicationFinance = applicationFinanceRepository.save(applicationFinance);
-
         initialize(applicationFinance);
-
         return new ApplicationFinanceResource(applicationFinance);
     }
 
     /**
-     * There are some objects that need a default value, and a id to use in the form,
+     * There are some objects that need a default value, and an instance to use in the form,
      * so there are some objects that need to be created before loading the form.
      */
     private void initialize(ApplicationFinance applicationFinance) {
-        initializeLabour(applicationFinance);
-        initializeOverhead(applicationFinance);
-        initializeFundingLevel(applicationFinance);
-        initializeOtherFunding(applicationFinance);
-    }
-
-    private Cost initializeOverhead(ApplicationFinance applicationFinance) {
-        String description = "Accept Rate";
-        Question question = questionService.getQuestionById(29L);
-        String item = OverheadRateType.NONE.name();
-        Cost cost = new Cost(item, description, 0, null, applicationFinance, question);
-        cost = costRepository.save(cost);
-        return cost;
-    }
-
-    private Cost initializeFundingLevel(ApplicationFinance applicationFinance) {
-        String description = GrantClaimHandler.GRANT_CLAIM;
-        Question question = questionService.getQuestionById(38L);
-        String item = null;
-        Integer quantity = null; // the funding level
-        Cost cost = new Cost(item, description, quantity, null, applicationFinance, question);
-        cost = costRepository.save(cost);
-        return cost;
-    }
-
-    private Cost initializeOtherFunding(ApplicationFinance applicationFinance) {
-        String description = OtherFundingCostCategory.OTHER_FUNDING;
-        Question question = questionService.getQuestionById(35L);
-        String item = "";
-        Integer quantity = null; // the funding level
-        BigDecimal costValue = new BigDecimal(0);
-        Cost cost = new Cost(item, description, quantity, costValue, applicationFinance, question);
-        cost = costRepository.save(cost);
-        return cost;
-    }
-
-    private Cost initializeLabour(ApplicationFinance applicationFinance) {
-        String description = "Working days per year";
-        Integer quantity = 0;
-        Question question = questionService.getQuestionById(28L);
-        Cost cost = new Cost(null, description, quantity, null, applicationFinance, question);
-        cost = costRepository.save(cost);
-        return cost;
+        for (CostType costType : CostType.values()) {
+            organisationFinanceHandler.initialiseCostType(applicationFinance, costType);
+        }
     }
 
     @RequestMapping("/getById/{applicationFinanceId}")
