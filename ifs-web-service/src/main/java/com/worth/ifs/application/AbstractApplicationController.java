@@ -199,7 +199,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected List<FormInputResponse> getFormInputResponses(ApplicationResource application) {
-        return       formInputResponseService.getByApplication(application.getId());
+        return formInputResponseService.getByApplication(application.getId());
     }
 
     protected void addUserDetails(Model model, ApplicationResource application, Long userId) {
