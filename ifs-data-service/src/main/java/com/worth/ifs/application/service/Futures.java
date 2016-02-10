@@ -67,6 +67,15 @@ public class Futures {
         };
     }
 
+    /**
+     * Adapt with a map Function. Note that there is no way of dealing with Exceptions in the adaptee, These will get
+     * propagated as ExecutionExceptions.
+     * @param base
+     * @param adaptor
+     * @param <T>
+     * @param <S>
+     * @return
+     */
     public static <T, S> Future<T> adapt(Future<S> base, Function<S, T> adaptor) {
         return new FutureAdapter<T, S>(base) {
             @Override
@@ -75,8 +84,6 @@ public class Futures {
             }
         };
     }
-
-
 
     public static <T> ListenableFuture<T> settable(T toSet) {
         SettableListenableFuture<T> settable = new SettableListenableFuture<>();

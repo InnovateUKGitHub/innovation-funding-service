@@ -1,7 +1,6 @@
 package com.worth.ifs.finance.resource.category;
 
 import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.GrantClaim;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -32,6 +31,7 @@ public class GrantClaimCategory implements CostCategory {
     @Override
     public void calculateTotal() {
         total = costs.stream()
+                .filter(c -> c.getTotal()!=null)
                 .map(c -> c.getTotal())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         log.info("GRANT CLAIM TOTAL: " + total);

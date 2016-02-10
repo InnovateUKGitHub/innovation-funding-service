@@ -1,8 +1,8 @@
 /*
 
 SVG based pie charts, won't show without javascript or svg
- 
-###Basic pie-chart 
+
+###Basic pie-chart
 
 ```
 <div class="pie">92%</div>
@@ -67,9 +67,6 @@ You can add `.small` to `.pie` for a smaller version of both
 		top:2px;
 		left:2px;
 	}
-	+ .pie-overlay span{
-		@extend .visuallyhidden;
-	}
 	+ .pie-overlay > div {
 		margin-top:0;
 		line-height: 36px;
@@ -88,6 +85,10 @@ You can add `.small` to `.pie` for a smaller version of both
 		background:$grey-3;
 		border-radius: 50%;
 	}
+  &[aria-hidden="true"]{
+    display: block;
+    visibility:visible;
+  }
 
 	circle {
 		fill:$red;
@@ -144,4 +145,3 @@ You can add `.small` to `.pie` for a smaller version of both
 		position: static;
 	}
 }
-
