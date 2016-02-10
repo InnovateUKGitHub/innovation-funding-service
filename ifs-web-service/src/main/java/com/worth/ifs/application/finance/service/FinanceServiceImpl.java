@@ -31,7 +31,7 @@ public class FinanceServiceImpl implements FinanceService {
     ApplicationFinanceRestService applicationFinanceRestService;
 
     public ApplicationFinanceResource addApplicationFinance(Long applicationId, Long userId) {
-        ProcessRole processRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrNull();
+        ProcessRole processRole = userRestService.findProcessRole(userId, applicationId).getSuccessObject();
 
         if(processRole.getOrganisation()!=null) {
             return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisation().getId());
@@ -40,12 +40,12 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     public ApplicationFinanceResource getApplicationFinance(Long applicationId, Long userId) {
-        ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrNull();
+        ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObject();
         return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
     }
 
     public ApplicationFinanceResource getApplicationFinanceDetails(Long applicationId, Long userId) {
-        ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrNull();
+        ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObject();
         return applicationFinanceRestService.getFinanceDetails(applicationId, userApplicationRole.getOrganisation().getId());
     }
 
