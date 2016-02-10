@@ -5,11 +5,11 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
-import static com.worth.ifs.application.service.ListenableFutures.adapt;
+import static com.worth.ifs.application.service.Futures.adapt;
 import static java.util.Arrays.asList;
 
 /**
@@ -33,12 +33,12 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
     }
 
     @Override
-    public ListenableFuture<List<ProcessRole>> findAssignableProcessRoles(Long applicationId) {
+    public Future<List<ProcessRole>> findAssignableProcessRoles(Long applicationId) {
         return adapt(userRestService.findAssignableProcessRoles(applicationId), re -> asList(re.getSuccessObject()));
     }
 
     @Override
-    public ListenableFuture<ProcessRole> getById(Long id){
+    public Future<ProcessRole> getById(Long id){
         return adapt(userRestService.findProcessRoleById(id), RestResult::getSuccessObjectOrNull);
     }
 }

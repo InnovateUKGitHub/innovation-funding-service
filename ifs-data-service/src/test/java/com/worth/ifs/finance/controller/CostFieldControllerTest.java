@@ -1,44 +1,30 @@
 package com.worth.ifs.finance.controller;
 
-import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.finance.mapper.CostFieldMapper;
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.transactional.CostFieldService;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CostFieldControllerTest {
-    @Mock
-    CostFieldService costFieldService;
+public class CostFieldControllerTest extends BaseControllerMockMVCTest<CostFieldController> {
 
     @Mock
-    CostFieldMapper costFieldMapper;
+    private CostFieldService costFieldService;
 
-    private MockMvc mockMvc;
-
-    @InjectMocks
-    private CostFieldController costFieldController;
-
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(costFieldController)
-                .build();
+    @Override
+    protected CostFieldController supplyControllerUnderTest() {
+        return new CostFieldController();
     }
 
     @Test
     public void findAllShouldReturnListOfCostFields() throws Exception{
-        when(costFieldService.findAll()).thenReturn(Arrays.asList(new CostField(), new CostField()));
+        when(costFieldService.findAll()).thenReturn(serviceSuccess(asList(new CostFieldResource(), new CostFieldResource())));
 
         mockMvc.perform(get("/costfield/findAll/"))
                 .andExpect(status().isOk());

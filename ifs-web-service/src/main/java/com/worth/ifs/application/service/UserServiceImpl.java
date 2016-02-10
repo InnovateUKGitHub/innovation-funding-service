@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.service.ListenableFutures.call;
+import static com.worth.ifs.application.service.Futures.call;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**

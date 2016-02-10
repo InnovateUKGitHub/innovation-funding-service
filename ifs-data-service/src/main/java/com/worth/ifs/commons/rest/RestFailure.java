@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.rest;
 
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.ErrorTemplate;
 import org.springframework.http.HttpStatus;
 
 import java.util.LinkedHashMap;
@@ -45,20 +46,18 @@ public class RestFailure {
         return new RestFailure(singletonList(new Error(key, message, statusCode)));
     }
 
-    public boolean is(String... messages) {
-        List<String> containedErrors = simpleMap(errors, Error::getErrorKey);
-        List<String> messagesList = asList(messages);
-        return containedErrors.containsAll(messagesList) && messagesList.containsAll(containedErrors);
+    public boolean is(Error... expectedErrors) {
+        List<Error> expectedErrorsList = asList(expectedErrors);
+        return this.errors.size() == expectedErrorsList.size() && errors.containsAll(expectedErrorsList);
     }
 
-    public boolean is(Enum<?>... messages) {
-        List<String> var = simpleMap(asList(messages), Enum::name);
-        return is(var.toArray(new String[var.size()]));
+    public boolean is(ErrorTemplate... expectedErrorTemplates) {
+        List<Error> errorList = simpleMap(asList(expectedErrorTemplates), Error::new);
+        return is(errorList.toArray(new Error[errorList.size()]));
     }
 
-    public boolean contains(Enum<?>... messages) {
-        List<String> messagesToCheck = simpleMap(asList(messages), Enum::name);
-        return contains(messagesToCheck.toArray(new String[messagesToCheck.size()]));
+    public boolean is(ErrorTemplate expectedErrorTemplate, Object... arguments) {
+        return is(new Error(expectedErrorTemplate, arguments));
     }
 
     public boolean contains(String... messages) {

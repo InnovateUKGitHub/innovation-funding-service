@@ -12,7 +12,7 @@ import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 
-import static com.worth.ifs.application.service.ListenableFutures.settable;
+import static com.worth.ifs.application.service.Futures.settable;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;

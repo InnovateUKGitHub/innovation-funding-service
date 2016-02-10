@@ -52,6 +52,10 @@ public class Errors {
         return new Error(GENERAL_UNEXPECTED_ERROR, message, INTERNAL_SERVER_ERROR);
     }
 
+    public static Error forbiddenError(String message) {
+        return new Error(GENERAL_UNEXPECTED_ERROR, message);
+    }
+
     public static Error incorrectTypeError(Class<?> clazz, List<Object> arguments) {
 
         List<Object> allArguments = new ArrayList<>();

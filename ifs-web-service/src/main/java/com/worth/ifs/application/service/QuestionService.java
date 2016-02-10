@@ -2,12 +2,12 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionStatusResource;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Future;
 
 /**
  * Interface for CRUD operations on {@link Question} related data.
@@ -19,7 +19,7 @@ public interface QuestionService {
     public List<Question> findByCompetition(Long competitionId);
     public List<QuestionStatusResource> getNotificationsForUser(Collection<QuestionStatusResource> questionStatuses, Long userId);
     public void removeNotifications(List<QuestionStatusResource> questionStatuses);
-    public ListenableFuture<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId);
+    public Future<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId);
     public Question getById(Long questionId);
     public Question getNextQuestion(Long questionId);
     public Question getPreviousQuestion(Long questionId);

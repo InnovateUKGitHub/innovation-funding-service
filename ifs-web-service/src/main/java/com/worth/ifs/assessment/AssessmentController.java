@@ -35,7 +35,7 @@ import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.service.ListenableFutures.call;
+import static com.worth.ifs.application.service.Futures.call;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
