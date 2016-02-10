@@ -307,7 +307,7 @@
                    th:title="'Row  : Rate (£/day)'"
                    data-calculation-operations="/"
                    readonly="readonly"
-                   th:id="${'cost-labour-'+labourCost?.id+'-labourRate'}"
+                   th:id="${'cost-labour-'+cost.id+'-labourRate'}"
                    th:name="${type + '-labourRate-' + question.id + '-' + cost.id}"
                    th:attr="data-calculation-fields=${'#cost-labour-'+cost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays'},data-calculation-rawValue=${cost.getRate(costCategory.workingDaysPerYear)}"
                    th:value="'£ ' + ${#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0)}"
@@ -318,7 +318,7 @@
                    th:title="'Row  : Days to be spent by all staff at this grade'"
                    class="form-control width-full"
                    th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                   th:id="${'cost-labour-'+labourCost?.id+'-labourDays'}"
+                   th:id="${'cost-labour-'+cost.id+'-labourDays'}"
                    th:name="${type + '-labourDays-' + question.id + '-' + cost.id}"
                    th:value="${cost.labourDays}"
                     />
