@@ -34,6 +34,7 @@ import static com.worth.ifs.commons.rest.RestSuccesses.noContentRestSuccess;
 import static com.worth.ifs.commons.rest.RestSuccesses.okRestSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.ParsingFunctions.validLong;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
@@ -71,14 +72,20 @@ public class FormInputResponseFileUploadController {
                 andOnSuccess((FormInputResponseFileEntryResource resource) -> createdRestSuccess(new FormInputResponseFileEntryCreatedResponse(resource.getFileEntryResource().getId()))).
                 andWithDefaultFailure(internalServerErrorRestFailure("Error creating file")).perform(() -> {
 
-                    return validContentLengthHeader(contentLength).
-                            andOnSuccess(lengthFromHeader -> validContentTypeHeader(contentType).
-                            andOnSuccess(typeFromHeader -> validFilename(originalFilename).
-                            andOnSuccess(filenameParameter -> validContentLength(lengthFromHeader).
-                            andOnSuccess(validLength -> validMediaType(typeFromHeader).
-                            andOnSuccess(validType -> createFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request).
-                            andOnSuccess(fileEntryPair -> serviceSuccess(fileEntryPair.getValue())))))));
+            return find(
+                    validContentLengthHeader(contentLength),
+                    validContentTypeHeader(contentType),
+                    validFilename(originalFilename)).andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> {
+
+                return find(
+                        validContentLength(lengthFromHeader),
+                        validMediaType(typeFromHeader)).andOnSuccess((validLength, validType) -> {
+
+                    return createFormInputResponseFile(validType, validLength, originalFilename, formInputId, applicationId, processRoleId, request).
+                            andOnSuccess(fileEntryPair -> serviceSuccess(fileEntryPair.getValue()));
                 });
+            });
+        });
     }
 
     @RequestMapping(value = "/file", method = PUT, produces = "application/json")
@@ -93,17 +100,21 @@ public class FormInputResponseFileUploadController {
 
         return newRestHandler().
                 andOnSuccess(okRestSuccess()).
-                andWithDefaultFailure(internalServerErrorRestFailure("Error updating file")).
-                perform(() -> {
+                andWithDefaultFailure(internalServerErrorRestFailure("Error updating file")).perform(() -> {
 
-            return validContentLengthHeader(contentLength).
-                    andOnSuccess(lengthFromHeader -> validContentTypeHeader(contentType).
-                    andOnSuccess(typeFromHeader -> validFilename(originalFilename).
-                    andOnSuccess(filenameParameter -> validContentLength(lengthFromHeader).
-                    andOnSuccess(validLength -> validMediaType(typeFromHeader).
-                    andOnSuccess(validType -> updateFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request).
-                    andOnSuccess(ServiceResult::serviceSuccess)
-            )))));
+            return find(
+                    validContentLengthHeader(contentLength),
+                    validContentTypeHeader(contentType),
+                    validFilename(originalFilename)).andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> {
+
+                return find(
+                        validContentLength(lengthFromHeader),
+                        validMediaType(typeFromHeader)).andOnSuccess((validLength, validType) -> {
+
+                    return updateFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request).
+                            andOnSuccess(ServiceResult::serviceSuccess);
+                });
+            });
         });
     }
 

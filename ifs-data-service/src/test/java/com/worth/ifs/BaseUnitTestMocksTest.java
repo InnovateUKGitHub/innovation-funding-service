@@ -8,6 +8,7 @@ import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
+import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
@@ -103,6 +104,9 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected UserService userServiceMock;
+
+    @Mock
+    protected CostRepository costRepositoryMock;
 
     @Before
     public void setupMockInjection() {

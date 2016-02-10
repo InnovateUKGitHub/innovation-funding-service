@@ -7,7 +7,9 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.CostFieldResource;
+import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -89,5 +91,13 @@ public class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<InviteOrganisationResource>> inviteOrganisationResourceListType() {
         return new ParameterizedTypeReference<List<InviteOrganisationResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<Cost>> costListType() {
+        return new ParameterizedTypeReference<List<Cost>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CostItem>> costItemListType() {
+        return new ParameterizedTypeReference<List<CostItem>>() {};
     }
 }
