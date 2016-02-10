@@ -2,6 +2,7 @@ package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 
 import java.util.List;
@@ -12,24 +13,24 @@ import java.util.Set;
  */
 public interface AssessmentRestService {
 
-    public List<Assessment> getAllByAssessorAndCompetition(Long userId, Long competitionId);
+    RestResult<List<Assessment>> getAllByAssessorAndCompetition(Long userId, Long competitionId);
 
-    public Assessment getOneByProcessRole(Long processRoleId);
+    RestResult<Assessment> getOneByProcessRole(Long processRoleId);
 
-    public Integer getTotalAssignedByAssessorAndCompetition(Long userId, Long competitionId);
+    RestResult<Integer> getTotalAssignedByAssessorAndCompetition(Long userId, Long competitionId);
 
-    public Integer getTotalSubmittedByAssessorAndCompetition(Long userId, Long competitionId);
+    RestResult<Integer> getTotalSubmittedByAssessorAndCompetition(Long userId, Long competitionId);
 
-    public Boolean respondToAssessmentInvitation(Long assessorId, Long applicationId, Boolean decision, String decisionReason, String observations);
+    RestResult<Void> respondToAssessmentInvitation(Long assessorId, Long applicationId, Boolean decision, String decisionReason, String observations);
 
-    public Boolean submitAssessments(Long assessorId, Set<Long> assessmentIds);
+    RestResult<Void> submitAssessments(Long assessorId, Set<Long> assessmentIds);
 
-    public Boolean saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments);
+    RestResult<Void> saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments);
 
-    public void acceptAssessmentInvitation(Long processRoleId, Assessment assessment);
+    RestResult<Void> acceptAssessmentInvitation(Long processRoleId, Assessment assessment);
 
-    public void rejectAssessmentInvitation(Long processRoleId, ProcessOutcome processOutcome);
+    RestResult<Void> rejectAssessmentInvitation(Long processRoleId, ProcessOutcome processOutcome);
 
-    public Score getScore(Long id);
+    RestResult<Score> getScore(Long id);
 
 }

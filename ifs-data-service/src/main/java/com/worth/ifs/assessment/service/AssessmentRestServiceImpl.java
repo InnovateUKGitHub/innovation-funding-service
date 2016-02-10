@@ -5,15 +5,17 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.assessmentListType;
 
 /**
  * AssessmentRestServiceImpl is a utility for CRUD operations on {@link Assessment}.
@@ -26,26 +28,28 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     @Value("${ifs.data.service.rest.assessment}")
     String assessmentRestURL;
 
-
-    public List<Assessment> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {
-        return Arrays.asList(restGet(assessmentRestURL +"/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , Assessment[].class));
+    @Override
+    public RestResult<List<Assessment>> getAllByAssessorAndCompetition(Long assessorId, Long competitionId) {
+        return getWithRestResult(assessmentRestURL +"/findAssessmentsByCompetition/" + assessorId + "/" + competitionId , assessmentListType());
     }
 
-    public Assessment getOneByProcessRole(Long processRoleId) {
-        return restGet(assessmentRestURL +"/findAssessmentByProcessRole/" + processRoleId, Assessment.class);
+    @Override
+    public RestResult<Assessment> getOneByProcessRole(Long processRoleId) {
+        return getWithRestResult(assessmentRestURL +"/findAssessmentByProcessRole/" + processRoleId, Assessment.class);
     }
 
-
-    public Integer getTotalAssignedByAssessorAndCompetition(Long assessorId, Long competitionId) {
-        return restGet(assessmentRestURL +"/totalAssignedAssessmentsByCompetition/" + assessorId + "/" + competitionId, Integer.class);
+    @Override
+    public RestResult<Integer> getTotalAssignedByAssessorAndCompetition(Long assessorId, Long competitionId) {
+        return getWithRestResult(assessmentRestURL +"/totalAssignedAssessmentsByCompetition/" + assessorId + "/" + competitionId, Integer.class);
     }
 
-
-    public Integer getTotalSubmittedByAssessorAndCompetition(Long assessorId, Long competitionId) {
-        return restGet(assessmentRestURL +"/totalSubmittedAssessmentsByCompetition/" + assessorId + "/" + competitionId, Integer.class);
+    @Override
+    public RestResult<Integer> getTotalSubmittedByAssessorAndCompetition(Long assessorId, Long competitionId) {
+        return getWithRestResult(assessmentRestURL +"/totalSubmittedAssessmentsByCompetition/" + assessorId + "/" + competitionId, Integer.class);
     }
 
-    public Boolean respondToAssessmentInvitation(Long assessorId, Long applicationId, Boolean decision, String reason, String observations) {
+    @Override
+    public RestResult<Void> respondToAssessmentInvitation(Long assessorId, Long applicationId, Boolean decision, String reason, String observations) {
 
         //builds the node with the response form fields data
         ObjectNode node =  new ObjectMapper().createObjectNode();
@@ -55,10 +59,11 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
         node.put("reason", reason);
         node.put("observations", HtmlUtils.htmlEscape(observations));
 
-        return restPost(assessmentRestURL +"/respondToAssessmentInvitation/", node, Boolean.class);
+        return postWithRestResult(assessmentRestURL +"/respondToAssessmentInvitation/", node, Void.class);
     }
 
-    public Boolean saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments) {
+    @Override
+    public RestResult<Void> saveAssessmentSummary(Long assessorId, Long applicationId, String suitableValue, String suitableFeedback, String comments) {
         //builds the node with the response form fields data
         ObjectNode node =  new ObjectMapper().createObjectNode();
         node.put("assessorId", assessorId);
@@ -66,32 +71,31 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
         node.put("suitableValue", suitableValue);
         node.put("suitableFeedback", HtmlUtils.htmlEscape(suitableFeedback));
         node.put("comments",  HtmlUtils.htmlEscape(comments));
-        return restPost(assessmentRestURL +"/saveAssessmentSummary/", node, Boolean.class);
+        return postWithRestResult(assessmentRestURL +"/saveAssessmentSummary/", node, Void.class);
     }
 
-    public Boolean submitAssessments(Long assessorId, Set<Long> assessmentIds ) {
+    @Override
+    public RestResult<Void> submitAssessments(Long assessorId, Set<Long> assessmentIds ) {
         //builds the node with the response form fields data
         ObjectNode node =  new ObjectMapper().createObjectNode();
         node.put("assessorId", assessorId);
         ArrayNode assessmentsToSubmit = new ObjectMapper().valueToTree(assessmentIds);
         node.putArray("assessmentsToSubmit").addAll(assessmentsToSubmit);
-        return restPost(assessmentRestURL +"/submitAssessments/", node,  Boolean.class);
+        return postWithRestResult(assessmentRestURL +"/submitAssessments/", node, Void.class);
     }
 
     @Override
-    public void acceptAssessmentInvitation(Long processId, Assessment assessment) {
-        restPost(assessmentRestURL + "/acceptAssessmentInvitation/" + processId, assessment, String.class);
+    public RestResult<Void> acceptAssessmentInvitation(Long processId, Assessment assessment) {
+        return postWithRestResult(assessmentRestURL + "/acceptAssessmentInvitation/" + processId, assessment, Void.class);
     }
 
     @Override
-    public void rejectAssessmentInvitation(Long processId, ProcessOutcome processOutcome) {
-        restPost(assessmentRestURL + "/rejectAssessmentInvitation/" + processId, processOutcome, String.class);
+    public RestResult<Void> rejectAssessmentInvitation(Long processId, ProcessOutcome processOutcome) {
+        return postWithRestResult(assessmentRestURL + "/rejectAssessmentInvitation/" + processId, processOutcome, Void.class);
     }
 
     @Override
-    public Score getScore(Long id) {
-        return restGet(assessmentRestURL + "/" + id + "/score", Score.class);
+    public RestResult<Score> getScore(Long id) {
+        return getWithRestResult(assessmentRestURL + "/" + id + "/score", Score.class);
     }
-
-
 }

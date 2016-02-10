@@ -14,6 +14,7 @@ import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
+import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.commons.security.UserAuthentication;
@@ -455,7 +456,7 @@ public class BaseUnitTest {
         formInputsToFormInputResponses = formInputResponses.stream().collect(toMap(formInputResponse -> formInputResponse.getFormInput().getId(), identity()));
         when(formInputResponseService.mapFormInputResponsesToFormInput(formInputResponses)).thenReturn(formInputsToFormInputResponses);
     }
-
+gst
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), OrganisationSize.LARGE);
@@ -465,8 +466,6 @@ public class BaseUnitTest {
     }
 
     public void setupAssessment(){
-        Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
-        Organisation organisation1 = organisations.get(0);
 
         Assessment assessment1 = new Assessment(assessorProcessRoles.get(2));
         assessment1.setId(1L);
@@ -477,8 +476,8 @@ public class BaseUnitTest {
         Assessment assessment4 = new Assessment(assessorProcessRoles.get(3));
         assessment4.setId(4L);
 
-        when(assessmentRestService.getTotalAssignedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(3);
-        when(assessmentRestService.getTotalSubmittedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(1);
+        when(assessmentRestService.getTotalAssignedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(restSuccess(3));
+        when(assessmentRestService.getTotalSubmittedByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(restSuccess(1));
 
         assessment1.setProcessStatus(AssessmentStates.REJECTED.getState());
         assessment2.setProcessStatus(AssessmentStates.PENDING.getState());
@@ -487,16 +486,18 @@ public class BaseUnitTest {
 
         submittedAssessments = singletonList(assessment3);
         assessments = asList(assessment1, assessment2, assessment3, assessment4);
-        when(assessmentRestService.getAllByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(assessments);
+        when(assessmentRestService.getAllByAssessorAndCompetition(assessor.getId(), competition.getId())).thenReturn(restSuccess(assessments));
 
-        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment1);
-        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment2);
-        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment3);
-        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(assessment4);
+        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(restSuccess(assessment1));
+        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(restSuccess(assessment2));
+        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(restSuccess(assessment3));
+        when(assessmentRestService.getOneByProcessRole(assessment1.getProcessRole().getId())).thenReturn(restSuccess(assessment4));
 
         when(organisationService.getUserOrganisation(applications.get(0), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
         when(organisationService.getUserOrganisation(applications.get(1), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
         when(organisationService.getUserOrganisation(applications.get(2), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
+
+        assessments.forEach(assessment -> when(assessmentRestService.getScore(assessment.getId())).thenReturn(restSuccess(new Score())));
     }
 
     public ExceptionHandlerExceptionResolver createExceptionResolver() {
