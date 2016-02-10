@@ -4,9 +4,9 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.UserRoleType;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * Interface for CRUD operations on {@link Application} related data.
@@ -19,7 +19,7 @@ public interface ApplicationRestService {
     RestResult<Void> saveApplication(ApplicationResource application);
     RestResult<ApplicationResource> createApplication(Long competitionId, Long userId, String applicationName);
     RestResult<Void> updateApplicationStatus(Long applicationId, Long statusId);
-    ListenableFuture<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId);
+    Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId);
     RestResult<Integer> getAssignedQuestionsCount(Long applicationId, Long assigneeId);
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
 }

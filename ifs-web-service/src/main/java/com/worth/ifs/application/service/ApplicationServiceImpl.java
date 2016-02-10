@@ -5,16 +5,17 @@ import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.service.ListenableFutures.call;
-import static java.util.stream.Collectors.toMap;
+import static com.worth.ifs.application.service.Futures.call;
+import static com.worth.ifs.application.service.Futures.adapt;
 import static java.util.Map.Entry;
+import static java.util.stream.Collectors.toMap;
 /**
  * This class contains methods to retrieve and store {@link ApplicationResource} related data,
  * through the RestService {@link ApplicationRestService}.
@@ -86,8 +87,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public ListenableFuture<Integer> getCompleteQuestionsPercentage(Long applicationId) {
-       return ListenableFutures.adapt(applicationRestService.getCompleteQuestionsPercentage(applicationId), re -> re.getSuccessObject().intValue());
+    public Future<Integer> getCompleteQuestionsPercentage(Long applicationId) {
+        return adapt(applicationRestService.getCompleteQuestionsPercentage(applicationId), re -> re.getSuccessObject().intValue());
     }
 
     @Override

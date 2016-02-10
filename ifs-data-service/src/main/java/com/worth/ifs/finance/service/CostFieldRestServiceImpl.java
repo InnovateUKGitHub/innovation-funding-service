@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.service;
 
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.CostFieldResource;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.costFieldResourceListType;
 
 /**
  * CostFieldRestServiceImpl is a utility for CRUD operations on {@link CostField}.
@@ -17,10 +18,11 @@ import static java.util.Arrays.asList;
  */
 @Service
 public class CostFieldRestServiceImpl extends BaseRestService implements CostFieldRestService {
+
     @Value("${ifs.data.service.rest.costfield}")
     String costFieldRestURL;
 
-    public List<CostFieldResource> getCostFields() {
-        return asList(restGet(costFieldRestURL + "/findAll/", CostFieldResource[].class));
+    public RestResult<List<CostFieldResource>> getCostFields() {
+        return getWithRestResult(costFieldRestURL + "/findAll/", costFieldResourceListType());
     }
 }

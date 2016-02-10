@@ -10,7 +10,7 @@ import java.util.Map;
  * Interface for CRUD operations on {@link Response} related data.
  */
 public interface FormInputResponseService {
-    public List<FormInputResponse> getByApplication(Long applicationId);
-    public Map<Long, FormInputResponse> mapFormInputResponsesToFormInput(List<FormInputResponse> responses);
-    public List<String> save(Long userId, Long applicationId, Long formInputId, String value);
+    List<FormInputResponse> getByApplication(Long applicationId);
+    Map<Long, FormInputResponse> mapFormInputResponsesToFormInput(List<FormInputResponse> responses);
+    List<String> save(Long userId, Long applicationId, Long formInputId, String value);
 }
