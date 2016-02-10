@@ -9,11 +9,11 @@ import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
-import static com.worth.ifs.application.service.ListenableFutures.adapt;
+import static com.worth.ifs.application.service.Futures.adapt;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 
@@ -53,8 +53,8 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     // TODO DW - INFUND-1555 - remove usage of ObjectNode if possible
     @Override
-    public ListenableFuture<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId) {
-        ListenableFuture<RestResult<ObjectNode>> result = getWithRestResultAsyc(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
+    public Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId) {
+        Future<RestResult<ObjectNode>> result = getWithRestResultAsyc(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
         return adapt(result, n -> n.andOnSuccess(jsonResponse -> restSuccess(jsonResponse.get("completedPercentage").asDouble())));
     }
 

@@ -25,15 +25,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.service.ListenableFutures.call;
+import static com.worth.ifs.application.service.Futures.call;
 
 /**
  * This object contains shared methods for all the Controllers related to the {@link ApplicationResource} data.
@@ -208,7 +208,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("leadApplicant", userService.getLeadApplicantProcessRoleOrNull(application));
     }
 
-    protected ListenableFuture<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<Organisation> userOrganisation) {
+    protected Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<Organisation> userOrganisation) {
         Long organisationId=0L;
         if(userOrganisation.isPresent()) {
             organisationId = userOrganisation.get().getId();
@@ -282,8 +282,8 @@ public abstract class AbstractApplicationController {
                                             Optional<Organisation> userOrganisation,
                                             List<ProcessRole> userApplicationRoles) {
         List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
-        ListenableFuture<Section> previousSection = sectionService.getPreviousSection(currentSection);
-        ListenableFuture<Section> nextSection = sectionService.getNextSection(currentSection);
+        Future<Section> previousSection = sectionService.getPreviousSection(currentSection);
+        Future<Section> nextSection = sectionService.getNextSection(currentSection);
 
         Map<Long, Section> sections =
                 sectionsList.stream().collect(Collectors.toMap(Section::getId,
@@ -296,7 +296,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("sections", sections);
 
 
-        ListenableFuture<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
+        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
 
         TreeSet<Organisation> organisations = getApplicationOrganisations(userApplicationRoles);
