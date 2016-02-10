@@ -46,9 +46,9 @@ import java.util.*;
 @Controller
 @RequestMapping("/application/{applicationId}/form")
 public class ApplicationFormController extends AbstractApplicationController {
-    private static final Log log = LogFactory.getLog(ApplicationFormController.class);
     public static final String MARK_AS_COMPLETE = "mark_as_complete";
     public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
+    private static final Log log = LogFactory.getLog(ApplicationFormController.class);
     private boolean selectFirstSectionIfNoneCurrentlySelected = true;
 
     @Autowired
@@ -88,12 +88,12 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "application-form";
     }
 
-    @RequestMapping(value="/question/{questionId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.GET)
     public String showQuestion(@ModelAttribute("form") ApplicationForm form,
                                BindingResult bindingResult, Model model,
                                @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("questionId") final Long questionId,
-                                  HttpServletRequest request) {
+                               HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
@@ -106,9 +106,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         return "application-form";
     }
 
-    private void addFormAttributes(Section section, Long applicationId, Long userId, Model model, ApplicationForm form, Question question){
+    private void addFormAttributes(Section section, Long applicationId, Long userId, Model model, ApplicationForm form, Question question) {
         Optional<Long> questionSectionId = null;
-        if(section!=null) {
+        if (section != null) {
             questionSectionId = Optional.ofNullable(section.getId());
         }
         super.addApplicationDetails(applicationId, userId, questionSectionId, model, form);
@@ -123,7 +123,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                      @PathVariable("applicationId") final Long applicationId,
                                      @PathVariable("questionId") final Long questionId,
                                      HttpServletRequest request,
-                                     HttpServletResponse response){
+                                     HttpServletResponse response) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         Section section = sectionService.getSectionByQuestionId(questionId);
@@ -142,36 +142,36 @@ public class ApplicationFormController extends AbstractApplicationController {
         form.objectErrors = bindingResult.getAllErrors();
         /* End save action */
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             this.addFormAttributes(section, applicationId, user.getId(), model, form, question);
             return "application-form";
-        }else{
+        } else {
             return getRedirectUrl(request, applicationId);
         }
     }
 
-    private String getRedirectUrl(HttpServletRequest request, Long applicationId){
-        if(request.getParameter("assign_question") != null ||
-            request.getParameter(MARK_AS_INCOMPLETE) != null ||
-            request.getParameter("add_cost") != null ||
-            request.getParameter("remove_cost") != null ||
-            request.getParameter(MARK_AS_COMPLETE) != null) {
+    private String getRedirectUrl(HttpServletRequest request, Long applicationId) {
+        if (request.getParameter("assign_question") != null ||
+                request.getParameter(MARK_AS_INCOMPLETE) != null ||
+                request.getParameter("add_cost") != null ||
+                request.getParameter("remove_cost") != null ||
+                request.getParameter(MARK_AS_COMPLETE) != null) {
             // user did a action, just display the same page.
-            log.info("redirect: "+ request.getRequestURI());
-            return "redirect:"+ request.getRequestURI();
+            log.info("redirect: " + request.getRequestURI());
+            return "redirect:" + request.getRequestURI();
         } else {
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
             log.info("default redirect: ");
-            return "redirect:/application/"+applicationId;
+            return "redirect:/application/" + applicationId;
         }
     }
 
-    @RequestMapping(value="/question/edit/{questionId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/question/edit/{questionId}", method = RequestMethod.GET)
     public String showQuestionInEditMode(@ModelAttribute("form") ApplicationForm form,
-                               BindingResult bindingResult, Model model,
-                               @PathVariable("applicationId") final Long applicationId,
-                               @PathVariable("questionId") final Long questionId,
-                               HttpServletRequest request) {
+                                         BindingResult bindingResult, Model model,
+                                         @PathVariable("applicationId") final Long applicationId,
+                                         @PathVariable("questionId") final Long questionId,
+                                         HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         if (processRole != null) {
@@ -183,7 +183,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addNavigation(Section section, Long applicationId, Model model) {
-        if(section==null) {
+        if (section == null) {
             return;
         }
         Question previousQuestion = questionService.getPreviousQuestionBySection(section.getId());
@@ -191,8 +191,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         Question nextQuestion = questionService.getNextQuestionBySection(section.getId());
         addNextQuestionToModel(nextQuestion, applicationId, model);
     }
+
     private void addNavigation(Question question, Long applicationId, Model model) {
-        if(question==null) {
+        if (question == null) {
             return;
         }
         Question previousQuestion = questionService.getPreviousQuestion(question.getId());
@@ -205,9 +206,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         String previousUrl;
         String previousText;
 
-        if(previousQuestion != null) {
+        if (previousQuestion != null) {
             Section previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
-            if(previousSection.isQuestionGroup()) {
+            if (previousSection.isQuestionGroup()) {
                 previousUrl = "/application/" + applicationId + "/form/section/" + previousSection.getId();
                 previousText = previousSection.getName();
             } else {
@@ -223,10 +224,10 @@ public class ApplicationFormController extends AbstractApplicationController {
         String nextUrl;
         String nextText;
 
-        if(nextQuestion!=null) {
+        if (nextQuestion != null) {
             Section nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
 
-            if(nextSection.isQuestionGroup()) {
+            if (nextSection.isQuestionGroup()) {
                 nextUrl = "/application/" + applicationId + "/form/section/" + nextSection.getId();
                 nextText = nextSection.getName();
             } else {
@@ -287,7 +288,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetition());
         Map<Long, List<String>> errors = null;
-        if(question != null) {
+        if (question != null) {
             errors = saveQuestionResponses(application, Arrays.asList(question), request, user.getId(), bindingResult);
         } else {
             Section selectedSection = getSelectedSection(competition.getSections(), sectionId);
@@ -298,13 +299,12 @@ public class ApplicationFormController extends AbstractApplicationController {
         params.forEach((key, value) -> log.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
 
 
-
         setApplicationDetails(application, form.getApplication());
         applicationService.save(application);
         markApplicationQuestions(application, user.getId(), request, response, errors);
 
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, user.getId(), application.getId());
-        if(financeFormHandler.handle(request)){
+        if (financeFormHandler.handle(request)) {
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
         }
 
@@ -320,7 +320,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<Question> questions, HttpServletRequest request, Long userId, BindingResult bindingResult) {
         Map<Long, List<String>> errors = saveQuestionResponses(request, questions, userId, application.getId());
-        errors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue("formInput["+ k +"]", e, e)));
+        errors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue("formInput[" + k + "]", e, e)));
         return errors;
     }
 
@@ -330,7 +330,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         boolean marked = markQuestion(request, params, application.getId(), userId, errors);
 
-        if(!marked){
+        if (!marked) {
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
         }
     }
@@ -346,7 +346,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         @PathVariable("applicationId") final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
                                         HttpServletRequest request,
-                                        HttpServletResponse response){
+                                        HttpServletResponse response) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Map<String, String[]> params = request.getParameterMap();
 
@@ -363,10 +363,10 @@ public class ApplicationFormController extends AbstractApplicationController {
         form.objectErrors = bindingResult.getAllErrors();
 
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), Optional.ofNullable(sectionId), model, form, true);
             return "application-form";
-        }else{
+        } else {
             return getRedirectUrl(request, applicationId);
         }
     }
@@ -380,18 +380,18 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (params.containsKey(MARK_AS_COMPLETE)) {
             Long questionId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
 
-            if(errors.containsKey(questionId) && !errors.get(questionId).isEmpty()){
+            if (errors.containsKey(questionId) && !errors.get(questionId).isEmpty()) {
                 List<String> fieldErrors = errors.get(questionId);
                 fieldErrors.add("Please enter valid data before marking a question as complete.");
-            }else{
+            } else {
                 questionService.markAsComplete(questionId, applicationId, processRole.getId());
-                success= true;
+                success = true;
             }
         }
         if (params.containsKey(MARK_AS_INCOMPLETE)) {
             Long questionId = Long.valueOf(request.getParameter(MARK_AS_INCOMPLETE));
             questionService.markAsInComplete(questionId, applicationId, processRole.getId());
-            success= true;
+            success = true;
 
         }
         return success;
@@ -400,20 +400,20 @@ public class ApplicationFormController extends AbstractApplicationController {
     private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
         Map<Long, List<String>> errorMap = new HashMap<>();
         questions.stream()
-            .forEach(question -> question.getFormInputs()
-                .stream()
-                .forEach(formInput -> {
-                        if (request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
-                            String value = request.getParameter("formInput[" + formInput.getId() + "]");
-                            List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
-                            if (errors.size() != 0) {
-                                log.error("save failed. " + question.getId());
-                                errorMap.put(question.getId(), new ArrayList<>(errors));
-                            }
-                        }
-                    }
-                )
-            );
+                .forEach(question -> question.getFormInputs()
+                                .stream()
+                                .forEach(formInput -> {
+                                            if (request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
+                                                String value = request.getParameter("formInput[" + formInput.getId() + "]");
+                                                List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
+                                                if (errors.size() != 0) {
+                                                    log.error("save failed. " + question.getId());
+                                                    errorMap.put(question.getId(), new ArrayList<>(errors));
+                                                }
+                                            }
+                                        }
+                                )
+                );
 
         return errorMap;
     }
@@ -422,20 +422,20 @@ public class ApplicationFormController extends AbstractApplicationController {
      * Set the submitted values, if not null. If they are null, then probably the form field was not in the current html form.
      */
     private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
-        if(updatedApplication == null){
+        if (updatedApplication == null) {
             return;
         }
 
-        if(updatedApplication.getName() != null){
-            log.error("setApplicationDetails: "+ updatedApplication.getName());
+        if (updatedApplication.getName() != null) {
+            log.debug("setApplicationDetails: " + updatedApplication.getName());
             application.setName(updatedApplication.getName());
         }
-        if(updatedApplication.getStartDate() != null) {
-            log.error("setApplicationDetails: "+ updatedApplication.getStartDate());
+        if (updatedApplication.getStartDate() != null) {
+            log.debug("setApplicationDetails: " + updatedApplication.getStartDate());
             application.setStartDate(updatedApplication.getStartDate());
         }
-        if(updatedApplication.getDurationInMonths() != null){
-            log.error("setApplicationDetails: " + updatedApplication.getDurationInMonths());
+        if (updatedApplication.getDurationInMonths() != null) {
+            log.debug("setApplicationDetails: " + updatedApplication.getDurationInMonths());
             application.setDurationInMonths(updatedApplication.getDurationInMonths());
         }
     }
@@ -444,7 +444,9 @@ public class ApplicationFormController extends AbstractApplicationController {
      * This method is for supporting ajax saving from the application form.
      */
     @RequestMapping(value = "/saveFormElement", method = RequestMethod.POST)
-    public @ResponseBody JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
+    public
+    @ResponseBody
+    JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
                              @RequestParam("value") String value,
                              @PathVariable("applicationId") Long applicationId,
                              HttpServletRequest request,
@@ -489,12 +491,12 @@ public class ApplicationFormController extends AbstractApplicationController {
     private void storeCostField(Long userId, Long applicationId, String fieldName, String value) {
         FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
 
-        if(fieldName != null && value != null) {
+        if (fieldName != null && value != null) {
             String cleanedFieldName = fieldName;
-            if(fieldName.startsWith("cost-")) {
+            if (fieldName.startsWith("cost-")) {
                 cleanedFieldName = fieldName.replace("cost-", "");
-            } else if(fieldName.startsWith("formInput[")) {
-                cleanedFieldName = fieldName.replace("formInput[","").replace("]","");
+            } else if (fieldName.startsWith("formInput[")) {
+                cleanedFieldName = fieldName.replace("formInput[", "").replace("]", "");
             }
             log.info("store field: " + cleanedFieldName + " val: " + value);
             financeFormHandler.storeField(cleanedFieldName, value);
@@ -505,7 +507,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("success", (success ? "true" : "false"));
-        if(!success){
+        if (!success) {
             ArrayNode errorsNode = mapper.createArrayNode();
             errors.stream().forEach(errorsNode::add);
             node.set("validation_errors", errorsNode);
@@ -518,18 +520,18 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         if ("application.name".equals(fieldName)) {
             String trimmedValue = value.trim();
-            if(StringUtils.isEmpty(trimmedValue)){
+            if (StringUtils.isEmpty(trimmedValue)) {
                 errors.add("Please enter the full title of the project.");
-            }else{
+            } else {
 
                 application.setName(trimmedValue);
                 applicationService.save(application);
             }
         } else if (fieldName.startsWith("application.durationInMonths")) {
             Long durationInMonth = Long.valueOf(value);
-            if(durationInMonth == null || durationInMonth < 1L){
+            if (durationInMonth == null || durationInMonth < 1L) {
                 errors.add("Please enter a valid duration.");
-            }else{
+            } else {
                 application.setDurationInMonths(durationInMonth);
                 applicationService.save(application);
             }
@@ -546,7 +548,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (startDate == null) {
             startDate = LocalDate.now();
         }
-        try{
+        try {
             if (fieldName.endsWith(".dayOfMonth")) {
                 startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
             } else if (fieldName.endsWith(".monthValue")) {
@@ -554,13 +556,13 @@ public class ApplicationFormController extends AbstractApplicationController {
             } else if (fieldName.endsWith(".year")) {
                 startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
             }
-            if(startDate.isBefore(LocalDate.now())){
+            if (startDate.isBefore(LocalDate.now())) {
                 errors.add("Please enter a future date.");
             }
 
             application.setStartDate(startDate);
             applicationService.save(application);
-        }catch(DateTimeException | NumberFormatException e){
+        } catch (DateTimeException | NumberFormatException e) {
             log.error(e);
             errors.add("Please enter a valid date.");
         }
