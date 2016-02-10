@@ -15,15 +15,16 @@ import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
  * This class contains methods to retrieve and store {@link Response} related data,
  * through the RestService {@link ResponseRestService}.
  */
+// TODO DW - INFUND-1555 - handle rest results
 @Service
 public class FormInputResponseServiceImpl implements FormInputResponseService {
 
     @Autowired
-    FormInputResponseRestService responseRestService;
+    private FormInputResponseRestService responseRestService;
 
     @Override
     public List<FormInputResponse> getByApplication(Long applicationId) {
-        return responseRestService.getResponsesByApplicationId(applicationId);
+        return responseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrNull();
     }
 
     @Override
@@ -37,6 +38,6 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
 
     @Override
     public List<String> save(Long userId, Long applicationId, Long formInputId, String value) {
-        return responseRestService.saveQuestionResponse(userId, applicationId, formInputId, value);
+        return responseRestService.saveQuestionResponse(userId, applicationId, formInputId, value).getSuccessObjectOrNull();
     }
 }
