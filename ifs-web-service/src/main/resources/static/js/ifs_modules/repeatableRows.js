@@ -10,7 +10,6 @@ IFS.repeatableRows = (function() {
         getAjaxUrl : function(el){
             var url = '';
             if(typeof(jQuery(el).val()) !== 'undefined' && typeof(jQuery(el).attr('name')) !== 'undefined' && jQuery("#application_id").length == 1){
-
                 var applicationId =  jQuery("#application_id").val();
                 url = window.location.protocol + '//'+window.location.host + '/application/' + applicationId + '/form/'+ jQuery(el).attr('name') + '/' + jQuery(el).val();
             }
@@ -41,7 +40,7 @@ IFS.repeatableRows = (function() {
                   url : url
               }).done(function(){
                   jQuery('[data-repeatable-row='+jQuery(el).val()+']').remove();
-                  jQuery('body').trigger('updateSerializedFormState').trigger('recalculateAllFinances');
+                  jQuery('body').trigger('recalculateAllFinances').trigger('updateSerializedFormState');
               });
             }
         }
