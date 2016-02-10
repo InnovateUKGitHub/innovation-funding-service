@@ -38,9 +38,12 @@ IFS.repeatableRows = (function() {
               event.preventDefault();
               jQuery.ajax({
                   url : url
-              }).done(function(){
-                  jQuery('[data-repeatable-row='+jQuery(el).val()+']').remove();
-                  jQuery('body').trigger('recalculateAllFinances').trigger('updateSerializedFormState');
+              }).done(function(data){
+                  data = jQuery.parseJSON(data);
+                  if(data.status == 'OK'){
+                    jQuery('[data-repeatable-row='+jQuery(el).val()+']').remove();
+                    jQuery('body').trigger('recalculateAllFinances').trigger('updateSerializedFormState');
+                  }
               });
             }
         }
