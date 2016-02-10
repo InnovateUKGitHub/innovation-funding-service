@@ -37,7 +37,9 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap(
                 "applicationName", "My Application",
+                "competitionName", "Competition 123",
                 "inviteUrl", "http://acceptinvite.com",
+                "inviteOrganisationName", "Nomensa",
                 "leadOrganisation", "Empire Ltd",
                 "leadApplicant", "Steve Smith",
                 "leadApplicantEmail", "steve@empire.com"
