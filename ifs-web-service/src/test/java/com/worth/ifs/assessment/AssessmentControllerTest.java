@@ -113,7 +113,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsPendingApplication() throws Exception {
         ApplicationResource application = applications.get(1);
         Assessment assessment = getAssessment(application);
-        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(restSuccess(assessment));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         log.info("assessment status: " + assessment.getProcessStatus());
@@ -131,7 +131,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsRejectedApplication() throws Exception {
         ApplicationResource application = applications.get(0);
         Assessment assessment = getAssessment(application);
-        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(restSuccess(assessment));
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());
@@ -147,7 +147,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsInvalidApplication() throws Exception {
         ApplicationResource application = applications.get(2);
         Assessment assessment = getAssessment(application);
-        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(restSuccess(assessment));
 
         when(applicationService.getById(anyLong())).thenReturn(application);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
@@ -209,7 +209,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsReject() throws Exception {
         ApplicationResource application = applications.get(1);
         Assessment assessment = getAssessment(application);
-        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(restSuccess(assessment));
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/reject-invitation", competition.getId(), application.getId()))
                 .andExpect(view().name(rejectInvitation))

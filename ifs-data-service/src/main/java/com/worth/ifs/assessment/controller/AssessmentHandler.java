@@ -86,17 +86,6 @@ public class AssessmentHandler {
         return assessmentRepository.countByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatusNot(assessorId, competitionId, ApplicationStatusConstants.REJECTED.getName());
     }
 
-    public RecommendedValue getRecommendedValueFromString(String value) {
-        switch (value) {
-            case "yes":
-                return RecommendedValue.YES;
-            case "no":
-                return RecommendedValue.NO;
-            default:
-                return RecommendedValue.EMPTY;
-        }
-    }
-
     private static ToIntFunction<String> stringToInteger = score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0;
 
     public Score getScore(Long id) {

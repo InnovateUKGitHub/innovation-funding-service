@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -56,5 +57,9 @@ public class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<Question>> questionListType() {
         return new ParameterizedTypeReference<List<Question>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<Assessment>> assessmentListType() {
+        return new ParameterizedTypeReference<List<Assessment>>() {};
     }
 }
