@@ -25,7 +25,7 @@ public class ApplicationFinanceResource {
     private EnumMap<CostType, CostCategory> financeOrganisationDetails;
 
     public ApplicationFinanceResource(ApplicationFinance applicationFinance) {
-        if(applicationFinance!=null) {
+        if (applicationFinance != null) {
             this.id = applicationFinance.getId();
             this.organisation = applicationFinance.getOrganisation().getId();
             this.application = applicationFinance.getApplication().getId();
@@ -55,8 +55,16 @@ public class ApplicationFinanceResource {
         return organisation;
     }
 
+    public void setOrganisation(Long organisation) {
+        this.organisation = organisation;
+    }
+
     public Long getApplication() {
         return application;
+    }
+
+    public void setApplication(Long application) {
+        this.application = application;
     }
 
     public OrganisationSize getOrganisationSize() {
@@ -67,32 +75,24 @@ public class ApplicationFinanceResource {
         this.organisationSize = organisationSize;
     }
 
-    public void setOrganisation(Long organisation) {
-        this.organisation = organisation;
-    }
-
-    public void setApplication(Long application) {
-        this.application = application;
-    }
-
     public EnumMap<CostType, CostCategory> getFinanceOrganisationDetails() {
         return financeOrganisationDetails;
-    }
-
-    public CostCategory getFinanceOrganisationDetails(CostType costType) {
-        if(financeOrganisationDetails!=null) {
-            return financeOrganisationDetails.get(costType);
-        } else {
-            return null;
-        }
     }
 
     public void setFinanceOrganisationDetails(EnumMap<CostType, CostCategory> financeOrganisationDetails) {
         this.financeOrganisationDetails = financeOrganisationDetails;
     }
 
+    public CostCategory getFinanceOrganisationDetails(CostType costType) {
+        if (financeOrganisationDetails != null) {
+            return financeOrganisationDetails.get(costType);
+        } else {
+            return null;
+        }
+    }
+
     public BigDecimal getTotal() {
-        if(financeOrganisationDetails == null) {
+        if (financeOrganisationDetails == null) {
             return BigDecimal.ZERO;
         }
 
@@ -104,7 +104,7 @@ public class ApplicationFinanceResource {
                 .map(cat -> cat.getValue().getTotal())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        if(total == null) {
+        if (total == null) {
             return BigDecimal.ZERO;
         }
 
@@ -112,7 +112,7 @@ public class ApplicationFinanceResource {
     }
 
     public GrantClaim getGrantClaim() {
-        if(financeOrganisationDetails != null && financeOrganisationDetails.containsKey(CostType.FINANCE)) {
+        if (financeOrganisationDetails != null && financeOrganisationDetails.containsKey(CostType.FINANCE)) {
             CostCategory costCategory = financeOrganisationDetails.get(CostType.FINANCE);
             return costCategory.getCosts().stream()
                     .findAny()

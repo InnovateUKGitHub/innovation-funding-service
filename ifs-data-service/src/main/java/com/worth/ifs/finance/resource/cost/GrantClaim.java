@@ -1,7 +1,5 @@
 package com.worth.ifs.finance.resource.cost;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import java.math.BigDecimal;
 
 public class GrantClaim implements CostItem {
@@ -25,6 +23,9 @@ public class GrantClaim implements CostItem {
 
     @Override
     public BigDecimal getTotal() {
+        if(grantClaimPercentage==null){
+            return null;
+        }
         return new BigDecimal(grantClaimPercentage);
     }
 

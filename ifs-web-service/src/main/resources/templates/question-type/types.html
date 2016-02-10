@@ -149,21 +149,22 @@
 
 
     <div th:fragment="finance">
-        <div th:class="form-group" th:classappend="${organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}? 'error'">
+        <div th:class="form-group" th:classappend="${organisationFinanceSize?.getMaxGrantClaimPercentage() != null and organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}? 'error'">
             <label class="form-label form-label-bold" for="cost-financegrantclaim">
                 <div th:text="${question.name}" />
                 <span class="form-hint" th:text="${question.description}" />
-                <span th:if="${organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}" class="error-message">This field should be <span th:remove="tag" th:text="${organisationFinanceSize?.getMaxGrantClaimPercentage()}" />% or lower</span>
+                <span th:if="${organisationFinanceSize?.getMaxGrantClaimPercentage() != null and organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}" class="error-message">This field should be <span th:remove="tag" th:text="${organisationFinanceSize?.getMaxGrantClaimPercentage()}" />% or lower</span>
             </label>
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"/>
             <input type="number"
                    min="0"
                    th:max="${organisationFinanceSize?.getMaxGrantClaimPercentage()}"
                    th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                   th:class="${organisationFinanceSize?.getMaxGrantClaimPercentage() lt organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
+                   th:class="${organisationFinanceSize?.getMaxGrantClaimPercentage() != null and organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
                    id="cost-financegrantclaim"
                    th:name="${'finance-grantclaim-' + question.id + '-' + organisationgrantClaimPercentageId}"
-                   th:value="${organisationGrantClaimPercentage}" />
+                   th:value="${organisationGrantClaimPercentage}"
+                    />
             <span>%</span>
         </div>
     </div>
