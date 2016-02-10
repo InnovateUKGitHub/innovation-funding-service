@@ -82,7 +82,8 @@ public class ApplicationController extends AbstractApplicationController {
         Competition competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
-        
+        model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
+
         return "application-summary";
     }
     @ProfileExecution
