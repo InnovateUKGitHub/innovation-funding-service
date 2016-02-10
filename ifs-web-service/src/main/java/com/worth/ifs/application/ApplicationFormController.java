@@ -15,7 +15,9 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -241,15 +243,23 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String addCostRow(@ModelAttribute("form") ApplicationForm form, Model model,
                              @PathVariable("applicationId") final Long applicationId,
                              @PathVariable("questionId") final Long questionId,
-                             HttpServletRequest request){
+                             HttpServletRequest request) {
         CostItem costItem = addCost(applicationId, questionId, request);
         String type = costItem.getCostType().getType();
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+
+        if (CostType.fromString(type).equals(CostType.LABOUR)) {
+            ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, user.getId());
+            LabourCostCategory costCategory = (LabourCostCategory) applicationFinanceResource.getFinanceOrganisationDetails(CostType.fromString(type));
+            model.addAttribute("costCategory", costCategory);
+        }
 
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
         model.addAttribute("type", type);
         model.addAttribute("question", questionService.getById(questionId));
-        model.addAttribute("materialCost", costItem);
+        model.addAttribute("cost", costItem);
+
         return String.format("question-type/types :: %s_row", type);
     }
 
