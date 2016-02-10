@@ -2,7 +2,6 @@ package com.worth.ifs.invite.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
@@ -19,12 +18,10 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static com.worth.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -65,7 +62,6 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.OK.getName())))
                 .andDo(document("invite/createApplicationInvites"));
 
         verify(inviteService, times(1)).save(Matchers.anyListOf(Invite.class));
@@ -92,7 +88,6 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.OK.getName())))
                 .andDo(document("invite/createApplicationInvites"));
     }
 
@@ -116,7 +111,6 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.OK.getName())))
                 .andDo(document("invite/createApplicationInvites"));
     }
 
@@ -139,7 +133,6 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.ERROR.getName())))
                 .andDo(document("invite/createApplicationInvites"));
     }
 
@@ -162,7 +155,6 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.ERROR.getName())))
                 .andDo(document("invite/createApplicationInvites"));
     }
 
@@ -185,7 +177,6 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.ERROR.getName())))
                 .andDo(document("invite/createApplicationInvites"));
     }
 
@@ -208,7 +199,6 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.ERROR.getName())))
                 .andDo(document("invite/createApplicationInvites"));
     }
 }

@@ -2,8 +2,6 @@ package com.worth.ifs.invite.controller;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.commons.resource.ResourceEnvelope;
-import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.Invite;
@@ -49,46 +47,43 @@ public class InviteController {
     InviteService inviteService;
 
     @RequestMapping("/createApplicationInvites")
-    public ResourceEnvelope<InviteResultsResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource, HttpServletRequest request) {
-        ResourceEnvelope<InviteResultsResource> resourceEnvelope;
+    public InviteResultsResource createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource, HttpServletRequest request) {
 
         if (inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
             InviteOrganisation newInviteOrganisation = assembleInviteOrganisationFromResource(inviteOrganisationResource);
             List<Invite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
             inviteOrganisationRepository.save(newInviteOrganisation);
             inviteService.save(newInvites);
-            resourceEnvelope = sendInvites(newInvites);
+            return sendInvites(newInvites);
         } else {
-            resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new InviteResultsResource());
+            // TODO DW - INFUND-1555 - reinstante error case
+//            resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new InviteResultsResource());
+            return null;
         }
-
-        return resourceEnvelope;
     }
 
     @RequestMapping("/getInviteByHash/{hash}")
-    public ResourceEnvelope<InviteResource> getInviteByHash(@PathVariable("hash") String hash) {
+    public InviteResource getInviteByHash(@PathVariable("hash") String hash) {
         Optional<Invite> invite = inviteService.getByHash(hash);
         if (invite.isPresent()) {
-            InviteResource inviteResource = new InviteResource(invite.get());
-            ResourceEnvelope<InviteResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), inviteResource);
-            return resourceEnvelope;
+            return new InviteResource(invite.get());
         }
 
-        ResourceEnvelope<InviteResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), null);
-        return resourceEnvelope;
+        // TODO DW - INFUND-1555 - reinstante error case
+//        ResourceEnvelope<InviteResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), null);
+        return null;
     }
 
     @RequestMapping("/getInviteOrganisationByHash/{hash}")
-    public ResourceEnvelope<InviteOrganisationResource> getInviteOrganisationByHash(@PathVariable("hash") String hash) {
+    public InviteOrganisationResource getInviteOrganisationByHash(@PathVariable("hash") String hash) {
         Optional<Invite> invite = inviteService.getByHash(hash);
         if (invite.isPresent()) {
-            InviteOrganisationResource inviteResource = new InviteOrganisationResource(invite.get().getInviteOrganisation());
-            ResourceEnvelope<InviteOrganisationResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), inviteResource);
-            return resourceEnvelope;
+            return new InviteOrganisationResource(invite.get().getInviteOrganisation());
         }
 
-        ResourceEnvelope<InviteOrganisationResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), null);
-        return resourceEnvelope;
+        // TODO DW - INFUND-1555 - reinstante error case
+//        ResourceEnvelope<InviteOrganisationResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), null);
+        return null;
     }
 
 
@@ -103,7 +98,7 @@ public class InviteController {
     }
 
     @RequestMapping(value = "/saveInvites", method = RequestMethod.POST)
-    public ResourceEnvelope<InviteResultsResource> saveInvites(@RequestBody List<InviteResource> inviteResources, HttpServletRequest request) {
+    public InviteResultsResource saveInvites(@RequestBody List<InviteResource> inviteResources, HttpServletRequest request) {
         List<Invite> invites = new ArrayList<>();
         inviteResources.stream().forEach(iR -> invites.add(mapInviteResourceToInvite(iR, null)));
         inviteService.save(invites);
@@ -111,7 +106,7 @@ public class InviteController {
 
     }
 
-    private ResourceEnvelope<InviteResultsResource> sendInvites(List<Invite> invites) {
+    private InviteResultsResource sendInvites(List<Invite> invites) {
         List<ServiceResult<Notification>> results = inviteService.inviteCollaborators(webBaseUrl, invites);
 
         long failures = results.stream().filter(r -> r.isFailure()).count();
@@ -121,8 +116,7 @@ public class InviteController {
         InviteResultsResource resource = new InviteResultsResource();
         resource.setInvitesSendFailure((int) failures);
         resource.setInvitesSendSuccess((int) successes);
-        ResourceEnvelope<InviteResultsResource> resourceEnvelope = new ResourceEnvelope(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), resource);
-        return resourceEnvelope;
+        return resource;
     }
 
     private InviteOrganisation assembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource) {

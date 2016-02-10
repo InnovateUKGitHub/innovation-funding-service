@@ -51,8 +51,8 @@ public class AcceptInviteController extends AbstractApplicationController {
                 LoginForm loginForm = new LoginForm();
 
                 // check if there already is a user with this emailaddress
-                List<UserResource> existingUsers = userService.findUserByEmail(inviteResource.getEmail());
-                if(!existingUsers.isEmpty()){
+                List<UserResource> existingUsers = userService.findUserByEmail(inviteResource.getEmail()).getSuccessObjectOrNull();
+                if(existingUsers != null && !existingUsers.isEmpty()){
                     model.addAttribute("emailAddressRegistered", "true");
                 }
 

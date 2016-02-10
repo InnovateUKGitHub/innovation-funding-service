@@ -1,6 +1,5 @@
 package com.worth.ifs.user.controller;
 
-import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -69,12 +68,12 @@ public class UserController {
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
-    public RestResult<ResourceEnvelope<UserResource>> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
+    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
         return newRestHandler().perform(() -> userService.createUser(organisationId, userResource));
     }
 
     @RequestMapping("/updateDetails")
-    public RestResult<ResourceEnvelope<UserResource>> createUser(@RequestBody UserResource userResource) {
+    public RestResult<UserResource> createUser(@RequestBody UserResource userResource) {
         return newRestHandler().perform(() -> userService.updateUser(userResource));
     }
 }
