@@ -28,6 +28,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
+
+// TODO DW - INFUND-1555 - handle rest results
 @Controller
 @RequestMapping("/application/{applicationId}/contributors")
 public class ApplicationContributorController extends AbstractApplicationController {
@@ -298,6 +301,8 @@ public class ApplicationContributorController extends AbstractApplicationControl
     }
 
     private List<InviteOrganisationResource> getSavedInviteOrganisations(ApplicationResource application) {
-        return new ArrayList<>(inviteRestService.getInvitesByApplication(application.getId()));
+        return inviteRestService.getInvitesByApplication(application.getId()).handleSuccessOrFailure(
+                failure -> emptyList(),
+                success -> success);
     }
 }

@@ -1,12 +1,8 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.commons.resource.ResourceEnvelope;
-import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
-import com.worth.ifs.commons.resource.ResourceError;
-import com.worth.ifs.login.LoginController;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,13 +17,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.Collections.emptyList;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -110,7 +110,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
         String email = "alreadyexistingemail@test.test";
 
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
-        when(userService.findUserByEmail(email)).thenReturn(userResourceList);
+        when(userService.findUserByEmail(email)).thenReturn(restSuccess(userResourceList));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -229,9 +229,6 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 .build();
 
 
-        ResourceEnvelope<UserResource> envelope = new ResourceEnvelope<>("OK", new ArrayList<>(), userResource);
-
-
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
         when(userService.createLeadApplicantForOrganisation(userResource.getFirstName(),
                 userResource.getLastName(),
@@ -239,7 +236,8 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
-                1L)).thenReturn(envelope);
+                1L)).thenReturn(restSuccess(userResource));
+        when(userService.findUserByEmail("test@test.test")).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -313,13 +311,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 .withId(1L)
                 .build();
 
-        ResourceError resourceError = new ResourceError("errorname","errordescription");
-
-        List<ResourceError> resourceErrors = new ArrayList<>();
-        resourceErrors.add(resourceError);
-
-        ResourceEnvelope<UserResource> envelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), resourceErrors, userResource);
-
+        Error error = new Error("errorname", "errordescription", BAD_REQUEST);
 
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
         when(userService.createLeadApplicantForOrganisation(userResource.getFirstName(),
@@ -328,7 +320,8 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
-                1L)).thenReturn(envelope);
+                1L)).thenReturn(restFailure(error));
+        when(userService.findUserByEmail("test@test.test")).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)

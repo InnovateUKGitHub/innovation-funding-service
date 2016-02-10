@@ -1,11 +1,8 @@
 package com.worth.ifs.profile;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.commons.resource.ResourceEnvelope;
-import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
-import com.worth.ifs.commons.resource.ResourceError;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.UserResource;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,13 +11,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -73,9 +71,8 @@ public class ProfileControllerTest extends BaseUnitTest {
 
     @Test
     public void userServiceSaveMethodIsCalledWhenSubmittingValidDetailsForm() throws Exception {
-        ResourceEnvelope<UserResource> envelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), newUserResource().build());
 
-        when(userService.updateDetails(user.getEmail(), "newfirstname", "newlastname", "Mrs", "0987654321")).thenReturn(envelope);
+        when(userService.updateDetails(user.getEmail(), "newfirstname", "newlastname", "Mrs", "0987654321")).thenReturn(restSuccess(newUserResource().build()));
         mockMvc.perform(post("/profile/edit")
                         .param("title", "Mrs")
                         .param("firstName", "newfirstname")
@@ -110,9 +107,8 @@ public class ProfileControllerTest extends BaseUnitTest {
 
     @Test
     public void whenSubmittingAValidFormTheUserProfileDetailsViewIsReturned() throws Exception {
-        ResourceEnvelope<UserResource> envelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), newUserResource().build());
 
-        when(userService.updateDetails(user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle(), user.getPhoneNumber())).thenReturn(envelope);
+        when(userService.updateDetails(user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle(), user.getPhoneNumber())).thenReturn(restSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/profile/edit")
                         .param("title", user.getTitle())
@@ -139,12 +135,9 @@ public class ProfileControllerTest extends BaseUnitTest {
 
     @Test
     public void userServiceResponseErrorsAreAddedTheModel() throws Exception {
-        List<ResourceError> resourceErrors = new ArrayList<>();
-        resourceErrors.add(new ResourceError("errorname", "errordescription"));
 
-        ResourceEnvelope<UserResource> envelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), resourceErrors, newUserResource().build());
-
-        when(userService.updateDetails(user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle(), user.getPhoneNumber())).thenReturn(envelope);
+        Error error = new Error("errorname", "errordescription", BAD_REQUEST);
+        when(userService.updateDetails(user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle(), user.getPhoneNumber())).thenReturn(restFailure(error));
 
         mockMvc.perform(post("/profile/edit")
                         .param("title", user.getTitle())

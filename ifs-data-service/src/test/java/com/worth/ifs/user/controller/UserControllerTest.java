@@ -3,8 +3,6 @@ package com.worth.ifs.user.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.resource.ResourceEnvelope;
-import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -112,20 +110,19 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         Long organisationId = 1L;
 
-        when(userServiceMock.createUser(organisationId, userResource)).thenReturn(serviceSuccess(new ResourceEnvelope<>("OK", null, userResource)));
+        when(userServiceMock.createUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/" + organisationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(applicationJsonString))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status", is(ResourceEnvelopeConstants.OK.getName())))
-                .andExpect(jsonPath("$.entity.firstName", notNullValue()))
-                .andExpect(jsonPath("$.entity.lastName", notNullValue()))
-                .andExpect(jsonPath("$.entity.phoneNumber", notNullValue()))
-                .andExpect(jsonPath("$.entity.title", notNullValue()))
-                .andExpect(jsonPath("$.entity.password", notNullValue()))
-                .andExpect(jsonPath("$.entity.email", notNullValue()))
-                .andExpect(jsonPath("$.entity.name", is(userResource.getFirstName() + " " + userResource.getLastName()))
+                .andExpect(jsonPath("$.firstName", notNullValue()))
+                .andExpect(jsonPath("$.lastName", notNullValue()))
+                .andExpect(jsonPath("$.phoneNumber", notNullValue()))
+                .andExpect(jsonPath("$.title", notNullValue()))
+                .andExpect(jsonPath("$.password", notNullValue()))
+                .andExpect(jsonPath("$.email", notNullValue()))
+                .andExpect(jsonPath("$.name", is(userResource.getFirstName() + " " + userResource.getLastName()))
                 );
     }
 

@@ -34,7 +34,7 @@ public class CostServiceImpl implements CostService {
 
     @Override
     public CostItem getById(Long costId) {
-        return costRestService.findById(costId);
+        return costRestService.findById(costId).getSuccessObjectOrNull();
     }
 
     @Override
@@ -42,6 +42,6 @@ public class CostServiceImpl implements CostService {
 
     @Override
     public CostItem add(Long applicationFinanceId, Long questionId, CostItem costItem) {
-        return costRestService.add(applicationFinanceId, questionId, costItem);
+        return costRestService.add(applicationFinanceId, questionId, costItem).getSuccessObjectOrNull();
     }
 }

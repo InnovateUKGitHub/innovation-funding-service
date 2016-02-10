@@ -2,7 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.commons.resource.ResourceEnvelope;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -25,10 +25,10 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserRestService userRestService;
+    private UserRestService userRestService;
 
     @Autowired
-    ProcessRoleService processRoleService;
+    private ProcessRoleService processRoleService;
 
     @Override
     // TODO DW - INFUND-1555 - get service to return RestResult
@@ -77,21 +77,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    // TODO DW - INFUND-1555 - get service to return RestResult
-    public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
-        ResourceEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId).getSuccessObjectOrNull();
-        return userResourceResourceStatusEnvelope;
+    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
+        return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
     }
 
     @Override
-    // TODO DW - INFUND-1555 - get service to return RestResult
-    public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
-        return userRestService.updateDetails(email, firstName, lastName, title, phoneNumber).getSuccessObjectOrNull();
+    public RestResult<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
+        return userRestService.updateDetails(email, firstName, lastName, title, phoneNumber);
     }
 
     @Override
-    // TODO DW - INFUND-1555 - get service to return RestResult
-    public List<UserResource> findUserByEmail(String email) {
-        return userRestService.findUserByEmail(email).getSuccessObjectOrNull();
+    public RestResult<List<UserResource>> findUserByEmail(String email) {
+        return userRestService.findUserByEmail(email);
     }
 }

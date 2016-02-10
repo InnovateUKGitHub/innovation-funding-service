@@ -1,13 +1,10 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
-import org.springframework.core.ParameterizedTypeReference;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
@@ -95,10 +92,9 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         Long organisationId = 1L;
 
-        ResourceEnvelope<UserResource> userResourceEnvelope = new ResourceEnvelope<>("OK", new ArrayList<>(), userResource);
-        setupPostWithRestResultExpectations(usersUrl + "/createLeadApplicantForOrganisation/" + organisationId, new ParameterizedTypeReference<ResourceEnvelope<UserResource>>() {}, userResource, userResourceEnvelope, OK);
+        setupPostWithRestResultExpectations(usersUrl + "/createLeadApplicantForOrganisation/" + organisationId, UserResource.class, userResource, userResource, OK);
 
-        ResourceEnvelope<UserResource> receivedResourceEnvelope = service.createLeadApplicantForOrganisation(userResource.getFirstName(),
+        UserResource receivedResource = service.createLeadApplicantForOrganisation(userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
@@ -107,6 +103,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 organisationId
         ).getSuccessObject();
 
-        assertEquals(userResourceEnvelope.getEntity(), receivedResourceEnvelope.getEntity());
+        assertEquals(userResource, receivedResource);
     }
 }

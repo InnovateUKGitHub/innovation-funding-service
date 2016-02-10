@@ -37,12 +37,19 @@ public class EntityLookupCallbacks {
         return ofNullable(getterResult).map(ServiceResult::serviceSuccess).orElse(serviceFailure(failureResponse));
     }
 
+    public static <SuccessType> ServiceResult<SuccessType> find(
+            SuccessType getterFn,
+            Error failureResponse) {
+
+        return find(() -> getterFn, failureResponse);
+    }
+
     /**
      * This find() method, given 2 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
      * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
      * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
      */
-    public static <FinalSuccessType, SuccessType1> ServiceResultHandler<SuccessType1> find(
+    public static <SuccessType1> ServiceResultHandler<SuccessType1> find(
             Supplier<ServiceResult<SuccessType1>> getterFn) {
 
         return new ServiceResultHandler<>(getterFn);
@@ -53,7 +60,18 @@ public class EntityLookupCallbacks {
      * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
      * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
      */
-    public static <FinalSuccessType, SuccessType1, SuccessType2> ServiceResultTuple2Handler<SuccessType1, SuccessType2> find(
+    public static <SuccessType1> ServiceResultHandler<SuccessType1> find(
+            ServiceResult<SuccessType1> getterFn) {
+
+        return find(() -> getterFn);
+    }
+
+    /**
+     * This find() method, given 2 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
+     * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
+     * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
+     */
+    public static <SuccessType1, SuccessType2> ServiceResultTuple2Handler<SuccessType1, SuccessType2> find(
             Supplier<ServiceResult<SuccessType1>> getterFn1,
             Supplier<ServiceResult<SuccessType2>> getterFn2) {
 
@@ -65,7 +83,19 @@ public class EntityLookupCallbacks {
      * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
      * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
      */
-    public static <FinalSuccessType, SuccessType1, SuccessType2, SuccessType3> ServiceResultTuple3Handler<SuccessType1, SuccessType2, SuccessType3> find(
+    public static <SuccessType1, SuccessType2> ServiceResultTuple2Handler<SuccessType1, SuccessType2> find(
+            ServiceResult<SuccessType1> getterFn1,
+            ServiceResult<SuccessType2> getterFn2) {
+
+        return find(() -> getterFn1, () -> getterFn2);
+    }
+
+    /**
+     * This find() method, given 2 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
+     * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
+     * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
+     */
+    public static <SuccessType1, SuccessType2, SuccessType3> ServiceResultTuple3Handler<SuccessType1, SuccessType2, SuccessType3> find(
             Supplier<ServiceResult<SuccessType1>> getterFn1,
             Supplier<ServiceResult<SuccessType2>> getterFn2,
             Supplier<ServiceResult<SuccessType3>> getterFn3) {
@@ -78,13 +108,40 @@ public class EntityLookupCallbacks {
      * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
      * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
      */
-    public static <FinalSuccessType, SuccessType1, SuccessType2, SuccessType3, SuccessType4> ServiceResultTuple4Handler<SuccessType1, SuccessType2, SuccessType3, SuccessType4> find(
+    public static <SuccessType1, SuccessType2, SuccessType3> ServiceResultTuple3Handler<SuccessType1, SuccessType2, SuccessType3> find(
+            ServiceResult<SuccessType1> getterFn1,
+            ServiceResult<SuccessType2> getterFn2,
+            ServiceResult<SuccessType3> getterFn3) {
+
+        return find(() -> getterFn1, () -> getterFn2, () -> getterFn3);
+    }
+
+    /**
+     * This find() method, given 2 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
+     * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
+     * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
+     */
+    public static <SuccessType1, SuccessType2, SuccessType3, SuccessType4> ServiceResultTuple4Handler<SuccessType1, SuccessType2, SuccessType3, SuccessType4> find(
             Supplier<ServiceResult<SuccessType1>> getterFn1,
             Supplier<ServiceResult<SuccessType2>> getterFn2,
             Supplier<ServiceResult<SuccessType3>> getterFn3,
             Supplier<ServiceResult<SuccessType4>> getterFn4) {
 
         return new ServiceResultTuple4Handler<>(getterFn1, getterFn2, getterFn3, getterFn4);
+    }
+
+    /**
+     * This find() method, given 2 ServiceResult suppliers, supplies a ServiceResultTuple2Handler that is able to execute
+     * the ServiceResults in a chain and fail early if necessary.  Assuming that they are all successes, a supplied
+     * BiFunction can then be called with the 2 successful ServiceResult values as its 2 inputs
+     */
+    public static <SuccessType1, SuccessType2, SuccessType3, SuccessType4> ServiceResultTuple4Handler<SuccessType1, SuccessType2, SuccessType3, SuccessType4> find(
+            ServiceResult<SuccessType1> getterFn1,
+            ServiceResult<SuccessType2> getterFn2,
+            ServiceResult<SuccessType3> getterFn3,
+            ServiceResult<SuccessType4> getterFn4) {
+
+        return find(() -> getterFn1, () -> getterFn2, () -> getterFn3, () -> getterFn4);
     }
 
     public static <T> ServiceResult<T> getOnlyElementOrFail(Collection<T> list) {

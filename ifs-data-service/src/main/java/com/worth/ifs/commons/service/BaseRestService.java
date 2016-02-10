@@ -107,6 +107,14 @@ public abstract class BaseRestService {
         return exchangeWithRestResult(path, GET, returnType);
     }
 
+    protected <T> RestResult<T> deleteWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
+        return exchangeWithRestResult(path, DELETE, returnType, OK, NO_CONTENT);
+    }
+
+    protected <T> RestResult<T> deleteWithRestResult(String path, Class<T> returnType) {
+        return exchangeWithRestResult(path, DELETE, returnType, OK, NO_CONTENT);
+    }
+
     protected <T> Future<RestResult<T>> getWithRestResultAsyc(String path, Class<T> returnType) {
         return exchangeWithRestResultAsync(path, GET, returnType);
     }
@@ -176,12 +184,16 @@ public abstract class BaseRestService {
         return exchangeWithRestResult(path, PUT, returnType);
     }
 
-    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, ParameterizedTypeReference<T> returnType) {
-        return exchangeWithRestResult(path, method, returnType, OK);
+    protected <R> RestResult<R> putWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType) {
+        return exchangeObjectWithRestResult(path, PUT, objectToSend, returnType, OK);
     }
 
-    private <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, ParameterizedTypeReference<T> returnType) {
-        return exchangeObjectWithRestResult(path, method, objectToSend, returnType, OK);
+    protected <R> RestResult<R> putWithRestResult(String path, Object objectToSend, Class<R> returnType) {
+        return exchangeObjectWithRestResult(path, PUT, objectToSend, returnType, OK);
+    }
+
+    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, ParameterizedTypeReference<T> returnType) {
+        return exchangeWithRestResult(path, method, returnType, OK);
     }
 
     private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, Class<T> returnType) {
@@ -190,10 +202,6 @@ public abstract class BaseRestService {
 
     private <T> Future<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, Class<T> returnType) {
         return exchangeWithRestResultAsync(path, method, returnType, OK);
-    }
-
-    private <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, Class<T> returnType) {
-        return exchangeObjectWithRestResult(path, method, objectToSend, returnType, OK);
     }
 
     private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, ParameterizedTypeReference<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
