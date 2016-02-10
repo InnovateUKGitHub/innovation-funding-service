@@ -15,7 +15,7 @@
 
     <div class="panel-indent">
 
-        <p>You have been invited to join a collaborative application for the competition <span th:text="${invite.competitionName}"></span>.</p>
+        <p>You have been invited to join a collaborative application for the competition <a th:href="${'/competition/'+invite.competitionId+'/details'}" th:text="${invite.competitionName}" />.</p>
         <p>Lead organisation: <strong><span th:text="${invite.leadOrganisation}"></span></strong><br />
             Lead applicant: <strong><span th:text="${invite.leadApplicant}"></span></strong></p>
 
