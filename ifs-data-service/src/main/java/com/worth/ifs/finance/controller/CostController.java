@@ -93,15 +93,16 @@ public class CostController {
     }
 
     private Cost addCostItem(ApplicationFinance applicationFinance, Question question, CostItem newCostItem) {
-        Cost existingCost = costRepository.findOneByApplicationFinanceIdAndQuestionId(applicationFinance.getId(), question.getId());
-        if(existingCost == null) {
-            Cost cost = organisationFinanceHandler.costItemToCost(newCostItem);
-            cost.setQuestion(question);
-            cost.setApplicationFinance(applicationFinance);
-            return costRepository.save(cost);
-        } else {
-            return update(existingCost.getId(), newCostItem);
+
+        if(newCostItem.getId() != null){
+            throw new RuntimeException("CostController.addCostItem, but there is a PK defined on the newCostItem.");
         }
+
+        Cost cost = organisationFinanceHandler.costItemToCost(newCostItem);
+        cost.setQuestion(question);
+        cost.setApplicationFinance(applicationFinance);
+        return costRepository.save(cost);
+
     }
 
     private Cost mapCost(Long id, Cost newCost) {

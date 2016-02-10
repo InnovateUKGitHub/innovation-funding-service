@@ -55,17 +55,14 @@ public class FinanceFormHandler {
     }
 
     private void addRemoveCostRows(HttpServletRequest request, Long applicationId, Long userId, Long applicationFinanceId) {
-        log.error(String.format("Got the Add / Remove Cost Param ????? " ));
         Map<String, String[]> requestParams = request.getParameterMap();
         if(requestParams.containsKey("add_cost")){
             String addCostParam = request.getParameter("add_cost");
-            log.error(String.format("Got the Add Cost Param with id: %s", addCostParam ));
             ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(applicationId, userId);
             financeService.addCost(applicationFinance.getId(), Long.valueOf(addCostParam));
         }
         if(requestParams.containsKey("remove_cost")){
             String removeCostParam = request.getParameter("remove_cost");
-            log.error(String.format("Got the REMOVE cost Param with id: %s", removeCostParam ));
             costService.delete(Long.valueOf(removeCostParam));
         }
     }
@@ -221,6 +218,7 @@ public class FinanceFormHandler {
 
     private void addCostItem(CostItem costItem, String question) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
+
         if(question!=null && !question.isEmpty()) {
             Long questionId = Long.parseLong(question);
             costService.add(applicationFinanceResource.getId(), questionId, costItem);
