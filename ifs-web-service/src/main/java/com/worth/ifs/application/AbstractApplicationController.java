@@ -338,7 +338,9 @@ public abstract class AbstractApplicationController {
     protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
         if(applicationFinanceResource == null) {
-            applicationFinanceResource = financeService.addApplicationFinance(applicationId, userId);
+            financeService.addApplicationFinance(applicationId, userId);
+            // ugly fix since the addApplicationFinance method does not return the correct results.
+            applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
         }
 
         return applicationFinanceResource;
