@@ -1,13 +1,11 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -111,8 +109,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    // TODO DW - INFUND-1555 - get rid of ResourceEnvelope
-    public RestResult<ResourceEnvelope<UserResource>> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
+    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
         UserResource user = new UserResource();
 
         user.setFirstName(firstName);
@@ -124,12 +121,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
         String url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId;
 
-        return postWithRestResult(url, user, new ParameterizedTypeReference<ResourceEnvelope<UserResource>>() {});
+        return postWithRestResult(url, user, UserResource.class);
     }
 
     @Override
-    // TODO DW - INFUND-1555 - get rid of ResourceEnvelope
-    public RestResult<ResourceEnvelope<UserResource>> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
+    public RestResult<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
         UserResource user = new UserResource();
         user.setEmail(email);
         user.setFirstName(firstName);
@@ -137,6 +133,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setTitle(title);
         user.setPhoneNumber(phoneNumber);
         String url = userRestURL + "/updateDetails";
-        return postWithRestResult(url, user, new ParameterizedTypeReference<ResourceEnvelope<UserResource>>() {});
+        return postWithRestResult(url, user, UserResource.class);
     }
 }

@@ -1,18 +1,16 @@
 package com.worth.ifs.registration;
 
-import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
-import com.worth.ifs.commons.resource.ResourceEnvelope;
-import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
-import com.worth.ifs.commons.resource.ResourceError;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.login.LoginController;
-import com.worth.ifs.util.CookieUtil;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.util.CookieUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +36,6 @@ public class RegistrationController {
 
     @Autowired
     private OrganisationService organisationService;
-
-    @Autowired
-    private CompetitionService competitionService;
 
     @Autowired
     private TokenAuthenticationService tokenAuthenticationService;
@@ -105,13 +100,13 @@ public class RegistrationController {
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
 
         if(!bindingResult.hasErrors()) {
-            ResourceEnvelope<UserResource> userResourceEnvelope = createUser(registrationForm, getOrganisationId(request));
+            RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request));
 
-            if(userResourceEnvelopeStatusIsOK(userResourceEnvelope)) {
-                loginUser(userResourceEnvelope.getEntity(), response);
+            if (createUserResult.isSuccess()) {
+                loginUser(createUserResult.getSuccessObject(), response);
                 destination = "redirect:/application/create/initialize-application/";
             } else {
-                addEnvelopeErrorsToBindingResultErrors(userResourceEnvelope.getErrors(), bindingResult);
+                addEnvelopeErrorsToBindingResultErrors(createUserResult.getFailure().getErrors(), bindingResult);
             }
 
         } else {
@@ -125,19 +120,19 @@ public class RegistrationController {
 
     private void checkForExistingEmail(String email, BindingResult bindingResult) {
         if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME)) {
-            List<UserResource> users = userService.findUserByEmail(email);
+            List<UserResource> users = userService.findUserByEmail(email).getSuccessObjectOrNull();
             if (users != null && !users.isEmpty()) {
                 bindingResult.addError(new FieldError(EMAIL_FIELD_NAME, EMAIL_FIELD_NAME, email, false, null, null, "Email address is already in use"));
             }
         }
     }
 
-    private void addEnvelopeErrorsToBindingResultErrors(List<ResourceError> errors, BindingResult bindingResult) {
+    private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {
         errors.forEach(
                 error -> bindingResult.addError(
                         new ObjectError(
-                                error.getName(),
-                                error.getDescription()
+                                error.getErrorKey(),
+                                error.getErrorMessage()
                         )
                 )
         );
@@ -148,12 +143,8 @@ public class RegistrationController {
         tokenAuthenticationService.addAuthentication(response, userResource);
     }
 
-    private boolean userResourceEnvelopeStatusIsOK(ResourceEnvelope<UserResource> userResourceEnvelope) {
-        return userResourceEnvelope.getStatus().equals(ResourceEnvelopeConstants.OK.getName()) && userResourceEnvelope.getEntity()!=null;
-    }
-
-    private ResourceEnvelope<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {
-        ResourceEnvelope<UserResource> userResourceEnvelope = userService.createLeadApplicantForOrganisation(
+    private RestResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {
+        return userService.createLeadApplicantForOrganisation(
                 registrationForm.getFirstName(),
                 registrationForm.getLastName(),
                 registrationForm.getPassword(),
@@ -161,7 +152,6 @@ public class RegistrationController {
                 registrationForm.getTitle(),
                 registrationForm.getPhoneNumber(),
                 organisationId);
-        return userResourceEnvelope;
     }
 
     private void addOrganisationNameToModel(Model model, Organisation organisation) {

@@ -15,9 +15,8 @@ import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOK
 import static com.worth.ifs.commons.service.BaseRestService.getJSONHeaders;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -95,6 +94,16 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         return response;
     }
 
+    protected ResponseEntity<Void> setupDeleteWithRestResultExpectations(String nonBaseUrl) {
+        return setupDeleteWithRestResultExpectations(nonBaseUrl, NO_CONTENT);
+    }
+
+    protected ResponseEntity<Void> setupDeleteWithRestResultExpectations(String nonBaseUrl, HttpStatus responseCode) {
+        ResponseEntity<Void> response = new ResponseEntity<>(responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, DELETE, httpEntityForRestCall(), Void.class)).thenReturn(response);
+        return response;
+    }
+
     protected <T> ResponseEntity<T> setupPostWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, Object requestBody, T responseBody, HttpStatus responseCode) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, POST, httpEntityForRestCall(requestBody), responseType)).thenReturn(response);
@@ -145,5 +154,9 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), responseType)).thenReturn(response);
         return response;
+    }
+
+    protected void setupDeleteWithRestResultVerifications(String nonBaseUrl) {
+        verify(mockRestTemplate).exchange(dataServicesUrl + nonBaseUrl, DELETE, httpEntityForRestCall(), Void.class);
     }
 }

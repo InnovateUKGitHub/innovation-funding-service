@@ -2,7 +2,7 @@ package com.worth.ifs.finance.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.finance.resource.CostFieldResource;
-import com.worth.ifs.finance.transactional.CostFieldService;
+import com.worth.ifs.finance.transactional.CostService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CostFieldControllerTest extends BaseControllerMockMVCTest<CostFieldController> {
 
     @Mock
-    private CostFieldService costFieldService;
+    private CostService costFieldService;
 
     @Override
     protected CostFieldController supplyControllerUnderTest() {

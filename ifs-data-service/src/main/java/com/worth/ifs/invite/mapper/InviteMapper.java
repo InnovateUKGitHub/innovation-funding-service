@@ -1,6 +1,7 @@
 package com.worth.ifs.invite.mapper;
 
 import com.worth.ifs.application.mapper.ApplicationMapper;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.transactional.InviteService;
@@ -31,6 +32,7 @@ public abstract class InviteMapper {
     }
 
     public Invite mapIdToInvite(Long id) {
-        return service.findOne(id);
+        ServiceResult<Invite> inviteResult = service.findOne(id);
+        return inviteResult.isSuccess() ? inviteResult.getSuccessObject() : null;
     }
 }
