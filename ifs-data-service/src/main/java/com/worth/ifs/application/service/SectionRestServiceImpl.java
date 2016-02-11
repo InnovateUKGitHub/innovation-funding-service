@@ -57,12 +57,12 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
 
     @Override
     public Future<RestResult<Section>> getPreviousSection(Long sectionId) {
-        return getWithRestResultAsyc(sectionRestURL + "/getPreviousSection/" + sectionId, Section.class);
+        return getWithRestResultAsync(sectionRestURL + "/getPreviousSection/" + sectionId, Section.class);
     }
 
     @Override
     public Future<RestResult<Section>> getNextSection(Long sectionId) {
-        return getWithRestResultAsyc(sectionRestURL + "/getNextSection/" + sectionId, Section.class);
+        return getWithRestResultAsync(sectionRestURL + "/getNextSection/" + sectionId, Section.class);
     }
 
     @Override
