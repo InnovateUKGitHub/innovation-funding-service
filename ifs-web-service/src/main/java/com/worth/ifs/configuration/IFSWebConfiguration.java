@@ -15,6 +15,7 @@ import org.springframework.web.servlet.resource.VersionResourceResolver;
 @Configuration
 public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     private static final Log LOG = LogFactory.getLog(IFSWebConfiguration.class);
+    public static final int CACHE_PERIOD = 60 * 60 * 24 * 60;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -29,7 +30,7 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
 
         registry.addResourceHandler("/js/**", "/css/**", "/images/**")
                 .addResourceLocations("classpath:static/js/", "classpath:static/css/", "classpath:static/images/")
-                .setCachePeriod(60 * 60 * 24 * 365) /* one year */
+                .setCachePeriod(CACHE_PERIOD)
                 .resourceChain(true)
                 .addResolver(versionResourceResolver);
 

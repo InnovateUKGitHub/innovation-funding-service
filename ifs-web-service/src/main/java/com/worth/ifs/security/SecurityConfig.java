@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .headers()
                     .frameOptions().sameOrigin()
-                    .cacheControl();
+                    .cacheControl().disable();
 
 
         //.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
