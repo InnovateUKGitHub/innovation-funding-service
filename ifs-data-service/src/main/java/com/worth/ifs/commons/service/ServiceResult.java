@@ -2,7 +2,6 @@ package com.worth.ifs.commons.service;
 
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.ErrorTemplate;
-import com.worth.ifs.commons.error.Errors;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,6 +11,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Collections.singletonList;
@@ -50,7 +50,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
 
     @Override
     protected <R> BaseEitherBackedResult<R, ServiceFailure> createFailure(FailingOrSucceedingResult<R, ServiceFailure> failure) {
-        return serviceFailure(failure.getFailure());
+        return failure != null ? serviceFailure(failure.getFailure()) : serviceFailure(internalServerErrorError("Unexpected error"));
     }
 
     public static ServiceResult<Void> serviceSuccess() {
@@ -97,7 +97,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      * was thrown in serviceCode
      */
     public static <T> ServiceResult<T> handlingErrors(Supplier<ServiceResult<T>> serviceCode) {
-        return handlingErrors(Errors.internalServerErrorError(), serviceCode);
+        return handlingErrors(internalServerErrorError(), serviceCode);
     }
 
     public static <T> ServiceResult<T> handlingErrors(ErrorTemplate catchAllErrorTemplate, Supplier<ServiceResult<T>> serviceCode) {

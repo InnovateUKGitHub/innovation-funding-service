@@ -27,6 +27,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.*;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.worth.ifs.commons.error.Errors.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -155,8 +156,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccess(newInviteOrganisation -> {
             List<Invite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
             inviteOrganisationRepository.save(newInviteOrganisation);
-            inviteRepository.save(newInvites);
-            return serviceSuccess(sendInvites(newInvites));
+            Iterable<Invite> savedInvites = inviteRepository.save(newInvites);
+            InviteResultsResource sentInvites = sendInvites(newArrayList(savedInvites));
+            return serviceSuccess(sentInvites);
         });
     }
 
