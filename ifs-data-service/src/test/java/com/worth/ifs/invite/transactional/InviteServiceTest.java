@@ -267,10 +267,40 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         List<InviteResource> expectedInvites = singletonList(new InviteResource(invite));
 
         InviteOrganisationResource expectedInviteOrganisation = newInviteOrganisationResource().
+                withId(inviteOrganisation.getId()).
                 withInviteResources(expectedInvites).
                 build();
 
         assertEquals(expectedInviteOrganisation, organisationInvite.getSuccessObject());
+    }
+
+    @Test
+    public void testGetInvitesByApplication() {
+
+        Competition competition = newCompetition().build();
+        Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
+        User user = newUser().build();
+        Organisation organisation = newOrganisation().build();
+
+        ProcessRole leadApplicantProcessRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
+        Application application = newApplication().withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
+        InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
+        Invite invite1 = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
+        Invite invite2 = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
+
+        when(inviteRepositoryMock.findByApplicationId(123L)).thenReturn(asList(invite1, invite2));
+
+        ServiceResult<List<InviteOrganisationResource>> result = inviteService.getInvitesByApplication(123L);
+        assertTrue(result.isSuccess());
+
+        List<InviteResource> expectedInvites = asList(new InviteResource(invite1), new InviteResource(invite2));
+
+        InviteOrganisationResource expectedInviteOrganisation = newInviteOrganisationResource().
+                withId(inviteOrganisation.getId()).
+                withInviteResources(expectedInvites).
+                build();
+
+        assertEquals(asList(expectedInviteOrganisation, expectedInviteOrganisation), result.getSuccessObject());
     }
 
     @Test
