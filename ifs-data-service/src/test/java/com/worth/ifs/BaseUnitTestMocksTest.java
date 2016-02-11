@@ -4,6 +4,7 @@ import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.repository.*;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.ResponseService;
+import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.transactional.FileService;
@@ -107,6 +108,9 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected CostRepository costRepositoryMock;
+
+    @Mock
+    protected AssessmentRepository assessmentRepositoryMock;
 
     @Before
     public void setupMockInjection() {

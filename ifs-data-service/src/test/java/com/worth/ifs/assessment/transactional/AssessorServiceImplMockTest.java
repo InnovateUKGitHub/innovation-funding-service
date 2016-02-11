@@ -4,14 +4,20 @@ import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.Set;
+
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
+import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -147,4 +153,29 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
         assertEquals("newFeedbackText", feedback.getAssessmentFeedback());
     }
 
+    @Test
+    public void testFindByProcessRole() {
+
+        Assessment assessment = newAssessment().build();
+
+        when(assessmentRepositoryMock.findOneByProcessRoleId(123L)).thenReturn(assessment);
+
+        ServiceResult<Assessment> result = service.getOneByProcessRole(123L);
+        assertTrue(result.isSuccess());
+        assertEquals(assessment, result.getSuccessObject());
+    }
+
+    @Test
+    public void testFindByCompetitionAndAssessor() {
+
+        Assessment assessment = newAssessment().build();
+        Set<String> states = AssessmentStates.getStates();
+        states.remove(AssessmentStates.REJECTED.getState());
+
+        when(assessmentRepositoryMock.findByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatusIn(456L, 123L, states)).thenReturn(singletonList(assessment));
+
+        ServiceResult<List<Assessment>> result = service.getAllByCompetitionAndAssessor(123L, 456L);
+        assertTrue(result.isSuccess());
+        assertEquals(singletonList(assessment), result.getSuccessObject());
+    }
 }
