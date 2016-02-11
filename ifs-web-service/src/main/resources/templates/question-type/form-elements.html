@@ -202,7 +202,6 @@
                  src="/images/field/field-assigned.png"
                  th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned.png')}"
                  alt=""
-                 title="This field is assigned to you"
                  class="assigned-to-me" />
 
             <div th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
