@@ -1,18 +1,18 @@
 package com.worth.ifs.finance.service;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.finance.controller.ApplicationFinanceController;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationFinanceResourceListType;
 
 /**
  * ApplicationFinanceRestServiceImpl is a utility for CRUD operations on {@link ApplicationFinance}.
@@ -21,59 +21,61 @@ import static java.util.Arrays.asList;
  */
 @Service
 public class ApplicationFinanceRestServiceImpl extends BaseRestService implements ApplicationFinanceRestService {
+
     @Value("${ifs.data.service.rest.applicationfinance}")
     String applicationFinanceRestURL;
 
-    private final Log log = LogFactory.getLog(getClass());
-
     @Override
-    public ApplicationFinanceResource getApplicationFinance(Long applicationId, Long organisationId) {
+    public RestResult<ApplicationFinanceResource> getApplicationFinance(Long applicationId, Long organisationId) {
         if(applicationId == null || organisationId == null){
             return null;
         }
-        return restGet(applicationFinanceRestURL + "/findByApplicationOrganisation/" + applicationId + "/" + organisationId, ApplicationFinanceResource.class);
+        return getWithRestResult(applicationFinanceRestURL + "/findByApplicationOrganisation/" + applicationId + "/" + organisationId, ApplicationFinanceResource.class);
     }
 
     @Override
-    public List<ApplicationFinanceResource> getApplicationFinances(Long applicationId) {
+    public RestResult<List<ApplicationFinanceResource>> getApplicationFinances(Long applicationId) {
         if(applicationId == null) {
             return null;
         }
 
-        return asList(restGet(applicationFinanceRestURL + "/findByApplication/" + applicationId, ApplicationFinanceResource[].class));
+        return getWithRestResult(applicationFinanceRestURL + "/findByApplication/" + applicationId, applicationFinanceResourceListType());
     }
 
     @Override
-    public ApplicationFinanceResource addApplicationFinanceForOrganisation(Long applicationId, Long organisationId) {
+    public RestResult<ApplicationFinanceResource> addApplicationFinanceForOrganisation(Long applicationId, Long organisationId) {
         if(applicationId == null || organisationId == null) {
             return null;
         }
-        return restPost(applicationFinanceRestURL + "/add/" + applicationId + "/" + organisationId, null, ApplicationFinanceResource.class);
+        return postWithRestResult(applicationFinanceRestURL + "/add/" + applicationId + "/" + organisationId, null, ApplicationFinanceResource.class);
     }
 
     @Override
-    public ApplicationFinanceResource update(Long applicationFinanceId, ApplicationFinanceResource applicationFinance){
-        return restPost(applicationFinanceRestURL + "/update/"+ applicationFinanceId, applicationFinance, ApplicationFinanceResource.class);
+    public RestResult<ApplicationFinanceResource> update(Long applicationFinanceId, ApplicationFinanceResource applicationFinance){
+        return postWithRestResult(applicationFinanceRestURL + "/update/"+ applicationFinanceId, applicationFinance, ApplicationFinanceResource.class);
     }
 
     @Override
-    public ApplicationFinanceResource getById(Long applicationFinanceId){
-        return restGet(applicationFinanceRestURL + "/getById/" + applicationFinanceId, ApplicationFinanceResource.class);
+    public RestResult<ApplicationFinanceResource> getById(Long applicationFinanceId){
+        return getWithRestResult(applicationFinanceRestURL + "/getById/" + applicationFinanceId, ApplicationFinanceResource.class);
+    }
+
+    // TODO DW - INFUND-1555 - remove usage of ObjectNode
+    @Override
+    public RestResult<Double> getResearchParticipationPercentage(Long applicationId){
+        return getWithRestResult(applicationFinanceRestURL + "/getResearchParticipationPercentage/" + applicationId, ObjectNode.class).andOnSuccess(jsonNode -> {
+            double percentage = jsonNode.get(ApplicationFinanceController.RESEARCH_PARTICIPATION_PERCENTAGE).asDouble();
+            return restSuccess(percentage);
+        });
     }
 
     @Override
-    public Double getResearchParticipationPercentage(Long applicationId){
-        ObjectNode jsonNode = restGet(applicationFinanceRestURL + "/getResearchParticipationPercentage/" + applicationId, ObjectNode.class);
-        return jsonNode.get(ApplicationFinanceController.RESEARCH_PARTICIPATION_PERCENTAGE).asDouble();
+    public RestResult<ApplicationFinanceResource> getFinanceDetails(Long applicationId, Long organisationId) {
+        return getWithRestResult(applicationFinanceRestURL + "/financeDetails/" + applicationId + "/"+organisationId, ApplicationFinanceResource.class);
     }
 
     @Override
-    public ApplicationFinanceResource getFinanceDetails(Long applicationId, Long organisationId) {
-        return restGet(applicationFinanceRestURL + "/financeDetails/" + applicationId + "/"+organisationId, ApplicationFinanceResource.class);
-    }
-
-    @Override
-    public List<ApplicationFinanceResource> getFinanceTotals(Long applicationId) {
-        return asList(restGet(applicationFinanceRestURL + "/financeTotals/" + applicationId, ApplicationFinanceResource[].class));
+    public RestResult<List<ApplicationFinanceResource>> getFinanceTotals(Long applicationId) {
+        return getWithRestResult(applicationFinanceRestURL + "/financeTotals/" + applicationId, applicationFinanceResourceListType());
     }
 }

@@ -25,14 +25,14 @@ public class FinanceServiceImpl implements FinanceService {
     private CostRestService costRestService;
 
     @Autowired
-    ApplicationFinanceRestService applicationFinanceRestService;
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Override
     public ApplicationFinanceResource addApplicationFinance(Long applicationId, Long userId) {
         ProcessRole processRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrNull();
 
         if(processRole.getOrganisation()!=null) {
-            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisation().getId());
+            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisation().getId()).getSuccessObjectOrNull();
         }
         return null;
     }
@@ -40,19 +40,19 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public ApplicationFinanceResource getApplicationFinance(Long applicationId, Long userId) {
         ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrNull();
-        return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId());
+        return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId()).getSuccessObjectOrNull();
     }
 
     @Override
     public ApplicationFinanceResource getApplicationFinanceDetails(Long applicationId, Long userId) {
         ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrNull();
-        return applicationFinanceRestService.getFinanceDetails(applicationId, userApplicationRole.getOrganisation().getId());
+        return applicationFinanceRestService.getFinanceDetails(applicationId, userApplicationRole.getOrganisation().getId()).getSuccessObjectOrNull();
     }
 
 
     @Override
     public List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId) {
-        return applicationFinanceRestService.getFinanceTotals(applicationId);
+        return applicationFinanceRestService.getFinanceTotals(applicationId).getSuccessObjectOrNull();
     }
 
 

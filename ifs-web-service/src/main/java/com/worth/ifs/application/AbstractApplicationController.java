@@ -39,6 +39,7 @@ import static com.worth.ifs.application.service.Futures.call;
  * This object contains shared methods for all the Controllers related to the {@link ApplicationResource} data.
  */
 public abstract class AbstractApplicationController {
+
     public static final String ASSIGN_QUESTION_PARAM = "assign_question";
     public static final String FORM_MODEL_ATTRIBUTE = "form";
     private final Log log = LogFactory.getLog(getClass());

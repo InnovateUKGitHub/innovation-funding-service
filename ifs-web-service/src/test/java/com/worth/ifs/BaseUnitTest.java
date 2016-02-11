@@ -462,7 +462,7 @@ public class BaseUnitTest {
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), OrganisationSize.LARGE);
         when(financeService.getApplicationFinanceDetails(application.getId(), loggedInUser.getId())).thenReturn(applicationFinanceResource);
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
-        when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(0.0);
+        when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
     }
 
     public void setupAssessment(){
