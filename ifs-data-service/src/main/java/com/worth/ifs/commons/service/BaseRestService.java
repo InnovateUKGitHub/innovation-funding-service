@@ -134,7 +134,7 @@ public abstract class BaseRestService {
     }
 
     // Asynchronous public calls
-    protected <T> Future<RestResult<T>> getWithRestResultAsyc(String path, Class<T> returnType) {
+    protected <T> Future<RestResult<T>> getWithRestResultAsync(String path, Class<T> returnType) {
         return adaptor.getWithRestResultAsyc(getDataRestServiceURL() + path, returnType);
     }
 
