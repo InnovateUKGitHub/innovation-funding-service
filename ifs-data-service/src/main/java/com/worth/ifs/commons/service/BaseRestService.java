@@ -102,11 +102,19 @@ public abstract class BaseRestService {
     }
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType) {
-        return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, OK, CREATED);
+        return postWithRestResult(path, objectToSend, returnType, OK, CREATED);
     }
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType) {
-        return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, OK, CREATED);
+        return postWithRestResult(path, objectToSend, returnType, OK, CREATED);
+    }
+
+    protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, expectedSuccessCode, otherExpectedStatusCodes);
+    }
+
+    protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, expectedSuccessCode, otherExpectedStatusCodes);
     }
 
     protected <T> RestResult<T> putWithRestResult(String path, ParameterizedTypeReference<T> returnType) {

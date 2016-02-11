@@ -1,18 +1,18 @@
 package com.worth.ifs.sil.email.service;
 
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.sil.email.resource.SilEmailMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
 import static com.worth.ifs.commons.service.ServiceResult.*;
+import static org.springframework.http.HttpStatus.ACCEPTED;
 
 /**
  * A simple logging implementation of the SIL email endpoint as opposed to a REST-based endpoint
@@ -32,11 +32,10 @@ public class RestSilEmailEndpoint extends BaseRestService implements SilEmailEnd
     public ServiceResult<SilEmailMessage> sendEmail(SilEmailMessage message) {
 
         return handlingErrors(() -> {
+            RestResult<Void> sendResult = postWithRestResult(silSendmailPath, message, Void.class, ACCEPTED);
 
-            ResponseEntity<String> response = restPostWithEntity(silSendmailPath, message, String.class);
-
-            if (!response.getStatusCode().equals(HttpStatus.ACCEPTED)) {
-                LOG.warn("Failed when sending email to SIL: " + response.getBody());
+            if (sendResult.isFailure()) {
+                LOG.warn("Failed when sending email to SIL: " + sendResult.getFailure());
                 return serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE));
             }
 

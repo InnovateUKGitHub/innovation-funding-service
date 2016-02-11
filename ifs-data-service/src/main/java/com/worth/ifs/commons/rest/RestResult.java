@@ -76,6 +76,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         return Either.getLeftOrRight(either);
     }
 
+    public static RestResult<Void> restSuccess() {
+        return restSuccess(OK);
+    }
+
     public static RestResult<Void> restSuccess(HttpStatus statusCode) {
         return restSuccess(null, statusCode);
     }

@@ -1,5 +1,6 @@
 package com.worth.ifs.sil.email.controller;
 
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.sil.email.resource.SilEmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailBody;
 import com.worth.ifs.sil.email.resource.SilEmailMessage;
@@ -15,13 +16,14 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.util.CollectionFunctions.*;
+import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -58,7 +60,7 @@ public class SimpleEmailEndpointController {
     private Boolean tlsEnabled;
 
     @RequestMapping(value="/sendmail", method = POST)
-    public void sendMail(@RequestBody SilEmailMessage message, HttpServletResponse response) {
+    public RestResult<Void> sendMail(@RequestBody SilEmailMessage message) {
 
         SilEmailBody plainTextBody = simpleFilter(message.getBody(), body -> body.getContentType().equals("text/plain")).get(0);
         SilEmailBody htmlBody = simpleFilter(message.getBody(), body -> body.getContentType().equals("text/html")).get(0);
@@ -150,6 +152,6 @@ public class SimpleEmailEndpointController {
             }
         }
 
-        response.setStatus(HttpServletResponse.SC_ACCEPTED);
+        return restSuccess(ACCEPTED);
     }
 }
