@@ -29,6 +29,10 @@ IFS.repeatableRows = (function() {
                   jQuery(el).prev().remove();
                   jQuery(target).append(data);
                   jQuery('body').trigger('updateSerializedFormState');
+                  var appendRow = jQuery(data).find('[type="number"][name],[type="text"][name],[type="email"][name]').first().attr('name');
+                  if(typeof(appendRow) !== 'undefined'){
+                      jQuery('[name='+appendRow+']').focus();
+                  }
               });
             }
         },
