@@ -32,60 +32,17 @@ public abstract class BaseRestService {
         this.dataRestServiceURL = dataRestServiceURL;
     }
 
-    public <T> ListenableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz) {
-        return adaptor.restGetAsync(getDataRestServiceURL() + path, clazz);
+    public void setRestTemplateAdaptor(RestTemplateAdaptor adaptor) {
+        this.adaptor = adaptor;
     }
 
-    protected <T> T restGet(String path, Class<T> c) {
-        return restGetEntity(path, c).getBody();
-    }
-
-    protected <T> T restGet(String path, Class<T> c, HttpHeaders headers) {
-        return adaptor.restGet(getDataRestServiceURL() + path, c, headers);
-    }
-
+    // Synchronous calls
     protected <T> RestResult<T> getWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
         return adaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
     protected <T> RestResult<T> getWithRestResult(String path, Class<T> returnType) {
         return adaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
-    }
-
-    protected <T> RestResult<T> deleteWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
-        return adaptor.deleteWithRestResult(getDataRestServiceURL() + path, returnType);
-    }
-
-    protected <T> RestResult<T> deleteWithRestResult(String path, Class<T> returnType) {
-        return adaptor.deleteWithRestResult(getDataRestServiceURL() + path, returnType);
-    }
-
-    protected <T> Future<RestResult<T>> getWithRestResultAsyc(String path, Class<T> returnType) {
-        return adaptor.getWithRestResultAsyc(getDataRestServiceURL() + path, returnType);
-    }
-
-    protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
-        return adaptor.restGetEntity(getDataRestServiceURL() + path, c);
-    }
-
-    protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, HttpHeaders headers) {
-        return adaptor.restGetEntity(getDataRestServiceURL() + path, c, headers);
-    }
-
-    protected <T> ResponseEntity<T> restGet(String path, ParameterizedTypeReference<T> returnType) {
-        return adaptor.restGet(getDataRestServiceURL() + path, returnType);
-    }
-
-    protected <T> T restPost(String path, Object postEntity, Class<T> c) {
-        return adaptor.restPostWithEntity(getDataRestServiceURL() + path, postEntity, c).getBody();
-    }
-
-    protected void restPut(String path) {
-        adaptor.restPutEntity(getDataRestServiceURL() + path, Void.class);
-    }
-
-    protected <T> ResponseEntity<T> restPutEntity(String path, Class<T> c) {
-        return adaptor.restPutEntity(getDataRestServiceURL() + path, c);
     }
 
     protected <T> RestResult<T> postWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
@@ -120,25 +77,69 @@ public abstract class BaseRestService {
         return adaptor.putWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
     }
 
-    protected void restPut(String path, Object entity) {
-        adaptor.restPut(getDataRestServiceURL() + path, entity);
+    protected <T> RestResult<T> deleteWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
+        return adaptor.deleteWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
-    protected <T> ResponseEntity<T> restPut(String path, Object entity, Class<T> c) {
-        return adaptor.restPut(getDataRestServiceURL() + path, entity, c);
-
+    protected <T> RestResult<T> deleteWithRestResult(String path, Class<T> returnType) {
+        return adaptor.deleteWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
-    protected void restDelete(String path) {
-        adaptor.restDelete(getDataRestServiceURL() + path);
+    protected <T> T restGet(String path, Class<T> c) {
+        return restGetEntity(path, c).getBody();
+    }
+
+    protected <T> T restGet(String path, Class<T> c, HttpHeaders headers) {
+        return restGetEntity(path, c, headers).getBody();
+    }
+
+    protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
+        return adaptor.restGetEntity(getDataRestServiceURL() + path, c);
+    }
+
+    protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, HttpHeaders headers) {
+        return adaptor.restGetEntity(getDataRestServiceURL() + path, c, headers);
+    }
+
+    protected <T> ResponseEntity<T> restGet(String path, ParameterizedTypeReference<T> returnType) {
+        return adaptor.restGet(getDataRestServiceURL() + path, returnType);
+    }
+
+    protected <T> T restPost(String path, Object postEntity, Class<T> c) {
+        return restPostWithEntity(path, postEntity, c).getBody();
     }
 
     protected <T> ResponseEntity<T> restPostWithEntity(String path, Object postEntity, Class<T> responseType) {
         return adaptor.restPostWithEntity(getDataRestServiceURL() + path, postEntity, responseType);
     }
 
-    public void setRestTemplateAdaptor(RestTemplateAdaptor adaptor) {
-        this.adaptor = adaptor;
+    protected void restPut(String path) {
+        adaptor.restPutEntity(getDataRestServiceURL() + path, Void.class);
+    }
+
+    protected <T> ResponseEntity<T> restPutEntity(String path, Class<T> c) {
+        return adaptor.restPutEntity(getDataRestServiceURL() + path, c);
+    }
+
+    protected void restPut(String path, Object entity) {
+        adaptor.restPut(getDataRestServiceURL() + path, entity);
+    }
+
+    protected <T> ResponseEntity<T> restPut(String path, Object entity, Class<T> c) {
+        return adaptor.restPut(getDataRestServiceURL() + path, entity, c);
+    }
+
+    protected void restDelete(String path) {
+        adaptor.restDelete(getDataRestServiceURL() + path);
+    }
+
+    // Asynchronous public calls
+    protected <T> Future<RestResult<T>> getWithRestResultAsyc(String path, Class<T> returnType) {
+        return adaptor.getWithRestResultAsyc(getDataRestServiceURL() + path, returnType);
+    }
+
+    public <T> ListenableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz) {
+        return adaptor.restGetAsync(getDataRestServiceURL() + path, clazz);
     }
 }
 
