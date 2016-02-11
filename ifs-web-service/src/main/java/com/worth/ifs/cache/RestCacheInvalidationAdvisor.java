@@ -1,6 +1,6 @@
-package com.worth.ifs.profiling;
+package com.worth.ifs.cache;
 
-import com.worth.ifs.cache.RestCacheInvalidationAdvisor;
+import com.worth.ifs.commons.service.RestCacheInvalidateResult;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
@@ -10,28 +10,28 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
-
 @Component
-public class ProfilingAdvisor extends AbstractPointcutAdvisor {
-
-    public static final int PROFILING_ORDER = RestCacheInvalidationAdvisor.REST_CACHE_INVALIDATE - 1;
-
-    public ProfilingAdvisor() {
-        setOrder(PROFILING_ORDER);
-    }
+public class RestCacheInvalidationAdvisor extends AbstractPointcutAdvisor {
 
     private static final long serialVersionUID = 1L;
+
+
+    public static final int REST_CACHE_INVALIDATE = RestCacheAdvisor.REST_CACHE - 1;
+
+    public RestCacheInvalidationAdvisor(){
+        setOrder(REST_CACHE_INVALIDATE);
+    }
 
     private final StaticMethodMatcherPointcut pointcut = new
             StaticMethodMatcherPointcut() {
                 @Override
                 public boolean matches(Method method, Class<?> targetClass) {
-                    return method.isAnnotationPresent(ProfileExecution.class);
+                    return method.isAnnotationPresent(RestCacheInvalidateResult.class);
                 }
             };
 
     @Autowired
-    private ProfilingMethodInterceptor interceptor;
+    private  RestCacheInvalidateMethodInterceptor interceptor;
 
     @Override
     public Pointcut getPointcut() {
@@ -42,6 +42,4 @@ public class ProfilingAdvisor extends AbstractPointcutAdvisor {
     public Advice getAdvice() {
         return this.interceptor;
     }
-
-
 }

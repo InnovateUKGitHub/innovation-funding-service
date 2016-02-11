@@ -19,6 +19,10 @@ public class RestCacheAdvisor extends AbstractPointcutAdvisor {
 
     public static final int REST_CACHE = CallFuturesInModelAdvisor.CALL_FUTURES_ORDER - 1;
 
+    public RestCacheAdvisor(){
+        setOrder(REST_CACHE);
+    }
+
     private final StaticMethodMatcherPointcut pointcut = new
             StaticMethodMatcherPointcut() {
                 @Override

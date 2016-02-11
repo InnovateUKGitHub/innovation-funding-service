@@ -51,74 +51,92 @@ public class RestTemplateAdaptor {
     }
 
     // Synchronous public calls
+    @RestCacheResult
     public <T> RestResult<T> getWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
         return exchangeWithRestResult(path, GET, returnType);
     }
 
+    @RestCacheResult
     public <T> RestResult<T> getWithRestResult(String path, Class<T> returnType) {
         return exchangeWithRestResult(path, GET, returnType);
     }
 
+    @RestCacheInvalidateResult
     public <T> RestResult<T> postWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
         return exchangeWithRestResult(path, POST, returnType, OK, CREATED);
     }
 
+    @RestCacheInvalidateResult
     public <R> RestResult<R> postWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType) {
         return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, OK, CREATED);
     }
 
+    @RestCacheInvalidateResult
     public <T> RestResult<T> postWithRestResult(String path, Class<T> returnType) {
         return exchangeWithRestResult(path, POST, returnType, OK, CREATED);
     }
 
+    @RestCacheInvalidateResult
     public <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType) {
         return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, OK, CREATED);
     }
 
-    public <R> RestResult<R> putWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType) {
-        return exchangeObjectWithRestResult(path, PUT, objectToSend, returnType, OK);
-    }
-
+    @RestCacheInvalidateResult
     public <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType, HttpStatus expectedStatusCode, HttpStatus... otherExpectedStatusCodes) {
         return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, expectedStatusCode, otherExpectedStatusCodes);
     }
 
+    @RestCacheInvalidateResult
     public <R> RestResult<R> postWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType, HttpStatus expectedStatusCode, HttpStatus... otherExpectedStatusCodes) {
         return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, expectedStatusCode, otherExpectedStatusCodes);
     }
 
+    @RestCacheInvalidateResult
+    public <R> RestResult<R> putWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType) {
+        return exchangeObjectWithRestResult(path, PUT, objectToSend, returnType, OK);
+    }
+
+    @RestCacheInvalidateResult
     public <T> RestResult<T> putWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
         return exchangeWithRestResult(path, PUT, returnType);
     }
 
+    @RestCacheInvalidateResult
     public <T> RestResult<T> putWithRestResult(String path, Class<T> returnType) {
         return exchangeWithRestResult(path, PUT, returnType);
     }
 
+    @RestCacheInvalidateResult
     public <R> RestResult<R> putWithRestResult(String path, Object objectToSend, Class<R> returnType) {
         return exchangeObjectWithRestResult(path, PUT, objectToSend, returnType, OK);
     }
 
+    @RestCacheInvalidateResult
     public <T> RestResult<T> deleteWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
         return exchangeWithRestResult(path, DELETE, returnType, OK, NO_CONTENT);
     }
 
+    @RestCacheInvalidateResult
     public <T> RestResult<T> deleteWithRestResult(String path, Class<T> returnType) {
         return exchangeWithRestResult(path, DELETE, returnType, OK, NO_CONTENT);
     }
 
+    @RestCacheResult
     public <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
         return getRestTemplate().exchange(path, GET, jsonEntity(null), c);
     }
 
+    @RestCacheResult
     public <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, HttpHeaders headers) {
         return getRestTemplate().exchange(path, GET, new HttpEntity<Object>(null, headers), c);
     }
 
+    @RestCacheResult
     public <T> ResponseEntity<T> restGet(String path, ParameterizedTypeReference<T> returnType) {
         return getRestTemplate().exchange(path, GET, jsonEntity(null), returnType);
     }
 
+    @RestCacheInvalidateResult
     public <T> ResponseEntity<T> restPostWithEntity(String path, Object postEntity, Class<T> responseType) {
         RestTemplate restTemplate = getRestTemplate();
         HttpHeaders headers = getHeaders();
@@ -131,27 +149,33 @@ public class RestTemplateAdaptor {
         return restTemplate.postForEntity(path, entity, responseType);
     }
 
+    @RestCacheInvalidateResult
     public <T> ResponseEntity<T> restPutEntity(String path, Class<T> c) {
         return getRestTemplate().exchange(path, PUT, jsonEntity(null), c);
     }
 
+    @RestCacheInvalidateResult
     public void restPut(String path, Object entity) {
         getRestTemplate().exchange(path, PUT, jsonEntity(entity), Void.class);
     }
 
+    @RestCacheInvalidateResult
     public <T> ResponseEntity<T> restPut(String path, Object entity, Class<T> c) {
         return getRestTemplate().exchange(path, PUT, jsonEntity(entity), c);
     }
 
+    @RestCacheInvalidateResult
     public void restDelete(String path) {
         getRestTemplate().exchange(path, DELETE, jsonEntity(null), Void.class);
     }
 
     // Asynchronous public calls
+    @RestCacheResult
     public <T> Future<RestResult<T>> getWithRestResultAsyc(String path, Class<T> returnType) {
         return exchangeWithRestResultAsync(path, GET, returnType);
     }
 
+    @RestCacheResult
     public <T> ListenableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz) {
         return withEmptyCallback(getAsyncRestTemplate().exchange(path, HttpMethod.GET, jsonEntity(""), clazz));
     }
