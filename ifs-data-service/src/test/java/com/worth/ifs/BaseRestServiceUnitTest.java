@@ -1,6 +1,7 @@
 package com.worth.ifs;
 
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.RestTemplateAdaptor;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.springframework.core.ParameterizedTypeReference;
@@ -12,7 +13,7 @@ import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
-import static com.worth.ifs.commons.service.BaseRestService.getJSONHeaders;
+import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.*;
@@ -47,8 +48,10 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
 
         service = registerRestServiceUnderTest();
         service.setDataRestServiceUrl(dataServicesUrl);
-        service.setRestTemplateSupplier(() -> mockRestTemplate);
-        service.setAsyncRestTemplate(() -> mockAsyncRestTemplate);
+        final RestTemplateAdaptor adaptor = new RestTemplateAdaptor();
+        service.setRestTemplateAdaptor(adaptor);
+        adaptor.setRestTemplateSupplier(() -> mockRestTemplate);
+        adaptor.setAsyncRestTemplate(() -> mockAsyncRestTemplate);
 
         SecurityContextImpl securityContext = new SecurityContextImpl();
         securityContext.setAuthentication(new TestingAuthenticationToken("A_PRINCIPAL", VALID_AUTH_TOKEN));
