@@ -192,7 +192,6 @@
                  src="/images/field/field-done.png"
                 th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done.png')}"
                 alt=""
-                 title="This field is marked as complete"
                  class="marked-as-complete" />
 
             <div th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" th:remove="tag">
