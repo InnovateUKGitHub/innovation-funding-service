@@ -1,29 +1,37 @@
 package com.worth.ifs.application;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -61,7 +69,7 @@ public class ApplicationController extends AbstractApplicationController {
                                                 HttpServletRequest request){
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
-        Section section = sectionService.getById(sectionId);
+        SectionResource section = sectionService.getById(sectionId);
         Competition competition = competitionService.getById(application.getCompetition());
 
         addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
@@ -202,14 +210,16 @@ public class ApplicationController extends AbstractApplicationController {
         Competition competition = competitionService.getById(application.getCompetition());
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
-        Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), true);
+        Optional<SectionResource> currentSection = getSection(simpleMap(competition.getSections(),s -> sectionService.getById(s.getId())), Optional.of(sectionId), true);
         //super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), currentSection, Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
         super.addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         super.addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
 
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
 
-        Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(questionId)).collect(Collectors.toList()).get(0);
+        Question question = currentSection.get().getQuestions().stream()
+                .map(questionService::getById)
+                .filter(q -> q.getId().equals(questionId)).collect(Collectors.toList()).get(0);
 
         model.addAttribute("question", question);
 

@@ -1,10 +1,20 @@
 package com.worth.ifs.assessment;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.dto.Score;
@@ -19,6 +29,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,15 +38,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import static com.worth.ifs.application.service.Futures.call;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -188,7 +199,7 @@ public class AssessmentController extends AbstractApplicationController {
             ApplicationResource application,
             List<ProcessRole> userApplicationRoles) {
         Competition competition = competitionService.getById(application.getCompetition());
-        Optional<Section> currentSection = getSection(competition.getSections(), sectionId, true);
+        Optional<SectionResource> currentSection = getSection(simpleMap(competition.getSections(),section -> sectionService.getById(section.getId())), sectionId, true);
         addApplicationDetails(application, competition, userId, currentSection, Optional.empty(), model, null, userApplicationRoles);
         addSectionDetails(model, currentSection);
         List<Response> questionResponses = responseService.getByApplication(application.getId());

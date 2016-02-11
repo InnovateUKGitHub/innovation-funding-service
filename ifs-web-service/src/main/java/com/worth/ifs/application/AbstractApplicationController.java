@@ -1,5 +1,19 @@
 package com.worth.ifs.application;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
@@ -10,7 +24,15 @@ import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.service.*;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.application.service.ProcessRoleService;
+import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.application.service.ResponseService;
+import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.application.service.UserService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -21,19 +43,14 @@ import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import static com.worth.ifs.application.service.Futures.call;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This object contains shared methods for all the Controllers related to the {@link ApplicationResource} data.
@@ -124,7 +141,7 @@ public abstract class AbstractApplicationController {
     protected ApplicationResource addApplicationDetails(ApplicationResource application,
                                                         Competition competition,
                                                         Long userId,
-                                                        Optional<Section> section,
+                                                        Optional<SectionResource> section,
                                                         Optional<Long> currentQuestionId,
                                                         Model model,
                                                         ApplicationForm form,
@@ -218,7 +235,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addAssigneableDetails(Model model, ApplicationResource application, Organisation userOrganisation,
-                                         Long userId, Optional<Section> currentSection, Optional<Long> currentQuestionId) {
+                                         Long userId, Optional<SectionResource> currentSection, Optional<Long> currentQuestionId) {
         Map<Long, QuestionStatusResource> questionAssignees;
         if(currentQuestionId.isPresent()){
             QuestionStatusResource questionStatusResource = questionService.getByQuestionIdAndApplicationIdAndOrganisationId(currentQuestionId.get(), application.getId(), userOrganisation.getId());
@@ -227,8 +244,8 @@ public abstract class AbstractApplicationController {
                 questionAssignees.put(currentQuestionId.get(), questionStatusResource);
             }
         }else if(currentSection.isPresent()){
-            Section section = currentSection.get();
-            questionAssignees = questionService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(getQuestionIds(section.getQuestions()), application.getId(), userOrganisation.getId());
+            SectionResource section = currentSection.get();
+            questionAssignees = questionService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(section.getQuestions(), application.getId(), userOrganisation.getId());
         }else{
             questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
         }
@@ -264,7 +281,7 @@ public abstract class AbstractApplicationController {
 
     // TODO DW - INFUND-1555 - handle rest results
     protected void addFinanceDetails(Model model, ApplicationResource application) {
-        Section section = sectionService.getByName("Your finances");
+        SectionResource section = sectionService.getByName("Your finances");
         sectionService.removeSectionsQuestionsWithType(section, "empty");
         model.addAttribute("financeSection", section);
 
@@ -280,15 +297,15 @@ public abstract class AbstractApplicationController {
     }
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, Competition competition,
-                                            Optional<Section> currentSection,
+                                            Optional<SectionResource> currentSection,
                                             Optional<Organisation> userOrganisation,
                                             List<ProcessRole> userApplicationRoles) {
-        List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
-        Future<Section> previousSection = sectionService.getPreviousSection(currentSection);
-        Future<Section> nextSection = sectionService.getNextSection(currentSection);
+        List<SectionResource> sectionsList = sectionService.getParentSections(simpleMap(competition.getSections(),Section::getId));
+        Future<SectionResource> previousSection = sectionService.getPreviousSection(currentSection);
+        Future<SectionResource> nextSection = sectionService.getNextSection(currentSection);
 
-        Map<Long, Section> sections =
-                sectionsList.stream().collect(Collectors.toMap(Section::getId,
+        Map<Long, SectionResource> sections =
+                sectionsList.stream().collect(Collectors.toMap(SectionResource::getId,
                         Function.identity()));
 
         userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
@@ -316,12 +333,12 @@ public abstract class AbstractApplicationController {
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
     }
 
-    protected void addSectionDetails(Model model, Optional<Section> currentSection) {
-        model.addAttribute("currentSectionId", currentSection.map(Section::getId).orElse(null));
+    protected void addSectionDetails(Model model, Optional<SectionResource> currentSection) {
+        model.addAttribute("currentSectionId", currentSection.map(SectionResource::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
     }
 
-    protected Optional<Section> getSection(List<Section> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
+    protected Optional<SectionResource> getSection(List<SectionResource> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
 
         if (sectionId.isPresent()) {
             Long id = sectionId.get();
@@ -350,7 +367,7 @@ public abstract class AbstractApplicationController {
     protected ApplicationResource addApplicationAndSections(ApplicationResource application,
                                                                              Competition competition,
                                                                              Long userId,
-                                                                             Optional<Section> section,
+                                                                             Optional<SectionResource> section,
                                                                              Optional<Long> currentQuestionId,
                                                                              Model model,
                                                                              ApplicationForm form) {

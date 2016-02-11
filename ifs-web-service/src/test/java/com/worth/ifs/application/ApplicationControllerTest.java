@@ -1,9 +1,16 @@
 package com.worth.ifs.application;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.user.domain.User;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,18 +22,17 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import static com.worth.ifs.application.service.Futures.settable;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -103,10 +109,10 @@ public class ApplicationControllerTest extends BaseUnitTest {
     @Test
     public void testApplicationDetailsOpenSection() throws Exception {
         ApplicationResource app = applications.get(0);
-        Section section = sections.get(2);
+        SectionResource section = sectionResources.get(2);
 
-        Map<Long, Section> collectedSections =
-                sections.stream().collect(Collectors.toMap(Section::getId,
+        Map<Long, SectionResource> collectedSections =
+                sectionResources.stream().collect(Collectors.toMap(SectionResource::getId,
                         Function.identity()));
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);

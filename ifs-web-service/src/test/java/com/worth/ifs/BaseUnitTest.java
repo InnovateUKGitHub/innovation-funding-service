@@ -1,17 +1,46 @@
 package com.worth.ifs;
 
+import java.lang.reflect.Method;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.worth.ifs.application.builder.QuestionBuilder;
 import com.worth.ifs.application.builder.SectionBuilder;
+import com.worth.ifs.application.builder.SectionResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.model.UserRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
-import com.worth.ifs.application.service.*;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.service.ApplicationRestService;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.ApplicationStatusRestService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.application.service.ProcessRoleService;
+import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.application.service.ResponseService;
+import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.application.service.UserService;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.dto.Score;
@@ -29,7 +58,13 @@ import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
-import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.domain.OrganisationType;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mockito.ArgumentCaptor;
@@ -42,25 +77,26 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.BuilderAmendFunctions.competition;
+import static com.worth.ifs.BuilderAmendFunctions.description;
+import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.BuilderAmendFunctions.idBasedValues;
+import static com.worth.ifs.BuilderAmendFunctions.incrementingIds;
+import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
@@ -122,6 +158,7 @@ public class BaseUnitTest {
 
     public List<ApplicationResource> applications;
     public List<Section> sections;
+    public List<SectionResource> sectionResources;
     public Map<Long, Question> questions;
     public Map<Long, FormInputResponse> formInputsToFormInputResponses;
     public List<Competition> competitions;
@@ -201,6 +238,7 @@ public class BaseUnitTest {
 
         QuestionBuilder questionBuilder = newQuestion().with(competition(competition));
         SectionBuilder sectionBuilder = newSection().with(competition(competition));
+        SectionResourceBuilder sectionResourceBuilder = newSectionResource().with(competition(competition.getId()));
 
         Question q01 = questionBuilder.with(id(1L)).with(name("Application details")).
                 withFormInputs(newFormInput().with(incrementingIds(1)).build(3)).
@@ -212,6 +250,12 @@ public class BaseUnitTest {
                 withQuestions(singletonList(q01)).
                 build();
 
+        SectionResource sectionResource1 = sectionResourceBuilder.
+                with(id(1L)).
+                with(name("Application details")).
+                withQuestions(simpleMap(singletonList(q01), Question::getId)).
+                build();
+
         Question q10 = questionBuilder.with(id(10L)).with(name("How does your project align with the scope of this competition?")).
                 build();
 
@@ -219,6 +263,11 @@ public class BaseUnitTest {
                 with(id(2L)).
                 with(name("Scope (Gateway question)")).
                 withQuestions(singletonList(q10)).
+                build();
+        SectionResource sectionResource2 = sectionResourceBuilder.
+                with(id(2L)).
+                with(name("Scope (Gateway question)")).
+                withQuestions(simpleMap(singletonList(q10),Question::getId)).
                 build();
 
         Question q20 = questionBuilder.with(id(20L)).with(name("1. What is the business opportunity that this project addresses?")).
@@ -233,6 +282,12 @@ public class BaseUnitTest {
                 with(name("Business proposition (Q1 - Q4)")).
                 withQuestions(asList(q20, q21, q22, q23)).
                 build();
+        SectionResource sectionResource3 = sectionResourceBuilder.
+                with(id(3L)).
+                with(name("Business proposition (Q1 - Q4)")).
+                withQuestions(simpleMap(asList(q20, q21, q22, q23), Question::getId)).
+                build();
+
 
         Question q30 = questionBuilder.with(id(30L)).with(name("5. What technical approach will be adopted and how will the project be managed?")).build();
         Question q31 = questionBuilder.with(id(31L)).with(name("6. What is innovative about this project?")).build();
@@ -244,11 +299,19 @@ public class BaseUnitTest {
                 with(name("Project approach (Q5 - Q8)")).
                 withQuestions(asList(q30, q31, q32, q33)).
                 build();
+        SectionResource sectionResource4 = sectionResourceBuilder.
+                with(id(4L)).
+                with(name("Project approach (Q5 - Q8)")).
+                withQuestions(simpleMap(asList(q30, q31, q32, q33), Question::getId)).
+                build();
 
         Section section5 = sectionBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).build();
         Section section6 = sectionBuilder.with(id(6L)).with(name("Finances")).build();
+        SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).build();
+        SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).build();
 
         sections = asList(section1, section2, section3, section4, section5, section6);
+        sectionResources = asList(sectionResource1, sectionResource2, sectionResource3, sectionResource4, sectionResource5, sectionResource6);
 
         ArrayList<Question> questionList = new ArrayList<>();
         for (Section section : sections) {
@@ -369,7 +432,7 @@ public class BaseUnitTest {
         users.get(0).addUserApplicationRole(processRole5);
         applications = applicationResources;
 
-        when(sectionService.getParentSections(competition.getSections())).thenReturn(sections);
+        when(sectionService.getParentSections(simpleMap(competition.getSections(), Section::getId))).thenReturn(sectionResources);
         when(sectionService.getCompleted(applicationList.get(0).getId(), organisation1.getId())).thenReturn(asList(1L, 2L));
         when(sectionService.getInCompleted(applicationList.get(0).getId())).thenReturn(asList(3L, 4L));
         when(processRoleService.findProcessRole(applicant.getId(), applicationList.get(0).getId())).thenReturn(processRole1);
@@ -419,8 +482,8 @@ public class BaseUnitTest {
         when(organisationService.getApplicationLeadOrganisation(applications.get(2))).thenReturn(Optional.of(organisation1));
         processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(settable(processRole)));
 
-        when(sectionService.getById(1L)).thenReturn(sections.get(0));
-        when(sectionService.getById(3L)).thenReturn(sections.get(2));
+        when(sectionService.getById(1L)).thenReturn(sectionResources.get(0));
+        when(sectionService.getById(3L)).thenReturn(sectionResources.get(2));
     }
 
     public void setupApplicationResponses(){

@@ -1,5 +1,20 @@
 package com.worth.ifs.application;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,16 +27,17 @@ import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
-import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +47,14 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.util.*;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -82,7 +97,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
-        Section section = sectionService.getSectionByQuestionId(questionId);
+        SectionResource section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetition());
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
@@ -101,7 +116,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Section section = sectionService.getById(sectionId);
+        SectionResource section = sectionService.getById(sectionId);
 
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetition());
@@ -118,7 +133,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private void addFormAttributes(ApplicationResource application,
                                    Competition competition,
-                                   Optional<Section> section,
+                                   Optional<SectionResource> section,
                                    Long userId, Model model,
                                    ApplicationForm form, Optional<Question> question,
                                    List<ProcessRole> userApplicationRoles){
@@ -138,7 +153,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                      HttpServletResponse response) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
-        Section section = sectionService.getSectionByQuestionId(questionId);
+        SectionResource section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
         Competition competition = competitionService.getById(application.getCompetition());
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
@@ -198,7 +213,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return showQuestion(form, bindingResult, model, applicationId, questionId, request);
     }
 
-    private void addNavigation(Section section, Long applicationId, Model model) {
+    private void addNavigation(SectionResource section, Long applicationId, Model model) {
         if (section == null) {
             return;
         }
@@ -223,7 +238,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         String previousText;
 
         if (previousQuestion != null) {
-            Section previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
+            SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
             if (previousSection.isQuestionGroup()) {
                 previousUrl = "/application/" + applicationId + "/form/section/" + previousSection.getId();
                 previousText = previousSection.getName();
@@ -241,7 +256,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         String nextText;
 
         if (nextQuestion != null) {
-            Section nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
+            SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
 
             if (nextSection.isQuestionGroup()) {
                 nextUrl = "/application/" + applicationId + "/form/section/" + nextSection.getId();
