@@ -26,6 +26,15 @@ public class RestCacheMethodInterceptor implements MethodInterceptor {
             = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).build();
 
 
+    public UidSupplier getUidSupplier() {
+        return uidSupplier;
+    }
+
+    public RestCacheMethodInterceptor setUidSupplier(final UidSupplier uidSupplier) {
+        this.uidSupplier = uidSupplier;
+        return this;
+    }
+
     @Autowired
     private UidSupplier uidSupplier;
 
@@ -43,7 +52,7 @@ public class RestCacheMethodInterceptor implements MethodInterceptor {
         // Get the uid to look up in the cache. Basically a uid for the request.
         final String uid = uidSupplier.get();
         final Optional cached = get(uid, method, parameters, cache);
-        if (cached.isPresent()){
+        if (cached.isPresent()) {
             return cached.get();
         } else {
             final Object toCache = invocation.proceed();
