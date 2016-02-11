@@ -79,6 +79,14 @@ public class RestTemplateAdaptor {
         return exchangeObjectWithRestResult(path, PUT, objectToSend, returnType, OK);
     }
 
+    public <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType, HttpStatus expectedStatusCode, HttpStatus... otherExpectedStatusCodes) {
+        return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, expectedStatusCode, otherExpectedStatusCodes);
+    }
+
+    public <R> RestResult<R> postWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType, HttpStatus expectedStatusCode, HttpStatus... otherExpectedStatusCodes) {
+        return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, expectedStatusCode, otherExpectedStatusCodes);
+    }
+
     public <T> RestResult<T> putWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
         return exchangeWithRestResult(path, PUT, returnType);
     }

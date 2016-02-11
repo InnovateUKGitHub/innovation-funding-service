@@ -4,7 +4,6 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.mapper.QuestionStatusMapper;
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.QuestionStatusResource;
@@ -16,7 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -24,6 +26,7 @@ import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
 
@@ -40,15 +43,13 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     private QuestionRepository questionRepository;
 
     @Autowired
-    ApplicationRepository applicationRepository;
+    private SectionService sectionService;
 
     @Autowired
-    SectionService sectionService;
+    private FormInputTypeService formInputTypeService;
 
     @Autowired
-    FormInputTypeService formInputTypeService;
-    @Autowired
-    QuestionStatusMapper questionStatusMapper;
+    private QuestionStatusMapper questionStatusMapper;
 
     @Override
     public ServiceResult<Question> getQuestionById(final Long id) {
@@ -67,23 +68,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                                                 final Long applicationId,
                                                 final Long markedAsInCompleteById) {
         return setComplete(questionId, applicationId, markedAsInCompleteById, false);
-    }
-
-    private ServiceResult<Void> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
-
-        return find(processRole(processRoleId), application(applicationId), question(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
-
-            QuestionStatus questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
-            if (questionStatus == null) {
-                questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
-            } else if (markAsComplete) {
-                questionStatus.markAsComplete();
-            } else {
-                questionStatus.markAsInComplete();
-            }
-            questionStatusRepository.save(questionStatus);
-            return serviceSuccess();
-        });
     }
 
     @Override
@@ -119,32 +103,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                     .map(Question::getId).collect(Collectors.toSet());
             return serviceSuccess(markedAsCompleteQuestions);
         });
-
-    }
-
-
-    private QuestionStatus getQuestionStatusByApplicationIdAndAssigneeId(Question question, Long applicationId, Long assigneeId) {
-        if (question.hasMultipleStatuses()) {
-            return questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(question.getId(), applicationId, assigneeId);
-        } else {
-            return findByQuestionIdAndApplicationId(question.getId(), applicationId);
-        }
-    }
-
-    private QuestionStatus getQuestionStatusByMarkedAsCompleteId(Question question, Long applicationId, Long markedAsCompleteById) {
-        if (question.hasMultipleStatuses()) {
-            return questionStatusRepository.findByQuestionIdAndApplicationIdAndMarkedAsCompleteById(question.getId(), applicationId, markedAsCompleteById);
-        } else {
-            return findByQuestionIdAndApplicationId(question.getId(), applicationId);
-        }
-    }
-
-    private QuestionStatus findByQuestionIdAndApplicationId(Long questionId, Long applicationId) {
-        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
-        if (questionStatuses != null && !questionStatuses.isEmpty()) {
-            return questionStatuses.get(0);
-        }
-        return null;
     }
 
     @Override
@@ -165,7 +123,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     // TODO DW - INFUND-1555 - in situation where next / prev question not found, should this be a 404?
     @Override
-
     public ServiceResult<Question> getNextQuestion(final Long questionId) {
 
         return find(question(questionId)).andOnSuccess(question -> {
@@ -187,15 +144,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
             return serviceSuccess(nextQuestion);
         });
-    }
-
-    private Question getNextQuestionBySection(Long section, Long competitionId) {
-        Section nextSection = sectionService.getNextSection(section).getSuccessObject();
-        if (nextSection != null) {
-            return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, nextSection.getId());
-        }
-        return null;
-
     }
 
     // TODO DW - INFUND-1555 - in situation where next / prev question not found, should this be a 404?
@@ -254,17 +202,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         });
     }
 
-    private Question getPreviousQuestionBySection(Long section, Long competitionId) {
-        Section previousSection = sectionService.getPreviousSection(section).getSuccessObject();
-
-        if (previousSection != null) {
-            return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(competitionId, previousSection.getId());
-        }
-        return null;
-    }
-
     @Override
-
     public ServiceResult<Boolean> isMarkedAsComplete(Question question, Long applicationId, Long organisationId) {
         if (question.hasMultipleStatuses()) {
             return serviceSuccess(isMarkedAsCompleteForOrganisation(question.getId(), applicationId, organisationId));
@@ -299,6 +237,74 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Override
     public ServiceResult<QuestionStatus> getQuestionStatusResourceById(Long id) {
         return find(() -> questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id));
+    }
+
+    @Override
+    public ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle) {
+        return getOnlyFormInputTypeByTitle(formInputTypeTitle).andOnSuccessReturn(inputType -> inputType.getFormInput().get(0).getQuestion());
+    }
+
+    private ServiceResult<Void> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
+
+        return find(processRole(processRoleId), application(applicationId), question(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
+
+            QuestionStatus questionStatus = getQuestionStatusByMarkedAsCompleteId(question, applicationId, processRoleId);
+            if (questionStatus == null) {
+                questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
+            } else if (markAsComplete) {
+                questionStatus.markAsComplete();
+            } else {
+                questionStatus.markAsInComplete();
+            }
+            questionStatusRepository.save(questionStatus);
+            return serviceSuccess();
+        });
+    }
+
+    private Question getNextQuestionBySection(Long section, Long competitionId) {
+        Section nextSection = sectionService.getNextSection(section).getSuccessObject();
+        if (nextSection != null) {
+            return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, nextSection.getId());
+        }
+        return null;
+
+    }
+
+    private Question getPreviousQuestionBySection(Long section, Long competitionId) {
+        Section previousSection = sectionService.getPreviousSection(section).getSuccessObject();
+
+        if (previousSection != null) {
+            return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(competitionId, previousSection.getId());
+        }
+        return null;
+    }
+
+    private QuestionStatus getQuestionStatusByApplicationIdAndAssigneeId(Question question, Long applicationId, Long assigneeId) {
+        if (question.hasMultipleStatuses()) {
+            return questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(question.getId(), applicationId, assigneeId);
+        } else {
+            return findByQuestionIdAndApplicationId(question.getId(), applicationId);
+        }
+    }
+
+    private QuestionStatus getQuestionStatusByMarkedAsCompleteId(Question question, Long applicationId, Long markedAsCompleteById) {
+        if (question.hasMultipleStatuses()) {
+            return questionStatusRepository.findByQuestionIdAndApplicationIdAndMarkedAsCompleteById(question.getId(), applicationId, markedAsCompleteById);
+        } else {
+            return findByQuestionIdAndApplicationId(question.getId(), applicationId);
+        }
+    }
+
+    private QuestionStatus findByQuestionIdAndApplicationId(Long questionId, Long applicationId) {
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
+        if (questionStatuses != null && !questionStatuses.isEmpty()) {
+            return questionStatuses.get(0);
+        }
+        return null;
+    }
+
+    private ServiceResult<FormInputType> getOnlyFormInputTypeByTitle(String formInputTypeTitle) {
+        return getFormInputTypesByTitle(formInputTypeTitle).andOnSuccess(types -> getOnlyElementOrFail(types));
     }
 
     private Boolean isMarkedAsCompleteForOrganisation(Long questionId, Long applicationId, Long organisationId) {
@@ -339,17 +345,8 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return Optional.ofNullable(markedAsComplete);
     }
 
-    @Override
-    public Question getQuestionByFormInputType(String formInputTypeTitle) {
-        List<FormInputType> inputTypes = formInputTypeService.findByTitle(formInputTypeTitle);
-        List<Question> questions = new ArrayList<>();
-        if (!inputTypes.isEmpty() && inputTypes.size() == 1) {
-            FormInputType inputType = inputTypes.get(0);
-            inputType.getFormInput().forEach(fi -> questions.add(fi.getQuestion()));
-            return questions.get(0);
-        } else {
-            throw new RuntimeException("FormInputType.title is not unique.");
-        }
+    private ServiceResult<List<FormInputType>> getFormInputTypesByTitle(String formInputTypeTitle) {
+        return find(formInputTypeService.findByTitle(formInputTypeTitle), notFoundError(Question.class, formInputTypeTitle));
     }
 
     private List<QuestionStatus> filterByOrganisationIdIfHasMultipleStatuses(final List<QuestionStatus> questionStatuses, Long organisationId) {
