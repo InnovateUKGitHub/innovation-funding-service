@@ -2,29 +2,20 @@ package com.worth.ifs.finance.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.repository.ApplicationRepository;
-import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
-import com.worth.ifs.finance.handler.item.OrganisationFinanceHandler;
-import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
-import com.worth.ifs.finance.resource.cost.CostType;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.repository.OrganisationRepository;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.worth.ifs.finance.transactional.CostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -34,102 +25,66 @@ import java.util.List;
 @RestController
 @RequestMapping("/applicationfinance")
 public class ApplicationFinanceController {
+
     public static final String RESEARCH_PARTICIPATION_PERCENTAGE = "researchParticipationPercentage";
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Autowired
-    OrganisationRepository organisationRepository;
-
-    @Autowired
-    ApplicationRepository applicationRepository;
-
-    @Autowired
-    QuestionService questionService;
-
-
-    @Autowired
-    ApplicationFinanceHandler applicationFinanceHandler;
-    @Autowired
-    OrganisationFinanceHandler organisationFinanceHandler;
-
-    @Autowired
-    CostRepository costRepository;
+    private CostService costService;
 
     @RequestMapping("/findByApplicationOrganisation/{applicationId}/{organisationId}")
-    public ApplicationFinanceResource findByApplicationOrganisation(
+    public RestResult<ApplicationFinanceResource> findByApplicationOrganisation(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-        return new ApplicationFinanceResource(applicationFinance);
+
+        return newRestHandler().perform(() -> costService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId));
     }
 
     @RequestMapping("/findByApplication/{applicationId}")
-    public List<ApplicationFinanceResource> findByApplication(
+    public RestResult<List<ApplicationFinanceResource>> findByApplication(
             @PathVariable("applicationId") final Long applicationId) {
 
-        List<ApplicationFinance> applicationFinances = applicationFinanceRepository.findByApplicationId(applicationId);
-        List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();
-        if (applicationFinances != null) {
-            applicationFinances.stream().forEach(af -> applicationFinanceResources.add(new ApplicationFinanceResource(af)));
-        }
-        return applicationFinanceResources;
+        return newRestHandler().perform(() -> costService.findApplicationFinanceByApplication(applicationId));
     }
 
+    // TODO DW - INFUND-1555 - remove ObjectNode usage
     @RequestMapping("/getResearchParticipationPercentage/{applicationId}")
-    public ObjectNode getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-        node.put(RESEARCH_PARTICIPATION_PERCENTAGE, applicationFinanceHandler.getResearchParticipationPercentage(applicationId).doubleValue());
-        return node;
+    public RestResult<ObjectNode> getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
+
+        return newRestHandler().perform(() ->
+            costService.getResearchParticipationPercentage(applicationId).andOnSuccess(percentage -> {
+                ObjectMapper mapper = new ObjectMapper();
+                ObjectNode node = mapper.createObjectNode();
+                node.put(RESEARCH_PARTICIPATION_PERCENTAGE, percentage);
+                return serviceSuccess(node);
+            })
+        );
     }
 
     @RequestMapping("/add/{applicationId}/{organisationId}")
-    public ApplicationFinanceResource add(
+    public RestResult<ApplicationFinanceResource> add(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
-        Application application = applicationRepository.findOne(applicationId);
-        Organisation organisation = organisationRepository.findOne(organisationId);
-        ApplicationFinance applicationFinance = new ApplicationFinance(application, organisation);
 
-        applicationFinance = applicationFinanceRepository.save(applicationFinance);
-        initialize(applicationFinance);
-        return new ApplicationFinanceResource(applicationFinance);
-    }
-
-    /**
-     * There are some objects that need a default value, and an instance to use in the form,
-     * so there are some objects that need to be created before loading the form.
-     */
-    private void initialize(ApplicationFinance applicationFinance) {
-        for (CostType costType : CostType.values()) {
-            organisationFinanceHandler.initialiseCostType(applicationFinance, costType);
-        }
+        return newRestHandler().perform(() -> costService.addCost(applicationId, organisationId));
     }
 
     @RequestMapping("/getById/{applicationFinanceId}")
-    public ApplicationFinanceResource findOne(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
-        return new ApplicationFinanceResource(applicationFinanceRepository.findOne(applicationFinanceId));
+    public RestResult<ApplicationFinanceResource> findOne(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
+        return newRestHandler().perform(() -> costService.getApplicationFinanceById(applicationFinanceId));
     }
 
     @RequestMapping("/update/{applicationFinanceId}")
-    public ApplicationFinanceResource update(@PathVariable("applicationFinanceId") final Long applicationFinanceId, @RequestBody final ApplicationFinanceResource applicationFinance) {
-        log.error(String.format("ApplicationFinanceController.update(%d)", applicationFinanceId));
-        ApplicationFinance dbFinance = applicationFinanceRepository.findOne(applicationFinance.getId());
-        dbFinance.merge(applicationFinance);
-        dbFinance = applicationFinanceRepository.save(dbFinance);
-        return new ApplicationFinanceResource(dbFinance);
+    public RestResult<ApplicationFinanceResource> update(@PathVariable("applicationFinanceId") final Long applicationFinanceId, @RequestBody final ApplicationFinanceResource applicationFinance) {
+        return newRestHandler().perform(() -> costService.updateCost(applicationFinanceId, applicationFinance));
     }
 
     @RequestMapping("/financeDetails/{applicationId}/{organisationId}")
-    public ApplicationFinanceResource financeDetails(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
-        return applicationFinanceHandler.getApplicationOrganisationFinances(new ApplicationFinanceResourceId(applicationId, organisationId));
+    public RestResult<ApplicationFinanceResource> financeDetails(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
+        return newRestHandler().perform(() -> costService.financeDetails(applicationId, organisationId));
     }
 
     @RequestMapping("/financeTotals/{applicationId}")
-    public List<ApplicationFinanceResource> financeTotals(@PathVariable("applicationId") final Long applicationId) {
-        return applicationFinanceHandler.getApplicationTotals(applicationId);
+    public RestResult<List<ApplicationFinanceResource>> financeTotals(@PathVariable("applicationId") final Long applicationId) {
+        return newRestHandler().perform(() -> costService.financeTotals(applicationId));
     }
 }

@@ -8,10 +8,10 @@ import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.util.CookieUtil;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.util.CookieUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static java.util.Collections.emptyList;
 
 // TODO DW - INFUND-1555 - handle rest results
 @Controller
@@ -302,7 +300,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
 
     private List<InviteOrganisationResource> getSavedInviteOrganisations(ApplicationResource application) {
         return inviteRestService.getInvitesByApplication(application.getId()).handleSuccessOrFailure(
-                failure -> emptyList(),
+                failure -> Collections.<InviteOrganisationResource>emptyList(),
                 success -> success);
     }
 }

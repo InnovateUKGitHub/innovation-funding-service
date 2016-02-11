@@ -3,8 +3,6 @@ package com.worth.ifs.competition.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
 import org.springframework.hateoas.core.Relation;
 
 import java.time.LocalDate;
@@ -19,8 +17,8 @@ import java.util.stream.Collectors;
 public class CompetitionResource{
     private Long id;
     private List<Long> applications = new ArrayList<>();
-    private List<Question> questions = new ArrayList<>();
-    private List<Section> sections = new ArrayList<>();
+    private List<Long> questions = new ArrayList<>();
+    private List<Long> sections = new ArrayList<>();
     private String name;
     private String description;
     private LocalDate startDate;
@@ -31,9 +29,9 @@ public class CompetitionResource{
 
     public CompetitionResource() {
     }
-    public CompetitionResource(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
+    public CompetitionResource(Long id, List<Long> applications, List<Long> questions, List<Long> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
-        this.applications = applications.stream().map(Application::getId).collect(Collectors.toList());
+        this.applications = applications;
         this.questions = questions;
         this.sections = sections;
         this.name = name;
@@ -50,7 +48,7 @@ public class CompetitionResource{
     }
 
 
-    public List<Section> getSections() {
+    public List<Long> getSections() {
         return sections;
     }
 
@@ -92,11 +90,11 @@ public class CompetitionResource{
     }
 
 
-    public void setSections(List<Section> sections) {
+    public void setSections(List<Long> sections) {
         this.sections = sections;
     }
 
-    public void setQuestions(List<Question> questions) {
+    public void setQuestions(List<Long> questions) {
         this.questions = questions;
     }
 
@@ -129,7 +127,7 @@ public class CompetitionResource{
         return applications;
     }
     @JsonIgnore
-    public List<Question> getQuestions(){return questions;}
+    public List<Long> getQuestions(){return questions;}
 
 
 

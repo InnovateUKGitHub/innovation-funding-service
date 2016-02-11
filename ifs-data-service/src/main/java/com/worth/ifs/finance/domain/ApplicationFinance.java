@@ -70,4 +70,12 @@ public class ApplicationFinance {
     public void merge(ApplicationFinanceResource applicationFinance) {
         this.setOrganisationSize(applicationFinance.getOrganisationSize());
     }
+
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
+    }
 }

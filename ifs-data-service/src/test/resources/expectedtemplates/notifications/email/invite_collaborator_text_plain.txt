@@ -1,13 +1,25 @@
 Dear User 2,
 
-You've been invited to join the application My Application as a collaborator.  Please paste the link below into a browser to accept the invitation:
-
-http://acceptinvite.com
+You have been invited to join a collaborative application for the competition 'Competition 123'.
 
 Lead organisation: Empire Ltd
 Lead applicant: Steve Smith
 
-Email the lead applicant steve@empire.com
+The lead applicant has invited you to join this application on behalf of the following organisation: Nomensa
 
-Thanks,
-User 1
+If this is not the correct organisation, email the application lead: steve@empire.com
+
+Please paste the link below into a browser to accept the invitation:
+http://acceptinvite.com
+
+Many thanks,
+
+The Innovate UK team
+
+Innovate UK
+North Star House
+North Star Avenue
+Swindon
+Wiltshire
+SN2 1JF
+© Crown copyright
