@@ -16,4 +16,9 @@ public class RestCacheInvalidateMethodInterceptor implements MethodInterceptor {
         cacheInterceptor.invalidate();
         return invocation.proceed();
     }
+
+    public RestCacheInvalidateMethodInterceptor setCacheInterceptor(RestCacheMethodInterceptor cacheInterceptor) {
+        this.cacheInterceptor = cacheInterceptor;
+        return this;
+    }
 }
