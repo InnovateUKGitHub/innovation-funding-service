@@ -7,7 +7,9 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.dto.Feedback;
+import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import org.junit.Test;
@@ -20,6 +22,8 @@ import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
@@ -177,5 +181,22 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
         ServiceResult<List<Assessment>> result = service.getAllByCompetitionAndAssessor(123L, 456L);
         assertTrue(result.isSuccess());
         assertEquals(singletonList(assessment), result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetScore() {
+
+        Competition competititon = newCompetition().build();
+        Application application = newApplication().withCompetition(competititon).build();
+        ProcessRole processRole = newProcessRole().withApplication(application).build();
+        Assessment assessment = newAssessment().withProcessRole(processRole).build();
+
+        when(assessmentRepositoryMock.findById(123L)).thenReturn(assessment);
+        when(responseService.findResponsesByApplication(application.getId())).thenReturn(serviceSuccess(newResponse().build(2)));
+
+        ServiceResult<Score> result = service.getScore(123L);
+
+        assertTrue(result.isSuccess());
+        assertEquals(new Score(), result.getSuccessObject());
     }
 }
