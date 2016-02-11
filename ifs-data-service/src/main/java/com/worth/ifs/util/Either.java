@@ -1,20 +1,23 @@
 package com.worth.ifs.util;
 
+import com.worth.ifs.commons.service.ExceptionThrowingFunction;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.NoSuchElementException;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
  * This class represents a return type that can have 2 possible return types, either a "left" value or a "right"
  * value.  Typically in functional programming, an Either is used to represent success and failure cases, where
  * the "left" type is the failure type and the "right" type is the success type.  Either producers can then be
- * chained together using the {@link Either#mapLeftOrRight(Function, Function)} method so that the if a "left" value is
- * encountered during the execution of the chain, the processing will "short circuit" and return the left response
- * without evaluating any further Either producers in the chain.
- *
- * Created by dwatson on 05/10/15.
+ * chained together using the {@link Either#mapLeftOrRight(ExceptionThrowingFunction, ExceptionThrowingFunction)} method
+ * so that the if a "left" value is encountered during the execution of the chain, the processing will "short circuit"
+ * and return the left response without evaluating any further Either producers in the chain.
  */
 public class Either<L, R> {
+
+    private static final Log LOG = LogFactory.getLog(Either.class);
 
     private boolean leftSet = false;
     private boolean rightSet = false;
@@ -46,14 +49,24 @@ public class Either<L, R> {
     }
 
     public <T> T mapLeftOrRight(
-            Function<? super L, ? extends T> lFunc,
-            Function<? super R, ? extends T> rFunc) {
-        return isLeft() ? lFunc.apply(left) : rFunc.apply(right);
+            ExceptionThrowingFunction<? super L, ? extends T> lFunc,
+            ExceptionThrowingFunction<? super R, ? extends T> rFunc) {
+        try {
+            return isLeft() ? lFunc.apply(left) : rFunc.apply(right);
+        } catch (Exception e) {
+            LOG.warn("Exception caught while processing function - returning null", e);
+            return null;
+        }
     }
 
     public <T> Either<L, T> map(
-            Function<? super R, Either<L, T>> rFunc) {
-        return isLeft() ? left(left) : rFunc.apply(right);
+            ExceptionThrowingFunction<? super R, Either<L, T>> rFunc) {
+        try {
+            return isLeft() ? left(left) : rFunc.apply(right);
+        } catch (Exception e) {
+            LOG.warn("Exception caught while processing function - returning null", e);
+            return null;
+        }
     }
 
     public boolean isLeft() {

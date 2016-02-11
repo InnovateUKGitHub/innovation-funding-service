@@ -1,14 +1,16 @@
 package com.worth.ifs.commons.service;
 
 import com.worth.ifs.util.Either;
-
-import java.util.function.Function;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a FailureType, and a
  * success will result in a T.  Additionally, these can be mapped to produce new ServiceResults that either fail or succeed.
  */
 public abstract class BaseEitherBackedResult<T, FailureType> implements FailingOrSucceedingResult<T, FailureType> {
+
+    private static final Log LOG = LogFactory.getLog(BaseEitherBackedResult.class);
 
     protected Either<FailureType, T> result;
 
@@ -20,13 +22,18 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
         this.result = result;
     }
 
-    public <T1> T1 handleSuccessOrFailure(Function<? super FailureType, ? extends T1> failureHandler, Function<? super T, ? extends T1> successHandler) {
+    public <T1> T1 handleSuccessOrFailure(ExceptionThrowingFunction<? super FailureType, ? extends T1> failureHandler, ExceptionThrowingFunction<? super T, ? extends T1> successHandler) {
         return mapLeftOrRight(failureHandler, successHandler);
     }
 
     @Override
-    public <R> BaseEitherBackedResult<R, FailureType> andOnSuccess(Function<? super T, FailingOrSucceedingResult<R, FailureType>> successHandler) {
+    public <R> BaseEitherBackedResult<R, FailureType> andOnSuccess(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, FailureType>> successHandler) {
         return map(successHandler);
+    }
+
+    @Override
+    public <R> BaseEitherBackedResult<R, FailureType> andOnSuccessReturn(ExceptionThrowingFunction<? super T, R> successHandler) {
+        return flatMap(successHandler);
     }
 
     public boolean isSuccess() {
@@ -54,21 +61,43 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
         return isRight() ? getRight() : null;
     }
 
-    protected <T1> T1 mapLeftOrRight(Function<? super FailureType, ? extends T1> lFunc, Function<? super T, ? extends T1> rFunc) {
+    protected <T1> T1 mapLeftOrRight(ExceptionThrowingFunction<? super FailureType, ? extends T1> lFunc, ExceptionThrowingFunction<? super T, ? extends T1> rFunc) {
         return result.mapLeftOrRight(lFunc, rFunc);
     }
 
-    protected <R> BaseEitherBackedResult<R, FailureType> map(Function<? super T, FailingOrSucceedingResult<R, FailureType>> rFunc) {
+    protected <R> BaseEitherBackedResult<R, FailureType> map(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, FailureType>> rFunc) {
 
         if (result.isLeft()) {
             return createFailure((FailingOrSucceedingResult<R, FailureType>) this);
         }
 
-        FailingOrSucceedingResult<R, FailureType> successResult = rFunc.apply(result.getRight());
-        return successResult.isFailure() ? createFailure(successResult) : createSuccess(successResult);
+        try {
+            FailingOrSucceedingResult<R, FailureType> successResult = rFunc.apply(result.getRight());
+            return successResult.isFailure() ? createFailure(successResult) : createSuccess(successResult);
+        } catch (Exception e) {
+            LOG.warn("Exception caught while processing success function - returning a failure", e);
+            return createFailure(null);
+        }
+    }
+
+    protected <R> BaseEitherBackedResult<R, FailureType> flatMap(ExceptionThrowingFunction<? super T, R> rFunc) {
+
+        if (result.isLeft()) {
+            return createFailure((FailingOrSucceedingResult<R, FailureType>) this);
+        }
+
+        try {
+            R successResult = rFunc.apply(result.getRight());
+            return createSuccess(successResult);
+        } catch (Exception e) {
+            LOG.warn("Exception caught while processing success function - returning a failure", e);
+            return createFailure(null);
+        }
     }
 
     protected abstract <R> BaseEitherBackedResult<R, FailureType> createSuccess(FailingOrSucceedingResult<R, FailureType> success);
+
+    protected abstract <R> BaseEitherBackedResult<R, FailureType> createSuccess(R success);
 
     protected abstract <R> BaseEitherBackedResult<R, FailureType> createFailure(FailingOrSucceedingResult<R, FailureType> failure);
 
