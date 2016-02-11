@@ -19,5 +19,7 @@ public interface FailingOrSucceedingResult<SuccessType, FailureType> {
 
     <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(Function<? super SuccessType, FailingOrSucceedingResult<R, FailureType>> successHandler);
 
+    <R> FailingOrSucceedingResult<R, FailureType> andOnSuccessReturn(Function<? super SuccessType, R> successHandler);
+
     <R> R handleSuccessOrFailure(Function<? super FailureType, ? extends R> failureHandler, Function<? super SuccessType, ? extends R> successHandler);
 }

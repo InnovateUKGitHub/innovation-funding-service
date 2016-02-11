@@ -29,6 +29,11 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
         return map(successHandler);
     }
 
+    @Override
+    public <R> BaseEitherBackedResult<R, FailureType> andOnSuccessReturn(Function<? super T, R> successHandler) {
+        return flatMap(successHandler);
+    }
+
     public boolean isSuccess() {
         return isRight();
     }
@@ -68,7 +73,19 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
         return successResult.isFailure() ? createFailure(successResult) : createSuccess(successResult);
     }
 
+    protected <R> BaseEitherBackedResult<R, FailureType> flatMap(Function<? super T, R> rFunc) {
+
+        if (result.isLeft()) {
+            return createFailure((FailingOrSucceedingResult<R, FailureType>) this);
+        }
+
+        R successResult = rFunc.apply(result.getRight());
+        return createSuccess(successResult);
+    }
+
     protected abstract <R> BaseEitherBackedResult<R, FailureType> createSuccess(FailingOrSucceedingResult<R, FailureType> success);
+
+    protected abstract <R> BaseEitherBackedResult<R, FailureType> createSuccess(R success);
 
     protected abstract <R> BaseEitherBackedResult<R, FailureType> createFailure(FailingOrSucceedingResult<R, FailureType> failure);
 

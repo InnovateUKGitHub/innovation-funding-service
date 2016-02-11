@@ -40,8 +40,18 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     @Override
+    public <R> ServiceResult<R> andOnSuccessReturn(Function<? super T, R> successHandler) {
+        return (ServiceResult<R>) super.andOnSuccessReturn(successHandler);
+    }
+
+    @Override
     protected <R> BaseEitherBackedResult<R, ServiceFailure> createSuccess(FailingOrSucceedingResult<R, ServiceFailure> success) {
         return serviceSuccess(success.getSuccessObject());
+    }
+
+    @Override
+    protected <R> BaseEitherBackedResult<R, ServiceFailure> createSuccess(R success) {
+        return serviceSuccess(success);
     }
 
     @Override

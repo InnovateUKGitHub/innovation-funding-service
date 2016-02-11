@@ -39,6 +39,11 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     @Override
+    public <R> RestResult<R> andOnSuccessReturn(Function<? super T, R> successHandler) {
+        return (RestResult<R>) super.andOnSuccessReturn(successHandler);
+    }
+
+    @Override
     protected <R> RestResult<R> createSuccess(FailingOrSucceedingResult<R, RestFailure> success) {
 
         if (success instanceof RestResult) {
@@ -46,6 +51,11 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         }
 
         return restSuccess(success.getSuccessObject());
+    }
+
+    @Override
+    protected <R> RestResult<R> createSuccess(R success) {
+        return restSuccess(success);
     }
 
     @Override
