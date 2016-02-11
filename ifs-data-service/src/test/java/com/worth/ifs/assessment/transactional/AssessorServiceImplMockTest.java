@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Response;
@@ -198,5 +199,15 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
 
         assertTrue(result.isSuccess());
         assertEquals(new Score(), result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetTotalAssignedAssessmentsByCompetition() {
+
+        when(assessmentRepositoryMock.countByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatusNot(456L, 123L, ApplicationStatusConstants.REJECTED.getName())).thenReturn(5);
+
+        ServiceResult<Integer> result = service.getTotalAssignedAssessmentsByCompetition(123L, 456L);
+        assertTrue(result.isSuccess());
+        assertEquals(Integer.valueOf(5), result.getSuccessObject());
     }
 }
