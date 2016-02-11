@@ -26,6 +26,6 @@ public class CostFieldController {
 
     @RequestMapping("/findAll/")
     public RestResult<List<CostFieldResource>> findAll() {
-        return newRestHandler().perform(() -> costFieldService.findAll());
+        return newRestHandler().perform(() -> costFieldService.findAllCostFields());
     }
 }

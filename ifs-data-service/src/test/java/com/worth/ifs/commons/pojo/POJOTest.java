@@ -12,7 +12,10 @@ import com.openpojo.validation.test.impl.SetterTester;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.AssessorFeedback;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.domain.CostValue;
 import com.worth.ifs.form.domain.FormInputType;
@@ -52,7 +55,10 @@ public class POJOTest {
         OrganisationAddress.class,
         CostValue.class,
         AssessorFeedback.class,
-        InviteOrganisation.class
+        InviteOrganisation.class,
+        Section.class,
+        ApplicationFinance.class,
+        Competition.class
     );
 
     @Before

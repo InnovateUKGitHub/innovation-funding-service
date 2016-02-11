@@ -31,26 +31,26 @@ public class CostController {
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             @PathVariable("questionId") final Long questionId,
             @RequestBody(required=false) final CostItem newCostItem) {
-        return newRestHandler().perform(() -> costService.add(applicationFinanceId, questionId, newCostItem));
+        return newRestHandler().perform(() -> costService.addCost(applicationFinanceId, questionId, newCostItem));
     }
 
     @RequestMapping("/update/{id}")
     public RestResult<Void> update(@PathVariable("id") final Long id, @RequestBody final CostItem newCostItem) {
-        return newRestHandler().perform(() -> costService.update(id, newCostItem));
+        return newRestHandler().perform(() -> costService.updateCost(id, newCostItem));
     }
 
     @RequestMapping("/get/{applicationFinanceId}")
     public RestResult<List<Cost>> findByApplicationId(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
-        return newRestHandler().perform(() -> costService.findByApplicationId(applicationFinanceId));
+        return newRestHandler().perform(() -> costService.findCostsByApplicationId(applicationFinanceId));
     }
 
     @RequestMapping("/findById/{id}")
     public RestResult<Cost> findById(@PathVariable("id") final Long id) {
-        return newRestHandler().perform(() -> costService.findById(id));
+        return newRestHandler().perform(() -> costService.findCostById(id));
     }
 
     @RequestMapping("/delete/{costId}")
     public RestResult<Void> delete(@PathVariable("costId") final Long costId) {
-        return newRestHandler().perform(() -> costService.delete(costId));
+        return newRestHandler().perform(() -> costService.deleteCost(costId));
     }
 }

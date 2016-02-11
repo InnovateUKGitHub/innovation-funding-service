@@ -24,12 +24,12 @@ public class CostFieldControllerTest extends BaseControllerMockMVCTest<CostField
 
     @Test
     public void findAllShouldReturnListOfCostFields() throws Exception{
-        when(costFieldService.findAll()).thenReturn(serviceSuccess(asList(new CostFieldResource(), new CostFieldResource())));
+        when(costFieldService.findAllCostFields()).thenReturn(serviceSuccess(asList(new CostFieldResource(), new CostFieldResource())));
 
         mockMvc.perform(get("/costfield/findAll/"))
                 .andExpect(status().isOk());
 
-        verify(costFieldService, times(1)).findAll();
+        verify(costFieldService, times(1)).findAllCostFields();
         verifyNoMoreInteractions(costFieldService);
     }
 }
