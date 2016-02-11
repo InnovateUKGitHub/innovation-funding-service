@@ -1,6 +1,5 @@
 package com.worth.ifs.application.service;
 
-import com.google.common.base.Joiner;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.rest.RestResult;
@@ -12,6 +11,7 @@ import java.util.List;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionStatusListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionStatusResourceListType;
+import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 
 /**
  *
@@ -48,7 +48,7 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
 
     @Override
     public RestResult<List<QuestionStatusResource>> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId) {
-        return getWithRestResult(questionStatusRestURL + "/findByQuestionIdsAndApplicationIdAndOrganisationId/" + Joiner.on(",").join(questionIds) + "/" + applicationId + "/" + organisationId, questionStatusResourceListType());
+        return getWithRestResult(questionStatusRestURL + "/findByQuestionIdsAndApplicationIdAndOrganisationId/" + simpleJoiner(questionIds, ",") + "/" + applicationId + "/" + organisationId, questionStatusResourceListType());
     }
 
     public RestResult<List<QuestionStatus>> getByIds(List<Long> ids){

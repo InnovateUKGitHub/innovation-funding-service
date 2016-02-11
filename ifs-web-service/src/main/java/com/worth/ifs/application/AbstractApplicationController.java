@@ -262,6 +262,7 @@ public abstract class AbstractApplicationController {
         }
     }
 
+    // TODO DW - INFUND-1555 - handle rest results
     protected void addFinanceDetails(Model model, ApplicationResource application) {
         Section section = sectionService.getByName("Your finances");
         sectionService.removeSectionsQuestionsWithType(section, "empty");
@@ -275,7 +276,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
 
-        model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(application.getId()));
+        model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(application.getId()).getSuccessObjectOrNull());
     }
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, Competition competition,

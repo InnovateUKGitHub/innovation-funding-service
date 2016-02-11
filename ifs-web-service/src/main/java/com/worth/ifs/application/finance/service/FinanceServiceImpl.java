@@ -9,6 +9,7 @@ import com.worth.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,7 +53,10 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Override
     public List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId) {
-        return applicationFinanceRestService.getFinanceTotals(applicationId).getSuccessObjectOrNull();
+        return applicationFinanceRestService.getFinanceTotals(applicationId).handleSuccessOrFailure(
+                failure -> Collections.<ApplicationFinanceResource> emptyList(),
+                success -> success
+        );
     }
 
 
