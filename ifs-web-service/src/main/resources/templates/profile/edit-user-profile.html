@@ -2,7 +2,7 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Your details'" th:remove="tag" />
-    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/css/prototype.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/prototype.css')}" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="user-profile-edit">
 
