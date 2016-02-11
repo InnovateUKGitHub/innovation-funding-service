@@ -36,6 +36,10 @@ public class BuilderAmendFunctions {
         return t -> setCompetition(competition, t);
     }
 
+    public static <T> Consumer<T> competition(Long competition) {
+        return t -> setCompetition(competition, t);
+    }
+
     public static <T> Consumer<T> application(Application application) {
         return t -> setApplication(application, t);
     }
@@ -130,6 +134,10 @@ public class BuilderAmendFunctions {
     }
 
     public static <T> T setCompetition(Competition value, T instance) {
+        return setField("competition", value, instance);
+    }
+
+    public static <T> T setCompetition(Long value, T instance) {
         return setField("competition", value, instance);
     }
 

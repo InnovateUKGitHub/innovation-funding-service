@@ -150,7 +150,21 @@ public class Competition {
     @JsonIgnore
     public List<Question> getQuestions(){return questions;}
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
 
     /* Keep it D.R.Y */
 
