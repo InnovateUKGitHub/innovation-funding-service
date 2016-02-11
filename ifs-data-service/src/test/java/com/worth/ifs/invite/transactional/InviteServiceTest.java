@@ -1,10 +1,8 @@
 package com.worth.ifs.invite.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.application.builder.ApplicationBuilder;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.builder.CompetitionBuilder;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
@@ -34,21 +32,29 @@ import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
+import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.commons.error.Errors.badRequestError;
+import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.invite.builder.InviteBuilder.newInvite;
+import static com.worth.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static com.worth.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.*;
 
 public class InviteServiceTest extends BaseUnitTestMocksTest {
     private final Log log = LogFactory.getLog(getClass());
@@ -75,7 +81,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testValidatorEmpty() {
-        Application application = ApplicationBuilder.newApplication().withName("AppName").build();
+        Application application = newApplication().withName("AppName").build();
         Role role1 = new Role(1L, "leadapplicant", null);
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
@@ -92,7 +98,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testValidatorEmail() {
-        Application application = ApplicationBuilder.newApplication().withName("AppName").build();
+        Application application = newApplication().withName("AppName").build();
         Role role1 = new Role(1L, "leadapplicant", null);
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
@@ -111,8 +117,8 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testInviteCollaborators() throws Exception {
-        Competition competition = CompetitionBuilder.newCompetition().build();
-        Application application = ApplicationBuilder.newApplication().withCompetition(competition).withName("AppName").build();
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).withName("AppName").build();
         Role role1 = new Role(1L, "leadapplicant", null);
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
@@ -132,7 +138,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testInviteCollaboratorsInvalid() throws Exception {
-        Application application = ApplicationBuilder.newApplication().withName("AppName").build();
+        Application application = newApplication().withName("AppName").build();
         Role role1 = new Role(1L, "leadapplicant", null);
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
@@ -238,6 +244,43 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
         verify(inviteRepositoryMock, never()).save(isA(List.class));
+    }
+
+    @Test
+    public void testGetInviteOrganisationByHash() {
+
+        Competition competition = newCompetition().build();
+        Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
+        User user = newUser().build();
+        Organisation organisation = newOrganisation().build();
+
+        ProcessRole leadApplicantProcessRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
+        Application application = newApplication().withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
+        InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
+        Invite invite = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
+
+        when(inviteRepositoryMock.getByHash("an organisation hash")).thenReturn(invite);
+
+        ServiceResult<InviteOrganisationResource> organisationInvite = inviteService.getInviteOrganisationByHash("an organisation hash");
+        assertTrue(organisationInvite.isSuccess());
+
+        List<InviteResource> expectedInvites = singletonList(new InviteResource(invite));
+
+        InviteOrganisationResource expectedInviteOrganisation = newInviteOrganisationResource().
+                withInviteResources(expectedInvites).
+                build();
+
+        assertEquals(expectedInviteOrganisation, organisationInvite.getSuccessObject());
+    }
+
+    @Test
+    public void testGetInviteOrganisationByHashButInviteOrganisationNotFound() {
+
+        when(inviteRepositoryMock.getByHash("an organisation hash")).thenReturn(null);
+
+        ServiceResult<InviteOrganisationResource> organisationInvite = inviteService.getInviteOrganisationByHash("an organisation hash");
+        assertTrue(organisationInvite.isFailure());
+        assertTrue(organisationInvite.getFailure().is(notFoundError(Invite.class, "an organisation hash")));
     }
 
 

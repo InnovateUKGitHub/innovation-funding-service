@@ -164,7 +164,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
-        return getByHash(hash).andOnSuccess(invite -> serviceSuccess(new InviteOrganisationResource(invite.getInviteOrganisation())));
+        return getByHash(hash).andOnSuccessReturn(invite -> new InviteOrganisationResource(invite.getInviteOrganisation()));
     }
 
     @Override
