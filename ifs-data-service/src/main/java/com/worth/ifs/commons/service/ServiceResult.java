@@ -10,7 +10,6 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.util.Either.left;
@@ -30,17 +29,12 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     @Override
-    public <R> R handleSuccessOrFailure(Function<? super ServiceFailure, ? extends R> failureHandler, Function<? super T, ? extends R> successHandler) {
-        return super.handleSuccessOrFailure(failureHandler, successHandler);
-    }
-
-    @Override
-    public <R> ServiceResult<R> andOnSuccess(Function<? super T, FailingOrSucceedingResult<R, ServiceFailure>> successHandler) {
+    public <R> ServiceResult<R> andOnSuccess(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, ServiceFailure>> successHandler) {
         return (ServiceResult<R>) super.andOnSuccess(successHandler);
     }
 
     @Override
-    public <R> ServiceResult<R> andOnSuccessReturn(Function<? super T, R> successHandler) {
+    public <R> ServiceResult<R> andOnSuccessReturn(ExceptionThrowingFunction<? super T, R> successHandler) {
         return (ServiceResult<R>) super.andOnSuccessReturn(successHandler);
     }
 

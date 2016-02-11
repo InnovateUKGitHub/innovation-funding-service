@@ -2,12 +2,12 @@ package com.worth.ifs.commons.rest;
 
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
+import com.worth.ifs.commons.service.ExceptionThrowingFunction;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.util.Either;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
-import java.util.function.Function;
 
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
@@ -34,12 +34,12 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     @Override
-    public <R> RestResult<R> andOnSuccess(Function<? super T, FailingOrSucceedingResult<R, RestFailure>> successHandler) {
+    public <R> RestResult<R> andOnSuccess(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, RestFailure>> successHandler) {
         return (RestResult<R>) super.andOnSuccess(successHandler);
     }
 
     @Override
-    public <R> RestResult<R> andOnSuccessReturn(Function<? super T, R> successHandler) {
+    public <R> RestResult<R> andOnSuccessReturn(ExceptionThrowingFunction<? super T, R> successHandler) {
         return (RestResult<R>) super.andOnSuccessReturn(successHandler);
     }
 
