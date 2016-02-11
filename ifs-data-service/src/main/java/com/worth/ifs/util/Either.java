@@ -54,8 +54,8 @@ public class Either<L, R> {
         try {
             return isLeft() ? lFunc.apply(left) : rFunc.apply(right);
         } catch (Exception e) {
-            LOG.warn("Exception caught while processing function - returning null", e);
-            return null;
+            LOG.warn("Exception caught while processing function - throwing as a runtime exception", e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -64,8 +64,8 @@ public class Either<L, R> {
         try {
             return isLeft() ? left(left) : rFunc.apply(right);
         } catch (Exception e) {
-            LOG.warn("Exception caught while processing function - returning null", e);
-            return null;
+            LOG.warn("Exception caught while processing function - throwing as a runtime exception", e);
+            throw new RuntimeException(e);
         }
     }
 
