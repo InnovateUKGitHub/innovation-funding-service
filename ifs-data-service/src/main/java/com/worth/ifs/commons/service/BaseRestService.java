@@ -7,15 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.Future;
-
-import static org.springframework.http.HttpMethod.*;
-import static org.springframework.http.HttpStatus.*;
 
 /**
  * BaseRestService provides a base for all Service classes.
@@ -46,27 +41,27 @@ public abstract class BaseRestService {
     }
 
     protected <T> T restGet(String path, Class<T> c, HttpHeaders headers) {
-        return restGetEntity(path, c, headers).getBody();
+        return adaptor.restGet(getDataRestServiceURL() + path, c, headers);
     }
 
     protected <T> RestResult<T> getWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
-        return exchangeWithRestResult(path, GET, returnType);
+        return adaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
     protected <T> RestResult<T> getWithRestResult(String path, Class<T> returnType) {
-        return exchangeWithRestResult(path, GET, returnType);
+        return adaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
     protected <T> RestResult<T> deleteWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
-        return exchangeWithRestResult(path, DELETE, returnType, OK, NO_CONTENT);
+        return adaptor.deleteWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
     protected <T> RestResult<T> deleteWithRestResult(String path, Class<T> returnType) {
-        return exchangeWithRestResult(path, DELETE, returnType, OK, NO_CONTENT);
+        return adaptor.deleteWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
     protected <T> Future<RestResult<T>> getWithRestResultAsyc(String path, Class<T> returnType) {
-        return exchangeWithRestResultAsync(path, GET, returnType);
+        return adaptor.getWithRestResultAsyc(getDataRestServiceURL() + path, returnType);
     }
 
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
@@ -94,67 +89,35 @@ public abstract class BaseRestService {
     }
 
     protected <T> RestResult<T> postWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
-        return exchangeWithRestResult(path, POST, returnType, OK, CREATED);
+        return adaptor.postWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
     protected <T> RestResult<T> postWithRestResult(String path, Class<T> returnType) {
-        return exchangeWithRestResult(path, POST, returnType, OK, CREATED);
+        return adaptor.postWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType) {
-        return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, OK, CREATED);
+        return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
     }
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType) {
-        return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, OK, CREATED);
+        return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
     }
 
     protected <T> RestResult<T> putWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
-        return exchangeWithRestResult(path, PUT, returnType);
+        return adaptor.putWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
     protected <T> RestResult<T> putWithRestResult(String path, Class<T> returnType) {
-        return exchangeWithRestResult(path, PUT, returnType);
+        return adaptor.putWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
     protected <R> RestResult<R> putWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType) {
-        return exchangeObjectWithRestResult(path, PUT, objectToSend, returnType, OK);
+        return adaptor.putWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
     }
 
     protected <R> RestResult<R> putWithRestResult(String path, Object objectToSend, Class<R> returnType) {
-        return exchangeObjectWithRestResult(path, PUT, objectToSend, returnType, OK);
-    }
-
-    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, ParameterizedTypeReference<T> returnType) {
-        return exchangeWithRestResult(path, method, returnType, OK);
-    }
-
-    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, Class<T> returnType) {
-        return exchangeWithRestResult(path, method, returnType, OK);
-    }
-
-    private <T> Future<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, Class<T> returnType) {
-        return exchangeWithRestResultAsync(path, method, returnType, OK);
-    }
-
-    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, ParameterizedTypeReference<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        return adaptor.exchangeWithRestResult(getDataRestServiceURL() + path, method, returnType, expectedSuccessCode, otherExpectedStatusCodes);
-    }
-
-    private <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, ParameterizedTypeReference<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        return adaptor.exchangeObjectWithRestResult(getDataRestServiceURL() + path, method, objectToSend, returnType, expectedSuccessCode, otherExpectedStatusCodes);
-    }
-
-    private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        return adaptor.exchangeWithRestResult(getDataRestServiceURL() + path, method, returnType, expectedSuccessCode, otherExpectedStatusCodes);
-    }
-
-    private <T> Future<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        return adaptor.exchangeWithRestResultAsync(getDataRestServiceURL() + path, method, returnType, expectedSuccessCode, otherExpectedStatusCodes);
-    }
-
-    private <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        return adaptor.exchangeObjectWithRestResult(getDataRestServiceURL() + path, method, objectToSend, returnType, expectedSuccessCode, otherExpectedStatusCodes);
+        return adaptor.putWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
     }
 
     protected void restPut(String path, Object entity) {
