@@ -1,6 +1,7 @@
 package com.worth.ifs;
 
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.RestTemplateAdaptor;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.springframework.core.ParameterizedTypeReference;
@@ -12,12 +13,11 @@ import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
-import static com.worth.ifs.commons.service.BaseRestService.getJSONHeaders;
+import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
@@ -48,8 +48,10 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
 
         service = registerRestServiceUnderTest();
         service.setDataRestServiceUrl(dataServicesUrl);
-        service.setRestTemplateSupplier(() -> mockRestTemplate);
-        service.setAsyncRestTemplate(() -> mockAsyncRestTemplate);
+        final RestTemplateAdaptor adaptor = new RestTemplateAdaptor();
+        service.setRestTemplateAdaptor(adaptor);
+        adaptor.setRestTemplateSupplier(() -> mockRestTemplate);
+        adaptor.setAsyncRestTemplate(() -> mockAsyncRestTemplate);
 
         SecurityContextImpl securityContext = new SecurityContextImpl();
         securityContext.setAuthentication(new TestingAuthenticationToken("A_PRINCIPAL", VALID_AUTH_TOKEN));
@@ -92,6 +94,16 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
     protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, ParameterizedTypeReference<T> responseType, T responseBody, HttpStatus responseCode) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, GET, httpEntityForRestCall(), responseType)).thenReturn(response);
+        return response;
+    }
+
+    protected ResponseEntity<Void> setupDeleteWithRestResultExpectations(String nonBaseUrl) {
+        return setupDeleteWithRestResultExpectations(nonBaseUrl, NO_CONTENT);
+    }
+
+    protected ResponseEntity<Void> setupDeleteWithRestResultExpectations(String nonBaseUrl, HttpStatus responseCode) {
+        ResponseEntity<Void> response = new ResponseEntity<>(responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, DELETE, httpEntityForRestCall(), Void.class)).thenReturn(response);
         return response;
     }
 
@@ -145,5 +157,9 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), responseType)).thenReturn(response);
         return response;
+    }
+
+    protected void setupDeleteWithRestResultVerifications(String nonBaseUrl) {
+        verify(mockRestTemplate).exchange(dataServicesUrl + nonBaseUrl, DELETE, httpEntityForRestCall(), Void.class);
     }
 }

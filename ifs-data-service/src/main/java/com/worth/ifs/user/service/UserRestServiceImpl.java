@@ -1,25 +1,21 @@
 package com.worth.ifs.user.service;
 
-import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
-import static com.worth.ifs.application.service.ListenableFutures.adapt;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 /**
@@ -88,7 +84,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public ListenableFuture<RestResult<ProcessRole>> findProcessRoleById(Long processRoleId) {
+    public Future<RestResult<ProcessRole>> findProcessRoleById(Long processRoleId) {
         return getWithRestResultAsyc(processRoleRestURL + "/" + processRoleId, ProcessRole.class);
     }
 
@@ -103,7 +99,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public ListenableFuture<RestResult<ProcessRole[]>> findAssignableProcessRoles(Long applicationId){
+    public Future<RestResult<ProcessRole[]>> findAssignableProcessRoles(Long applicationId){
         return getWithRestResultAsyc(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRole[].class);
     }
 
@@ -113,8 +109,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    // TODO DW - INFUND-1555 - get rid of ResourceEnvelope
-    public RestResult<ResourceEnvelope<UserResource>> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
+    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
         UserResource user = new UserResource();
 
         user.setFirstName(firstName);
@@ -126,12 +121,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
         String url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId;
 
-        return postWithRestResult(url, user, new ParameterizedTypeReference<ResourceEnvelope<UserResource>>() {});
+        return postWithRestResult(url, user, UserResource.class);
     }
 
     @Override
-    // TODO DW - INFUND-1555 - get rid of ResourceEnvelope
-    public RestResult<ResourceEnvelope<UserResource>> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
+    public RestResult<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
         UserResource user = new UserResource();
         user.setEmail(email);
         user.setFirstName(firstName);
@@ -139,6 +133,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setTitle(title);
         user.setPhoneNumber(phoneNumber);
         String url = userRestURL + "/updateDetails";
-        return postWithRestResult(url, user, new ParameterizedTypeReference<ResourceEnvelope<UserResource>>() {});
+        return postWithRestResult(url, user, UserResource.class);
     }
 }

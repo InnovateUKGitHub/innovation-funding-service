@@ -1,8 +1,6 @@
 package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.resource.ResourceEnvelope;
-import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.*;
@@ -107,9 +105,8 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         return serviceSuccess(related);
     }
 
-    // TODO DW - INFUND-1555 - remove ResourceEnvelopes
     @Override
-    public ServiceResult<ResourceEnvelope<UserResource>> createUser(final Long organisationId, UserResource userResource) {
+    public ServiceResult<UserResource> createUser(final Long organisationId, UserResource userResource) {
 
         return handlingErrors(() -> {
 
@@ -117,21 +114,16 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
             addOrganisationToUser(newUser, organisationId);
             addRoleToUser(newUser, UserRoleType.APPLICANT.getName());
 
-            ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
-
             if (repository.findByEmail(userResource.getEmail()).isEmpty()) {
                 UserResource createdUserResource = createUserWithToken(newUser);
-                addUserResource(resourceEnvelope, createdUserResource);
-                return serviceSuccess(resourceEnvelope);
+                return serviceSuccess(createdUserResource);
             } else {
                 return serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, userResource.getEmail()));
             }
         });
     }
 
-    // TODO DW - INFUND-1555 - remove ResourceEnvelopes
-    public ServiceResult<ResourceEnvelope<UserResource>> updateUser(UserResource userResource) {
-        ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
+    public ServiceResult<UserResource> updateUser(UserResource userResource) {
         List<User> existingUser = repository.findByEmail(userResource.getEmail());
         if (existingUser == null || existingUser.size() <= 0) {
             LOG.error("User with email " + userResource.getEmail() + " doesn't exist!");
@@ -139,13 +131,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         }
         User newUser = createUser(existingUser.get(0), userResource);
         UserResource updatedUser = createUser(newUser);
-        addUserResource(resourceEnvelope, updatedUser);
-        return serviceSuccess(resourceEnvelope);
-    }
-
-    private void addUserResource(ResourceEnvelope<UserResource> resourceEnvelope, UserResource userResource) {
-        resourceEnvelope.setEntity(userResource);
-        resourceEnvelope.setStatus(ResourceEnvelopeConstants.OK.getName());
+        return serviceSuccess(updatedUser);
     }
 
     private UserResource createUserWithToken(User user) {

@@ -1,16 +1,16 @@
 package com.worth.ifs.finance.controller;
 
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.finance.mapper.CostFieldMapper;
 import com.worth.ifs.finance.resource.CostFieldResource;
-import com.worth.ifs.finance.transactional.CostFieldService;
+import com.worth.ifs.finance.transactional.CostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -20,15 +20,12 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 @RestController
 @RequestMapping("/costfield")
 public class CostFieldController {
-    @Autowired
-    CostFieldService costFieldService;
 
     @Autowired
-    CostFieldMapper costFieldMapper;
+    private CostService costFieldService;
 
     @RequestMapping("/findAll/")
-    public List<CostFieldResource> findAll() {
-        List<CostField> costFields = costFieldService.findAll();
-        return simpleMap(costFields, costFieldMapper::mapCostFieldToResource);
+    public RestResult<List<CostFieldResource>> findAll() {
+        return newRestHandler().perform(() -> costFieldService.findAllCostFields());
     }
 }

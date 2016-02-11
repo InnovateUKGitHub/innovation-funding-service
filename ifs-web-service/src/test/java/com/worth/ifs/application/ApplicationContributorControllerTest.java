@@ -19,8 +19,12 @@ import org.springframework.validation.Validator;
 
 import javax.servlet.http.Cookie;
 
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -65,6 +69,7 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
         this.setupApplicationResponses();
         this.loginDefaultUser();
         this.setupFinances();
+        this.setupInvites();
 
         applicationId = applications.get(0).getId();
         alternativeApplicationId = applicationId + 1;
@@ -292,5 +297,9 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
         ContributorsForm contributorsFormResult = (ContributorsForm) mockResult.getModelAndView().getModelMap().get("contributorsForm");
         assertNotNull(contributorsFormResult.getOrganisations().get(0));
         assertEquals(0, contributorsFormResult.getOrganisations().get(0).getInvites().size());
+    }
+
+    public void setupInvites() {
+        when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
     }
 }

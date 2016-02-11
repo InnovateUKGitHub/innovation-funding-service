@@ -1,13 +1,25 @@
 Dear ${notificationTarget.name},
 
-You've been invited to join the application ${applicationName} as a collaborator.  Please paste the link below into a browser to accept the invitation:
-
-${inviteUrl}
+You have been invited to join a collaborative application for the competition '${competitionName}'.
 
 Lead organisation: ${leadOrganisation}
 Lead applicant: ${leadApplicant}
 
-Email the lead applicant ${leadApplicantEmail}
+The lead applicant has invited you to join this application on behalf of the following organisation: ${inviteOrganisationName}
 
-Thanks,
-${notificationSource.name}
+If this is not the correct organisation, email the application lead: ${leadApplicantEmail}
+
+Please paste the link below into a browser to accept the invitation:
+${inviteUrl}
+
+Many thanks,
+
+The Innovate UK team
+
+Innovate UK
+North Star House
+North Star Avenue
+Swindon
+Wiltshire
+SN2 1JF
+© Crown copyright

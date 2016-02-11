@@ -5,9 +5,9 @@ import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.*;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -73,7 +73,7 @@ public class QuestionServiceImpl implements QuestionService {
         questionStatuses.stream().forEach(qs -> questionRestService.updateNotification(qs.getId(), true));
     }
 
-    public ListenableFuture<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
+    public Future<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
         return questionRestService.getMarkedAsComplete(applicationId, organisationId);
     }
 

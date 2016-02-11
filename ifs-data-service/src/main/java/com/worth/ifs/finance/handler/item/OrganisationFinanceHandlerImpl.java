@@ -1,5 +1,8 @@
 package com.worth.ifs.finance.handler.item;
 
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.repository.CostFieldRepository;
@@ -11,11 +14,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -28,10 +29,32 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
     EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
 
     @Autowired
+    QuestionService questionService;
+
+    @Autowired
     CostRepository costRepository;
 
     @Autowired
     CostFieldRepository costFieldRepository;
+
+    @Override
+    public void initialiseCostType(ApplicationFinance applicationFinance, CostType costType){
+        Question question = getQuestionByCostType(costType);
+        try{
+            List<Cost> cost = getCostHandler(costType).initializeCost();
+            cost.forEach(c -> {
+                c.setQuestion(question);
+                c.setApplicationFinance(applicationFinance);
+            });
+            costRepository.save(cost);
+        }catch (IllegalArgumentException e){
+            log.error(String.format("No CostHandler for type: ", costType.getType()));
+        }
+    }
+
+    private Question getQuestionByCostType(CostType costType) {
+        return questionService.getQuestionByFormInputType(costType.getType());
+    }
 
     @Override
     public EnumMap<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {
@@ -96,6 +119,13 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
         List<CostField> costFields = costFieldRepository.findAll();
         costHandler.setCostFields(costFields);
         return costHandler.toCost(costItem);
+    }
+
+    @Override
+    public CostItem costToCostItem(Cost cost) {
+        CostType costType = CostType.fromString(cost.getQuestion().getFormInputs().get(0).getFormInputType().getTitle());
+        CostHandler costHandler = getCostHandler(costType);
+        return costHandler.toCostItem(cost);
     }
 
     public List<Cost> costItemsToCost(List<CostItem> costItems) {

@@ -1,19 +1,25 @@
 package com.worth.ifs.invite.transactional;
 
-import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.invite.domain.InviteOrganisation;
+import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
@@ -21,25 +27,31 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.*;
 
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.error.Errors.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;
 
 @Service
 public class InviteServiceImpl extends BaseTransactionalService implements InviteService {
 
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(InviteServiceImpl.class);
 
     enum Notifications {
         INVITE_COLLABORATOR
     }
 
-    @Autowired
-    ApplicationService applicationService;
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     @Autowired
-    InviteRepository inviteRepository;
+    private InviteRepository inviteRepository;
+
+    @Autowired
+    private InviteOrganisationRepository inviteOrganisationRepository;
 
     @Autowired
     private NotificationService notificationService;
@@ -56,15 +68,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public Optional<InviteResource> getInviteByHash(String hash){
-        Optional<Invite> invite = inviteRepository.getByHash(hash);
-        if(invite.isPresent()){
-            return Optional.ofNullable(new InviteResource(invite.get()));
-        }
-        return Optional.empty();
-    }
-
-    @Override
     public List<ServiceResult<Notification>> inviteCollaborators(String baseUrl, List<Invite> invites) {
         List<ServiceResult<Notification>> results = new ArrayList<>();
         invites.stream().forEach(invite -> {
@@ -72,7 +75,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             validator.validate(invite, errors);
 
             if(errors.hasErrors()){
-                errors.getFieldErrors().stream().peek(e -> log.debug(String.format("Field error: %s ", e.getField())));
+                errors.getFieldErrors().stream().peek(e -> LOG.debug(String.format("Field error: %s ", e.getField())));
                 ServiceResult<Notification> inviteResult = serviceFailure(internalServerErrorError("Validation errors"));
 
                 results.add(inviteResult);
@@ -106,7 +109,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private boolean handleInviteError(Invite i, ServiceFailure failure) {
-        log.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
+        LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
         return true;
     }
 
@@ -116,7 +119,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<Notification> inviteCollaboratorToApplication(String baseUrl, Invite invite) {
-        log.warn("inviteCollaboratorToApplication");
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
 
@@ -139,28 +141,151 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public Invite findOne(Long id) {
-        return inviteRepository.findOne(id);
+    public ServiceResult<Invite> findOne(Long id) {
+        return find(() -> inviteRepository.findOne(id), notFoundError(Invite.class, id));
     }
 
     @Override
-    public List<Invite> findByApplicationId(Long applicationId) {
-        return inviteRepository.findByApplicationId(applicationId);
+    public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource) {
+
+        if (!inviteOrganisationResourceIsValid(inviteOrganisationResource)) {
+            return serviceFailure(badRequestError("The Invite is not valid"));
+        }
+
+        return assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccess(newInviteOrganisation -> {
+            List<Invite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
+            inviteOrganisationRepository.save(newInviteOrganisation);
+            inviteRepository.save(newInvites);
+            return serviceSuccess(sendInvites(newInvites));
+        });
     }
 
     @Override
-    public Optional<Invite> getByHash(String hash) {
-        return inviteRepository.getByHash(hash);
+    public ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
+        return getByHash(hash).andOnSuccess(invite -> serviceSuccess(new InviteOrganisationResource(invite.getInviteOrganisation())));
     }
 
     @Override
-    public Invite save(Invite invite) {
-        return inviteRepository.save(invite);
+    public ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
+
+        return findByApplicationId(applicationId).andOnSuccess(invites -> {
+            List<InviteOrganisationResource> inviteOrganisations = simpleMap(invites, invite -> new InviteOrganisationResource(invite.getInviteOrganisation()));
+            return serviceSuccess(inviteOrganisations);
+        });
     }
 
     @Override
-    public Iterable<Invite> save(Iterable<Invite> invites) {
-        return inviteRepository.save(invites);
+    public ServiceResult<InviteResultsResource> saveInvites(List<InviteResource> inviteResources) {
+        List<Invite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
+        inviteRepository.save(invites);
+        return serviceSuccess(sendInvites(invites));
+
     }
 
+    @Override
+    public ServiceResult<InviteResource> getInviteByHash(String hash) {
+        return getByHash(hash).andOnSuccess(invite -> serviceSuccess(new InviteResource(invite)));
+    }
+
+    private ServiceResult<Invite> getByHash(String hash) {
+        return find(() -> inviteRepository.getByHash(hash), notFoundError(Invite.class, hash));
+    }
+
+    private ServiceResult<List<Invite>> findByApplicationId(Long applicationId) {
+        return serviceSuccess(inviteRepository.findByApplicationId(applicationId));
+    }
+
+    private InviteResultsResource sendInvites(List<Invite> invites) {
+        List<ServiceResult<Notification>> results = inviteCollaborators(webBaseUrl, invites);
+
+        long failures = results.stream().filter(r -> r.isFailure()).count();
+        long successes = results.stream().filter(r -> r.isSuccess()).count();
+        LOG.info(String.format("Invite sending requests %s Success: %s Failures: %s", invites.size(), successes, failures));
+
+        InviteResultsResource resource = new InviteResultsResource();
+        resource.setInvitesSendFailure((int) failures);
+        resource.setInvitesSendSuccess((int) successes);
+        return resource;
+    }
+
+    private ServiceResult<InviteOrganisation> assembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource) {
+
+        if (inviteOrganisationResource.getOrganisation() != null) {
+            return find(organisation(inviteOrganisationResource.getOrganisation())).andOnSuccess(organisation -> {
+                InviteOrganisation newInviteOrganisation = new InviteOrganisation(
+                        inviteOrganisationResource.getOrganisationName(),
+                        organisation,
+                        null);
+                return serviceSuccess(newInviteOrganisation);
+            });
+        } else {
+            InviteOrganisation newInviteOrganisation = new InviteOrganisation(
+                    inviteOrganisationResource.getOrganisationName(),
+                    null,
+                    null);
+            return serviceSuccess(newInviteOrganisation);
+        }
+    }
+
+    private List<Invite> assembleInvitesFromInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource, InviteOrganisation newInviteOrganisation) {
+        List<Invite> invites = new ArrayList<>();
+        inviteOrganisationResource.getInviteResources().forEach(inviteResource ->
+                invites.add(mapInviteResourceToInvite(inviteResource, newInviteOrganisation))
+        );
+
+        return invites;
+    }
+
+    private Invite mapInviteResourceToInvite(InviteResource inviteResource, InviteOrganisation newInviteOrganisation) {
+        Application application = applicationRepository.findOne(inviteResource.getApplication());
+        if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
+            newInviteOrganisation = inviteOrganisationRepository.findOne(inviteResource.getInviteOrganisation());
+        }
+        Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatusConstants.CREATED);
+
+        return invite;
+    }
+
+    private boolean inviteOrganisationResourceIsValid(InviteOrganisationResource inviteOrganisationResource) {
+        if (!inviteOrganisationResourceNameAndIdAreValid(inviteOrganisationResource)) {
+            return false;
+        }
+
+        if (!allInviteResourcesAreValid(inviteOrganisationResource)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean inviteOrganisationResourceNameAndIdAreValid(InviteOrganisationResource inviteOrganisationResource) {
+        if ((inviteOrganisationResource.getOrganisationName() == null ||
+                inviteOrganisationResource.getOrganisationName().isEmpty())
+                &&
+                inviteOrganisationResource.getOrganisation() == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean allInviteResourcesAreValid(InviteOrganisationResource inviteOrganisationResource) {
+        if (inviteOrganisationResource.getInviteResources()
+                .stream()
+                .filter(inviteResource -> !inviteResourceIsValid(inviteResource))
+                .count() > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean inviteResourceIsValid(InviteResource inviteResource) {
+
+        if (StringUtils.isEmpty(inviteResource.getEmail()) || StringUtils.isEmpty(inviteResource.getName()) || inviteResource.getApplication() == null) {
+            return false;
+        }
+
+        return true;
+    }
 }

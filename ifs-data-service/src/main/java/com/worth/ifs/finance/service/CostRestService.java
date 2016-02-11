@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.service;
 
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.finance.resource.cost.CostItem;
 
 import java.util.List;
@@ -8,9 +9,9 @@ import java.util.List;
  * Interface for CRUD operations on {@link Cost} related data.
  */
 public interface CostRestService{
-    public void add(Long applicationFinanceId, Long questionId, CostItem costItem);
-    public List<CostItem> getCosts(Long applicationFinanceId);
-    public void update(CostItem costItem);
-    public CostItem findById(Long id);
-    public void delete(Long costId);
+    RestResult<CostItem> add(Long applicationFinanceId, Long questionId, CostItem costItem);
+    RestResult<List<CostItem>> getCosts(Long applicationFinanceId);
+    RestResult<Void> update(CostItem costItem);
+    RestResult<CostItem> findById(Long id);
+    RestResult<Void> delete(Long costId);
 }

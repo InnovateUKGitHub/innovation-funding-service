@@ -5,13 +5,13 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Future;
 
-import static com.worth.ifs.application.service.ListenableFutures.adapt;
+import static com.worth.ifs.application.service.Futures.adapt;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionListType;
 import static java.util.Arrays.asList;
 
@@ -51,7 +51,7 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
     }
 
     @Override
-    public ListenableFuture<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
+    public Future<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
         return adapt(restGetAsync(questionRestURL + "/getMarkedAsComplete/" + applicationId + "/" + organisationId, Long[].class), re -> new HashSet<>(asList(re.getBody())));
     }
 
@@ -62,21 +62,21 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
 
     @Override
     public RestResult<Question> getNextQuestion(Long questionId) {
-        return getWithRestResult(questionRestURL + "/getNextQuestion/"+questionId, Question.class);
+        return getWithRestResult(questionRestURL + "/getNextQuestion/" + questionId, Question.class);
     }
 
     @Override
     public RestResult<Question> getPreviousQuestion(Long questionId) {
-        return getWithRestResult(questionRestURL + "/getPreviousQuestion/"+questionId, Question.class);
+        return getWithRestResult(questionRestURL + "/getPreviousQuestion/" + questionId, Question.class);
     }
 
     @Override
     public RestResult<Question> getPreviousQuestionBySection(Long sectionId) {
-        return getWithRestResult(questionRestURL + "/getPreviousQuestionBySection/"+sectionId, Question.class);
+        return getWithRestResult(questionRestURL + "/getPreviousQuestionBySection/" + sectionId, Question.class);
     }
 
     @Override
     public RestResult<Question> getNextQuestionBySection(Long sectionId) {
-        return getWithRestResult(questionRestURL + "/getNextQuestionBySection/"+sectionId, Question.class);
+        return getWithRestResult(questionRestURL + "/getNextQuestionBySection/" + sectionId, Question.class);
     }
 }

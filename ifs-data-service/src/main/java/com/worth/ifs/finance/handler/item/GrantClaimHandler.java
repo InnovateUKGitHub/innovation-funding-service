@@ -5,6 +5,8 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles the grant claims, i.e. converts the costs to be stored into the database
@@ -26,5 +28,18 @@ public class GrantClaimHandler extends CostHandler {
     @Override
     public CostItem toCostItem(Cost cost) {
         return new GrantClaim(cost.getId(), cost.getQuantity());
+    }
+
+    @Override
+    public List<Cost> initializeCost() {
+        ArrayList<Cost> costs = new ArrayList<>();
+        costs.add(initializeFundingLevel());
+        return costs;
+    }
+
+    private Cost initializeFundingLevel() {
+        GrantClaim costItem = new GrantClaim();
+        costItem.setGrantClaimPercentage(null);
+        return toCost(costItem);
     }
 }

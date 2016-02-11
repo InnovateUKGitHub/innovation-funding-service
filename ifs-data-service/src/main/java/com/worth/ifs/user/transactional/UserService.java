@@ -1,6 +1,5 @@
 package com.worth.ifs.user.transactional;
 
-import com.worth.ifs.commons.resource.ResourceEnvelope;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.User;
@@ -39,8 +38,8 @@ public interface UserService {
     ServiceResult<Set<User>> findRelatedUsers(final Long applicationId);
 
     @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<ResourceEnvelope<UserResource>> createUser(final Long organisationId, UserResource userResource);
+    ServiceResult<UserResource> createUser(final Long organisationId, UserResource userResource);
 
     @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<ResourceEnvelope<UserResource>> updateUser(UserResource userResource);
+    ServiceResult<UserResource> updateUser(UserResource userResource);
 }

@@ -1,5 +1,6 @@
 package com.worth.ifs.form.mapper;
 
+import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.form.domain.FormInput;
@@ -15,7 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
         CompetitionMapper.class,
         FormInputTypeMapper.class,
         FormInputResponseMapper.class,
-        FormValidatorMapper.class
+        FormValidatorMapper.class,
+        QuestionMapper.class
     }
 )
 public abstract class FormInputMapper {

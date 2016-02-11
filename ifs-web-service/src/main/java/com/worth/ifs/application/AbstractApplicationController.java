@@ -25,20 +25,21 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.service.ListenableFutures.call;
+import static com.worth.ifs.application.service.Futures.call;
 
 /**
  * This object contains shared methods for all the Controllers related to the {@link ApplicationResource} data.
  */
 public abstract class AbstractApplicationController {
+
     public static final String ASSIGN_QUESTION_PARAM = "assign_question";
     public static final String FORM_MODEL_ATTRIBUTE = "form";
     private final Log log = LogFactory.getLog(getClass());
@@ -172,7 +173,7 @@ public abstract class AbstractApplicationController {
 
         Optional<Organisation> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
         leadOrganisation.ifPresent(org ->
-            model.addAttribute("leadOrganisation", org)
+                        model.addAttribute("leadOrganisation", org)
         );
     }
 
@@ -199,7 +200,7 @@ public abstract class AbstractApplicationController {
     }
 
     protected List<FormInputResponse> getFormInputResponses(ApplicationResource application) {
-        return       formInputResponseService.getByApplication(application.getId());
+        return formInputResponseService.getByApplication(application.getId());
     }
 
     protected void addUserDetails(Model model, ApplicationResource application, Long userId) {
@@ -208,7 +209,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("leadApplicant", userService.getLeadApplicantProcessRoleOrNull(application));
     }
 
-    protected ListenableFuture<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<Organisation> userOrganisation) {
+    protected Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<Organisation> userOrganisation) {
         Long organisationId=0L;
         if(userOrganisation.isPresent()) {
             organisationId = userOrganisation.get().getId();
@@ -253,7 +254,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
         model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
         if(applicationFinanceResource.getGrantClaim()!=null) {
-            model.addAttribute("organisationGrantClaimPercentage", applicationFinanceResource.getGrantClaimPercentage());
+            model.addAttribute("organisationGrantClaimPercentage", applicationFinanceResource.getGrantClaim().getGrantClaimPercentage());
             model.addAttribute("organisationgrantClaimPercentageId", applicationFinanceResource.getGrantClaim().getId());
             String formInputKey = "finance-grantclaim-" + applicationFinanceResource.getGrantClaim();
             String formInputValue = applicationFinanceResource.getGrantClaimPercentage() != null ? applicationFinanceResource.getGrantClaimPercentage().toString() : "";
@@ -261,6 +262,7 @@ public abstract class AbstractApplicationController {
         }
     }
 
+    // TODO DW - INFUND-1555 - handle rest results
     protected void addFinanceDetails(Model model, ApplicationResource application) {
         Section section = sectionService.getByName("Your finances");
         sectionService.removeSectionsQuestionsWithType(section, "empty");
@@ -274,7 +276,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
 
-        model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(application.getId()));
+        model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(application.getId()).getSuccessObjectOrNull());
     }
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, Competition competition,
@@ -282,8 +284,8 @@ public abstract class AbstractApplicationController {
                                             Optional<Organisation> userOrganisation,
                                             List<ProcessRole> userApplicationRoles) {
         List<Section> sectionsList = sectionService.getParentSections(competition.getSections());
-        ListenableFuture<Section> previousSection = sectionService.getPreviousSection(currentSection);
-        ListenableFuture<Section> nextSection = sectionService.getNextSection(currentSection);
+        Future<Section> previousSection = sectionService.getPreviousSection(currentSection);
+        Future<Section> nextSection = sectionService.getNextSection(currentSection);
 
         Map<Long, Section> sections =
                 sectionsList.stream().collect(Collectors.toMap(Section::getId,
@@ -296,7 +298,7 @@ public abstract class AbstractApplicationController {
         model.addAttribute("sections", sections);
 
 
-        ListenableFuture<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
+        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
 
         TreeSet<Organisation> organisations = getApplicationOrganisations(userApplicationRoles);
@@ -312,7 +314,6 @@ public abstract class AbstractApplicationController {
         model.addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
-        model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
     }
 
     protected void addSectionDetails(Model model, Optional<Section> currentSection) {
@@ -338,7 +339,9 @@ public abstract class AbstractApplicationController {
     protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
         if(applicationFinanceResource == null) {
-            applicationFinanceResource = financeService.addApplicationFinance(applicationId, userId);
+            financeService.addApplicationFinance(applicationId, userId);
+            // ugly fix since the addApplicationFinance method does not return the correct results.
+            applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
         }
 
         return applicationFinanceResource;

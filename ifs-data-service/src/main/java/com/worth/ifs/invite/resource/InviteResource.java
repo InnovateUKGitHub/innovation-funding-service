@@ -14,6 +14,7 @@ public class InviteResource {
     private String name;
     private String email;
     private Long application;
+    private Long competitionId;
     private String competitionName;
     private String applicationName;
     private Long inviteOrganisation;
@@ -46,6 +47,7 @@ public class InviteResource {
         this.email = i.getEmail();
         this.application = i.getApplication().getId();
         this.applicationName = i.getApplication().getName();
+        this.competitionId = i.getApplication().getCompetition().getId();
         this.competitionName = i.getApplication().getCompetition().getName();
         this.leadOrganisation = i.getApplication().getLeadOrganisation().get().getName();
         this.leadApplicant = i.getApplication().getLeadApplicant().get().getName();
@@ -108,6 +110,14 @@ public class InviteResource {
 
     public void setStatus(InviteStatusConstants status) {
         this.status = status;
+    }
+
+    public Long getCompetitionId() {
+        return competitionId;
+    }
+
+    public void setCompetitionId(Long competitionId) {
+        this.competitionId = competitionId;
     }
 
     public String getCompetitionName() {

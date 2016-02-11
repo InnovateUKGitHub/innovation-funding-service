@@ -2,10 +2,10 @@ package com.worth.ifs.organisation.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.RestTemplateAdaptor;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
-import com.worth.ifs.security.NotSecured;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -19,9 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
-import static com.worth.ifs.commons.service.ServiceResult.handlingErrors;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.*;
 import static java.util.Optional.ofNullable;
 
 /**
@@ -48,13 +46,12 @@ public class CompanyHouseApi extends BaseRestService {
         return COMPANY_HOUSE_API;
     }
 
-    @NotSecured("These services are not secured because the company house api are open to use for everyone.")
     public ServiceResult<List<CompanyHouseBusiness>> searchOrganisations(String encodedSearchText) {
 
         return handlingErrors(() -> decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
 
             // encoded in the web-services.
-            JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + decodedSearchText, JsonNode.class);
+            JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + decodedSearchText, JsonNode.class, getHeaders());
             JsonNode companyItems = companiesResources.path("items");
             List<CompanyHouseBusiness> results = new ArrayList<>();
             companyItems.forEach(i -> results.add(companySearchMapper(i)));
@@ -62,23 +59,20 @@ public class CompanyHouseApi extends BaseRestService {
         }));
     }
 
-    @NotSecured("These services are not secured because the company house api are open to use for everyone.")
     public ServiceResult<CompanyHouseBusiness> getOrganisationById(String id) {
         LOG.debug("getOrganisationById " + id);
 
         return handlingErrors(() -> {
 
-            return ofNullable(restGet("company/" + id, JsonNode.class)).
+            return ofNullable(restGet("company/" + id, JsonNode.class, getHeaders())).
                     map(jsonNode -> serviceSuccess(companyProfileMapper(jsonNode))).
                     orElse(serviceFailure(internalServerErrorError("No response from Companies House")));
         });
     }
 
-    @NotSecured("Because its just overwriting the methods from the baseclass, no authorization check needed.")
-    @Override
-    public HttpHeaders getHeaders() {
+    private HttpHeaders getHeaders() {
         LOG.debug("Adding authorization headers");
-        HttpHeaders headers = super.getHeaders();
+        HttpHeaders headers = RestTemplateAdaptor.getHeaders();
 
         String auth = COMPANY_HOUSE_KEY + ":";
         byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
