@@ -7,7 +7,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import java.util.Map;
 
 /**
- *
+ * A Notification Template Service (a service that can process a template file in order to produce a Notification message string)
  */
 public interface NotificationTemplateRenderer {
 

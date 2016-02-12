@@ -3,6 +3,7 @@ package com.worth.ifs.invite.domain;
 import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -23,7 +24,7 @@ public class InviteOrganisation {
     private Organisation organisation;
 
     @OneToMany(mappedBy = "inviteOrganisation")
-    private List<Invite> invites;
+    private List<Invite> invites = new ArrayList<>();
 
     public InviteOrganisation() {
 

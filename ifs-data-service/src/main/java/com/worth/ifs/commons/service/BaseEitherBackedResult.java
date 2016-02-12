@@ -75,8 +75,8 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
             FailingOrSucceedingResult<R, FailureType> successResult = rFunc.apply(result.getRight());
             return successResult.isFailure() ? createFailure(successResult) : createSuccess(successResult);
         } catch (Exception e) {
-            LOG.warn("Exception caught while processing success function - returning a failure", e);
-            return createFailure(null);
+            LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -90,8 +90,8 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
             R successResult = rFunc.apply(result.getRight());
             return createSuccess(successResult);
         } catch (Exception e) {
-            LOG.warn("Exception caught while processing success function - returning a failure", e);
-            return createFailure(null);
+            LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
+            throw new RuntimeException(e);
         }
     }
 
