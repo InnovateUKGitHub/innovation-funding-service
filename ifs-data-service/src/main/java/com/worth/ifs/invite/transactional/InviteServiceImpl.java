@@ -168,11 +168,16 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
+    public ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
 
         return findByApplicationId(applicationId).andOnSuccess(invites -> {
             List<InviteOrganisationResource> inviteOrganisations = simpleMap(invites, invite -> new InviteOrganisationResource(invite.getInviteOrganisation()));
-            return serviceSuccess(inviteOrganisations);
+
+            if(!inviteOrganisations.isEmpty()){
+                return serviceSuccess(new HashSet<>(inviteOrganisations));
+            }else{
+                return serviceSuccess(new HashSet<>());
+            }
         });
     }
 
@@ -244,6 +249,12 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             newInviteOrganisation = inviteOrganisationRepository.findOne(inviteResource.getInviteOrganisation());
         }
         Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatusConstants.CREATED);
+        if(newInviteOrganisation.getOrganisation()!= null){
+            List<InviteOrganisation> existingOrgInvite = inviteOrganisationRepository.findByOrganisationId(newInviteOrganisation.getOrganisation().getId());
+            if(existingOrgInvite.size() > 0){
+                invite.setInviteOrganisation(existingOrgInvite.get(0));
+            }
+        }
 
         return invite;
     }
