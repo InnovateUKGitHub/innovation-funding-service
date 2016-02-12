@@ -35,7 +35,6 @@ import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.handlingErrors;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
 import static com.worth.ifs.util.CollectionFunctions.mapEntryValue;
@@ -74,9 +73,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Override
     public ServiceResult<Feedback> updateAssessorFeedback(Feedback.Id feedbackId, Optional<String> feedbackValue, Optional<String> feedbackText) {
 
-        return handlingErrors(() ->
-
-                find(response(feedbackId.getResponseId()), role(ASSESSOR)).andOnSuccess((response, assessorRole) -> {
+        return find(response(feedbackId.getResponseId()), role(ASSESSOR)).andOnSuccess((response, assessorRole) -> {
 
             Application application = response.getApplication();
 
@@ -93,7 +90,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                 responseRepository.save(response);
                 return serviceSuccess(feedback);
             });
-        }));
+        });
     }
 
     @Override

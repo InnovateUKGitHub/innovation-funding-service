@@ -36,7 +36,6 @@ import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeTrue;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -325,18 +324,6 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         } finally {
             targetFolder.setWritable(true);
         }
-    }
-
-    @Test
-    public void testCreateFileWithUnexpectedExceptionsHandlesFailureGracefully() {
-
-        RuntimeException exception = new RuntimeException("you shall not pass!");
-        when(fileEntryRepository.save(isA(FileEntry.class))).thenThrow(exception);
-
-        FileEntryResource file = newFileEntryResource().with(id(null)).withFilesizeBytes(17).build();
-        ServiceResult<Pair<File, FileEntry>> result = service.createFile(file, fakeInputStreamSupplier());
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(FILES_UNABLE_TO_CREATE_FILE));
     }
 
     @Test

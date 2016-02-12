@@ -1,6 +1,7 @@
 package com.worth.ifs.invite.transactional;
 
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
@@ -211,8 +212,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     private InviteResultsResource sendInvites(List<Invite> invites) {
         List<ServiceResult<Notification>> results = inviteCollaborators(webBaseUrl, invites);
 
-        long failures = results.stream().filter(r -> r.isFailure()).count();
-        long successes = results.stream().filter(r -> r.isSuccess()).count();
+        long failures = results.stream().filter(BaseEitherBackedResult::isFailure).count();
+        long successes = results.stream().filter(BaseEitherBackedResult::isSuccess).count();
         LOG.info(String.format("Invite sending requests %s Success: %s Failures: %s", invites.size(), successes, failures));
 
         InviteResultsResource resource = new InviteResultsResource();

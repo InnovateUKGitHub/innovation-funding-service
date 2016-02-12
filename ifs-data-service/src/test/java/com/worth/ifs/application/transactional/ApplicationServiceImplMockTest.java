@@ -280,58 +280,6 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadExistingFormInputResponseSaveThrowingExceptionHandledGracefully() {
-
-        FileEntryResource fileEntryResource = newFileEntryResource().build();
-        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        File fileFound = mock(File.class);
-        FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
-
-        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(serviceSuccess(Pair.of(fileFound, newFileEntry)));
-
-        FormInputResponse existingFormInputResponse = newFormInputResponse().build();
-        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
-
-        when(formInputResponseRepositoryMock.save(existingFormInputResponse)).thenThrow(new RuntimeException("Surprise!"));
-
-        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
-                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
-
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(FILES_UNABLE_TO_CREATE_FILE));
-    }
-
-    @Test
-    public void testCreateFormInputResponseFileUploadNewFormInputResponseSaveThrowingExceptionHandledGracefully() {
-
-        FileEntryResource fileEntryResource = newFileEntryResource().build();
-        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        File fileFound = mock(File.class);
-        FileEntry newFileEntry = newFileEntry().with(id(999L)).build();
-
-        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).
-                thenReturn(serviceSuccess(Pair.of(fileFound, newFileEntry)));
-
-        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
-        when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
-        when(formInputRepositoryMock.findOne(123L)).thenReturn(newFormInput().build());
-        when(applicationRepositoryMock.findOne(456L)).thenReturn(newApplication().build());
-
-        when(formInputResponseRepositoryMock.save(isA(FormInputResponse.class))).thenThrow(new RuntimeException("Surprise!"));
-
-        ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
-                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
-
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(FILES_UNABLE_TO_CREATE_FILE));
-    }
-
-    @Test
     public void testUpdateFormInputResponseFileUpload() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
@@ -467,28 +415,6 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testDeleteFormInputResponseFileUploadButUnexpectedExceptionOccursAndHandledGracefully() {
-
-        FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
-        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
-        Supplier<InputStream> inputStreamSupplier = () -> null;
-
-        FileEntry existingFileEntry = newFileEntry().with(id(999L)).build();
-        FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
-
-        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
-        when(fileServiceMock.deleteFile(999L)).thenThrow(new IllegalArgumentException("No deleting files today..."));
-
-        ServiceResult<FormInputResponse> result =
-                service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
-
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(FILES_UNABLE_TO_DELETE_FILE));
-    }
-
-
-    @Test
     public void testGetFormInputResponseFileUpload() {
 
         FileEntry fileEntry = newFileEntry().with(id(321L)).build();
@@ -528,23 +454,6 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(internalServerErrorError("no files for you...")));
     }
-
-    @Test
-    public void testGetFormInputResponseFileUploadButUnexpectedExceptionThrownAndHandledGracefully() {
-
-        FileEntry fileEntry = newFileEntry().build();
-        FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(fileEntry).build();
-
-        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(formInputResponse);
-        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenThrow(new RuntimeException("not so fast!"));
-
-        ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> result =
-                service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
-
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 123L, 456L, 789L)));
-    }
-
 
     @Test
     public void testGetFormInputResponseFileUploadButUnableToFindFormInputResponse() {

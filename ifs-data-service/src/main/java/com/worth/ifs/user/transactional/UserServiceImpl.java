@@ -108,19 +108,16 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     @Override
     public ServiceResult<UserResource> createUser(final Long organisationId, UserResource userResource) {
 
-        return handlingErrors(() -> {
+        User newUser = assembleUserFromResource(userResource);
+        addOrganisationToUser(newUser, organisationId);
+        addRoleToUser(newUser, UserRoleType.APPLICANT.getName());
 
-            User newUser = assembleUserFromResource(userResource);
-            addOrganisationToUser(newUser, organisationId);
-            addRoleToUser(newUser, UserRoleType.APPLICANT.getName());
-
-            if (repository.findByEmail(userResource.getEmail()).isEmpty()) {
-                UserResource createdUserResource = createUserWithToken(newUser);
-                return serviceSuccess(createdUserResource);
-            } else {
-                return serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, userResource.getEmail()));
-            }
-        });
+        if (repository.findByEmail(userResource.getEmail()).isEmpty()) {
+            UserResource createdUserResource = createUserWithToken(newUser);
+            return serviceSuccess(createdUserResource);
+        } else {
+            return serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, userResource.getEmail()));
+        }
     }
 
     public ServiceResult<UserResource> updateUser(UserResource userResource) {

@@ -9,6 +9,7 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                                     p.getRole().getName().equals(UserRoleType.APPLICANT.getName())          ||
                                     p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName())
                     )
-                    .map(p -> p.getOrganisation()).collect(Collectors.toList());
+                    .map(ProcessRole::getOrganisation).collect(Collectors.toList());
             Map<Long, Set<Long>> organisationMap = new HashMap<>();
             for (Organisation organisation : organisations) {
                 Set<Long> completedSections = new LinkedHashSet<>();

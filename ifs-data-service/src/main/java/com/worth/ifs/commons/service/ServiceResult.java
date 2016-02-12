@@ -5,8 +5,6 @@ import com.worth.ifs.commons.error.ErrorTemplate;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.transaction.NoTransactionException;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -100,6 +98,20 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         return handlingErrors(internalServerErrorError(), serviceCode);
     }
 
+    /**
+     * This wrapper wraps the serviceCode function and rolls back transactions upon receiving a ServiceFailure
+     * response (an Either with a left of ServiceFailure).
+     *
+     * It will also catch all exceptions thrown from within serviceCode and convert them into ServiceFailures of
+     * type GENERAL_UNEXPECTED_ERROR.
+     *
+     * @param serviceCode - code that performs some process and returns a successful or failing ServiceResult, the state
+     *                      of which then allows this wrapper to perform additional actions
+     *
+     * @param <T> - the successful return type of the ServiceResult
+     * @return the original ServiceResult returned from the serviceCode, or a generic ServiceResult failure if an exception
+     * was thrown in serviceCode
+     */
     public static <T> ServiceResult<T> handlingErrors(ErrorTemplate catchAllErrorTemplate, Supplier<ServiceResult<T>> serviceCode) {
         return handlingErrors(new Error(catchAllErrorTemplate), serviceCode);
     }
@@ -119,28 +131,10 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
          */
     public static <T> ServiceResult<T> handlingErrors(Error catchAllError, Supplier<ServiceResult<T>> serviceCode) {
         try {
-            ServiceResult<T> response = serviceCode.get();
-
-            if (response.isFailure()) {
-                LOG.debug("Service failure encountered - performing transaction rollback");
-                rollbackTransaction();
-            }
-            return response;
+            return serviceCode.get();
         } catch (Exception e) {
-            LOG.warn("Uncaught exception encountered while performing service call.  Performing transaction rollback and returning ServiceFailure", e);
-            rollbackTransaction();
+            LOG.warn("Uncaught exception encountered while performing service call.  Returning ServiceFailure", e);
             return serviceFailure(catchAllError);
         }
     }
-
-    private static void rollbackTransaction() {
-        try {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        } catch (NoTransactionException e) {
-            LOG.trace("No transaction to roll back");
-            LOG.error(e);
-        }
-    }
-
-
 }

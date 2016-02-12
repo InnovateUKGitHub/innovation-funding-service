@@ -47,59 +47,49 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     @Override
     public ServiceResult<Pair<File, FileEntry>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
 
-        return handlingErrors(new Error(FILES_UNABLE_TO_CREATE_FILE), () ->
-
-            createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
-                try {
-                    return validateMediaType(validationFile, MediaType.parseMediaType(resource.getMediaType())).andOnSuccess(tempFile ->
-                           validateContentLength(resource.getFilesizeBytes(), tempFile)).andOnSuccess(tempFile ->
-                           saveFileEntry(resource).andOnSuccess(savedFileEntry ->
-                           createFileForFileEntry(savedFileEntry, tempFile)).andOnSuccess(
-                           ServiceResult::serviceSuccess)
-                    );
-                } finally {
-                    deleteFile(validationFile);
-                }
-            })
-        );
+        return createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
+            try {
+                return validateMediaType(validationFile, MediaType.parseMediaType(resource.getMediaType())).andOnSuccess(tempFile ->
+                       validateContentLength(resource.getFilesizeBytes(), tempFile)).andOnSuccess(tempFile ->
+                       saveFileEntry(resource).andOnSuccess(savedFileEntry ->
+                       createFileForFileEntry(savedFileEntry, tempFile)).andOnSuccess(
+                       ServiceResult::serviceSuccess)
+                );
+            } finally {
+                deleteFile(validationFile);
+            }
+        });
     }
 
     @Override
     public ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
-        return handlingErrors(notFoundError(FileEntry.class, fileEntryId), () ->
-                findFileEntry(fileEntryId).
-                        andOnSuccess(this::findFile).
-                        andOnSuccess(this::getInputStreamSuppier).
-                        andOnSuccess(ServiceResult::serviceSuccess)
-        );
+        return findFileEntry(fileEntryId).
+            andOnSuccess(this::findFile).
+            andOnSuccess(this::getInputStreamSuppier).
+            andOnSuccess(ServiceResult::serviceSuccess);
     }
 
     @Override
     public ServiceResult<Pair<File, FileEntry>> updateFile(FileEntryResource updatedFile, Supplier<InputStream> inputStreamSupplier) {
 
-        return handlingErrors(new Error(FILES_UNABLE_TO_UPDATE_FILE, FileEntry.class, updatedFile.getId()), () ->
-
-                createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
-                    try {
-                        return validateMediaType(validationFile, MediaType.parseMediaType(updatedFile.getMediaType())).andOnSuccess(tempFile ->
-                               validateContentLength(updatedFile.getFilesizeBytes(), tempFile)).andOnSuccess(tempFile ->
-                               updateFileEntry(updatedFile).andOnSuccess(updatedFileEntry ->
-                               updateFileForFileEntry(updatedFileEntry, tempFile).andOnSuccess(
-                               ServiceResult::serviceSuccess
-                        )));
-                    } finally {
-                        deleteFile(validationFile);
-                    }
-                })
-        );
+        return createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
+            try {
+                return validateMediaType(validationFile, MediaType.parseMediaType(updatedFile.getMediaType())).andOnSuccess(tempFile ->
+                       validateContentLength(updatedFile.getFilesizeBytes(), tempFile)).andOnSuccess(tempFile ->
+                       updateFileEntry(updatedFile).andOnSuccess(updatedFileEntry ->
+                       updateFileForFileEntry(updatedFileEntry, tempFile).andOnSuccess(
+                       ServiceResult::serviceSuccess
+                )));
+            } finally {
+                deleteFile(validationFile);
+            }
+        });
     }
 
     @Override
     public ServiceResult<FileEntry> deleteFile(long fileEntryId) {
 
-        return handlingErrors(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, fileEntryId), () ->
-
-            findFileEntry(fileEntryId).
+        return findFileEntry(fileEntryId).
             andOnSuccess(fileEntry -> findFile(fileEntry).
             andOnSuccess(file -> {
 
@@ -112,7 +102,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                 } else {
                     return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, fileEntryId));
                 }
-            })));
+            }));
     }
 
     private ServiceResult<FileEntry> updateFileEntry(FileEntryResource updatedFileDetails) {

@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.handlingErrors;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -128,11 +127,10 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<Void> deleteCost(final Long costId) {
-        return handlingErrors(() -> {
-            costValueRepository.deleteByCostId(costId);
-            costRepository.delete(costId);
-            return serviceSuccess();
-        });
+
+        costValueRepository.deleteByCostId(costId);
+        costRepository.delete(costId);
+        return serviceSuccess();
     }
 
     @Override

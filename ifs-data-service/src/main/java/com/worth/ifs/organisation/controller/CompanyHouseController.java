@@ -19,7 +19,7 @@ import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 public class CompanyHouseController {
 
     @Autowired
-    private CompanyHouseApi companyHouseService;
+    private CompanyHouseApiService companyHouseService;
 
     @RequestMapping("/searchCompanyHouse/{searchText}")
     public RestResult<List<CompanyHouseBusiness>> searchCompanyHouse(@PathVariable("searchText") final String searchText) {

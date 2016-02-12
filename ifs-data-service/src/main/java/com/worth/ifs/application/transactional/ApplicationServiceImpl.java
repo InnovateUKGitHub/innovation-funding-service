@@ -91,142 +91,128 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
 
-        return handlingErrors(() -> {
+        return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
 
-            return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
+           Application application = new Application();
+           application.setName(applicationName);
+           LocalDate currentDate = LocalDate.now();
+           application.setStartDate(currentDate);
 
-               Application application = new Application();
-               application.setName(applicationName);
-               LocalDate currentDate = LocalDate.now();
-               application.setStartDate(currentDate);
+           String name = ApplicationStatusConstants.CREATED.getName();
 
-               String name = ApplicationStatusConstants.CREATED.getName();
+           List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
+           ApplicationStatus applicationStatus = applicationStatusList.get(0);
 
-               List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
-               ApplicationStatus applicationStatus = applicationStatusList.get(0);
+           application.setApplicationStatus(applicationStatus);
+           application.setDurationInMonths(3L);
 
-               application.setApplicationStatus(applicationStatus);
-               application.setDurationInMonths(3L);
+           List<Role> roles = roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName());
+           Role role = roles.get(0);
 
-               List<Role> roles = roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName());
-               Role role = roles.get(0);
+           Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
 
-               Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+           ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
-               ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+           List<ProcessRole> processRoles = new ArrayList<>();
+           processRoles.add(processRole);
 
-               List<ProcessRole> processRoles = new ArrayList<>();
-               processRoles.add(processRole);
+           application.setProcessRoles(processRoles);
+           application.setCompetition(competition);
 
-               application.setProcessRoles(processRoles);
-               application.setCompetition(competition);
+           applicationRepository.save(application);
+           processRoleRepository.save(processRole);
 
-               applicationRepository.save(application);
-               processRoleRepository.save(processRole);
-
-               return serviceSuccess(applicationMapper.mapApplicationToResource(application));
-           });
-        });
+           return serviceSuccess(applicationMapper.mapApplicationToResource(application));
+       });
     }
 
     @Override
     public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
-        return handlingErrors(FILES_UNABLE_TO_CREATE_FILE, () -> {
+        long applicationId = formInputResponseFile.getCompoundId().getApplicationId();
+        long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
+        long formInputId = formInputResponseFile.getCompoundId().getFormInputId();
 
-            long applicationId = formInputResponseFile.getCompoundId().getApplicationId();
-            long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
-            long formInputId = formInputResponseFile.getCompoundId().getFormInputId();
+        FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
 
-            FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
+        if (existingResponse != null && existingResponse.getFileEntry() != null) {
+            return serviceFailure(new Error(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, existingResponse.getFileEntry().getId()));
+        } else {
 
-            if (existingResponse != null && existingResponse.getFileEntry() != null) {
-                return serviceFailure(new Error(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, existingResponse.getFileEntry().getId()));
-            } else {
+            return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).andOnSuccess(successfulFile -> {
 
-                return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).andOnSuccess(successfulFile -> {
+                FileEntry fileEntry = successfulFile.getValue();
 
-                    FileEntry fileEntry = successfulFile.getValue();
+                if (existingResponse != null) {
 
-                    if (existingResponse != null) {
+                    existingResponse.setFileEntry(fileEntry);
+                    formInputResponseRepository.save(existingResponse);
+                    FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputResponseFile.getCompoundId());
+                    return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
 
-                        existingResponse.setFileEntry(fileEntry);
-                        formInputResponseRepository.save(existingResponse);
-                        FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputResponseFile.getCompoundId());
-                        return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
+                } else {
 
-                    } else {
+                    return getProcessRole(processRoleId).
+                            andOnSuccess(processRole -> getFormInput(formInputId).
+                            andOnSuccess(formInput -> getApplication(applicationId).
+                            andOnSuccess(application -> {
 
-                        return getProcessRole(processRoleId).
-                                andOnSuccess(processRole -> getFormInput(formInputId).
-                                andOnSuccess(formInput -> getApplication(applicationId).
-                                andOnSuccess(application -> {
-
-                                    FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
-                                    formInputResponseRepository.save(newFormInputResponse);
-                                    FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
-                                    return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
-                        })));
-                    }
-                });
-            }
-        });
+                                FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
+                                formInputResponseRepository.save(newFormInputResponse);
+                                FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
+                                return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
+                    })));
+                }
+            });
+        }
     }
 
     @Override
     public ServiceResult<Pair<File, FormInputResponseFileEntryResource>> updateFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile, Supplier<InputStream> inputStreamSupplier) {
 
-        return handlingErrors(FILES_UNABLE_TO_UPDATE_FILE, () -> {
+        ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
+                getFormInputResponseFileUpload(formInputResponseFile.getCompoundId());
 
-            ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
-                    getFormInputResponseFileUpload(formInputResponseFile.getCompoundId());
+        return existingFileResult.andOnSuccess(existingFile -> {
 
-            return existingFileResult.andOnSuccess(existingFile -> {
+            FormInputResponseFileEntryResource existingFormInputResource = existingFile.getKey();
 
-                FormInputResponseFileEntryResource existingFormInputResource = existingFile.getKey();
+            FileEntryResource existingFileResource = existingFormInputResource.getFileEntryResource();
+            FileEntryResource updatedFileDetails = formInputResponseFile.getFileEntryResource();
+            FileEntryResource updatedFileDetailsWithId = new FileEntryResource(existingFileResource.getId(), updatedFileDetails.getName(), updatedFileDetails.getMediaType(), updatedFileDetails.getFilesizeBytes());
 
-                FileEntryResource existingFileResource = existingFormInputResource.getFileEntryResource();
-                FileEntryResource updatedFileDetails = formInputResponseFile.getFileEntryResource();
-                FileEntryResource updatedFileDetailsWithId = new FileEntryResource(existingFileResource.getId(), updatedFileDetails.getName(), updatedFileDetails.getMediaType(), updatedFileDetails.getFilesizeBytes());
-
-                return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).andOnSuccess(updatedFile ->
-                        serviceSuccess(Pair.of(updatedFile.getKey(), existingFormInputResource))
-                );
-            });
+            return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).andOnSuccess(updatedFile ->
+                    serviceSuccess(Pair.of(updatedFile.getKey(), existingFormInputResource))
+            );
         });
     }
 
     @Override
     public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId formInputResponseFileId) {
 
-        return handlingErrors(FILES_UNABLE_TO_DELETE_FILE, () -> {
+        ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
+                getFormInputResponseFileUpload(formInputResponseFileId);
 
-            ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
-                    getFormInputResponseFileUpload(formInputResponseFileId);
+        return existingFileResult.andOnSuccess(existingFile -> {
 
-            return existingFileResult.andOnSuccess(existingFile -> {
+            FormInputResponseFileEntryResource formInputFileEntryResource = existingFile.getKey();
+            Long fileEntryId = formInputFileEntryResource.getFileEntryResource().getId();
 
-                FormInputResponseFileEntryResource formInputFileEntryResource = existingFile.getKey();
-                Long fileEntryId = formInputFileEntryResource.getFileEntryResource().getId();
-
-                return fileService.deleteFile(fileEntryId).
-                        andOnSuccess(deletedFile -> getFormInputResponse(formInputFileEntryResource.getCompoundId()).
-                        andOnSuccess(this::unlinkFileEntryFromFormInputResponse).
-                        andOnSuccess(ServiceResult::serviceSuccess)
-                );
-            });
+            return fileService.deleteFile(fileEntryId).
+                    andOnSuccess(deletedFile -> getFormInputResponse(formInputFileEntryResource.getCompoundId()).
+                    andOnSuccess(this::unlinkFileEntryFromFormInputResponse).
+                    andOnSuccess(ServiceResult::serviceSuccess)
+            );
         });
     }
 
     @Override
     public ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
 
-        return handlingErrors(notFoundError(FileEntry.class, fileEntryId.getFormInputId(), fileEntryId.getApplicationId(), fileEntryId.getProcessRoleId()), () ->
-
-                getFormInputResponse(fileEntryId).
-                        andOnSuccess(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
-                        andOnSuccess(inputStreamSupplier -> serviceSuccess(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier))
-        )));
+        return getFormInputResponse(fileEntryId).
+                andOnSuccess(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
+                andOnSuccess(inputStreamSupplier -> serviceSuccess(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier))
+        ));
     }
 
     private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
@@ -273,16 +259,13 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<ApplicationResource> saveApplicationDetails(final Long id, ApplicationResource application) {
 
-        return handlingErrors(() -> {
+        return getApplication(id).andOnSuccess(existingApplication -> {
 
-            return getApplication(id).andOnSuccess(existingApplication -> {
-
-                existingApplication.setName(application.getName());
-                existingApplication.setDurationInMonths(application.getDurationInMonths());
-                existingApplication.setStartDate(application.getStartDate());
-                Application savedApplication = applicationRepository.save(existingApplication);
-                return serviceSuccess(applicationMapper.mapApplicationToResource(savedApplication));
-            });
+            existingApplication.setName(application.getName());
+            existingApplication.setDurationInMonths(application.getDurationInMonths());
+            existingApplication.setStartDate(application.getStartDate());
+            Application savedApplication = applicationRepository.save(existingApplication);
+            return serviceSuccess(applicationMapper.mapApplicationToResource(savedApplication));
         });
     }
 
@@ -302,14 +285,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<ApplicationResource> updateApplicationStatus(final Long id,
                                                          final Long statusId) {
-        return handlingErrors(() -> {
+        return find(application(id), applicationStatus(statusId)).andOnSuccess((application, applicationStatus) -> {
 
-            return find(application(id), applicationStatus(statusId)).andOnSuccess((application, applicationStatus) -> {
-
-                application.setApplicationStatus(applicationStatus);
-                applicationRepository.save(application);
-                return serviceSuccess(applicationMapper.mapApplicationToResource(application));
-            });
+            application.setApplicationStatus(applicationStatus);
+            applicationRepository.save(application);
+            return serviceSuccess(applicationMapper.mapApplicationToResource(application));
         });
     }
 
@@ -343,41 +323,38 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             final Long userId,
             final String applicationName) {
 
-        return handlingErrors(() -> {
+        return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
 
-            return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
+           Application application = new Application();
+           application.setName(applicationName);
+           LocalDate currentDate = LocalDate.now();
+           application.setStartDate(currentDate);
 
-               Application application = new Application();
-               application.setName(applicationName);
-               LocalDate currentDate = LocalDate.now();
-               application.setStartDate(currentDate);
+           String name = ApplicationStatusConstants.CREATED.getName();
 
-               String name = ApplicationStatusConstants.CREATED.getName();
+           List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
+           ApplicationStatus applicationStatus = applicationStatusList.get(0);
 
-               List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
-               ApplicationStatus applicationStatus = applicationStatusList.get(0);
+           application.setApplicationStatus(applicationStatus);
+           application.setDurationInMonths(3L);
 
-               application.setApplicationStatus(applicationStatus);
-               application.setDurationInMonths(3L);
+           List<Role> roles = roleRepository.findByName("leadapplicant");
+           Role role = roles.get(0);
 
-               List<Role> roles = roleRepository.findByName("leadapplicant");
-               Role role = roles.get(0);
+           Organisation userOrganisation = user.getOrganisations().get(0);
 
-               Organisation userOrganisation = user.getOrganisations().get(0);
+           ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
-               ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+           List<ProcessRole> processRoles = new ArrayList<>();
+           processRoles.add(processRole);
 
-               List<ProcessRole> processRoles = new ArrayList<>();
-               processRoles.add(processRole);
+           application.setProcessRoles(processRoles);
+           application.setCompetition(competition);
 
-               application.setProcessRoles(processRoles);
-               application.setCompetition(competition);
+           Application createdApplication = applicationRepository.save(application);
+           processRoleRepository.save(processRole);
 
-               Application createdApplication = applicationRepository.save(application);
-               processRoleRepository.save(processRole);
-
-               return serviceSuccess(applicationMapper.mapApplicationToResource(createdApplication));
-            });
+           return serviceSuccess(applicationMapper.mapApplicationToResource(createdApplication));
         });
     }
 
@@ -458,7 +435,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             LOG.info("Total completed questions" + countCompleted);
 
             if (questions.isEmpty()) {
-                return serviceSuccess(Double.valueOf(0));
+                return serviceSuccess(0d);
             } else {
                 return serviceSuccess((100.0 / totalQuestions) * countCompleted);
             }

@@ -1,17 +1,16 @@
 package com.worth.ifs.email.service;
 
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.email.resource.EmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailBody;
 import com.worth.ifs.sil.email.resource.SilEmailMessage;
 import com.worth.ifs.sil.email.service.SilEmailEndpoint;
-import com.worth.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.service.ServiceResult.handlingErrors;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -27,14 +26,11 @@ public class SilEmailService implements EmailService {
     @Override
     public ServiceResult<List<EmailAddress>> sendEmail(EmailAddress from, List<EmailAddress> to, String subject, String plainTextBodyContent, String htmlBodyContent) {
 
-        return handlingErrors(() -> {
+        SilEmailAddress fromEmail = new SilEmailAddress(from.getName(), from.getEmailAddress());
+        List<SilEmailAddress> toEmails = simpleMap(to, recipient -> new SilEmailAddress(recipient.getName(), recipient.getEmailAddress()));
+        SilEmailBody plainTextBody = new SilEmailBody("text/plain", plainTextBodyContent);
+        SilEmailBody htmlBody = new SilEmailBody("text/html", htmlBodyContent);
 
-            SilEmailAddress fromEmail = new SilEmailAddress(from.getName(), from.getEmailAddress());
-            List<SilEmailAddress> toEmails = simpleMap(to, recipient -> new SilEmailAddress(recipient.getName(), recipient.getEmailAddress()));
-            SilEmailBody plainTextBody = new SilEmailBody("text/plain", plainTextBodyContent);
-            SilEmailBody htmlBody = new SilEmailBody("text/html", htmlBodyContent);
-
-            return endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).andOnSuccess(successfullySent -> serviceSuccess(to));
-        });
+        return endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).andOnSuccess(successfullySent -> serviceSuccess(to));
     }
 }
