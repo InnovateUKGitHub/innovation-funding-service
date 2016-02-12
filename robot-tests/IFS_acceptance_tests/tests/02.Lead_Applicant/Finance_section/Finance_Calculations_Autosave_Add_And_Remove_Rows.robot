@@ -21,6 +21,7 @@ Labour
     [Documentation]    INFUND-192
     ...    Acceptance tests for the Labour section calculations
     ...    INFUND-736
+    ...    INFUND-1256
     [Tags]    Labour    Autosave    Calculations    Finance
     Given Applicant goes to the Your finances section
     And the Applicant fills in the Labour costs
@@ -31,6 +32,8 @@ Labour
     Then the labour total should be correct again
     And the user reloads the page
     And the labour total should be correct again
+    And the applicant edits the working days field
+    And the labour total should have been updated
 
 Overheads
     [Documentation]    INFUND-192
@@ -167,6 +170,20 @@ the applicant fills a second row in the labour costs
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
     Sleep    1s
 
+the applicant edits the working days field
+    Click Element    css=[aria-controls="collapsible-1"]
+    Wait Until Element Is Visible         css=#cost-labour-1-workingDays
+    Clear Element Text    css=#cost-labour-1-workingDays
+    Input Text    css=#cost-labour-1-workingDays    250
+    Focus    css=.app-submit-btn
+    Sleep    1s
+
+the labour total should have been updated
+    Textfield Value Should Be    css=#section-total-9    £ 48,000
+    Element Should Contain    css=[data-mirror="#section-total-9"]    £ 48,000
+
+
+
 the applicant fills in the overheads costs
     Click Element    css=[aria-controls="collapsible-2"]
     Select Radio Button     overheads-rateType-29-51   DEFAULT_PERCENTAGE
@@ -175,8 +192,8 @@ the applicant fills in the overheads costs
 
 the calculations of the overheads should be correct
     Wait Until Element Is Visible   id=section-total-10-default
-    Textfield Value Should Be       id=section-total-10-default      £ 10,435
-    Element Should Contain    css=[aria-controls="collapsible-2"] [data-mirror]    £ 10,435
+    Textfield Value Should Be       id=section-total-10-default      £ 9,600
+    Element Should Contain    css=[aria-controls="collapsible-2"] [data-mirror]    £ 9,600
 
 the applicant changes the data in the overheads section
     Select Radio Button     overheads-rateType-29-51    CUSTOM_RATE
@@ -186,8 +203,8 @@ the applicant changes the data in the overheads section
 
 the calculations of the overheads should still be correct
     Wait Until Element Is Visible   id=section-total-10-custom
-    Textfield Value Should Be       id=section-total-10-custom      £ 15,652
-    Element Should Contain    css=[aria-controls="collapsible-2"] [data-mirror]    £ 15,652
+    Textfield Value Should Be       id=section-total-10-custom      £ 14,400
+    Element Should Contain    css=[aria-controls="collapsible-2"] [data-mirror]    £ 14,400
 
 the applicant changes the data in the overheads section again
     Select Radio Button     overheads-rateType-29-51    SPECIAL_AGREED_RATE
@@ -197,8 +214,8 @@ the applicant changes the data in the overheads section again
 
 the calculations of the overheads should be correct again
     Wait Until Element Is Visible  id=section-total-10-special
-    Textfield Value Should Be      id=section-total-10-special     £ 20,870
-    Element Should Contain    css=[aria-controls="collapsible-2"] [data-mirror]    £ 20,870
+    Textfield Value Should Be      id=section-total-10-special     £ 19,200
+    Element Should Contain    css=[aria-controls="collapsible-2"] [data-mirror]    £ 19,200
 
 the calculations of the overheads should be correct once more
     Click Element    css=[aria-controls="collapsible-2"]
