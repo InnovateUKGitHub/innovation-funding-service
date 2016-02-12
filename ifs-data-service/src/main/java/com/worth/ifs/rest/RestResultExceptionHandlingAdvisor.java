@@ -7,7 +7,9 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
+import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.rest.RestFailures.internalServerErrorRestFailure;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
 
 /**
  *
@@ -31,7 +33,7 @@ public class RestResultExceptionHandlingAdvisor {
             }
         } catch (Throwable e) {
             LOG.warn("Exception caught while processing RestResult-returning method.  Converting to default 500 RestResult", e);
-            return internalServerErrorRestFailure();
+            return restFailure(internalServerErrorError(e.getMessage()));
         }
     }
 }
