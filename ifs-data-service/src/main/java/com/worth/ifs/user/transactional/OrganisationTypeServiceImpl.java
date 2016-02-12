@@ -2,6 +2,7 @@ package com.worth.ifs.user.transactional;
 
 import com.google.common.collect.Lists;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.OrganisationType;
 import com.worth.ifs.user.mapper.OrganisationTypeMapper;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
@@ -16,7 +17,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class OrganisationTypeServiceImpl implements OrganisationTypeService {
+public class OrganisationTypeServiceImpl extends BaseTransactionalService implements OrganisationTypeService {
 
     @Autowired
     private OrganisationTypeRepository repository;

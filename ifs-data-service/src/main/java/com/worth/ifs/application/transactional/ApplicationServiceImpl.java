@@ -58,6 +58,8 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
 
+    private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
+
     // TODO DW - INFUND-1555 - put into a DTO
     public static final String READY_FOR_SUBMIT = "readyForSubmit";
     public static final String PROGRESS = "progress";
@@ -85,8 +87,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private SectionService sectionService;
-
-    private final Log log = LogFactory.getLog(getClass());
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -454,8 +454,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
 
             Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
-            log.info("Total questions" + totalQuestions);
-            log.info("Total completed questions" + countCompleted);
+            LOG.info("Total questions" + totalQuestions);
+            LOG.info("Total completed questions" + countCompleted);
 
             if (questions.isEmpty()) {
                 return serviceSuccess(Double.valueOf(0));

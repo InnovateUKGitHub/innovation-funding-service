@@ -2,7 +2,6 @@ package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -26,9 +25,6 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class SectionServiceImpl extends BaseTransactionalService implements SectionService {
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;

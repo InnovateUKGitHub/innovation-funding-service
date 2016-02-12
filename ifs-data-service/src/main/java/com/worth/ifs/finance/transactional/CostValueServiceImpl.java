@@ -6,6 +6,7 @@ import com.worth.ifs.finance.domain.CostValueId;
 import com.worth.ifs.finance.mapper.CostValueMapper;
 import com.worth.ifs.finance.repository.CostValueRepository;
 import com.worth.ifs.finance.resource.CostValueResource;
+import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class CostValueServiceImpl implements CostValueService {
+public class CostValueServiceImpl extends BaseTransactionalService implements CostValueService {
 
     @Autowired
     private CostValueRepository repository;
