@@ -105,7 +105,7 @@
             <div class="form-group">
                 
                  <label class="form-label form-label-bold" for="assessor-question-feedback-text">Feedback
-                    <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
+                    <span class="form-hint">Please justify your <span th:text="${(questionTitle == 'scope' ? 'answer' : 'score')}">SCORE</span> by writing two or three sentences which will be returned to the applicant as feedback</span>
                  </label>
 
                  <div th:replace="prototypes/fragments/assessor-view :: ${'prototype-assessor-guidance-' + questionTitle}"  th:remove="tag" />
