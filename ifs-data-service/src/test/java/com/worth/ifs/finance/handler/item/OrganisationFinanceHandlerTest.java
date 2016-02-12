@@ -2,6 +2,7 @@ package com.worth.ifs.finance.handler.item;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
@@ -122,7 +123,7 @@ public class OrganisationFinanceHandlerTest {
         Question question = newQuestion().withFormInputs(Arrays.asList(formInput)).build();
 
         costTypeQuestion.put(costType, question);
-        when(questionService.getQuestionByFormInputType(eq(costType.getType()))).thenReturn(question);
+        when(questionService.getQuestionByFormInputType(eq(costType.getType()))).thenReturn(ServiceResult.serviceSuccess(question));
     }
 
     @Test
