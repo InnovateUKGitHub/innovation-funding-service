@@ -9,6 +9,7 @@ import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.internal.util.collections.Sets;
 import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
@@ -49,9 +50,9 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
         assessment.setId(123L);
 
-        when(assessorService.getAllByCompetitionAndAssessor(123L, 456L)).thenReturn(serviceSuccess(assessments));
+        when(assessorService.getAllByCompetitionAndAssessor(456L, 123L)).thenReturn(serviceSuccess(assessments));
 
-        mockMvc.perform(get(applicationControllerPath+"/findAssessmentsByCompetition/1/1"))
+        mockMvc.perform(get(applicationControllerPath+"/findAssessmentsByCompetition/123/456"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]id", is(123)))
                 .andDo(document("assessment/find-competition-assessment"));
@@ -111,7 +112,9 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         long processRoleId = 2L;
         Assessment assessment = newAssessment().withId(assessmentId).build();
         String json = new ObjectMapper().writeValueAsString(assessment);
-        when(assessorService.getOneByProcessRole(processRoleId)).thenReturn(serviceSuccess(assessment));
+
+        when(assessorService.acceptAssessmentInvitation(eq(processRoleId), isA(Assessment.class))).thenReturn(serviceSuccess());
+
         mockMvc.perform(post(applicationControllerPath + "/acceptAssessmentInvitation/" + processRoleId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
@@ -155,10 +158,12 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         when(assessorService.getOne(assessmentId1)).thenReturn(serviceSuccess(assessment1));
         when(assessorService.getOne(assessmentId2)).thenReturn(serviceSuccess(assessment2));
 
+        when(assessorService.submitAssessments(Sets.newSet(assessmentId1, assessmentId2))).thenReturn(serviceSuccess());
+
         mockMvc.perform(post(applicationControllerPath + "/submitAssessments").contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"))
+                .andExpect(content().string(""))
                 .andDo(document("assessment/submit-assessments-assessment"));
     }
 
