@@ -7,6 +7,7 @@ import com.worth.ifs.commons.rest.RestErrorEnvelope;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.form.domain.FormInputResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -27,11 +28,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.Errors.*;
-import static com.worth.ifs.commons.rest.RestFailures.internalServerErrorRestFailure;
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-import static com.worth.ifs.commons.rest.RestSuccesses.createdRestSuccess;
-import static com.worth.ifs.commons.rest.RestSuccesses.noContentRestSuccess;
-import static com.worth.ifs.commons.rest.RestSuccesses.okRestSuccess;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -68,24 +64,21 @@ public class FormInputResponseFileUploadController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) throws IOException {
 
-        return newRestHandler().
-                andOnSuccess((FormInputResponseFileEntryResource resource) -> createdRestSuccess(new FormInputResponseFileEntryCreatedResponse(resource.getFileEntryResource().getId()))).
-                andWithDefaultFailure(internalServerErrorRestFailure("Error creating file")).perform(() -> {
+        ServiceResult<FormInputResponseFileEntryResource> creationResult =
+                find(validContentLengthHeader(contentLength), validContentTypeHeader(contentType), validFilename(originalFilename)).
+                        andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> {
 
             return find(
-                    validContentLengthHeader(contentLength),
-                    validContentTypeHeader(contentType),
-                    validFilename(originalFilename)).andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> {
+                    validContentLength(lengthFromHeader),
+                    validMediaType(typeFromHeader)).andOnSuccess((validLength, validType) -> {
 
-                return find(
-                        validContentLength(lengthFromHeader),
-                        validMediaType(typeFromHeader)).andOnSuccess((validLength, validType) -> {
-
-                    return createFormInputResponseFile(validType, validLength, originalFilename, formInputId, applicationId, processRoleId, request).
-                            andOnSuccess(fileEntryPair -> serviceSuccess(fileEntryPair.getValue()));
-                });
+                return createFormInputResponseFile(validType, validLength, originalFilename, formInputId, applicationId, processRoleId, request).
+                        andOnSuccess(fileEntryPair -> serviceSuccess(fileEntryPair.getValue()));
             });
         });
+
+        ServiceResult<FormInputResponseFileEntryCreatedResponse> response = creationResult.andOnSuccessReturn(entry -> new FormInputResponseFileEntryCreatedResponse(entry.getFileEntryResource().getId()));
+        return response.toDefaultRestResultForPostCreate();
     }
 
     @RequestMapping(value = "/file", method = PUT, produces = "application/json")
@@ -98,24 +91,22 @@ public class FormInputResponseFileUploadController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) throws IOException {
 
-        return newRestHandler().
-                andOnSuccess(okRestSuccess()).
-                andWithDefaultFailure(internalServerErrorRestFailure("Error updating file")).perform(() -> {
+        ServiceResult<FormInputResponseFileEntryResource> updateResult = find(
+                validContentLengthHeader(contentLength),
+                validContentTypeHeader(contentType),
+                validFilename(originalFilename)).andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> {
 
             return find(
-                    validContentLengthHeader(contentLength),
-                    validContentTypeHeader(contentType),
-                    validFilename(originalFilename)).andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> {
+                    validContentLength(lengthFromHeader),
+                    validMediaType(typeFromHeader)).
+                    andOnSuccess((validLength, validType) -> {
 
-                return find(
-                        validContentLength(lengthFromHeader),
-                        validMediaType(typeFromHeader)).andOnSuccess((validLength, validType) -> {
-
-                    return updateFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request).
-                            andOnSuccess(ServiceResult::serviceSuccess);
-                });
+                return updateFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request).
+                        andOnSuccess(ServiceResult::serviceSuccess);
             });
         });
+
+        return updateResult.toDefaultRestResultForPut();
     }
 
     @RequestMapping(value = "/file", method = GET)
@@ -187,13 +178,9 @@ public class FormInputResponseFileUploadController {
             @RequestParam("applicationId") long applicationId,
             @RequestParam("processRoleId") long processRoleId) throws IOException {
 
-        return newRestHandler().andOnSuccess(noContentRestSuccess()).
-               andWithDefaultFailure(internalServerErrorRestFailure("Error deleting file")).
-               perform(() -> {
-
-            FormInputResponseFileEntryId compoundId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
-            return applicationService.deleteFormInputResponseFileUpload(compoundId);
-        });
+        FormInputResponseFileEntryId compoundId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
+        ServiceResult<FormInputResponse> deleteResult = applicationService.deleteFormInputResponseFileUpload(compoundId);
+        return deleteResult.toDefaultRestResultForDelete();
     }
 
     private ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> doGetFile(long formInputId, long applicationId, long processRoleId) {

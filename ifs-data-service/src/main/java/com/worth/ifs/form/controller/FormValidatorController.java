@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 @RestController
 @RequestMapping("/formvalidator")
 public class FormValidatorController {
@@ -19,6 +17,6 @@ public class FormValidatorController {
 
     @RequestMapping("/{id}")
     public RestResult<FormValidatorResource> findById(@PathVariable("id") final Long id) throws ClassNotFoundException{
-        return newRestHandler().perform(() -> service.findOne(id));
+        return service.findOne(id).toDefaultRestResultForGet();
     }
 }

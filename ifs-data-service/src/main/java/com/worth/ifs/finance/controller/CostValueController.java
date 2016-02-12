@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 @RestController
 @RequestMapping("/costvalue")
 public class CostValueController {
@@ -20,6 +18,6 @@ public class CostValueController {
 
     @RequestMapping("/{id}")
     public RestResult<CostValueResource> findById(@PathVariable("id") final CostValueId id) {
-        return newRestHandler().perform(() -> service.findOne(id));
+        return service.findOne(id).toDefaultRestResultForGet();
     }
 }

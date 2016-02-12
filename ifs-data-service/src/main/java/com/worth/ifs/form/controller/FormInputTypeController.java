@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 @RestController
 @RequestMapping("/forminputtype")
 public class FormInputTypeController {
@@ -19,6 +17,6 @@ public class FormInputTypeController {
 
     @RequestMapping("/{id}")
     public RestResult<FormInputTypeResource> findById(@PathVariable("id") final Long id) {
-        return newRestHandler().perform(() -> service.findFormInputType(id));
+        return service.findFormInputType(id).toDefaultRestResultForGet();
     }
 }

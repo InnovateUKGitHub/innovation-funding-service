@@ -28,8 +28,12 @@ public class ServiceFailureTransactionRollbackAdvisorTest extends BaseIntegratio
     @Test
     @Rollback
     public void testSuccessfulMethodUpdatesDatabaseSuccessfully() {
+
         testService.successfulMethod();
         assertEquals("Successful", getUser().getName());
+
+        testService.restoreSuccessfulMethod();
+        assertEquals("Steve Smith", getUser().getName());
     }
 
     @Test

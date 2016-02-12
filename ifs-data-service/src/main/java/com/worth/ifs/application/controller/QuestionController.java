@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Set;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 
 /**
  * QuestionController exposes question data and operations through a REST API.
@@ -26,21 +24,21 @@ public class QuestionController {
 
     @RequestMapping("/id/{id}")
     public RestResult<Question> getQuestionById(@PathVariable("id") final Long id) {
-        return newRestHandler().perform(() -> questionService.getQuestionById(id));
+        return questionService.getQuestionById(id).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/markAsComplete/{questionId}/{applicationId}/{markedAsCompleteById}")
     public RestResult<Void> markAsComplete(@PathVariable("questionId") final Long questionId,
                         @PathVariable("applicationId") final Long applicationId,
                         @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
-        return newRestHandler().perform(() -> questionService.markAsComplete(questionId, applicationId, markedAsCompleteById));
+        return questionService.markAsComplete(questionId, applicationId, markedAsCompleteById).toDefaultRestResultForPut();
     }
 
     @RequestMapping("/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}")
     public RestResult<Void> markAsInComplete(@PathVariable("questionId") final Long questionId,
                                  @PathVariable("applicationId") final Long applicationId,
                                  @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById) {
-        return newRestHandler().perform(() -> questionService.markAsInComplete(questionId, applicationId, markedAsInCompleteById));
+        return questionService.markAsInComplete(questionId, applicationId, markedAsInCompleteById).toDefaultRestResultForPut();
     }
 
     @RequestMapping("/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}")
@@ -48,44 +46,44 @@ public class QuestionController {
                        @PathVariable("applicationId") final Long applicationId,
                        @PathVariable("assigneeId") final Long assigneeId,
                        @PathVariable("assignedById") final Long assignedById) {
-        return newRestHandler().perform(() -> questionService.assign(questionId, applicationId, assigneeId, assignedById));
+        return questionService.assign(questionId, applicationId, assigneeId, assignedById).toDefaultRestResultForPut();
     }
 
     @RequestMapping("/getMarkedAsComplete/{applicationId}/{organisationId}")
     public RestResult<Set<Long>> getMarkedAsComplete(@PathVariable("applicationId") Long applicationId,
                                          @PathVariable("organisationId") Long organisationId) {
-        return newRestHandler().perform(() -> questionService.getMarkedAsComplete(applicationId, organisationId));
+        return questionService.getMarkedAsComplete(applicationId, organisationId).toDefaultRestResultForGet();
     }
 
 
     @RequestMapping("/updateNotification/{questionStatusId}/{notify}")
     public RestResult<Void> updateNotification(@PathVariable("questionStatusId") final Long questionStatusId,
                                    @PathVariable("notify") final Boolean notify) {
-        return newRestHandler().perform(() -> questionService.updateNotification(questionStatusId, notify));
+        return questionService.updateNotification(questionStatusId, notify).toDefaultRestResultForPut();
     }
 
     @RequestMapping("/findByCompetition/{competitionId}")
     public RestResult<List<Question>> findByCompetition(@PathVariable("competitionId") final Long competitionId) {
-        return newRestHandler().perform(() -> questionService.findByCompetition(competitionId));
+        return questionService.findByCompetition(competitionId).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/getNextQuestion/{questionId}")
     public RestResult<Question> getNextQuestion(@PathVariable("questionId") final Long questionId) {
-        return newRestHandler().perform(() -> questionService.getNextQuestion(questionId));
+        return questionService.getNextQuestion(questionId).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/getPreviousQuestionBySection/{sectionId}")
     public RestResult<Question> getPreviousQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
-        return newRestHandler().perform(() -> questionService.getPreviousQuestionBySection(sectionId));
+        return questionService.getPreviousQuestionBySection(sectionId).toDefaultRestResultForGet();
     }
 
     @RequestMapping(value = "/getNextQuestionBySection/{sectionId}")
     public RestResult<Question> getNextQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
-        return newRestHandler().perform(() -> questionService.getNextQuestionBySection(sectionId));
+        return questionService.getNextQuestionBySection(sectionId).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/getPreviousQuestion/{questionId}")
     public RestResult<Question> getPreviousQuestion(@PathVariable("questionId") final Long questionId) {
-        return newRestHandler().perform(() -> questionService.getPreviousQuestion(questionId));
+        return questionService.getPreviousQuestion(questionId).toDefaultRestResultForGet();
     }
 }

@@ -159,27 +159,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testCreateFileButApplicationServiceCallFailsThrowsException() throws Exception {
-
-        when(applicationService.createFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isSupplierMatcher())).thenThrow(new RuntimeException("No files today!"));
-
-        MvcResult response = mockMvc.
-                perform(
-                        post("/forminputresponse/file").
-                                param("formInputId", "123").
-                                param("applicationId", "456").
-                                param("processRoleId", "789").
-                                param("filename", "original.pdf").
-                                header("Content-Type", "application/pdf").
-                                header("Content-Length", "1000").
-                                content("My PDF content")).
-                andExpect(status().isInternalServerError()).
-                andReturn();
-
-        assertResponseErrorMessageEqual("Error creating file", internalServerErrorError("Error creating file"), response);
-    }
-
-    @Test
     public void testCreateFileButFormInputNotFound() throws Exception {
         assertCreateFileButEntityNotFound(FormInput.class, "formInputNotFound", "FormInput not found");
     }
@@ -379,27 +358,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testUpdateFileButApplicationServiceCallFailsThrowsException() throws Exception {
-
-        when(applicationService.updateFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isSupplierMatcher())).thenThrow(new RuntimeException("No files today!"));
-
-        MvcResult response = mockMvc.
-                perform(
-                        put("/forminputresponse/file").
-                                param("formInputId", "123").
-                                param("applicationId", "456").
-                                param("processRoleId", "789").
-                                param("filename", "original.pdf").
-                                header("Content-Type", "application/pdf").
-                                header("Content-Length", "1000").
-                                content("My PDF content")).
-                andExpect(status().isInternalServerError()).
-                andReturn();
-
-        assertResponseErrorMessageEqual("Error updating file", internalServerErrorError("Error updating file"), response);
-    }
-
-    @Test
     public void testUpdateFileButFormInputNotFound() throws Exception {
         assertUpdateFileButEntityNotFound(FormInput.class, "formInputNotFound", "FormInput not found");
     }
@@ -562,23 +520,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("processRoleId", "789")).
                 andExpect(status().isInternalServerError()).
                 andDo(document("forminputresponsefileupload/file_fileDelete_internalServerError")).
-                andReturn();
-
-        assertResponseErrorMessageEqual("Error deleting file", internalServerErrorError("Error deleting file"), response);
-    }
-
-    @Test
-    public void testDeleteFileButApplicationServiceCallFailsThrowsException() throws Exception {
-
-        when(applicationService.deleteFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenThrow(new RuntimeException("No files today!"));
-
-        MvcResult response = mockMvc.
-                perform(
-                        delete("/forminputresponse/file").
-                                param("formInputId", "123").
-                                param("applicationId", "456").
-                                param("processRoleId", "789")).
-                andExpect(status().isInternalServerError()).
                 andReturn();
 
         assertResponseErrorMessageEqual("Error deleting file", internalServerErrorError("Error deleting file"), response);

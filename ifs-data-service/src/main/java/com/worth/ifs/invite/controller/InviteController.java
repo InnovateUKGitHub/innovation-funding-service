@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Set;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 /**
  * InviteController is to handle the REST calls from the web-service and contains the handling of all call involving the Invite and InviteOrganisations.
  */
@@ -26,27 +24,27 @@ public class InviteController {
 
     @RequestMapping("/createApplicationInvites")
     public RestResult<InviteResultsResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
-        return newRestHandler().perform(() -> inviteService.createApplicationInvites(inviteOrganisationResource));
+        return inviteService.createApplicationInvites(inviteOrganisationResource).toDefaultRestResultForPostCreate();
     }
 
     @RequestMapping("/getInviteByHash/{hash}")
     public RestResult<InviteResource> getInviteByHash(@PathVariable("hash") String hash) {
-        return newRestHandler().perform(() -> inviteService.getInviteByHash(hash));
+        return inviteService.getInviteByHash(hash).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/getInviteOrganisationByHash/{hash}")
     public RestResult<InviteOrganisationResource> getInviteOrganisationByHash(@PathVariable("hash") String hash) {
-        return newRestHandler().perform(() -> inviteService.getInviteOrganisationByHash(hash));
+        return inviteService.getInviteOrganisationByHash(hash).toDefaultRestResultForGet();
     }
 
 
     @RequestMapping("/getInvitesByApplicationId/{applicationId}")
     public RestResult<Set<InviteOrganisationResource>> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
-        return newRestHandler().perform(() -> inviteService.getInvitesByApplication(applicationId));
+        return inviteService.getInvitesByApplication(applicationId).toDefaultRestResultForGet();
     }
 
     @RequestMapping(value = "/saveInvites", method = RequestMethod.POST)
     public RestResult<InviteResultsResource> saveInvites(@RequestBody List<InviteResource> inviteResources) {
-        return newRestHandler().perform(() -> inviteService.saveInvites(inviteResources));
+        return inviteService.saveInvites(inviteResources).toDefaultRestResultForPostCreate();
     }
 }

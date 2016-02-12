@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 /**
  * ApplicationController exposes Application data and operations through a REST API.
  */
@@ -27,17 +25,17 @@ public class CompetitionController {
 
     @RequestMapping("/findById/{id}")
     public RestResult<Competition> getCompetitionById(@PathVariable("id") final Long id) {
-        return newRestHandler().perform(() -> competitionService.getCompetitionById(id));
+        return competitionService.getCompetitionById(id).toDefaultRestResultForGet();
     }
 
     // TODO DW - INFUND-1555 - do we really need this route AND the above route?
     @RequestMapping("/id/{id}")
     public RestResult<Competition> getApplicationById(@PathVariable("id") final Long id) {
-        return newRestHandler().perform(() -> competitionService.getCompetitionById(id));
+        return competitionService.getCompetitionById(id).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/findAll")
     public RestResult<List<Competition>> findAll() {
-        return newRestHandler().perform(() -> competitionService.findAll());
+        return competitionService.findAll().toDefaultRestResultForGet();
     }
 }

@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Set;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 /**
  * This RestController exposes CRUD operations to both the
  * {@link com.worth.ifs.user.service.UserRestServiceImpl} and other REST-API users
@@ -29,51 +27,51 @@ public class UserController {
 
     @RequestMapping("/token/{token}")
     public RestResult<User> getUserByToken(@PathVariable("token") final String token) {
-        return newRestHandler().perform(() -> userService.getUserByToken(token));
+        return userService.getUserByToken(token).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/email/{email}/password/{password}")
     public RestResult<User> getUserByEmailandPassword(@PathVariable("email") final String email, @PathVariable("password") final String password) {
-        return newRestHandler().perform(() -> userService.getUserByEmailandPassword(email, password));
+        return userService.getUserByEmailandPassword(email, password).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/id/{id}")
     public RestResult<User> getUserById(@PathVariable("id") final Long id) {
-        return newRestHandler().perform(() -> userService.getUserById(id));
+        return userService.getUserById(id).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/name/{name}")
     public RestResult<List<User>> getUserByName(@PathVariable("name") final String name) {
-        return newRestHandler().perform(() -> userService.getUserByName(name));
+        return userService.getUserByName(name).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/findAll/")
     public RestResult<List<User>> findAll() {
-        return newRestHandler().perform(() -> userService.findAll());
+        return userService.findAll().toDefaultRestResultForGet();
     }
 
     @RequestMapping("/findByEmail/{email}/")
     public RestResult<List<UserResource>> findByEmail(@PathVariable("email") final String email) {
-        return newRestHandler().perform(() -> userService.findByEmail(email));
+        return userService.findByEmail(email).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/findAssignableUsers/{applicationId}")
     public RestResult<Set<User>> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
-        return newRestHandler().perform(() -> userService.findAssignableUsers(applicationId));
+        return userService.findAssignableUsers(applicationId).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/findRelatedUsers/{applicationId}")
     public RestResult<Set<User>> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
-        return newRestHandler().perform(() -> userService.findRelatedUsers(applicationId));
+        return userService.findRelatedUsers(applicationId).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return newRestHandler().perform(() -> userService.createUser(organisationId, userResource));
+        return userService.createUser(organisationId, userResource).toDefaultRestResultForPostCreate();
     }
 
     @RequestMapping("/updateDetails")
     public RestResult<UserResource> createUser(@RequestBody UserResource userResource) {
-        return newRestHandler().perform(() -> userService.updateUser(userResource));
+        return userService.updateUser(userResource).toDefaultRestResultForPutWithBody();
     }
 }

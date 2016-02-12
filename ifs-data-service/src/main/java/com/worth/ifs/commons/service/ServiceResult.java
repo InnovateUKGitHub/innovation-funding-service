@@ -2,17 +2,24 @@ package com.worth.ifs.commons.service;
 
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.ErrorTemplate;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Collections.singletonList;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a ServiceFailure, and a
@@ -49,6 +56,66 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     @Override
     protected <R> BaseEitherBackedResult<R, ServiceFailure> createFailure(FailingOrSucceedingResult<R, ServiceFailure> failure) {
         return failure != null ? serviceFailure(failure.getFailure()) : serviceFailure(internalServerErrorError("Unexpected error"));
+    }
+
+    public RestResult<T> toRestResult() {
+        return toRestResult(OK);
+    }
+
+    public RestResult<Void> toEmptyRestResult() {
+        return toEmptyRestResult(OK);
+    }
+
+    public RestResult<T> toRestResult(HttpStatus statusCode) {
+        return handleSuccessOrFailure(
+                failure -> handleServiceFailure(failure),
+                success -> restSuccess(success, statusCode)
+        );
+    }
+
+    public RestResult<Void> toEmptyRestResult(HttpStatus statusCode) {
+        return handleSuccessOrFailure(
+                failure -> handleServiceFailure(failure),
+                success -> restSuccess(statusCode)
+        );
+    }
+
+    public RestResult<Void> toRestResultNoContent() {
+        return toEmptyRestResult(NO_CONTENT);
+    }
+
+    public RestResult<T> toDefaultRestResultForGet() {
+        return toRestResult();
+    }
+
+    public RestResult<T> toDefaultRestResultForPostCreate() {
+        return toRestResult(CREATED);
+    }
+
+    /**
+     * @deprecated should use POSTs for create, and PUTs for update
+     */
+    public RestResult<Void> toDefaultRestResultForPostUpdate() {
+        return toEmptyRestResult();
+    }
+
+    public RestResult<Void> toDefaultRestResultForPut() {
+        return toEmptyRestResult();
+    }
+
+    /**
+     * @deprecated PUTs shouldn't generally return results - an HTTP status is generally ok
+     */
+    public RestResult<T> toDefaultRestResultForPutWithBody() {
+        return toRestResult();
+    }
+
+    public RestResult<Void> toDefaultRestResultForDelete() {
+        return toRestResultNoContent();
+    }
+
+    private <R> RestResult<R> handleServiceFailure(ServiceFailure failure) {
+        return restFailure(failure.getErrors());
     }
 
     public static ServiceResult<Void> serviceSuccess() {

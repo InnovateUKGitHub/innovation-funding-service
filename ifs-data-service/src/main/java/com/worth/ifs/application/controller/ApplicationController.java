@@ -5,14 +5,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -27,43 +26,43 @@ public class ApplicationController {
 
     @RequestMapping("/normal/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
-        return newRestHandler().perform(() -> applicationService.getApplicationById(id));
+        return applicationService.getApplicationById(id).toDefaultRestResultForGet();
     }
 
 
     @RequestMapping("/")
     public RestResult<List<ApplicationResource>> findAll() {
-        return newRestHandler().perform(() -> applicationService.findAll());
+        return applicationService.findAll().toDefaultRestResultForGet();
     }
 
     @RequestMapping("/findByUser/{userId}")
     public RestResult<List<ApplicationResource>> findByUserId(@PathVariable("userId") final Long userId) {
-        return newRestHandler().perform(() -> applicationService.findByUserId(userId));
+        return applicationService.findByUserId(userId).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/saveApplicationDetails/{id}")
     public RestResult<Void> saveApplicationDetails(@PathVariable("id") final Long id,
                                                    @RequestBody ApplicationResource application) {
 
-        return newRestHandler().perform(() -> applicationService.saveApplicationDetails(id, application));
+        return applicationService.saveApplicationDetails(id, application).toDefaultRestResultForPostUpdate();
     }
 
     @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")
     public RestResult<ObjectNode> getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        return newRestHandler().perform(() -> applicationService.getProgressPercentageNodeByApplicationId(applicationId));
+        return applicationService.getProgressPercentageNodeByApplicationId(applicationId).toDefaultRestResultForGet();
     }
 
     @RequestMapping(value = "/updateApplicationStatus", method = RequestMethod.PUT)
     public RestResult<Void> updateApplicationStatus(@RequestParam("applicationId") final Long id,
                                                           @RequestParam("statusId") final Long statusId) {
 
-        return newRestHandler().perform(() -> applicationService.updateApplicationStatus(id, statusId));
+        return applicationService.updateApplicationStatus(id, statusId).toDefaultRestResultForPut();
     }
 
 
     @RequestMapping("/applicationReadyForSubmit/{applicationId}")
     public RestResult<ObjectNode> applicationReadyForSubmit(@PathVariable("applicationId") final Long id){
-        return newRestHandler().perform(() -> applicationService.applicationReadyForSubmit(id));
+        return applicationService.applicationReadyForSubmit(id).toDefaultRestResultForGet();
     }
 
 
@@ -72,7 +71,7 @@ public class ApplicationController {
                                                                      @PathVariable("userId") final Long userId,
                                                                      @PathVariable("role") final UserRoleType role) {
 
-        return newRestHandler().perform(() -> applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role));
+        return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toDefaultRestResultForGet();
     }
 
     @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.POST)
@@ -81,6 +80,9 @@ public class ApplicationController {
             @PathVariable("userId") final Long userId,
             @RequestBody JsonNode jsonObj) {
 
-        return newRestHandler().perform(() -> applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, jsonObj.get("name").textValue()));
+        String name = jsonObj.get("name").textValue();
+        ServiceResult<ApplicationResource> applicationResult =
+                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, name);
+        return applicationResult.toDefaultRestResultForPostCreate();
     }
 }

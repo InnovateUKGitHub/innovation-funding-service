@@ -14,17 +14,17 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 @RestController
 public class RestResultExceptionHandlingAdviceTestController {
 
-    @RequestMapping
+    @RequestMapping("/success-test")
     public RestResult<String> successfulMethod() {
         return restSuccess("Success");
     }
 
-    @RequestMapping
+    @RequestMapping("/failure-test")
     public RestResult<String> failedMethod() {
         return restFailure(internalServerErrorError("Failure"));
     }
 
-    @RequestMapping
+    @RequestMapping("/exception-test")
     public RestResult<String> exceptionThrowingMethod() {
         throw new RuntimeException("Exception");
     }

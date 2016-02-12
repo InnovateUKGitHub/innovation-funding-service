@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 @RestController
 @RequestMapping("/organisationtype")
 public class OrganisationTypeController {
@@ -21,11 +19,11 @@ public class OrganisationTypeController {
 
     @RequestMapping("/{id}")
     public RestResult<OrganisationTypeResource> findById(@PathVariable("id") final Long id) {
-        return newRestHandler().perform(() -> service.findOne(id));
+        return service.findOne(id).toDefaultRestResultForGet();
     }
 
     @RequestMapping("/getAll")
     public RestResult<List<OrganisationTypeResource>> findAll() {
-        return newRestHandler().perform(() -> service.findAll());
+        return service.findAll().toDefaultRestResultForGet();
     }
 }

@@ -2,6 +2,7 @@ package com.worth.ifs.form.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.transactional.FormInputService;
@@ -16,7 +17,6 @@ import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
@@ -36,7 +36,7 @@ public class FormInputResponseController {
 
     @RequestMapping("/findResponsesByApplication/{applicationId}")
     public RestResult<List<FormInputResponse>> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
-        return newRestHandler().perform(() -> formInputService.findResponsesByApplication(applicationId));
+        return formInputService.findResponsesByApplication(applicationId).toDefaultRestResultForGet();
     }
 
     @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
@@ -47,8 +47,7 @@ public class FormInputResponseController {
         Long formInputId = jsonObj.get("formInputId").asLong();
         String value = HtmlUtils.htmlUnescape(jsonObj.get("value").asText(""));
 
-        return newRestHandler().perform(() ->
-                formInputService.saveQuestionResponse(userId, applicationId, formInputId, value).andOnSuccess(response -> {
+        ServiceResult<List<String>> result = formInputService.saveQuestionResponse(userId, applicationId, formInputId, value).andOnSuccess(response -> {
 
             BindingResult bindingResult = ValidationUtil.validateResponse(response);
             if (bindingResult.hasErrors()) {
@@ -61,6 +60,8 @@ public class FormInputResponseController {
 
             ValidatedResponse validatedResponse = new ValidatedResponse(bindingResult, response);
             return serviceSuccess(validatedResponse.getAllErrors());
-        }));
+        });
+
+        return result.toDefaultRestResultForPutWithBody();
     }
 }

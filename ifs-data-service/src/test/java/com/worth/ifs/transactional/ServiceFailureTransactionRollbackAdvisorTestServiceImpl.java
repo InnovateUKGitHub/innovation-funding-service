@@ -31,6 +31,16 @@ public class ServiceFailureTransactionRollbackAdvisorTestServiceImpl extends Bas
     }
 
     @Override
+    public ServiceResult<String> restoreSuccessfulMethod() {
+
+        User user = getUser();
+        user.setName("Steve Smith");
+        userRepository.save(user);
+
+        return serviceSuccess("Successful restore");
+    }
+
+    @Override
     public ServiceResult<String> failingMethod() {
 
         User user = getUser();
