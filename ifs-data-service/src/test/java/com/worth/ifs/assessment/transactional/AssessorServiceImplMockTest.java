@@ -9,18 +9,24 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.transactional.UsersRolesService;
+import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import java.util.List;
 import java.util.Set;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -33,6 +39,10 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -46,6 +56,12 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
     protected AssessorService supplyServiceUnderTest() {
         return new AssessorServiceImpl();
     }
+
+    @Mock
+    private AssessmentWorkflowEventHandler assessmentWorkflowEventHandlerMock;
+
+    @Mock
+    private UsersRolesService usersRolesServiceMock;
 
     @Test
     public void test_responseNotFound() {
@@ -209,5 +225,83 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
         ServiceResult<Integer> result = service.getTotalAssignedAssessmentsByCompetition(123L, 456L);
         assertTrue(result.isSuccess());
         assertEquals(Integer.valueOf(5), result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetTotalSubmittedAssessmentsByCompetition() {
+
+        when(assessmentRepositoryMock.countByProcessRoleUserIdAndProcessRoleApplicationCompetitionIdAndStatus(456L, 123L, ApplicationStatusConstants.SUBMITTED.getName())).thenReturn(5);
+
+        ServiceResult<Integer> result = service.getTotalSubmittedAssessmentsByCompetition(123L, 456L);
+        assertTrue(result.isSuccess());
+        assertEquals(Integer.valueOf(5), result.getSuccessObject());
+    }
+
+    @Test
+    public void testAcceptAssessmentInvitation() {
+
+        Competition competititon = newCompetition().build();
+        Application application = newApplication().withCompetition(competititon).build();
+        ProcessRole processRole = newProcessRole().withApplication(application).build();
+        Assessment assessment = newAssessment().withProcessRole(processRole).build();
+
+        when(assessmentRepositoryMock.findOneByProcessRoleId(123L)).thenReturn(assessment);
+
+        ServiceResult<Void> result = service.acceptAssessmentInvitation(123L, assessment);
+        assertTrue(result.isSuccess());
+
+        verify(assessmentWorkflowEventHandlerMock).acceptInvitation(123L, assessment);
+    }
+
+    @Test
+    public void testRejectAssessmentInvitation() {
+
+        Competition competititon = newCompetition().build();
+        Application application = newApplication().withCompetition(competititon).build();
+        ProcessRole processRole = newProcessRole().withApplication(application).build();
+        Assessment assessment = newAssessment().withProcessRole(processRole).build();
+
+        when(assessmentRepositoryMock.findOneByProcessRoleId(123L)).thenReturn(assessment);
+
+        ProcessOutcome processOutcome = newProcessOutcome().build();
+        ServiceResult<Void> result = service.rejectAssessmentInvitation(123L, processOutcome);
+        assertTrue(result.isSuccess());
+
+        verify(assessmentWorkflowEventHandlerMock).rejectInvitation(123L, null, processOutcome);
+    }
+
+    @Test
+    public void testSubmitAssessments() {
+
+        Competition competititon = newCompetition().build();
+        Application application = newApplication().withCompetition(competititon).build();
+        ProcessRole processRole = newProcessRole().withApplication(application).build();
+        Assessment assessment1 = newAssessment().withProcessRole(processRole).build();
+        Assessment assessment2 = newAssessment().withProcessRole(processRole).build();
+
+        when(assessmentRepositoryMock.findById(assessment1.getId())).thenReturn(assessment1);
+        when(assessmentRepositoryMock.findById(assessment2.getId())).thenReturn(assessment2);
+
+        ServiceResult<Void> result = service.submitAssessments(newHashSet(assessment1.getId(), assessment2.getId()));
+        assertTrue(result.isSuccess());
+
+        verify(assessmentWorkflowEventHandlerMock, times(2)).submit(isA(Assessment.class));
+    }
+
+    @Test
+    public void testSubmitAssessment() {
+
+        Competition competititon = newCompetition().build();
+        Application application = newApplication().withCompetition(competititon).build();
+        ProcessRole processRole = newProcessRole().withApplication(application).build();
+        Assessment assessment = newAssessment().withProcessRole(processRole).build();
+
+        when(usersRolesServiceMock.getProcessRoleByUserIdAndApplicationId(123L, 456L)).thenReturn(serviceSuccess(processRole));
+
+        when(assessmentRepositoryMock.findOneByProcessRoleId(processRole.getId())).thenReturn(assessment);
+        ServiceResult<Void> result = service.submitAssessment(123L, 456L, "a suitable value", "suitable feedback", "some comments");
+        assertTrue(result.isSuccess());
+
+        verify(assessmentWorkflowEventHandlerMock).recommend(eq(processRole.getId()), isA(Assessment.class), isA(ProcessOutcome.class));
     }
 }
