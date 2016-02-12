@@ -11,7 +11,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-929: As a lead applicant i want to be able to have a separate screen, so that i can invite contributors to the application
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Create new application    collaboration
+Force Tags        Create new application    collaboration       Pending   # These tests are pending due to bug INFUND:1841
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
