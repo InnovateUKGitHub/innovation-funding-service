@@ -129,7 +129,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
     @Override
     public ServiceResult<Section> findByName(final String name) {
-        return find(() -> sectionRepository.findByName(name), notFoundError(Section.class, name));
+        return find(sectionRepository.findByName(name), notFoundError(Section.class, name));
     }
 
     // TODO DW - INFUND-1555 - work out the getSuccessObject call
@@ -265,11 +265,11 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
     @Override
     public ServiceResult<Section> getSectionByQuestionId(final Long questionId) {
-        return find(() -> sectionRepository.findByQuestionsId(questionId), notFoundError(Section.class, questionId));
+        return find(sectionRepository.findByQuestionsId(questionId), notFoundError(Section.class, questionId));
     }
 
 
     private ServiceResult<Section> getSection(Long sectionId) {
-        return find(() -> sectionRepository.findOne(sectionId), notFoundError(Section.class, sectionId));
+        return find(sectionRepository.findOne(sectionId), notFoundError(Section.class, sectionId));
     }
 }

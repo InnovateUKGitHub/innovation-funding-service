@@ -109,7 +109,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     public ServiceResult<Void> updateNotification(final Long questionStatusId,
                                                   final Boolean notify) {
 
-        return find(() -> questionStatusRepository.findOne(questionStatusId), notFoundError(QuestionStatus.class, questionStatusId)).andOnSuccess(questionStatus -> {
+        return find(questionStatusRepository.findOne(questionStatusId), notFoundError(QuestionStatus.class, questionStatusId)).andOnSuccess(questionStatus -> {
             questionStatus.setNotified(notify);
             questionStatusRepository.save(questionStatus);
             return serviceSuccess();
@@ -236,7 +236,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<QuestionStatus> getQuestionStatusResourceById(Long id) {
-        return find(() -> questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id));
+        return find(questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id));
     }
 
     @Override
@@ -360,6 +360,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private ServiceResult<Question> getQuestion(Long questionId) {
-        return find(() -> questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
+        return find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
     }
 }

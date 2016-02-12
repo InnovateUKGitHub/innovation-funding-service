@@ -144,7 +144,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<Invite> findOne(Long id) {
-        return find(() -> inviteRepository.findOne(id), notFoundError(Invite.class, id));
+        return find(inviteRepository.findOne(id), notFoundError(Invite.class, id));
     }
 
     @Override
@@ -202,7 +202,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private ServiceResult<Invite> getByHash(String hash) {
-        return find(() -> inviteRepository.getByHash(hash), notFoundError(Invite.class, hash));
+        return find(inviteRepository.getByHash(hash), notFoundError(Invite.class, hash));
     }
 
     private ServiceResult<List<Invite>> findByApplicationId(Long applicationId) {

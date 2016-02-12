@@ -222,7 +222,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<FormInput> getFormInput(long formInputId) {
-        return find(() -> formInputRepository.findOne(formInputId), notFoundError(FormInput.class, formInputId));
+        return find(formInputRepository.findOne(formInputId), notFoundError(FormInput.class, formInputId));
     }
 
     private FormInputResponseFileEntryResource formInputResponseFileEntryResource(FileEntry fileEntry, FormInputResponseFileEntryId fileEntryId) {
@@ -232,14 +232,16 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private ServiceResult<FormInputResponse> getFormInputResponse(FormInputResponseFileEntryId fileEntry) {
         Error formInputResponseNotFoundError = notFoundError(FormInputResponse.class, fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId());
-        return find(() -> formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId()), formInputResponseNotFoundError);
+        return find(formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(
+                fileEntry.getApplicationId(),
+                fileEntry.getProcessRoleId(),
+                fileEntry.getFormInputId()),
+                formInputResponseNotFoundError);
     }
 
     @Override
     public ServiceResult<ApplicationResource> getApplicationById(final Long id) {
-        return super.getApplication(id).andOnSuccess(application ->
-            serviceSuccess(applicationMapper.mapApplicationToResource(application))
-        );
+        return getApplication(id).andOnSuccessReturn(applicationMapper::mapApplicationToResource);
     }
 
     @Override

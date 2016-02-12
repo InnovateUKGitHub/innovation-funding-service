@@ -24,6 +24,6 @@ public class CostValueServiceImpl extends BaseTransactionalService implements Co
 
     @Override
     public ServiceResult<CostValueResource> findOne(CostValueId id) {
-        return find(() -> repository.findOne(id), notFoundError(CostValue.class)).andOnSuccessReturn(mapper::mapCostValueToResource);
+        return find(repository.findOne(id), notFoundError(CostValue.class)).andOnSuccessReturn(mapper::mapCostValueToResource);
     }
 }

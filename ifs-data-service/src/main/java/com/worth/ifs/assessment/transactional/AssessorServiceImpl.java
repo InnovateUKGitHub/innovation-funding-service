@@ -111,7 +111,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
 
     @Override
     public ServiceResult<Assessment> getOne(Long id) {
-        return find(() -> assessmentRepository.findById(id), notFoundError(Assessment.class, id));
+        return find(assessmentRepository.findById(id), notFoundError(Assessment.class, id));
     }
 
     /**
@@ -128,7 +128,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
 
     @Override
     public ServiceResult<Assessment> getOneByProcessRole(Long processRoleId) {
-        return find(() -> assessmentRepository.findOneByProcessRoleId(processRoleId), notFoundError(Assessment.class, processRoleId));
+        return find(assessmentRepository.findOneByProcessRoleId(processRoleId), notFoundError(Assessment.class, processRoleId));
     }
 
     @Override
@@ -237,9 +237,13 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     private ServiceResult<ProcessRole> getAssessorProcessRole(Long assessorUserId, Long applicationId, Role assessorRole) {
-        return find(() -> processRoleRepository.findByUserIdAndRoleAndApplicationId(assessorUserId, assessorRole, applicationId),
-                notFoundError(ProcessRole.class, assessorUserId, assessorRole.getName(), applicationId)).
+        return getProcessRoleByUseridRoleAndApplicationId(assessorUserId, applicationId, assessorRole).
                 andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
+    }
+
+    private ServiceResult<List<ProcessRole>> getProcessRoleByUseridRoleAndApplicationId(Long assessorUserId, Long applicationId, Role assessorRole) {
+        return find(processRoleRepository.findByUserIdAndRoleAndApplicationId(assessorUserId, assessorRole, applicationId),
+                notFoundError(ProcessRole.class, assessorUserId, assessorRole.getName(), applicationId));
     }
 
     private RecommendedValue getRecommendedValueFromString(String value) {

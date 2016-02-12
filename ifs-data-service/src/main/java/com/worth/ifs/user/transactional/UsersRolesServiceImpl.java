@@ -29,17 +29,17 @@ public class UsersRolesServiceImpl extends BaseTransactionalService implements U
 
     @Override
     public ServiceResult<List<ProcessRole>> getProcessRolesByApplicationId(Long applicationId) {
-        return find(() -> processRoleRepository.findByApplicationId(applicationId), notFoundError(ProcessRole.class, "Application", applicationId));
+        return find(processRoleRepository.findByApplicationId(applicationId), notFoundError(ProcessRole.class, "Application", applicationId));
     }
 
     @Override
     public ServiceResult<ProcessRole> getProcessRoleByUserIdAndApplicationId(Long userId, Long applicationId) {
-        return find(() -> processRoleRepository.findByUserIdAndApplicationId(userId, applicationId), notFoundError(ProcessRole.class, "User", userId, "Application", applicationId));
+        return find(processRoleRepository.findByUserIdAndApplicationId(userId, applicationId), notFoundError(ProcessRole.class, "User", userId, "Application", applicationId));
     }
 
     @Override
     public ServiceResult<List<ProcessRole>> getProcessRolesByUserId(Long userId) {
-        return find(() -> processRoleRepository.findByUserId(userId), notFoundError(ProcessRole.class, "User", userId));
+        return find(processRoleRepository.findByUserId(userId), notFoundError(ProcessRole.class, "User", userId));
     }
 
     @Override

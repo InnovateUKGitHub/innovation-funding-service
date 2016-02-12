@@ -23,6 +23,6 @@ public class FileEntryServiceImpl extends BaseTransactionalService implements Fi
 
     @Override
     public ServiceResult<FileEntryResource> findOne(Long id) {
-        return find(() -> repository.findOne(id), notFoundError(FileEntry.class, id)).andOnSuccessReturn(mapper::mapFileEntryToResource);
+        return find(repository.findOne(id), notFoundError(FileEntry.class, id)).andOnSuccessReturn(mapper::mapFileEntryToResource);
     }
 }

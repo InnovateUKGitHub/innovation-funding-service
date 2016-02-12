@@ -46,18 +46,18 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     @Override
     public ServiceResult<FormInput> findFormInput(Long id) {
-        return find(() -> formInputRepository.findOne(id), notFoundError(FormInput.class, id));
+        return find(formInputRepository.findOne(id), notFoundError(FormInput.class, id));
     }
 
     @Override
     public ServiceResult<FormInputTypeResource> findFormInputType(Long id) {
-        return find(() -> formInputTypeRepository.findOne(id), notFoundError(FormInputType.class, id)).
-                andOnSuccess(formInputType -> serviceSuccess(mapper.mapFormInputTypeToResource(formInputType)));
+        return find(formInputTypeRepository.findOne(id), notFoundError(FormInputType.class, id)).
+                andOnSuccessReturn(mapper::mapFormInputTypeToResource);
     }
 
     @Override
     public ServiceResult<List<FormInputResponse>> findResponsesByApplication(final Long applicationId) {
-        return find(() -> formInputResponseRepository.findByApplicationId(applicationId), notFoundError(FormInputResponse.class, applicationId));
+        return find(formInputResponseRepository.findByApplicationId(applicationId), notFoundError(FormInputResponse.class, applicationId));
     }
 
     @Override

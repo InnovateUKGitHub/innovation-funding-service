@@ -67,7 +67,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<CostField> getCostFieldById(Long id) {
-        return find(() -> costFieldRepository.findOne(id), notFoundError(CostField.class, id));
+        return find(costFieldRepository.findOne(id), notFoundError(CostField.class, id));
     }
 
     @Override
@@ -99,7 +99,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     private ServiceResult<Cost> doUpdate(Long id, CostItem newCostItem) {
-        return find(() -> costRepository.findOne(id), notFoundError(Cost.class, id)).andOnSuccess(existingCost -> {
+        return find(costRepository.findOne(id), notFoundError(Cost.class, id)).andOnSuccess(existingCost -> {
 
             Cost newCost = organisationFinanceHandler.costItemToCost(newCostItem);
             Cost updatedCost = mapCost(existingCost, newCost);
@@ -122,7 +122,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<Cost> findCostById(final Long id) {
-        return find(() -> costRepository.findOne(id), notFoundError(Cost.class, id));
+        return find(costRepository.findOne(id), notFoundError(Cost.class, id));
     }
 
     @Override
