@@ -1,7 +1,6 @@
 package com.worth.ifs.application.transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -23,14 +22,6 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -274,7 +265,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {
-        Section nextSection = sectionService.getNextSection(section).getSuccessObject();
+        SectionResource nextSection = sectionService.getNextSection(section).getSuccessObject();
         if (nextSection != null) {
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, nextSection.getId());
         }
@@ -283,7 +274,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private Question getPreviousQuestionBySection(Long section, Long competitionId) {
-        Section previousSection = sectionService.getPreviousSection(section).getSuccessObject();
+        SectionResource previousSection = sectionService.getPreviousSection(section).getSuccessObject();
 
         if (previousSection != null) {
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(competitionId, previousSection.getId());
