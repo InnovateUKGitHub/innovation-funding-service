@@ -21,6 +21,7 @@ Labour
     [Documentation]    INFUND-192
     ...    Acceptance tests for the Labour section calculations
     ...    INFUND-736
+    ...    INFUND-1256
     [Tags]    Labour    Autosave    Calculations    Finance
     Given Applicant goes to the Your finances section
     And the Applicant fills in the Labour costs
@@ -31,6 +32,8 @@ Labour
     Then the labour total should be correct again
     And the user reloads the page
     And the labour total should be correct again
+    And the applicant edits the working days field
+    And the labour total should have been updated
 
 Overheads
     [Documentation]    INFUND-192
@@ -166,6 +169,17 @@ the applicant fills a second row in the labour costs
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
     Sleep    1s
+
+the applicant edits the working days field
+    Clear Element Text    css=#cost-labour-1-workingDays
+    Input Text    css=#cost-labour-1-workingDays    250
+
+the labour total should have been updated
+    Sleep   1s
+    Textfield Value Should Be    css=#section-total-9    £ 52,174
+    Element Should Contain    css=[data-mirror="#section-total-9"]    £ 52,174
+
+
 
 the applicant fills in the overheads costs
     Click Element    css=[aria-controls="collapsible-2"]
