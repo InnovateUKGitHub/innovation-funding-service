@@ -171,7 +171,13 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     public ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
 
         return findByApplicationId(applicationId).andOnSuccess(invites -> {
-            List<InviteOrganisationResource> inviteOrganisations = simpleMap(invites, invite -> new InviteOrganisationResource(invite.getInviteOrganisation()));
+            List<InviteOrganisationResource> inviteOrganisations = simpleMap(invites, invite -> {
+                InviteOrganisation inviteOrg = invite.getInviteOrganisation();
+                List<Invite> invitesTmp = inviteOrg.getInvites();
+                invitesTmp.removeIf(i -> !i.getApplication().getId().equals(applicationId));
+                inviteOrg.setInvites(invitesTmp);
+                return new InviteOrganisationResource(inviteOrg);
+            });
 
             if(!inviteOrganisations.isEmpty()){
                 return serviceSuccess(new HashSet<>(inviteOrganisations));
