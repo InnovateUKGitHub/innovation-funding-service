@@ -28,7 +28,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -285,10 +284,11 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         Organisation organisation = newOrganisation().build();
 
         ProcessRole leadApplicantProcessRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
-        Application application = newApplication().withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
+        Application application = newApplication().withId(123L).withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
         InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
         Invite invite1 = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
         Invite invite2 = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
+        inviteOrganisation.setInvites(Arrays.asList(invite1, invite2));
 
         when(inviteRepositoryMock.findByApplicationId(123L)).thenReturn(asList(invite1, invite2));
 
@@ -302,7 +302,17 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
                 withInviteResources(expectedInvites).
                 build();
 
-        assertEquals(new HashSet<>(Arrays.asList(expectedInviteOrganisation)), result.getSuccessObject());
+        Set<InviteOrganisationResource> set = result.getSuccessObject();
+        assertEquals(1, result.getSuccessObject().size());
+        InviteOrganisationResource inviteOrgResource = set.iterator().next();
+
+        assertEquals(inviteOrganisation.getOrganisationName(), inviteOrgResource.getOrganisationName());
+        assertEquals(inviteOrganisation.getId(), inviteOrgResource.getId());
+        assertEquals(inviteOrganisation.getInvites().size(), inviteOrgResource.getInviteResources().size());
+        assertEquals(inviteOrganisation.getInvites().get(0).getName(), inviteOrgResource.getInviteResources().get(0).getName());
+        assertEquals(inviteOrganisation.getInvites().get(0).getEmail(), inviteOrgResource.getInviteResources().get(0).getEmail());
+        assertEquals(inviteOrganisation.getInvites().get(1).getName(), inviteOrgResource.getInviteResources().get(1).getName());
+        assertEquals(inviteOrganisation.getInvites().get(1).getEmail(), inviteOrgResource.getInviteResources().get(1).getEmail());
     }
 
     @Test

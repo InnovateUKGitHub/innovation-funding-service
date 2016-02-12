@@ -249,11 +249,11 @@
       <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}" />
     </div>
     <div th:if="${questionAssignee?.assignee}" th:unless="${currentUser.getId() == questionAssignee?.assignedByUserId}" th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assignee  assigned-to-me ' : 'assignee')" >
-        <span th:if="${questionAssignee?.getAssignedBy().getUser().getId() != leadApplicant?.getId()}">This question has been reassigned to
+        <span th:if="${questionAssignee?.assignedByUserId != leadApplicant?.getId()}">This question has been reassigned to
           <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}"/> by
-          <span th:text="${(currentUser.getId() == questionAssignee?.assignedByUserId) ? 'you' : questionAssignee?.getAssignedBy()?.getUser()?.getName()}"/>
+          <span th:text="${(currentUser.getId() == questionAssignee?.assignedByUserId) ? 'you' : questionAssignee?.assignedByName}"/>
         </span>
-        <span th:unless="${questionAssignee?.getAssignedBy().getUser().getId() != leadApplicant?.getId()}">This question is assigned to
+        <span th:unless="${questionAssignee?.assignedByUserId != leadApplicant?.getId()}">This question is assigned to
           <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}"/>
         </span>
     </div>
