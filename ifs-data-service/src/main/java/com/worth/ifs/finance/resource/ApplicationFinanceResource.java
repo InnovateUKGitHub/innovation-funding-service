@@ -6,6 +6,8 @@ import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.user.domain.OrganisationSize;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -16,7 +18,8 @@ import java.util.EnumMap;
  * Application finance reosurce holda the organisation's finance resources for an application
  */
 public class ApplicationFinanceResource {
-    private final Log log = LogFactory.getLog(getClass());
+
+    private static final Log LOG = LogFactory.getLog(ApplicationFinanceResource.class);
 
     Long id;
     private Long organisation;
@@ -155,6 +158,34 @@ public class ApplicationFinanceResource {
 
     @JsonIgnore
     public Log getLog() {
-        return this.log;
+        return this.LOG;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ApplicationFinanceResource that = (ApplicationFinanceResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(organisation, that.organisation)
+                .append(application, that.application)
+                .append(organisationSize, that.organisationSize)
+                .append(financeOrganisationDetails, that.financeOrganisationDetails)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(organisation)
+                .append(application)
+                .append(organisationSize)
+                .append(financeOrganisationDetails)
+                .toHashCode();
     }
 }

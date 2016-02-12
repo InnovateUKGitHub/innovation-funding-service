@@ -233,6 +233,11 @@ public abstract class AbstractApplicationController {
             questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.getId());
         }
 
+        if(currentQuestionId.isPresent()) {
+            QuestionStatusResource questionAssignee = questionAssignees.get(currentQuestionId.get());
+            model.addAttribute("questionAssignee", questionAssignee);
+        }
+
         List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         questionService.removeNotifications(notifications);
 

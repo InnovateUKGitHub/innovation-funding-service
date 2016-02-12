@@ -55,13 +55,13 @@ Verify the name of the new application
 
 *** Keywords ***
 the title of the new application should be visible in the overview page
-    Page Should Contain    test title - Application number 000008
+    Page Should Contain    test title - Application number 00000
 
 the new application should be visible in the dashboard page
     Click Link    link= My dashboard
     sleep    1s
     Wait Until Page Contains    test title
-    Page Should Contain    Application number: 000008
+    Page Should Contain    Application number: 00000
 
 the user goes to the create application page
     go to    ${COMPETITION_DETAILS_URL}
@@ -137,16 +137,17 @@ the user logs-in as robot@test.com
     Click Button    css=input.button
 
 the user edits the competition title
-    go to    ${APPLICATION_DETAILS_APPLICATION8}
+    click link      Technology Inspired
+    sleep     2s
+    click link      Application details
     Input Text    id=application_details-title    test title
     Click Element    jQuery=button:contains("Save and return")
 
 the title should be visible in the Application team page
     Click Element    link=View team members and add collaborators
     Wait Until Page Contains    View and manage your partner companies
-    Page Should Contain    test title - Application number 000008
+    Page Should Contain    test title
 
 the title should be visible in the application form
-    go to    ${APPLICATION_DETAILS_APPLICATION8}
-    Wait Until Page Contains    Project title
-    Page Should Contain    test title - Application number 000008
+    click link  test title
+    Wait Until Page Contains    test title

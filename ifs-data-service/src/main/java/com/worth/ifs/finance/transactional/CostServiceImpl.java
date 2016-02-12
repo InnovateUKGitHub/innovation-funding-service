@@ -66,8 +66,6 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Autowired
     private OrganisationFinanceHandler organisationFinanceHandler;
 
-
-
     @Override
     public ServiceResult<CostField> getCostFieldById(Long id) {
         return find(() -> costFieldRepository.findOne(id), notFoundError(CostField.class, id));
@@ -140,7 +138,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Override
     public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, final Long organisationId) {
         return find(applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId), notFoundError(ApplicationFinance.class, applicationId, organisationId)).
-                andOnSuccess(applicationFinance -> serviceSuccess(new ApplicationFinanceResource(applicationFinance)));
+                andOnSuccessReturn(ApplicationFinanceResource::new);
     }
 
     @Override
@@ -167,6 +165,10 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<ApplicationFinanceResource> addCost(Long applicationId, Long organisationId) {
+        ApplicationFinance existingFinances = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+        if(existingFinances != null){
+            return serviceSuccess(new ApplicationFinanceResource(existingFinances));
+        }
 
         return find(application(applicationId), organisation(organisationId)).andOnSuccess((application, organisation) -> {
 

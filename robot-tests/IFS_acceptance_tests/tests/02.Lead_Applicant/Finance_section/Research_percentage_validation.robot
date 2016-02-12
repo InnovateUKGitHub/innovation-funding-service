@@ -62,9 +62,8 @@ The first collaborator logs in
 The first collaborator edits financial details to bring down the research participation level
     Go To               ${your_finances_url_application_2}
     Click Element    css=[aria-controls="collapsible-1"]
-    Wait Until Element Is Visible           link=Add another role
-    Click Element    link=Add another role
-    Sleep    1s
+    Wait Until Element Is Visible   name=add_cost
+    Click Element    name=add_cost
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100

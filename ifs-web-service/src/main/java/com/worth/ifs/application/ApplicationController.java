@@ -5,12 +5,9 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.profiling.ProfileExecution;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -200,29 +196,17 @@ public class ApplicationController extends AbstractApplicationController {
         ApplicationResource application = applicationService.getById(applicationId);
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Competition competition = competitionService.getById(application.getCompetition());
-        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-
         Optional<Section> currentSection = getSection(competition.getSections(), Optional.of(sectionId), true);
         //super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), currentSection, Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
-        super.addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
-        super.addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
-
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
-
         Question question = currentSection.get().getQuestions().stream().filter(q -> q.getId().equals(questionId)).collect(Collectors.toList()).get(0);
 
+        super.addApplicationAndSections(application, competition, user.getId(), currentSection, Optional.ofNullable(question.getId()), model, form);
+        super.addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
+
         model.addAttribute("question", question);
-
-        Organisation userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles).get();
-
-        Map<Long, QuestionStatusResource> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(applicationId, userOrganisation.getId());
-
-        QuestionStatusResource questionAssignee = questionAssignees.get(questionId);
-        model.addAttribute("questionAssignee", questionAssignee);
-
         model.addAttribute("currentUser", user);
         model.addAttribute("section", currentSection.get());
-
         return "application/single-section-details";
     }
 

@@ -1,6 +1,9 @@
 package com.worth.ifs.assessment.dto;
 
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class Score {
     private int total;
     private int possible;
@@ -26,5 +29,29 @@ public class Score {
 
     public int getPercentage() {
         return percentage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Score score = (Score) o;
+
+        return new EqualsBuilder()
+                .append(total, score.total)
+                .append(possible, score.possible)
+                .append(percentage, score.percentage)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(total)
+                .append(possible)
+                .append(percentage)
+                .toHashCode();
     }
 }

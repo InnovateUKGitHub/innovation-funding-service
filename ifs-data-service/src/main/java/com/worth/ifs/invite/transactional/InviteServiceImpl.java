@@ -27,6 +27,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.*;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.worth.ifs.commons.error.Errors.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -155,22 +156,34 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccess(newInviteOrganisation -> {
             List<Invite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
             inviteOrganisationRepository.save(newInviteOrganisation);
-            inviteRepository.save(newInvites);
-            return serviceSuccess(sendInvites(newInvites));
+            Iterable<Invite> savedInvites = inviteRepository.save(newInvites);
+            InviteResultsResource sentInvites = sendInvites(newArrayList(savedInvites));
+            return serviceSuccess(sentInvites);
         });
     }
 
     @Override
     public ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
-        return getByHash(hash).andOnSuccess(invite -> serviceSuccess(new InviteOrganisationResource(invite.getInviteOrganisation())));
+        return getByHash(hash).andOnSuccessReturn(invite -> new InviteOrganisationResource(invite.getInviteOrganisation()));
     }
 
     @Override
-    public ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
+    public ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
 
         return findByApplicationId(applicationId).andOnSuccess(invites -> {
-            List<InviteOrganisationResource> inviteOrganisations = simpleMap(invites, invite -> new InviteOrganisationResource(invite.getInviteOrganisation()));
-            return serviceSuccess(inviteOrganisations);
+            List<InviteOrganisationResource> inviteOrganisations = simpleMap(invites, invite -> {
+                InviteOrganisation inviteOrg = invite.getInviteOrganisation();
+                List<Invite> invitesTmp = inviteOrg.getInvites();
+                invitesTmp.removeIf(i -> !i.getApplication().getId().equals(applicationId));
+                inviteOrg.setInvites(invitesTmp);
+                return new InviteOrganisationResource(inviteOrg);
+            });
+
+            if(!inviteOrganisations.isEmpty()){
+                return serviceSuccess(new HashSet<>(inviteOrganisations));
+            }else{
+                return serviceSuccess(new HashSet<>());
+            }
         });
     }
 
@@ -242,6 +255,12 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             newInviteOrganisation = inviteOrganisationRepository.findOne(inviteResource.getInviteOrganisation());
         }
         Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatusConstants.CREATED);
+        if(newInviteOrganisation.getOrganisation()!= null){
+            List<InviteOrganisation> existingOrgInvite = inviteOrganisationRepository.findByOrganisationId(newInviteOrganisation.getOrganisation().getId());
+            if(existingOrgInvite.size() > 0){
+                invite.setInviteOrganisation(existingOrgInvite.get(0));
+            }
+        }
 
         return invite;
     }

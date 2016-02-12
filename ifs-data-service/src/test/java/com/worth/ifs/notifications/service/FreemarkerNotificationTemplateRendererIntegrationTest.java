@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    private FreemarkerNotificationTemplateRenderer renderer;
+    private NotificationTemplateRenderer renderer;
 
     @Test
     public void testTemplateRender() throws URISyntaxException, IOException {

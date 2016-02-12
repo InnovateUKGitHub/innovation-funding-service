@@ -1,24 +1,24 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.mapper.AssessorFeedbackMapper;
 import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.application.transactional.AssessorFeedbackService;
+import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
+
 @RestController
 @RequestMapping("/assessorfeedback")
 public class AssessorFeedbackController {
+
     @Autowired
     private AssessorFeedbackService service;
 
-    @Autowired
-    private AssessorFeedbackMapper mapper;
-
     @RequestMapping("/{id}")
-    public AssessorFeedbackResource findById(@PathVariable("id") final Long id) {
-        return mapper.mapAssessorFeedbackToResource(service.findOne(id));
+    public RestResult<AssessorFeedbackResource> findById(@PathVariable("id") final Long id) {
+        return newRestHandler().perform(() -> service.findOne(id));
     }
 }
