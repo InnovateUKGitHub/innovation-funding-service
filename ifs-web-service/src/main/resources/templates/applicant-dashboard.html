@@ -13,7 +13,7 @@
 
     <div class="event-alert is-open" th:each="notification:${notifications}">
         <p>
-            <span th:text="${notification?.assignedBy?.user?.name + ' has assigned a question to you'}"></span>
+            <span th:text="${notification?.assignedByName + ' has assigned a question to you'}"></span>
         </p>
     </div>
 
