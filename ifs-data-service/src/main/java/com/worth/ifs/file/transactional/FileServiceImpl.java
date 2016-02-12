@@ -195,15 +195,16 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     private ServiceResult<File> findFile(FileEntry fileEntry) {
 
-        return find(() -> {
+        Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
+        List<String> pathElements = filePathAndName.getLeft();
+        String filename = filePathAndName.getRight();
+        File expectedFile = new File(pathElementsToFile(pathElements), filename);
 
-            Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
-            List<String> pathElements = filePathAndName.getLeft();
-            String filename = filePathAndName.getRight();
-            File expectedFile = new File(pathElementsToFile(pathElements), filename);
-            return expectedFile.exists() ? expectedFile : null;
-
-        }, notFoundError(FileEntry.class, fileEntry.getId()));
+        if (expectedFile.exists()) {
+            return serviceSuccess(expectedFile);
+        } else {
+            return serviceFailure(notFoundError(FileEntry.class, fileEntry.getId()));
+        }
     }
 
     private ServiceResult<File> createFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {

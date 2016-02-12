@@ -25,23 +25,14 @@ public class EntityLookupCallbacks {
     private static final Log log = LogFactory.getLog(EntityLookupCallbacks.class);
 
     public static <SuccessType> ServiceResult<SuccessType> find(
-            Supplier<SuccessType> getterFn,
+            SuccessType result,
             Error failureResponse) {
 
-        SuccessType getterResult = getterFn.get();
-
-        if (getterResult instanceof Collection && ((Collection) getterResult).isEmpty()) {
+        if (result instanceof Collection && ((Collection) result).isEmpty()) {
             return serviceFailure(failureResponse);
         }
 
-        return ofNullable(getterResult).map(ServiceResult::serviceSuccess).orElse(serviceFailure(failureResponse));
-    }
-
-    public static <SuccessType> ServiceResult<SuccessType> find(
-            SuccessType getterFn,
-            Error failureResponse) {
-
-        return find(() -> getterFn, failureResponse);
+        return ofNullable(result).map(ServiceResult::serviceSuccess).orElse(serviceFailure(failureResponse));
     }
 
     /**
