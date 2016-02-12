@@ -45,7 +45,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     @Override
     public ServiceResult<Map<Long, Set<Long>>> getCompletedSections(final Long applicationId) {
 
-        return getApplication(applicationId).andOnSuccess(application -> {
+        return getApplication(applicationId).andOnSuccessReturn(application -> {
 
             List<Section> sections = application.getCompetition().getSections();
             List<Organisation> organisations = application.getProcessRoles().stream()
@@ -65,7 +65,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 }
                 organisationMap.put(organisation.getId(), completedSections);
             }
-            return serviceSuccess(organisationMap);
+            return organisationMap;
         });
     }
 
@@ -97,7 +97,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     @Override
     public ServiceResult<List<Long>> getIncompleteSections(final Long applicationId) {
 
-        return getApplication(applicationId).andOnSuccess(application -> {
+        return getApplication(applicationId).andOnSuccessReturn(application -> {
 
             List<Section> sections = application.getCompetition().getSections();
             List<Long> incompleteSections = new ArrayList<>();
@@ -123,7 +123,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 }
             }
 
-            return serviceSuccess(incompleteSections);
+            return incompleteSections;
         });
     }
 
@@ -176,7 +176,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     @Override
     public ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection) {
 
-        return getApplication(applicationId).andOnSuccess(application -> {
+        return getApplication(applicationId).andOnSuccessReturn(application -> {
 
             boolean allSectionsWithSubsectionsAreComplete = true;
 
@@ -200,7 +200,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                     break;
                 }
             }
-            return serviceSuccess(allSectionsWithSubsectionsAreComplete);
+            return allSectionsWithSubsectionsAreComplete;
         });
     }
 

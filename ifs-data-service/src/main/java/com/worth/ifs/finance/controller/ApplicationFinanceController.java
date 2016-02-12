@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-
 /**
  * This RestController exposes CRUD operations to both the
  * {@link com.worth.ifs.finance.service.ApplicationFinanceRestServiceImpl} and other REST-API users
@@ -50,11 +48,11 @@ public class ApplicationFinanceController {
     @RequestMapping("/getResearchParticipationPercentage/{applicationId}")
     public RestResult<ObjectNode> getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
 
-        ServiceResult<ObjectNode> result = costService.getResearchParticipationPercentage(applicationId).andOnSuccess(percentage -> {
+        ServiceResult<ObjectNode> result = costService.getResearchParticipationPercentage(applicationId).andOnSuccessReturn(percentage -> {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put(RESEARCH_PARTICIPATION_PERCENTAGE, percentage);
-            return serviceSuccess(node);
+            return node;
         });
 
         return result.toDefaultRestResultForGet();

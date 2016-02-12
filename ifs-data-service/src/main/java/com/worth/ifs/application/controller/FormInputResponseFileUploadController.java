@@ -73,7 +73,7 @@ public class FormInputResponseFileUploadController {
                     validMediaType(typeFromHeader)).andOnSuccess((validLength, validType) -> {
 
                 return createFormInputResponseFile(validType, validLength, originalFilename, formInputId, applicationId, processRoleId, request).
-                        andOnSuccess(fileEntryPair -> serviceSuccess(fileEntryPair.getValue()));
+                        andOnSuccessReturn(Pair::getValue);
             });
         });
 
@@ -101,8 +101,7 @@ public class FormInputResponseFileUploadController {
                     validMediaType(typeFromHeader)).
                     andOnSuccess((validLength, validType) -> {
 
-                return updateFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request).
-                        andOnSuccess(ServiceResult::serviceSuccess);
+                return updateFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request);
             });
         });
 
@@ -204,7 +203,9 @@ public class FormInputResponseFileUploadController {
 
         FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, mediaType, length);
         FormInputResponseFileEntryResource formInputResponseFile = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
-        return applicationService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request)).andOnSuccess(result -> serviceSuccess(result.getRight()));
+
+        return applicationService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier(request)).
+                andOnSuccessReturn(Pair::getValue);
     }
 
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {

@@ -150,19 +150,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                     FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputResponseFile.getCompoundId());
                     return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
 
-                } else {
-
-                    return getProcessRole(processRoleId).
-                            andOnSuccess(processRole -> getFormInput(formInputId).
-                            andOnSuccess(formInput -> getApplication(applicationId).
-                            andOnSuccess(application -> {
-
-                                FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
-                                formInputResponseRepository.save(newFormInputResponse);
-                                FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
-                                return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
-                    })));
                 }
+
+                return find(processRole(processRoleId), () -> getFormInput(formInputId), application(applicationId)).andOnSuccess((processRole, formInput, application) -> {
+
+                    FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
+                    formInputResponseRepository.save(newFormInputResponse);
+                    FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
+                    return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
+                });
             });
         }
     }
@@ -181,8 +177,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             FileEntryResource updatedFileDetails = formInputResponseFile.getFileEntryResource();
             FileEntryResource updatedFileDetailsWithId = new FileEntryResource(existingFileResource.getId(), updatedFileDetails.getName(), updatedFileDetails.getMediaType(), updatedFileDetails.getFilesizeBytes());
 
-            return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).andOnSuccess(updatedFile ->
-                    serviceSuccess(Pair.of(updatedFile.getKey(), existingFormInputResource))
+            return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).andOnSuccessReturn(updatedFile ->
+                    Pair.of(updatedFile.getKey(), existingFormInputResource)
             );
         });
     }
@@ -200,8 +196,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
             return fileService.deleteFile(fileEntryId).
                     andOnSuccess(deletedFile -> getFormInputResponse(formInputFileEntryResource.getCompoundId()).
-                    andOnSuccess(this::unlinkFileEntryFromFormInputResponse).
-                    andOnSuccess(ServiceResult::serviceSuccess)
+                    andOnSuccess(this::unlinkFileEntryFromFormInputResponse)
             );
         });
     }
@@ -211,7 +206,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         return getFormInputResponse(fileEntryId).
                 andOnSuccess(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
-                andOnSuccess(inputStreamSupplier -> serviceSuccess(Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier))
+                andOnSuccessReturn(inputStreamSupplier -> Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier)
         ));
     }
 
@@ -251,23 +246,23 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<List<ApplicationResource>> findByUserId(final Long userId) {
-        return getUser(userId).andOnSuccess(user -> {
+        return getUser(userId).andOnSuccessReturn(user -> {
             List<ProcessRole> roles = processRoleRepository.findByUser(user);
             List<Application> applications = simpleMap(roles, ProcessRole::getApplication);
-            return serviceSuccess(applicationsToResources(applications));
+            return applicationsToResources(applications);
         });
     }
 
     @Override
     public ServiceResult<ApplicationResource> saveApplicationDetails(final Long id, ApplicationResource application) {
 
-        return getApplication(id).andOnSuccess(existingApplication -> {
+        return getApplication(id).andOnSuccessReturn(existingApplication -> {
 
             existingApplication.setName(application.getName());
             existingApplication.setDurationInMonths(application.getDurationInMonths());
             existingApplication.setStartDate(application.getStartDate());
             Application savedApplication = applicationRepository.save(existingApplication);
-            return serviceSuccess(applicationMapper.mapApplicationToResource(savedApplication));
+            return applicationMapper.mapApplicationToResource(savedApplication);
         });
     }
 
@@ -275,12 +270,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<ObjectNode> getProgressPercentageNodeByApplicationId(final Long applicationId) {
 
-        return getProgressPercentageByApplicationId(applicationId).andOnSuccess(percentage -> {
+        return getProgressPercentageByApplicationId(applicationId).andOnSuccessReturn(percentage -> {
 
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("completedPercentage", percentage);
-            return serviceSuccess(node);
+            return node;
         });
     }
 
@@ -363,8 +358,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<ApplicationResource> findByProcessRole(final Long id){
 
-        return getProcessRole(id).andOnSuccess(processRole ->
-            serviceSuccess(applicationMapper.mapApplicationToResource(processRole.getApplication()))
+        return getProcessRole(id).andOnSuccessReturn(processRole ->
+            applicationMapper.mapApplicationToResource(processRole.getApplication())
         );
     }
 
@@ -372,9 +367,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<ObjectNode> applicationReadyForSubmit(Long id) {
 
-        return find(application(id), () -> getProgressPercentageByApplicationId(id)).andOnSuccess((application, progressPercentage) -> {
+        return find(application(id), () -> getProgressPercentageByApplicationId(id)).andOnSuccess((application, progressPercentage) ->
 
-            return sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccess(allSectionsComplete -> {
+            sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
 
                 Competition competition = application.getCompetition();
                 double researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id).doubleValue();
@@ -393,16 +388,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 node.put(RESEARCH_PARTICIPATION, researchParticipation);
                 node.put(RESEARCH_PARTICIPATION_VALID, (researchParticipation <= competition.getMaxResearchRatio()));
                 node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
-                return serviceSuccess(node);
-
-            });
-        });
+                return node;
+            })
+        );
     }
 
     // TODO DW - INFUND-1555 - deal with rest results
     private ServiceResult<Double> getProgressPercentageByApplicationId(final Long applicationId) {
 
-        return getApplication(applicationId).andOnSuccess(application -> {
+        return getApplication(applicationId).andOnSuccessReturn(application -> {
 
             List<Section> sections = application.getCompetition().getSections();
 
@@ -437,9 +431,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             LOG.info("Total completed questions" + countCompleted);
 
             if (questions.isEmpty()) {
-                return serviceSuccess(0d);
+                return 0d;
             } else {
-                return serviceSuccess((100.0 / totalQuestions) * countCompleted);
+                return (100.0 / totalQuestions) * countCompleted;
             }
         });
     }

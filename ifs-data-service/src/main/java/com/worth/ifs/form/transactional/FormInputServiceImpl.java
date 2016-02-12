@@ -74,7 +74,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
         return find(user(userId), application(applicationId), formInput(formInputId)).
                 andOnSuccess((user, application, formInput) -> {
 
-            return getOrCreateResponse(application, formInput, userAppRole).andOnSuccess(response -> {
+            return getOrCreateResponse(application, formInput, userAppRole).andOnSuccessReturn(response -> {
 
                 if (!response.getValue().equals(htmlUnescapedValue)) {
                     response.setUpdateDate(LocalDateTime.now());
@@ -83,7 +83,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
                 response.setValue(htmlUnescapedValue);
                 formInputResponseRepository.save(response);
-                return serviceSuccess(response);
+                return response;
             });
         });
     }

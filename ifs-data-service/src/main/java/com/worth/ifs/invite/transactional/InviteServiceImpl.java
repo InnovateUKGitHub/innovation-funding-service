@@ -154,12 +154,12 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             return serviceFailure(badRequestError("The Invite is not valid"));
         }
 
-        return assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccess(newInviteOrganisation -> {
+        return assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccessReturn(newInviteOrganisation -> {
             List<Invite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
             inviteOrganisationRepository.save(newInviteOrganisation);
             Iterable<Invite> savedInvites = inviteRepository.save(newInvites);
             InviteResultsResource sentInvites = sendInvites(newArrayList(savedInvites));
-            return serviceSuccess(sentInvites);
+            return sentInvites;
         });
     }
 
@@ -171,7 +171,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Override
     public ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
 
-        return findByApplicationId(applicationId).andOnSuccess(invites -> {
+        return findByApplicationId(applicationId).andOnSuccessReturn(invites -> {
             List<InviteOrganisationResource> inviteOrganisations = simpleMap(invites, invite -> {
                 InviteOrganisation inviteOrg = invite.getInviteOrganisation();
                 List<Invite> invitesTmp = inviteOrg.getInvites();
@@ -180,11 +180,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 return new InviteOrganisationResource(inviteOrg);
             });
 
-            if(!inviteOrganisations.isEmpty()){
-                return serviceSuccess(new HashSet<>(inviteOrganisations));
-            }else{
-                return serviceSuccess(new HashSet<>());
-            }
+            return new HashSet<>(inviteOrganisations);
         });
     }
 
@@ -198,7 +194,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteResource> getInviteByHash(String hash) {
-        return getByHash(hash).andOnSuccess(invite -> serviceSuccess(new InviteResource(invite)));
+        return getByHash(hash).andOnSuccessReturn(InviteResource::new);
     }
 
     private ServiceResult<Invite> getByHash(String hash) {

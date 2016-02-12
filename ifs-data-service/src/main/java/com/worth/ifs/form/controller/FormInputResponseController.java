@@ -47,7 +47,7 @@ public class FormInputResponseController {
         Long formInputId = jsonObj.get("formInputId").asLong();
         String value = HtmlUtils.htmlUnescape(jsonObj.get("value").asText(""));
 
-        ServiceResult<List<String>> result = formInputService.saveQuestionResponse(userId, applicationId, formInputId, value).andOnSuccess(response -> {
+        ServiceResult<List<String>> result = formInputService.saveQuestionResponse(userId, applicationId, formInputId, value).andOnSuccessReturn(response -> {
 
             BindingResult bindingResult = ValidationUtil.validateResponse(response);
             if (bindingResult.hasErrors()) {
@@ -59,7 +59,7 @@ public class FormInputResponseController {
             LOG.debug("Single question saved!");
 
             ValidatedResponse validatedResponse = new ValidatedResponse(bindingResult, response);
-            return serviceSuccess(validatedResponse.getAllErrors());
+            return validatedResponse.getAllErrors();
         });
 
         return result.toDefaultRestResultForPutWithBody();

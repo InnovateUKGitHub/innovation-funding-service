@@ -20,8 +20,9 @@ import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.notifications.service.senders.email.EmailAddressResolver.fromNotificationSource;
 import static com.worth.ifs.notifications.service.senders.email.EmailAddressResolver.fromNotificationTarget;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.io.File.separator;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 /**
  * A Notification Sender that can, given a Notification, construct an email from it and use the Email Service to send
@@ -51,11 +52,9 @@ public class EmailNotificationSender implements NotificationSender {
             EmailAddress from = fromNotificationSource(notification.getFrom());
 
             List<ServiceResult<List<EmailAddress>>> results = simpleMap(notification.getTo(), recipient ->
-                getSubject(notification, recipient).andOnSuccess(subject ->
-                getPlainTextBody(notification, recipient).andOnSuccess(plainTextBody ->
-                getHtmlBody(notification, recipient).andOnSuccess(htmlBody ->
-                    emailService.sendEmail(from, asList(fromNotificationTarget(recipient)), subject, plainTextBody, htmlBody)
-                )))
+                find(getSubject(notification, recipient), getPlainTextBody(notification, recipient), getHtmlBody(notification, recipient)).andOnSuccess((subject, plainTextBody, htmlBody) ->
+                    emailService.sendEmail(from, singletonList(fromNotificationTarget(recipient)), subject, plainTextBody, htmlBody)
+                )
             );
 
             return processAnyFailuresOrSucceed(results, serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE)), serviceSuccess(notification));

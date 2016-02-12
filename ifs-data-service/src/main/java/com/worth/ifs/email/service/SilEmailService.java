@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -31,6 +30,6 @@ public class SilEmailService implements EmailService {
         SilEmailBody plainTextBody = new SilEmailBody("text/plain", plainTextBodyContent);
         SilEmailBody htmlBody = new SilEmailBody("text/html", htmlBodyContent);
 
-        return endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).andOnSuccess(successfullySent -> serviceSuccess(to));
+        return endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).andOnSuccessReturn(successfullySent -> to);
     }
 }

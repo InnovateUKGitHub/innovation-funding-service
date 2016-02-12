@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
@@ -17,9 +18,7 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Collections.singletonList;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a ServiceFailure, and a
@@ -36,6 +35,17 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     @Override
     public <R> ServiceResult<R> andOnSuccess(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, ServiceFailure>> successHandler) {
         return (ServiceResult<R>) super.andOnSuccess(successHandler);
+    }
+
+    public ServiceResult<Void> andOnSuccessReturnVoid() {
+        return andOnSuccess(success -> serviceSuccess());
+    }
+
+    public ServiceResult<Void> andOnSuccessReturnVoid(Consumer<? super T> successHandler) {
+        return andOnSuccess(success -> {
+            successHandler.accept(success);
+            return serviceSuccess();
+        });
     }
 
     @Override

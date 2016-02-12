@@ -49,12 +49,13 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
         return createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
             try {
-                return validateMediaType(validationFile, MediaType.parseMediaType(resource.getMediaType())).andOnSuccess(tempFile ->
-                       validateContentLength(resource.getFilesizeBytes(), tempFile)).andOnSuccess(tempFile ->
-                       saveFileEntry(resource).andOnSuccess(savedFileEntry ->
-                       createFileForFileEntry(savedFileEntry, tempFile)).andOnSuccess(
-                       ServiceResult::serviceSuccess)
-                );
+                return find(
+                        validateMediaType(validationFile, MediaType.parseMediaType(resource.getMediaType())),
+                        validateContentLength(resource.getFilesizeBytes(), validationFile)).
+                        andOnSuccess((mediaType, contentLength) ->
+                            saveFileEntry(resource).andOnSuccess(savedFileEntry ->
+                                    createFileForFileEntry(savedFileEntry, validationFile))
+                        );
             } finally {
                 deleteFile(validationFile);
             }
@@ -64,9 +65,8 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     @Override
     public ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
         return findFileEntry(fileEntryId).
-            andOnSuccess(this::findFile).
-            andOnSuccess(this::getInputStreamSuppier).
-            andOnSuccess(ServiceResult::serviceSuccess);
+                andOnSuccess(this::findFile).
+                andOnSuccess(this::getInputStreamSupplier);
     }
 
     @Override
@@ -74,12 +74,14 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
         return createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
             try {
-                return validateMediaType(validationFile, MediaType.parseMediaType(updatedFile.getMediaType())).andOnSuccess(tempFile ->
-                       validateContentLength(updatedFile.getFilesizeBytes(), tempFile)).andOnSuccess(tempFile ->
-                       updateFileEntry(updatedFile).andOnSuccess(updatedFileEntry ->
-                       updateFileForFileEntry(updatedFileEntry, tempFile).andOnSuccess(
-                       ServiceResult::serviceSuccess
-                )));
+                return find(
+                        validateMediaType(validationFile, MediaType.parseMediaType(updatedFile.getMediaType())),
+                        validateContentLength(updatedFile.getFilesizeBytes(), validationFile)).
+                        andOnSuccess((mediaType, contentLength) ->
+
+                    updateFileEntry(updatedFile).
+                            andOnSuccess(updatedFileEntry -> updateFileForFileEntry(updatedFileEntry, validationFile))
+                );
             } finally {
                 deleteFile(validationFile);
             }
@@ -116,7 +118,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
 
-        return updateFileForFileEntry(pathElements, filename, tempFile).andOnSuccess(file -> serviceSuccess(Pair.of(file, existingFileEntry)));
+        return updateFileForFileEntry(pathElements, filename, tempFile).andOnSuccessReturn(file -> Pair.of(file, existingFileEntry));
     }
 
     private ServiceResult<File> createTemporaryFileForValidation(Supplier<InputStream> inputStreamSupplier) {
@@ -165,7 +167,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         }
     }
 
-    private ServiceResult<Supplier<InputStream>> getInputStreamSuppier(File file) {
+    private ServiceResult<Supplier<InputStream>> getInputStreamSupplier(File file) {
         return serviceSuccess(() -> {
             try {
                 return new FileInputStream(file);
@@ -181,7 +183,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         Pair<List<String>, String> absoluteFilePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
-        return createFileForFileEntry(pathElements, filename, tempFile).andOnSuccess(file -> serviceSuccess(Pair.of(file, savedFileEntry)));
+        return createFileForFileEntry(pathElements, filename, tempFile).andOnSuccessReturn(file -> Pair.of(file, savedFileEntry));
     }
 
     private ServiceResult<FileEntry> saveFileEntry(FileEntryResource resource) {
