@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 
@@ -40,7 +41,7 @@ public class InviteController {
 
 
     @RequestMapping("/getInvitesByApplicationId/{applicationId}")
-    public RestResult<List<InviteOrganisationResource>> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
+    public RestResult<Set<InviteOrganisationResource>> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
         return newRestHandler().perform(() -> inviteService.getInvitesByApplication(applicationId));
     }
 

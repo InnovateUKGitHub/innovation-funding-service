@@ -28,7 +28,9 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
@@ -290,7 +292,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
         when(inviteRepositoryMock.findByApplicationId(123L)).thenReturn(asList(invite1, invite2));
 
-        ServiceResult<List<InviteOrganisationResource>> result = inviteService.getInvitesByApplication(123L);
+        ServiceResult<Set<InviteOrganisationResource>> result = inviteService.getInvitesByApplication(123L);
         assertTrue(result.isSuccess());
 
         List<InviteResource> expectedInvites = asList(new InviteResource(invite1), new InviteResource(invite2));
@@ -300,7 +302,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
                 withInviteResources(expectedInvites).
                 build();
 
-        assertEquals(asList(expectedInviteOrganisation, expectedInviteOrganisation), result.getSuccessObject());
+        assertEquals(new HashSet<>(Arrays.asList(expectedInviteOrganisation)), result.getSuccessObject());
     }
 
     @Test

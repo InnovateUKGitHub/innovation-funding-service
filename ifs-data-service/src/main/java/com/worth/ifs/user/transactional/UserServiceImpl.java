@@ -32,6 +32,8 @@ import static java.util.stream.Collectors.toSet;
 @Service
 public class UserServiceImpl extends BaseTransactionalService implements UserService {
 
+    private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
+
     @Autowired
     private UserRepository repository;
 
@@ -43,8 +45,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Autowired
     private RoleRepository roleRepository;
-
-    private final Log LOG = LogFactory.getLog(getClass());
 
     @Override
     public ServiceResult<User> getUserByToken(final String token) {
