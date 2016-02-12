@@ -190,8 +190,8 @@
          <div th:unless="${readonly}" class="textarea-header" th:id="${validationId}">
            <img th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                  src="/images/field/field-done.png"
-                 alt=""
-                 title="This field is marked as complete"
+                th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done.png')}"
+                alt=""
                  class="marked-as-complete" />
 
             <div th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" th:remove="tag">
@@ -200,6 +200,7 @@
 
             <img th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))}"
                  src="/images/field/field-assigned.png"
+                 th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned.png')}"
                  alt=""
                  title="This field is assigned to you"
                  class="assigned-to-me" />

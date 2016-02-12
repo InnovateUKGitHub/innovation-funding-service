@@ -25,7 +25,7 @@ import java.util.concurrent.Future;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
-import static com.worth.ifs.commons.service.BaseRestService.getJSONHeaders;
+import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.junit.Assert.*;
@@ -34,9 +34,6 @@ import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
-/**
- *
- */
 public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseWebIntegrationTest {
 
     @Value("${ifs.data.service.rest.baseURL}")

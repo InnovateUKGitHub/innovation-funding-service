@@ -35,13 +35,15 @@ public class CapitalUsageHandler extends CostHandler {
         Integer utilisation = 0;
 
         for (CostValue costValue : cost.getCostValues()) {
-            String title = costValue.getCostField().getTitle();
-            if (title.equals(COST_FIELD_EXISTING)) {
-                existing = costValue.getValue();
-            } else if (title.equals(COST_FIELD_RESIDUAL_VALUE)) {
-                residualValue = new BigDecimal(costValue.getValue());
-            } else if (title.equals(COST_FIELD_UTILISATION)) {
-                utilisation = Integer.valueOf(costValue.getValue());
+            if(costValue.getCostField() != null && costValue.getCostField().getTitle() != null){
+                String title = costValue.getCostField().getTitle();
+                if (title.equals(COST_FIELD_EXISTING)) {
+                    existing = costValue.getValue();
+                } else if (title.equals(COST_FIELD_RESIDUAL_VALUE)) {
+                    residualValue = new BigDecimal(costValue.getValue());
+                } else if (title.equals(COST_FIELD_UTILISATION)) {
+                    utilisation = Integer.valueOf(costValue.getValue());
+                }
             }
         }
 

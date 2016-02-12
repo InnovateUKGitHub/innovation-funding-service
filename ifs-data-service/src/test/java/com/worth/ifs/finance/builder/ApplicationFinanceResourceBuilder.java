@@ -1,14 +1,12 @@
 package com.worth.ifs.finance.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.user.domain.Organisation;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 /**
@@ -34,11 +32,11 @@ public class ApplicationFinanceResourceBuilder extends BaseBuilder<ApplicationFi
         return new ApplicationFinanceResource();
     }
 
-    public ApplicationFinanceResourceBuilder withApplication(Application application) {
-        return with(application(application));
+    public ApplicationFinanceResourceBuilder withApplication(Long applicationId) {
+        return with(finance -> finance.setApplication(applicationId));
     }
 
-    public ApplicationFinanceResourceBuilder withOrganisation(Organisation organisation) {
-        return with(finance -> setField("organisation", organisation, finance));
+    public ApplicationFinanceResourceBuilder withOrganisation(Long organisationId) {
+        return with(finance -> finance.setOrganisation(organisationId));
     }
 }
