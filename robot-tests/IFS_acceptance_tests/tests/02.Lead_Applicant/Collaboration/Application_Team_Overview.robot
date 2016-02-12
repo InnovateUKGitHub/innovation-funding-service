@@ -22,6 +22,8 @@ The Lead Applicant can view and add details of other partner organisation
 
 The Lead Applicant can send the invitation to collaborators
     [Documentation]    INFUND-928
+    [Tags]      Pending
+    # Pending due to bug INFUND-1840
     When Application goes to the Application Team page
     Then Applicant clicks on "Invite new contributors"
     And the applicant clicks the add person link
