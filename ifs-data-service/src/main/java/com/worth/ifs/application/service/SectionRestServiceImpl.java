@@ -1,16 +1,18 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.service.BaseRestService;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
+
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.BaseRestService;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 
@@ -26,8 +28,8 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     String sectionRestURL;
 
     @Override
-    public RestResult<Section> getById(Long sectionId) {
-        return getWithRestResult(sectionRestURL + "/getById/" + sectionId, Section.class);
+    public RestResult<SectionResource> getById(Long sectionId) {
+        return getWithRestResult(sectionRestURL + "/" + sectionId, SectionResource.class);
     }
 
     @Override
@@ -46,8 +48,8 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     }
 
     @Override
-    public RestResult<Section> getSection(String name) {
-        return getWithRestResult(sectionRestURL + "/findByName/" + name, Section.class);
+    public RestResult<SectionResource> getSection(String name) {
+        return getWithRestResult(sectionRestURL + "/findByName/" + name, SectionResource.class);
     }
 
     @Override
@@ -56,17 +58,17 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     }
 
     @Override
-    public Future<RestResult<Section>> getPreviousSection(Long sectionId) {
-        return getWithRestResultAsync(sectionRestURL + "/getPreviousSection/" + sectionId, Section.class);
+    public Future<RestResult<SectionResource>> getPreviousSection(Long sectionId) {
+        return getWithRestResultAsyc(sectionRestURL + "/getPreviousSection/" + sectionId, SectionResource.class);
     }
 
     @Override
-    public Future<RestResult<Section>> getNextSection(Long sectionId) {
-        return getWithRestResultAsync(sectionRestURL + "/getNextSection/" + sectionId, Section.class);
+    public Future<RestResult<SectionResource>> getNextSection(Long sectionId) {
+        return getWithRestResultAsyc(sectionRestURL + "/getNextSection/" + sectionId, SectionResource.class);
     }
 
     @Override
-    public RestResult<Section> getSectionByQuestionId(Long questionId) {
-        return getWithRestResult(sectionRestURL + "/getSectionByQuestionId/" + questionId, Section.class);
+    public RestResult<SectionResource> getSectionByQuestionId(Long questionId) {
+        return getWithRestResult(sectionRestURL + "/getSectionByQuestionId/" + questionId, SectionResource.class);
     }
 }

@@ -17,6 +17,7 @@ public class AssessorFeedbackController {
     @Autowired
     private AssessorFeedbackService service;
 
+
     @RequestMapping("/{id}")
     public RestResult<AssessorFeedbackResource> findById(@PathVariable("id") final Long id) {
         return newRestHandler().perform(() -> service.findOne(id));
