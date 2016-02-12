@@ -72,6 +72,8 @@ public class AcceptInviteController extends AbstractApplicationController {
         }
 
     }
+
+    // TODO DW - INFUND-1555 - handle rest results
     @RequestMapping(value = "/accept-invite/new-account-organisation-type", method = RequestMethod.GET)
     public String chooseOrganisationType(HttpServletRequest request,
                                          HttpServletResponse response,
@@ -83,7 +85,7 @@ public class AcceptInviteController extends AbstractApplicationController {
         if(invite.isSuccess() && InviteStatusConstants.SEND.equals(invite.getSuccessObject().getStatus())){
             InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObject();
 
-            List<OrganisationTypeResource> types = organisationTypeRestService.getAll();
+            List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccessObjectOrNull();
             types = types.stream().filter(t -> t.getParentOrganisationType() == null).collect(Collectors.toList());
             model.addAttribute("organisationTypes", types);
             model.addAttribute("inviteOrganisation", inviteOrganisation);

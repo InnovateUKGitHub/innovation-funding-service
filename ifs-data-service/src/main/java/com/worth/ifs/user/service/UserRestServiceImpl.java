@@ -85,7 +85,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public Future<RestResult<ProcessRole>> findProcessRoleById(Long processRoleId) {
-        return getWithRestResultAsyc(processRoleRestURL + "/" + processRoleId, ProcessRole.class);
+        return getWithRestResultAsync(processRoleRestURL + "/" + processRoleId, ProcessRole.class);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public Future<RestResult<ProcessRole[]>> findAssignableProcessRoles(Long applicationId){
-        return getWithRestResultAsyc(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRole[].class);
+        return getWithRestResultAsync(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRole[].class);
     }
 
     @Override

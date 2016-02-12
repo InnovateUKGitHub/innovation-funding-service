@@ -54,7 +54,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     // TODO DW - INFUND-1555 - remove usage of ObjectNode if possible
     @Override
     public Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId) {
-        Future<RestResult<ObjectNode>> result = getWithRestResultAsyc(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
+        Future<RestResult<ObjectNode>> result = getWithRestResultAsync(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
         return adapt(result, n -> n.andOnSuccess(jsonResponse -> restSuccess(jsonResponse.get("completedPercentage").asDouble())));
     }
 

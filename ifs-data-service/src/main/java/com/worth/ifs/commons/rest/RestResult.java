@@ -1,16 +1,23 @@
 package com.worth.ifs.commons.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
+import com.worth.ifs.commons.service.ExceptionThrowingFunction;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.util.Either;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpStatusCodeException;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.function.Function;
 
+import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
@@ -34,8 +41,13 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     @Override
-    public <R> RestResult<R> andOnSuccess(Function<? super T, FailingOrSucceedingResult<R, RestFailure>> successHandler) {
+    public <R> RestResult<R> andOnSuccess(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, RestFailure>> successHandler) {
         return (RestResult<R>) super.andOnSuccess(successHandler);
+    }
+
+    @Override
+    public <R> RestResult<R> andOnSuccessReturn(ExceptionThrowingFunction<? super T, R> successHandler) {
+        return (RestResult<R>) super.andOnSuccessReturn(successHandler);
     }
 
     @Override
@@ -46,6 +58,11 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         }
 
         return restSuccess(success.getSuccessObject());
+    }
+
+    @Override
+    protected <R> RestResult<R> createSuccess(R success) {
+        return restSuccess(success);
     }
 
     @Override
@@ -64,6 +81,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
     public static <T1> T1 getLeftOrRight(Either<T1, T1> either) {
         return Either.getLeftOrRight(either);
+    }
+
+    public static RestResult<Void> restSuccess() {
+        return restSuccess(OK);
     }
 
     public static RestResult<Void> restSuccess(HttpStatus statusCode) {
@@ -97,4 +118,36 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     public static <T> RestResult<T> restFailure(List<Error> errors, HttpStatus statusCode) {
         return new RestResult<>(left(RestFailure.error(errors, statusCode)), null);
     }
+
+
+    public static <T> Either<Void, T> fromJson(String json, Class<T> clazz) {
+        if (Void.class.equals(clazz)) {
+            return right(null);
+        }
+        if (String.class.equals(clazz)) {
+            return Either.<Void, T>right((T) json);
+        }
+        try {
+            return right(new ObjectMapper().readValue(json, clazz));
+        } catch (IOException e) {
+            return left();
+        }
+    }
+
+    public static <T> RestResult<T> fromException(HttpStatusCodeException e) {
+        return fromJson(e.getResponseBodyAsString(), RestErrorEnvelope.class).mapLeftOrRight(
+                failure -> RestResult.<T>restFailure(internalServerErrorError("Unable to process JSON response as type " + RestErrorEnvelope.class.getSimpleName())),
+                success -> RestResult.<T>restFailure(success.getErrors(), e.getStatusCode())
+        );
+    }
+
+    public static <T> RestResult<T> fromResponse(final ResponseEntity<T> response, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
+        if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
+            return RestResult.<T>restSuccess(response.getBody(), response.getStatusCode());
+        } else {
+            return RestResult.<T>restFailure(new com.worth.ifs.commons.error.Error(INTERNAL_SERVER_ERROR, "Unexpected status code " + response.getStatusCode(), INTERNAL_SERVER_ERROR));
+        }
+    }
+
 }

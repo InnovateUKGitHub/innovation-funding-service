@@ -4,11 +4,13 @@ import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.invite.domain.InviteOrganisation;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Collections.emptyList;
 
 public class InviteBuilder extends BaseBuilder<Invite, InviteBuilder> {
@@ -32,6 +34,24 @@ public class InviteBuilder extends BaseBuilder<Invite, InviteBuilder> {
 
     public InviteBuilder withApplication(Application... applications) {
         return withArray((application, invite) -> invite.setApplication(application), applications);
+    }
+
+    public InviteBuilder withInviteOrganisation(InviteOrganisation... organisations) {
+        return withArray((organisation, invite) -> invite.setInviteOrganisation(organisation), organisations);
+    }
+
+    @Override
+    public List<Invite> build(int numberToBuild) {
+        List<Invite> invites = super.build(numberToBuild);
+
+        // add back-refs to InviteOrganisations
+        invites.forEach(invite -> {
+            InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
+            if (inviteOrganisation != null && !simpleMap(inviteOrganisation.getInvites(), Invite::getId).contains(invite.getId())) {
+                inviteOrganisation.getInvites().add(invite);
+            }
+        });
+        return invites;
     }
 
     @Override

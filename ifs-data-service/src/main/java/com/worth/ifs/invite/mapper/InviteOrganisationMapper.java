@@ -1,8 +1,8 @@
 package com.worth.ifs.invite.mapper;
 
 import com.worth.ifs.invite.domain.InviteOrganisation;
+import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.transactional.InviteOrganisationService;
 import com.worth.ifs.user.mapper.OrganisationMapper;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class InviteOrganisationMapper {
 
     @Autowired
-    private InviteOrganisationService service;
+    private InviteOrganisationRepository repository;
 
     public abstract InviteOrganisationResource mapInviteOrganisationToResource(InviteOrganisation object);
 
@@ -30,6 +30,6 @@ public abstract class InviteOrganisationMapper {
     }
 
     public InviteOrganisation mapIdToInviteOrganisation(Long id) {
-        return service.findOne(id);
+        return repository.findOne(id);
     }
 }

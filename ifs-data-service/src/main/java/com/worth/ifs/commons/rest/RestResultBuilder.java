@@ -63,6 +63,11 @@ public class RestResultBuilder {
 
             try {
                 ServiceResult<?> response = serviceResult.get();
+
+                if (response == null) {
+                    return (RestResult<ReturnType>) internalServerErrorRestFailure("Cannot process a null ServiceResult");
+                }
+
                 return response.handleSuccessOrFailure(failure -> {
 
                     RestResult<ReturnType> handled = handleServiceFailure(failure);

@@ -2,6 +2,8 @@ package com.worth.ifs.invite.resource;
 
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.Invite;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /*
 * InviteResource is a DTO which enables to application to transfer Invite entities.
@@ -150,5 +152,47 @@ public class InviteResource {
 
     public void setLeadApplicant(String leadApplicant) {
         this.leadApplicant = leadApplicant;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InviteResource that = (InviteResource) o;
+
+        return new EqualsBuilder()
+                .append(leadOrganisation, that.leadOrganisation)
+                .append(leadApplicant, that.leadApplicant)
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(email, that.email)
+                .append(application, that.application)
+                .append(competitionId, that.competitionId)
+                .append(competitionName, that.competitionName)
+                .append(applicationName, that.applicationName)
+                .append(inviteOrganisation, that.inviteOrganisation)
+                .append(hash, that.hash)
+                .append(status, that.status)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(leadOrganisation)
+                .append(leadApplicant)
+                .append(id)
+                .append(name)
+                .append(email)
+                .append(application)
+                .append(competitionId)
+                .append(competitionName)
+                .append(applicationName)
+                .append(inviteOrganisation)
+                .append(hash)
+                .append(status)
+                .toHashCode();
     }
 }
