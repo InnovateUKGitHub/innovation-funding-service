@@ -31,33 +31,33 @@ public class ProcessRoleController {
 
     @RequestMapping("/{id}")
     public RestResult<ProcessRole> findOne(@PathVariable("id") final Long id) {
-        return usersRolesService.getProcessRoleById(id).toDefaultRestResultForGet();
+        return usersRolesService.getProcessRoleById(id).toGetResponse();
     }
 
     @RequestMapping("/findByUserApplication/{userId}/{applicationId}")
     public RestResult<ProcessRole> findByUserApplication(@PathVariable("userId") final Long userId,
                                                      @PathVariable("applicationId") final Long applicationId) {
-        return usersRolesService.getProcessRoleByUserIdAndApplicationId(userId, applicationId).toDefaultRestResultForGet();
+        return usersRolesService.getProcessRoleByUserIdAndApplicationId(userId, applicationId).toGetResponse();
     }
 
     @RequestMapping("/findByApplicationId/{applicationId}")
     public RestResult<List<ProcessRole>> findByUserApplication(@PathVariable("applicationId") final Long applicationId) {
 
-        return usersRolesService.getProcessRolesByApplicationId(applicationId).toDefaultRestResultForGet();
+        return usersRolesService.getProcessRolesByApplicationId(applicationId).toGetResponse();
     }
 
     @RequestMapping("/findByUserId/{userId}")
     public RestResult<List<ProcessRole>> findByUser(@PathVariable("userId") final Long userId) {
-        return usersRolesService.getProcessRolesByUserId(userId).toDefaultRestResultForGet();
+        return usersRolesService.getProcessRolesByUserId(userId).toGetResponse();
     }
 
     @RequestMapping("/findAssignable/{applicationId}")
     public RestResult<List<ProcessRole>> findAssignable(@PathVariable("applicationId") final Long applicationId) {
-        return usersRolesService.getAssignableProcessRolesByApplicationId(applicationId).toDefaultRestResultForGet();
+        return usersRolesService.getAssignableProcessRolesByApplicationId(applicationId).toGetResponse();
     }
 
     @RequestMapping("{id}/application")
     public RestResult<ApplicationResource> findByProcessRole(@PathVariable("id") final Long id){
-        return applicationService.findByProcessRole(id).toDefaultRestResultForGet();
+        return applicationService.findByProcessRole(id).toGetResponse();
     }
 }

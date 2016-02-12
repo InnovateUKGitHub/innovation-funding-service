@@ -26,43 +26,42 @@ public class ApplicationController {
 
     @RequestMapping("/normal/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
-        return applicationService.getApplicationById(id).toDefaultRestResultForGet();
+        return applicationService.getApplicationById(id).toGetResponse();
     }
-
 
     @RequestMapping("/")
     public RestResult<List<ApplicationResource>> findAll() {
-        return applicationService.findAll().toDefaultRestResultForGet();
+        return applicationService.findAll().toGetResponse();
     }
 
     @RequestMapping("/findByUser/{userId}")
     public RestResult<List<ApplicationResource>> findByUserId(@PathVariable("userId") final Long userId) {
-        return applicationService.findByUserId(userId).toDefaultRestResultForGet();
+        return applicationService.findByUserId(userId).toGetResponse();
     }
 
     @RequestMapping("/saveApplicationDetails/{id}")
     public RestResult<Void> saveApplicationDetails(@PathVariable("id") final Long id,
                                                    @RequestBody ApplicationResource application) {
 
-        return applicationService.saveApplicationDetails(id, application).toDefaultRestResultForPostUpdate();
+        return applicationService.saveApplicationDetails(id, application).toPostUpdateResponse();
     }
 
     @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")
     public RestResult<ObjectNode> getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        return applicationService.getProgressPercentageNodeByApplicationId(applicationId).toDefaultRestResultForGet();
+        return applicationService.getProgressPercentageNodeByApplicationId(applicationId).toGetResponse();
     }
 
     @RequestMapping(value = "/updateApplicationStatus", method = RequestMethod.PUT)
     public RestResult<Void> updateApplicationStatus(@RequestParam("applicationId") final Long id,
                                                           @RequestParam("statusId") final Long statusId) {
 
-        return applicationService.updateApplicationStatus(id, statusId).toDefaultRestResultForPut();
+        return applicationService.updateApplicationStatus(id, statusId).toPutResponse();
     }
 
 
     @RequestMapping("/applicationReadyForSubmit/{applicationId}")
     public RestResult<ObjectNode> applicationReadyForSubmit(@PathVariable("applicationId") final Long id){
-        return applicationService.applicationReadyForSubmit(id).toDefaultRestResultForGet();
+        return applicationService.applicationReadyForSubmit(id).toGetResponse();
     }
 
 
@@ -71,7 +70,7 @@ public class ApplicationController {
                                                                      @PathVariable("userId") final Long userId,
                                                                      @PathVariable("role") final UserRoleType role) {
 
-        return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toDefaultRestResultForGet();
+        return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toGetResponse();
     }
 
     @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = RequestMethod.POST)
@@ -83,6 +82,6 @@ public class ApplicationController {
         String name = jsonObj.get("name").textValue();
         ServiceResult<ApplicationResource> applicationResult =
                 applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, name);
-        return applicationResult.toDefaultRestResultForPostCreate();
+        return applicationResult.toPostCreateResponse();
     }
 }

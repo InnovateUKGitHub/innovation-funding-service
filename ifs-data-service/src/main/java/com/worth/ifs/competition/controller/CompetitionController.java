@@ -25,17 +25,17 @@ public class CompetitionController {
 
     @RequestMapping("/findById/{id}")
     public RestResult<Competition> getCompetitionById(@PathVariable("id") final Long id) {
-        return competitionService.getCompetitionById(id).toDefaultRestResultForGet();
+        return competitionService.getCompetitionById(id).toGetResponse();
     }
 
     // TODO DW - INFUND-1555 - do we really need this route AND the above route?
     @RequestMapping("/id/{id}")
     public RestResult<Competition> getApplicationById(@PathVariable("id") final Long id) {
-        return competitionService.getCompetitionById(id).toDefaultRestResultForGet();
+        return competitionService.getCompetitionById(id).toGetResponse();
     }
 
     @RequestMapping("/findAll")
     public RestResult<List<Competition>> findAll() {
-        return competitionService.findAll().toDefaultRestResultForGet();
+        return competitionService.findAll().toGetResponse();
     }
 }

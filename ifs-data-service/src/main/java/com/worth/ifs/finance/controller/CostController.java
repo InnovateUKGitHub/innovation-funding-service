@@ -29,26 +29,26 @@ public class CostController {
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             @PathVariable("questionId") final Long questionId,
             @RequestBody(required=false) final CostItem newCostItem) {
-        return costService.addCost(applicationFinanceId, questionId, newCostItem).toDefaultRestResultForPostCreate();
+        return costService.addCost(applicationFinanceId, questionId, newCostItem).toPostCreateResponse();
     }
 
     @RequestMapping("/update/{id}")
     public RestResult<Void> update(@PathVariable("id") final Long id, @RequestBody final CostItem newCostItem) {
-        return costService.updateCost(id, newCostItem).toDefaultRestResultForPut();
+        return costService.updateCost(id, newCostItem).toPutResponse();
     }
 
     @RequestMapping("/get/{applicationFinanceId}")
     public RestResult<List<Cost>> findByApplicationId(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
-        return costService.findCostsByApplicationId(applicationFinanceId).toDefaultRestResultForGet();
+        return costService.findCostsByApplicationId(applicationFinanceId).toGetResponse();
     }
 
     @RequestMapping("/findById/{id}")
     public RestResult<Cost> findById(@PathVariable("id") final Long id) {
-        return costService.findCostById(id).toDefaultRestResultForGet();
+        return costService.findCostById(id).toGetResponse();
     }
 
     @RequestMapping("/delete/{costId}")
     public RestResult<Void> delete(@PathVariable("costId") final Long costId) {
-        return costService.deleteCost(costId).toDefaultRestResultForDelete();
+        return costService.deleteCost(costId).toDeleteResponse();
     }
 }

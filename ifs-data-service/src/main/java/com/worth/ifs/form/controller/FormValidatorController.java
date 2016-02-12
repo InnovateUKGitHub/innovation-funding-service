@@ -17,6 +17,6 @@ public class FormValidatorController {
 
     @RequestMapping("/{id}")
     public RestResult<FormValidatorResource> findById(@PathVariable("id") final Long id) throws ClassNotFoundException{
-        return service.findOne(id).toDefaultRestResultForGet();
+        return service.findOne(id).toGetResponse();
     }
 }

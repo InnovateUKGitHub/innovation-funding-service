@@ -17,6 +17,6 @@ public class FileEntryController {
 
     @RequestMapping("/{id}")
     public RestResult<FileEntryResource> findById(@PathVariable("id") final Long id) {
-        return service.findOne(id).toDefaultRestResultForGet();
+        return service.findOne(id).toGetResponse();
     }
 }

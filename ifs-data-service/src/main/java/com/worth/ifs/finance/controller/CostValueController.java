@@ -18,6 +18,6 @@ public class CostValueController {
 
     @RequestMapping("/{id}")
     public RestResult<CostValueResource> findById(@PathVariable("id") final CostValueId id) {
-        return service.findOne(id).toDefaultRestResultForGet();
+        return service.findOne(id).toGetResponse();
     }
 }

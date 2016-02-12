@@ -24,27 +24,27 @@ public class InviteController {
 
     @RequestMapping("/createApplicationInvites")
     public RestResult<InviteResultsResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
-        return inviteService.createApplicationInvites(inviteOrganisationResource).toDefaultRestResultForPostCreate();
+        return inviteService.createApplicationInvites(inviteOrganisationResource).toPostCreateResponse();
     }
 
     @RequestMapping("/getInviteByHash/{hash}")
     public RestResult<InviteResource> getInviteByHash(@PathVariable("hash") String hash) {
-        return inviteService.getInviteByHash(hash).toDefaultRestResultForGet();
+        return inviteService.getInviteByHash(hash).toGetResponse();
     }
 
     @RequestMapping("/getInviteOrganisationByHash/{hash}")
     public RestResult<InviteOrganisationResource> getInviteOrganisationByHash(@PathVariable("hash") String hash) {
-        return inviteService.getInviteOrganisationByHash(hash).toDefaultRestResultForGet();
+        return inviteService.getInviteOrganisationByHash(hash).toGetResponse();
     }
 
 
     @RequestMapping("/getInvitesByApplicationId/{applicationId}")
     public RestResult<Set<InviteOrganisationResource>> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
-        return inviteService.getInvitesByApplication(applicationId).toDefaultRestResultForGet();
+        return inviteService.getInvitesByApplication(applicationId).toGetResponse();
     }
 
     @RequestMapping(value = "/saveInvites", method = RequestMethod.POST)
     public RestResult<InviteResultsResource> saveInvites(@RequestBody List<InviteResource> inviteResources) {
-        return inviteService.saveInvites(inviteResources).toDefaultRestResultForPostCreate();
+        return inviteService.saveInvites(inviteResources).toPostCreateResponse();
     }
 }

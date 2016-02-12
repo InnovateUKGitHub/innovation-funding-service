@@ -19,11 +19,11 @@ public class OrganisationTypeController {
 
     @RequestMapping("/{id}")
     public RestResult<OrganisationTypeResource> findById(@PathVariable("id") final Long id) {
-        return service.findOne(id).toDefaultRestResultForGet();
+        return service.findOne(id).toGetResponse();
     }
 
     @RequestMapping("/getAll")
     public RestResult<List<OrganisationTypeResource>> findAll() {
-        return service.findAll().toDefaultRestResultForGet();
+        return service.findAll().toGetResponse();
     }
 }

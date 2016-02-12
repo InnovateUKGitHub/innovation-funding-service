@@ -27,51 +27,51 @@ public class UserController {
 
     @RequestMapping("/token/{token}")
     public RestResult<User> getUserByToken(@PathVariable("token") final String token) {
-        return userService.getUserByToken(token).toDefaultRestResultForGet();
+        return userService.getUserByToken(token).toGetResponse();
     }
 
     @RequestMapping("/email/{email}/password/{password}")
     public RestResult<User> getUserByEmailandPassword(@PathVariable("email") final String email, @PathVariable("password") final String password) {
-        return userService.getUserByEmailandPassword(email, password).toDefaultRestResultForGet();
+        return userService.getUserByEmailandPassword(email, password).toGetResponse();
     }
 
     @RequestMapping("/id/{id}")
     public RestResult<User> getUserById(@PathVariable("id") final Long id) {
-        return userService.getUserById(id).toDefaultRestResultForGet();
+        return userService.getUserById(id).toGetResponse();
     }
 
     @RequestMapping("/name/{name}")
     public RestResult<List<User>> getUserByName(@PathVariable("name") final String name) {
-        return userService.getUserByName(name).toDefaultRestResultForGet();
+        return userService.getUserByName(name).toGetResponse();
     }
 
     @RequestMapping("/findAll/")
     public RestResult<List<User>> findAll() {
-        return userService.findAll().toDefaultRestResultForGet();
+        return userService.findAll().toGetResponse();
     }
 
     @RequestMapping("/findByEmail/{email}/")
     public RestResult<List<UserResource>> findByEmail(@PathVariable("email") final String email) {
-        return userService.findByEmail(email).toDefaultRestResultForGet();
+        return userService.findByEmail(email).toGetResponse();
     }
 
     @RequestMapping("/findAssignableUsers/{applicationId}")
     public RestResult<Set<User>> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
-        return userService.findAssignableUsers(applicationId).toDefaultRestResultForGet();
+        return userService.findAssignableUsers(applicationId).toGetResponse();
     }
 
     @RequestMapping("/findRelatedUsers/{applicationId}")
     public RestResult<Set<User>> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
-        return userService.findRelatedUsers(applicationId).toDefaultRestResultForGet();
+        return userService.findRelatedUsers(applicationId).toGetResponse();
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return userService.createUser(organisationId, userResource).toDefaultRestResultForPostCreate();
+        return userService.createUser(organisationId, userResource).toPostCreateResponse();
     }
 
     @RequestMapping("/updateDetails")
     public RestResult<UserResource> createUser(@RequestBody UserResource userResource) {
-        return userService.updateUser(userResource).toDefaultRestResultForPutWithBody();
+        return userService.updateUser(userResource).toPutWithBodyResponse();
     }
 }

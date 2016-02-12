@@ -17,6 +17,6 @@ public class FormInputController {
 
     @RequestMapping("/{id}")
     public RestResult<FormInput> findOne(@PathVariable("id") Long id){
-        return formInputService.findFormInput(id).toDefaultRestResultForGet();
+        return formInputService.findFormInput(id).toGetResponse();
     }
 }

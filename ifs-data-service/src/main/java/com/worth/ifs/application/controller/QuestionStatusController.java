@@ -24,26 +24,26 @@ public class QuestionStatusController {
 
     @RequestMapping("/findByQuestionAndApplication/{questionId}/{applicationId}")
     public RestResult<List<QuestionStatus>> getQuestionStatusByApplicationIdAndAssigneeId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId) {
-        return questionService.getQuestionStatusByApplicationIdAndAssigneeId(questionId, applicationId).toDefaultRestResultForGet();
+        return questionService.getQuestionStatusByApplicationIdAndAssigneeId(questionId, applicationId).toGetResponse();
     }
 
     @RequestMapping("/findByQuestionAndApplicationAndOrganisation/{questionId}/{applicationId}/{organisationId}")
     public RestResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId) {
-        return questionService.getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(questionId, applicationId, organisationId).toDefaultRestResultForGet();
+        return questionService.getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(questionId, applicationId, organisationId).toGetResponse();
     }
 
     @RequestMapping(value = "/findByQuestionIdsAndApplicationIdAndOrganisationId/{questionIds}/{applicationId}/{organisationId}")
     public RestResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(@PathVariable Long[] questionIds, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
-        return questionService.getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).toDefaultRestResultForGet();
+        return questionService.getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).toGetResponse();
     }
 
     @RequestMapping("/findByApplicationAndOrganisation/{applicationId}/{organisationId}")
     public RestResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(@PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
-        return questionService.findByApplicationAndOrganisation(applicationId, organisationId).toDefaultRestResultForGet();
+        return questionService.findByApplicationAndOrganisation(applicationId, organisationId).toGetResponse();
     }
 
     @RequestMapping("/{id}")
     public RestResult<QuestionStatus> getQuestionStatusResourceById(@PathVariable("id") Long id){
-        return questionService.getQuestionStatusResourceById(id).toDefaultRestResultForGet();
+        return questionService.getQuestionStatusResourceById(id).toGetResponse();
     }
 }

@@ -21,11 +21,11 @@ public class CompanyHouseController {
 
     @RequestMapping("/searchCompanyHouse/{searchText}")
     public RestResult<List<CompanyHouseBusiness>> searchCompanyHouse(@PathVariable("searchText") final String searchText) {
-        return companyHouseService.searchOrganisations(searchText).toDefaultRestResultForGet();
+        return companyHouseService.searchOrganisations(searchText).toGetResponse();
     }
 
     @RequestMapping("/getCompanyHouse/{id}")
     public RestResult<CompanyHouseBusiness> getCompanyHouse(@PathVariable("id") final String id) {
-        return companyHouseService.getOrganisationById(id).toDefaultRestResultForGet();
+        return companyHouseService.getOrganisationById(id).toGetResponse();
     }
 }

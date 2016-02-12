@@ -29,12 +29,12 @@ public class OrganisationController {
 
     @RequestMapping("/findByApplicationId/{applicationId}")
     public RestResult<Set<Organisation>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        return organisationService.findByApplicationId(applicationId).toDefaultRestResultForGet();
+        return organisationService.findByApplicationId(applicationId).toGetResponse();
     }
 
     @RequestMapping("/findById/{organisationId}")
     public RestResult<Organisation> findById(@PathVariable("organisationId") final Long organisationId) {
-        return organisationService.findById(organisationId).toDefaultRestResultForGet();
+        return organisationService.findById(organisationId).toGetResponse();
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
@@ -42,14 +42,14 @@ public class OrganisationController {
         LOG.debug("OrganisationController , create method");
         LOG.debug("OrganisationController , create method " + organisation.getName());
 
-        return organisationService.create(organisation).toDefaultRestResultForPostCreate();
+        return organisationService.create(organisation).toPostCreateResponse();
     }
 
     @RequestMapping(value = "/saveResource", method = RequestMethod.POST)
     public RestResult<OrganisationResource> saveResource(@RequestBody OrganisationResource organisationResource) {
         LOG.debug("OrganisationController , create method");
 
-        return organisationService.saveResource(organisationResource).toDefaultRestResultForPostCreate();
+        return organisationService.saveResource(organisationResource).toPostCreateResponse();
     }
 
     // TODO DW - INFUND-1555 - do we want to be returning an OrganisationResource from this call?
@@ -60,6 +60,6 @@ public class OrganisationController {
         LOG.info("OrganisationController , add addresstype " + addressType.name());
         LOG.info("OrganisationController , add getAddressLine1 " + address.getAddressLine1());
 
-        return organisationService.addAddress(organisationId, addressType, address).toDefaultRestResultForPutWithBody();
+        return organisationService.addAddress(organisationId, addressType, address).toPutWithBodyResponse();
     }
 }

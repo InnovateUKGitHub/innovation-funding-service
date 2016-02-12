@@ -34,14 +34,14 @@ public class ApplicationFinanceController {
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
 
-        return costService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId).toDefaultRestResultForGet();
+        return costService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId).toGetResponse();
     }
 
     @RequestMapping("/findByApplication/{applicationId}")
     public RestResult<List<ApplicationFinanceResource>> findByApplication(
             @PathVariable("applicationId") final Long applicationId) {
 
-        return costService.findApplicationFinanceByApplication(applicationId).toDefaultRestResultForGet();
+        return costService.findApplicationFinanceByApplication(applicationId).toGetResponse();
     }
 
     // TODO DW - INFUND-1555 - remove ObjectNode usage
@@ -55,7 +55,7 @@ public class ApplicationFinanceController {
             return node;
         });
 
-        return result.toDefaultRestResultForGet();
+        return result.toGetResponse();
     }
 
     @RequestMapping("/add/{applicationId}/{organisationId}")
@@ -63,26 +63,26 @@ public class ApplicationFinanceController {
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
 
-        return costService.addCost(applicationId, organisationId).toDefaultRestResultForPostCreate();
+        return costService.addCost(applicationId, organisationId).toPostCreateResponse();
     }
 
     @RequestMapping("/getById/{applicationFinanceId}")
     public RestResult<ApplicationFinanceResource> findOne(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
-        return costService.getApplicationFinanceById(applicationFinanceId).toDefaultRestResultForGet();
+        return costService.getApplicationFinanceById(applicationFinanceId).toGetResponse();
     }
 
     @RequestMapping("/update/{applicationFinanceId}")
     public RestResult<ApplicationFinanceResource> update(@PathVariable("applicationFinanceId") final Long applicationFinanceId, @RequestBody final ApplicationFinanceResource applicationFinance) {
-        return costService.updateCost(applicationFinanceId, applicationFinance).toDefaultRestResultForPutWithBody();
+        return costService.updateCost(applicationFinanceId, applicationFinance).toPutWithBodyResponse();
     }
 
     @RequestMapping("/financeDetails/{applicationId}/{organisationId}")
     public RestResult<ApplicationFinanceResource> financeDetails(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
-        return costService.financeDetails(applicationId, organisationId).toDefaultRestResultForGet();
+        return costService.financeDetails(applicationId, organisationId).toGetResponse();
     }
 
     @RequestMapping("/financeTotals/{applicationId}")
     public RestResult<List<ApplicationFinanceResource>> financeTotals(@PathVariable("applicationId") final Long applicationId) {
-        return costService.financeTotals(applicationId).toDefaultRestResultForGet();
+        return costService.financeTotals(applicationId).toGetResponse();
     }
 }

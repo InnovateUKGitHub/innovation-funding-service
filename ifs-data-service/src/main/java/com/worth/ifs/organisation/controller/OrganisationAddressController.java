@@ -17,6 +17,6 @@ public class OrganisationAddressController {
 
     @RequestMapping("/{id}")
     public RestResult<OrganisationAddressResource> findById(@PathVariable("id") final Long id) {
-        return service.findOne(id).toDefaultRestResultForGet();
+        return service.findOne(id).toGetResponse();
     }
 }

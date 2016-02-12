@@ -17,6 +17,6 @@ public class AddressController {
 
     @RequestMapping("/{id}")
     public RestResult<AddressResource> findById(@PathVariable("id") final Long id) {
-        return service.findOne(id).toDefaultRestResultForGet();
+        return service.findOne(id).toGetResponse();
     }
 }

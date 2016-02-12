@@ -29,34 +29,34 @@ public class AssessmentController {
 
     @RequestMapping("/findAssessmentsByCompetition/{assessorId}/{competitionId}")
     public RestResult<List<Assessment>> findAssessmentsByProcessRole(@PathVariable("assessorId") final Long assessorId, @PathVariable("competitionId") final Long competitionId) {
-        return assessorService.getAllByCompetitionAndAssessor(competitionId, assessorId).toDefaultRestResultForGet();
+        return assessorService.getAllByCompetitionAndAssessor(competitionId, assessorId).toGetResponse();
     }
 
     @RequestMapping("/findAssessmentByProcessRole/{processRoleId}")
     public RestResult<Assessment> getAssessmentByProcessRole( @PathVariable("processRoleId") final Long processRoleId) {
-        return assessorService.getOneByProcessRole(processRoleId).toDefaultRestResultForGet();
+        return assessorService.getOneByProcessRole(processRoleId).toGetResponse();
     }
 
     @RequestMapping("/totalAssignedAssessmentsByCompetition/{userId}/{competitionId}")
     public RestResult<Integer> getTotalAssignedAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
-        return assessorService.getTotalAssignedAssessmentsByCompetition(competitionId, userId).toDefaultRestResultForGet();
+        return assessorService.getTotalAssignedAssessmentsByCompetition(competitionId, userId).toGetResponse();
     }
 
     @RequestMapping("/totalSubmittedAssessmentsByCompetition/{userId}/{competitionId}")
     public RestResult<Integer> getTotalSubmittedAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
-        return assessorService.getTotalSubmittedAssessmentsByCompetition(competitionId, userId).toDefaultRestResultForGet();
+        return assessorService.getTotalSubmittedAssessmentsByCompetition(competitionId, userId).toGetResponse();
     }
 
     @RequestMapping(value = "/acceptAssessmentInvitation/{processRoleId}")
     public RestResult<Void> acceptAssessmentInvitation(@PathVariable("processRoleId") final Long processRoleId,
                                            @RequestBody Assessment assessment) {
-        return assessorService.acceptAssessmentInvitation(processRoleId, assessment).toDefaultRestResultForPut();
+        return assessorService.acceptAssessmentInvitation(processRoleId, assessment).toPutResponse();
     }
 
     @RequestMapping(value = "/rejectAssessmentInvitation/{processRoleId}")
     public RestResult<Void> rejectAssessmentInvitation(@PathVariable("processRoleId") final Long processRoleId,
                                            @RequestBody ProcessOutcome processOutcome) {
-        return assessorService.rejectAssessmentInvitation(processRoleId, processOutcome).toDefaultRestResultForPut();
+        return assessorService.rejectAssessmentInvitation(processRoleId, processOutcome).toPutResponse();
     }
 
     @RequestMapping(value = "/submitAssessments", method = RequestMethod.POST)
@@ -65,7 +65,7 @@ public class AssessmentController {
         //unpacks all the response form data fields
         ArrayNode assessmentsIds = (ArrayNode) formData.get("assessmentsToSubmit");
         Set<Long> assessments = fromArrayNodeToSet(assessmentsIds);
-        return assessorService.submitAssessments(assessments).toDefaultRestResultForPostUpdate();
+        return assessorService.submitAssessments(assessments).toPostUpdateResponse();
     }
 
     @RequestMapping(value = "/saveAssessmentSummary", method = RequestMethod.POST)
@@ -77,12 +77,12 @@ public class AssessmentController {
         String suitableFeedback =  HtmlUtils.htmlUnescape(formData.get("suitableFeedback").asText());
         String comments =  HtmlUtils.htmlUnescape(formData.get("comments").textValue());
 
-        return assessorService.submitAssessment(assessorId, applicationId, suitableValue, suitableFeedback, comments).toDefaultRestResultForPostUpdate();
+        return assessorService.submitAssessment(assessorId, applicationId, suitableValue, suitableFeedback, comments).toPostUpdateResponse();
     }
 
     @RequestMapping(value = "{assessmentId}/score")
     public RestResult<Score> scoreForAssessment(@PathVariable("assessmentId") Long id){
-        return assessorService.getScore(id).toDefaultRestResultForGet();
+        return assessorService.getScore(id).toGetResponse();
     }
 
     private Set<Long> fromArrayNodeToSet(ArrayNode array) {

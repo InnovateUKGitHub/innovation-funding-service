@@ -19,6 +19,6 @@ public class ApplicationStatusController {
 
     @RequestMapping("/{id}")
     public RestResult<ApplicationStatusResource> getApplicationStatusById(@PathVariable("id") final Long id) {
-        return applicationStatusService.getById(id).toDefaultRestResultForGet();
+        return applicationStatusService.getById(id).toGetResponse();
     }
 }

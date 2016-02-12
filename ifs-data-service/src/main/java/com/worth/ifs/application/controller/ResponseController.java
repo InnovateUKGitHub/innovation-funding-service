@@ -31,7 +31,7 @@ public class ResponseController {
 
     @RequestMapping("/findResponsesByApplication/{applicationId}")
     public RestResult<List<Response>> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
-        return responseService.findResponsesByApplication(applicationId).toDefaultRestResultForGet();
+        return responseService.findResponsesByApplication(applicationId).toGetResponse();
     }
 
     @RequestMapping(value = "/saveQuestionResponse/{responseId}/assessorFeedback", params="assessorUserId", method = RequestMethod.PUT, produces = "application/json")
@@ -40,14 +40,14 @@ public class ResponseController {
                                                               @RequestParam("feedbackValue") Optional<String> feedbackValue,
                                                               @RequestParam("feedbackText") Optional<String> feedbackText) {
 
-        return assessorService.updateAssessorFeedback(new Feedback.Id(responseId, assessorUserId), feedbackValue, feedbackText).toDefaultRestResultForPut();
+        return assessorService.updateAssessorFeedback(new Feedback.Id(responseId, assessorUserId), feedbackValue, feedbackText).toPutResponse();
     }
 
     @RequestMapping(value= "/assessorFeedback/{responseId}/{assessorProcessRoleId}", method = RequestMethod.GET, produces = "application/json")
     public RestResult<Feedback> getFeedback(@PathVariable("responseId") Long responseId,
                                             @PathVariable("assessorProcessRoleId") Long assessorProcessRoleId){
 
-        return assessorService.getFeedback(new Feedback.Id().setAssessorUserId(assessorProcessRoleId).setResponseId(responseId)).toDefaultRestResultForGet();
+        return assessorService.getFeedback(new Feedback.Id().setAssessorUserId(assessorProcessRoleId).setResponseId(responseId)).toGetResponse();
     }
 
 

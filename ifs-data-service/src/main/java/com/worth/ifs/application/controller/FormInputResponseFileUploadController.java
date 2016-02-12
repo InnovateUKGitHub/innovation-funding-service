@@ -78,7 +78,7 @@ public class FormInputResponseFileUploadController {
         });
 
         ServiceResult<FormInputResponseFileEntryCreatedResponse> response = creationResult.andOnSuccessReturn(entry -> new FormInputResponseFileEntryCreatedResponse(entry.getFileEntryResource().getId()));
-        return response.toDefaultRestResultForPostCreate();
+        return response.toPostCreateResponse();
     }
 
     @RequestMapping(value = "/file", method = PUT, produces = "application/json")
@@ -105,7 +105,7 @@ public class FormInputResponseFileUploadController {
             });
         });
 
-        return updateResult.toDefaultRestResultForPut();
+        return updateResult.toPutResponse();
     }
 
     @RequestMapping(value = "/file", method = GET)
@@ -179,7 +179,7 @@ public class FormInputResponseFileUploadController {
 
         FormInputResponseFileEntryId compoundId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
         ServiceResult<FormInputResponse> deleteResult = applicationService.deleteFormInputResponseFileUpload(compoundId);
-        return deleteResult.toDefaultRestResultForDelete();
+        return deleteResult.toDeleteResponse();
     }
 
     private ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> doGetFile(long formInputId, long applicationId, long processRoleId) {

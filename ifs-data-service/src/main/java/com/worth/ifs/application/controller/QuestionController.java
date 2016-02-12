@@ -24,21 +24,21 @@ public class QuestionController {
 
     @RequestMapping("/id/{id}")
     public RestResult<Question> getQuestionById(@PathVariable("id") final Long id) {
-        return questionService.getQuestionById(id).toDefaultRestResultForGet();
+        return questionService.getQuestionById(id).toGetResponse();
     }
 
     @RequestMapping("/markAsComplete/{questionId}/{applicationId}/{markedAsCompleteById}")
     public RestResult<Void> markAsComplete(@PathVariable("questionId") final Long questionId,
                         @PathVariable("applicationId") final Long applicationId,
                         @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
-        return questionService.markAsComplete(questionId, applicationId, markedAsCompleteById).toDefaultRestResultForPut();
+        return questionService.markAsComplete(questionId, applicationId, markedAsCompleteById).toPutResponse();
     }
 
     @RequestMapping("/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}")
     public RestResult<Void> markAsInComplete(@PathVariable("questionId") final Long questionId,
                                  @PathVariable("applicationId") final Long applicationId,
                                  @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById) {
-        return questionService.markAsInComplete(questionId, applicationId, markedAsInCompleteById).toDefaultRestResultForPut();
+        return questionService.markAsInComplete(questionId, applicationId, markedAsInCompleteById).toPutResponse();
     }
 
     @RequestMapping("/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}")
@@ -46,44 +46,44 @@ public class QuestionController {
                        @PathVariable("applicationId") final Long applicationId,
                        @PathVariable("assigneeId") final Long assigneeId,
                        @PathVariable("assignedById") final Long assignedById) {
-        return questionService.assign(questionId, applicationId, assigneeId, assignedById).toDefaultRestResultForPut();
+        return questionService.assign(questionId, applicationId, assigneeId, assignedById).toPutResponse();
     }
 
     @RequestMapping("/getMarkedAsComplete/{applicationId}/{organisationId}")
     public RestResult<Set<Long>> getMarkedAsComplete(@PathVariable("applicationId") Long applicationId,
                                          @PathVariable("organisationId") Long organisationId) {
-        return questionService.getMarkedAsComplete(applicationId, organisationId).toDefaultRestResultForGet();
+        return questionService.getMarkedAsComplete(applicationId, organisationId).toGetResponse();
     }
 
 
     @RequestMapping("/updateNotification/{questionStatusId}/{notify}")
     public RestResult<Void> updateNotification(@PathVariable("questionStatusId") final Long questionStatusId,
                                    @PathVariable("notify") final Boolean notify) {
-        return questionService.updateNotification(questionStatusId, notify).toDefaultRestResultForPut();
+        return questionService.updateNotification(questionStatusId, notify).toPutResponse();
     }
 
     @RequestMapping("/findByCompetition/{competitionId}")
     public RestResult<List<Question>> findByCompetition(@PathVariable("competitionId") final Long competitionId) {
-        return questionService.findByCompetition(competitionId).toDefaultRestResultForGet();
+        return questionService.findByCompetition(competitionId).toGetResponse();
     }
 
     @RequestMapping("/getNextQuestion/{questionId}")
     public RestResult<Question> getNextQuestion(@PathVariable("questionId") final Long questionId) {
-        return questionService.getNextQuestion(questionId).toDefaultRestResultForGet();
+        return questionService.getNextQuestion(questionId).toGetResponse();
     }
 
     @RequestMapping("/getPreviousQuestionBySection/{sectionId}")
     public RestResult<Question> getPreviousQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
-        return questionService.getPreviousQuestionBySection(sectionId).toDefaultRestResultForGet();
+        return questionService.getPreviousQuestionBySection(sectionId).toGetResponse();
     }
 
     @RequestMapping(value = "/getNextQuestionBySection/{sectionId}")
     public RestResult<Question> getNextQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
-        return questionService.getNextQuestionBySection(sectionId).toDefaultRestResultForGet();
+        return questionService.getNextQuestionBySection(sectionId).toGetResponse();
     }
 
     @RequestMapping("/getPreviousQuestion/{questionId}")
     public RestResult<Question> getPreviousQuestion(@PathVariable("questionId") final Long questionId) {
-        return questionService.getPreviousQuestion(questionId).toDefaultRestResultForGet();
+        return questionService.getPreviousQuestion(questionId).toGetResponse();
     }
 }

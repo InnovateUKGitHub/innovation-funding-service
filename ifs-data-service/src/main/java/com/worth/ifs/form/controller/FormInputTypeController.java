@@ -17,6 +17,6 @@ public class FormInputTypeController {
 
     @RequestMapping("/{id}")
     public RestResult<FormInputTypeResource> findById(@PathVariable("id") final Long id) {
-        return service.findFormInputType(id).toDefaultRestResultForGet();
+        return service.findFormInputType(id).toGetResponse();
     }
 }

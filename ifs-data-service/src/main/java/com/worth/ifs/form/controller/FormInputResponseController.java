@@ -36,7 +36,7 @@ public class FormInputResponseController {
 
     @RequestMapping("/findResponsesByApplication/{applicationId}")
     public RestResult<List<FormInputResponse>> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
-        return formInputService.findResponsesByApplication(applicationId).toDefaultRestResultForGet();
+        return formInputService.findResponsesByApplication(applicationId).toGetResponse();
     }
 
     @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
@@ -62,6 +62,6 @@ public class FormInputResponseController {
             return validatedResponse.getAllErrors();
         });
 
-        return result.toDefaultRestResultForPutWithBody();
+        return result.toPutWithBodyResponse();
     }
 }

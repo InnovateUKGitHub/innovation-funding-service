@@ -24,48 +24,48 @@ public class SectionController {
 
     @RequestMapping("/getById/{sectionId}")
     public RestResult<Section> getById(@PathVariable("sectionId") final Long sectionId) {
-        return sectionService.getById(sectionId).toDefaultRestResultForGet();
+        return sectionService.getById(sectionId).toGetResponse();
     }
 
     @RequestMapping("/getCompletedSectionsByOrganisation/{applicationId}")
     public RestResult<Map<Long, Set<Long>>> getCompletedSectionsMap(@PathVariable("applicationId") final Long applicationId) {
-        return sectionService.getCompletedSections(applicationId).toDefaultRestResultForGet();
+        return sectionService.getCompletedSections(applicationId).toGetResponse();
     }
 
     @RequestMapping("/getCompletedSections/{applicationId}/{organisationId}")
     public RestResult<Set<Long>> getCompletedSections(@PathVariable("applicationId") final Long applicationId,
                                           @PathVariable("organisationId") final Long organisationId) {
 
-        return sectionService.getCompletedSections(applicationId, organisationId).toDefaultRestResultForGet();
+        return sectionService.getCompletedSections(applicationId, organisationId).toGetResponse();
     }
 
     @RequestMapping("/allSectionsMarkedAsComplete/{applicationId}")
     public RestResult<Boolean> getCompletedSections(@PathVariable("applicationId") final Long applicationId) {
-        return sectionService.childSectionsAreCompleteForAllOrganisations(null, applicationId, null).toDefaultRestResultForGet();
+        return sectionService.childSectionsAreCompleteForAllOrganisations(null, applicationId, null).toGetResponse();
     }
 
     @RequestMapping("/getIncompleteSections/{applicationId}")
     public RestResult<List<Long>> getIncompleteSections(@PathVariable("applicationId") final Long applicationId) {
-        return sectionService.getIncompleteSections(applicationId).toDefaultRestResultForGet();
+        return sectionService.getIncompleteSections(applicationId).toGetResponse();
     }
 
     @RequestMapping("findByName/{name}")
     public RestResult<Section> findByName(@PathVariable("name") final String name) {
-        return sectionService.findByName(name).toDefaultRestResultForGet();
+        return sectionService.findByName(name).toGetResponse();
     }
 
     @RequestMapping("/getNextSection/{sectionId}")
     public RestResult<Section> getNextSection(@PathVariable("sectionId") final Long sectionId) {
-        return sectionService.getNextSection(sectionId).toDefaultRestResultForGet();
+        return sectionService.getNextSection(sectionId).toGetResponse();
     }
 
     @RequestMapping("/getPreviousSection/{sectionId}")
     public RestResult<Section> getPreviousSection(@PathVariable("sectionId") final Long sectionId) {
-        return sectionService.getPreviousSection(sectionId).toDefaultRestResultForGet();
+        return sectionService.getPreviousSection(sectionId).toGetResponse();
     }
 
     @RequestMapping("/getSectionByQuestionId/{questionId}")
     public RestResult<Section> getSectionByQuestionId(@PathVariable("questionId") final Long questionId) {
-        return sectionService.getSectionByQuestionId(questionId).toDefaultRestResultForGet();
+        return sectionService.getSectionByQuestionId(questionId).toGetResponse();
     }
 }

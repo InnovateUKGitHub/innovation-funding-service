@@ -68,59 +68,59 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         return failure != null ? serviceFailure(failure.getFailure()) : serviceFailure(internalServerErrorError("Unexpected error"));
     }
 
-    public RestResult<T> toRestResult() {
+    private RestResult<T> toRestResult() {
         return toRestResult(OK);
     }
 
-    public RestResult<Void> toEmptyRestResult() {
+    private RestResult<Void> toEmptyRestResult() {
         return toEmptyRestResult(OK);
     }
 
-    public RestResult<T> toRestResult(HttpStatus statusCode) {
+    private RestResult<T> toRestResult(HttpStatus statusCode) {
         return handleSuccessOrFailure(
                 failure -> handleServiceFailure(failure),
                 success -> restSuccess(success, statusCode)
         );
     }
 
-    public RestResult<Void> toEmptyRestResult(HttpStatus statusCode) {
+    private RestResult<Void> toEmptyRestResult(HttpStatus statusCode) {
         return handleSuccessOrFailure(
                 failure -> handleServiceFailure(failure),
                 success -> restSuccess(statusCode)
         );
     }
 
-    public RestResult<Void> toRestResultNoContent() {
+    private RestResult<Void> toRestResultNoContent() {
         return toEmptyRestResult(NO_CONTENT);
     }
 
-    public RestResult<T> toDefaultRestResultForGet() {
+    public RestResult<T> toGetResponse() {
         return toRestResult();
     }
 
-    public RestResult<T> toDefaultRestResultForPostCreate() {
+    public RestResult<T> toPostCreateResponse() {
         return toRestResult(CREATED);
     }
 
     /**
      * @deprecated should use POSTs for create, and PUTs for update
      */
-    public RestResult<Void> toDefaultRestResultForPostUpdate() {
+    public RestResult<Void> toPostUpdateResponse() {
         return toEmptyRestResult();
     }
 
-    public RestResult<Void> toDefaultRestResultForPut() {
+    public RestResult<Void> toPutResponse() {
         return toEmptyRestResult();
     }
 
     /**
      * @deprecated PUTs shouldn't generally return results - an HTTP status is generally ok
      */
-    public RestResult<T> toDefaultRestResultForPutWithBody() {
+    public RestResult<T> toPutWithBodyResponse() {
         return toRestResult();
     }
 
-    public RestResult<Void> toDefaultRestResultForDelete() {
+    public RestResult<Void> toDeleteResponse() {
         return toRestResultNoContent();
     }
 
