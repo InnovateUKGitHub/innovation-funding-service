@@ -32,7 +32,7 @@
             <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
         </div>
 
-		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:remove="tag" />
+		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:with="questionTitle='question6'" th:remove="tag" />
 
 	</form>
 
