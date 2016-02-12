@@ -47,7 +47,9 @@ the applicant should get a warning to enter data in the "Project Summary" questi
 the applicant inserts some text again in the "Project Summary" question
     Input Text    css=#form-input-11 .editor    test if the applicant can mark the question as complete
     Click Element    css=.bold_button
-    Sleep   2s
+    Focus    css=.app-submit-btn
+    Sleep   1s
+    Reload Page
 
 applicant should be able to mark the question as complete
     Click Element    css=#form-input-11 .buttonlink[name="mark_as_complete"]
