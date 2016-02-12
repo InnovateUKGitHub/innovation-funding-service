@@ -1,19 +1,28 @@
 package com.worth.ifs.assessment.viewmodel;
 
-import com.worth.ifs.application.builder.AssessorFeedbackBuilder;
-import com.worth.ifs.application.builder.ResponseBuilder;
-import com.worth.ifs.application.builder.SectionBuilder;
-import com.worth.ifs.application.domain.*;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.user.domain.ProcessRole;
-import org.junit.Test;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
+
+import com.worth.ifs.application.builder.AssessorFeedbackBuilder;
+import com.worth.ifs.application.builder.ResponseBuilder;
+import com.worth.ifs.application.builder.SectionBuilder;
+import com.worth.ifs.application.builder.SectionResourceBuilder;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.AssessorFeedback;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.user.domain.ProcessRole;
+
+import org.junit.Test;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -21,13 +30,17 @@ import static com.worth.ifs.application.builder.AssessorFeedbackBuilder.newFeedb
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.forEachWithIndex;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -50,12 +63,24 @@ public class AssessmentSubmitReviewModelTest {
         List<Question> section1Questions = newQuestion().build(2);
         List<Question> section2Questions = newQuestion().build(2);
 
+        List<Question> questions = new ArrayList<>(section1Questions.size() + section2Questions.size());
+        questions.addAll(section1Questions);
+        questions.addAll(section2Questions);
+
         List<Section> sections = newSection()
                 .withQuestionSets(asList(section1Questions, section2Questions))
                 .build(2);
 
+        List<SectionResource> sectionResources = newSectionResource()
+                .withQuestionSets(asList(simpleMap(section1Questions, Question::getId), simpleMap(section2Questions,Question::getId)))
+                .build(2);
+
         Competition competition = newCompetition()
                 .withSections(sections)
+                .build();
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withSections(simpleMap(sections, Section::getId))
                 .build();
 
         Application application = newApplication().
@@ -92,7 +117,7 @@ public class AssessmentSubmitReviewModelTest {
         //
         // Build the model
         //
-        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, allResponses, applicationResource, competition, null);
+        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, allResponses, applicationResource, competitionResource, null, questions, sectionResources);
 
         Map<Question, AssessorFeedback> originalQuestionToFeedback = new HashMap<>();
         IntStream.range(0, section1Questions.size()).forEach(i -> originalQuestionToFeedback.put(section1Questions.get(i), section1ResponseFeedback.get(i)));
@@ -103,7 +128,7 @@ public class AssessmentSubmitReviewModelTest {
         //
         assertNotNull(model);
         assertEquals(applicationResource, model.getApplication());
-        assertEquals(competition, model.getCompetition());
+        assertEquals(competitionResource, model.getCompetition());
 
         originalQuestionToFeedback.entrySet().forEach(entry -> {
             Question question = entry.getKey();
@@ -163,13 +188,22 @@ public class AssessmentSubmitReviewModelTest {
         ProcessRole assessorProcessRole = newProcessRole().build();
 
         SectionBuilder sectionBuilder = newSection().withDisplayInAssessmentApplicationSummary(false);
+        SectionResourceBuilder sectionResourceBuilder = newSectionResource().withDisplayInAssessmentApplicationSummary(false);
+        
+        List<Question> questions = newQuestion().build(3);
 
-        Section section1 = sectionBuilder.withQuestions(newQuestion().build(1)).build();
-        Section section2ToBeIncluded = sectionBuilder.withDisplayInAssessmentApplicationSummary(true).withQuestions(newQuestion().build(1)).build();
-        Section section3 = sectionBuilder.withQuestions(newQuestion().build(1)).build();
+        Section section1 = sectionBuilder.withQuestions(singletonList(questions.get(0))).build();
+        Section section2ToBeIncluded = sectionBuilder.withDisplayInAssessmentApplicationSummary(true).withQuestions(singletonList(questions.get(1))).build();
+        Section section3 = sectionBuilder.withQuestions(singletonList(questions.get(2))).build();
         List<Section> sections = asList(section1, section2ToBeIncluded, section3);
 
+        SectionResource sectionResource1 = sectionResourceBuilder.withQuestions(singletonList(questions.get(0).getId())).build();
+        SectionResource sectionResource2ToBeIncluded = sectionResourceBuilder.withDisplayInAssessmentApplicationSummary(true).withQuestions(singletonList(questions.get(1).getId())).build();
+        SectionResource sectionResource3 = sectionResourceBuilder.withQuestions(singletonList(questions.get(2).getId())).build();
+        List<SectionResource> sectionResources = asList(sectionResource1, sectionResource2ToBeIncluded, sectionResource3);
+
         Competition competition = newCompetition().withSections(sections).build();
+        CompetitionResource competitionResource = newCompetitionResource().withSections(simpleMap(sections,Section::getId)).build();
         Application application = newApplication().withCompetition(competition).build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competition).build();
         Assessment assessment = newAssessment().withProcessRole(assessorProcessRole).build();
@@ -178,7 +212,7 @@ public class AssessmentSubmitReviewModelTest {
         //
         // Build the model
         //
-        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, emptyList(), applicationResource, competition, null);
+        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, emptyList(), applicationResource, competitionResource, null, questions, sectionResources);
 
         //
         // test we only see the section marked to be included
@@ -203,11 +237,18 @@ public class AssessmentSubmitReviewModelTest {
         Question scorableQuestion = newQuestion().build();
         Question nonScorableQuestion = newQuestion().withNeedingAssessorScore(false).build();
 
+        List<Question> questions = asList(scorableQuestion, nonScorableQuestion);
+
         List<Section> sections = newSection()
                 .withQuestions(asList(scorableQuestion, nonScorableQuestion))
                 .build(1);
 
+        List<SectionResource> sectionResources = newSectionResource()
+                .withQuestions(simpleMap(questions, Question::getId))
+                .build(1);
+
         Competition competition = newCompetition().withSections(sections).build();
+        CompetitionResource competitionResource = newCompetitionResource().withSections(simpleMap(sections, Section::getId)).build();
         Application application = newApplication().withCompetition(competition).build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competition).build();
         Assessment assessment = newAssessment().withProcessRole(assessorProcessRole).build();
@@ -225,7 +266,7 @@ public class AssessmentSubmitReviewModelTest {
         //
         // Build the model
         //
-        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, responses, applicationResource, competition, null);
+        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, responses, applicationResource, competitionResource, null, questions, sectionResources);
 
         //
         // Test the top-level model attributes

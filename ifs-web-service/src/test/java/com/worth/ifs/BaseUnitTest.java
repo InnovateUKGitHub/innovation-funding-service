@@ -49,6 +49,7 @@ import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -93,6 +94,7 @@ import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectio
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -163,6 +165,8 @@ public class BaseUnitTest {
     public Map<Long, FormInputResponse> formInputsToFormInputResponses;
     public List<Competition> competitions;
     public Competition competition;
+    public List<CompetitionResource> competitionResources;
+    public CompetitionResource competitionResource;
     public List<User> users;
     public List<Organisation> organisations;
     TreeSet<Organisation> organisationSet;
@@ -233,6 +237,10 @@ public class BaseUnitTest {
     public void setupCompetition(){
 
         competition = newCompetition().with(id(1L)).with(name("Competition x")).with(description("Description afds")).
+                withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).
+                build();
+
+        competitionResource = newCompetitionResource().with(id(1L)).with(name("Competition x")).with(description("Description afds")).
                 withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).
                 build();
 
@@ -327,9 +335,9 @@ public class BaseUnitTest {
 
         competitions = singletonList(competition);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionRestService.getAll()).thenReturn(restSuccess(competitions));
-        when(competitionService.getById(any(Long.class))).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competitionResource));
+        when(competitionRestService.getAll()).thenReturn(restSuccess(competitionResources));
+        when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
     }
 
     public void setupUserRoles() {

@@ -1,8 +1,13 @@
 package com.worth.ifs.application;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashSet;
+
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
@@ -10,6 +15,7 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.resource.cost.Materials;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.ProcessRole;
+
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,22 +34,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashSet;
-
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -122,9 +129,15 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testApplicationFormWithOpenSection() throws Exception {
         EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
 
+        Long currentSectionId = 1L;
+
+        SectionResource currentSection = newSectionResource().with(s -> s.setId(currentSectionId)).build();
+
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(sectionService.getById(anyLong())).thenReturn(currentSection);
+        when(sectionService.getByName("Your finances")).thenReturn(currentSection);
         mockMvc.perform(get("/application/1/form/section/1"))
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attribute("currentApplication", application))
@@ -134,7 +147,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
                 .andExpect(model().attribute("userIsLeadApplicant", true))
                 .andExpect(model().attribute("leadApplicant", processRoles.get(0)))
-                .andExpect(model().attribute("currentSectionId", 1L));
+                .andExpect(model().attribute("currentSectionId", currentSectionId));
 
     }
 
@@ -145,13 +158,16 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         when(questionService.getById(anyLong())).thenReturn(question);
         when(applicationService.getById(application.getId(), false)).thenReturn(application);
-        when(competitionService.getById(anyLong())).thenReturn(competition);
+        when(competitionService.getById(anyLong())).thenReturn(competitionResource);
         mockMvc.perform(post("/application/1/form/question/1"))
                 .andExpect(status().is3xxRedirection());
     }
 
     @Test
     public void testAddAnother() throws Exception {
+
+        when(sectionService.getById(anyLong())).thenReturn(null);
+        when(sectionService.getByName("Your finances")).thenReturn(newSectionResource().with(s -> s.setId(1L)).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("add_cost", String.valueOf(questionId)))
@@ -199,6 +215,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testApplicationFormSubmit() throws Exception {
         Long userId = loggedInUser.getId();
 
+        when(sectionService.getById(anyLong())).thenReturn(null);
+        when(sectionService.getByName("Your finances")).thenReturn(newSectionResource().with(s -> s.setId(1L)).build());
         // without assign or mark as complete, just redirect to application overview.
 
         MvcResult result = mockMvc.perform(
@@ -223,6 +241,9 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testApplicationFormSubmitMarkAsComplete() throws Exception {
         Long userId = loggedInUser.getId();
 
+        when(sectionService.getById(anyLong())).thenReturn(null);
+        when(sectionService.getByName("Your finances")).thenReturn(newSectionResource().with(s -> s.setId(1L)).build());
+
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("mark_as_complete", "12")
@@ -233,8 +254,11 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     }
 
     @Test
-    public void testApplicationFormSubmitMarkAsInComplete() throws Exception {
+    public void testApplicationFormSubmitMarkAsIncomplete() throws Exception {
         Long userId = loggedInUser.getId();
+
+        when(sectionService.getById(anyLong())).thenReturn(null);
+        when(sectionService.getByName("Your finances")).thenReturn(newSectionResource().with(s -> s.setId(1L)).build());
 
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
@@ -247,6 +271,9 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testApplicationFormSubmitValidationErrors() throws Exception {
+
+        when(sectionService.getById(anyLong())).thenReturn(null);
+        when(sectionService.getByName("Your finances")).thenReturn(newSectionResource().with(s -> s.setId(1L)).build());
         //http://www.disasterarea.co.uk/blog/mockmvc-to-test-spring-mvc-form-validation/
         Long userId = loggedInUser.getId();
 
@@ -274,6 +301,9 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""))).thenReturn(validationErrors);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         Long userId = loggedInUser.getId();
+
+        when(sectionService.getById(sectionId)).thenReturn(newSectionResource().with(s -> s.setId(sectionId)).build());
+        when(sectionService.getByName("Your finances")).thenReturn(newSectionResource().with(s -> s.setId(1L)).build());
 
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
@@ -509,6 +539,9 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String questionId = "application_details-startdate_year";
         Long userId = loggedInUser.getId();
         String value = "2015";
+
+        when(sectionService.getById(anyLong())).thenReturn(null);
+        when(sectionService.getByName("Your finances")).thenReturn(newSectionResource().with(s -> s.setId(1L)).build());
 
         MvcResult result = mockMvc.perform(
                 post("/application/" + application.getId().toString() + "/form/saveFormElement")
