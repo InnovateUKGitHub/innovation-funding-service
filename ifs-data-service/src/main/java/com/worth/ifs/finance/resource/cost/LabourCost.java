@@ -105,4 +105,8 @@ public class LabourCost implements CostItem {
     public CostType getCostType() {
         return costType;
     }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

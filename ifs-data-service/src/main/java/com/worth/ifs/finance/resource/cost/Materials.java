@@ -1,9 +1,5 @@
 package com.worth.ifs.finance.resource.cost;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.math.BigDecimal;
 
 /**
@@ -57,5 +53,17 @@ public class Materials implements CostItem {
     @Override
     public CostType getCostType() {
         return costType;
+    }
+
+    public void setItem(String item) {
+        this.item = item;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }

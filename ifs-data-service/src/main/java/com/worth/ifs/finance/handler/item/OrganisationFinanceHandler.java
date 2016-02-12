@@ -12,7 +12,7 @@ import java.util.EnumMap;
  * Action to retrieve the finances of the organisations
  */
 public interface OrganisationFinanceHandler {
-    void initialiseCostType(ApplicationFinance applicationFinance, CostType costType);
+    Iterable<Cost> initialiseCostType(ApplicationFinance applicationFinance, CostType costType);
     EnumMap<CostType,CostCategory> getOrganisationFinances(Long applicationFinanceId);
     EnumMap<CostType,CostCategory> getOrganisationFinanceTotals(Long id);
     Cost costItemToCost(CostItem costItem);
