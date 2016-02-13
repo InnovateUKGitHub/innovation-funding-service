@@ -12,7 +12,7 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
  *
  */
 @RestController
-public class RestResultExceptionHandlingAdviceTestController {
+public class RestResultExceptionHandlingAdviceTestRestController {
 
     @RequestMapping("/success-test")
     public RestResult<String> successfulMethod() {
@@ -20,12 +20,31 @@ public class RestResultExceptionHandlingAdviceTestController {
     }
 
     @RequestMapping("/failure-test")
-    public RestResult<String> failedMethod() {
+    public RestResult<String> failingMethod() {
         return restFailure(internalServerErrorError("Failure"));
+    }
+
+    @RequestMapping("/null-test")
+    public RestResult<String> nullReturningMethod() {
+        return null;
     }
 
     @RequestMapping("/exception-test")
     public RestResult<String> exceptionThrowingMethod() {
         throw new RuntimeException("Exception");
+    }
+
+    @RequestMapping("/package-private-exception-test")
+    RestResult<String> packagePrivateMethod() {
+        return null;
+    }
+
+    public RestResult<String> nonRequestMappingAnnotatedMethod() {
+        return null;
+    }
+
+    @RequestMapping("/non-rest-result-returning-method")
+    public String nonRestResultReturningMethod() {
+        return null;
     }
 }
