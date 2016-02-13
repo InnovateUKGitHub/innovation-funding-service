@@ -1,13 +1,5 @@
 package com.worth.ifs.application;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.form.ApplicationForm;
@@ -20,16 +12,16 @@ import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -210,8 +202,12 @@ public class ApplicationController extends AbstractApplicationController {
         CompetitionResource  competition = competitionService.getById(application.getCompetition());
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
-        Optional<SectionResource> currentSection = getSection(simpleMap(competition.getSections(),s -> sectionService.getById(s)), Optional.of(sectionId), true);
-        //super.addApplicationAndSectionsAndFinanceDetails(applicationId, user.getId(), currentSection, Optional.empty(), model, form, selectFirstSectionIfNoneCurrentlySelected);
+        Optional<SectionResource> currentSection;
+        if(sectionId != null){
+            currentSection = Optional.ofNullable(sectionService.getById(sectionId));
+        }else{
+            currentSection = Optional.empty();
+        }
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
 
@@ -231,9 +227,17 @@ public class ApplicationController extends AbstractApplicationController {
         QuestionStatusResource questionAssignee = questionAssignees.get(questionId);
         model.addAttribute("questionAssignee", questionAssignee);
 
+
         model.addAttribute("currentUser", user);
         model.addAttribute("section", currentSection.get());
-        List<Question> sectionQuestions = simpleMap(currentSection.get().getQuestions(), questionService::getById);
+
+
+        Map<Long, List<Question>> sectionQuestions = new HashMap<>();
+        if(questionId != null){
+            sectionQuestions.put(question.getSection().getId(), Arrays.asList(questionService.getById(questionId)));
+        }else{
+            sectionQuestions.put(currentSection.get().getId(), currentSection.get().getQuestions().stream().map(questionService::getById).collect(Collectors.toList()));
+        }
         model.addAttribute("sectionQuestions", sectionQuestions);
         List<SectionResource> childSections = simpleMap(currentSection.get().getChildSections(), sectionService::getById);
         model.addAttribute("childSections", childSections);

@@ -38,12 +38,12 @@
             <section th:id="'section-'+${section.getId()}">
                 <h2 th:text="${section.name}" class="heading-medium no-margin-bottom"/>
                 <p th:text="${section.description}"></p>
-                <ul th:switch="${subSections.get(section.id).size()}" th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
-                    <div th:case="${0}" th:remove="tag">
+                <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
+                    <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
                         <div th:replace="application/single-section-details :: sectionDetails (question=${question}, questionAssignee=${questionAssignee}, questionAssignees=${questionAssignees}, responses=${responses}, currentUser=${currentUser}, userIsLeadApplicant=${userIsLeadApplicant}, leadApplicant=${leadApplicant}, section=${section}, currentApplication=${currentApplication})"></div>
                     </div>
                     <!--/* sections with children like the finance */-->
-                    <div th:case="*" th:remove="tag">
+                    <div th:unless="${subSections.get(section.id).size() ==0}" th:remove="tag">
                         <li class="grid-row" th:classappend="section" th:each="childSection : ${subSections.get(section.id)}">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
