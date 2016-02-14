@@ -260,7 +260,7 @@
 </div>
 <!-- ========================= Assign / reassign buttons =========================== -->
 <div th:fragment="ready-for-review">
-  <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${currentUser.getId() == questionAssignee?assigneeUserId}">
+  <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${currentUser.getId() == questionAssignee?.assigneeUserId}">
     <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}"
             type="submit"
             name="assign_question"
