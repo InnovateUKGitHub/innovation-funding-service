@@ -7,7 +7,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.Errors;
-import com.worth.ifs.commons.rest.RestErrorEnvelope;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInput;
@@ -154,7 +154,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
-        RestErrorEnvelope restErrorResponse = new ObjectMapper().readValue(content, RestErrorEnvelope.class);
+        RestErrorResponse restErrorResponse = new ObjectMapper().readValue(content, RestErrorResponse.class);
         assertTrue(restErrorResponse.is(generalError));
     }
 
@@ -901,11 +901,11 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     private void assertResponseErrorMessageEqual(String expectedMessage, Error expectedError, MvcResult mvcResult) throws IOException {
         String content = mvcResult.getResponse().getContentAsString();
-        RestErrorEnvelope restErrorResponse = new ObjectMapper().readValue(content, RestErrorEnvelope.class);
+        RestErrorResponse restErrorResponse = new ObjectMapper().readValue(content, RestErrorResponse.class);
         assertErrorMessageEqual(expectedMessage, expectedError, restErrorResponse);
     }
 
-    private void assertErrorMessageEqual(String expectedMessage, Error expectedError, RestErrorEnvelope restErrorResponse) {
+    private void assertErrorMessageEqual(String expectedMessage, Error expectedError, RestErrorResponse restErrorResponse) {
         assertEquals(expectedMessage, restErrorResponse.getErrors().get(0).getErrorMessage());
         assertTrue(restErrorResponse.is(expectedError));
     }

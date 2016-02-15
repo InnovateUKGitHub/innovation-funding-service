@@ -3,7 +3,7 @@ package com.worth.ifs.application.controller;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.transactional.ApplicationService;
-import com.worth.ifs.commons.rest.RestErrorEnvelope;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -121,7 +121,7 @@ public class FormInputResponseFileUploadController {
 
             return result.handleSuccessOrFailure(
                     failure -> {
-                        RestErrorEnvelope errorResponse = new RestErrorEnvelope(failure.getErrors());
+                        RestErrorResponse errorResponse = new RestErrorResponse(failure.getErrors());
                         return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
                     },
                     success -> {
@@ -138,7 +138,7 @@ public class FormInputResponseFileUploadController {
         } catch (Exception e) {
 
             LOG.error("Error retrieving file", e);
-            return new ResponseEntity<>(new RestErrorEnvelope(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file")), INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -155,7 +155,7 @@ public class FormInputResponseFileUploadController {
 
             return result.handleSuccessOrFailure(
                     failure -> {
-                        RestErrorEnvelope errorResponse = new RestErrorEnvelope(failure.getErrors());
+                        RestErrorResponse errorResponse = new RestErrorResponse(failure.getErrors());
                         return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
                     },
                     success -> {
@@ -167,7 +167,7 @@ public class FormInputResponseFileUploadController {
         } catch (Exception e) {
 
             LOG.error("Error retrieving file details", e);
-            return new ResponseEntity<>(new RestErrorEnvelope(internalServerErrorError("Error retrieving file details")), INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new RestErrorResponse(internalServerErrorError("Error retrieving file details")), INTERNAL_SERVER_ERROR);
         }
     }
 

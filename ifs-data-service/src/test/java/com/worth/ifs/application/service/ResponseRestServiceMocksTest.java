@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.commons.error.Errors;
-import com.worth.ifs.commons.rest.RestErrorEnvelope;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
@@ -72,8 +72,8 @@ public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<Respon
         String expectedUrl = dataServicesUrl + responseRestURL +
                 "/saveQuestionResponse/1/assessorFeedback?assessorUserId=2&feedbackValue=value&feedbackText=text";
 
-        RestErrorEnvelope restErrorEnvelope = new RestErrorEnvelope(asList(Errors.badRequestError("Bad!"), Errors.internalServerErrorError("Bang!")));
-        when(mockRestTemplate.exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class)).thenThrow(new HttpServerErrorException(BAD_REQUEST, "Bad!", toJsonBytes(restErrorEnvelope), defaultCharset()));
+        RestErrorResponse restErrorResponse = new RestErrorResponse(asList(Errors.badRequestError("Bad!"), Errors.internalServerErrorError("Bang!")));
+        when(mockRestTemplate.exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class)).thenThrow(new HttpServerErrorException(BAD_REQUEST, "Bad!", toJsonBytes(restErrorResponse), defaultCharset()));
 
         // now run the method under test
         RestResult<Void> failure = service.saveQuestionResponseAssessorFeedback(2L, 1L, Optional.of("value"), Optional.of("text"));

@@ -18,23 +18,23 @@ import static java.util.Collections.singletonList;
  * Multiple Errors can be combined here and reported back to the client.  The overall HTTP status code for the
  * multiple errors is derived from the status codes on the individual Errors.
  */
-public class RestErrorEnvelope {
+public class RestErrorResponse {
 
-    private static final Log LOG = LogFactory.getLog(RestErrorEnvelope.class);
+    private static final Log LOG = LogFactory.getLog(RestErrorResponse.class);
 
     private List<Error> errors;
 
     /**
      * For JSON marshalling
      */
-    public RestErrorEnvelope() {
+    public RestErrorResponse() {
     }
 
-    public RestErrorEnvelope(Error error) {
+    public RestErrorResponse(Error error) {
         this(singletonList(error));
     }
 
-    public RestErrorEnvelope(List<Error> errors) {
+    public RestErrorResponse(List<Error> errors) {
         this.errors = errors;
     }
 
