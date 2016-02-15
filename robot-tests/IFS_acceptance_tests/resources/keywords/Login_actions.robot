@@ -43,6 +43,13 @@ The guest user opens the browser
                                                   ...  remote_url=${REMOTE_URL}
                                                   ...  desired_capabilities=${DESIRED_CAPABILITIES}
 
+    run keyword and ignore error         Log into Shib
+
+Log into Shib
+    Input Text             name=j_username         steve.smith@empire.com
+    Input Text             name=j_password         test
+    Submit Form
+    Wait Until Element Is Visible       id=id_email
 
 TestTeardown User closes the browser
     Run keyword if  '${REMOTE_URL}' != ''    Report Sauce status  'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
