@@ -31,7 +31,8 @@ Verify the field is disabled for other collaborators
 
 Verify the field is enabled for the collaborator/assignee
     [Documentation]    INFUND-275
-    [Tags]    Collaboration    Overview
+    [Tags]    Collaboration    Overview    Pending
+    # Pending because of INFUND-1842
     Given the Collaborator is in the public description section
     When the Collaborator gets the assigned notification
     Then the public description question should be assigned to the collaborator
@@ -39,14 +40,16 @@ Verify the field is enabled for the collaborator/assignee
 
 Verify the ' Last update message'
     [Documentation]    INFUND-280
-    [Tags]    Collaboration
+    [Tags]    Collaboration    Pending
+    # Pending because of INFUND-1842
     Given the collaborator is in the public description section
     When the collaborator edits public description question
     Then the 'Last update' message should be updated
 
 Verify collaborator can mark as ready for review
     [Documentation]    INFUND-877
-    [Tags]    Collaboration
+    [Tags]    Collaboration    Pending
+    # Pending because of INFUND-1842
     When the collaborator is in the public description section
     Then the collaborator can mark the question as ready for review
 
@@ -58,7 +61,8 @@ Verify the field is disabled for the collaborator
 
 Verify that the field has been reassigned to the lead applicant
     [Documentation]    INFUND-275
-    [Tags]    Collaboration
+    [Tags]    Collaboration    pending
+    # Pending because of INFUND-1842
     Given the Applicant can log in
     And Applicant goes to the 'public description' question
     When the Applicant gets the reassigned notification
