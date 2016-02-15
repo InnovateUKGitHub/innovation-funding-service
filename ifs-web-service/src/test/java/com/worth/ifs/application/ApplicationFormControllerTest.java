@@ -1,9 +1,5 @@
 package com.worth.ifs.application;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashSet;
-
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -15,7 +11,6 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.resource.cost.Materials;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.ProcessRole;
-
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,6 +29,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashSet;
+
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.application.service.Futures.settable;
@@ -42,15 +41,11 @@ import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.calls;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -136,8 +131,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-        when(sectionService.getById(anyLong())).thenReturn(currentSection);
-        when(sectionService.getByName("Your finances")).thenReturn(currentSection);
         mockMvc.perform(get("/application/1/form/section/1"))
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attribute("currentApplication", application))
@@ -301,9 +294,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""))).thenReturn(validationErrors);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         Long userId = loggedInUser.getId();
-
-        when(sectionService.getById(sectionId)).thenReturn(newSectionResource().with(s -> s.setId(sectionId)).build());
-        when(sectionService.getByName("Your finances")).thenReturn(newSectionResource().with(s -> s.setId(1L)).build());
 
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
