@@ -3,8 +3,7 @@
 <body>
 
 <ul th:fragment="sectionDetails (question, questionAssignee, questionAssignees, responses, currentUser, userIsLeadApplicant, leadApplicant , section, currentApplication)" th:remove="tag">
-
-    <div th:each="question : ${section.getQuestions()}" th:remove="tag">
+    <div th:each="question : ${sectionQuestions.get(section.id)}" th:remove="tag">
 
         <li class="grid-row section"
             th:each="formInput, status : ${question.getFormInputs()}" th:if="${formInput.isIncludedInApplicationSummary()}"

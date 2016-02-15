@@ -1,16 +1,21 @@
 package com.worth.ifs.organisation.controller;
 
+import java.util.List;
+
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
+
 import org.hamcrest.text.IsEqualIgnoringCase;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+@Ignore
 public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegrationTest<CompanyHouseController> {
 
     private String COMPANY_ID = "08241216";

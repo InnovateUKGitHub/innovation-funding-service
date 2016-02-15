@@ -3,6 +3,7 @@ package com.worth.ifs.application;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
@@ -33,6 +34,7 @@ import java.util.EnumMap;
 import java.util.HashSet;
 
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertTrue;
@@ -86,6 +88,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
         this.loginDefaultUser();
+        this.setupUserRoles();
         this.setupFinances();
 
 
@@ -107,8 +110,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         ApplicationResource app = applications.get(0);
         ProcessRole userAppRole = new ProcessRole();
 
-        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-        when(applicationService.getById(app.getId())).thenReturn(app);
         when(processRoleService.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(userAppRole);
 
         mockMvc.perform(get("/application/1/form"))
@@ -122,8 +123,11 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testApplicationFormWithOpenSection() throws Exception {
         EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
 
+        Long currentSectionId = 1L;
+
+        SectionResource currentSection = newSectionResource().with(s -> s.setId(currentSectionId)).build();
+
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
-        when(applicationService.getById(application.getId())).thenReturn(application);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         mockMvc.perform(get("/application/1/form/section/1"))
                 .andExpect(view().name("application-form"))
@@ -134,7 +138,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
                 .andExpect(model().attribute("userIsLeadApplicant", true))
                 .andExpect(model().attribute("leadApplicant", processRoles.get(0)))
-                .andExpect(model().attribute("currentSectionId", 1L));
+                .andExpect(model().attribute("currentSectionId", currentSectionId));
 
     }
 
@@ -143,9 +147,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         Question question = newQuestion().build();
         ApplicationResource application = applications.get(0);
 
-        when(questionService.getById(anyLong())).thenReturn(question);
         when(applicationService.getById(application.getId(), false)).thenReturn(application);
-        when(competitionService.getById(anyLong())).thenReturn(competition);
         mockMvc.perform(post("/application/1/form/question/1"))
                 .andExpect(status().is3xxRedirection());
     }
@@ -157,8 +159,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                         .param("add_cost", String.valueOf(questionId)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId() + "/form/section/" + sectionId));
-
-
 
         // verify that the method is called to send the data to the data services.
         Mockito.inOrder(financeService).verify(financeService, calls(1)).addCost(applicationFinanceResource.getId(), questionId);
@@ -173,9 +173,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 get("/application/{applicationId}/form/add_cost/{questionId}", application.getId(), questionId)
         ).andReturn();
 
-        System.out.println("AjaxAddRow");
-        System.out.println(result.getResponse().getContentAsString());
-
         // verify that the method is called to send the data to the data services.
         Mockito.inOrder(costService).verify(costService, calls(1)).add(eq(applicationFinanceResource.getId()), eq(questionId), any());
     }
@@ -188,9 +185,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 get("/application/{applicationId}/form/remove_cost/{costId}", application.getId(), costId)
         ).andReturn();
 
-        System.out.println("AjaxRemoveRow");
-        System.out.println(result.getResponse().getContentAsString());
-
         // verify that the method is called to send the data to the data services.
         Mockito.inOrder(costService).verify(costService, calls(1)).delete(eq(costId));
     }
@@ -198,8 +192,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Test
     public void testApplicationFormSubmit() throws Exception {
         Long userId = loggedInUser.getId();
-
-        // without assign or mark as complete, just redirect to application overview.
 
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
@@ -222,7 +214,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Test
     public void testApplicationFormSubmitMarkAsComplete() throws Exception {
         Long userId = loggedInUser.getId();
-
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("mark_as_complete", "12")
@@ -233,12 +224,12 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     }
 
     @Test
-    public void testApplicationFormSubmitMarkAsInComplete() throws Exception {
+    public void testApplicationFormSubmitMarkAsIncomplete() throws Exception {
         Long userId = loggedInUser.getId();
 
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param("mark_as_complete", "12")
+                        .param("mark_as_incomplete", "3")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId +"**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
@@ -247,7 +238,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Test
     public void testApplicationFormSubmitValidationErrors() throws Exception {
-        //http://www.disasterarea.co.uk/blog/mockmvc-to-test-spring-mvc-form-validation/
         Long userId = loggedInUser.getId();
 
         when(formInputResponseService.save(userId, application.getId(), 1L, "")).thenReturn(asList("Please enter some text"));
@@ -509,6 +499,9 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String questionId = "application_details-startdate_year";
         Long userId = loggedInUser.getId();
         String value = "2015";
+
+        when(sectionService.getById(anyLong())).thenReturn(null);
+        when(sectionService.getByName("Your finances")).thenReturn(newSectionResource().with(s -> s.setId(1L)).build());
 
         MvcResult result = mockMvc.perform(
                 post("/application/" + application.getId().toString() + "/form/saveFormElement")

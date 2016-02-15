@@ -1,26 +1,31 @@
 package com.worth.ifs.assessment.viewmodel;
 
-import com.worth.ifs.application.domain.AssessorFeedback;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.RecommendedValue;
-import com.worth.ifs.assessment.dto.Score;
-import com.worth.ifs.competition.domain.Competition;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.worth.ifs.application.domain.AssessorFeedback;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.assessment.domain.Assessment;
+import com.worth.ifs.assessment.domain.RecommendedValue;
+import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.competition.resource.CompetitionResource;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import static com.worth.ifs.assessment.domain.AssessmentOutcomes.RECOMMEND;
 import static com.worth.ifs.util.CollectionFunctions.mapEntryValue;
 import static com.worth.ifs.util.CollectionFunctions.pairsToMap;
-import static com.worth.ifs.util.PairFunctions.*;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
+import static com.worth.ifs.util.PairFunctions.leftPair;
+import static com.worth.ifs.util.PairFunctions.presentRightPair;
+import static com.worth.ifs.util.PairFunctions.rightPairIsPresent;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -37,7 +42,7 @@ public class AssessmentSubmitReviewModel {
 
     private final Assessment assessment;
     private final ApplicationResource application;
-    private final Competition competition;
+    private final CompetitionResource competition;
     private final List<Question> questions;
     private final List<Question> scorableQuestions;
     private final Score score;
@@ -49,15 +54,12 @@ public class AssessmentSubmitReviewModel {
     // TODO this logic should live in the data layer and we should return a dto instead.
     // TODO Note there is code commonality with AssessmentHandler.getScore.
     // TODO make these changes when converting to dtos.
-    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ApplicationResource application, Competition competition, Score score) {
+    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ApplicationResource application, CompetitionResource competition, Score score, List<Question> questions, List<SectionResource> sections) {
         this.assessment = assessment;
         this.application = application;
         this.competition = competition;
         this.score = score;
-
-        questions = competition.getSections().stream().
-                flatMap(section -> section.getQuestions().stream()).
-                collect(toList());
+        this.questions = questions;
 
         scorableQuestions = questions.stream().filter(Question::getNeedingAssessorScore).collect(toList());
 
@@ -81,15 +83,24 @@ public class AssessmentSubmitReviewModel {
         responseIdsAndFeedback = responsesAndFeedback.entrySet().stream().
                 collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
 
-        List<Section> sections = competition.getSections();
 
         Map<Question, Optional<AssessorFeedback>> questionsAndFeedback = questionsAndResponses.entrySet().stream().
                 map(e -> Pair.of(e.getKey(), e.getValue().map(feedback -> Optional.ofNullable(responseIdsAndFeedback.get(feedback.getId()))).orElse(empty()))).
                         collect(pairsToMap());
 
+        Map<Long, List<Question>> sectionQuestions = simpleToMap(sections,
+                SectionResource::getId,
+                s -> simpleFilter(questions,
+                        q -> s.getQuestions()
+                                .contains(
+                                        q.getId()
+                                )
+                )
+        );
+
         assessmentSummarySections = sections.stream().
-                filter(Section::isDisplayInAssessmentApplicationSummary).
-                map(section -> new AssessmentSummarySection(section, questionsAndFeedback)).
+                filter(SectionResource::isDisplayInAssessmentApplicationSummary).
+                map(section -> new AssessmentSummarySection(section, sectionQuestions.get(section.getId()), questionsAndFeedback)).
                 collect(toList());
     }
 
@@ -101,7 +112,7 @@ public class AssessmentSubmitReviewModel {
         return application;
     }
 
-    public Competition getCompetition() {
+    public CompetitionResource getCompetition() {
         return competition;
     }
 
