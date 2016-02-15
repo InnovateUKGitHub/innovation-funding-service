@@ -15,7 +15,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 *** Variables ***
 ${INVITE_COLLABORATORS_PAGE}    ${SERVER}/application/2/contributors/invite?newApplication
 ${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/3/contributors/invite?newApplication
-${INVITE_COLLABORATORS_PAGE}    ${SERVER}/application/2/contributors/invite?newApplication
+${APPLICATION_3_TEAM_PAGE}    ${SERVER}/application/3/contributors
 
 *** Test Cases ***
 The lead applicant should be able to add/remove a collaborator
@@ -124,7 +124,8 @@ The user's inputs should be autosaved
     Then the user's inputs should still be visible    1
     And the user goes to the second invite page
     And the inputs of the first invite should not be visible
-    Capture Page Screenshot
+    And when the user goes to the application team page of application 3
+    And the inputs of the first invite should not be visible
 
 *** Keywords ***
 the applicant is in the invite contributors page
@@ -297,3 +298,7 @@ the applicant inserts and already invited email
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    test@example.com
     # the following keyword disables the browser's validation
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+
+when the user goes to the application team page of application 3
+    go to    ${APPLICATION_3_TEAM_PAGE}
+    Click Element    jQuery=.button:contains("Invite new contributors")
