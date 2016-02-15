@@ -1,13 +1,14 @@
 package com.worth.ifs.competition.service;
 
-import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.competition.domain.Competition;
-import org.junit.Test;
-
 import java.util.List;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionListType;
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.competition.resource.CompetitionResource;
+
+import org.junit.Test;
+
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -28,11 +29,11 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     @Test
     public void test_getAll() {
 
-        List<Competition> returnedResponse = newCompetition().build(3);
+        List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/findAll", competitionListType(), returnedResponse);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/findAll", competitionResourceListType(), returnedResponse);
 
-        List<Competition> responses = service.getAll().getSuccessObject();
+        List<CompetitionResource> responses = service.getAll().getSuccessObject();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
@@ -40,11 +41,11 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     @Test
     public void test_getCompetitionById() {
 
-        Competition returnedResponse = newCompetition().build();
+        CompetitionResource returnedResponse = newCompetitionResource().build();
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/findById/123", Competition.class, returnedResponse);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/123", CompetitionResource.class, returnedResponse);
 
-        Competition response = service.getCompetitionById(123L).getSuccessObject();
+        CompetitionResource response = service.getCompetitionById(123L).getSuccessObject();
         assertNotNull(response);
         assertEquals(returnedResponse, response);
     }

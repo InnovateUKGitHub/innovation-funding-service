@@ -1,11 +1,13 @@
 package com.worth.ifs.application.service;
 
+import java.util.List;
+
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * This class contains methods to retrieve and store {@link Competition} related data,
@@ -19,12 +21,12 @@ public class CompetitionServiceImpl implements CompetitionService {
     CompetitionsRestService competitionsRestService;
 
     @Override
-    public Competition getById(Long competitionId){
+    public CompetitionResource getById(Long competitionId){
         return competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrNull();
     }
 
     @Override
-    public List<Competition> getAllCompetitions() {
+    public List<CompetitionResource> getAllCompetitions() {
         return competitionsRestService.getAll().getSuccessObjectOrNull();
    }
 }
