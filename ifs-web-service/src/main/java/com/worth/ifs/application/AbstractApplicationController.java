@@ -144,7 +144,6 @@ public abstract class AbstractApplicationController {
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
-        log.error("addAssigneableDetails");
         userOrganisation.ifPresent(org ->
             addAssigneableDetails(model, application, org, userId, section, currentQuestionId)
         );

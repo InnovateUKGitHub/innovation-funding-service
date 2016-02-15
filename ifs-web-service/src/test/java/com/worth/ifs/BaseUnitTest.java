@@ -223,7 +223,7 @@ public class BaseUnitTest {
         SectionResourceBuilder sectionResourceBuilder = newSectionResource().with(competition(competition.getId()));
 
         Question q01 = questionBuilder.with(id(1L)).with(name("Application details")).
-                withFormInputs(newFormInput().with(incrementingIds(1)).build(3)).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(3)).
                 build();
 
         Section section1 = sectionBuilder.
@@ -239,6 +239,7 @@ public class BaseUnitTest {
                 build();
 
         Question q10 = questionBuilder.with(id(10L)).with(name("How does your project align with the scope of this competition?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).
                 build();
 
         Section section2 = sectionBuilder.
@@ -253,11 +254,15 @@ public class BaseUnitTest {
                 build();
 
         Question q20 = questionBuilder.with(id(20L)).with(name("1. What is the business opportunity that this project addresses?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).
                 build();
 
-        Question q21 = questionBuilder.with(id(21L)).with(name("2. What is the size of the market opportunity that this project might open up?")).build();
-        Question q22 = questionBuilder.with(id(22L)).with(name("3. How will the results of the project be exploited and disseminated?")).build();
-        Question q23 = questionBuilder.with(id(23L)).with(name("4. What economic, social and environmental benefits is the project expected to deliver?")).build();
+        Question q21 = questionBuilder.with(id(21L)).with(name("2. What is the size of the market opportunity that this project might open up?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
+        Question q22 = questionBuilder.with(id(22L)).with(name("3. How will the results of the project be exploited and disseminated?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
+        Question q23 = questionBuilder.with(id(23L)).with(name("4. What economic, social and environmental benefits is the project expected to deliver?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
 
         Section section3 = sectionBuilder.
                 with(id(3L)).
@@ -271,10 +276,14 @@ public class BaseUnitTest {
                 build();
 
 
-        Question q30 = questionBuilder.with(id(30L)).with(name("5. What technical approach will be adopted and how will the project be managed?")).build();
-        Question q31 = questionBuilder.with(id(31L)).with(name("6. What is innovative about this project?")).build();
-        Question q32 = questionBuilder.with(id(32L)).with(name("7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?")).build();
-        Question q33 = questionBuilder.with(id(33L)).with(name("8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?")).build();
+        Question q30 = questionBuilder.with(id(30L)).with(name("5. What technical approach will be adopted and how will the project be managed?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
+        Question q31 = questionBuilder.with(id(31L)).with(name("6. What is innovative about this project?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
+        Question q32 = questionBuilder.with(id(32L)).with(name("7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
+        Question q33 = questionBuilder.with(id(33L)).with(name("8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
 
         Section section4 = sectionBuilder.
                 with(id(4L)).
@@ -319,8 +328,7 @@ public class BaseUnitTest {
         }
 
         questions.forEach((id, question) -> {
-            // each question should have a question type.
-            question.setFormInputs(asList(formInput));
+            when(questionService.getById(id)).thenReturn(question);
         });
 
         competition.setSections(sections);
