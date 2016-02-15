@@ -30,6 +30,7 @@ import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.user.domain.*;
@@ -70,6 +71,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
@@ -160,6 +162,8 @@ public class BaseUnitTest {
 
 
     private Random randomGenerator;
+    private FormInput formInput;
+    private FormInputType formInputType;
 
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -202,6 +206,9 @@ public class BaseUnitTest {
     }
 
     public void setupCompetition(){
+        formInput = newFormInput().build();
+        formInputType = new FormInputType(1L, "textarea");
+        formInput.setFormInputType(formInputType);
 
         competition = newCompetition().with(id(1L)).with(name("Competition x")).with(description("Description afds")).
                 withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).
@@ -310,7 +317,14 @@ public class BaseUnitTest {
                 questions.putAll(questionsMap);
             }
         }
+
+        questions.forEach((id, question) -> {
+            // each question should have a question type.
+            question.setFormInputs(asList(formInput));
+        });
+
         competition.setSections(sections);
+        competitionResource.setSections(sections.stream().map(s -> s.getId()).collect(toList()));
         when(sectionService.getParentSections(anyList())).thenReturn(sectionResources);
         competitions = singletonList(competition);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
