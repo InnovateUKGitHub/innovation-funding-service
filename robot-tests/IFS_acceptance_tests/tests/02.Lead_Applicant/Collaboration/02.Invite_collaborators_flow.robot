@@ -31,6 +31,7 @@ Valid invitation submit
     Given the applicant is in the invite contributors page
     When the applicant enters valid inputs
     Then the applicant should be redirected to the overview page
+    And the invite notification should be visible
 
 Lead applicant can access the Application team page(Link in the overview page)
     [Documentation]    INFUND-928
@@ -39,10 +40,16 @@ Lead applicant can access the Application team page(Link in the overview page)
     Then Lead Applicant should be redirected to the Application team page
     Then Lead Applicant should have the correct status
 
-Status of the invited people in the Application team page
+Status of the invited people(Application team page)
     [Documentation]    INFUND-929
     Given the applicant goes to the application 1 team page
-    The the status of the Invited people should be correct
+    Then The status of the Invited people should be correct in the application team page
+
+Status of the invited people(Manage contributors page)
+    [Documentation]    Infund-928
+    Given Application goes to the Application Team page
+    And Applicant clicks on "Invite new contributors"
+    Then the status of the people should be correct in the Manage contributors page
 
 The Lead Applicant can add new collaborators
     [Documentation]    INFUND-928
@@ -63,7 +70,7 @@ Verify the invited collaborators are not editable
 
 Pending collaborators should not be available in the assign list
     [Documentation]    INFUND-928
-    [Tags]    Pending
+    [Tags]
     Given Applicant goes to the 'Public description' question
     Then the applicant should not be able to assign the question to the users that still pending the invite    tester
 
@@ -137,13 +144,9 @@ the applicant can enter Organisation name, Name and E-mail
 the applicant goes to the application 1 team page
     GO TO    ${APPLICATION_TEAM_PAGE}
 
-The the status of the Invited people should be correct
-    #Page Should Contain    Empire Ltd (Lead organisation)
+The status of the Invited people should be correct in the application team page
     Element Should Contain    css=#content ul li:nth-child(1)    (Lead Applicant)
     Element Should Contain    css=#content ul li:nth-child(2)    (pending)
-    #Page Should Contain    Fannie May (pending)
-    #Page Should Contain    Collaborator 2 (pending)
-    #Page Should Contain    Collaborator 4 (pending)
     Element Should Contain    css=p+ div .heading-medium small    (Lead organisation)
     Element Should Contain    css=div+ div .heading-medium small    (pending)
 
@@ -160,3 +163,12 @@ the applicant should not be able to assign the question to the users that still 
     [Arguments]    ${assignee_name}
     Click Element    css=#form-input-12 .assign-button button
     Page Should Not Contain Element    xpath=//div[@id="form-input-12"]//button[contains(text(),"${assignee_name}")]
+
+the invite notification should be visible
+    Wait Until Element Is Visible    css=.event-alert
+    page should contain    Invites send
+
+the status of the people should be correct in the Manage contributors page
+    Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    That's you!
+    Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-child(3)    (pending)
+    Element Should Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
