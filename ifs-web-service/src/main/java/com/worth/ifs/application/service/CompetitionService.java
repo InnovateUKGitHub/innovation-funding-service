@@ -1,15 +1,17 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.competition.domain.Competition;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
+
+import org.springframework.stereotype.Service;
 
 /**
  * Interface for CRUD operations on {@link Competition} related data.
  */
 @Service
 public interface CompetitionService {
-    Competition getById(Long id);
-    List<Competition> getAllCompetitions();
+    CompetitionResource getById(Long id);
+    List<CompetitionResource> getAllCompetitions();
 }

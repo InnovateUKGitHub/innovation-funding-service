@@ -1,12 +1,14 @@
 package com.worth.ifs.application.mapper;
 
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
+
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -15,14 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
         QuestionMapper.class
     }
 )
-public abstract class SectionMapper {
+public abstract class SectionMapper extends BaseMapper<Section, SectionResource> {
 
     @Autowired
-    private SectionRepository repository;
-
-    public abstract SectionResource mapSectionToResource(Section object);
-
-    public abstract Section resourceToSection(SectionResource resource);
+    public void setRepository(CrudRepository<Section, Long> repository) {
+        this.repository = repository;
+    }
 
     public Long mapSectionToId(Section object) {
         if (object == null) {
@@ -36,6 +36,6 @@ public abstract class SectionMapper {
     }
 
     public SectionResource mapIdToSectionResource(Long id) {
-        return mapSectionToResource(repository.findOne(id));
+        return mapToResource(repository.findOne(id));
     }
 }

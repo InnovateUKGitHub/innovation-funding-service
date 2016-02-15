@@ -1,16 +1,17 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.domain.Section;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.commons.rest.RestResult;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 
@@ -24,8 +25,8 @@ public class SectionController {
     @Autowired
     private SectionService sectionService;
 
-    @RequestMapping("/getById/{sectionId}")
-    public RestResult<Section> getById(@PathVariable("sectionId") final Long sectionId) {
+    @RequestMapping("/{sectionId}")
+    public RestResult<SectionResource> getById(@PathVariable("sectionId") final Long sectionId) {
         return newRestHandler().perform(() -> sectionService.getById(sectionId));
     }
 
@@ -52,22 +53,22 @@ public class SectionController {
     }
 
     @RequestMapping("findByName/{name}")
-    public RestResult<Section> findByName(@PathVariable("name") final String name) {
+    public RestResult<SectionResource> findByName(@PathVariable("name") final String name) {
         return newRestHandler().perform(() -> sectionService.findByName(name));
     }
 
     @RequestMapping("/getNextSection/{sectionId}")
-    public RestResult<Section> getNextSection(@PathVariable("sectionId") final Long sectionId) {
+    public RestResult<SectionResource> getNextSection(@PathVariable("sectionId") final Long sectionId) {
         return newRestHandler().perform(() -> sectionService.getNextSection(sectionId));
     }
 
     @RequestMapping("/getPreviousSection/{sectionId}")
-    public RestResult<Section> getPreviousSection(@PathVariable("sectionId") final Long sectionId) {
+    public RestResult<SectionResource> getPreviousSection(@PathVariable("sectionId") final Long sectionId) {
         return newRestHandler().perform(() -> sectionService.getPreviousSection(sectionId));
     }
 
     @RequestMapping("/getSectionByQuestionId/{questionId}")
-    public RestResult<Section> getSectionByQuestionId(@PathVariable("questionId") final Long questionId) {
+    public RestResult<SectionResource> getSectionByQuestionId(@PathVariable("questionId") final Long questionId) {
         return newRestHandler().perform(() -> sectionService.getSectionByQuestionId(questionId));
     }
 }

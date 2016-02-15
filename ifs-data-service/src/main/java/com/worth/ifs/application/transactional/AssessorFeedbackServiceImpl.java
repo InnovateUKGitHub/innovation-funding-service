@@ -22,6 +22,6 @@ public class AssessorFeedbackServiceImpl implements AssessorFeedbackService {
 
     @Override
     public ServiceResult<AssessorFeedbackResource> findOne(Long id) {
-        return find(repository.findOne(id), notFoundError(AssessorFeedback.class, id)).andOnSuccessReturn(mapper::mapAssessorFeedbackToResource);
+        return find(repository.findOne(id), notFoundError(AssessorFeedback.class, id)).andOnSuccessReturn(mapper::mapToResource);
     }
 }

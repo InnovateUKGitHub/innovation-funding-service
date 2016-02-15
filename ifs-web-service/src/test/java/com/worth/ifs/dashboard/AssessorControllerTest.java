@@ -1,7 +1,14 @@
 package com.worth.ifs.dashboard;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -9,13 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class AssessorControllerTest  extends BaseUnitTest {
 
@@ -43,8 +49,9 @@ public class AssessorControllerTest  extends BaseUnitTest {
      public void testDashboardWithAssessorLogin() throws Exception {
         this.loginUser(assessor);
 
-        List<Competition> competitions = new ArrayList<>();
-        competitions.add(competition);
+        List<Competition> competitions = asList(competition);
+
+        List<CompetitionResource> competitionResources = asList(competitionResource);
 
         Map<Long, Integer> competitionsTotalAssignedAssessments = new HashMap<>();
         competitionsTotalAssignedAssessments.put(competition.getId(), 3);
@@ -52,10 +59,12 @@ public class AssessorControllerTest  extends BaseUnitTest {
         Map<Long, Integer> competitionsSubmittedAssessments = new HashMap<>();
         competitionsSubmittedAssessments.put(competition.getId(), 1);
 
+        when(competitionService.getAllCompetitions()).thenReturn(competitionResources);
+
         mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("assessor-dashboard"))
-                .andExpect(model().attribute("competitionsForAssessment", competitions))
+                .andExpect(model().attribute("competitionsForAssessment", competitionResources))
                 .andExpect(model().attribute("totalAssignedAssessments", competitionsTotalAssignedAssessments))
                 .andExpect(model().attribute("submittedAssessments", competitionsSubmittedAssessments));
     }
