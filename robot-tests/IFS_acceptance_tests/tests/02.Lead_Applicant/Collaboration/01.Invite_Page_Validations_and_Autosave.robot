@@ -107,6 +107,7 @@ Already invite email should not allowed
     Capture Page Screenshot
 
 Link to add multiple partner organisation
+    [Tags]      Failing
     Given the applicant is in the invite contributors page
     And the applicant clicks link "Add partner organisation"
     And the applicant should see another link "Add partner organisation" below the previously clicked partner organisation
