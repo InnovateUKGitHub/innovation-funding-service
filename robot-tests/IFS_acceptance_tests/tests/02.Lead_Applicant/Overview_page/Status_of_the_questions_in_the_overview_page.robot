@@ -51,8 +51,9 @@ the applicant assigns the "Project summary" question to "Steve Smith"
     Click Element    xpath=//*[@id="collapsible-1"]//button[contains(text(),"${assignee_name}")]
 
 the applicant should see a blue flag in the Public description (overview page)
-    Sleep   5s
+    Reload Page
     Wait Until Page Contains Element    css=#form-input-11 .assigned
+
 
 the blue flag should not be visible
     Element Should Not Be Visible    css=#form-input-11 .assigned
