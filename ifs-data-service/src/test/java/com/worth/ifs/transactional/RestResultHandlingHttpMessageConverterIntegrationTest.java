@@ -101,10 +101,4 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
         headers.set(AUTH_TOKEN, "789ghi");
         return new HttpEntity<>(headers);
     }
-
-    private <T> HttpEntity<T> jsonEntity(T entity){
-        HttpHeaders headers = getJSONHeaders();
-        headers.set(AUTH_TOKEN, "123abc");
-        return new HttpEntity<>(entity, headers);
-    }
 }

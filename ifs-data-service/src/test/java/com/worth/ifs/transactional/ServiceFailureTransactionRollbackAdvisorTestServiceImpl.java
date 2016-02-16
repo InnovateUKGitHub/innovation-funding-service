@@ -60,6 +60,11 @@ public class ServiceFailureTransactionRollbackAdvisorTestServiceImpl extends Bas
         throw new RuntimeException("Exception");
     }
 
+    @Override
+    public ServiceResult<String> accessDeniedMethod() {
+        return null;
+    }
+
     private User getUser() {
         return getOnlyElement(userRepository.findByEmail("steve.smith@empire.com"));
     }

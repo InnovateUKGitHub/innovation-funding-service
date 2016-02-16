@@ -12,7 +12,7 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
  *
  */
 @RestController
-public class RestResultExceptionHandlingAdviceTestRestController {
+public class RestResultExceptionHandlingAdviceIntegrationTestRestController {
 
     @RequestMapping("/success-test")
     public RestResult<String> successfulMethod() {

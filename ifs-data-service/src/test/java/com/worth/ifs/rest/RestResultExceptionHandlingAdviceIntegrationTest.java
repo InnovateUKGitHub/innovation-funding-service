@@ -13,10 +13,10 @@ import static org.junit.Assert.assertTrue;
 /**
  *
  */
-public class RestResultExceptionHandlingAdviceTest extends BaseIntegrationTest {
+public class RestResultExceptionHandlingAdviceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    private RestResultExceptionHandlingAdviceTestRestController applicableController;
+    private RestResultExceptionHandlingAdviceIntegrationTestRestController applicableController;
 
     @Test
     public void testSuccessMethodReturnsSuccessNormally() {
