@@ -7,7 +7,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
 Test Teardown     User closes the browser
-Force Tags        Failing               # these tests have been tagged as failing since the numbers no longer match up to the database - find out why!
+Force Tags        Failing   HappyPath             # these tests have been tagged as failing since the numbers no longer match up to the database - find out why!
 Default Tags      Finance    Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot

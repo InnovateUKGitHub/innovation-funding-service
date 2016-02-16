@@ -13,7 +13,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 Status changes when we assign a question to the collaborator
     [Documentation]    INFUND-39
-    [Tags]    Applicant    Overview
+    [Tags]    Applicant    Overview     HappyPath
     Given Applicant goes to the 'project summary' question
     When the Applicant edits the "Project summary" question
     And the applicant assigns the "Project Summary" question to Jessica Doe    Jessica Doe

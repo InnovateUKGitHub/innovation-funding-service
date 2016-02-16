@@ -11,16 +11,19 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 View and edit profile link is visible in the Dashboard page
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
+    [Tags]          HappyPath
     When the Applicant is in Dashboard page
     Then the link to Edit Profile should be present
 
 View and edit profile link redirects to the Your profile page
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
+    [Tags]          HappyPath
     When the Applicant clicks the link Edit profile from Dashboard page
     Then the link to Edit Profile should be present in Your profile page
 
 Edit the profile and verify if the changes are saved
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
+    [Tags]      HappyPath
     When the Applicant is in Dashboard page
     And the Applicant clicks the link Edit profile from Dashboard page
     And the applicant clicks the Edit your details link

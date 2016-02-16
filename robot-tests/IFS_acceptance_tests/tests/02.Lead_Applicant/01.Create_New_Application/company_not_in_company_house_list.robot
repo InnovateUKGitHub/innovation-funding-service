@@ -21,7 +21,7 @@ ${organisation_name}    Top of the Popps
 *** Test Cases ***
 Applicant can see the option to add a company that isn't on the Companies House List
     [Documentation]    INFUND-888
-    [Tags]    Applicant    Company    Companies House
+    [Tags]    Applicant    Company    Companies House   HappyPath
     Given the applicant is on the "Find your organisation on companies House" page
     And the applicant can see an option to say their company is "Not on Companies House"
     When the applicant clicks the option to say their company is "Not on Companies House"

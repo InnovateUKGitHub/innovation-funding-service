@@ -140,7 +140,7 @@ unset testScrub
 unset happyPath
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :d:" opt ; do
+while getopts ":q :t :h :d:" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -148,7 +148,7 @@ while getopts ":q :t :d:" opt ; do
 	t)
 	 testScrub=1
 	;;
-	hp)
+	h)
 	 happyPath=1
 	;;
         d)

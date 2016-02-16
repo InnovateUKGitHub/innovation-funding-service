@@ -15,7 +15,7 @@ ${competition_name}    Technology Inspired
 *** Test Cases ***
 Submitting an application shows a confirmation popup
     [Documentation]    INFUND-342
-    [Tags]    Assessor
+    [Tags]    Assessor   HappyPath
     Given Assessor clicks the competition
     When Select Application Checkbox    ${application_name}
     And Submit Selected Applications
@@ -31,7 +31,7 @@ Cancelling the confirmation leaves the Application in unchanged state
 
 Confirming the popup changes the Application state to submitted
     [Documentation]    INFUND-342
-    [Tags]    Assessor
+    [Tags]    Assessor  HappyPath
     Given Select Application Checkbox    ${application_name}
     And Submit Selected Applications
     When Confirm the confirmation popup

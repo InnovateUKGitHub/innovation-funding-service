@@ -40,27 +40,27 @@ Assessment progress is 1 out of 4
 
 Assessor can see the applications details page
     [Documentation]    INFUND-337
-    [Tags]    Assessor
+    [Tags]    Assessor      HappyPath
     When Assessor clicks the competition
     Then Competition's details page should be visible
 
 Application invitation review page shows the title
     [Documentation]    INFUND-329
-    [Tags]    Assessor
+    [Tags]    Assessor  HappyPath
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Application title
 
 Application invitation review page shows partners
     [Documentation]    INFUND-329
-    [Tags]    Assessor
+    [Tags]    Assessor  HappyPath
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Partners organisations
 
 Application state changes when accepting an invitation for assessment
     [Documentation]    INFUND-338
-    [Tags]    Assessor
+    [Tags]    Assessor  HappyPath
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     And Assessor accepts the application
@@ -117,7 +117,7 @@ Application Summary returns an error message when submitting empty feedback
 
 Assessor can see the competitions that he/she accepted
     [Documentation]    INFUND-292
-    [Tags]    Assessor
+    [Tags]    Assessor  HappyPath
     When Assessor is viewing the Competitions list
     Then Assessor sees competitions he or she accepted
 
