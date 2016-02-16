@@ -22,7 +22,7 @@ public class SectionController {
     @Autowired
     private SectionService sectionService;
 
-    @RequestMapping("/getById/{sectionId}")
+    @RequestMapping("/{sectionId}")
     public RestResult<SectionResource> getById(@PathVariable("sectionId") final Long sectionId) {
         return sectionService.getById(sectionId).toGetResponse();
     }
