@@ -1,19 +1,5 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.mapper.QuestionStatusMapper;
-import com.worth.ifs.application.repository.QuestionRepository;
-import com.worth.ifs.application.repository.QuestionStatusRepository;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.form.domain.FormInputType;
-import com.worth.ifs.form.transactional.FormInputTypeService;
-import com.worth.ifs.transactional.BaseTransactionalService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +7,21 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.mapper.QuestionStatusMapper;
+import com.worth.ifs.application.repository.QuestionRepository;
+import com.worth.ifs.application.repository.QuestionStatusRepository;
+import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.form.transactional.FormInputTypeService;
+import com.worth.ifs.transactional.BaseTransactionalService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -151,10 +152,11 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return sectionService.getById(sectionId).andOnSuccessReturn(section -> {
 
             if (section.getParentSection() != null) {
-                Section previousSection = sectionService.getPreviousSection(section).getSuccessObjectOrNull();
+                SectionResource previousSection = sectionService.getPreviousSection(section).getSuccessObjectOrNull();
                 if (previousSection != null) {
                     Optional<Question> lastQuestionInSection = previousSection.getQuestions()
                             .stream()
+                            .map(questionRepository::findOne)
                             .max(comparing(Question::getPriority));
                     return lastQuestionInSection.orElse(null);
                 }
@@ -170,10 +172,11 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return sectionService.getById(sectionId).andOnSuccessReturn(section -> {
 
             if (section.getParentSection() != null) {
-                Section nextSection = sectionService.getNextSection(section).getSuccessObjectOrNull();
-                if (nextSection != null) {
+                SectionResource nextSection = sectionService.getNextSection(section).getSuccessObjectOrNull();
+                if(nextSection!=null) {
                     Optional<Question> firstQuestionInSection = nextSection.getQuestions()
                             .stream()
+                            .map(questionRepository::findOne)
                             .min(comparing(Question::getPriority));
                     return firstQuestionInSection.orElse(null);
                 }
@@ -261,7 +264,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {
-        Section nextSection = sectionService.getNextSection(section).getSuccessObject();
+        SectionResource nextSection = sectionService.getNextSection(section).getSuccessObject();
         if (nextSection != null) {
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, nextSection.getId());
         }
@@ -270,7 +273,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private Question getPreviousQuestionBySection(Long section, Long competitionId) {
-        Section previousSection = sectionService.getPreviousSection(section).getSuccessObject();
+        SectionResource previousSection = sectionService.getPreviousSection(section).getSuccessObject();
 
         if (previousSection != null) {
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(competitionId, previousSection.getId());

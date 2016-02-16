@@ -1,12 +1,12 @@
 package com.worth.ifs.assessment.viewmodel;
 
-import com.worth.ifs.application.domain.AssessorFeedback;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import com.worth.ifs.application.domain.AssessorFeedback;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.resource.SectionResource;
 
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -30,8 +30,8 @@ public class AssessmentSummarySection {
         this.name = name;
     }
 
-    public AssessmentSummarySection(Section section, Map<Question, Optional<AssessorFeedback>> questionsAndFeedback) {
-        this(section.getQuestions().stream().
+    public AssessmentSummarySection(SectionResource section, List<Question> questions, Map<Question, Optional<AssessorFeedback>> questionsAndFeedback) {
+        this(questions.stream().
                         filter(question -> question.getNeedingAssessorScore() || !isBlank(question.getAssessorConfirmationQuestion())).
                         map(question -> new AssessmentSummarySectionQuestion(question, questionsAndFeedback.get(question))).
                                         collect(toList()),

@@ -1,8 +1,8 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.user.domain.User;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -103,10 +103,12 @@ public class ApplicationControllerTest extends BaseUnitTest {
     @Test
     public void testApplicationDetailsOpenSection() throws Exception {
         ApplicationResource app = applications.get(0);
-        Section section = sections.get(2);
+        SectionResource section = sectionResources.get(2);
 
-        Map<Long, Section> collectedSections =
-                sections.stream().collect(Collectors.toMap(Section::getId,
+
+
+        Map<Long, SectionResource> collectedSections =
+                sectionResources.stream().collect(Collectors.toMap(SectionResource::getId,
                         Function.identity()));
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);

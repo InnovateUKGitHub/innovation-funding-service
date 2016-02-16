@@ -15,7 +15,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 *** Variables ***
 ${INVITE_COLLABORATORS_PAGE}    ${SERVER}/application/2/contributors/invite?newApplication
 ${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/3/contributors/invite?newApplication
-${INVITE_COLLABORATORS_PAGE}    ${SERVER}/application/2/contributors/invite?newApplication
+${APPLICATION_3_TEAM_PAGE}    ${SERVER}/application/3/contributors
 
 *** Test Cases ***
 The lead applicant should be able to add/remove a collaborator
@@ -63,12 +63,9 @@ Applicant inputs Organisation and other details should be autosaved (in cookie)
     [Documentation]    INFUND-1039
     [Tags]    Collaboration
     Given the applicant is in the invite contributors page
-    Capture Page Screenshot
     And the applicant clicks link "Add partner organisation"
     And the applicant can enter Organisation name, Name and E-mail
-    And reloads the page
     Then the applicant's inputs should be visible
-    Capture Page Screenshot
 
 Blank organisation name is not allowed
     [Documentation]    INFUND-896
@@ -119,12 +116,12 @@ Link to add multiple partner organisation
 The user's inputs should be autosaved
     [Documentation]    INFUND-901
     Given the applicant is in the invite contributors page
-    When the user fills the name and email field    1
-    And the user reloads the page
+    When the user fills the name and email field and reloads the page    1
     Then the user's inputs should still be visible    1
     And the user goes to the second invite page
     And the inputs of the first invite should not be visible
-    Capture Page Screenshot
+    And when the user goes to the application team page of application 3
+    And the inputs of the first invite should not be visible
 
 *** Keywords ***
 the applicant is in the invite contributors page
@@ -143,7 +140,7 @@ the applicant clicks the remove link
 the line should be removed
     Element Should Not Be Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
 
-the user fills the name and email field
+the user fills the name and email field and reloads the page
     [Arguments]    ${group_number}
     Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator01
@@ -153,9 +150,7 @@ the user fills the name and email field
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    collaboratortest@fanniemay.com
     sleep    1s
     focus    jquery=li:nth-child(1) button:contains('Add person')
-
-the user reloads the page
-    Reload Page
+    reload page
 
 the user's inputs should still be visible
     [Arguments]    ${group_number}
@@ -215,9 +210,7 @@ the applicant can enter Organisation name, Name and E-mail
     Input Text    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(2) input    collaborator3@fanniemay.com
     focus    jquery=li:nth-child(2) button:contains('Add person')
     Sleep    1s
-
-reloads the page
-    Reload Page
+    reload page
 
 the applicant's inputs should be visible
     Textfield Value Should Be    name=organisations[1].organisationName    Fannie May
@@ -297,3 +290,7 @@ the applicant inserts and already invited email
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    test@example.com
     # the following keyword disables the browser's validation
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+
+when the user goes to the application team page of application 3
+    go to    ${APPLICATION_3_TEAM_PAGE}
+    Click Element    jQuery=.button:contains("Invite new contributors")

@@ -359,6 +359,7 @@ the applicant adds a second row for the other costs fields
     Input Text    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
     Mouse Out    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     focus    css=.app-submit-btn
+    sleep   1s
 
 the other costs total should be correct
     Textfield Value Should Be    id=section-total-15    £ 200

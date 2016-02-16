@@ -2,7 +2,9 @@ package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.form.domain.FormInputResponse;
@@ -34,10 +36,13 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     private SectionRepository sectionRepository;
 
     @Autowired
+    private SectionMapper sectionMapper;
+
+    @Autowired
     private QuestionService questionService;
 
     @Override
-    public ServiceResult<Section> getById(final Long sectionId) {
+    public ServiceResult<SectionResource> getById(final Long sectionId) {
         return getSection(sectionId);
     }
 
@@ -128,8 +133,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     @Override
-    public ServiceResult<Section> findByName(final String name) {
-        return find(sectionRepository.findByName(name), notFoundError(Section.class, name));
+    public ServiceResult<SectionResource> findByName(final String name) {
+        return find(sectionRepository.findByName(name), notFoundError(Section.class, name)).
+                andOnSuccessReturn(sectionMapper::mapToResource);
     }
 
     // TODO DW - INFUND-1555 - work out the getSuccessObject call
@@ -152,7 +158,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     public ServiceResult<Boolean> isMainSectionComplete(Section section, Long applicationId, Long organisationId, boolean ignoreOtherOrganisations) {
         boolean sectionIsComplete = true;
         for (Question question : section.getQuestions()) {
-            if (ignoreOtherOrganisations == false && question.getName() != null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING") && section.getParentSection() != null) {
+            if (!ignoreOtherOrganisations && question.getName() != null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING") && section.getParentSection() != null) {
                 if (!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section).getSuccessObject()) {
                     sectionIsComplete = false;
                 }
@@ -196,7 +202,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                         break;
                     }
                 }
-                if (allSectionsWithSubsectionsAreComplete == false) {
+                if (!allSectionsWithSubsectionsAreComplete) {
                     break;
                 }
             }
@@ -205,12 +211,12 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     @Override
-    public ServiceResult<Section> getNextSection(final Long sectionId) {
+    public ServiceResult<SectionResource> getNextSection(final Long sectionId) {
         return getSection(sectionId).andOnSuccess(this::getNextSection);
     }
 
     @Override
-    public ServiceResult<Section> getNextSection(Section section) {
+    public ServiceResult<SectionResource> getNextSection(SectionResource section) {
         if (section == null) {
             return null;
         }
@@ -218,29 +224,29 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         if (section.getParentSection() != null) {
             return getNextSiblingSection(section);
         } else {
-            Section nextSection = sectionRepository.findFirstByCompetitionIdAndPriorityGreaterThanAndParentSectionIsNullOrderByPriorityAsc(section.getCompetition().getId(), section.getPriority());
-            return serviceSuccess(nextSection);
+            Section nextSection = sectionRepository.findFirstByCompetitionIdAndPriorityGreaterThanAndParentSectionIsNullOrderByPriorityAsc(section.getCompetition(), section.getPriority());
+            return find(nextSection, notFoundError(Section.class, section.getCompetition(), section.getPriority())).andOnSuccessReturn(sectionMapper::mapToResource);
         }
     }
 
-    private ServiceResult<Section> getNextSiblingSection(Section section) {
+    private ServiceResult<SectionResource> getNextSiblingSection(SectionResource section) {
         Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanAndQuestionGroupTrueOrderByPriorityAsc(
-                section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority());
+                section.getCompetition(), section.getParentSection(), section.getPriority());
 
         if (sibling == null) {
             return getNextSection(section.getParentSection());
         } else {
-            return serviceSuccess(sibling);
+            return serviceSuccess(sectionMapper.mapToResource(sibling));
         }
     }
 
     @Override
-    public ServiceResult<Section> getPreviousSection(final Long sectionId) {
+    public ServiceResult<SectionResource> getPreviousSection(final Long sectionId) {
         return getSection(sectionId).andOnSuccess(this::getPreviousSection);
     }
 
     @Override
-    public ServiceResult<Section> getPreviousSection(Section section) {
+    public ServiceResult<SectionResource> getPreviousSection(SectionResource section) {
         if (section == null) {
             return null;
         }
@@ -248,28 +254,32 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         if (section.getParentSection() != null) {
             return getPreviousSiblingSection(section);
         } else {
-            return serviceSuccess(sectionRepository.findFirstByCompetitionIdAndPriorityLessThanAndParentSectionIsNullOrderByPriorityDesc(section.getCompetition().getId(), section.getPriority()));
+            Section firstSection = sectionRepository.findFirstByCompetitionIdAndPriorityLessThanAndParentSectionIsNullOrderByPriorityDesc(section.getCompetition(), section.getPriority());
+
+            return find(firstSection, notFoundError(Section.class, section.getCompetition(), section.getPriority())).
+                    andOnSuccessReturn(sectionMapper::mapToResource);
         }
     }
 
-    private ServiceResult<Section> getPreviousSiblingSection(Section section) {
+    private ServiceResult<SectionResource> getPreviousSiblingSection(SectionResource section) {
         Section sibling = sectionRepository.findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanAndQuestionGroupTrueOrderByPriorityDesc(
-                section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority());
+                section.getCompetition(), section.getParentSection(), section.getPriority());
 
         if (sibling == null) {
             return getPreviousSection(section.getParentSection());
         } else {
-            return serviceSuccess(sibling);
+            return serviceSuccess(sectionMapper.mapToResource(sibling));
         }
     }
 
     @Override
-    public ServiceResult<Section> getSectionByQuestionId(final Long questionId) {
-        return find(sectionRepository.findByQuestionsId(questionId), notFoundError(Section.class, questionId));
+    public ServiceResult<SectionResource> getSectionByQuestionId(final Long questionId) {
+        return find(sectionRepository.findByQuestionsId(questionId), notFoundError(Section.class, questionId)).
+                andOnSuccessReturn(sectionMapper::mapToResource);
     }
 
-
-    private ServiceResult<Section> getSection(Long sectionId) {
-        return find(sectionRepository.findOne(sectionId), notFoundError(Section.class, sectionId));
+    private ServiceResult<SectionResource> getSection(Long sectionId) {
+        return find(sectionRepository.findOne(sectionId), notFoundError(Section.class, sectionId)).
+                andOnSuccessReturn(sectionMapper::mapToResource);
     }
 }

@@ -1,6 +1,6 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class SectionController {
     private SectionService sectionService;
 
     @RequestMapping("/getById/{sectionId}")
-    public RestResult<Section> getById(@PathVariable("sectionId") final Long sectionId) {
+    public RestResult<SectionResource> getById(@PathVariable("sectionId") final Long sectionId) {
         return sectionService.getById(sectionId).toGetResponse();
     }
 
@@ -50,22 +50,22 @@ public class SectionController {
     }
 
     @RequestMapping("findByName/{name}")
-    public RestResult<Section> findByName(@PathVariable("name") final String name) {
+    public RestResult<SectionResource> findByName(@PathVariable("name") final String name) {
         return sectionService.findByName(name).toGetResponse();
     }
 
     @RequestMapping("/getNextSection/{sectionId}")
-    public RestResult<Section> getNextSection(@PathVariable("sectionId") final Long sectionId) {
+    public RestResult<SectionResource> getNextSection(@PathVariable("sectionId") final Long sectionId) {
         return sectionService.getNextSection(sectionId).toGetResponse();
     }
 
     @RequestMapping("/getPreviousSection/{sectionId}")
-    public RestResult<Section> getPreviousSection(@PathVariable("sectionId") final Long sectionId) {
+    public RestResult<SectionResource> getPreviousSection(@PathVariable("sectionId") final Long sectionId) {
         return sectionService.getPreviousSection(sectionId).toGetResponse();
     }
 
     @RequestMapping("/getSectionByQuestionId/{questionId}")
-    public RestResult<Section> getSectionByQuestionId(@PathVariable("questionId") final Long questionId) {
+    public RestResult<SectionResource> getSectionByQuestionId(@PathVariable("questionId") final Long questionId) {
         return sectionService.getSectionByQuestionId(questionId).toGetResponse();
     }
 }
