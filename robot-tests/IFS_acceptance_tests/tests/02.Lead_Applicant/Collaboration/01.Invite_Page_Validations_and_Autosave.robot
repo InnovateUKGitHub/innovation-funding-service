@@ -65,7 +65,6 @@ Applicant inputs Organisation and other details should be autosaved (in cookie)
     Given the applicant is in the invite contributors page
     And the applicant clicks link "Add partner organisation"
     And the applicant can enter Organisation name, Name and E-mail
-    And reloads the page
     Then the applicant's inputs should be visible
 
 Blank organisation name is not allowed
