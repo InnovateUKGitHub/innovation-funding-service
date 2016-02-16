@@ -6,16 +6,16 @@ import com.worth.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 
 /**
- *
+ * A test Service for tests in {@link ServiceFailureExceptionHandlingAdviceTest}
  */
 @Service
-public class ServiceFailureTransactionRollbackAdvisorTestServiceImpl extends BaseTransactionalService implements ServiceFailureTransactionRollbackAdvisorTestService {
+public class ServiceFailureExceptionHandlingAdviceTestServiceImpl extends BaseTransactionalService implements ServiceFailureExceptionHandlingAdviceTestService {
 
     @Autowired
     public UserRepository userRepository;

@@ -29,7 +29,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.worth.ifs.commons.error.Errors.*;
+import static com.worth.ifs.commons.error.CommonErrors.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;

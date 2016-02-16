@@ -5,13 +5,14 @@ import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- *
+ * This tests that Service methods returning RestResults are handled by the RestResultExceptionHandlingAdvice and converts
+ * exceptions and nulls into failing RestResults.
  */
 public class RestResultExceptionHandlingAdviceIntegrationTest extends BaseIntegrationTest {
 

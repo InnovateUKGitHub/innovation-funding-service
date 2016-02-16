@@ -22,7 +22,8 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
- *
+ * This test tests that the {@link RestErrorController} is able to take low-level errors produced by Spring MVC and Spring Security
+ * prior to any Controller code actually being called, and convert them into RestErrorResponses.
  */
 public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends BaseWebIntegrationTest {
 

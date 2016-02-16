@@ -14,13 +14,17 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
-import static com.worth.ifs.commons.error.Errors.forbiddenError;
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.http.HttpStatus.*;
 
 /**
+ * This Error Controller catches errors thrown by the DispatcherServlet and low-level Spring MVC and Security code.  This Controller
+ * effectively converts errors that are encountered before Controller code is ever executed into RestErrorResponses.
  *
+ * Examples of these types of low-level errors are requesting paths for which there are no Controllers to handle, and Spring Security
+ * exceptions for attempting to access a forbidden path.
  */
 @RestController
 public class RestErrorController extends AbstractErrorController implements org.springframework.boot.autoconfigure.web.ErrorController {

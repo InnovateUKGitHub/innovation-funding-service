@@ -23,7 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.concurrent.Future;
 
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
 import static java.util.Collections.emptyList;
@@ -34,6 +34,11 @@ import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * Tests for the {@link com.worth.ifs.rest.RestResultHandlingHttpMessageConverter}, to assert that it can take successful
+ * RestResults from Controllers and convert them into the "body" of the RestResult, and that it can take failing RestResults
+ * and convert them into {@link RestErrorResponse} objects.
+ */
 public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseWebIntegrationTest {
 
     @Value("${ifs.data.service.rest.baseURL}")
@@ -46,7 +51,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     public UserAuthenticationService userAuthenticationService;
 
     @Test
-    public void testSuccessRestResultHandled() {
+    public void testSuccessRestResultHandledAsTheBodyOfTheRestResult() {
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -61,7 +66,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     }
 
     @Test
-    public void testFailureRestResultHandled() throws IOException {
+    public void testFailureRestResultHandledAsARestErrorResponse() throws IOException {
 
         RestTemplate restTemplate = new RestTemplate();
 

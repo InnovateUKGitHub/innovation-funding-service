@@ -5,8 +5,8 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.error.Errors;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -28,10 +28,10 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
-import static com.worth.ifs.commons.error.Errors.payloadTooLargeError;
+import static com.worth.ifs.commons.error.CommonErrors.payloadTooLargeError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
@@ -211,7 +211,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_missingContentLength")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", Errors.lengthRequiredError(5000), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", CommonErrors.lengthRequiredError(5000), response);
     }
 
     @Test
@@ -231,7 +231,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_unsupportedContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", CommonErrors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
@@ -250,7 +250,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_missingContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", CommonErrors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
@@ -410,7 +410,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_missingContentLength")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", Errors.lengthRequiredError(5000), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", CommonErrors.lengthRequiredError(5000), response);
     }
 
     @Test
@@ -430,7 +430,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_unsupportedContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", CommonErrors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
@@ -449,7 +449,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_missingContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", CommonErrors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
     }
 
     @Test

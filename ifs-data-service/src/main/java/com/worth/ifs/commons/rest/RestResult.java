@@ -13,7 +13,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.io.IOException;
 import java.util.List;
 
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
