@@ -5,9 +5,9 @@ import com.worth.ifs.security.NotSecured;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- *
+ * A test Service for tests in {@link ServiceFailureExceptionHandlingAdviceTest}
  */
-public interface ServiceFailureTransactionRollbackAdvisorTestService {
+public interface ServiceFailureExceptionHandlingAdviceTestService {
 
     @NotSecured("just a test method")
     ServiceResult<String> successfulMethod();

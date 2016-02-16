@@ -7,18 +7,22 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
-import static com.worth.ifs.commons.rest.RestFailures.internalServerErrorRestFailure;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.rest.CommonRestFailures.internalServerErrorRestFailure;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 
 /**
+ * This Advice targets any @RequestMapping Controller methods that return RestResults and ensures that the calling code will receive
+ * a RestResult.
  *
+ * In effect, if the called method throws an Exception, this'll be transformed into an "Internal Server Error" RestResult, and if
+ * it returns null, it'll convert it into an "Internal Server Error" RestResult.
  */
 @Aspect
 @Component
-public class RestResultExceptionHandlingAdvisor {
+public class RestResultExceptionHandlingAdvice {
 
-    private static final Log LOG = LogFactory.getLog(RestResultExceptionHandlingAdvisor.class);
+    private static final Log LOG = LogFactory.getLog(RestResultExceptionHandlingAdvice.class);
 
     @Around("@annotation(org.springframework.web.bind.annotation.RequestMapping) && execution(public com.worth.ifs.commons.rest.RestResult *.*(..))")
     public Object handleReturnedRestResults(ProceedingJoinPoint joinPoint) throws Throwable {

@@ -36,8 +36,8 @@ import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newAp
 import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.CREATED;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;

@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**

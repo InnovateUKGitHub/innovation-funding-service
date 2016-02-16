@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.util.CollectionFunctions.*;

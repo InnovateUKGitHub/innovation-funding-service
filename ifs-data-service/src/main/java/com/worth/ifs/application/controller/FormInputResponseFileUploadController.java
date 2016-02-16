@@ -27,7 +27,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.Errors.*;
+import static com.worth.ifs.commons.error.CommonErrors.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;

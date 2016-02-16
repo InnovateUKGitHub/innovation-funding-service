@@ -18,7 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static java.util.Optional.ofNullable;
 

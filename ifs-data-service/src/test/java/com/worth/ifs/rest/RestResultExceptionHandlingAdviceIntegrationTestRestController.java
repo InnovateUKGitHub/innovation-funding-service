@@ -4,12 +4,12 @@ import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 
 /**
- *
+ * A test Controller for tests in {@link RestResultExceptionHandlingAdviceIntegrationTest}
  */
 @RestController
 public class RestResultExceptionHandlingAdviceIntegrationTestRestController {

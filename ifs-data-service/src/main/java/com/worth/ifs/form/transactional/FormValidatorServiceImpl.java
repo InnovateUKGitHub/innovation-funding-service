@@ -9,7 +9,7 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 @Service

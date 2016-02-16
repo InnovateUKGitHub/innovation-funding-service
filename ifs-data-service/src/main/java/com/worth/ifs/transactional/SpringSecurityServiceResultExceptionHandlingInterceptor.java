@@ -9,12 +9,16 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.error.Errors.forbiddenError;
+import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 
+/**
+ * This Interceptor operates below Spring Security AOP code that is intercepting ServiceResult-returning Service code,
+ * and allows it to catch Spring Security exceptions and convert them into failing ServiceResults.
+ */
 @Component
-public class SpringSecurityExceptionHandlingMethodInterceptor implements MethodInterceptor {
+public class SpringSecurityServiceResultExceptionHandlingInterceptor implements MethodInterceptor {
 
-    private static final Log LOG = LogFactory.getLog(SpringSecurityExceptionHandlingMethodInterceptor.class);
+    private static final Log LOG = LogFactory.getLog(SpringSecurityServiceResultExceptionHandlingInterceptor.class);
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.commons.error.Errors;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Test;
@@ -72,7 +72,7 @@ public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<Respon
         String expectedUrl = dataServicesUrl + responseRestURL +
                 "/saveQuestionResponse/1/assessorFeedback?assessorUserId=2&feedbackValue=value&feedbackText=text";
 
-        RestErrorResponse restErrorResponse = new RestErrorResponse(asList(Errors.badRequestError("Bad!"), Errors.internalServerErrorError("Bang!")));
+        RestErrorResponse restErrorResponse = new RestErrorResponse(asList(CommonErrors.badRequestError("Bad!"), CommonErrors.internalServerErrorError("Bang!")));
         when(mockRestTemplate.exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class)).thenThrow(new HttpServerErrorException(BAD_REQUEST, "Bad!", toJsonBytes(restErrorResponse), defaultCharset()));
 
         // now run the method under test

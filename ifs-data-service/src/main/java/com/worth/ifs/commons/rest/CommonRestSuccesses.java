@@ -6,7 +6,7 @@ import static org.springframework.http.HttpStatus.*;
 /**
  * A factory class for some common RestResult success cases, so that we can handle them in a consistent manner.
  */
-public class RestSuccesses {
+public class CommonRestSuccesses {
 
     public static RestResult<Void> okRestSuccess() {
         return restSuccess(OK);

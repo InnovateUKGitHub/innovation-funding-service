@@ -13,12 +13,17 @@ import java.lang.reflect.Method;
 
 import static java.lang.reflect.Modifier.isPublic;
 
+/**
+ * This Advisor places the {@link SpringSecurityServiceResultExceptionHandlingInterceptor} below Spring Security AOP code
+ * that is intercepting ServiceResult-returning Service code, and allows it to catch Spring Security exceptions and convert
+ * them into failing ServiceResults.
+ */
 @Component
-public class SpringSecurityExceptionHandlingAdvisor extends AbstractPointcutAdvisor {
+public class SpringSecurityServiceResultExceptionHandlingAdvisor extends AbstractPointcutAdvisor {
 
     private static final long serialVersionUID = 1L;
 
-    public SpringSecurityExceptionHandlingAdvisor(){
+    public SpringSecurityServiceResultExceptionHandlingAdvisor(){
         setOrder(LOWEST_PRECEDENCE);
     }
 
@@ -31,7 +36,7 @@ public class SpringSecurityExceptionHandlingAdvisor extends AbstractPointcutAdvi
             };
 
     @Autowired
-    private SpringSecurityExceptionHandlingMethodInterceptor interceptor;
+    private SpringSecurityServiceResultExceptionHandlingInterceptor interceptor;
 
     @Override
     public Pointcut getPointcut() {

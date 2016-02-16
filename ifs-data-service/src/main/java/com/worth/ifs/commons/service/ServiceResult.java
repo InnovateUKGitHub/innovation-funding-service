@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.util.Either.left;
@@ -68,14 +68,23 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         return failure != null ? serviceFailure(failure.getFailure()) : serviceFailure(internalServerErrorError("Unexpected error"));
     }
 
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult
+     */
     private RestResult<T> toRestResult() {
         return toRestResult(OK);
     }
 
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate bodiless (Void) RestResult
+     */
     private RestResult<Void> toEmptyRestResult() {
         return toEmptyRestResult(OK);
     }
 
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult
+     */
     private RestResult<T> toRestResult(HttpStatus statusCode) {
         return handleSuccessOrFailure(
                 failure -> handleServiceFailure(failure),
@@ -83,6 +92,9 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         );
     }
 
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult
+     */
     private RestResult<Void> toEmptyRestResult(HttpStatus statusCode) {
         return handleSuccessOrFailure(
                 failure -> handleServiceFailure(failure),
@@ -90,36 +102,76 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         );
     }
 
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult of type "204 - No Content"
+     */
     private RestResult<Void> toRestResultNoContent() {
         return toEmptyRestResult(NO_CONTENT);
     }
 
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a GET request that is requesting
+     * data.
+     *
+     * This will be a RestResult containing the body of the ServiceResult and a "200 - OK" response.
+     */
     public RestResult<T> toGetResponse() {
         return toRestResult();
     }
 
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that is
+     * creating data.
+     *
+     * This will be a RestResult containing the body of the ServiceResult and a "201 - Created" response.
+     *
+     * This is an appropriate response for a POST that is creating data.  To update data, consider using a PUT.
+     */
     public RestResult<T> toPostCreateResponse() {
         return toRestResult(CREATED);
     }
 
     /**
-     * @deprecated should use POSTs for create, and PUTs for update
+     * @deprecated should use POSTs to create new data, and PUTs to update data.
+     *
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that is
+     * updating data (although PUTs should really be used).
+     *
+     * This will be a bodiless RestResult with a "200 - OK" response.
      */
     public RestResult<Void> toPostUpdateResponse() {
         return toEmptyRestResult();
     }
 
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a PUT request that is
+     * updating data.
+     *
+     * This will be a bodiless RestResult with a "200 - OK" response.
+     */
     public RestResult<Void> toPutResponse() {
         return toEmptyRestResult();
     }
 
     /**
-     * @deprecated PUTs shouldn't generally return results - an HTTP status is generally ok
+     * @deprecated PUTs shouldn't generally return results in their bodies
+     *
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a PUT request that is
+     * updating data.
+     *
+     * This will be a RestResult containing the body of the ServiceResult with a "200 - OK" response, although ideally
+     * PUT responses shouldn't need to inculde bodies.
      */
     public RestResult<T> toPutWithBodyResponse() {
         return toRestResult();
     }
 
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a DELETE request that is
+     * deleting data.
+     *
+     * This will be a bodiless RestResult with a "204 - No content" response.
+     */
     public RestResult<Void> toDeleteResponse() {
         return toRestResultNoContent();
     }
@@ -128,22 +180,37 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         return restFailure(failure.getErrors());
     }
 
+    /**
+     * A factory method to generate a successful ServiceResult without a body.
+     */
     public static ServiceResult<Void> serviceSuccess() {
         return new ServiceResult<>(right(null));
     }
 
+    /**
+     * A factory method to generate a successful ServiceResult with a body to return.
+     */
     public static <T> ServiceResult<T> serviceSuccess(T successfulResult) {
         return new ServiceResult<>(right(successfulResult));
     }
 
+    /**
+     * A factory method to generate a failing ServiceResult based upon another.
+     */
     public static <T> ServiceResult<T> serviceFailure(ServiceFailure failure) {
         return new ServiceResult<>(left(failure));
     }
 
+    /**
+     * A factory method to generate a failing ServiceResult based upon an Error.
+     */
     public static <T> ServiceResult<T> serviceFailure(Error error) {
         return new ServiceResult<>(left(new ServiceFailure(singletonList(error))));
     }
 
+    /**
+     * A convenience factory method to generate a successful ServiceResult, only if "value" is non null.
+     */
     public static <T> ServiceResult<T> getNonNullValue(T value, Error error) {
 
         if (value == null) {
@@ -153,6 +220,10 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         return serviceSuccess(value);
     }
 
+    /**
+     * A convenience factory method to take a list of ServiceResults and generate a successful ServiceResult only if
+     * all ServiceResults are successful.
+     */
     public static <T, R> ServiceResult<T> processAnyFailuresOrSucceed(List<ServiceResult<R>> results, ServiceResult<T> failureResponse, ServiceResult<T> successResponse) {
         return results.stream().anyMatch(ServiceResult::isFailure) ? failureResponse : successResponse;
     }
