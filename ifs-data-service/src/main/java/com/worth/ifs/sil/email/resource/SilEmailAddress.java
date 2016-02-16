@@ -56,9 +56,6 @@ public class SilEmailAddress {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("name", name)
-                .append("email", email)
-                .toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 }

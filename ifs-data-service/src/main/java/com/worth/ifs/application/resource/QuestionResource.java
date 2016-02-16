@@ -211,28 +211,7 @@ public class QuestionResource {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-            .append("id", this.id)
-            .append("name", this.name)
-            .append("shortName", this.shortName)
-            .append("description", this.description)
-            .append("guidanceQuestion", this.guidanceQuestion)
-            .append("guidanceAnswer", this.guidanceAnswer)
-            .append("formInputIds", this.formInputs)
-            .append("markAsCompletedEnabled", this.markAsCompletedEnabled)
-            .append("assignEnabled", this.assignEnabled)
-            .append("multipleStatuses", this.multipleStatuses)
-            .append("priority", this.priority)
-            .append("needingAssessorScore", this.needingAssessorScore)
-            .append("needingAssessorFeedback", this.needingAssessorFeedback)
-            .append("assessorConfirmationQuestion", this.assessorConfirmationQuestion)
-            .append("competitionId", this.competition)
-            .append("sectionId", this.section)
-            .append("responseIds", this.responses)
-            .append("questionStatusIds", this.questionStatuses)
-            .append("costIds", this.costs)
-            .append("questionNumber", this.questionNumber)
-            .toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 
     public Boolean getAssignEnabled() {
