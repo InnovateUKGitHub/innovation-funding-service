@@ -14,7 +14,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 Verify the applicant can assign a question
     [Documentation]    INFUND-275, INFUND-280
-    [Tags]    Collaboration
+    [Tags]    Collaboration     HappyPath
     Given the Applicant can log in
     Given Applicant goes to the 'public description' question
     When the Applicant assigns the public description question to the collaborator    Jessica Doe
@@ -24,14 +24,14 @@ Verify the applicant can assign a question
 
 Verify the field is disabled for other collaborators
     [Documentation]    INFUND-275
-    [Tags]    Collaboration
+    [Tags]    Collaboration         HappyPath
     Given the second Collaborator is logged in
     When the second Collaborator is in the public description question
     Then the public description question should not be editable
 
 Verify the field is enabled for the collaborator/assignee
     [Documentation]    INFUND-275
-    [Tags]    Collaboration    Overview    Pending
+    [Tags]    Collaboration    Overview    Pending  HappyPath
     # Pending because of INFUND-1842
     Given the Collaborator is in the public description section
     When the Collaborator gets the assigned notification
@@ -48,7 +48,7 @@ Verify the ' Last update message'
 
 Verify collaborator can mark as ready for review
     [Documentation]    INFUND-877
-    [Tags]    Collaboration    Pending
+    [Tags]    Collaboration    Pending      HappyPath
     # Pending because of INFUND-1842
     When the collaborator is in the public description section
     Then the collaborator can mark the question as ready for review
@@ -61,7 +61,7 @@ Verify the field is disabled for the collaborator
 
 Verify that the field has been reassigned to the lead applicant
     [Documentation]    INFUND-275
-    [Tags]    Collaboration    pending
+    [Tags]    Collaboration    Pending
     # Pending because of INFUND-1842
     Given the Applicant can log in
     And Applicant goes to the 'public description' question

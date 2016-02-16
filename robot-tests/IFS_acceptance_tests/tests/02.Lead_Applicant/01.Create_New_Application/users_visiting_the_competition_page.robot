@@ -11,7 +11,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 The user is logged in
     [Documentation]    INFUND-921
-    [Tags]    Applicant    Details page
+    [Tags]    Applicant    Details page     HappyPath
     Given the Applicant is in Competition details page
     When the Applicant clicks on "Create application" button
     Then the Applicant should redirect to the Check Eligibility

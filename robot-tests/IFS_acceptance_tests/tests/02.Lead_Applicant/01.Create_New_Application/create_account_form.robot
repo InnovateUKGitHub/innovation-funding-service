@@ -145,7 +145,7 @@ Password is too long
 
 Valid account creation
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]    Account    Validations    HappyPath
     Given the user follows the standard path to the account creation page for non registered users
     When the user inputs a first name
     And the user inputs a last name

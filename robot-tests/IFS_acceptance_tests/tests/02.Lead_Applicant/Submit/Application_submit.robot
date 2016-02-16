@@ -31,7 +31,7 @@ Submit button disabled when the application is incomplete
     and the applicant redirects to the summary page
     and the applicant marks the first question as incomplete
     Then the submit button should be disabled
-    [Teardown]    And the applicant marks the first question as complete
+    [Teardown]    The applicant marks the first question as complete
 
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927

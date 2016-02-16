@@ -17,7 +17,7 @@ ${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9
 *** Test Cases ***
 Create application flow for non registered users CH route
     [Documentation]    INNFUND-669
-    [Tags]    Create application
+    [Tags]    Create application    HappyPath
     Given the user goes to the create application page
     When the user clicks the sign in to apply button
     and the user clicks the create button
@@ -31,7 +31,7 @@ Create application flow for non registered users CH route
 
 Create application flow for non registered users non CH route
     [Documentation]    INNFUND-669
-    [Tags]    Create application
+    [Tags]    Create application    HappyPath
     Given the user goes to the create application page
     When the user clicks the sign in to apply button
     and the user clicks the create button

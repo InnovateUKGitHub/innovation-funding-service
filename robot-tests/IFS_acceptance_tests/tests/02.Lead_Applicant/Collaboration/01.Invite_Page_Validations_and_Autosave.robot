@@ -20,6 +20,7 @@ ${APPLICATION_3_TEAM_PAGE}    ${SERVER}/application/3/contributors
 *** Test Cases ***
 The lead applicant should be able to add/remove a collaborator
     [Documentation]    INFUND-901
+    [Tags]      HappyPath
     Given the applicant is in the invite contributors page
     And the applicant clicks the add person link
     When a new line is added to the collaborator table
@@ -61,7 +62,7 @@ Link to remove partner organisation
 
 Applicant inputs Organisation and other details should be autosaved (in cookie)
     [Documentation]    INFUND-1039
-    [Tags]    Collaboration
+    [Tags]    Collaboration     HappyPath
     Given the applicant is in the invite contributors page
     And the applicant clicks link "Add partner organisation"
     And the applicant can enter Organisation name, Name and E-mail
@@ -121,7 +122,7 @@ The user's inputs should be autosaved
     Then the user's inputs should still be visible    1
     And the user goes to the second invite page
     And the inputs of the first invite should not be visible
-    And when the user goes to the application team page of application 3
+    And the user goes to the application team page of application 3
     And the inputs of the first invite should not be visible
 
 *** Keywords ***
@@ -292,6 +293,6 @@ the applicant inserts and already invited email
     # the following keyword disables the browser's validation
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
 
-when the user goes to the application team page of application 3
+the user goes to the application team page of application 3
     go to    ${APPLICATION_3_TEAM_PAGE}
     Click Element    jQuery=.button:contains("Invite new contributors")

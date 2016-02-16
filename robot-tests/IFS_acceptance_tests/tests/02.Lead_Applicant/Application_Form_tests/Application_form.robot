@@ -26,7 +26,7 @@ ${NEW_TEST_APPLICATION_OVERVIEW}    ${SERVER}/application/1
 *** Test Cases ***
 Verify the Autosave for the form text areas
     [Documentation]    INFUND-189
-    [Tags]    Applicant    Autosave    Form
+    [Tags]    Applicant    Autosave    Form     HappyPath
     [Setup]
     Given Applicant goes to the 'project summary' question of the new application
     When the Applicant enters some text
@@ -42,7 +42,7 @@ Verify the Questions guidance for the "Rovel additive..." Application form
 
 Verify the navigation in the form sections
     [Documentation]    INFUND-189
-    [Tags]    Applicant    Form
+    [Tags]    Applicant    Form     HappyPath
     Given Applicant goes to the Overview page
     When the Applicant clicks a section then the Applicant navigates to the correct section
 
@@ -64,17 +64,17 @@ Verify the "review and submit" button
 Verify that when the Applicant marks as complete the text box should be green and the state changes to edit
     [Documentation]    INFUND-210,
     ...    INFUND-202
-    [Tags]    Applicant    Mark as complete    Form
+    [Tags]    Applicant    Mark as complete    Form     HappyPath
     Given Applicant goes to the 'public description' question of the new application
     When the Applicant edits 'Public description' and marks it as complete
     Then the text box should turn to green
     And the button state should change to 'Edit'
     And the question should be marked as complete on the application overview page
 
-Verify that when the Applicant marks as incomplete the text box should be green and the state changes to edit
+Verify that when the Applicant marks as incomplete the text box is no longer green and the state changes to be editable
     [Documentation]    INFUND-210,
     ...    INFUND-202
-    [Tags]    Applicant    Mark as complete    Form
+    [Tags]    Applicant    Mark as complete    Form     HappyPath
     Given Applicant goes to the 'public description' question of the new application
     When the Applicant marks as incomplete 'Public description'
     Then the text box should be editable

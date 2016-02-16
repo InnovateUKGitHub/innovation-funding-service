@@ -19,7 +19,7 @@ ${Invalid_Company_Registration_Number}    64536
 *** Test Cases ***
 Search using valid company name
     [Documentation]    INFUND-887
-    [Tags]    Applicant    Company house
+    [Tags]    Applicant    Company house    HappyPath
     # seems to have just started failing as of 27/01. Perhaps some change to the company house stuff?
     Given the user is in "Create your account" page
     When the user enters the valid company name in the Search text field
@@ -34,7 +34,7 @@ Search using invalid company name
 
 Search using valid registration number
     [Documentation]    INFUND-887
-    [Tags]    Applicant    Company house
+    [Tags]    Applicant    Company house    HappyPath
     # seems to have just started failing as of 27/01. Perhaps some change to the company house stuff?
     Given the user is in "Create your account" page
     When the user enters the valid registration number in the Search text field

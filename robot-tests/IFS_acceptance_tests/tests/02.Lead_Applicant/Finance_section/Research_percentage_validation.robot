@@ -26,7 +26,7 @@ If research participation is too high, an error is shown on the form and also th
 
 If research participation is below the maximum level, no error is shown
     [Documentation]     INFUND-1436
-    [Tags]              Research percentage     Validation      Finances
+    [Tags]              Research percentage     Validation      Finances    HappyPath
     Given the first collaborator logs in
     When the first collaborator edits financial details to bring down the research participation level
     And the applicant logs in

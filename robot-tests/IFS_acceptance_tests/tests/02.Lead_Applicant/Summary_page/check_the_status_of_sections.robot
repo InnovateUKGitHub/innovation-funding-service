@@ -14,7 +14,7 @@ Resource          ../../../resources/keywords/Application_question_edit_actions.
 *** Test Cases ***
 Check that status is updated on the summary page after marking a section as complete
     [Documentation]    INFUND-544
-    [Tags]    Applicant    Summary    Application
+    [Tags]    Applicant    Summary    Application   HappyPath
     Given applicant goes to the 'application summary' page for application 2
     And none of the sections are marked as complete
     When applicant goes to the 'economic benefit' question for application 2

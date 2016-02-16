@@ -11,6 +11,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 Enter Valid Postcode and the results should be displayed in the dropdown
     [Documentation]    INFUND-890
+    [Tags]      HappyPath
     Given the user is in Create your account page
     When the user enters the Valid Postcode
     Then the user should see the results based on the entered Postcode in "Select your address" dropdown
@@ -27,6 +28,7 @@ Empty Postcode field
 
 Same Operating address
     [Documentation]    INFUND-890
+    [Tags]          HappyPath
     Given the user is in Create your account page
     When the user selects the checkbox "The registered test is the same as the operating address"
     Then the address fields should not be displayed on the page

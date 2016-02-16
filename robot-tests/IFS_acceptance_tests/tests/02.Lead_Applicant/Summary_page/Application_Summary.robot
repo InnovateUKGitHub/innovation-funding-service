@@ -14,7 +14,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 Verify all sections present in the summary page
     [Documentation]    -INFUND-193
     ...    -INFUND-1075
-    [Tags]    Applicant    Summary
+    [Tags]    Applicant    Summary  HappyPath
     Given the Applicant is in the Summary page
     Then all the sections should be visible
 
