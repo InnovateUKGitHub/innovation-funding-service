@@ -49,6 +49,7 @@ Verify the name of the new application
     Given the user logs-in as robot@test.com
     When the user edits the competition title
     Then the title of the new application should be visible in the overview page
+    And the progress indicator should show 0
     And the title should be visible in the Application team page
     And the new application should be visible in the dashboard page
     and the title should be visible in the application form
@@ -137,9 +138,9 @@ the user logs-in as robot@test.com
     Click Button    css=input.button
 
 the user edits the competition title
-    click link      Technology Inspired
-    sleep     2s
-    click link      Application details
+    click link    Technology Inspired
+    sleep    2s
+    click link    Application details
     Input Text    id=application_details-title    test title
     Click Element    jQuery=button:contains("Save and return")
 
@@ -149,5 +150,8 @@ the title should be visible in the Application team page
     Page Should Contain    test title
 
 the title should be visible in the application form
-    click link  test title
+    click link    test title
     Wait Until Page Contains    test title
+
+the progress indicator should show 0
+    Element Should Contain    css=.progress-indicator    0
