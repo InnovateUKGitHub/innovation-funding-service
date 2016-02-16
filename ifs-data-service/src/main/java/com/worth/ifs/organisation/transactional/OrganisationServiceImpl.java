@@ -2,7 +2,6 @@ package com.worth.ifs.organisation.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.Address;
-import com.worth.ifs.organisation.repository.AddressRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.commons.error.Errors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.handlingErrors;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.stream.Collectors.toCollection;
@@ -38,68 +36,51 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     private OrganisationTypeRepository organisationTypeRepository;
 
     @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
     private OrganisationMapper organisationMapper;
 
     @Override
     public ServiceResult<Set<Organisation>> findByApplicationId(final Long applicationId) {
 
-        return handlingErrors(() -> {
-
-            List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
-            Set<Organisation> organisations = roles.stream().map(role -> organisationRepository.findByProcessRoles(role)).collect(toCollection(LinkedHashSet::new));
-            return serviceSuccess(organisations);
-        });
+        List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
+        Set<Organisation> organisations = roles.stream().map(role -> organisationRepository.findByProcessRoles(role)).collect(toCollection(LinkedHashSet::new));
+        return serviceSuccess(organisations);
     }
 
     @Override
     public ServiceResult<Organisation> findById(final Long organisationId) {
-        return find(() -> organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
+        return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
     }
 
     @Override
     public ServiceResult<OrganisationResource> create(final Organisation organisation) {
 
-        return handlingErrors(() -> {
-
-            if (organisation.getOrganisationType() == null) {
-                organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
-            }
-            Organisation savedOrganisation = organisationRepository.save(organisation);
-            return serviceSuccess(organisationMapper.mapOrganisationToResource(savedOrganisation));
-        });
+        if (organisation.getOrganisationType() == null) {
+            organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
+        }
+        Organisation savedOrganisation = organisationRepository.save(organisation);
+        return serviceSuccess(organisationMapper.mapOrganisationToResource(savedOrganisation));
     }
 
     // TODO DW - INFUND-1555 - lot of duplication between create() and saveResource()
     @Override
     public ServiceResult<OrganisationResource> saveResource(final OrganisationResource organisationResource) {
 
-        return handlingErrors(() -> {
+        Organisation organisation = organisationMapper.resourceToOrganisation(organisationResource);
 
-            Organisation organisation = organisationMapper.resourceToOrganisation(organisationResource);
-
-            if (organisation.getOrganisationType() == null) {
-                organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
-            }
-            Organisation savedOrganisation = organisationRepository.save(organisation);
-            return serviceSuccess(organisationMapper.mapOrganisationToResource(savedOrganisation));
-        });
+        if (organisation.getOrganisationType() == null) {
+            organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
+        }
+        Organisation savedOrganisation = organisationRepository.save(organisation);
+        return serviceSuccess(organisationMapper.mapOrganisationToResource(savedOrganisation));
     }
 
     @Override
     public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressType addressType, Address address) {
 
-        return handlingErrors(() -> {
-
-            ServiceResult<Organisation> organisationSearch = find(() -> organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
-
-            return organisationSearch.andOnSuccess(organisation -> {
-                organisation.addAddress(address, addressType);
-                Organisation updatedOrganisation = organisationRepository.save(organisation);
-                return serviceSuccess(organisationMapper.mapOrganisationToResource(updatedOrganisation));
-            });
+        return find(organisation(organisationId)).andOnSuccess(organisation -> {
+            organisation.addAddress(address, addressType);
+            Organisation updatedOrganisation = organisationRepository.save(organisation);
+            return serviceSuccess(organisationMapper.mapOrganisationToResource(updatedOrganisation));
         });
     }
 

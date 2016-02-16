@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.transactional.AssessorService;
-import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.controller.ProcessRoleController;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +15,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 
 /**
  * AssessmentController is REST controller that handles requests and delegates their intent
@@ -34,34 +29,34 @@ public class AssessmentController {
 
     @RequestMapping("/findAssessmentsByCompetition/{assessorId}/{competitionId}")
     public RestResult<List<Assessment>> findAssessmentsByProcessRole(@PathVariable("assessorId") final Long assessorId, @PathVariable("competitionId") final Long competitionId) {
-        return newRestHandler().perform(() -> assessorService.getAllByCompetitionAndAssessor(competitionId, assessorId));
+        return assessorService.getAllByCompetitionAndAssessor(competitionId, assessorId).toGetResponse();
     }
 
     @RequestMapping("/findAssessmentByProcessRole/{processRoleId}")
     public RestResult<Assessment> getAssessmentByProcessRole( @PathVariable("processRoleId") final Long processRoleId) {
-        return newRestHandler().perform(() -> assessorService.getOneByProcessRole(processRoleId));
+        return assessorService.getOneByProcessRole(processRoleId).toGetResponse();
     }
 
     @RequestMapping("/totalAssignedAssessmentsByCompetition/{userId}/{competitionId}")
     public RestResult<Integer> getTotalAssignedAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
-        return newRestHandler().perform(() -> assessorService.getTotalAssignedAssessmentsByCompetition(competitionId, userId));
+        return assessorService.getTotalAssignedAssessmentsByCompetition(competitionId, userId).toGetResponse();
     }
 
     @RequestMapping("/totalSubmittedAssessmentsByCompetition/{userId}/{competitionId}")
     public RestResult<Integer> getTotalSubmittedAssessmentsByCompetition( @PathVariable("userId") final Long userId, @PathVariable("competitionId") final Long competitionId ) {
-        return newRestHandler().perform(() -> assessorService.getTotalSubmittedAssessmentsByCompetition(competitionId, userId));
+        return assessorService.getTotalSubmittedAssessmentsByCompetition(competitionId, userId).toGetResponse();
     }
 
     @RequestMapping(value = "/acceptAssessmentInvitation/{processRoleId}")
     public RestResult<Void> acceptAssessmentInvitation(@PathVariable("processRoleId") final Long processRoleId,
                                            @RequestBody Assessment assessment) {
-        return newRestHandler().perform(() -> assessorService.acceptAssessmentInvitation(processRoleId, assessment));
+        return assessorService.acceptAssessmentInvitation(processRoleId, assessment).toPutResponse();
     }
 
     @RequestMapping(value = "/rejectAssessmentInvitation/{processRoleId}")
     public RestResult<Void> rejectAssessmentInvitation(@PathVariable("processRoleId") final Long processRoleId,
                                            @RequestBody ProcessOutcome processOutcome) {
-        return newRestHandler().perform(() -> assessorService.rejectAssessmentInvitation(processRoleId, processOutcome));
+        return assessorService.rejectAssessmentInvitation(processRoleId, processOutcome).toPutResponse();
     }
 
     @RequestMapping(value = "/submitAssessments", method = RequestMethod.POST)
@@ -70,7 +65,24 @@ public class AssessmentController {
         //unpacks all the response form data fields
         ArrayNode assessmentsIds = (ArrayNode) formData.get("assessmentsToSubmit");
         Set<Long> assessments = fromArrayNodeToSet(assessmentsIds);
-        return newRestHandler().perform(() -> assessorService.submitAssessments(assessments));
+        return assessorService.submitAssessments(assessments).toPostUpdateResponse();
+    }
+
+    @RequestMapping(value = "/saveAssessmentSummary", method = RequestMethod.POST)
+    public RestResult<Void> submitAssessment(@RequestBody JsonNode formData) {
+        Long assessorId = formData.get("assessorId").asLong();
+        Long applicationId = formData.get("applicationId").asLong();
+
+        String suitableValue = formData.get("suitableValue").asText();
+        String suitableFeedback =  HtmlUtils.htmlUnescape(formData.get("suitableFeedback").asText());
+        String comments =  HtmlUtils.htmlUnescape(formData.get("comments").textValue());
+
+        return assessorService.submitAssessment(assessorId, applicationId, suitableValue, suitableFeedback, comments).toPostUpdateResponse();
+    }
+
+    @RequestMapping(value = "{assessmentId}/score")
+    public RestResult<Score> scoreForAssessment(@PathVariable("assessmentId") Long id){
+        return assessorService.getScore(id).toGetResponse();
     }
 
     private Set<Long> fromArrayNodeToSet(ArrayNode array) {
@@ -83,22 +95,5 @@ public class AssessmentController {
         }
 
         return longsSet;
-    }
-
-    @RequestMapping(value = "/saveAssessmentSummary", method = RequestMethod.POST)
-    public RestResult<Boolean> submitAssessment(@RequestBody JsonNode formData) {
-        Long assessorId = formData.get("assessorId").asLong();
-        Long applicationId = formData.get("applicationId").asLong();
-
-        String suitableValue = formData.get("suitableValue").asText();
-        String suitableFeedback =  HtmlUtils.htmlUnescape(formData.get("suitableFeedback").asText());
-        String comments =  HtmlUtils.htmlUnescape(formData.get("comments").textValue());
-
-        return newRestHandler().perform(() -> assessorService.submitAssessment(assessorId, applicationId, suitableValue, suitableFeedback, comments));
-    }
-
-    @RequestMapping(value = "{assessmentId}/score")
-    public RestResult<Void> scoreForAssessment(@PathVariable("assessmentId") Long id){
-        return newRestHandler().perform(() -> assessorService.getScore(id));
     }
 }

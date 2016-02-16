@@ -1,6 +1,7 @@
 package com.worth.ifs.invite.transactional;
 
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
@@ -143,7 +144,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<Invite> findOne(Long id) {
-        return find(() -> inviteRepository.findOne(id), notFoundError(Invite.class, id));
+        return find(inviteRepository.findOne(id), notFoundError(Invite.class, id));
     }
 
     @Override
@@ -153,12 +154,12 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             return serviceFailure(badRequestError("The Invite is not valid"));
         }
 
-        return assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccess(newInviteOrganisation -> {
+        return assembleInviteOrganisationFromResource(inviteOrganisationResource).andOnSuccessReturn(newInviteOrganisation -> {
             List<Invite> newInvites = assembleInvitesFromInviteOrganisationResource(inviteOrganisationResource, newInviteOrganisation);
             inviteOrganisationRepository.save(newInviteOrganisation);
             Iterable<Invite> savedInvites = inviteRepository.save(newInvites);
             InviteResultsResource sentInvites = sendInvites(newArrayList(savedInvites));
-            return serviceSuccess(sentInvites);
+            return sentInvites;
         });
     }
 
@@ -170,7 +171,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Override
     public ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
 
-        return findByApplicationId(applicationId).andOnSuccess(invites -> {
+        return findByApplicationId(applicationId).andOnSuccessReturn(invites -> {
             List<InviteOrganisationResource> inviteOrganisations = simpleMap(invites, invite -> {
                 InviteOrganisation inviteOrg = invite.getInviteOrganisation();
                 List<Invite> invitesTmp = inviteOrg.getInvites();
@@ -179,11 +180,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 return new InviteOrganisationResource(inviteOrg);
             });
 
-            if(!inviteOrganisations.isEmpty()){
-                return serviceSuccess(new HashSet<>(inviteOrganisations));
-            }else{
-                return serviceSuccess(new HashSet<>());
-            }
+            return new HashSet<>(inviteOrganisations);
         });
     }
 
@@ -197,11 +194,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteResource> getInviteByHash(String hash) {
-        return getByHash(hash).andOnSuccess(invite -> serviceSuccess(new InviteResource(invite)));
+        return getByHash(hash).andOnSuccessReturn(InviteResource::new);
     }
 
     private ServiceResult<Invite> getByHash(String hash) {
-        return find(() -> inviteRepository.getByHash(hash), notFoundError(Invite.class, hash));
+        return find(inviteRepository.getByHash(hash), notFoundError(Invite.class, hash));
     }
 
     private ServiceResult<List<Invite>> findByApplicationId(Long applicationId) {
@@ -211,8 +208,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     private InviteResultsResource sendInvites(List<Invite> invites) {
         List<ServiceResult<Notification>> results = inviteCollaborators(webBaseUrl, invites);
 
-        long failures = results.stream().filter(r -> r.isFailure()).count();
-        long successes = results.stream().filter(r -> r.isSuccess()).count();
+        long failures = results.stream().filter(BaseEitherBackedResult::isFailure).count();
+        long successes = results.stream().filter(BaseEitherBackedResult::isSuccess).count();
         LOG.info(String.format("Invite sending requests %s Success: %s Failures: %s", invites.size(), successes, failures));
 
         InviteResultsResource resource = new InviteResultsResource();

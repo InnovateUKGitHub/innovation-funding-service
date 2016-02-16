@@ -47,59 +47,51 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     @Override
     public ServiceResult<Pair<File, FileEntry>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
 
-        return handlingErrors(new Error(FILES_UNABLE_TO_CREATE_FILE), () ->
-
-            createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
-                try {
-                    return validateMediaType(validationFile, MediaType.parseMediaType(resource.getMediaType())).andOnSuccess(tempFile ->
-                           validateContentLength(resource.getFilesizeBytes(), tempFile)).andOnSuccess(tempFile ->
-                           saveFileEntry(resource).andOnSuccess(savedFileEntry ->
-                           createFileForFileEntry(savedFileEntry, tempFile)).andOnSuccess(
-                           ServiceResult::serviceSuccess)
-                    );
-                } finally {
-                    deleteFile(validationFile);
-                }
-            })
-        );
+        return createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
+            try {
+                return find(
+                        validateMediaType(validationFile, MediaType.parseMediaType(resource.getMediaType())),
+                        validateContentLength(resource.getFilesizeBytes(), validationFile)).
+                        andOnSuccess((mediaType, contentLength) ->
+                            saveFileEntry(resource).andOnSuccess(savedFileEntry ->
+                                    createFileForFileEntry(savedFileEntry, validationFile))
+                        );
+            } finally {
+                deleteFile(validationFile);
+            }
+        });
     }
 
     @Override
     public ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
-        return handlingErrors(notFoundError(FileEntry.class, fileEntryId), () ->
-                findFileEntry(fileEntryId).
-                        andOnSuccess(this::findFile).
-                        andOnSuccess(this::getInputStreamSuppier).
-                        andOnSuccess(ServiceResult::serviceSuccess)
-        );
+        return findFileEntry(fileEntryId).
+                andOnSuccess(this::findFile).
+                andOnSuccess(this::getInputStreamSupplier);
     }
 
     @Override
     public ServiceResult<Pair<File, FileEntry>> updateFile(FileEntryResource updatedFile, Supplier<InputStream> inputStreamSupplier) {
 
-        return handlingErrors(new Error(FILES_UNABLE_TO_UPDATE_FILE, FileEntry.class, updatedFile.getId()), () ->
+        return createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
+            try {
+                return find(
+                        validateMediaType(validationFile, MediaType.parseMediaType(updatedFile.getMediaType())),
+                        validateContentLength(updatedFile.getFilesizeBytes(), validationFile)).
+                        andOnSuccess((mediaType, contentLength) ->
 
-                createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
-                    try {
-                        return validateMediaType(validationFile, MediaType.parseMediaType(updatedFile.getMediaType())).andOnSuccess(tempFile ->
-                               validateContentLength(updatedFile.getFilesizeBytes(), tempFile)).andOnSuccess(tempFile ->
-                               updateFileEntry(updatedFile).andOnSuccess(updatedFileEntry ->
-                               updateFileForFileEntry(updatedFileEntry, tempFile).andOnSuccess(
-                               ServiceResult::serviceSuccess
-                        )));
-                    } finally {
-                        deleteFile(validationFile);
-                    }
-                })
-        );
+                    updateFileEntry(updatedFile).
+                            andOnSuccess(updatedFileEntry -> updateFileForFileEntry(updatedFileEntry, validationFile))
+                );
+            } finally {
+                deleteFile(validationFile);
+            }
+        });
     }
 
     @Override
     public ServiceResult<FileEntry> deleteFile(long fileEntryId) {
 
-        return handlingErrors(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, fileEntryId), () ->
-
-            findFileEntry(fileEntryId).
+        return findFileEntry(fileEntryId).
             andOnSuccess(fileEntry -> findFile(fileEntry).
             andOnSuccess(file -> {
 
@@ -112,7 +104,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                 } else {
                     return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, fileEntryId));
                 }
-            })));
+            }));
     }
 
     private ServiceResult<FileEntry> updateFileEntry(FileEntryResource updatedFileDetails) {
@@ -126,7 +118,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
 
-        return updateFileForFileEntry(pathElements, filename, tempFile).andOnSuccess(file -> serviceSuccess(Pair.of(file, existingFileEntry)));
+        return updateFileForFileEntry(pathElements, filename, tempFile).andOnSuccessReturn(file -> Pair.of(file, existingFileEntry));
     }
 
     private ServiceResult<File> createTemporaryFileForValidation(Supplier<InputStream> inputStreamSupplier) {
@@ -175,7 +167,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         }
     }
 
-    private ServiceResult<Supplier<InputStream>> getInputStreamSuppier(File file) {
+    private ServiceResult<Supplier<InputStream>> getInputStreamSupplier(File file) {
         return serviceSuccess(() -> {
             try {
                 return new FileInputStream(file);
@@ -191,7 +183,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         Pair<List<String>, String> absoluteFilePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
-        return createFileForFileEntry(pathElements, filename, tempFile).andOnSuccess(file -> serviceSuccess(Pair.of(file, savedFileEntry)));
+        return createFileForFileEntry(pathElements, filename, tempFile).andOnSuccessReturn(file -> Pair.of(file, savedFileEntry));
     }
 
     private ServiceResult<FileEntry> saveFileEntry(FileEntryResource resource) {
@@ -200,20 +192,21 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     private ServiceResult<FileEntry> findFileEntry(Long fileEntryId) {
-        return find(() -> fileEntryRepository.findOne(fileEntryId), notFoundError(FileEntry.class, fileEntryId));
+        return find(fileEntryRepository.findOne(fileEntryId), notFoundError(FileEntry.class, fileEntryId));
     }
 
     private ServiceResult<File> findFile(FileEntry fileEntry) {
 
-        return find(() -> {
+        Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
+        List<String> pathElements = filePathAndName.getLeft();
+        String filename = filePathAndName.getRight();
+        File expectedFile = new File(pathElementsToFile(pathElements), filename);
 
-            Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
-            List<String> pathElements = filePathAndName.getLeft();
-            String filename = filePathAndName.getRight();
-            File expectedFile = new File(pathElementsToFile(pathElements), filename);
-            return expectedFile.exists() ? expectedFile : null;
-
-        }, notFoundError(FileEntry.class, fileEntry.getId()));
+        if (expectedFile.exists()) {
+            return serviceSuccess(expectedFile);
+        } else {
+            return serviceFailure(notFoundError(FileEntry.class, fileEntry.getId()));
+        }
     }
 
     private ServiceResult<File> createFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {

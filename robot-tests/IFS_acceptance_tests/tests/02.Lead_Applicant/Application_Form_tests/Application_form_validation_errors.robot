@@ -22,7 +22,7 @@ Verify the validation error for an invalid date (Year)
     Given Applicant goes to the 'application details' question
     And the applicant inserts an invalid date "18-11-2015"
     Then the applicant should get a validation error message    Please enter a future date
-    And the Year field is empty
+    And the field is empty    id=application_details-startdate_year
     Then the applicant should get a validation error message    This field should be a number
     And the applicant inserts "2016" in the Year field(valid date)
     And the applicant should not see the validation error any more
@@ -31,43 +31,43 @@ Verify the validation error for an invalid date (day)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'application details' question
-    And the applicant inserts "32" in the day field
+    And the applicant inserts an input    id=application_details-startdate_day    32
     And the applicant should get a validation error message    Please enter a valid date
-    When the applicant inserts "0" in the day field
+    And the applicant inserts an input    id=application_details-startdate_day    0
     And the applicant should get a validation error message    Please enter a valid date
-    And the applicant inserts "-1" in the day field
+    And the applicant inserts an input    id=application_details-startdate_day    -1
     Then the applicant should get a validation error message    Please enter a valid date
-    And the day field is empty
+    And the field is empty    id=application_details-startdate_day
     Then the applicant should get a validation error message    This field should be a number
-    And the applicant inserts 01 in the day
+    And the applicant inserts an input    id=application_details-startdate_day    15
     And the applicant should not see the validation error any more
 
 Verify the validation error for an invalid date (month)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'application details' question
-    And the applicant inserts "0" in the month field
+    And the applicant inserts an input    id=application_details-startdate_month    0
     And the applicant should get a validation error message    Please enter a valid date
-    When the applicant inserts "13" in the month field
+    When the applicant inserts an input    id=application_details-startdate_month    13
     And the applicant should get a validation error message    Please enter a valid date
-    And the applicant inserts "-1" in the month field
+    And the applicant inserts an input    id=application_details-startdate_month    -1
     Then the applicant should get a validation error message    Please enter a valid date
-    And the month field is empty
+    ANd the field is empty    id=application_details-startdate_month
     And the applicant should get a validation error message    This field should be a number
-    And the applicant inserts "01" in the month field
+    And the applicant inserts an input    id=application_details-startdate_month    09
     And the applicant should not see the validation error any more
 
 Verify the validation error for the duration field
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
     Given Applicant goes to the 'application details' question
-    And the applicant inserts "0" in the duration field
+    And the applicant inserts an input    id=application_details-duration    0
     And the applicant should get a validation error message    Please enter a valid duration
-    When the applicant inserts "-1" in the duration field
+    When the applicant inserts an input    id=application_details-duration    -1
     And the applicant should get a validation error message    Please enter a valid duration
-    And the applicant leaves the duration field empty
+    And the field is empty    id=application_details-duration
     Then the applicant should get a validation error message    This field should be a number
-    And the Applicant inserts 01 in the duration field
+    And the applicant inserts an input    id=application_details-duration    15
     And the applicant should not see the validation error any more
 
 Verify the validation error when the text area is empty
@@ -78,40 +78,20 @@ Verify the validation error when the text area is empty
     Then the applicant should get a validation error message    Please enter some text
 
 *** Keywords ***
-the applicant inserts "32" in the day field
-    Clear Element Text    id=application_details-startdate_day
-    Input Text    id=application_details-startdate_day    32
+the applicant inserts an input
+    [Arguments]    ${FIELD}    ${INPUT}
+    Clear Element Text    ${FIELD}
+    Input Text    ${FIELD}    ${INPUT}
+    focus    jQuery=button:contains("Save and")
 
-the applicant inserts "0" in the day field
-    Clear Element Text    id=application_details-startdate_day
-    Input Text    id=application_details-startdate_day    0
-
-the applicant inserts "0" in the month field
-    Clear Element Text    id=application_details-startdate_month
-    Input Text    id=application_details-startdate_month    0
-
-the day field is empty
-    Clear Element Text    id=application_details-startdate_day
-
-the applicant inserts 01 in the day
-    Clear Element Text    id=application_details-startdate_day
-    Input Text    id=application_details-startdate_day    01
+the field is empty
+    [Arguments]    ${EMPTY_FIELD}
+    Clear Element Text    ${EMPTY_FIELD}
 
 the applicant should not see the validation error any more
-    sleep    1s
     Focus    css=.app-submit-btn
+    sleep    1s
     Wait Until Element Is Not Visible    css=.error-message
-
-the applicant inserts "13" in the month field
-    Clear Element Text    id=application_details-startdate_month
-    Input Text    id=application_details-startdate_month    13
-
-the month field is empty
-    Clear Element Text    id=application_details-startdate_month
-
-the applicant inserts "01" in the month field
-    Clear Element Text    id=application_details-startdate_month
-    Input Text    id=application_details-startdate_month    09
 
 the applicant inserts an invalid date "18-11-2015"
     Clear Element Text    id=application_details-startdate_day
@@ -125,17 +105,6 @@ the applicant inserts "2016" in the Year field(valid date)
     Clear Element Text    id=application_details-startdate_year
     Input Text    id=application_details-startdate_year    2016
 
-the Year field is empty
-    Clear Element Text    id=application_details-startdate_year
-
-the applicant inserts "-1" in the day field
-    Clear Element Text    id=application_details-startdate_day
-    Input Text    id=application_details-startdate_day    -1
-
-the applicant inserts "-1" in the month field
-    Clear Element Text    id=application_details-startdate_month
-    Input Text    id=application_details-startdate_month    -1
-
 the applicant clears the text area of the "Project Summary"
     #Question should be editable    css=#form-input-11 .buttonlink[name="mark_as_incomplete"]
     Clear Element Text    css=#form-input-11 .editor
@@ -144,25 +113,6 @@ the applicant clears the text area of the "Project Summary"
     Comment    Click Element    css=.fa-bold
     Sleep    2s
 
-the applicant should get a validation error
-    Focus    css=.app-submit-btn
-    Wait Until Element Is Visible    css=#form-input-11 .error-message
-the applicant inserts "0" in the duration field
-    Clear Element Text    id=application_details-duration
-    Input Text    id=application_details-duration    0
-
-the applicant inserts "-1" in the duration field
-    Clear Element Text    id=application_details-duration
-    Input Text    id=application_details-duration    -1
-
-the applicant leaves the duration field empty
-    Clear Element Text    id=application_details-duration
-
-the Applicant inserts 01 in the duration field
-    Clear Element Text    id=application_details-duration
-    Input Text    id=application_details-duration    1
-    focus    jQuery=button:contains("Save and")
-
 the applicant clears the application title field
     Clear Element Text    id=application_details-title
 
@@ -170,4 +120,4 @@ The applicant should get a validation error message
     [Arguments]    ${validation error}
     focus    jQuery=button:contains("Save and")
     Wait Until Page Contains    ${validation_error}
-    Element Should Be Visible    css=.error-message
+    #Element Should Be Visible    css=.error-message

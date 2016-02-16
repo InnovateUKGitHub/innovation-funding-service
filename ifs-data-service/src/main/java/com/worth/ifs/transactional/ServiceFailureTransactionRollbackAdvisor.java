@@ -6,10 +6,13 @@ import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import static com.worth.ifs.commons.error.Errors.forbiddenError;
 import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 
@@ -38,8 +41,12 @@ public class ServiceFailureTransactionRollbackAdvisor {
                 return result;
             }
 
+        } catch (AccessDeniedException | AuthenticationCredentialsNotFoundException e) {
+            LOG.warn(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a ServiceFailure");
+            handleFailure();
+            return serviceFailure(forbiddenError(e.getMessage()));
         } catch (Throwable e) {
-            LOG.warn("Exception caught while processing ServiceResult-returning method.  Converting to a ServiceFailure");
+            LOG.warn(e.getClass().getSimpleName() + "caught while processing ServiceResult-returning method.  Converting to a ServiceFailure");
             handleFailure();
             return serviceFailure(internalServerErrorError(e.getMessage()));
         }

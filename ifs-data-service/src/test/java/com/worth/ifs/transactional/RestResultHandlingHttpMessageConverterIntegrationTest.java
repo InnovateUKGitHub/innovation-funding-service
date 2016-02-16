@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseWebIntegrationTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.service.ApplicationRestService;
-import com.worth.ifs.commons.rest.RestErrorEnvelope;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.security.SecuritySetter;
@@ -74,8 +74,8 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
         } catch (HttpClientErrorException | HttpServerErrorException e) {
 
             assertEquals(NOT_FOUND, e.getStatusCode());
-            RestErrorEnvelope restErrorEnvelope = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorEnvelope.class);
-            assertTrue(restErrorEnvelope.is(notFoundError(Application.class, 9999L)));
+            RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
+            assertTrue(restErrorResponse.is(notFoundError(Application.class, 9999L)));
         }
     }
 
@@ -100,11 +100,5 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
         HttpHeaders headers = getJSONHeaders();
         headers.set(AUTH_TOKEN, "789ghi");
         return new HttpEntity<>(headers);
-    }
-
-    private <T> HttpEntity<T> jsonEntity(T entity){
-        HttpHeaders headers = getJSONHeaders();
-        headers.set(AUTH_TOKEN, "123abc");
-        return new HttpEntity<>(entity, headers);
     }
 }

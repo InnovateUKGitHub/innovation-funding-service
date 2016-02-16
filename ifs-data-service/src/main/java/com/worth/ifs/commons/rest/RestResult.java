@@ -135,8 +135,8 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     public static <T> RestResult<T> fromException(HttpStatusCodeException e) {
-        return fromJson(e.getResponseBodyAsString(), RestErrorEnvelope.class).mapLeftOrRight(
-                failure -> RestResult.<T>restFailure(internalServerErrorError("Unable to process JSON response as type " + RestErrorEnvelope.class.getSimpleName())),
+        return fromJson(e.getResponseBodyAsString(), RestErrorResponse.class).mapLeftOrRight(
+                failure -> RestResult.<T>restFailure(internalServerErrorError("Unable to process JSON response as type " + RestErrorResponse.class.getSimpleName())),
                 success -> RestResult.<T>restFailure(success.getErrors(), e.getStatusCode())
         );
     }

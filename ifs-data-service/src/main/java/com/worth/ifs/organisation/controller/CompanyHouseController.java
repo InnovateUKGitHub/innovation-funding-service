@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 /**
  * CompanyHouseController exposes CompanyHouse data and operations through a REST API.
  */
@@ -19,15 +17,15 @@ import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 public class CompanyHouseController {
 
     @Autowired
-    private CompanyHouseApi companyHouseService;
+    private CompanyHouseApiService companyHouseService;
 
     @RequestMapping("/searchCompanyHouse/{searchText}")
     public RestResult<List<CompanyHouseBusiness>> searchCompanyHouse(@PathVariable("searchText") final String searchText) {
-        return newRestHandler().perform(() -> companyHouseService.searchOrganisations(searchText));
+        return companyHouseService.searchOrganisations(searchText).toGetResponse();
     }
 
     @RequestMapping("/getCompanyHouse/{id}")
     public RestResult<CompanyHouseBusiness> getCompanyHouse(@PathVariable("id") final String id) {
-        return newRestHandler().perform(() -> companyHouseService.getOrganisationById(id));
+        return companyHouseService.getOrganisationById(id).toGetResponse();
     }
 }

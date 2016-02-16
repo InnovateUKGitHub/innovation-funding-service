@@ -110,10 +110,9 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     public ServiceResult<Void> updateNotification(final Long questionStatusId,
                                                   final Boolean notify) {
 
-        return find(() -> questionStatusRepository.findOne(questionStatusId), notFoundError(QuestionStatus.class, questionStatusId)).andOnSuccess(questionStatus -> {
+        return find(questionStatusRepository.findOne(questionStatusId), notFoundError(QuestionStatus.class, questionStatusId)).andOnSuccessReturnVoid(questionStatus -> {
             questionStatus.setNotified(notify);
             questionStatusRepository.save(questionStatus);
-            return serviceSuccess();
         });
     }
 
@@ -150,7 +149,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     // TODO DW - INFUND-1555 - in situation where next / prev question not found, should this be a 404?
     @Override
     public ServiceResult<Question> getPreviousQuestionBySection(final Long sectionId) {
-        return sectionService.getById(sectionId).andOnSuccess(section -> {
+        return sectionService.getById(sectionId).andOnSuccessReturn(section -> {
 
             if (section.getParentSection() != null) {
                 SectionResource previousSection = sectionService.getPreviousSection(section).getSuccessObjectOrNull();
@@ -159,10 +158,10 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                             .stream()
                             .map(questionRepository::findOne)
                             .max(comparing(Question::getPriority));
-                    return serviceSuccess(lastQuestionInSection.orElse(null));
+                    return lastQuestionInSection.orElse(null);
                 }
             }
-            return serviceSuccess(null);
+            return null;
         });
     }
 
@@ -170,7 +169,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Override
     public ServiceResult<Question> getNextQuestionBySection(final Long sectionId) {
 
-        return sectionService.getById(sectionId).andOnSuccess(section -> {
+        return sectionService.getById(sectionId).andOnSuccessReturn(section -> {
 
             if (section.getParentSection() != null) {
                 SectionResource nextSection = sectionService.getNextSection(section).getSuccessObjectOrNull();
@@ -179,10 +178,10 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                             .stream()
                             .map(questionRepository::findOne)
                             .min(comparing(Question::getPriority));
-                    return serviceSuccess(firstQuestionInSection.orElse(null));
+                    return firstQuestionInSection.orElse(null);
                 }
             }
-            return serviceSuccess(null);
+            return null;
         });
     }
 
@@ -239,7 +238,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<QuestionStatus> getQuestionStatusResourceById(Long id) {
-        return find(() -> questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id));
+        return find(questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id));
     }
 
     @Override
@@ -363,6 +362,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private ServiceResult<Question> getQuestion(Long questionId) {
-        return find(() -> questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
+        return find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
     }
 }

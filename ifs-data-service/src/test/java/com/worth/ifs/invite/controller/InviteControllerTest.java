@@ -67,7 +67,7 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
         mockMvc.perform(post("/invite/createApplicationInvites", "json")
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andDo(document("invite/createApplicationInvites"));
 
         verify(inviteService, times(1)).createApplicationInvites(inviteOrganisationResource);

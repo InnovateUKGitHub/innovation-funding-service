@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 /**
  * QuestionStatusController exposes question status data and operations through a REST API.
  * It is mainly used at present for getting question statuses for given question in given application.
@@ -26,26 +24,26 @@ public class QuestionStatusController {
 
     @RequestMapping("/findByQuestionAndApplication/{questionId}/{applicationId}")
     public RestResult<List<QuestionStatus>> getQuestionStatusByApplicationIdAndAssigneeId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId) {
-        return newRestHandler().perform(() -> questionService.getQuestionStatusByApplicationIdAndAssigneeId(questionId, applicationId));
+        return questionService.getQuestionStatusByApplicationIdAndAssigneeId(questionId, applicationId).toGetResponse();
     }
 
     @RequestMapping("/findByQuestionAndApplicationAndOrganisation/{questionId}/{applicationId}/{organisationId}")
     public RestResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId) {
-        return newRestHandler().perform(() -> questionService.getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(questionId, applicationId, organisationId));
+        return questionService.getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(questionId, applicationId, organisationId).toGetResponse();
     }
 
     @RequestMapping(value = "/findByQuestionIdsAndApplicationIdAndOrganisationId/{questionIds}/{applicationId}/{organisationId}")
     public RestResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(@PathVariable Long[] questionIds, @PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
-        return newRestHandler().perform(() -> questionService.getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId));
+        return questionService.getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).toGetResponse();
     }
 
     @RequestMapping("/findByApplicationAndOrganisation/{applicationId}/{organisationId}")
     public RestResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(@PathVariable("applicationId") Long applicationId, @PathVariable("organisationId") Long organisationId){
-        return newRestHandler().perform(() -> questionService.findByApplicationAndOrganisation(applicationId, organisationId));
+        return questionService.findByApplicationAndOrganisation(applicationId, organisationId).toGetResponse();
     }
 
     @RequestMapping("/{id}")
     public RestResult<QuestionStatus> getQuestionStatusResourceById(@PathVariable("id") Long id){
-        return newRestHandler().perform(() -> questionService.getQuestionStatusResourceById(id));
+        return questionService.getQuestionStatusResourceById(id).toGetResponse();
     }
 }

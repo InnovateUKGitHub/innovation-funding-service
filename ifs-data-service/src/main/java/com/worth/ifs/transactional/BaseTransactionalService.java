@@ -59,7 +59,7 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<Response> getResponse(Long responseId) {
-        return find(() -> responseRepository.findOne(responseId), notFoundError(Response.class, responseId));
+        return find(responseRepository.findOne(responseId), notFoundError(Response.class, responseId));
     }
 
     protected Supplier<ServiceResult<ProcessRole>> processRole(Long processRoleId) {
@@ -67,7 +67,7 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<ProcessRole> getProcessRole(Long processRoleId) {
-        return find(() -> processRoleRepository.findOne(processRoleId), notFoundError(ProcessRole.class, processRoleId));
+        return find(processRoleRepository.findOne(processRoleId), notFoundError(ProcessRole.class, processRoleId));
     }
 
     protected Supplier<ServiceResult<Application>> application(final Long id) {
@@ -75,7 +75,7 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<Application> getApplication(final Long id) {
-        return find(() -> applicationRepository.findOne(id), notFoundError(Application.class, id));
+        return find(applicationRepository.findOne(id), notFoundError(Application.class, id));
     }
 
     protected Supplier<ServiceResult<User>> user(final Long id) {
@@ -83,7 +83,7 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<User> getUser(final Long id) {
-        return find(() -> userRepository.findOne(id), notFoundError(User.class, id));
+        return find(userRepository.findOne(id), notFoundError(User.class, id));
     }
 
     protected Supplier<ServiceResult<Competition>> competition(final Long id) {
@@ -91,7 +91,7 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<Competition> getCompetition(final Long id) {
-        return find(() -> competitionRepository.findOne(id), notFoundError(Competition.class, id));
+        return find(competitionRepository.findOne(id), notFoundError(Competition.class, id));
     }
 
     protected Supplier<ServiceResult<ApplicationStatus>> applicationStatus(final Long id) {
@@ -99,7 +99,7 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<ApplicationStatus> getApplicationStatus(final Long id) {
-        return find(() -> applicationStatusRepository.findOne(id), notFoundError(ApplicationStatus.class, id));
+        return find(applicationStatusRepository.findOne(id), notFoundError(ApplicationStatus.class, id));
     }
 
     protected Supplier<ServiceResult<Role>> role(UserRoleType roleType) {
@@ -107,7 +107,7 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<Role> getRole(UserRoleType roleType) {
-        return find(() -> roleRepository.findByName(roleType.getName()), notFoundError(Role.class, roleType.getName())).
+        return find(roleRepository.findByName(roleType.getName()), notFoundError(Role.class, roleType.getName())).
                 andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
     }
 
@@ -116,6 +116,6 @@ public abstract class BaseTransactionalService  {
     }
 
     protected ServiceResult<Organisation> getOrganisation(Long id) {
-        return find(() -> organisationRepository.findOne(id), notFoundError(Organisation.class, id));
+        return find(organisationRepository.findOne(id), notFoundError(Organisation.class, id));
     }
 }

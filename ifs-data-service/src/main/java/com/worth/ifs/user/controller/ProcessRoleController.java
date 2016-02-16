@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 /**
  * This RestController exposes CRUD operations
  * to manage {@link ProcessRole} related data.
@@ -33,33 +31,33 @@ public class ProcessRoleController {
 
     @RequestMapping("/{id}")
     public RestResult<ProcessRole> findOne(@PathVariable("id") final Long id) {
-        return newRestHandler().perform(() -> usersRolesService.getProcessRoleById(id));
+        return usersRolesService.getProcessRoleById(id).toGetResponse();
     }
 
     @RequestMapping("/findByUserApplication/{userId}/{applicationId}")
     public RestResult<ProcessRole> findByUserApplication(@PathVariable("userId") final Long userId,
                                                      @PathVariable("applicationId") final Long applicationId) {
-        return newRestHandler().perform(() -> usersRolesService.getProcessRoleByUserIdAndApplicationId(userId, applicationId));
+        return usersRolesService.getProcessRoleByUserIdAndApplicationId(userId, applicationId).toGetResponse();
     }
 
     @RequestMapping("/findByApplicationId/{applicationId}")
     public RestResult<List<ProcessRole>> findByUserApplication(@PathVariable("applicationId") final Long applicationId) {
 
-        return newRestHandler().perform(() -> usersRolesService.getProcessRolesByApplicationId(applicationId));
+        return usersRolesService.getProcessRolesByApplicationId(applicationId).toGetResponse();
     }
 
     @RequestMapping("/findByUserId/{userId}")
     public RestResult<List<ProcessRole>> findByUser(@PathVariable("userId") final Long userId) {
-        return newRestHandler().perform(() -> usersRolesService.getProcessRolesByUserId(userId));
+        return usersRolesService.getProcessRolesByUserId(userId).toGetResponse();
     }
 
     @RequestMapping("/findAssignable/{applicationId}")
     public RestResult<List<ProcessRole>> findAssignable(@PathVariable("applicationId") final Long applicationId) {
-        return newRestHandler().perform(() -> usersRolesService.getAssignableProcessRolesByApplicationId(applicationId));
+        return usersRolesService.getAssignableProcessRolesByApplicationId(applicationId).toGetResponse();
     }
 
     @RequestMapping("{id}/application")
     public RestResult<ApplicationResource> findByProcessRole(@PathVariable("id") final Long id){
-        return newRestHandler().perform(() -> applicationService.findByProcessRole(id));
+        return applicationService.findByProcessRole(id).toGetResponse();
     }
 }

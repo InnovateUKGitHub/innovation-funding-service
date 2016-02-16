@@ -27,7 +27,6 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
 import static com.worth.ifs.commons.error.Errors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -41,9 +40,7 @@ import static java.util.Optional.of;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for {@link AssessorServiceImpl}
@@ -117,17 +114,6 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(notFoundError(ProcessRole.class, userId, ASSESSOR.getName(), applicationId)));
-    }
-
-    @Test
-    public void test_uncaughtExceptions_handled() {
-
-        long responseId = 1L;
-        when(responseRepositoryMock.findOne(responseId)).thenThrow(new RuntimeException());
-        ServiceResult<Feedback> serviceResult = service.updateAssessorFeedback(
-                new Feedback.Id(responseId, 2L), empty(), empty());
-        assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(internalServerErrorError()));
     }
 
     @Test
