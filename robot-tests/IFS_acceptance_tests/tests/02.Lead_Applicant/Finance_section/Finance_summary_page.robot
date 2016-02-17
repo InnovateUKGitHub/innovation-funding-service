@@ -7,7 +7,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
 Test Teardown     User closes the browser
-Force Tags        Failing   HappyPath             # these tests have been tagged as failing since the numbers no longer match up to the database - find out why!
+Force Tags        HappyPath    # these tests have been tagged as failing since the numbers no longer match up to the database - find out why!
 Default Tags      Finance    Applicant
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -104,7 +104,7 @@ the finance summary calculations should be correct
 the applicant enters a bigger funding amount
     [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
     go to    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}
-    Select Radio button    other_funding-otherPublicFunding-35-null    Yes
+    #Select Radio button    other_funding-otherPublicFunding-35-null    Yes
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    80000
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test2
     Sleep    1s
