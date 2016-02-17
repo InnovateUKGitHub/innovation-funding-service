@@ -58,7 +58,7 @@ table{
 
 		.info-area{
 			float: left;
-			width: 24%;
+			width: 19%;
 			margin-right: 10px;
 			padding: 0%;
 			max-height: 90%;
@@ -87,17 +87,19 @@ table{
 			.grid-row{
 				margin: 0;
 			}
-
+			
+			.column-half,
 			.column-quarter,
 			.column-third{
-				width: 50%;
-				//clear: both;
+				width: 100%;
+				clear: both; 
 			}
+	
 		}
 
 		.data-area{
 			float: right;
-			width: 73%;
+			width: 80%;
 
 			& > .heading-large:first-child{
 				margin-top: 0;
@@ -107,7 +109,7 @@ table{
 		.fixed .info-area{
 			position: fixed;
 			top: 0;
-			width: 23%;
+			width: 18%;
 			background: white;
 			z-index: 10;
 			box-sizing: border-box;
@@ -116,4 +118,17 @@ table{
 
 	}
 }
+
+/* @include media($min-width: 1700px){
+	.full-width{
+		.info-area{
+			.column-quarter,
+			.column-third{
+				width: 50%;
+				clear: none; 
+			}
+		}
+	}
+} */
+
 

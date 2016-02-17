@@ -106,8 +106,7 @@ Application Summary shows your feedback when appropriate
 
 Application Summary returns an error message when submitting empty feedback
     [Documentation]    INFUND-357
-    [Tags]    Assessor    Pending
-    # Tagged as Pending due to bug INFUND-1854
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     And Assessor opens an application    ${accept_application_name}
     And Assessor clicks the Review Button

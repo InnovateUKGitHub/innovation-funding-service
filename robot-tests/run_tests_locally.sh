@@ -24,8 +24,10 @@ function stopServers {
     echo "********SHUTDOWN TOMCAT********"
     cd ${webTomcatBinPath}
     ./shutdown.sh
+    wait
     cd ${dataTomcatBinPath}
     ./shutdown.sh
+    wait
     echo "********UNDEPLOYING THE APPLICATION********"
     cd ${dataWebappsPath}
     rm -rf ROOT ROOT.war
@@ -186,7 +188,7 @@ then
     startServers
 elif [ "$happyPath" ]
 then 
-    echo "using happyPath mode: this will run a pared down set of tests as a sanity check for developers pre-commit"
+    echo "using happyPath mode: this will run a pared down set of tests as a sanity check for developers pre-commit" >&2
     stopServers
     resetDB
     buildAndDeploy
