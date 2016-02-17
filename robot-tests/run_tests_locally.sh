@@ -57,7 +57,6 @@ function buildAndDeploy {
 
     cd ${webServiceCodeDir}
     ./gradlew clean deployToTomcat
-    
 
 }
 

@@ -4,7 +4,7 @@ Documentation     -INFUND-262: As a (lead) applicant, I want to see which fields
 ...               -INFUND-265: As both lead applicant and collaborator I want to see the changes other participants have made since my last visit, so I can see progress made on the application form
 ...               -INFUND-877: As a collaborator I want to be able to mark application questions that have been assigned to me as complete, so that my lead applicant is aware of my progress
 Test Teardown     User closes the browser
-Force Tags         Pending      # This test suite marked as Pending due to bug INFUND:1841
+Force Tags         Pending      # This test suite marked as Pending due to bug INFUND:1842
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
