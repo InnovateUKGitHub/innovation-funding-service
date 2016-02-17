@@ -43,7 +43,7 @@ Log into Shib
     Input Text    id=username    steve.smith@empire.com
     Input Text    id=password    test
     click element    css=button[type=submit]
-    Wait Until Element Is Visible    id=id_email
+    Sleep       5s
 
 TestTeardown User closes the browser
     Run keyword if    '${REMOTE_URL}' != ''    Report Sauce status    'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
