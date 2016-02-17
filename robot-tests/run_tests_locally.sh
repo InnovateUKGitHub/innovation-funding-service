@@ -24,8 +24,10 @@ function stopServers {
     echo "********SHUTDOWN TOMCAT********"
     cd ${webTomcatBinPath}
     ./shutdown.sh
+    wait
     cd ${dataTomcatBinPath}
     ./shutdown.sh
+    wait
     echo "********UNDEPLOYING THE APPLICATION********"
     cd ${dataWebappsPath}
     rm -rf ROOT ROOT.war
