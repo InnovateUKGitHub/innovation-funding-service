@@ -35,7 +35,7 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Assessments closed'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Funders panel'})" th:remove="tag" />
 
 	<div id="sticky-zone">
 	
@@ -110,11 +110,10 @@
 		                    <th scope="col" class="alignright">Grant request (&#163;)</th>
 		                    <th scope="col" class="alignright">Score as percentage</th>
 		                    <th scope="col" class="alignright">Percentage spread</th>
-		                    <th scope="col" class="alignright">Reviews completed</th>
-		                    <th scope="col" class="alignright">On scope</th>
 		                    <th scope="col" class="alignright">Recommended</th>
+		                    <th scope="col" class="alignright">Assessment panel score</th>
+		                    <th scope="col" class="alignright">Panel recommended</th>
 		                    <th scope="col" class="alignright" id="propose-funding">Propose funding</th>
-		                    <th scope="col" class="alignright" id="assessment-panel">Assessment panel</th>
 		                    <th scope="col" class="alignright">Funding remaining</th>
 		                </tr>
 		            </thead>
@@ -128,10 +127,9 @@
 		                    <td class="alignright">90</td>
 		                    <td class="alignright">5</td>
 		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" checked='checked' /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
@@ -144,10 +142,9 @@
 		                    <td class="alignright">88</td>
 		                    <td class="alignright">2</td>
 		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" checked='checked' /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
@@ -159,11 +156,10 @@
 		                    <td class="alignright">25000</td>
 		                    <td class="alignright">-</td>
 		                    <td class="alignright">-</td>
-		                    <td class="alignright">5</td>
 		                    <td class="alignright">-</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" checked='checked' /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
@@ -172,14 +168,13 @@
 		                    <td>Intelligent machine</td>
 		                    <td>BBC</td>
 		                    <td>Digital services</td>
-		                    <td class="alignright">50000</td>
+		                    <td class="alignright">15000</td>
 		                    <td class="alignright">-</td>
 		                    <td class="alignright">-</td>
-		                    <td class="alignright">5</td>
 		                    <td class="alignright">-</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" checked='checked' /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
@@ -188,30 +183,28 @@
 		                    <td>Progressive machines</td>
 		                    <td>Kingfisher</td>
 		                    <td>Digital services</td>
-		                    <td class="alignright">65000</td>
+		                    <td class="alignright">25000</td>
 		                    <td class="alignright">-</td>
 		                    <td class="alignright">-</td>
-		                    <td class="alignright">5</td>
 		                    <td class="alignright">-</td>
-		                    <td class="alignright">-</td>
-		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" checked='checked' /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
-		                <tr>
+		                <tr class="assessment-panel-start">
 		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5436</a></th>
 		                    <td>Example application 6</td>
 		                    <td>Kingfisher</td>
 		                    <td>Digital services</td>
 		                    <td class="alignright">35000</td>
-		                    <td class="alignright">69</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright">4</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">90</td>
+		                    <td class="alignright">Yes</td>
 		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
@@ -223,11 +216,10 @@
 		                    <td class="alignright">35000</td>
 		                    <td class="alignright">69</td>
 		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
 		                    <td class="alignright">4</td>
-		                    <td class="alignright">4</td>
+		                    <td class="alignright">89</td>
+		                    <td class="alignright">Yes</td>
 		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
@@ -237,13 +229,12 @@
 		                    <td>Kingfisher</td>
 		                    <td>Digital services</td>
 		                    <td class="alignright">35000</td>
-		                    <td class="alignright">69</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright">4</td>
+		                    <td class="alignright">66</td>
+		                    <td class="alignright">9</td>
+		                    <td class="alignright">2</td>
+		                    <td class="alignright">79</td>
+		                    <td class="alignright">Yes</td>
 		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
@@ -253,29 +244,117 @@
 		                    <td>Kingfisher</td>
 		                    <td>Digital services</td>
 		                    <td class="alignright">35000</td>
+		                    <td class="alignright">65</td>
+		                    <td class="alignright">14</td>
+		                    <td class="alignright">-</td>
 		                    <td class="alignright">69</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
-		                    <td class="alignright">4</td>
-		                    <td class="alignright">4</td>
+		                    <td class="alignright">Yes</td>
 		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                    <td class="alignright funding-remaining">&nbsp;</td>
+		                </tr>
+
+		                <tr class="assessment-panel-end">
+		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5440</a></th>
+		                    <td>Example application 10</td>
+		                    <td>Kingfisher</td>
+		                    <td>Digital services</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">44</td>
+		                    <td class="alignright">No</td>
+		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 
 		                <tr>
-		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-54310</a></th>
-		                    <td>Example application 10</td>
+		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5441</a></th>
+		                    <td>Example application 11</td>
+		                    <td>Kingfisher</td>
+		                    <td>Digital services</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="alignright funding-remaining">&nbsp;</td>
+		                </tr>
+
+		                <tr>
+		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5442</a></th>
+		                    <td>Example application 12</td>
 		                    <td>Kingfisher</td>
 		                    <td>Digital services</td>
 		                    <td class="alignright">35000</td>
 		                    <td class="alignright">69</td>
 		                    <td class="alignright">5</td>
-		                    <td class="alignright">5</td>
 		                    <td class="alignright">4</td>
-		                    <td class="alignright">4</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright">&nbsp;</td>
 		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
-		                    <td class="alignright"><input type="checkbox" class="input-panel" aria-labelledby="assessment-panel" /></td>
+		                    <td class="alignright funding-remaining">&nbsp;</td>
+		                </tr>
+
+		                <tr>
+		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5443</a></th>
+		                    <td>Example application 13</td>
+		                    <td>Kingfisher</td>
+		                    <td>Digital services</td>
+		                    <td class="alignright">35000</td>
+		                    <td class="alignright">66</td>
+		                    <td class="alignright">9</td>
+		                    <td class="alignright">2</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="alignright funding-remaining">&nbsp;</td>
+		                </tr>
+
+		                <tr>
+		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5444</a></th>
+		                    <td>Example application 14</td>
+		                    <td>Kingfisher</td>
+		                    <td>Digital services</td>
+		                    <td class="alignright">35000</td>
+		                    <td class="alignright">65</td>
+		                    <td class="alignright">14</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="alignright funding-remaining">&nbsp;</td>
+		                </tr>
+
+		                <tr>
+		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5445</a></th>
+		                    <td>Example application 15</td>
+		                    <td>Kingfisher</td>
+		                    <td>Digital services</td>
+		                    <td class="alignright">35000</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
+		                    <td class="alignright funding-remaining">&nbsp;</td>
+		                </tr>
+
+		                <tr>
+		                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5446</a></th>
+		                    <td>Example application 16</td>
+		                    <td>Kingfisher</td>
+		                    <td>Digital services</td>
+		                    <td class="alignright">35000</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">-</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright">&nbsp;</td>
+		                    <td class="alignright"><input type="checkbox" class="input-propose" aria-labelledby="propose-funding" /></td>
 		                    <td class="alignright funding-remaining">&nbsp;</td>
 		                </tr>
 		            </tbody>
@@ -313,6 +392,23 @@
 	// <![CDATA[
 
 		var totalFunding = 250000;
+
+		//First check the existing selected options and calculate remaining funding
+
+
+		jQuery('.input-propose').each(function(){
+			if (jQuery(this).prop('checked')){
+
+				var grantRequest = jQuery(this).parent().parent().find('td:eq(3)').text();
+
+				totalFunding = parseInt(totalFunding) - parseInt(grantRequest);
+
+				jQuery(this).parent().parent().find('.funding-remaining').text(totalFunding);
+				jQuery('#funding-remaining').text(totalFunding);
+
+			}
+		});
+
 
 		jQuery('.input-propose').on('click',function(e){ 
 
