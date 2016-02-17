@@ -6,7 +6,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -14,11 +13,9 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Collections.singletonList;
-import static org.springframework.http.HttpStatus.*;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a ServiceFailure, and a
@@ -69,54 +66,13 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     /**
-     * Convenience method to convert a ServiceResult into an appropriate RestResult
-     */
-    private RestResult<T> toRestResult() {
-        return toRestResult(OK);
-    }
-
-    /**
-     * Convenience method to convert a ServiceResult into an appropriate bodiless (Void) RestResult
-     */
-    private RestResult<Void> toEmptyRestResult() {
-        return toEmptyRestResult(OK);
-    }
-
-    /**
-     * Convenience method to convert a ServiceResult into an appropriate RestResult
-     */
-    private RestResult<T> toRestResult(HttpStatus statusCode) {
-        return handleSuccessOrFailure(
-                failure -> handleServiceFailure(failure),
-                success -> restSuccess(success, statusCode)
-        );
-    }
-
-    /**
-     * Convenience method to convert a ServiceResult into an appropriate RestResult
-     */
-    private RestResult<Void> toEmptyRestResult(HttpStatus statusCode) {
-        return handleSuccessOrFailure(
-                failure -> handleServiceFailure(failure),
-                success -> restSuccess(statusCode)
-        );
-    }
-
-    /**
-     * Convenience method to convert a ServiceResult into an appropriate RestResult of type "204 - No Content"
-     */
-    private RestResult<Void> toRestResultNoContent() {
-        return toEmptyRestResult(NO_CONTENT);
-    }
-
-    /**
      * Convenience method to convert a ServiceResult into an appropriate RestResult for a GET request that is requesting
      * data.
      *
      * This will be a RestResult containing the body of the ServiceResult and a "200 - OK" response.
      */
     public RestResult<T> toGetResponse() {
-        return toRestResult();
+        return handleSuccessOrFailure(failure -> toRestFailure(), RestResult::toGetResponse);
     }
 
     /**
@@ -128,7 +84,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      * This is an appropriate response for a POST that is creating data.  To update data, consider using a PUT.
      */
     public RestResult<T> toPostCreateResponse() {
-        return toRestResult(CREATED);
+        return handleSuccessOrFailure(failure -> toRestFailure(), RestResult::toPostCreateResponse);
     }
 
     /**
@@ -140,7 +96,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      * This will be a bodiless RestResult with a "200 - OK" response.
      */
     public RestResult<Void> toPostUpdateResponse() {
-        return toEmptyRestResult();
+        return handleSuccessOrFailure(failure -> toRestFailure(), success -> RestResult.toPostUpdateResponse());
     }
 
     /**
@@ -150,7 +106,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      * This will be a bodiless RestResult with a "200 - OK" response.
      */
     public RestResult<Void> toPutResponse() {
-        return toEmptyRestResult();
+        return handleSuccessOrFailure(failure -> toRestFailure(), success -> RestResult.toPutResponse());
     }
 
     /**
@@ -163,7 +119,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      * PUT responses shouldn't need to inculde bodies.
      */
     public RestResult<T> toPutWithBodyResponse() {
-        return toRestResult();
+        return handleSuccessOrFailure(failure -> toRestFailure(), RestResult::toPutWithBodyResponse);
     }
 
     /**
@@ -173,11 +129,11 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      * This will be a bodiless RestResult with a "204 - No content" response.
      */
     public RestResult<Void> toDeleteResponse() {
-        return toRestResultNoContent();
+        return handleSuccessOrFailure(failure -> toRestFailure(), success -> RestResult.toDeleteResponse());
     }
 
-    private <R> RestResult<R> handleServiceFailure(ServiceFailure failure) {
-        return restFailure(failure.getErrors());
+    private <T> RestResult<T> toRestFailure() {
+        return restFailure(getFailure().getErrors());
     }
 
     /**

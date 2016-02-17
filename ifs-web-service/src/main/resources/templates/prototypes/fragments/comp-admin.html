@@ -782,12 +782,6 @@
                         </div>
                     </td>
                 </tr>
-
-
-
-                
-
-
             </tbody>
         </table>
     </div>
@@ -1387,6 +1381,127 @@
                     </td>
                 </tr>
 
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- =========================== Assessor panel list table =========================== --> 
+<div th:fragment="prototype-assessor-panel-table">
+    <div class="table-overflow">
+        <table id="assessor-list">
+            <thead>
+                <tr>
+                    <th scope="col">Assessor</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Innovation area</th>
+                    <th scope="col">Skills</th>
+                    <th scope="col" class="alignright">Assessments completed</th>
+                    <th scope="col" class="alignright" id="attend-panel">Attend assessor panel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="filtered-result">
+                    <th scope="row">Bill Knightly</th>
+                    <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
+                    <td class="alignright">10</td>
+                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Dave Redford</th>
+                    <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
+                    <td class="alignright">10</td>
+                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                </tr>
+
+                <tr class="filtered-result">
+                    <th scope="row">Phil Newman</th>
+                    <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
+                    <td class="alignright">10</td>
+                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                </tr>
+
+                <tr class="filtered-result">
+                    <th scope="row">Pete Brown</th>
+                    <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
+                    <td class="alignright">11</td>
+                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Tim Townsend</th>
+                    <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
+                    <td class="alignright">9</td>
+                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                </tr>
+
+                <tr class="filtered-result">
+                    <th scope="row">Jamie Wilson</th>
+                    <td>Academic</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
+                    <td class="alignright">7</td>
+                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Fred Smith</th>
+                    <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
+                    <td class="alignright">6</td>
+                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                </tr>
+
+                <tr class="filtered-result">
+                    <th scope="row">Charlie Brown</th>
+                    <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
+                    <td class="alignright">5</td>
+                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Samantha Greene</th>
+                    <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
+                    <td class="alignright">4</td>
+                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Bash Malik</th>
+                    <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
+                    <td class="alignright">3</td>
+                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Bryan Griffiths</th>
+                    <td>Industry</td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
+                    <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
+                    <td class="alignright">-</td>
+                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                </tr>
+                
+                
             </tbody>
         </table>
     </div>

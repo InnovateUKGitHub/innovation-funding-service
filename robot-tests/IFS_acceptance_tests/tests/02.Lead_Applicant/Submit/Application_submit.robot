@@ -61,13 +61,6 @@ the submit button should be disabled
     go to    ${SUMMARY_PAGE_APPLICATION_7}
     Element Should Be Disabled    css=.alignright-button button
 
-Clear the Project summary field
-    Wait Until Element Is Visible    css=#form-input-11 .editor
-    Clear Element Text    css=#form-input-11 .editor
-    Press Key    css=#form-input-11 .editor    \\8
-    Focus    css=.app-submit-btn
-    Sleep    2s
-
 the applicant clicks Yes in the submit modal
     click element    link=Submit application
     click link    link=Yes, I want to submit my application

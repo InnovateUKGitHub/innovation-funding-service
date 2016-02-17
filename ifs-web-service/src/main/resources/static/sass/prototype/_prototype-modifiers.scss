@@ -33,6 +33,10 @@ table{
 	#content{
 		max-width: 95%;
 		min-width: 960px;
+
+		@include media-down(tablet){
+			min-width: 90%;
+		}
 	}
 }
 
