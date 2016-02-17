@@ -26,7 +26,7 @@ ${NEW_TEST_APPLICATION_OVERVIEW}    ${SERVER}/application/1
 *** Test Cases ***
 Verify the Autosave for the form text areas
     [Documentation]    INFUND-189
-    [Tags]    Applicant    Autosave    Form     HappyPath
+    [Tags]    Applicant    Autosave    Form    HappyPath
     [Setup]
     Given Applicant goes to the 'project summary' question of the new application
     When the Applicant enters some text
@@ -42,13 +42,13 @@ Verify the Questions guidance for the "Rovel additive..." Application form
 
 Verify the navigation in the form sections
     [Documentation]    INFUND-189
-    [Tags]    Applicant    Form     HappyPath
+    [Tags]    Applicant    Form    HappyPath
     Given Applicant goes to the Overview page
     When the Applicant clicks a section then the Applicant navigates to the correct section
 
 Verify that the word count works
     [Documentation]    INFUND-198
-    [Tags]    Applicant    Word count    Form
+    [Tags]    Applicant    Word count    Form    # HappyPath
     Given Applicant goes to the 'public description' question of the new application
     When the Applicant edits the Public description
     Then the word count should be correct for the Public description
@@ -64,7 +64,7 @@ Verify the "review and submit" button
 Verify that when the Applicant marks as complete the text box should be green and the state changes to edit
     [Documentation]    INFUND-210,
     ...    INFUND-202
-    [Tags]    Applicant    Mark as complete    Form     HappyPath
+    [Tags]    Applicant    Mark as complete    Form    HappyPath
     Given Applicant goes to the 'public description' question of the new application
     When the Applicant edits 'Public description' and marks it as complete
     Then the text box should turn to green
@@ -74,7 +74,7 @@ Verify that when the Applicant marks as complete the text box should be green an
 Verify that when the Applicant marks as incomplete the text box is no longer green and the state changes to be editable
     [Documentation]    INFUND-210,
     ...    INFUND-202
-    [Tags]    Applicant    Mark as complete    Form     HappyPath
+    [Tags]    Applicant    Mark as complete    Form    HappyPath
     Given Applicant goes to the 'public description' question of the new application
     When the Applicant marks as incomplete 'Public description'
     Then the text box should be editable
@@ -222,7 +222,6 @@ the button state should change to 'Edit'
     Page Should Contain Element    css=#form-input-12 button    Edit
 
 the word count for the Project description question should be correct (100 words)
-
     Element Should Contain    css=#form-input-12 .count-down    100
 
 the Applicant edits 'Public description' and marks it as complete

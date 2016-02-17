@@ -44,7 +44,7 @@ public class RestResultExceptionHandlingAdviceIntegrationTest extends BaseIntegr
     public void testExceptionThrowingMethodReturnsDefaultFailure() {
         RestResult<String> result = applicableController.exceptionThrowingMethod();
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(internalServerErrorError("Exception")));
+        assertTrue(result.getFailure().is(internalServerErrorError()));
     }
 
     @Test

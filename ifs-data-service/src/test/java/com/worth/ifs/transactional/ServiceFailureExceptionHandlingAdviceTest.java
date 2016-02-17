@@ -53,7 +53,7 @@ public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTe
 
         ServiceResult<String> result = testService.exceptionThrowingMethod();
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(internalServerErrorError("Exception")));
+        assertTrue(result.getFailure().is(internalServerErrorError()));
 
         assertEquals("Steve Smith", getUser().getName());
     }

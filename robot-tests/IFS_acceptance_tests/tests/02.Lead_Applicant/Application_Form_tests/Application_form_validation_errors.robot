@@ -18,7 +18,7 @@ Verify the validation error when the Project title field is empty
 
 Verify the validation error for an invalid date (Year)
     [Documentation]    -INFUND-43
-    [Tags]    Applicant    Validations
+    [Tags]    Applicant    Validations    HappyPath
     Given Applicant goes to the 'application details' question
     And the applicant inserts an invalid date "18-11-2015"
     Then the applicant should get a validation error message    Please enter a future date

@@ -13,7 +13,7 @@ Resource          ../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Log-out
-    [Tags]    Guest     HappyPath
+    [Tags]    Guest    HappyPath
     [Setup]    Login as user    &{lead_applicant_credentials}
     Given the Applicant is logged-in
     When The Applicant clicks the log-out button
@@ -28,7 +28,7 @@ Invalid Login
     Then the guest user should get an error message
 
 Valid login as Applicant
-    [Tags]    Guest     HappyPath
+    [Tags]    Guest    HappyPath
     Given the user is not logged-in
     When the guest user inserts applicant user name    ${lead_applicant_credentials["email"]}
     And the user inserts password    ${lead_applicant_credentials["password"]}
@@ -38,7 +38,7 @@ Valid login as Applicant
     [Teardown]    Logout as user
 
 Valid login as Collaborator
-    [Tags]    Guest     HappyPath
+    [Tags]    Guest    HappyPath
     Given the user is not logged-in
     When the guest user inserts applicant user name    ${collaborator1_credentials["email"]}
     And the user inserts password    ${collaborator1_credentials["password"]}
@@ -49,7 +49,7 @@ Valid login as Collaborator
 
 Valid login as Assessor
     [Documentation]    INFUND-286
-    [Tags]    Assessor    Guest     HappyPath
+    [Tags]    Assessor    Guest    HappyPath
     Given the user is not logged-in
     When the guest user inserts applicant user name    ${assessor_credentials["email"]}
     And the user inserts password    ${assessor_credentials["password"]}

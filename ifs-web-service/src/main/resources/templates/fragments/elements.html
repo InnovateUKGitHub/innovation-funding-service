@@ -64,8 +64,7 @@
 
 <!-- =========================== Element: Application Title =========================== -->
 <div th:fragment="application-title (application, competition) ">
-    <p class="subtitle" th:if="${application.getName() != ''}" th:text="${application.getName()} +' - Application number ' + ${#numbers.formatInteger(application.id,6)} "/>
-    <p class="subtitle" th:unless="${application.getName() != ''}" th:text="${competition.getName()} +' - Application number ' + ${#numbers.formatInteger(application.id,6)} "/>
+    <p class="subtitle" th:text="${application.getApplicationDisplayName()} +' - Application number ' + ${#numbers.formatInteger(application.id,6)} "/>
 </div>
 <!-- =========================== Element: Pie chart =========================== -->
 <div th:fragment="pie-small">
