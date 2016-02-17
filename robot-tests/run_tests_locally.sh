@@ -186,7 +186,7 @@ then
     startServers
 elif [ "$happyPath" ]
 then 
-    echo "using happyPath mode: this will run a pared down set of tests as a sanity check for developers pre-commit"
+    echo "using happyPath mode: this will run a pared down set of tests as a sanity check for developers pre-commit" >&2
     stopServers
     resetDB
     buildAndDeploy
