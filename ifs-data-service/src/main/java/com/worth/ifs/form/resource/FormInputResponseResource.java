@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.mapper.FormInputMapper;
 import com.worth.ifs.user.domain.ProcessRole;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
-
-import static com.worth.ifs.form.mapper.FormInputMapper.FormInputMAPPER;
 
 public class FormInputResponseResource {
     private Long id;
@@ -18,6 +18,9 @@ public class FormInputResponseResource {
     private Long formInput;
     private Long application;
     private Long fileEntry;
+
+    @Autowired
+    private FormInputMapper formInputMapper;
 
 
     public FormInputResponseResource() {
@@ -79,7 +82,7 @@ public class FormInputResponseResource {
 
     @JsonIgnore
     public Integer getWordCountLeft(){
-        return FormInputMAPPER.mapIdToFormInput(formInput).getWordCount() - this.getWordCount();
+        return formInputMapper.mapIdToDomain(formInput).getWordCount() - this.getWordCount();
     }
 
 

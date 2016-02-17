@@ -7,10 +7,7 @@ import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
-
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -20,22 +17,13 @@ import org.springframework.data.repository.CrudRepository;
         SectionMapper.class
     }
 )
-public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource> {
-
-    @Autowired
-    public void setRepository(CrudRepository<Competition, Long> repository) {
-        this.repository = repository;
-    }
+public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {
 
     public Long mapCompetitionToId(Competition object) {
         if (object == null) {
             return null;
         }
         return object.getId();
-    }
-
-    public Competition mapIdToCompetition(Long id) {
-        return repository.findOne(id);
     }
 
 }

@@ -15,6 +15,6 @@ public class ApplicationStatusServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<ApplicationStatusResource> getById(Long id) {
-        return getApplicationStatus(id).andOnSuccessReturn(mapper::mapApplicationStatusToResource);
+        return getApplicationStatus(id).andOnSuccessReturn(mapper::mapToResource);
     }
 }

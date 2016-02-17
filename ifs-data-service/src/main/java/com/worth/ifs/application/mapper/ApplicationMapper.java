@@ -11,8 +11,6 @@ import com.worth.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -24,22 +22,13 @@ import org.springframework.data.repository.CrudRepository;
         InviteMapper.class
     }
 )
-public abstract class ApplicationMapper extends BaseMapper<Application, ApplicationResource> {
-    @Autowired
-    public void setRepository(CrudRepository<Application, Long> repository) {
-        this.repository = repository;
-    }
-
+public abstract class ApplicationMapper extends BaseMapper<Application, ApplicationResource, Long> {
 
     public Long mapApplicationToId(Application object) {
         if (object == null) {
             return null;
         }
         return object.getId();
-    }
-
-    public Application mapIdToApplication(Long id) {
-        return repository.findOne(id);
     }
 
     @Mappings({

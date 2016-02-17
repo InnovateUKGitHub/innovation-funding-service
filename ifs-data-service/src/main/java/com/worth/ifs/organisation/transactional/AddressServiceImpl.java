@@ -23,6 +23,6 @@ public class AddressServiceImpl extends BaseTransactionalService implements Addr
 
     @Override
     public ServiceResult<AddressResource> findOne(Long id) {
-        return find(repository.findOne(id), notFoundError(Address.class, id)).andOnSuccessReturn(mapper::mapAddressToResource);
+        return find(repository.findOne(id), notFoundError(Address.class, id)).andOnSuccessReturn(mapper::mapToResource);
     }
 }

@@ -1,14 +1,13 @@
 package com.worth.ifs.form.mapper;
 
 import com.worth.ifs.application.mapper.ApplicationMapper;
+import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -19,14 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
         FileEntryMapper.class
     }
 )
-public abstract class FormInputResponseMapper {
-
-    @Autowired
-    private FormInputResponseRepository repository;
-
-    public abstract FormInputResponseResource mapFormInputResponseToResource(FormInputResponse object);
-
-    public abstract FormInputResponse resourceToFormInputResponse(FormInputResponseResource resource);
+public abstract class FormInputResponseMapper extends BaseMapper<FormInputResponse, FormInputResponseResource, Long> {
 
     public Long mapFormInputResponseToId(FormInputResponse object) {
         if (object == null) {
@@ -34,9 +26,4 @@ public abstract class FormInputResponseMapper {
         }
         return object.getId();
     }
-
-    public FormInputResponse mapIdToFormInputResponse(Long id) {
-        return repository.findOne(id);
-    }
-
 }

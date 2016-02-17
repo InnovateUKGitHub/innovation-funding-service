@@ -58,20 +58,20 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
             organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
         }
         Organisation savedOrganisation = organisationRepository.save(organisation);
-        return serviceSuccess(organisationMapper.mapOrganisationToResource(savedOrganisation));
+        return serviceSuccess(organisationMapper.mapToResource(savedOrganisation));
     }
 
     // TODO DW - INFUND-1555 - lot of duplication between create() and saveResource()
     @Override
     public ServiceResult<OrganisationResource> saveResource(final OrganisationResource organisationResource) {
 
-        Organisation organisation = organisationMapper.resourceToOrganisation(organisationResource);
+        Organisation organisation = organisationMapper.mapToDomain(organisationResource);
 
         if (organisation.getOrganisationType() == null) {
             organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
         }
         Organisation savedOrganisation = organisationRepository.save(organisation);
-        return serviceSuccess(organisationMapper.mapOrganisationToResource(savedOrganisation));
+        return serviceSuccess(organisationMapper.mapToResource(savedOrganisation));
     }
 
     @Override
@@ -80,7 +80,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
             organisation.addAddress(address, addressType);
             Organisation updatedOrganisation = organisationRepository.save(organisation);
-            return serviceSuccess(organisationMapper.mapOrganisationToResource(updatedOrganisation));
+            return serviceSuccess(organisationMapper.mapToResource(updatedOrganisation));
         });
     }
 

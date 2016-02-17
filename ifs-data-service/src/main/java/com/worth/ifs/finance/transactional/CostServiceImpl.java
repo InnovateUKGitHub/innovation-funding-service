@@ -73,7 +73,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Override
     public ServiceResult<List<CostFieldResource>> findAllCostFields() {
         List<CostField> allCostFields = costFieldRepository.findAll();
-        List<CostFieldResource> resources = simpleMap(allCostFields, costFieldMapper::mapCostFieldToResource);
+        List<CostFieldResource> resources = simpleMap(allCostFields, costFieldMapper::mapToResource);
         return serviceSuccess(resources);
     }
 

@@ -52,7 +52,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     @Override
     public ServiceResult<FormInputTypeResource> findFormInputType(Long id) {
         return find(formInputTypeRepository.findOne(id), notFoundError(FormInputType.class, id)).
-                andOnSuccessReturn(mapper::mapFormInputTypeToResource);
+                andOnSuccessReturn(mapper::mapToResource);
     }
 
     @Override

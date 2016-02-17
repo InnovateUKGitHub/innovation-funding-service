@@ -116,16 +116,16 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     @Test
     public void testUpdateApplicationStatus() throws Exception {
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.APPROVED.getId());
-        assertEquals(ApplicationStatusConstants.APPROVED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
+        assertEquals(ApplicationStatusConstants.APPROVED.getName(), applicationStatusMapper.mapIdToDomain(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
 
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.REJECTED.getId());
-        assertEquals(ApplicationStatusConstants.REJECTED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
+        assertEquals(ApplicationStatusConstants.REJECTED.getName(), applicationStatusMapper.mapIdToDomain(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
 
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.CREATED.getId());
-        assertEquals(ApplicationStatusConstants.CREATED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
+        assertEquals(ApplicationStatusConstants.CREATED.getName(), applicationStatusMapper.mapIdToDomain(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
 
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.SUBMITTED.getId());
-        assertEquals(ApplicationStatusConstants.SUBMITTED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
+        assertEquals(ApplicationStatusConstants.SUBMITTED.getName(), applicationStatusMapper.mapIdToDomain(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
     }
 
     @Test
