@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseWebIntegrationTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.service.ApplicationRestService;
-import com.worth.ifs.commons.rest.RestErrorEnvelope;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.security.SecuritySetter;
@@ -23,7 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.concurrent.Future;
 
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
 import static java.util.Collections.emptyList;
@@ -34,6 +34,11 @@ import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
+/**
+ * Tests for the {@link com.worth.ifs.rest.RestResultHandlingHttpMessageConverter}, to assert that it can take successful
+ * RestResults from Controllers and convert them into the "body" of the RestResult, and that it can take failing RestResults
+ * and convert them into {@link RestErrorResponse} objects.
+ */
 public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseWebIntegrationTest {
 
     @Value("${ifs.data.service.rest.baseURL}")
@@ -46,7 +51,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     public UserAuthenticationService userAuthenticationService;
 
     @Test
-    public void testSuccessRestResultHandled() {
+    public void testSuccessRestResultHandledAsTheBodyOfTheRestResult() {
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -61,7 +66,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     }
 
     @Test
-    public void testFailureRestResultHandled() throws IOException {
+    public void testFailureRestResultHandledAsARestErrorResponse() throws IOException {
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -74,8 +79,8 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
         } catch (HttpClientErrorException | HttpServerErrorException e) {
 
             assertEquals(NOT_FOUND, e.getStatusCode());
-            RestErrorEnvelope restErrorEnvelope = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorEnvelope.class);
-            assertTrue(restErrorEnvelope.is(notFoundError(Application.class, 9999L)));
+            RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
+            assertTrue(restErrorResponse.is(notFoundError(Application.class, 9999L)));
         }
     }
 
@@ -100,11 +105,5 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
         HttpHeaders headers = getJSONHeaders();
         headers.set(AUTH_TOKEN, "789ghi");
         return new HttpEntity<>(headers);
-    }
-
-    private <T> HttpEntity<T> jsonEntity(T entity){
-        HttpHeaders headers = getJSONHeaders();
-        headers.set(AUTH_TOKEN, "123abc");
-        return new HttpEntity<>(entity, headers);
     }
 }

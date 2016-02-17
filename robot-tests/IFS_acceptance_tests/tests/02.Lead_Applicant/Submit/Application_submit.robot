@@ -31,7 +31,7 @@ Submit button disabled when the application is incomplete
     and the applicant redirects to the summary page
     and the applicant marks the first question as incomplete
     Then the submit button should be disabled
-    [Teardown]    And the applicant marks the first question as complete
+    [Teardown]    The applicant marks the first question as complete
 
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
@@ -60,13 +60,6 @@ Submit flow (complete application)
 the submit button should be disabled
     go to    ${SUMMARY_PAGE_APPLICATION_7}
     Element Should Be Disabled    css=.alignright-button button
-
-Clear the Project summary field
-    Wait Until Element Is Visible    css=#form-input-11 .editor
-    Clear Element Text    css=#form-input-11 .editor
-    Press Key    css=#form-input-11 .editor    \\8
-    Focus    css=.app-submit-btn
-    Sleep    2s
 
 the applicant clicks Yes in the submit modal
     click element    link=Submit application

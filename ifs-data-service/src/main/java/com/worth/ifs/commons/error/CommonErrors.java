@@ -3,9 +3,7 @@ package com.worth.ifs.commons.error;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_INCORRECT_TYPE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
-import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static java.util.Arrays.asList;
 import static org.springframework.http.HttpStatus.*;
@@ -15,7 +13,7 @@ import static org.springframework.http.HttpStatus.*;
  * in the way we construct, for instance, Errors that pertain to not being able to find an entity by a set of credentials
  * (e.g. its primary key)
  */
-public class Errors {
+public class CommonErrors {
 
     public static Error notFoundError(Class<?> entityClazz, List<Object> arguments) {
         List<Object> allArguments = new ArrayList<>();
@@ -53,7 +51,7 @@ public class Errors {
     }
 
     public static Error forbiddenError(String message) {
-        return new Error(GENERAL_UNEXPECTED_ERROR, message);
+        return new Error(GENERAL_FORBIDDEN, message, FORBIDDEN);
     }
 
     public static Error incorrectTypeError(Class<?> clazz, List<Object> arguments) {

@@ -31,8 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.Errors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.handlingErrors;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -68,7 +67,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<CostField> getCostFieldById(Long id) {
-        return find(() -> costFieldRepository.findOne(id), notFoundError(CostField.class, id));
+        return find(costFieldRepository.findOne(id), notFoundError(CostField.class, id));
     }
 
     @Override
@@ -96,11 +95,11 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<Void> updateCost(final Long id, final CostItem newCostItem) {
-        return doUpdate(id, newCostItem).andOnSuccess(success -> serviceSuccess());
+        return doUpdate(id, newCostItem).andOnSuccessReturnVoid();
     }
 
     private ServiceResult<Cost> doUpdate(Long id, CostItem newCostItem) {
-        return find(() -> costRepository.findOne(id), notFoundError(Cost.class, id)).andOnSuccess(existingCost -> {
+        return find(costRepository.findOne(id), notFoundError(Cost.class, id)).andOnSuccessReturn(existingCost -> {
 
             Cost newCost = organisationFinanceHandler.costItemToCost(newCostItem);
             Cost updatedCost = mapCost(existingCost, newCost);
@@ -112,7 +111,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
                     .filter(c -> !c.getValue().equals("null"))
                     .forEach(costValue -> updateCostValue(costValue, savedCost));
 
-            return serviceSuccess(updatedCost);
+            return updatedCost;
         });
     }
 
@@ -123,16 +122,15 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<Cost> findCostById(final Long id) {
-        return find(() -> costRepository.findOne(id), notFoundError(Cost.class, id));
+        return find(costRepository.findOne(id), notFoundError(Cost.class, id));
     }
 
     @Override
     public ServiceResult<Void> deleteCost(final Long costId) {
-        return handlingErrors(() -> {
-            costValueRepository.deleteByCostId(costId);
-            costRepository.delete(costId);
-            return serviceSuccess();
-        });
+
+        costValueRepository.deleteByCostId(costId);
+        costRepository.delete(costId);
+        return serviceSuccess();
     }
 
     @Override
@@ -144,19 +142,19 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Override
     public ServiceResult<List<ApplicationFinanceResource>> findApplicationFinanceByApplication(Long applicationId) {
 
-        return find(applicationFinanceRepository.findByApplicationId(applicationId), notFoundError(ApplicationFinance.class, applicationId)).andOnSuccess(applicationFinances -> {
+        return find(applicationFinanceRepository.findByApplicationId(applicationId), notFoundError(ApplicationFinance.class, applicationId)).andOnSuccessReturn(applicationFinances -> {
 
             List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();
             if (applicationFinances != null) {
                 applicationFinances.stream().forEach(af -> applicationFinanceResources.add(new ApplicationFinanceResource(af)));
             }
-            return serviceSuccess(applicationFinanceResources);
+            return applicationFinanceResources;
         });
     }
 
     @Override
     public ServiceResult<Double> getResearchParticipationPercentage(Long applicationId) {
-        return getResearchPercentage(applicationId).andOnSuccess(percentage -> serviceSuccess(percentage.doubleValue()));
+        return getResearchPercentage(applicationId).andOnSuccessReturn(BigDecimal::doubleValue);
     }
 
     private ServiceResult<BigDecimal> getResearchPercentage(Long applicationId) {

@@ -5,19 +5,17 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 
 /**
- *
+ * A test Service for tests in {@link ServiceFailureExceptionHandlingAdviceTest}
  */
 @Service
-@Transactional
-public class ServiceFailureTransactionRollbackAdvisorTestServiceImpl implements ServiceFailureTransactionRollbackAdvisorTestService {
+public class ServiceFailureExceptionHandlingAdviceTestServiceImpl extends BaseTransactionalService implements ServiceFailureExceptionHandlingAdviceTestService {
 
     @Autowired
     public UserRepository userRepository;
@@ -30,6 +28,16 @@ public class ServiceFailureTransactionRollbackAdvisorTestServiceImpl implements 
         userRepository.save(user);
 
         return serviceSuccess("Successful");
+    }
+
+    @Override
+    public ServiceResult<String> restoreSuccessfulMethod() {
+
+        User user = getUser();
+        user.setName("Steve Smith");
+        userRepository.save(user);
+
+        return serviceSuccess("Successful restore");
     }
 
     @Override
@@ -50,6 +58,11 @@ public class ServiceFailureTransactionRollbackAdvisorTestServiceImpl implements 
         userRepository.save(user);
 
         throw new RuntimeException("Exception");
+    }
+
+    @Override
+    public ServiceResult<String> accessDeniedMethod() {
+        return null;
     }
 
     private User getUser() {

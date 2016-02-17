@@ -3,6 +3,7 @@ package com.worth.ifs.finance.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.transactional.CostService;
@@ -13,9 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -36,28 +34,28 @@ public class ApplicationFinanceController {
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
 
-        return newRestHandler().perform(() -> costService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId));
+        return costService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId).toGetResponse();
     }
 
     @RequestMapping("/findByApplication/{applicationId}")
     public RestResult<List<ApplicationFinanceResource>> findByApplication(
             @PathVariable("applicationId") final Long applicationId) {
 
-        return newRestHandler().perform(() -> costService.findApplicationFinanceByApplication(applicationId));
+        return costService.findApplicationFinanceByApplication(applicationId).toGetResponse();
     }
 
     // TODO DW - INFUND-1555 - remove ObjectNode usage
     @RequestMapping("/getResearchParticipationPercentage/{applicationId}")
     public RestResult<ObjectNode> getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
 
-        return newRestHandler().perform(() ->
-            costService.getResearchParticipationPercentage(applicationId).andOnSuccess(percentage -> {
-                ObjectMapper mapper = new ObjectMapper();
-                ObjectNode node = mapper.createObjectNode();
-                node.put(RESEARCH_PARTICIPATION_PERCENTAGE, percentage);
-                return serviceSuccess(node);
-            })
-        );
+        ServiceResult<ObjectNode> result = costService.getResearchParticipationPercentage(applicationId).andOnSuccessReturn(percentage -> {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put(RESEARCH_PARTICIPATION_PERCENTAGE, percentage);
+            return node;
+        });
+
+        return result.toGetResponse();
     }
 
     @RequestMapping("/add/{applicationId}/{organisationId}")
@@ -65,26 +63,26 @@ public class ApplicationFinanceController {
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
 
-        return newRestHandler().perform(() -> costService.addCost(applicationId, organisationId));
+        return costService.addCost(applicationId, organisationId).toPostCreateResponse();
     }
 
     @RequestMapping("/getById/{applicationFinanceId}")
     public RestResult<ApplicationFinanceResource> findOne(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
-        return newRestHandler().perform(() -> costService.getApplicationFinanceById(applicationFinanceId));
+        return costService.getApplicationFinanceById(applicationFinanceId).toGetResponse();
     }
 
     @RequestMapping("/update/{applicationFinanceId}")
     public RestResult<ApplicationFinanceResource> update(@PathVariable("applicationFinanceId") final Long applicationFinanceId, @RequestBody final ApplicationFinanceResource applicationFinance) {
-        return newRestHandler().perform(() -> costService.updateCost(applicationFinanceId, applicationFinance));
+        return costService.updateCost(applicationFinanceId, applicationFinance).toPutWithBodyResponse();
     }
 
     @RequestMapping("/financeDetails/{applicationId}/{organisationId}")
     public RestResult<ApplicationFinanceResource> financeDetails(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
-        return newRestHandler().perform(() -> costService.financeDetails(applicationId, organisationId));
+        return costService.financeDetails(applicationId, organisationId).toGetResponse();
     }
 
     @RequestMapping("/financeTotals/{applicationId}")
     public RestResult<List<ApplicationFinanceResource>> financeTotals(@PathVariable("applicationId") final Long applicationId) {
-        return newRestHandler().perform(() -> costService.financeTotals(applicationId));
+        return costService.financeTotals(applicationId).toGetResponse();
     }
 }

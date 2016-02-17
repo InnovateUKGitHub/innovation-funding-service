@@ -24,8 +24,10 @@ function stopServers {
     echo "********SHUTDOWN TOMCAT********"
     cd ${webTomcatBinPath}
     ./shutdown.sh
+    wait
     cd ${dataTomcatBinPath}
     ./shutdown.sh
+    wait
     echo "********UNDEPLOYING THE APPLICATION********"
     cd ${dataWebappsPath}
     rm -rf ROOT ROOT.war
@@ -87,10 +89,11 @@ function runTests {
     pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase --exclude Failing --exclude Pending --name IFS $testDirectory
 }
 
-testDirectory='IFS_acceptance_tests/tests/*'
-if [ -n "$1" ]; then
- testDirectory="$1"
-fi
+function runHappyPathTests {
+    echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
+    cd ${scriptDir}
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase --include HappyPath --exclude Failing --exclude Pending --name IFS $testDirectory
+}
 
 cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
@@ -136,16 +139,19 @@ echo "webBase:           ${webBase}"
 unset opt
 unset quickTest
 unset testScrub
-
+unset happyPath
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :d:" opt ; do
+while getopts ":q :t :h :d:" opt ; do
     case $opt in
         q)
          quickTest=1
         ;;
 	t)
 	 testScrub=1
+	;;
+	h)
+	 happyPath=1
 	;;
         d)
          testDirectory="$OPTARG"
@@ -180,6 +186,14 @@ then
     resetDB
     buildAndDeploy
     startServers
+elif [ "$happyPath" ]
+then 
+    echo "using happyPath mode: this will run a pared down set of tests as a sanity check for developers pre-commit" >&2
+    stopServers
+    resetDB
+    buildAndDeploy
+    startServers
+    runHappyPathTests
 else
     echo "using quickTest:   FALSE" >&2
     stopServers

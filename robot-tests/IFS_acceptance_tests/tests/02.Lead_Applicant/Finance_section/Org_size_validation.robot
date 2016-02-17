@@ -22,7 +22,7 @@ Small organisation can't choose over 70% funding
 
 Small organisation can choose up to 70% funding
     [Documentation]    INFUND-1100
-    [Tags]    Organisation    Funding    Finance
+    [Tags]    Organisation    Funding    Finance    HappyPath
     When the applicant enters organisation size details    ${small_org_option}    68
     Then the 'your finances' section can be successfully saved    ${small_org_option}    68
 

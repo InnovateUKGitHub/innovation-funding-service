@@ -10,17 +10,26 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 
 /**
+ * This Advice targets public Service methods that return ServiceResults and ensure that the calling code will receive a ServiceResult.
  *
+ * It also ensures that any Transaction in progress will be rolled back if a failing ServiceResult or an Exception is encountered.
+ *
+ * In effect, if the called method throws an Exception, this'll be transformed into an "Internal Server Error" ServiceResult, and if
+ * it returns null, it'll convert it into an "Internal Server Error" ServiceResult.
+ *
+ * Transactions will be rolled back for null results, failing ServiceResults, or exceptions being thrown.
+ *
+ * This Aspect is attached between the TransactionManager and the code being called.
  */
 @Aspect
 @Component
-public class ServiceFailureTransactionRollbackAdvisor {
+public class ServiceFailureExceptionHandlingAdvice {
 
-    private static final Log LOG = LogFactory.getLog(ServiceFailureTransactionRollbackAdvisor.class);
+    private static final Log LOG = LogFactory.getLog(ServiceFailureExceptionHandlingAdvice.class);
 
     @Around("@target(org.springframework.stereotype.Service) && execution(public com.worth.ifs.commons.service.ServiceResult *.*(..))")
     public Object handleReturnedServiceResults(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -39,7 +48,7 @@ public class ServiceFailureTransactionRollbackAdvisor {
             }
 
         } catch (Throwable e) {
-            LOG.warn("Exception caught while processing ServiceResult-returning method.  Converting to a ServiceFailure");
+            LOG.warn(e.getClass().getSimpleName() + "caught while processing ServiceResult-returning method.  Converting to a ServiceFailure");
             handleFailure();
             return serviceFailure(internalServerErrorError(e.getMessage()));
         }

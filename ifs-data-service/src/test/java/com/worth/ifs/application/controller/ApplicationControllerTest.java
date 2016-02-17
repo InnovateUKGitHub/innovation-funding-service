@@ -116,7 +116,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         mockMvc.perform(post("/application/createApplicationByName/" + competitionId + "/" + userId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(applicationNameNode)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", notNullValue()))
                 .andDo(document("application/create-application"));
     }

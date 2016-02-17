@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 @RestController
 @RequestMapping("/assessorfeedback")
 public class AssessorFeedbackController {
@@ -20,6 +18,6 @@ public class AssessorFeedbackController {
 
     @RequestMapping("/{id}")
     public RestResult<AssessorFeedbackResource> findById(@PathVariable("id") final Long id) {
-        return newRestHandler().perform(() -> service.findOne(id));
+        return service.findOne(id).toGetResponse();
     }
 }

@@ -27,7 +27,7 @@ ${APPLICATION_TEAM_PAGE}    ${SERVER}/application/1/contributors
 *** Test Cases ***
 Valid invitation submit
     [Documentation]    INFUND-901
-    [Tags]
+    [Tags]  HappyPath
     Given the applicant is in the invite contributors page
     When the applicant enters valid inputs
     Then the applicant should be redirected to the overview page
@@ -35,6 +35,7 @@ Valid invitation submit
 
 Lead applicant can access the Application team page(Link in the overview page)
     [Documentation]    INFUND-928
+    [Tags]      HappyPath
     Given Applicant goes to the Overview page
     When Lead Applicant clicks link "View team members and add collaborators"
     Then Lead Applicant should be redirected to the Application team page
@@ -42,17 +43,20 @@ Lead applicant can access the Application team page(Link in the overview page)
 
 Status of the invited people(Application team page)
     [Documentation]    INFUND-929
+    [Tags]      HappyPath
     Given the applicant goes to the application 1 team page
     Then The status of the Invited people should be correct in the application team page
 
 Status of the invited people(Manage contributors page)
     [Documentation]    Infund-928
+    [Tags]      HappyPath
     Given Application goes to the Application Team page
     And Applicant clicks on "Invite new contributors"
     Then the status of the people should be correct in the Manage contributors page
 
 The Lead Applicant can add new collaborators
     [Documentation]    INFUND-928
+    [Tags]      HappyPath
     Given Application goes to the Application Team page
     And Applicant clicks on "Invite new contributors"
     And the applicant clicks the add person link

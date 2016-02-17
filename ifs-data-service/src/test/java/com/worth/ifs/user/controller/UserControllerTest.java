@@ -115,7 +115,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/" + organisationId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(applicationJsonString))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstName", notNullValue()))
                 .andExpect(jsonPath("$.lastName", notNullValue()))
                 .andExpect(jsonPath("$.phoneNumber", notNullValue()))

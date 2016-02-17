@@ -12,7 +12,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Test Cases ***
 Auto-save test for the "Grant" field
-    [Tags]    Applicant    Autosave    Finance
+    [Tags]    Applicant    Autosave    Finance    HappyPath
     Given Applicant goes to the Your finances section
     Then auto-save should work for the "Grant" field
     And the grant value should be correct in the finance summary page
@@ -37,11 +37,3 @@ auto-save should work for the "Grant" field
     focus    jQuery= button:contains('Mark as complete')
     ${input_value} =    Get Value    id=cost-financegrantclaim
     Should Be Equal As Strings    ${input_value}    25
-
-the Applicant edits the "The Gross Annual Salary"
-    Wait Until Page Contains Element    css=#labour-costs-table tbody td:nth-of-type(2) input
-    Clear Element Text    css=#cost-labour-1-workingDays
-    Input Text    css=#cost-labour-1-workingDays    256
-    Input Text    css=#labour-costs-table tbody td:nth-of-type(2) input    2000
-    Input Text    css=#labour-costs-table tbody td:nth-of-type(4) input    150
-    Focus    css=#content > div.grid-row > div.column-two-thirds > form > div.alignright-button > a

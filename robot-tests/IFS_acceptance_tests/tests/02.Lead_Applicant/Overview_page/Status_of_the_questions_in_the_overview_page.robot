@@ -13,7 +13,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 Status changes when we assign a question to the collaborator
     [Documentation]    INFUND-39
-    [Tags]    Applicant    Overview
+    [Tags]    Applicant    Overview     HappyPath
     Given Applicant goes to the 'project summary' question
     When the Applicant edits the "Project summary" question
     And the applicant assigns the "Project Summary" question to Jessica Doe    Jessica Doe
@@ -51,7 +51,9 @@ the applicant assigns the "Project summary" question to "Steve Smith"
     Click Element    xpath=//*[@id="collapsible-1"]//button[contains(text(),"${assignee_name}")]
 
 the applicant should see a blue flag in the Public description (overview page)
+    Reload Page
     Wait Until Page Contains Element    css=#form-input-11 .assigned
+
 
 the blue flag should not be visible
     Element Should Not Be Visible    css=#form-input-11 .assigned

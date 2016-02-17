@@ -8,8 +8,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -17,10 +17,10 @@ import static org.junit.Assert.assertTrue;
 /**
  *
  */
-public class ServiceFailureTransactionRollbackAdvisorTest extends BaseIntegrationTest {
+public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTest {
 
     @Autowired
-    private ServiceFailureTransactionRollbackAdvisorTestService testService;
+    private ServiceFailureExceptionHandlingAdviceTestService testService;
 
     @Autowired
     private UserRepository userRepository;
@@ -28,8 +28,12 @@ public class ServiceFailureTransactionRollbackAdvisorTest extends BaseIntegratio
     @Test
     @Rollback
     public void testSuccessfulMethodUpdatesDatabaseSuccessfully() {
+
         testService.successfulMethod();
         assertEquals("Successful", getUser().getName());
+
+        testService.restoreSuccessfulMethod();
+        assertEquals("Steve Smith", getUser().getName());
     }
 
     @Test

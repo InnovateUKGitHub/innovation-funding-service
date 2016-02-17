@@ -11,28 +11,28 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 Project summary section accepts Bold text format
     [Documentation]    INFUND-187
-    [Tags]    Applicant    Form    WYSIWYG
+    [Tags]    Applicant    Form    WYSIWYG    HappyPath
     Given Applicant goes to the 'business opportunity' question
     When the Applicant clicks on the Bold button in the "business opportunity" field
     Then all text entered should be Bold and stay the same after page refresh
 
 Project summary section accepts Italic text format
     [Documentation]    INFUND-187
-    [Tags]    Applicant    Form    WYSIWYG
+    [Tags]    Applicant    Form    WYSIWYG    HappyPath
     Given Applicant goes to the 'business opportunity' question
     When the Applicant clicks on the Italic button in the "business opportunity" field
     Then all text entered should be Italic and stay the same after page refresh
 
 Project summary section accepts Numbering bullet format
     [Documentation]    INFUND-187
-    [Tags]    Applicant    Form    WYSIWYG
+    [Tags]    Applicant    Form    WYSIWYG    HappyPath
     Given Applicant goes to the 'business opportunity' question
     When the Applicant clicks on the Numbering bullet button in the "business opportunity" field
     Then all text entered should be in Numbering bullets and stay the same after page refresh
 
 Project summary section accepts Bullet format
     [Documentation]    INFUND-187
-    [Tags]    Applicant    Form    WYSIWYG
+    [Tags]    Applicant    Form    WYSIWYG    HappyPath
     Given Applicant goes to the 'business opportunity' question
     When the Applicant clicks on the Bullet format button in the "business opportunity" field
     Then all text entered should be in Bullet format and stay the same after page refresh
@@ -89,6 +89,3 @@ all text entered should be in Bullet format and stay the same after page refresh
     Focus    css=.app-submit-btn
     Sleep    1s
     Wait Until Page Contains Element    css=#form-input-1 .editor li
-
-the applicant is in the Application details section
-    go to    ${APPLICATION_URL}

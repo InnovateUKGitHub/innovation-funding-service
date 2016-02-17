@@ -1,7 +1,7 @@
 package com.worth.ifs.rest;
 
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.rest.RestErrorEnvelope;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -19,7 +19,7 @@ import java.util.List;
  * before passing them down to the default MappingJackson2HttpMessageConverter for converting to JSON, unpacks them, determines
  * whether or not they represent a success or a failure case, applies the success or failure HTTP status code, and, in the case of
  * a success, allows the "success resource" to be converted to JSON and, in the event of a failure case coverts the failure to
- * a standard RestErrorEnvelope.
+ * a standard RestErrorResponse.
  *
  * In this way, we have a consistent error-handling mechanism over REST for Controller methods that are returning RestResults.
  */
@@ -45,7 +45,7 @@ public class RestResultHandlingHttpMessageConverter extends MappingJackson2HttpM
 
         if (restResult.isFailure()) {
             List<Error> errors = restResult.getFailure().getErrors();
-            super.writeInternal(new RestErrorEnvelope(errors), type, outputMessage);
+            super.writeInternal(new RestErrorResponse(errors), type, outputMessage);
         } else {
 
             if (restResult.getSuccessObject() != null) {

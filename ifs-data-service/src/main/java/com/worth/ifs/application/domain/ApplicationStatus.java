@@ -47,9 +47,6 @@ public class ApplicationStatus {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-            .append("id", id)
-            .append("name", name)
-            .toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 }

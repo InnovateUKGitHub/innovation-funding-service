@@ -18,7 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static java.util.Optional.ofNullable;
 
@@ -29,9 +29,9 @@ import static java.util.Optional.ofNullable;
  * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Company House API site</a>
  */
 @Service
-public class CompanyHouseApi extends BaseRestService {
+public class CompanyHouseApiServiceImpl extends BaseRestService implements CompanyHouseApiService {
 
-    private static final Log LOG = LogFactory.getLog(CompanyHouseApi.class);
+    private static final Log LOG = LogFactory.getLog(CompanyHouseApiServiceImpl.class);
 
     @Value("${ifs.data.company-house.url}")
     private final String COMPANY_HOUSE_API = null;
@@ -48,7 +48,7 @@ public class CompanyHouseApi extends BaseRestService {
 
     public ServiceResult<List<CompanyHouseBusiness>> searchOrganisations(String encodedSearchText) {
 
-        return handlingErrors(() -> decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
+        return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
 
             // encoded in the web-services.
             JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + decodedSearchText, JsonNode.class, getHeaders());
@@ -56,18 +56,15 @@ public class CompanyHouseApi extends BaseRestService {
             List<CompanyHouseBusiness> results = new ArrayList<>();
             companyItems.forEach(i -> results.add(companySearchMapper(i)));
             return serviceSuccess(results);
-        }));
+        });
     }
 
     public ServiceResult<CompanyHouseBusiness> getOrganisationById(String id) {
         LOG.debug("getOrganisationById " + id);
 
-        return handlingErrors(() -> {
-
-            return ofNullable(restGet("company/" + id, JsonNode.class, getHeaders())).
-                    map(jsonNode -> serviceSuccess(companyProfileMapper(jsonNode))).
-                    orElse(serviceFailure(internalServerErrorError("No response from Companies House")));
-        });
+        return ofNullable(restGet("company/" + id, JsonNode.class, getHeaders())).
+            map(jsonNode -> serviceSuccess(companyProfileMapper(jsonNode))).
+            orElse(serviceFailure(internalServerErrorError("No response from Companies House")));
     }
 
     private HttpHeaders getHeaders() {

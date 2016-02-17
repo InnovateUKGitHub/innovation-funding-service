@@ -115,16 +115,4 @@ public class NotificationServiceImplTest extends BaseServiceUnitTest<Notificatio
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
     }
-
-    @Test
-    public void testSendNotificationByEmailButSenderThrowsException() {
-
-        Notification notificationToSend = newNotification().build();
-
-        when(mockEmailNotificationSender.sendNotification(notificationToSend)).thenThrow(new IllegalArgumentException("No sending!"));
-
-        ServiceResult<Notification> result = service.sendNotification(notificationToSend, EMAIL);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
-    }
 }

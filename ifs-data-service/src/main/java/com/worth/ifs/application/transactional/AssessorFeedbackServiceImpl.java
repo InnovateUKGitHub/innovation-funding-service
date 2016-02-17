@@ -5,14 +5,15 @@ import com.worth.ifs.application.mapper.AssessorFeedbackMapper;
 import com.worth.ifs.application.repository.AssessorFeedbackRepository;
 import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class AssessorFeedbackServiceImpl implements AssessorFeedbackService {
+public class AssessorFeedbackServiceImpl extends BaseTransactionalService implements AssessorFeedbackService {
 
     @Autowired
     private AssessorFeedbackRepository repository;

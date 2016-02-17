@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.stream.Collectors.toSet;
@@ -48,14 +48,14 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<User> getUserByToken(final String token) {
-        return find(() -> repository.findByToken(token), notFoundError(User.class, token)).
+        return find(repository.findByToken(token), notFoundError(User.class, token)).
                 andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
     }
 
     @Override
     public ServiceResult<User> getUserByEmailandPassword(final String email, final String password) {
 
-        return find(() -> repository.findByEmail(email), notFoundError(User.class, email)).
+        return find(repository.findByEmail(email), notFoundError(User.class, email)).
                 andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail).
                 andOnSuccess(user -> user.passwordEquals(password) ? serviceSuccess(user) : serviceFailure(notFoundError(User.class)));
     }
@@ -67,7 +67,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<List<User>> getUserByName(final String name) {
-        return find(() -> repository.findByName(name), notFoundError(User.class, name));
+        return find(repository.findByName(name), notFoundError(User.class, name));
     }
 
     @Override
@@ -108,19 +108,16 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     @Override
     public ServiceResult<UserResource> createUser(final Long organisationId, UserResource userResource) {
 
-        return handlingErrors(() -> {
+        User newUser = assembleUserFromResource(userResource);
+        addOrganisationToUser(newUser, organisationId);
+        addRoleToUser(newUser, UserRoleType.APPLICANT.getName());
 
-            User newUser = assembleUserFromResource(userResource);
-            addOrganisationToUser(newUser, organisationId);
-            addRoleToUser(newUser, UserRoleType.APPLICANT.getName());
-
-            if (repository.findByEmail(userResource.getEmail()).isEmpty()) {
-                UserResource createdUserResource = createUserWithToken(newUser);
-                return serviceSuccess(createdUserResource);
-            } else {
-                return serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, userResource.getEmail()));
-            }
-        });
+        if (repository.findByEmail(userResource.getEmail()).isEmpty()) {
+            UserResource createdUserResource = createUserWithToken(newUser);
+            return serviceSuccess(createdUserResource);
+        } else {
+            return serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, userResource.getEmail()));
+        }
     }
 
     public ServiceResult<UserResource> updateUser(UserResource userResource) {
