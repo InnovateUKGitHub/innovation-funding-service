@@ -8,6 +8,8 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -19,6 +21,11 @@ import org.mapstruct.Mapper;
     }
 )
 public abstract class FormInputResponseMapper extends BaseMapper<FormInputResponse, FormInputResponseResource, Long> {
+
+    @Mappings({
+            @Mapping(source = "formInput.wordCount", target = "formInputMaxWordCount")
+    })
+    public abstract FormInputResponseResource mapToResource(FormInputResponse domain);
 
     public Long mapFormInputResponseToId(FormInputResponse object) {
         if (object == null) {
