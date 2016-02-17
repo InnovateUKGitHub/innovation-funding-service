@@ -123,7 +123,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
            applicationRepository.save(application);
            processRoleRepository.save(processRole);
 
-           return serviceSuccess(applicationMapper.mapApplicationToResource(application));
+           return serviceSuccess(applicationMapper.mapToResource(application));
        });
     }
 
@@ -237,7 +237,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationResource> getApplicationById(final Long id) {
-        return getApplication(id).andOnSuccessReturn(applicationMapper::mapApplicationToResource);
+        return getApplication(id).andOnSuccessReturn(applicationMapper::mapToResource);
     }
 
     @Override
@@ -263,7 +263,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             existingApplication.setDurationInMonths(application.getDurationInMonths());
             existingApplication.setStartDate(application.getStartDate());
             Application savedApplication = applicationRepository.save(existingApplication);
-            return applicationMapper.mapApplicationToResource(savedApplication);
+            return applicationMapper.mapToResource(savedApplication);
         });
     }
 
@@ -287,7 +287,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
             application.setApplicationStatus(applicationStatus);
             applicationRepository.save(application);
-            return serviceSuccess(applicationMapper.mapApplicationToResource(application));
+            return serviceSuccess(applicationMapper.mapToResource(application));
         });
     }
 
@@ -352,7 +352,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
            Application createdApplication = applicationRepository.save(application);
            processRoleRepository.save(processRole);
 
-           return serviceSuccess(applicationMapper.mapApplicationToResource(createdApplication));
+           return serviceSuccess(applicationMapper.mapToResource(createdApplication));
         });
     }
 
@@ -360,7 +360,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationResource> findByProcessRole(final Long id){
 
         return getProcessRole(id).andOnSuccessReturn(processRole ->
-            applicationMapper.mapApplicationToResource(processRole.getApplication())
+            applicationMapper.mapToResource(processRole.getApplication())
         );
     }
 
@@ -445,6 +445,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private List<ApplicationResource> applicationsToResources(List<Application> filtered) {
-        return simpleMap(filtered, application -> applicationMapper.mapApplicationToResource(application));
+        return simpleMap(filtered, application -> applicationMapper.mapToResource(application));
     }
 }
