@@ -297,10 +297,6 @@ Disable browser validations
     [Documentation]    This keyword disables the browsers validations in order to test the validation errors in all the browsers
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
 
-the user should see an error for the email duplication
-    Page Should Contain    We were unable to create your account
-    page should contain    Email address is already in use
-
 the user follows the standard path to the account creation page for non registered users
     go to    ${COMPETITION_DETAILS_URL}
     click element    jQuery=.column-third .button:contains("Sign in to apply")

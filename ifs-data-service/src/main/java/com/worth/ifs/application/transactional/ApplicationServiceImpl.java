@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -372,12 +373,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
 
                 Competition competition = application.getCompetition();
-                double researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id).doubleValue();
+                BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
 
                 boolean readyForSubmit = false;
                 if (allSectionsComplete &&
-                        progressPercentage == 100 &&
-                        researchParticipation <= competition.getMaxResearchRatio()) {
+                        progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0 &&
+                        researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) == -1) {
                     readyForSubmit = true;
                 }
 
@@ -386,7 +387,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 node.put(READY_FOR_SUBMIT, readyForSubmit);
                 node.put(PROGRESS, progressPercentage);
                 node.put(RESEARCH_PARTICIPATION, researchParticipation);
-                node.put(RESEARCH_PARTICIPATION_VALID, (researchParticipation <= competition.getMaxResearchRatio()));
+                node.put(RESEARCH_PARTICIPATION_VALID, (researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) == -1));
                 node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
                 return node;
             })
@@ -394,8 +395,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     // TODO DW - INFUND-1555 - deal with rest results
-    private ServiceResult<Double> getProgressPercentageByApplicationId(final Long applicationId) {
-
+    private ServiceResult<BigDecimal> getProgressPercentageByApplicationId(final Long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(application -> {
 
             List<Section> sections = application.getCompetition().getSections();
@@ -431,9 +431,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             LOG.info("Total completed questions" + countCompleted);
 
             if (questions.isEmpty()) {
-                return 0d;
+                return BigDecimal.ZERO;
+            } else if (totalQuestions.compareTo(countCompleted) == 0){
+                return BigDecimal.valueOf(100).setScale(2); // make sure there is no result like 100.0000000001 because of rounding issues.
             } else {
-                return (100.0 / totalQuestions) * countCompleted;
+                BigDecimal result = BigDecimal.valueOf(100.00).setScale(10, BigDecimal.ROUND_HALF_DOWN);
+                result = result.divide(new BigDecimal(totalQuestions.toString()), 10, BigDecimal.ROUND_HALF_UP);
+                result = result.multiply(new BigDecimal(countCompleted.toString()));
+//                (100.0 / totalQuestions) * countCompleted);
+                return result;
             }
         });
     }
