@@ -7,8 +7,8 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
 Test Teardown     User closes the browser
-Force Tags        HappyPath    # these tests have been tagged as failing since the numbers no longer match up to the database - find out why!
-Default Tags      Finance    Applicant
+Force Tags        Finance    Applicant    # these tests have been tagged as failing since the numbers no longer match up to the database - find out why!
+Default Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -25,7 +25,7 @@ ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}    ${SERVER}/application/7/form/sectio
 *** Test Cases ***
 Finance summary page calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]    Finance    Finance Section    Collaboration
+    [Tags]    Collaboration
     Given the user logs in as lead applicant
     When the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
@@ -34,7 +34,7 @@ Finance summary page calculations for Lead applicant
 
 Finance summary calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]    Finance    Finance Section    Collaboration
+    [Tags]    Collaboration
     Given the user logs in as first collaborator
     And the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
@@ -43,7 +43,7 @@ Finance summary calculations for the first collaborator
 
 Finance summary calculations for the second collaborator
     [Documentation]    INFUND-524
-    [Tags]    Finance    Finance Section    Collaboration
+    [Tags]    HappyPath
     Given the user logs in as second collaborator
     And the user goes to the finance summary of the Providing sustainable childcare application
     When the finance summary calculations should be correct
@@ -54,6 +54,7 @@ Finance summary calculations for the second collaborator
 
 Green check shouldn't show when the finances are incomplete
     [Documentation]    INFUND-927
+    [Tags]    HappyPath
     Given the user logs in as first collaborator
     When the collaborator goes to the finance summary of the completed application
     And applicant marks one finance sub-section as incomplete
@@ -62,6 +63,7 @@ Green check shouldn't show when the finances are incomplete
 
 Green check should show when the applicant marks the finance as complete
     [Documentation]    INFUND-927
+    [Tags]    HappyPath
     Given the user logs in as first collaborator
     And the collaborator goes to the finance summary of the completed application
     When the applicant marks the finance question as complete

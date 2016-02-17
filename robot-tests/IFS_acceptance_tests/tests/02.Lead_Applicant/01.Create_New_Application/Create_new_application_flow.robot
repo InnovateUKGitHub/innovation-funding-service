@@ -45,7 +45,7 @@ Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
-    [Tags]    Applicant    New application
+    [Tags]    Applicant    New application    HappyPath
     Given the user logs-in as robot@test.com
     When the user edits the competition title
     Then the title of the new application should be visible in the overview page

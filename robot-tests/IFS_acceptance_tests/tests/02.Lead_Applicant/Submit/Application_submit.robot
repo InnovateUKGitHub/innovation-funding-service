@@ -10,6 +10,7 @@ Documentation     This test has been put last (with the 1.) because the other ap
 ...               -INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Applicant    Submit
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/keywords/Login_actions.robot
@@ -25,7 +26,7 @@ ${FINANCE_SECTION_7}    ${SERVER}/application/7/form/section/7
 *** Test Cases ***
 Submit button disabled when the application is incomplete
     [Documentation]    INFUND-195
-    [Tags]    Applicant    Submit    Review and Submit    Summary
+    [Tags]    Summary
     Given the applicant goes to the overview page of the application 7
     When the applicant clicks the review and submit button
     and the applicant redirects to the summary page
@@ -35,7 +36,7 @@ Submit button disabled when the application is incomplete
 
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
-    [Tags]    Applicant    Submit
+    [Tags]    Summary
     Given applicant is in the finance summary of the application 7
     When the applicant marks the finance section as incomplete
     And the applicant goes to the overview page of the application 7
@@ -48,7 +49,7 @@ Submit flow (complete application)
     [Documentation]    INFUND-205
     ...
     ...    This test case test the submit modal(cancel option) and the the submit of the form, the confirmation page and the new status of the application
-    [Tags]    Applicant    Submit    Review and Submit    Summary
+    [Tags]    Summary    HappyPath
     Given the applicant goes to the overview page of the application 7
     When the applicant clicks the review and submit button
     and the applicant redirects to the summary page
