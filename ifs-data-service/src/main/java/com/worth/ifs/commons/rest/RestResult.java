@@ -19,8 +19,7 @@ import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * Represents the result of a Rest Controller action, that will be either a failure or a success.  A failure will result in a RestFailure, and a
@@ -119,7 +118,6 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         return new RestResult<>(left(RestFailure.error(errors, statusCode)), null);
     }
 
-
     public static <T> Either<Void, T> fromJson(String json, Class<T> clazz) {
         if (Void.class.equals(clazz)) {
             return right(null);
@@ -148,6 +146,73 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         } else {
             return RestResult.<T>restFailure(new com.worth.ifs.commons.error.Error(INTERNAL_SERVER_ERROR, "Unexpected status code " + response.getStatusCode(), INTERNAL_SERVER_ERROR));
         }
+    }
+
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a GET request that is requesting
+     * data.
+     *
+     * This will be a RestResult containing the body of the ServiceResult and a "200 - OK" response.
+     */
+    public static <T> RestResult<T> toGetResponse(T body) {
+        return restSuccess(body, OK);
+    }
+
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that is
+     * creating data.
+     *
+     * This will be a RestResult containing the body of the ServiceResult and a "201 - Created" response.
+     *
+     * This is an appropriate response for a POST that is creating data.  To update data, consider using a PUT.
+     */
+    public static <T> RestResult<T> toPostCreateResponse(T body) {
+        return restSuccess(body, CREATED);
+    }
+
+    /**
+     * @deprecated should use POSTs to create new data, and PUTs to update data.
+     *
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that is
+     * updating data (although PUTs should really be used).
+     *
+     * This will be a bodiless RestResult with a "200 - OK" response.
+     */
+    public static <T> RestResult<Void> toPostUpdateResponse() {
+        return restSuccess();
+    }
+
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a PUT request that is
+     * updating data.
+     *
+     * This will be a bodiless RestResult with a "200 - OK" response.
+     */
+    public static RestResult<Void> toPutResponse() {
+        return restSuccess();
+    }
+
+    /**
+     * @deprecated PUTs shouldn't generally return results in their bodies
+     *
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a PUT request that is
+     * updating data.
+     *
+     * This will be a RestResult containing the body of the ServiceResult with a "200 - OK" response, although ideally
+     * PUT responses shouldn't need to inculde bodies.
+     */
+    public static <T> RestResult<T> toPutWithBodyResponse(T body) {
+        return restSuccess(body, OK);
+    }
+
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a DELETE request that is
+     * deleting data.
+     *
+     * This will be a bodiless RestResult with a "204 - No content" response.
+     */
+    public static RestResult<Void> toDeleteResponse() {
+        return restSuccess(NO_CONTENT);
     }
 
 }
