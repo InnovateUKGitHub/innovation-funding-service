@@ -102,7 +102,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
             return true;
         }));
 
-        when(applicationMapperMock.mapApplicationToResource(applicationExpectations)).thenReturn(applicationResource);
+        when(applicationMapperMock.mapToResource(applicationExpectations)).thenReturn(applicationResource);
 
         ApplicationResource created =
                 service.createApplicationByApplicationNameForUserIdAndCompetitionId("testApplication", competition.getId(), user.getId()).getSuccessObject();

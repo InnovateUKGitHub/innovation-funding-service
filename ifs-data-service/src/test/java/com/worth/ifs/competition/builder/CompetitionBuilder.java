@@ -42,6 +42,9 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public CompetitionBuilder withEndDate(LocalDate endDate) {
         return with(competition -> setField("endDate", endDate, competition));
     }
+    public CompetitionBuilder withName(String name) {
+        return with(competition -> setField("name", name, competition));
+    }
 
     @Override
     protected CompetitionBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Competition>> actions) {

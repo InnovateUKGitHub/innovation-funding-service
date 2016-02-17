@@ -37,7 +37,7 @@ public class RestResultExceptionHandlingAdvice {
             }
         } catch (Throwable e) {
             LOG.warn("Exception caught while processing RestResult-returning method.  Converting to default 500 RestResult", e);
-            return restFailure(internalServerErrorError(e.getMessage()));
+            return restFailure(internalServerErrorError());
         }
     }
 }
