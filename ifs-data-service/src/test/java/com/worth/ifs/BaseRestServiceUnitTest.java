@@ -50,8 +50,8 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         service.setDataRestServiceUrl(dataServicesUrl);
         final RestTemplateAdaptor adaptor = new RestTemplateAdaptor();
         service.setRestTemplateAdaptor(adaptor);
-        adaptor.setRestTemplateSupplier(() -> mockRestTemplate);
-        adaptor.setAsyncRestTemplate(() -> mockAsyncRestTemplate);
+        adaptor.setRestTemplate(mockRestTemplate);
+        adaptor.setAsyncRestTemplate(mockAsyncRestTemplate);
 
         SecurityContextImpl securityContext = new SecurityContextImpl();
         securityContext.setAuthentication(new TestingAuthenticationToken("A_PRINCIPAL", VALID_AUTH_TOKEN));
