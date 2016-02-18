@@ -31,6 +31,7 @@ The guest user clicks the log-in button
 #    Run keyword if  '${SERVER_AUTH}' == ''    Go to    ${PROTOCOL}${SERVER_BASE}
 
 The guest user opens the browser
+    Start Virtual Display    1920    1080
     Run keyword if  '${SERVER_AUTH}' != ''        Open browser   ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}
                                                   ...  ff_profile_dir=${FF_PROFILE}
                                                   ...  remote_url=${REMOTE_URL}
@@ -52,3 +53,5 @@ User closes the browser
 
 Logout as user
     Click Element    link=Logout
+    Location Should Be    ${TEMPORARY_LOGOUT_URL}
+    Go to    ${LOGIN_URL}

@@ -4,6 +4,7 @@ ${SERVER_BASE}    localhost:8085
 ${PROTOCOL}       http://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${LOGIN_URL}      ${SERVER}/
+${TEMPORARY_LOGOUT_URL}   ${LOGIN_URL}Logout/
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/1/summary
 ${QUESTION11_URL}    ${SERVER}/application-form/1/section/1/#question-11

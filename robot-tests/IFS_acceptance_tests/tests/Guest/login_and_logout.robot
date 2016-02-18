@@ -71,7 +71,6 @@ the guest user inserts wrong password
     Input Password    id=password    testtest
 
 the guest user should get an error message
-    Element Should Be Visible    css=.error-message
     Page Should Not Contain Element    link=Logout
 
 the guest user inserts applicant user name
@@ -92,7 +91,8 @@ The Applicant clicks the log-out button
     Click Element    link=Logout
 
 the applicant should be logged-out
-    Location Should Be    ${LOGIN_URL}
+    Location Should Be    ${TEMPORARY_LOGOUT_URL}
+    Go to    ${LOGIN_URL}
 
 the Applicant is logged-in
     Element Should Be Visible    link=Logout
