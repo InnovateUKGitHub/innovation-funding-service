@@ -8,7 +8,6 @@ import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.profiling.ProfileExecution;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,8 +32,6 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 @RequestMapping("/application")
 public class ApplicationController extends AbstractApplicationController {
     private final Log log = LogFactory.getLog(getClass());
-    private boolean selectFirstSectionIfNoneCurrentlySelected = false;
-
 
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();
@@ -79,15 +76,15 @@ public class ApplicationController extends AbstractApplicationController {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
-        addOrganisationAndUserFinanceDetails(application, user.getId(), model, form );
+        addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
         return "application-summary";
     }
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)
-    public String applicationSummarySubmit(@RequestParam("mark_as_complete") Long markQuestionCompleteId, Model model, @PathVariable("applicationId") final Long applicationId,
-                                     HttpServletRequest request) {
+    public String applicationSummarySubmit(@RequestParam("mark_as_complete") Long markQuestionCompleteId, @PathVariable("applicationId") final Long applicationId,
+                                           HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         if(markQuestionCompleteId!=null) {
             questionService.markAsComplete(markQuestionCompleteId, applicationId, user.getId());
@@ -128,7 +125,7 @@ public class ApplicationController extends AbstractApplicationController {
     }
     @ProfileExecution
     @RequestMapping("/create/{competitionId}")
-    public String applicationCreatePage(Model model, @PathVariable("competitionId") final Long competitionId, HttpServletRequest request){
+    public String applicationCreatePage(){
         return "application-create";
     }
 
@@ -153,7 +150,7 @@ public class ApplicationController extends AbstractApplicationController {
     }
     @ProfileExecution
     @RequestMapping(value = "/create-confirm-competition")
-    public String competitionCreateApplication(Model model, HttpServletRequest request){
+    public String competitionCreateApplication(){
         return "application-create-confirm-competition";
     }
 
@@ -199,7 +196,6 @@ public class ApplicationController extends AbstractApplicationController {
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
         CompetitionResource  competition = competitionService.getById(application.getCompetition());
-        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
         Optional<SectionResource> currentSection = getSectionByIds(competition.getSections(), sectionId, false);
 
@@ -239,7 +235,6 @@ public class ApplicationController extends AbstractApplicationController {
     /**
      * Assign a question to a user
      *
-     * @param model showing details
      * @param applicationId the application for which the user is assigned
      * @param sectionId section id for showing details
      * @param request request parameters
@@ -247,9 +242,8 @@ public class ApplicationController extends AbstractApplicationController {
      */
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
-    public String assignQuestion(Model model,
-                                @PathVariable("applicationId") final Long applicationId,
-                                @PathVariable("sectionId") final Long sectionId,
+    public String assignQuestion(@PathVariable("applicationId") final Long applicationId,
+                                 @PathVariable("sectionId") final Long sectionId,
                                  HttpServletRequest request,
                                  HttpServletResponse response){
 

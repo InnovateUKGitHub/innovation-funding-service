@@ -246,10 +246,6 @@ public abstract class AbstractApplicationController {
         model.addAttribute("notifications", notifications);
     }
 
-    private List<Long> getQuestionIds(final List<Question> questions){
-        return questions.stream().map(Question::getId).collect(Collectors.toList());
-    }
-
     protected void addOrganisationFinanceDetails(Model model, ApplicationResource application, Long userId, Form form) {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(application.getId(), userId);
         Organisation organisation = organisationService.getOrganisationById(applicationFinanceResource.getOrganisation());
