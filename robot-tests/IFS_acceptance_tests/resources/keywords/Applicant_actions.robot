@@ -212,3 +212,8 @@ Create new application
     go to    ${CREATE_APPLICATION_PAGE}
     Input Text    id=application_name    Form test application
     Click Element    css=#content > form > input
+
+User should be redirected to the correct page
+    [Arguments]    ${URL}
+    location should be    ${URL}
+    Page Should Not Contain    error
