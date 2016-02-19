@@ -133,9 +133,9 @@ the user enters the details for the non CH
     Submit Form
 
 the user logs-in as robot@test.com
-    Input Text    id=id_email    robot@test.com
-    Input Password    id=id_password    testtest
-    Click Button    css=input.button
+    Input Text    id=username    robot@test.com
+    Input Password    id=password    testtest
+    Click Button    css=button[name="_eventId_proceed"]
 
 the user edits the competition title
     click link    Technology Inspired

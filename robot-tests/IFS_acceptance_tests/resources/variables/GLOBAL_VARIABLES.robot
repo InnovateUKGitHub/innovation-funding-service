@@ -18,7 +18,7 @@ ${ECONOMIC_BENEFIT_URL_APPLICATION_3}    ${SERVER}/application/3/form/question/4
 ${applicant_dashboard_url}    ${SERVER}/applicant/dashboard
 ${assessor_dashboard_url}    ${SERVER}/assessor/dashboard
 ${COMPETITION_DETAILS_URL}    ${SERVER}/competition/1/details/
-${LOG_OUT}        ${SERVER}/logout
+${LOG_OUT}        ${TEMPORARY_LOGOUT_URL}
 ${APPLICATION_QUESTIONS_SECTION_URL}    ${SERVER}/application-form/1/section/2/
 ${SEARCH_COMPANYHOUSE_URL}    ${SERVER}/application/create/find-business
 ${APPLICATION_DETAILS_URL}    ${SERVER}/application/1/form/question/9
