@@ -1,7 +1,7 @@
 package com.worth.ifs.authentication.service;
 
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
-import com.worth.ifs.transactional.ServiceResult;
 
 /**
  * Represents an endpoint attached to the (external) Authentication service
@@ -12,7 +12,7 @@ public interface IdentityProviderService {
      * Creates a user record in the Identity Provider's database and returns a unique id for that user record
      *
      * @param emailAddress
-     * @param phoneNumber
+     * @param password
      * @return
      */
     @NotSecured("TODO - implement when permissions matrix defined")

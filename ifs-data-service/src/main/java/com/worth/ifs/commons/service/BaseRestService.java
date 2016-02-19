@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.service;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -10,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.Future;
+
+import static com.worth.ifs.util.Either.left;
+import static com.worth.ifs.util.Either.right;
 
 /**
  * BaseRestService provides a base for all Service classes.
@@ -115,16 +119,27 @@ public abstract class BaseRestService {
         return restPostWithEntity(path, postEntity, c).getBody();
     }
 
+    protected <T, R> Either<R, T> restPost(String path, Object postEntity, Class<T> successClass, Class<R> failureClass, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        return restPostWithEntity(path, postEntity, successClass, failureClass, expectedSuccessCode, otherExpectedStatusCodes).mapLeftOrRight(
+                failure -> left(failure.getBody()),
+                success -> right(success.getBody())
+        );
+    }
+
+    protected <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> restPostWithEntity(String path, Object postEntity, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        return adaptor.restPostWithEntity(getDataRestServiceURL() + path, postEntity, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
+    }
+
     protected <T> ResponseEntity<T> restPostWithEntity(String path, Object postEntity, Class<T> responseType) {
         return adaptor.restPostWithEntity(getDataRestServiceURL() + path, postEntity, responseType);
     }
 
     protected void restPut(String path) {
-        adaptor.restPutEntity(getDataRestServiceURL() + path, Void.class);
+        adaptor.restPutWithEntity(getDataRestServiceURL() + path, Void.class);
     }
 
     protected <T> ResponseEntity<T> restPutEntity(String path, Class<T> c) {
-        return adaptor.restPutEntity(getDataRestServiceURL() + path, c);
+        return adaptor.restPutWithEntity(getDataRestServiceURL() + path, c);
     }
 
     protected void restPut(String path, Object entity) {
@@ -133,6 +148,17 @@ public abstract class BaseRestService {
 
     protected <T> ResponseEntity<T> restPut(String path, Object entity, Class<T> c) {
         return adaptor.restPut(getDataRestServiceURL() + path, entity, c);
+    }
+
+    protected <T, R> Either<R, T> restPut(String path, Object postEntity, Class<T> successClass, Class<R> failureClass, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        return restPutWithEntity(path, postEntity, successClass, failureClass, expectedSuccessCode, otherExpectedStatusCodes).mapLeftOrRight(
+                failure -> left(failure.getBody()),
+                success -> right(success.getBody())
+        );
+    }
+
+    protected <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> restPutWithEntity(String path, Object postEntity, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        return adaptor.restPutWithEntity(getDataRestServiceURL() + path, postEntity, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
     }
 
     protected void restDelete(String path) {

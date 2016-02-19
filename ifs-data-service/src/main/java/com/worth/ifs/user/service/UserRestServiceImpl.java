@@ -41,7 +41,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<User> retrieveUserByUid(String uid) {
-        if(StringUtils.isEmpty(token))
+        if(StringUtils.isEmpty(uid))
             return restFailure(notFoundError(User.class, uid));
 
         return getWithRestResult(userRestURL + "/uid/" + uid, User.class);

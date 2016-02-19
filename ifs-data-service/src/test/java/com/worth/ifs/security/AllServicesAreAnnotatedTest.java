@@ -2,7 +2,7 @@ package com.worth.ifs.security;
 
 import com.worth.ifs.BaseIntegrationTest;
 import com.worth.ifs.commons.security.StatelessAuthenticationFilter;
-import com.worth.ifs.commons.security.TokenAuthenticationService;
+import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.transactional.FileServiceImpl;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
 
     List<Class<?>> excludedClasses
             = Arrays.asList(
-                    TokenAuthenticationService.class,
+                    UidAuthenticationService.class,
                     StatelessAuthenticationFilter.class,
                     FileServiceImpl.class
             );

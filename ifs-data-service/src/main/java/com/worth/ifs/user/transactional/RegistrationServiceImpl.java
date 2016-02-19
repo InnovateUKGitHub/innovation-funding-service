@@ -1,8 +1,8 @@
 package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.authentication.service.IdentityProviderService;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
@@ -15,13 +15,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.ORGANISATION_NOT_FOUND;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.ROLE_NOT_FOUND;
-import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
-import static com.worth.ifs.transactional.ServiceResult.success;
-import static com.worth.ifs.user.transactional.RegistrationServiceImpl.ServiceFailures.UNABLE_TO_CREATE_USER;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * A service around Registration and general user-creation operations
@@ -40,33 +36,28 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private OrganisationRepository organisationRepository;
 
     @Override
-    public ServiceResult<User> createUserLeadApplicantForOrganisation(Long organisationId, UserResource userResource) {
+    public ServiceResult<UserResource> createUserLeadApplicantForOrganisation(Long organisationId, UserResource userResource) {
 
-        return handlingErrors(UNABLE_TO_CREATE_USER, () -> {
+        User newUser = assembleUserFromResource(userResource);
 
-            User newUser = assembleUserFromResource(userResource);
-
-            return addOrganisationToUser(newUser, organisationId).map(user ->
-                   addRoleToUser(user, UserRoleType.APPLICANT.getName())).map(user ->
-                   createUserWithUid(newUser, userResource.getPassword())
-            );
-        });
+        return addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
+               addRoleToUser(user, UserRoleType.APPLICANT.getName())).andOnSuccess(user ->
+               createUserWithUid(newUser, userResource.getPassword())).andOnSuccessReturn(UserResource::new);
     }
 
     private ServiceResult<User> createUserWithUid(User user, String password) {
 
         ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
 
-        return uidFromIdpResult.map(uidFromIdp -> {
+        return uidFromIdpResult.andOnSuccessReturn(uidFromIdp -> {
             user.setUid(uidFromIdp);
-            User createdUser = userRepository.save(user);
-            return successResponse(createdUser);
+            return userRepository.save(user);
         });
     }
 
     private ServiceResult<User> addRoleToUser(User user, String roleName) {
 
-        return getOrFail(() -> roleRepository.findByName(roleName), ROLE_NOT_FOUND).map(roles -> {
+        return find(roleRepository.findByName(roleName), notFoundError(Role.class, roleName)).andOnSuccessReturn(roles -> {
 
             Role applicantRole = getOnlyElement(roles);
 
@@ -77,19 +68,19 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             }
 
             user.setRoles(newRoles);
-            return success(user);
+            return user;
         });
 
     }
 
     private ServiceResult<User> addOrganisationToUser(User user, Long organisationId) {
 
-        return getOrFail(() -> organisationRepository.findOne(organisationId), ORGANISATION_NOT_FOUND).map(userOrganisation -> {
+        return find(organisation(organisationId)).andOnSuccessReturn(userOrganisation -> {
 
             List<Organisation> userOrganisationList = new ArrayList<>();
             userOrganisationList.add(userOrganisation);
             user.setOrganisations(userOrganisationList);
-            return success(user);
+            return user;
         });
     }
 

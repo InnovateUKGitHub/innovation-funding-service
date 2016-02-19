@@ -34,7 +34,7 @@ public class UidAuthenticationService implements UserAuthenticationService {
 
     public Authentication getAuthentication(HttpServletRequest request) {
         String uid = uidSupplier.getUid(request);
-        User user = validator.retrieveUserByUid(uid);
+        User user = validator.retrieveUserByUid(uid).getSuccessObjectOrNull();
         return user != null ? new UserAuthentication(user) : null;
     }
 }

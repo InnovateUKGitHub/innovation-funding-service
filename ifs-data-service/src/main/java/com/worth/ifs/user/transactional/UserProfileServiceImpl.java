@@ -1,19 +1,17 @@
 package com.worth.ifs.user.transactional;
 
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.transactional.ServiceResult;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.util.EntityLookupCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.USER_NOT_FOUND;
-import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
-import static com.worth.ifs.transactional.ServiceResult.success;
-import static com.worth.ifs.user.transactional.UserProfileServiceImpl.ServiceFailures.UNABLE_TO_UPDATE_USER;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOrFail;
-import static com.worth.ifs.util.EntityLookupCallbacks.onlyElement;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * A Service for operations regarding Users' profiles.  This implementation delegates some of this work to an Identity Provider Service
@@ -29,27 +27,24 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     private UserRepository userRepository;
 
     @Override
-    public ServiceResult<User> updateProfile(UserResource userResource) {
-        return getUserByEmailAddress(userResource).map(existingUser -> updateUser(existingUser, userResource));
+    public ServiceResult<UserResource> updateProfile(UserResource userResource) {
+        return getUserByEmailAddress(userResource).andOnSuccess(existingUser -> updateUser(existingUser, userResource)).andOnSuccessReturn(UserResource::new);
     }
 
     private ServiceResult<User> updateUser(User existingUser, UserResource updatedUserResource){
 
-        return handlingErrors(UNABLE_TO_UPDATE_USER, () -> {
+        existingUser.setName(concatenateFullName(updatedUserResource.getFirstName(), updatedUserResource.getLastName()));
+        existingUser.setPhoneNumber(updatedUserResource.getPhoneNumber());
+        existingUser.setTitle(updatedUserResource.getTitle());
+        existingUser.setLastName(updatedUserResource.getLastName());
+        existingUser.setFirstName(updatedUserResource.getFirstName());
 
-            existingUser.setName(concatenateFullName(updatedUserResource.getFirstName(), updatedUserResource.getLastName()));
-            existingUser.setPhoneNumber(updatedUserResource.getPhoneNumber());
-            existingUser.setTitle(updatedUserResource.getTitle());
-            existingUser.setLastName(updatedUserResource.getLastName());
-            existingUser.setFirstName(updatedUserResource.getFirstName());
-
-            return success(userRepository.save(existingUser));
-        });
+        return serviceSuccess(userRepository.save(existingUser));
     }
 
 
     private ServiceResult<User> getUserByEmailAddress(UserResource userResource) {
-        return getOrFail(() -> userRepository.findByEmail(userResource.getEmail()), USER_NOT_FOUND).map(users -> onlyElement(users, USER_NOT_FOUND));
+        return find(userRepository.findByEmail(userResource.getEmail()), notFoundError(User.class, userResource.getEmail())).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
     }
 
     private String concatenateFullName(String firstName, String lastName) {

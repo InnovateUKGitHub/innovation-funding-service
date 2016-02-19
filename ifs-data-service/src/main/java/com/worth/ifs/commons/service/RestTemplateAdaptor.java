@@ -1,7 +1,9 @@
 package com.worth.ifs.commons.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.application.service.FutureAdapterWithExceptionHandling;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,19 +13,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
-import org.springframework.web.client.AsyncRestTemplate;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.rest.RestResult.fromException;
 import static com.worth.ifs.commons.rest.RestResult.fromResponse;
-import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
+import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
+import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -154,8 +159,62 @@ public class RestTemplateAdaptor {
     }
 
     @RestCacheInvalidateResult
-    public <T> ResponseEntity<T> restPutEntity(String path, Class<T> c) {
+    public <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> restPostWithEntity(String path, Object postEntity, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        try {
+            ResponseEntity<String> asString = restPostWithEntity(path, postEntity, String.class);
+            return handleSuccessOrFailureJsonResponse(asString, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            return handleSuccessOrFailureJsonResponse(new ResponseEntity<>(e.getResponseBodyAsString(), e.getStatusCode()), responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
+        }
+    }
+
+    private <T> Either<Void, T> fromJson(String json, Class<T> responseType) {
+
+        if (Void.class.isAssignableFrom(responseType) && isBlank(json)) {
+            return right(null);
+        }
+
+        try {
+            return right(new ObjectMapper().readValue(json, responseType));
+        } catch (IOException e) {
+            return left();
+        }
+    }
+
+    @RestCacheInvalidateResult
+    public <T> ResponseEntity<T> restPutWithEntity(String path, Class<T> c) {
         return getRestTemplate().exchange(path, PUT, jsonEntity(null), c);
+    }
+
+    @RestCacheInvalidateResult
+    public <T> ResponseEntity<T> restPutWithEntity(String path, Object putEntity, Class<T> c) {
+        return getRestTemplate().exchange(path, PUT, jsonEntity(putEntity), c);
+    }
+
+    @RestCacheInvalidateResult
+    public <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> restPutWithEntity(String path, Object putEntity, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        try {
+            ResponseEntity<String> asString = restPutWithEntity(path, putEntity, String.class);
+            return handleSuccessOrFailureJsonResponse(asString, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            return handleSuccessOrFailureJsonResponse(new ResponseEntity<>(e.getResponseBodyAsString(), e.getStatusCode()), responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
+        }
+    }
+
+    private <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> handleSuccessOrFailureJsonResponse(ResponseEntity<String> asString, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
+
+        if (allExpectedSuccessStatusCodes.contains(asString.getStatusCode())) {
+            return fromJson(asString.getBody(), responseType).mapLeftOrRight(
+                    failure -> left(new ResponseEntity<>((R) null, INTERNAL_SERVER_ERROR)),
+                    success -> right(new ResponseEntity<>(success, asString.getStatusCode()))
+            );
+        } else {
+            return fromJson(asString.getBody(), failureType).mapLeftOrRight(
+                    failure -> left(new ResponseEntity<>((R) null, INTERNAL_SERVER_ERROR)),
+                    success -> left(new ResponseEntity<>(success, asString.getStatusCode()))
+            );
+        }
     }
 
     @RestCacheInvalidateResult

@@ -123,6 +123,14 @@ public class UserResource {
         this.password = password;
     }
 
+    public List<Long> getOrganisationIds() {
+        return this.organisationIds;
+    }
+
+    public void setOrganisationIds(List<Long> organisationIds) {
+        this.organisationIds = organisationIds;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

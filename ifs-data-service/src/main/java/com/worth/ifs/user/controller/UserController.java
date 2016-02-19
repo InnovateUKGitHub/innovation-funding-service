@@ -3,6 +3,8 @@ package com.worth.ifs.user.controller;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.transactional.RegistrationService;
+import com.worth.ifs.user.transactional.UserProfileService;
 import com.worth.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +27,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RegistrationService registrationService;
+
+    @Autowired
+    private UserProfileService userProfileService;
+
     @RequestMapping("/uid/{uid}")
     public RestResult<User> getUserByUid(@PathVariable("uid") final String uid) {
-        return repository.findOneByUid(uid);
-    }
-
-    @RequestMapping("/id/{id}")
-    public RestResult<User> getUserById(@PathVariable("id") final Long id) {
-        return repository.findOne(id);
+        return userService.getUserByUid(uid).toGetResponse();
     }
 
     @RequestMapping("/id/{id}")
@@ -67,11 +70,11 @@ public class UserController {
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return userService.createUser(organisationId, userResource).toPostCreateResponse();
+        return registrationService.createUserLeadApplicantForOrganisation(organisationId, userResource).toPostCreateResponse();
     }
 
     @RequestMapping("/updateDetails")
     public RestResult<UserResource> createUser(@RequestBody UserResource userResource) {
-        return userService.updateUser(userResource).toPutWithBodyResponse();
+        return userProfileService.updateProfile(userResource).toPutWithBodyResponse();
     }
 }

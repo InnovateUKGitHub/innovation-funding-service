@@ -4,7 +4,7 @@ import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.CreateUserResponse;
 import com.worth.ifs.authentication.resource.IdentityProviderError;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
-import com.worth.ifs.util.JsonStatusResponse;
+import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ldap.core.AttributesMapper;
@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.UUID;
 
-import static com.worth.ifs.util.JsonStatusResponse.ok;
 import static java.util.Collections.emptyList;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -52,7 +51,7 @@ public class IdpStubController {
         LdapQueryBuilder query = LdapQueryBuilder.query();
         query.filter(filter);
 
-        List<String> results = ldapTemplate.search(query, (AttributesMapper<String>) attributes -> attributes.toString());
+        List<String> results = ldapTemplate.search(query, (AttributesMapper<String>) Object::toString);
 
         if (!results.isEmpty()) {
             return new ResponseEntity<>(new IdentityProviderError("DUPLICATE_EMAIL_ADDRESS", emptyList()), CONFLICT);
@@ -64,9 +63,9 @@ public class IdpStubController {
     }
 
     @RequestMapping(value = "/{uid}", method = PUT, produces = "application/json")
-    public JsonStatusResponse updateUser(@RequestBody UpdateUserResource updateUserRequest, @PathVariable("uid") String uid) {
+    public RestResult<Void> updateUser(@RequestBody UpdateUserResource updateUserRequest, @PathVariable("uid") String uid) {
         update(updateUserRequest, uid);
-        return ok();
+        return RestResult.toPutResponse();
     }
 
     public void create(CreateUserResource user, String uid) {
@@ -78,7 +77,7 @@ public class IdpStubController {
 
         Name dn = buildDn(uid);
 
-        ModificationItem password = getModificationItem("userPassword", updateUserRequest.getEmailAddress());
+        ModificationItem password = getModificationItem("userPassword", updateUserRequest.getPassword());
 
         ldapTemplate.modifyAttributes(dn, new ModificationItem[] {password});
     }

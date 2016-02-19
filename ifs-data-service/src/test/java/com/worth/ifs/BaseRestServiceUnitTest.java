@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
-import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
+import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

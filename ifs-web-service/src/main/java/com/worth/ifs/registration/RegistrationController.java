@@ -4,7 +4,7 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.security.TokenAuthenticationService;
+import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.login.LoginController;
 import com.worth.ifs.user.domain.Organisation;
@@ -38,7 +38,7 @@ public class RegistrationController {
     private OrganisationService organisationService;
 
     @Autowired
-    private TokenAuthenticationService tokenAuthenticationService;
+    private UidAuthenticationService uidAuthenticationService;
 
     @Autowired
     protected UserAuthenticationService userAuthenticationService;
@@ -140,7 +140,9 @@ public class RegistrationController {
 
     private void loginUser(UserResource userResource, HttpServletResponse response) {
         CookieUtil.saveToCookie(response, "userId", String.valueOf(userResource.getId()));
-        tokenAuthenticationService.addAuthentication(response, userResource);
+
+        // TODO DW - INFUND-936 - autologin?
+//        uidAuthenticationService.addAuthentication(response, userResource);
     }
 
     private RestResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {

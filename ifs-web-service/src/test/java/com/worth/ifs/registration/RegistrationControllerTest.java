@@ -7,13 +7,11 @@ import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +23,6 @@ import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Collections.emptyList;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -224,7 +221,6 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 .withTitle("Mr")
                 .withPhoneNumber("0123456789")
                 .withEmail("test@test.test")
-                .withToken("testToken123abc")
                 .withId(1L)
                 .build();
 
@@ -308,7 +304,6 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 .withTitle("Mr")
                 .withPhoneNumber("0123456789")
                 .withEmail("test@test.test")
-                .withToken("testToken123abc")
                 .withId(1L)
                 .build();
 

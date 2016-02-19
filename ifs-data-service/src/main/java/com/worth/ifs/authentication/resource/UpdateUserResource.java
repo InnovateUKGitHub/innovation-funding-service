@@ -20,8 +20,12 @@ public class UpdateUserResource {
         this.password = password;
     }
 
-    public String getEmailAddress() {
+    public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

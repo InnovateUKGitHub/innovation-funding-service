@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
-import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
+import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpMethod.GET;
@@ -70,7 +70,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
     private <T> HttpEntity<T> headersEntity(){
         HttpHeaders headers = getJSONHeaders();
-        headers.set(AUTH_TOKEN, "789ghi");
+        headers.set(AUTH_TOKEN, "847ac08d-5486-3f3a-9e15-06303fb01ffb");
         return new HttpEntity<>(headers);
     }
 }

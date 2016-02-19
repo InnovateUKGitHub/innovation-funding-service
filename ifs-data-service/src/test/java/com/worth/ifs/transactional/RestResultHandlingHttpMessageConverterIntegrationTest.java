@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.concurrent.Future;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
+import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -86,7 +86,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
     @Test
     public void testFailureRestResultHandledAsync() throws Exception {
-        final User initial = SecuritySetter.swapOutForUser(new User("","","", "123abc", "", emptyList()));
+        final User initial = SecuritySetter.swapOutForUser(new User("","","", "", emptyList(), "6b50cb4f-7222-33a5-99c5-8c068cd0b03c"));
         try {
             final long applicationIdThatDoesNotExist = -1L;
             final Future<RestResult<Double>> completeQuestionsPercentage = applicationRestService.getCompleteQuestionsPercentage(applicationIdThatDoesNotExist);
@@ -103,7 +103,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
     private <T> HttpEntity<T> headersEntity(){
         HttpHeaders headers = getJSONHeaders();
-        headers.set(AUTH_TOKEN, "789ghi");
+        headers.set(AUTH_TOKEN, "847ac08d-5486-3f3a-9e15-06303fb01ffb");
         return new HttpEntity<>(headers);
     }
 }

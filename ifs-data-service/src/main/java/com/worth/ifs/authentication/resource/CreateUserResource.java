@@ -30,6 +30,14 @@ public class CreateUserResource {
         return plainTextPassword;
     }
 
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public void setPlainTextPassword(String plainTextPassword) {
+        this.plainTextPassword = plainTextPassword;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -38,6 +38,11 @@ public class LoginController {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
+        return getRedirectUrlForUser(user);
+    }
+
+    public static String getRedirectUrlForUser(User user) {
+
         String roleName = "";
 
         if(!user.getRoles().isEmpty()) {

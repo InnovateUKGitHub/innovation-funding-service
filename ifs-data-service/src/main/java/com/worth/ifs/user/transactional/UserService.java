@@ -14,7 +14,7 @@ import java.util.Set;
 public interface UserService {
 
     @NotSecured("Need to keep open to all to allow login")
-    ServiceResult<User> getUserByToken(final String token);
+    ServiceResult<User> getUserByUid(final String uid);
 
     @NotSecured("Need to keep open to all to allow login")
     ServiceResult<User> getUserByEmailandPassword(final String email, final String password);
@@ -36,10 +36,4 @@ public interface UserService {
 
     @NotSecured("TODO - implement when permissions matrix in place")
     ServiceResult<Set<User>> findRelatedUsers(final Long applicationId);
-
-    @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<UserResource> createUser(final Long organisationId, UserResource userResource);
-
-    @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<UserResource> updateUser(UserResource userResource);
 }
