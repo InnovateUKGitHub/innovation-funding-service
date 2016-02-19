@@ -29,6 +29,7 @@ Edit the profile and verify if the changes are saved
     And the applicant clicks the Edit your details link
     And the Applicant enters the profile details
     Then the Applicant should see the saved changes in Your profile page
+    And the Applicant can change their details back again
 
 Display errors for invalid inputs of the First name
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
@@ -131,3 +132,16 @@ the applicant should get a validation error for the phone number
 the error message for the min/max allowed characters should be visible
     Wait Until Element Is Visible    css=.error-message
     Page Should Contain    length must be between 2 and 70
+
+the Applicant can change their details back again
+    the Applicant is in Dashboard page
+    the Applicant clicks the link Edit profile from Dashboard page
+    the applicant clicks the Edit your details link
+    the Applicant enters their old profile details
+
+the Applicant enters their old profile details
+    Select From List By Index    id=title    4
+    Input Text    id=firstName    Steve
+    Input Text    id=lastName    Smith
+    Input Text    id=phoneNumber    +-0123456789
+    Click Element    css=.extra-margin
