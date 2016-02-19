@@ -31,6 +31,15 @@ Edit the profile and verify if the changes are saved
     Then the Applicant should see the saved changes in Your profile page
     And the Applicant can change their details back again
 
+Verify that the applicant's name has been changed on other parts of the site
+    [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
+    [Tags]          Pending
+    # Pending due to bug INFUND-1967
+    Given the Applicant is on the manage team page
+    Then the Applicant should see their updated name
+    And other contributors should see the Applicant's updated name for the assignation options
+    And the Applicant can change their details back again
+
 Display errors for invalid inputs of the First name
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     Given the Applicant is in Your details page
@@ -134,6 +143,7 @@ the error message for the min/max allowed characters should be visible
     Page Should Contain    length must be between 2 and 70
 
 the Applicant can change their details back again
+    Login as User    &{lead_applicant_credentials}
     the Applicant is in Dashboard page
     the Applicant clicks the link Edit profile from Dashboard page
     the applicant clicks the Edit your details link
@@ -145,3 +155,18 @@ the Applicant enters their old profile details
     Input Text    id=lastName    Smith
     Input Text    id=phoneNumber    +-0123456789
     Click Element    css=.extra-margin
+
+the Applicant is on the manage team page
+    go to       ${APPLICATION_TEAM_URL}
+
+the Applicant should see their updated name
+    Page Should Contain         Chris Brown
+
+other contributors should see the Applicant's updated name for the assignation options
+    Logout as user
+    Login as user  &{collaborator1_credentials}
+    go to       ${APPLICATION_OVERVIEW_URL}
+    page should contain         chris brown
+
+
+
