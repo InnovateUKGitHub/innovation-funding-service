@@ -1,0 +1,19 @@
+.inline-nav{
+	border-bottom: 1px solid $border-colour;
+	padding-left: 10px;
+	position: relative;
+	margin-bottom: 30px;
+	
+	li{
+		display: inline-block;
+		padding: 10px;
+
+		&.selected{
+			border: 1px solid $border-colour;
+			border-bottom: none;
+			margin-bottom: -1px;
+			background: $panel-colour;
+		}
+	}
+
+}
