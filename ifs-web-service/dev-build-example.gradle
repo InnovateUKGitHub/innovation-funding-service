@@ -11,5 +11,4 @@ ext.ifsRestConnectionsMaxTotal=100
 ext.ifsRestConnectionsMaxPerRoute=5
 ext.ifsRestConnectionsTimeoutMillis=60000
 
-
 ext.ifsIdpLogoutUrl="https://ifs-local-dev/idp/logout"

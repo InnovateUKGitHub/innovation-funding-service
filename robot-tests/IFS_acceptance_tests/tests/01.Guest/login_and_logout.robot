@@ -19,7 +19,7 @@ Log-out
     # When The Applicant clicks the log-out button
     # Then user should be redirected to the correct page    ${LOGIN_URL}
     Logout as user
-    
+
 Invalid Login
     [Tags]    Guest
     Given the user is not logged-in
