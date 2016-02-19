@@ -50,6 +50,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     private String webBaseUrl;
 
     @Autowired
+    private InviteMapper inviteMapper;
+    @Autowired
+    private InviteOrganisationMapper inviteOrganisationMapper;
+
+    @Autowired
     private InviteRepository inviteRepository;
 
     @Autowired
@@ -133,9 +138,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }else{
             notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisationName());
         }
-        notificationArguments.put("leadOrganisation", invite.getApplication().getLeadOrganisation().get().getName());
-        notificationArguments.put("leadApplicant", invite.getApplication().getLeadApplicant().get().getName());
-        notificationArguments.put("leadApplicantEmail", invite.getApplication().getLeadApplicant().get().getEmail());
+        notificationArguments.put("leadOrganisation", invite.getApplication().getLeadOrganisation().getName());
+        notificationArguments.put("leadApplicant", invite.getApplication().getLeadApplicant().getName());
+        notificationArguments.put("leadApplicantEmail", invite.getApplication().getLeadApplicant().getEmail());
 
         Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_COLLABORATOR, notificationArguments);
         return notificationService.sendNotification(notification, EMAIL);
