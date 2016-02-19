@@ -1,7 +1,6 @@
-package com.worth.ifs.commons.security;
+package com.worth.ifs.security;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.core.Authentication;
@@ -24,7 +23,6 @@ import java.util.List;
 @Service
 @Configurable
 public class StatelessAuthenticationFilter extends GenericFilterBean {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;

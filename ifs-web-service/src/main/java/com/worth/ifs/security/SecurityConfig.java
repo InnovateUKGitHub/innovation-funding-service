@@ -1,6 +1,5 @@
 package com.worth.ifs.security;
 
-import com.worth.ifs.commons.security.StatelessAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -36,10 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .csrf().disable()
             .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-                .anonymous()
             .and()
-                .authorizeRequests().anyRequest().permitAll()
+                .authorizeRequests().anyRequest().authenticated()
             .and()
                 .exceptionHandling()
             .and()

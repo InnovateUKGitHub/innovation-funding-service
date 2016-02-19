@@ -1,7 +1,6 @@
 package com.worth.ifs.security;
 
 import com.worth.ifs.BaseIntegrationTest;
-import com.worth.ifs.commons.security.StatelessAuthenticationFilter;
 import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.transactional.FileServiceImpl;

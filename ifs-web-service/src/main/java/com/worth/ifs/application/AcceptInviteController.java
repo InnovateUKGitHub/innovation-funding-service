@@ -63,12 +63,12 @@ public class AcceptInviteController extends AbstractApplicationController {
                 return "application-contributors/invite/accept-invite";
             }else{
                 cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
-                return "redirect:/login";
+                return "redirect:/";
             }
 
         }else {
             cookieFlashMessageFilter.setFlashMessage(response, "inviteNotValid");
-            return "redirect:/login";
+            return "redirect:/";
         }
 
     }
@@ -91,7 +91,7 @@ public class AcceptInviteController extends AbstractApplicationController {
             model.addAttribute("inviteOrganisation", inviteOrganisation);
             model.addAttribute("invite", invite.getSuccessObject());
         }else{
-            return "redirect:/login";
+            return "redirect:/";
         }
         return "application-contributors/invite/organisation-type";
     }
