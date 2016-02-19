@@ -7,6 +7,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.mapper.ApplicationStatusMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -77,6 +78,12 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     @Autowired
     public void setQuestionController(QuestionController questionController) {
         this.questionController = questionController;
+    }
+
+    @Test
+    public void testFindAll() {
+        RestResult<List<ApplicationResource>> all = controller.findAll();
+        assertEquals(5, all.getSuccessObject().size());
     }
 
     @Test
