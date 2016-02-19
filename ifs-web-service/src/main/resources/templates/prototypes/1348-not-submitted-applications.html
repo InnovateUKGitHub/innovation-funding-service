@@ -34,10 +34,10 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${''}, ${''})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Innovate UK, 4891061'}, ${'Technology inspired'}, ${'Competition closed'})" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Innovate UK, 4891061'}, ${'Technology inspired'}, ${'Competition open'})" th:remove="tag" />
-
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='applications', status='open'" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='applications'" th:remove="tag" />
 
 	<div id="sticky-zone">
 
@@ -46,28 +46,14 @@
 
 			<section class="boxed">
 				
-				<div class="grid-row">
-					<div class="column-one">
-				 		<p><span class="heading-medium">30th March 2016</span> <br />Application deadline</p>
-				 	</div>
-				</div>
-
 				 <div class="grid-row">
 
-				 	<div class="column-quarter">
-				 		<p><span class="heading-medium">22</span> <br />Total number of applications</p>
-				 	</div>
-				 	
-				 	<div class="column-quarter">
-				 		<p><span class="heading-medium">12</span> <br />Applications started</p>
-				 	</div>
-					
-					<div class="column-quarter">
-					 	<p><span class="heading-medium">6</span> <br />Applications in progress <br />(Beyond 50%)</p>
-					</div>
-					
 					<div class="column-quarter"> 	
 					 	<p><span class="heading-medium">4</span> <br />Applications submitted</p>
+					</div>
+
+					<div class="column-quarter">
+					 	<p><span class="heading-medium">18</span> <br />Applications not submitted</p>
 					</div>
 
 				 </div>
@@ -84,9 +70,9 @@
 	
 		<div class="data-area">
 
-			<h2 class="heading-large" id="current-assessors">Application list</h2>
+			<h2 class="heading-large" id="current-assessors">Applications not submitted</h2>
 			
-			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='openApplications'" th:remove="tag" />
+			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='notSubmittedApplications'" th:remove="tag" />
 			
 			<div class="table-overflow">
 				<table id="application-list">
@@ -95,49 +81,15 @@
 							<th scope="col">Application no</th>
 							<th scope="col">Project title</th>
 							<th scope="col">Lead</th>
-							<th scope="col" style="width: 20%">Status</th>
-							<th scope="col" class="alignright" style="width: 10%">Percentage complete</th>
+							<th scope="col" class="alignright">Percentage complete</th>
 						</tr>
 					</thead>
 					<tbody>
 						
 						<tr class="filtered-result">
-							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5431</a></th>
-							<td>Machine learning in robots</td>
-							<td>PWC</td>
-							<td>Application submitted</td>
-							<td class="alignright">100</td>
-						</tr>
-
-						<tr class="filtered-result">
-							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5432</a></th>
-							<td>AI in learning</td>
-							<td>BBC</td>
-							<td>Application submitted</td>
-							<td class="alignright">100</td>
-						</tr>
-
-						<tr class="filtered-result">
-							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5433</a></th>
-							<td>Machine learning in robots</td>
-							<td>PWC</td>
-							<td>Application submitted</td>
-							<td class="alignright">100</td>
-						</tr>
-
-						<tr class="filtered-result">
-							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5434</a></th>
-							<td>Robots that learn</td>
-							<td>Kingfisher</td>
-							<td>Application submitted</td>
-							<td class="alignright">100</td>
-						</tr>
-
-						<tr class="filtered-result">
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application in progress (beyond 50%)</td>
 							<td class="alignright">89</td>
 						</tr>
 
@@ -145,7 +97,6 @@
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5436</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application in progress (beyond 50%)</td>
 							<td class="alignright">86</td>
 						</tr>
 
@@ -153,7 +104,6 @@
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5437</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application in progress (beyond 50%)</td>
 							<td class="alignright">86</td>
 						</tr>
 
@@ -161,7 +111,6 @@
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5438</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application in progress (beyond 50%)</td>
 							<td class="alignright">84</td>
 						</tr>
 
@@ -169,7 +118,6 @@
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5439</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application in progress (beyond 50%)</td>
 							<td class="alignright">85</td>
 						</tr>
 
@@ -177,7 +125,6 @@
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5440</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application in progress (beyond 50%)</td>
 							<td class="alignright">83</td>
 						</tr>
 
@@ -185,80 +132,70 @@
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5441</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application started</td>
-							<td class="alignright">42</td>
+							<td class="alignright">82</td>
 						</tr>
 
 						<tr class="filtered-result">
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5442</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application started</td>
-							<td class="alignright">41</td>
+							<td class="alignright">81</td>
 						</tr>
 
 						<tr class="filtered-result">
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5443</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application started</td>
-							<td class="alignright">36</td>
+							<td class="alignright">76</td>
 						</tr>
 
 						<tr class="filtered-result">
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5444</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application started</td>
-							<td class="alignright">35</td>
+							<td class="alignright">75</td>
 						</tr>
 
 						<tr class="filtered-result">
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5445</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application started</td>
-							<td class="alignright">30</td>
+							<td class="alignright">70</td>
 						</tr>
 
 						<tr class="filtered-result">
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5446</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application started</td>
-							<td class="alignright">27</td>
+							<td class="alignright">67</td>
 						</tr>
 
 						<tr class="filtered-result">
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5447</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application started</td>
-							<td class="alignright">25</td>
+							<td class="alignright">65</td>
 						</tr>
 
 						<tr class="filtered-result">
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5448</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application started</td>
-							<td class="alignright">20</td>
+							<td class="alignright">60</td>
 						</tr>
 
 						<tr class="filtered-result">
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5449</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application started</td>
-							<td class="alignright">19</td>
+							<td class="alignright">59</td>
 						</tr>
 
 						<tr class="filtered-result">
 							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5450</a></th>
 							<td>Example application</td>
 							<td>Example lead</td>
-							<td>Application started</td>
-							<td class="alignright">10</td>
+							<td class="alignright">50</td>
 						</tr>
 
 					</tbody>
@@ -267,14 +204,14 @@
 			
 			<div th:if="${param.filterStatus == null}" th:remove="tag">
 			
-				<ul class="pagination">
+				<!-- <ul class="pagination">
 				    <li class="next">
 				        <a href="#" rel="next" title="Navigate to next part">
 				            <span class="pagination-label">Next</span>
 				            <span class="pagination-part-title">1 of 2</span>
 				        </a>
 				    </li>
-				</ul>
+				</ul> -->
 			
 			</div>
 		</div>

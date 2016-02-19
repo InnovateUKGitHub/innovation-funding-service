@@ -40,6 +40,18 @@ table{
 	}
 }
 
+/*--- Contrain areas within full width layout ---*/
+.full-width{
+	.constrain-width{
+		max-width: 1400px;
+		margin: 0 auto;
+
+		&.extra-margin{
+			margin-top: 30px;
+		}
+	}
+}
+
 
 /*--- Boxed content ---*/
 
