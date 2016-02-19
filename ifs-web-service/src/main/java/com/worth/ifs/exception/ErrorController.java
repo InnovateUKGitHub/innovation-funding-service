@@ -1,9 +1,11 @@
 package com.worth.ifs.exception;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,6 +39,12 @@ public class ErrorController {
     public ModelAndView objectNotFoundHandler(HttpServletRequest req, Exception e) throws ObjectNotFoundException {
         log.debug("ErrorController  objectNotFoundHandler", e);
         return createExceptionModelAndView(e, "404", req);
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ModelAndView accessDeniedException(HttpServletRequest req, Exception e) {
+        log.debug("ErrorController  actionNotAllowed", e);
+        return createExceptionModelAndView(e, "forbidden", req);
     }
 
     private static ModelAndView createExceptionModelAndView(Exception e,String message, HttpServletRequest req){

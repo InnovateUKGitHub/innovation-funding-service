@@ -1,13 +1,16 @@
 package com.worth.ifs.commons.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ExceptionThrowingFunction;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.util.Either;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.IOException;
@@ -47,6 +50,28 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     @Override
     public <R> RestResult<R> andOnSuccessReturn(ExceptionThrowingFunction<? super T, R> successHandler) {
         return (RestResult<R>) super.andOnSuccessReturn(successHandler);
+    }
+
+    /**
+     *
+     * @param restFailure - Failure object with details about the failure
+     * @return Always returns null
+     */
+    @Override
+    public T findAndThrowException(RestFailure restFailure) {
+        if(restFailure.is(CommonFailureKeys.GENERAL_FORBIDDEN)){
+            throw new AccessDeniedException(restFailure.getStatusCode().getReasonPhrase());
+        }
+
+        if(restFailure.getStatusCode() == HttpStatus.NOT_FOUND){
+            throw new ResourceNotFoundException();
+        }
+
+        if(restFailure.getStatusCode() == HttpStatus.BAD_REQUEST){
+            throw new IllegalArgumentException();
+        }
+
+        return null;
     }
 
     @Override
