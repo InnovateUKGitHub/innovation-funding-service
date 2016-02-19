@@ -1,6 +1,7 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.organisation.OrganisationCreationController;
 import com.worth.ifs.application.form.CompanyHouseForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.exception.ErrorController;
@@ -225,8 +226,8 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
                         .param("confirm-company-details", "")
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists(ApplicationCreationController.COMPANY_NAME))
-                .andExpect(cookie().exists(ApplicationCreationController.COMPANY_ADDRESS))
+                .andExpect(cookie().exists(OrganisationCreationController.COMPANY_NAME))
+                .andExpect(cookie().exists(OrganisationCreationController.COMPANY_ADDRESS))
                 .andExpect(view().name("redirect:/application/create/confirm-company"));
     }
 
@@ -344,8 +345,8 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
     @Test
     public void testConfirmCompany() throws Exception {
         mockMvc.perform(get("/application/create/confirm-company")
-                        .cookie(new Cookie(ApplicationCreationController.COMPANY_ADDRESS, "{}"))
-                        .cookie(new Cookie(ApplicationCreationController.COMPANY_NAME, "SOME NAME"))
+                        .cookie(new Cookie(OrganisationCreationController.COMPANY_ADDRESS, "{}"))
+                        .cookie(new Cookie(OrganisationCreationController.COMPANY_NAME, "SOME NAME"))
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attributeExists("business"))
@@ -356,8 +357,8 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
     @Test
     public void testSaveCompany() throws Exception {
         mockMvc.perform(get("/application/create/save-company/")
-                        .cookie(new Cookie(ApplicationCreationController.COMPANY_ADDRESS, "{}"))
-                        .cookie(new Cookie(ApplicationCreationController.COMPANY_NAME, "SOME NAME"))
+                        .cookie(new Cookie(OrganisationCreationController.COMPANY_ADDRESS, "{}"))
+                        .cookie(new Cookie(OrganisationCreationController.COMPANY_NAME, "SOME NAME"))
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/registration/register?organisationId=" + organisationResource.getId()));

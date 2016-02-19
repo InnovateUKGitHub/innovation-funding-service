@@ -17,7 +17,7 @@
 
         <h2 class="heading-medium">Business organisation</h2>
 
-        <form th:action="@{/application/create/find-business}" th:object="${companyHouseForm}" method="POST">
+        <form th:action="@{/organisation/create/find-business}" th:object="${companyHouseForm}" method="POST">
             <fieldset>
                 <legend class="visuallyhidden">Business organisation</legend>
 
@@ -34,7 +34,7 @@
                 <ul id="org-results" class="results-list panel-indent" th:if="${companyHouseForm.companyHouseSearching}" th:unless="${#fields.hasErrors('*{companyHouseName}')}">
                     <li class="type-company" th:each="company : ${companyHouseForm.companyHouseList}">
                         <h3>
-                            <a th:href="${'/application/create/selected-business/'+ company.companyNumber}" title="View company" th:text="${company.name}">
+                            <a th:href="${'/organisation/create/selected-business/'+ company.companyNumber}" title="View company" th:text="${company.name}">
                             </a>
                         </h3>
                         <p class="meta crumbtrail" th:text="${company.description}"></p>

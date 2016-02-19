@@ -8,4 +8,6 @@ public interface InviteOrganisationService {
 
     @NotSecured("TODO")
     ServiceResult<InviteOrganisationResource> findOne(Long id);
+
+    ServiceResult<InviteOrganisationResource> save(InviteOrganisationResource inviteOrganisationResource);
 }

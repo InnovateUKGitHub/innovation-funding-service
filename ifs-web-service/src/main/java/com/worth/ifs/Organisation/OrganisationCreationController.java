@@ -1,4 +1,4 @@
-package com.worth.ifs.Organisation;
+package com.worth.ifs.organisation;
 
 import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.application.form.CompanyHouseForm;
@@ -350,9 +350,10 @@ public class OrganisationCreationController {
                 s -> {
                     log.error(String.format("found the invite.. %s", cookieHash));
 
+
                     return inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
                         f -> {
-                            log.error(String.format("Did not find the invite.. %s", cookieHash));
+                            log.error(String.format("Did not find the invite organisation.. %s", s.getInviteOrganisation()));
                             return false;
                         },
                         i -> {
@@ -361,6 +362,8 @@ public class OrganisationCreationController {
                                 // Save the created organisation Id, so the next invitee does not have to..
                                 log.error("saving newly create organisation to inviteOrganisation");
                                 inviteOrganisationRestService.put(i);
+                            }else{
+                                log.error("invite organisation is already connected to a organisation.");
                             }
                             return true;
                         }

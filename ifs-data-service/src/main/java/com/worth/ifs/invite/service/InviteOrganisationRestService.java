@@ -6,4 +6,6 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 public interface InviteOrganisationRestService {
 
     RestResult<InviteOrganisationResource> findOne(Long id);
+
+    RestResult<Void> put(InviteOrganisationResource inviteOrganisation);
 }
