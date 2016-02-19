@@ -1,5 +1,9 @@
 package com.worth.ifs.organisation.transactional;
 
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.transactional.BaseTransactionalService;
@@ -11,12 +15,9 @@ import com.worth.ifs.user.mapper.OrganisationMapper;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -39,16 +40,16 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     private OrganisationMapper organisationMapper;
 
     @Override
-    public ServiceResult<Set<OrganisationResource>> findByApplicationId(final Long applicationId) {
+    public ServiceResult<Set<Organisation>> findByApplicationId(final Long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<Organisation> organisations = roles.stream().map(role -> organisationRepository.findByProcessRoles(role)).collect(toCollection(LinkedHashSet::new));
-        return serviceSuccess(organisations.stream().map(organisationMapper::mapToResource).collect(Collectors.toSet()));
+        return serviceSuccess(organisations);
     }
 
     @Override
-    public ServiceResult<OrganisationResource> findById(final Long organisationId) {
-        return find(organisationMapper.mapToResource(organisationRepository.findOne(organisationId)), notFoundError(Organisation.class, organisationId));
+    public ServiceResult<Organisation> findById(final Long organisationId) {
+        return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
     }
 
     @Override
