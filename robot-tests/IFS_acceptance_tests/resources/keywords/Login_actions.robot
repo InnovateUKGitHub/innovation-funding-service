@@ -32,19 +32,11 @@ The guest user clicks the log-in button
     #    Run keyword if    '${SERVER_AUTH}' == ''    Go to    ${PROTOCOL}${SERVER_BASE}
 
 The guest user opens the browser
-    # Start Virtual Display    1920    1080
+    Start Virtual Display    1920    1080
     Run keyword if    '${SERVER_AUTH}' != ''    Open browser    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}    ff_profile_dir=${FF_PROFILE}    remote_url=${REMOTE_URL}
     ...    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    ff_profile_dir=${FF_PROFILE}    remote_url=${REMOTE_URL}
     ...    desired_capabilities=${DESIRED_CAPABILITIES}
-    run keyword and ignore error    Log into Shib
-
-Log into Shib
-    Input Text    id=username    steve.smith@empire.com
-    Input Text    id=password    test
-    click element    css=button[type=submit]
-    Sleep       2s
-    Location Should Be      ${LOGIN_URL}
 
 TestTeardown User closes the browser
     Run keyword if    '${REMOTE_URL}' != ''    Report Sauce status    'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}

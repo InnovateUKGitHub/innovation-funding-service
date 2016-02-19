@@ -246,7 +246,6 @@ the user should see an error
 
 the user cannot login with their new details
     go to    ${LOGIN_URL}
-    Disable browser validations
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${correct_password}
     Click Button    css=button[name="_eventId_proceed"]
@@ -273,14 +272,12 @@ the user cannot login with either password
     go to    ${LOGIN_URL}
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${correct_password}
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Click Button    css=button[name="_eventId_proceed"]
     # Page Should Contain    Your login was unsuccessful because of the following issue(s)
     Page Should Contain    The username you entered cannot be identified
     go to    ${LOGIN_URL}
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${incorrect_password}
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Click Button    css=button[name="_eventId_proceed"]
     # Page Should Contain    Your login was unsuccessful because of the following issue(s)
     Page Should Contain    The username you entered cannot be identified

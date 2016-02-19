@@ -93,8 +93,8 @@ the user cannot login with the invalid email
     go to    ${LOGIN_URL}
     Input Text    id=username    ${invalid_email_addy}
     Input Password    id=password    password
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Click Button    css=button[name="_eventId_proceed"]
+    # TODO DW - reinstante expectations
     # Page Should Contain    Your login was unsuccessful
     # Page Should Contain    Please enter a valid e-mail address
     Page Should Contain    The username you entered cannot be identified
