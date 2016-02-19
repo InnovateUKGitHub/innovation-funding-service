@@ -1,18 +1,16 @@
 package com.worth.ifs.competition.service;
 
-import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.competition.domain.Competition;
-import org.junit.Test;
-import org.springframework.http.ResponseEntity;
-
 import java.util.List;
 
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.competition.resource.CompetitionResource;
+
+import org.junit.Test;
+
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpStatus.OK;
 
 /**
  *
@@ -31,29 +29,23 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     @Test
     public void test_getAll() {
 
-        String expectedUrl = dataServicesUrl + competitionsRestURL + "/findAll";
-        Competition[] returnedResponse = newCompetition().buildArray(3, Competition.class);
-        ResponseEntity<Competition[]> returnedEntity = new ResponseEntity<>(returnedResponse, OK);
+        List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
 
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Competition[].class)).thenReturn(returnedEntity);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/findAll", competitionResourceListType(), returnedResponse);
 
-        List<Competition> responses = service.getAll();
+        List<CompetitionResource> responses = service.getAll().getSuccessObject();
         assertNotNull(responses);
-        assertEquals(returnedResponse[0], responses.get(0));
-        assertEquals(returnedResponse[1], responses.get(1));
-        assertEquals(returnedResponse[2], responses.get(2));
+        assertEquals(returnedResponse, responses);
     }
 
     @Test
     public void test_getCompetitionById() {
 
-        String expectedUrl = dataServicesUrl + competitionsRestURL + "/findById/123";
-        Competition returnedResponse = newCompetition().build();
-        ResponseEntity<Competition> returnedEntity = new ResponseEntity<>(returnedResponse, OK);
+        CompetitionResource returnedResponse = newCompetitionResource().build();
 
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Competition.class)).thenReturn(returnedEntity);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/123", CompetitionResource.class, returnedResponse);
 
-        Competition response = service.getCompetitionById(123L);
+        CompetitionResource response = service.getCompetitionById(123L).getSuccessObject();
         assertNotNull(response);
         assertEquals(returnedResponse, response);
     }

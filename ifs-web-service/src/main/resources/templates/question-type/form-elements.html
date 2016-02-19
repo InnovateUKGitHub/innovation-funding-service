@@ -2,12 +2,10 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
 <!-- =========================== Form label =========================== -->
-<div th:fragment="form-label (name,id,bold)">
-    <label th:class="${bold}? 'form-label form-label-bold' : 'form-label'"
-           th:if="${name}"
-           th:for="${id}"
-           th:text="${name}"
-            />
+<div th:fragment="form-label (name)">
+    <label th:class="${bold}? 'form-label form-label-bold' : 'form-label'" th:if="${name}" th:for="${id}">
+        <div th:text="${name}" />
+    </label>
 </div>
 <!-- =========================== Form label hidden =========================== -->
 <div th:fragment="form-label-hidden (name,id)">
@@ -19,13 +17,13 @@
 </div>
 <!-- =========================== Form validation messages =========================== -->
 <div th:fragment="form-validation-messages (id)">
-    <div class="validation-messages" th:with="validationId='formInput['+${id}+']'" >
+    <div th:with="validationId='formInput['+${id}+']'" th:remove="tag">
         <span class="error-message" th:if="${#fields.hasErrors(validationId)}" th:errors="*{__${validationId}__}"></span>
     </div>
 </div>
 <!-- ===========================Form hint =========================== -->
 <div th:fragment="form-hint (hint)">
-    <div class="form-hint"
+    <span class="form-hint"
          th:if="${hint}"
          th:utext="${hint}"
             />
@@ -137,22 +135,22 @@
 <!-- ========================= textarea  =========================== -->
 
 <div th:fragment="form-textarea (id, name, value,readonly)">
-		<textarea
-                th:id="${id}"
-                th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
-                th:field="*{formInput[__${id}__]}"
-                th:readonly="${readonly}"
-                th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}}"
-                th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
-                >
+		<textarea th:id="${id}"
+              th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
+              th:field="*{formInput[__${id}__]}"
+              th:readonly="${readonly}"
+              th:attrappend="data-max_words=${wordCount != null}?@{${wordCount}}"
+              th:attr="rows=${textareaRows != null ? textareaRows : ''}, cols=${textareaCols != null ? textareaCols : ''}"
+              >
 		</textarea>
 </div>
-<div th:fragment="form-finance-textarea (type, id, name, value)">
+<div th:fragment="form-finance-textarea (type, id, name, value,readonly)">
 		<textarea  class="form-control"
                 th:id="${'cost-'+ type + '-'+id+'-'+name}"
                 th:name="${type +'-'+name+'-' + id}"
                 th:text="${value}"
                 rows="4"
+                th:readonly="${readonly}"
                 >
 		</textarea>
 </div>
@@ -179,7 +177,7 @@
     <div th:class="'textarea-wrapped ' +
                    (${readonly} ? '' : (
                             (${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} ? 'marked-as-complete' :
-                                (${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))} ? 'assigned-to-me ' : '')
+                                (${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))} ? 'assigned-to-me ' : '')
                             )
                        )
                        + ' ' +
@@ -192,22 +190,24 @@
          <div th:unless="${readonly}" class="textarea-header" th:id="${validationId}">
            <img th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                  src="/images/field/field-done.png"
-                 alt="This field is marked as complete"
-                 title="This field is marked as complete"
+                th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done.png')}"
+                alt=""
                  class="marked-as-complete" />
 
             <div th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" th:remove="tag">
                   <div class="assignee">This question is <strong>marked as complete</strong></div>
             </div>
 
-            <img th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))}"
+            <img th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))}"
                  src="/images/field/field-assigned.png"
-                 alt="This field is assigned to you"
+                 th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned.png')}"
+                 alt=""
                  title="This field is assigned to you"
                  class="assigned-to-me" />
 
             <div th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                 th:include="question-type/form-elements :: current-assignee" th:remove="tag"/>
+                 th:include="question-type/form-elements :: current-assignee"
+                 th:remove="tag"/>
         </div>
 
         <div th:include="question-type/form-elements :: form-textarea (
@@ -216,8 +216,8 @@
 		 					wordCount=${formInput.getWordCount()},
 		 					readonly=${readonly} or ${question.isMarkAsCompletedEnabled() and
 		 					    markedAsComplete?.contains(question.id)} or
-		 					    ${(currentUser.getId() != questionAssignee?.getAssignee()?.getUser()?.getId() and  questionAssignee?.getAssignee()!=null) or
-		 					    (questionAssignee?.getAssignee()==null and !userIsLeadApplicant)},
+		 					    ${(currentUser.getId() != questionAssignee?.assigneeUserId and  questionAssignee?.assignee!=null) or
+		 					    (questionAssignee?.assignee==null and !userIsLeadApplicant)},
                                 name='formInput['+${formInput.getId()}+']'
                                 )" th:remove="tag">
         </div>
@@ -243,28 +243,28 @@
 </div>
 <!-- ========================= Current Assignee =========================== -->
 <div th:fragment="current-assignee">
-    <div th:if="(${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId()} and ${questionAssignee?.getAssignee()})" th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')">
-      <span th:if="${questionAssignee?.getAssignee().getUser().getId() == leadApplicant?.getId()}">You have reassigned this question to</span>
-      <span th:unless="${questionAssignee?.getAssignee().getUser().getId() == leadApplicant?.getId()}">You have assigned this question to</span>
-      <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
+    <div th:if="(${currentUser.getId() == questionAssignee?.assignedByUserId} and ${questionAssignee?.assignee})" th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assignee  assigned-to-me ' : 'assignee')">
+      <span th:if="${questionAssignee?.assigneeUserId == leadApplicant?.getId()}">You have reassigned this question to</span>
+      <span th:unless="${questionAssignee?.assigneeUserId == leadApplicant?.getId()}">You have assigned this question to</span>
+      <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}" />
     </div>
-    <div th:if="${questionAssignee?.getAssignee()}" th:unless="${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId()}" th:class="(${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()} ? 'assignee  assigned-to-me ' : 'assignee')" >
-        <span th:if="${questionAssignee?.getAssignedBy().getUser().getId() != leadApplicant?.getId()}">This question has been reassigned to
-          <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/> by
-          <span th:text="${currentUser.getId() == questionAssignee?.getAssignedBy()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignedBy()?.getUser()?.getName()}"/>
+    <div th:if="${questionAssignee?.assignee}" th:unless="${currentUser.getId() == questionAssignee?.assignedByUserId}" th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assignee  assigned-to-me ' : 'assignee')" >
+        <span th:if="${questionAssignee?.assignedByUserId != leadApplicant?.getId()}">This question has been reassigned to
+          <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}"/> by
+          <span th:text="${(currentUser.getId() == questionAssignee?.assignedByUserId) ? 'you' : questionAssignee?.assignedByName}"/>
         </span>
-        <span th:unless="${questionAssignee?.getAssignedBy().getUser().getId() != leadApplicant?.getId()}">This question is assigned to
-          <span th:text="${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId() ? 'you' : questionAssignee?.getAssignee()?.getUser()?.getName()}"/>
+        <span th:unless="${questionAssignee?.assignedByUserId != leadApplicant?.getId()}">This question is assigned to
+          <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}"/>
         </span>
     </div>
 </div>
 <!-- ========================= Assign / reassign buttons =========================== -->
 <div th:fragment="ready-for-review">
-  <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()}">
+  <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${currentUser.getId() == questionAssignee?.assigneeUserId}">
     <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}"
             type="submit"
             name="assign_question"
-            th:value="${question.getId()}+'_'+${questionAssignee?.getAssignedBy()?.getUser()?.getId()}"
+            th:value="${question.getId()}+'_'+${questionAssignee?.assignedByUserId}"
             th:class="'buttonlink'">Ready for review
     </button>
   </div>
@@ -276,16 +276,16 @@
               <div th:include="question-type/form-elements :: assigned-to" th:remove="tag"/>
         </div>
         <div class="assign-team">
-            <h3>Reassign question</h3>
+            Reassign question
             <ul class="list-bullet">
                 <li th:each="assignableUser : ${assignableUsers}">
                     <button type="submit" name="assign_question"
                             th:value="${question.getId()}+'_'+${assignableUser.getId()}"
-                            th:unless="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
+                            th:unless="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                             th:text="${assignableUser.getUser()?.getName()}"
                             th:attrappend="formaction='&#35;question-'+${question.getId()}"
                             class="buttonlink"/>
-                    <div th:if="${(questionAssignee?.getAssignee()?.getId() == assignableUser.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
+                    <div th:if="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                          th:text="${assignableUser.getUser()?.getName()}"/>
                 </li>
             </ul>
@@ -294,13 +294,13 @@
 </div>
 <!-- ========================= Assigned to =========================== -->
 <div th:fragment="assigned-to">
-        <div th:remove="tag" th:if="${questionAssignee?.getAssignee() != null} ">
-            <span th:if="${questionAssignee?.getAssignedBy()?.getUser()?.getId() == leadApplicant?.getUser().getId()}">Assigned to:</span>
-            <span th:unless="${questionAssignee?.getAssignedBy()?.getUser()?.getId() == leadApplicant?.getUser().getId()}">Reassigned to:</span>
-             <strong th:text="${name}" th:with="name=${(questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser.getId()) ? 'You' : questionAssignee?.getAssignee()?.getUser()?.getName()}" />
+        <div th:remove="tag" th:if="${questionAssignee?.assignee != null} ">
+            <span th:if="${questionAssignee?.assignedByUserId == leadApplicant?.getUser().getId()}">Assigned to:</span>
+            <span th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.getUser().getId()}">Reassigned to:</span>
+             <strong th:text="${name}" th:with="name=${(questionAssignee?.assigneeUserId == currentUser.getId()) ? 'You' : questionAssignee?.getAssigneeName()}" />
         </div>
         <!-- Default to lead applicant when unassigned.  TODO: Maybe we need to indicate visually in someway that this has not been actually assigned by defaulting to it? -->
-        <div th:remove="tag" th:if="${questionAssignee?.getAssignee() == null} ">
+        <div th:remove="tag" th:if="${questionAssignee?.assignee == null} ">
             Assigned to: <strong th:text="${name}" th:with="name=${(leadApplicant?.getUser()?.getId() == currentUser.getId()) ? 'You' : leadApplicant?.getUser()?.getName()}" />
         </div>
 </div>
@@ -322,7 +322,7 @@
 <!-- ========================= Mark as complete buttons =========================== -->
 
 <div th:fragment="form-mark-as-complete-buttons">
-    <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.getAssignee()?.getUser()?.getId() == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}"
+    <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}"
             type="submit"
             name="mark_as_complete"
             th:value="${question.getId()}"
@@ -337,7 +337,6 @@
             th:class="${costCategory!=null} ? 'button' : 'buttonlink'"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Edit
     </button>
-
 </div>
 <!-- ========================= edit link =========================== -->
 

@@ -4,14 +4,18 @@ import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.application.transactional.SectionService;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @Rollback
 public class SectionControllerIntegrationTest extends BaseControllerIntegrationTest<SectionController> {
@@ -69,10 +73,10 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
 
     @Test
     public void testGetById() throws Exception {
-        Section section = controller.getById(sectionId);
+        SectionResource section = controller.getById(sectionId).getSuccessObject();
         assertEquals("Details", section.getName());
 
-        section = controller.getById(2L);
+        section = controller.getById(2L).getSuccessObject();
         assertEquals("Application questions", section.getName());
     }
 
@@ -87,16 +91,16 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         assertEquals("Your finances", section.getName());
         assertTrue(section.hasChildSections());
         assertEquals(7, section.getChildSections().size());
-        assertTrue(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections));
-        assertEquals(8, controller.getCompletedSections(applicationId, 3L).size());
+        assertTrue(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());
+        assertEquals(8, controller.getCompletedSections(applicationId, 3L).getSuccessObject().size());
 
         // Mark one question as incomplete.
         questionService.markAsInComplete(28L, applicationId, leadApplicantProcessRole);
-        assertFalse(questionService.isMarkedAsComplete(questionService.getQuestionById(21L), applicationId, leadApplicantOrganisationId));
+        assertFalse(questionService.isMarkedAsComplete(questionService.getQuestionById(21L).getSuccessObject(), applicationId, leadApplicantOrganisationId).getSuccessObject());
 
-        assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections));
-        assertEquals(7, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).size());
-        assertEquals(8, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).size());
+        assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());
+        assertEquals(7, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccessObject().size());
+        assertEquals(8, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).getSuccessObject().size());
 
         section = sectionRepository.findOne(11L);
         assertEquals("Materials", section.getName());

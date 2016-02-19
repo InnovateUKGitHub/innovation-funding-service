@@ -88,6 +88,9 @@ ifs-data-service.ipr
 ifs-data-service.iws
 ifs-web-service.ipr
 robot-tests/target
+robot-tests/benchmarking_report.txt
+jmeter/jmeter.log
+
 
 classes/
 
@@ -101,3 +104,4 @@ ifs-web-service.iws
 
 # python bytecode nonsense
 *.pyc
+

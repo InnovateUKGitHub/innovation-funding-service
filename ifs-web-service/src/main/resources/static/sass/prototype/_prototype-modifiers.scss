@@ -21,12 +21,22 @@
 	}
 }
 
+table{
+	tfoot{
+		border-top: 3px solid $black;
+	}
+}
+
 /*--- Full width pages for comp administrators ---*/
 
 .full-width{
 	#content{
-		max-width: 90%;
+		max-width: 95%;
 		min-width: 960px;
+
+		@include media-down(tablet){
+			min-width: 90%;
+		}
 	}
 }
 
@@ -141,5 +151,22 @@ ul.underline{
 	@extend %hidden-blocks-js;
 }
 
+/*--- Clearfix ---*/
 
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
 
+.cf:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.cf {
+    *zoom: 1;
+}

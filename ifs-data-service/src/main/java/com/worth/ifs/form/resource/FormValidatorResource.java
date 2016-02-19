@@ -1,7 +1,6 @@
 package com.worth.ifs.form.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.Validator;
 
 
@@ -47,5 +46,9 @@ public class FormValidatorResource {
     @JsonIgnore
     public Class<Validator> getClazz() throws ClassNotFoundException {
         return (Class<Validator>) Class.forName(this.clazzName);
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

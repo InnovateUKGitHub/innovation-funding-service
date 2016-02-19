@@ -1,14 +1,16 @@
 package com.worth.ifs.application.mapper;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
+import com.worth.ifs.invite.mapper.InviteMapper;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -16,17 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
         ProcessRoleMapper.class,
         ApplicationFinanceMapper.class,
         ApplicationStatusMapper.class,
-        CompetitionMapper.class
+        CompetitionMapper.class,
+        InviteMapper.class
     }
 )
-public abstract class ApplicationMapper {
-
-    @Autowired
-    private ApplicationRepository repository;
-
-    public abstract ApplicationResource mapApplicationToResource(Application object);
-
-    public abstract Application mapResourceToApplication(ApplicationResource resource);
+public abstract class ApplicationMapper extends BaseMapper<Application, ApplicationResource, Long> {
 
     public Long mapApplicationToId(Application object) {
         if (object == null) {
@@ -35,8 +31,13 @@ public abstract class ApplicationMapper {
         return object.getId();
     }
 
-    public Application mapIdToApplication(Long id) {
-        return repository.findOne(id);
-    }
+    @Mappings({
+            @Mapping(source = "competition.name", target = "competitionName")
+    })
+    public abstract ApplicationResource mapToResource(Application domain);
+    public abstract Iterable<ApplicationResource> mapToResource(Iterable<Application> domain);
+    public abstract Application mapToDomain(ApplicationResource resource);
+    public abstract Iterable<Application> mapToDomain(Iterable<ApplicationResource> resource);
+
 
 }

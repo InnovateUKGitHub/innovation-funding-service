@@ -1,5 +1,10 @@
 package com.worth.ifs.dashboard;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
@@ -8,9 +13,10 @@ import com.worth.ifs.application.service.ApplicationStatusRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.ProcessRoleService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +24,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 
@@ -59,7 +60,7 @@ public class ApplicantController {
         List<ApplicationResource> inProgress = applicationService.getInProgress(user.getId());
         List<ApplicationResource> finished = applicationService.getFinished(user.getId());
 
-        Map<Long, Competition> competitions = createCompetitionMap(inProgress, finished);
+        Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished);
         Map<Long, ApplicationStatusResource> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
 
         model.addAttribute("applicationsInProcess", inProgress);
@@ -88,17 +89,18 @@ public class ApplicantController {
         ).mapToLong(applicationResource -> applicationResource.getId()).boxed().collect(Collectors.toList());
     }
 
+    // TODO DW - INFUND-1555 - handle rest result
     private Map<Long, ApplicationStatusResource> createApplicationStatusMap(List<ApplicationResource>... resources){
         return combineLists(resources).stream()
             .collect(
                 Collectors.toMap(
                     ApplicationResource::getId,
-                    application -> applicationStatusService.getApplicationStatusById(application.getApplicationStatus())
+                    application -> applicationStatusService.getApplicationStatusById(application.getApplicationStatus()).getSuccessObjectOrNull()
                 )
             );
     }
 
-    private Map<Long, Competition> createCompetitionMap(List<ApplicationResource>... resources){
+    private Map<Long, CompetitionResource> createCompetitionMap(List<ApplicationResource>... resources){
         return combineLists(resources).stream()
             .collect(
                 Collectors.toMap(

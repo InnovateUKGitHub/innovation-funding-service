@@ -2,7 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.commons.resource.ResourceEnvelope;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.application.service.Futures.call;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -24,25 +25,28 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserRestService userRestService;
+    private UserRestService userRestService;
 
     @Autowired
-    ProcessRoleService processRoleService;
+    private ProcessRoleService processRoleService;
 
     @Override
+    // TODO DW - INFUND-1555 - get service to return RestResult
     public List<User> getAssignable(Long applicationId) {
-        return userRestService.findAssignableUsers(applicationId);
+        return userRestService.findAssignableUsers(applicationId).getSuccessObjectOrNull();
     }
 
+    @Override
     public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = simpleMap(application.getProcessRoles(),id -> processRoleService.getById(id));
+        List<ProcessRole> userApplicationRoles = call(simpleMap(application.getProcessRoles(), id -> processRoleService.getById(id)));
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRole().getName()
                 .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().getId().equals(userId));
 
     }
 
+    @Override
     public ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = simpleMap(application.getProcessRoles(),id -> processRoleService.getById(id));
+        List<ProcessRole> userApplicationRoles = call(simpleMap(application.getProcessRoles(), id -> processRoleService.getById(id)));
         for(final ProcessRole processRole : userApplicationRoles){
             if(processRole.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())){
                 return processRole;
@@ -51,36 +55,39 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
     public Set<User> getAssignableUsers(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList());
+        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
+                .map(id -> processRoleService.getById(id))
+                .collect(Collectors.toList()));
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
                 .map(ProcessRole::getUser)
                 .collect(Collectors.toSet());
     }
 
+    @Override
     public Set<User> getApplicationUsers(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
+        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
             .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()));
         return userApplicationRoles.stream()
                 .map(ProcessRole::getUser)
                 .collect(Collectors.toSet());
     }
 
-    public ResourceEnvelope<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
-        ResourceEnvelope<UserResource> userResourceResourceStatusEnvelope = userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
-        return userResourceResourceStatusEnvelope;
+    @Override
+    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
+        return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
     }
 
     @Override
-    public ResourceEnvelope<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
+    public RestResult<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
         return userRestService.updateDetails(email, firstName, lastName, title, phoneNumber);
     }
 
-    public List<UserResource> findUserByEmail(String email) {
+    @Override
+    public RestResult<List<UserResource>> findUserByEmail(String email) {
         return userRestService.findUserByEmail(email);
     }
 }

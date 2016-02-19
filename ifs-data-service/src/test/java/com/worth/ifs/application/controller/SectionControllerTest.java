@@ -1,23 +1,27 @@
 package com.worth.ifs.application.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.competition.domain.Competition;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -51,7 +55,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         Competition competition = newCompetition().withSections(allSections).build();
         Application application = newApplication().withCompetition(newCompetition().withSections(allSections).build()).build();
         when(sectionService.getCompletedSections(application.getId(), organisationId))
-                .thenReturn(completedSectionIds);
+                .thenReturn(serviceSuccess(completedSectionIds));
 
         mockMvc.perform(post("/section/getCompletedSections/" + application.getId() + "/" + organisationId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -72,7 +76,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         Competition competition = newCompetition().withSections(allSections).build();
         Application application = newApplication().withCompetition(newCompetition().withSections(allSections).build()).build();
         when(sectionService.getIncompleteSections(application.getId()))
-                .thenReturn(incompleteSectionIds);
+                .thenReturn(serviceSuccess(incompleteSectionIds));
 
         mockMvc.perform(post("/section/getIncompleteSections/" + application.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -83,21 +87,21 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
     @Test
     public void findByNameTest() throws Exception {
-        List<Section> sections = newSection().build(1);
-        when(sectionService.findByName("testname")).thenReturn(sections.get(0));
+        SectionResource section = newSectionResource().build();
+        when(sectionService.findByName("testname")).thenReturn(serviceSuccess(section));
 
         mockMvc.perform(post("/section/findByName/testname")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(sections.get(0))));
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(section)));
     }
 
     @Test
     public void getNextSectionTest() throws Exception {
         Section section = newSection().withCompetitionAndPriority(newCompetition().build(), 1).build();
-        Section nextSection = newSection().build();
-        when(sectionService.getNextSection(section.getId())).thenReturn(nextSection);
+        SectionResource nextSection = newSectionResource().build();
+        when(sectionService.getNextSection(section.getId())).thenReturn(serviceSuccess(nextSection));
 
         mockMvc.perform(get("/section/getNextSection/" + section.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -109,8 +113,8 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
     @Test
     public void getPreviousSectionTest() throws Exception {
         Section section = newSection().withCompetitionAndPriority(newCompetition().build(), 1).build();
-        Section previousSection = newSection().build();
-        when(sectionService.getPreviousSection(section.getId())).thenReturn(previousSection);
+        SectionResource previousSection = newSectionResource().build();
+        when(sectionService.getPreviousSection(section.getId())).thenReturn(serviceSuccess(previousSection));
 
         mockMvc.perform(get("/section/getPreviousSection/" + section.getId())
                 .contentType(MediaType.APPLICATION_JSON)

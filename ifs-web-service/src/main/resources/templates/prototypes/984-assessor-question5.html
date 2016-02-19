@@ -18,10 +18,12 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Technical approach'})" th:remove="tag" />
 
+    <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p>
+
 	<form action="#" method="post">
 		<div class="form-group">
 			
-			<h2 class="heading-medium no-margin">5. What technical approach will you use and how will you manage your project?</h2>
+			<h2 class="heading-medium">5. What technical approach will you use and how will you manage your project?</h2>
 			
 			<p>Our Academic partner has developed a technique to identify the precise cause of the issue and have been able to demonstrate it at a small scale. Taking this information they will scale up the experiment to a percentage of industrial scale to confirm. We will take this data and engineer a solution to isolate the problem we will then collude with our fabrication partner to design and prototype a tool to correct the obstacle.</p>
 
@@ -32,7 +34,7 @@
             <a href="#">Project-plan.pdf (161.96 KB)</a>
         </div>
 
-		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:remove="tag" />
+		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:with="questionTitle='question5'" th:remove="tag" />
 
 	</form>
 

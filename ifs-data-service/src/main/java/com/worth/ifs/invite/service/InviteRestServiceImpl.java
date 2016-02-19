@@ -1,16 +1,16 @@
 package com.worth.ifs.invite.service;
 
-import com.worth.ifs.commons.resource.ResourceEnvelope;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.invite.resource.InviteOrganisationResourceEnvelope;
 import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.user.service.OrganisationRestService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.worth.ifs.invite.resource.InviteResultsResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.inviteOrganisationResourceListType;
 
 /*
 * A typical RestService to use as a client API on the web-service side for the data-service functionality .
@@ -18,9 +18,8 @@ import java.util.List;
 
 @Service
 public class InviteRestServiceImpl extends BaseRestService implements InviteRestService {
+
     private String inviteRestUrl;
-    @Autowired
-    OrganisationRestService organisationRestService;
 
     @Value("${ifs.data.service.rest.invite}")
     void setInviteRestUrl(String inviteRestUrl) {
@@ -28,7 +27,7 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     }
 
     @Override
-    public ResourceEnvelope<InviteOrganisationResource> createInvitesByInviteOrganisation(String organisationName, List<InviteResource> invites) {
+    public RestResult<InviteResultsResource> createInvitesByInviteOrganisation(String organisationName, List<InviteResource> invites) {
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource();
 
         inviteOrganisation.setOrganisationName(organisationName);
@@ -36,19 +35,42 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
 
         String url = inviteRestUrl + "/createApplicationInvites";
 
-        return restPost(url, inviteOrganisation, InviteOrganisationResourceEnvelope.class);
+        return postWithRestResult(url, inviteOrganisation, InviteResultsResource.class);
     }
 
     @Override
-    public ResourceEnvelope<InviteOrganisationResource> createInvitesByOrganisation(Long organisationId, List<InviteResource> invites) {
+    public RestResult<InviteResultsResource> createInvitesByOrganisation(Long organisationId, List<InviteResource> invites) {
         InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource();
 
-        inviteOrganisation.setOrganisationId(organisationId);
+        inviteOrganisation.setOrganisation(organisationId);
         inviteOrganisation.setInviteResources(invites);
 
         String url = inviteRestUrl + "/createApplicationInvites";
 
-        return restPost(url, inviteOrganisation, InviteOrganisationResourceEnvelope.class);
+        return postWithRestResult(url, inviteOrganisation, InviteResultsResource.class);
+    }
+
+    @Override
+    public RestResult<InviteResultsResource> saveInvites(List<InviteResource> inviteResources) {
+        String url = inviteRestUrl + "/saveInvites";
+        return postWithRestResult(url, inviteResources, InviteResultsResource.class);
+    }
+
+    @Override
+    public RestResult<InviteResource> getInviteByHash(String hash) {
+        return getWithRestResult(inviteRestUrl + "/getInviteByHash/" + hash, InviteResource.class);
+    }
+
+    @Override
+    public RestResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
+        return getWithRestResult(inviteRestUrl + "/getInviteOrganisationByHash/"+hash, InviteOrganisationResource.class);
+    }
+
+
+    @Override
+    public RestResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
+        String url = inviteRestUrl + "/getInvitesByApplicationId/"+ applicationId;
+        return getWithRestResult(url, inviteOrganisationResourceListType());
     }
 
 }

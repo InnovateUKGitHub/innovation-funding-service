@@ -1,20 +1,29 @@
 package com.worth.ifs.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.util.JsonStatusResponse;
+import com.worth.ifs.commons.error.CommonErrors;
+import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.commons.rest.RestResult;
 import org.junit.Test;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
-import static org.junit.Assert.*;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.responseListType;
+import static java.nio.charset.Charset.defaultCharset;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 
 public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<ResponseRestServiceImpl> {
 
@@ -30,39 +39,56 @@ public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<Respon
 
     @Test
     public void test_getResponsesByApplicationId() {
-        String expectedUrl = dataServicesUrl + responseRestURL + "/findResponsesByApplication/1";
 
+        List<Response> responses = newResponse().build(3);
+        setupGetWithRestResultExpectations(responseRestURL + "/findResponsesByApplication/1", responseListType(), responses);
 
-        Response[] responses = newResponse().buildArray(3, Response.class);
-        ResponseEntity<Response[]> response = new ResponseEntity(responses, HttpStatus.OK);
-
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Response[].class)).thenReturn(response);
         // now run the method under test
-        List<Response> returnedResponses = service.getResponsesByApplicationId(1L);
+        List<Response> returnedResponses = service.getResponsesByApplicationId(1L).getSuccessObject();
 
         // verify
-        assertNotNull(returnedResponses);
-        assertEquals(3, returnedResponses.size());
-        assertEquals(responses[0], returnedResponses.get(0));
-        assertEquals(responses[1], returnedResponses.get(1));
-        assertEquals(responses[2], returnedResponses.get(2));
+        assertEquals(responses, returnedResponses);
 
     }
 
     @Test
-    public void test_saveQuestionResponseAssessorFeedback() {
+    public void testSaveQuestionResponseAssessorFeedback() throws JsonProcessingException {
         String expectedUrl = dataServicesUrl + responseRestURL +
                 "/saveQuestionResponse/1/assessorFeedback?assessorUserId=2&feedbackValue=value&feedbackText=text";
 
-        JsonStatusResponse ok = JsonStatusResponse.ok();
-        ResponseEntity<JsonStatusResponse> response = new ResponseEntity<>(ok, HttpStatus.OK);
-        when(mockRestTemplate.exchange(expectedUrl, PUT, httpEntityForRestCall(), JsonStatusResponse.class)).thenReturn(response);
+        ResponseEntity<Void> response = new ResponseEntity<>(OK);
+        when(mockRestTemplate.exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class)).thenReturn(response);
 
         // now run the method under test
-        Boolean success = service.saveQuestionResponseAssessorFeedback(2L, 1L, Optional.of("value"), Optional.of("text"));
+        RestResult<Void> success = service.saveQuestionResponseAssessorFeedback(2L, 1L, Optional.of("value"), Optional.of("text"));
 
         // verify
-        assertTrue(success);
+        assertTrue(success.isSuccess());
+    }
+
+    @Test
+    public void testSaveQuestionResponseAssessorFeedbackButRestErrorEnvelopeReturned() throws JsonProcessingException {
+
+        String expectedUrl = dataServicesUrl + responseRestURL +
+                "/saveQuestionResponse/1/assessorFeedback?assessorUserId=2&feedbackValue=value&feedbackText=text";
+
+        RestErrorResponse restErrorResponse = new RestErrorResponse(asList(CommonErrors.badRequestError("Bad!"), CommonErrors.internalServerErrorError("Bang!")));
+        when(mockRestTemplate.exchange(expectedUrl, PUT, httpEntityForRestCall(), Void.class)).thenThrow(new HttpServerErrorException(BAD_REQUEST, "Bad!", toJsonBytes(restErrorResponse), defaultCharset()));
+
+        // now run the method under test
+        RestResult<Void> failure = service.saveQuestionResponseAssessorFeedback(2L, 1L, Optional.of("value"), Optional.of("text"));
+
+        // verify
+        assertTrue(failure.isFailure());
+        assertEquals(BAD_REQUEST, failure.getStatusCode());
+    }
+
+    private String toJson(Object object) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(object);
+    }
+
+    private byte[] toJsonBytes(Object object) throws JsonProcessingException {
+        return toJson(object).getBytes();
     }
 //
 //    @Test

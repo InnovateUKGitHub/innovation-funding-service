@@ -58,6 +58,17 @@ public class Role {
         this.name = name;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+    @JsonIgnore
+    public List<User> getUsers() {
+        return this.users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 
     @Override
     public boolean equals(Object obj) {

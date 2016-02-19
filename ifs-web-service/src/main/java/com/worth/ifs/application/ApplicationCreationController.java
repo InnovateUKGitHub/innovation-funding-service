@@ -11,13 +11,12 @@ import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.user.domain.AddressType;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.util.CookieUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -63,29 +61,12 @@ public class ApplicationCreationController extends AbstractApplicationController
     public static final String COMPANY_NAME = "company_name";
     public static final String CONFIRM_COMPANY_DETAILS = "confirm-company-details";
     public static final String COMPANY_ADDRESS = "company_address";
-    public static final String ORGANISATION_SIZE = "organisation_size";
     public static final String ORGANISATION_NAME = "organisationName";
-    public static final String ORGANISATION_SIZE1 = "organisationSize";
     public static final String COMPANY_HOUSE_NAME = "companyHouseName";
     private static final String POSTCODE = "postcode";
     private static final String APPLICATION_ID = "applicationId";
-    @Value("${server.session.cookie.secure}")
-    private static boolean cookieSecure;
-    @Value("${server.session.cookie.http-only}")
-    private static boolean cookieHttpOnly;
     private static final Log log = LogFactory.getLog(ApplicationCreationController.class);
     Validator validator;
-
-    public static void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue) {
-        if (fieldName != null) {
-            Cookie cookie = new Cookie(fieldName, fieldValue);
-            cookie.setSecure(cookieSecure);
-            cookie.setHttpOnly(cookieHttpOnly);
-            cookie.setPath("/");
-            cookie.setMaxAge(3600);
-            response.addCookie(cookie);
-        }
-    }
 
     public static String getSerializedObject(Object object) {
         ObjectMapper mapper = new ObjectMapper();
@@ -109,17 +90,6 @@ public class ApplicationCreationController extends AbstractApplicationController
         return obj;
     }
 
-    public static String getFromCookie(HttpServletRequest request, String fieldName) {
-        if(request != null && request.getCookies() != null){
-            for (Cookie cookie : request.getCookies()) {
-                if (cookie.getName().equals(fieldName)) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
-
     @Autowired
     public void setValidator(Validator validator) {
         this.validator = validator;
@@ -132,25 +102,26 @@ public class ApplicationCreationController extends AbstractApplicationController
                                    HttpServletResponse response) {
         model.addAttribute("loginForm", new LoginForm());
         model.addAttribute(COMPETITION_ID, competitionId);
-
-        saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
+        CookieUtil.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
         return "create-application/check-eligibility";
     }
 
     @RequestMapping("/initialize-application")
     public String initializeApplication(HttpServletRequest request,
                                         HttpServletResponse response) {
-        Long competitionId = Long.valueOf(getFromCookie(request, COMPETITION_ID));
-        Long userId = Long.valueOf(getFromCookie(request, USER_ID));
+        log.info("get competition id");
+
+        Long competitionId = Long.valueOf(CookieUtil.getCookieValue(request, COMPETITION_ID));
+        log.info("get user id");
+        Long userId = Long.valueOf(CookieUtil.getCookieValue(request, USER_ID));
 
         ApplicationResource application = applicationService.createApplication(competitionId, userId, "");
         if (application == null || application.getId() == null) {
             log.error("Application not created with competitionID: " + competitionId);
             log.error("Application not created with userId: " + userId);
         } else {
-            saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
-            return String.format("redirect:/application/%s/contributors/invite", String.valueOf(application.getId()));
-            //return ApplicationController.redirectToApplication(application);
+            CookieUtil.saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
+            return String.format("redirect:/application/%s/contributors/invite?newApplication", String.valueOf(application.getId()));
         }
         return null;
     }
@@ -196,7 +167,8 @@ public class ApplicationCreationController extends AbstractApplicationController
                                            Model model,
                                            HttpServletRequest request,
                                            HttpServletResponse response) throws IOException {
-        String companyHouseFormJson = getFromCookie(request, "companyHouseForm");
+
+        String companyHouseFormJson = CookieUtil.getCookieValue(request, "companyHouseForm");
         companyHouseForm = getObjectFromJson(companyHouseFormJson, CompanyHouseForm.class);
         companyHouseForm.bindingResult = bindingResult;
         companyHouseForm.objectErrors = bindingResult.getAllErrors();
@@ -273,12 +245,10 @@ public class ApplicationCreationController extends AbstractApplicationController
             companyHouseForm.setManualAddress(true);
             bindingResult.getFieldErrors().stream().forEach(e -> log.debug(e.getDefaultMessage()));
 
-            if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !bindingResult.hasFieldErrors(ORGANISATION_SIZE1)) {
+            if (!bindingResult.hasFieldErrors(ORGANISATION_NAME)) {
                 // save state into cookie.
-                saveToCookie(response, COMPANY_NAME, String.valueOf(companyHouseForm.getOrganisationName()));
-                saveToCookie(response, COMPANY_ADDRESS, getSerializedObject(companyHouseForm.getSelectedPostcode()));
-                saveToCookie(response, ORGANISATION_SIZE, companyHouseForm.getOrganisationSize().name());
-
+                CookieUtil.saveToCookie(response, COMPANY_NAME, String.valueOf(companyHouseForm.getOrganisationName()));
+                CookieUtil.saveToCookie(response, COMPANY_ADDRESS, String.valueOf(companyHouseForm.getSelectedPostcode()));
                 return "redirect:/application/create/confirm-company";
             } else {
                 // Prepare data for displaying validation messages after redirect.
@@ -288,7 +258,7 @@ public class ApplicationCreationController extends AbstractApplicationController
                 companyHouseForm.setManualAddress(true);
                 companyHouseForm.setTriedToSave(true);
 
-                saveToCookie(response, "companyHouseForm", getSerializedObject(companyHouseForm));
+                CookieUtil.saveToCookie(response, "companyHouseForm", getSerializedObject(companyHouseForm));
                 return "redirect:/application/create/find-business/invalid-entry";
             }
         }
@@ -303,12 +273,12 @@ public class ApplicationCreationController extends AbstractApplicationController
     public String confirmCompany(Model model,
                                  HttpServletRequest request) throws IOException {
         // Get data form cookie, convert json to Address object
-        String jsonAddress = getFromCookie(request, COMPANY_ADDRESS);
+        String jsonAddress = CookieUtil.getCookieValue(request, COMPANY_ADDRESS);
         Address address = getObjectFromJson(jsonAddress, Address.class);
 
         // For displaying information only!
         CompanyHouseBusiness org = new CompanyHouseBusiness();
-        org.setName(getFromCookie(request, COMPANY_NAME));
+        org.setName(CookieUtil.getCookieValue(request, COMPANY_NAME));
         org.setOfficeAddress(address);
         model.addAttribute("business", org);
 
@@ -321,8 +291,7 @@ public class ApplicationCreationController extends AbstractApplicationController
                                   Model model,
                                   @PathVariable(COMPANY_ID) final String companyId,
                                   HttpServletResponse response) {
-        saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
-
+        CookieUtil.saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
         CompanyHouseBusiness org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
         model.addAttribute("business", org);
         return "create-application/confirm-selected-organisation";
@@ -377,7 +346,7 @@ public class ApplicationCreationController extends AbstractApplicationController
                                         @PathVariable(COMPANY_ID) final String companyId,
                                         HttpServletRequest request,
                                         HttpServletResponse response) {
-        saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
+        CookieUtil.saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
 
         if (organisationService == null) {
             log.error("companyHouseService is null");
@@ -399,25 +368,23 @@ public class ApplicationCreationController extends AbstractApplicationController
         } else if (request.getParameter(SELECT_ADDRESS) != null) {
             return String.format("redirect:/application/create/selected-business/%s/postcode/%s/use-address/%s", companyId, confirmCompanyDetailsForm.getPostcodeInput(), confirmCompanyDetailsForm.getSelectedPostcodeIndex());
         } else if (request.getParameter(SAVE_COMPANY_DETAILS) != null) {
-            if (!bindingResult.hasFieldErrors(ORGANISATION_SIZE1)) {
-                String name = org.getName();
-                String companyHouseNumber = org.getCompanyNumber();
-                // NOTE: Setting organisation size to null as this will eventually be moved to finance details section.
-                Organisation organisation = new Organisation(null, name, companyHouseNumber, null);
+            String name = org.getName();
+            String companyHouseNumber = org.getCompanyNumber();
+            // NOTE: Setting organisation size to null as this will eventually be moved to finance details section.
+            OrganisationResource organisationResource = new OrganisationResource();
+            organisationResource.setName(name);
+            organisationResource.setCompanyHouseNumber(companyHouseNumber);
+            organisationResource.setOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
 
-                OrganisationResource organisationResource = organisationService.save(organisation);
-                if (!confirmCompanyDetailsForm.isUseCompanyHouseAddress()) {
-                    //Save address manually entered.
-                    organisationService.addAddress(organisationResource, confirmCompanyDetailsForm.getSelectedPostcode(), AddressType.OPERATING);
-                }
-                // Save address from company house api
-                organisationService.addAddress(organisationResource, org.getOfficeAddress(), AddressType.REGISTERED);
-
-                return String.format("redirect:/registration/register?organisationId=%d", organisationResource.getId());
-            } else {
-                log.warn("Could not save, validation message organisation size.");
-                confirmCompanyDetailsForm.setTriedToSave(true);
+            organisationResource = organisationService.save(organisationResource);
+            if (!confirmCompanyDetailsForm.isUseCompanyHouseAddress()) {
+                //Save address manually entered.
+                organisationService.addAddress(organisationResource, confirmCompanyDetailsForm.getSelectedPostcode(), AddressType.OPERATING);
             }
+            // Save address from company house api
+            organisationService.addAddress(organisationResource, org.getOfficeAddress(), AddressType.REGISTERED);
+
+            return String.format("redirect:/registration/register?organisationId=%d", organisationResource.getId());
         }
         return "create-application/confirm-selected-organisation";
     }
@@ -428,13 +395,16 @@ public class ApplicationCreationController extends AbstractApplicationController
     @RequestMapping("/save-company")
     public String saveCompany(HttpServletRequest request) throws IOException {
         // Get data form cookie, convert json to Address object
-        String jsonAddress = getFromCookie(request, COMPANY_ADDRESS);
+
+        String jsonAddress = CookieUtil.getCookieValue(request, COMPANY_ADDRESS);
         Address address = getObjectFromJson(jsonAddress, Address.class);
 
 
-        Organisation organisation = new Organisation(null, getFromCookie(request, COMPANY_NAME), null, OrganisationSize.valueOf(getFromCookie(request, ORGANISATION_SIZE)));
+        OrganisationResource organisationResource = new OrganisationResource();
+        organisationResource.setName(CookieUtil
+                .getCookieValue(request, COMPANY_NAME));
 
-        OrganisationResource organisationResource = organisationService.save(organisation);
+        organisationResource = organisationService.save(organisationResource);
         if (address != null) {
             organisationService.addAddress(organisationResource, address, AddressType.OPERATING);
         }

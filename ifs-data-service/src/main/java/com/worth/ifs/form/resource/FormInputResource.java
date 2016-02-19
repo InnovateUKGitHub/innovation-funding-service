@@ -9,6 +9,7 @@ public class FormInputResource {
     private Integer wordCount;
     private Long formInputType;
     private List<Long> responses;
+    private Long question;
     private Long competition;
     private Set<Long> inputValidators;
     private String description;
@@ -97,4 +98,13 @@ public class FormInputResource {
     public void setIncludedInApplicationSummary(Boolean includedInApplicationSummary) {
         this.includedInApplicationSummary = includedInApplicationSummary;
     }
+
+    public Long getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Long question) {
+        this.question = question;
+    }
 }
+

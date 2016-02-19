@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.Optional;
  * This class contains methods to retrieve and store {@link Response} related data,
  * through the RestService {@link ResponseRestService}.
  */
+// TODO DW - INFUND-1555 - handle rest results
 @Service
 public class ResponseServiceImpl implements ResponseService {
 
@@ -20,7 +22,7 @@ public class ResponseServiceImpl implements ResponseService {
 
     @Override
     public List<Response> getByApplication(Long applicationId) {
-        return responseRestService.getResponsesByApplicationId(applicationId);
+        return responseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrNull();
     }
 
     @Override
@@ -33,7 +35,7 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public Boolean saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, Optional<String> feedbackValue, Optional<String> feedbackText) {
+    public RestResult<Void> saveQuestionResponseAssessorFeedback(Long assessorUserId, Long responseId, Optional<String> feedbackValue, Optional<String> feedbackText) {
         return responseRestService.saveQuestionResponseAssessorFeedback(assessorUserId, responseId, feedbackValue, feedbackText);
     }
 }

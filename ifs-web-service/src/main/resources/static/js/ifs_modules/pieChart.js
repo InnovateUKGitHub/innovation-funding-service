@@ -2,7 +2,7 @@
 //http://www.smashingmagazine.com/2015/07/designing-simple-pie-charts-with-css/
 IFS.pieChart = (function(){
     "use strict";
-     var s; // private alias to settings 
+     var s; // private alias to settings
 
     return {
         settings : {
@@ -12,7 +12,7 @@ IFS.pieChart = (function(){
             s = this.settings;
             if(Modernizr.svg && Modernizr.inlinesvg){
                 jQuery(s.pieElement).each(function() {
-                		IFS.pieChart.pieSVG(this);	
+                		IFS.pieChart.pieSVG(this);
                 });
             }
         },
@@ -33,6 +33,7 @@ IFS.pieChart = (function(){
             pie.textContent = '';
             svg.appendChild(title);
             svg.appendChild(circle);
+            pie.setAttribute('aria-hidden','true');
             pie.appendChild(svg);
         }
     };

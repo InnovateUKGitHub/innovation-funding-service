@@ -1,10 +1,9 @@
 package com.worth.ifs.user.mapper;
 
+import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.user.domain.OrganisationType;
-import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
     componentModel = "spring",
@@ -12,23 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
     }
 )
-public abstract class OrganisationTypeMapper {
+public abstract class OrganisationTypeMapper extends BaseMapper<OrganisationType, OrganisationTypeResource, Long> {
 
-    @Autowired
-    private OrganisationTypeRepository repository;
-
-    public abstract OrganisationTypeResource mapOrganisationTypeToResource(OrganisationType object);
-
-    public abstract OrganisationType resourceToOrganisationType(OrganisationTypeResource resource);
 
     public Long mapOrganisationTypeToId(OrganisationType object) {
         if (object == null) {
             return null;
         }
         return object.getId();
-    }
-
-    public OrganisationType mapIdToOrganisationType(Long id) {
-        return repository.findOne(id);
     }
 }

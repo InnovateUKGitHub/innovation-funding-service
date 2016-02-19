@@ -1,7 +1,5 @@
 package com.worth.ifs.finance.resource.cost;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -106,5 +104,9 @@ public class LabourCost implements CostItem {
     @Override
     public CostType getCostType() {
         return costType;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

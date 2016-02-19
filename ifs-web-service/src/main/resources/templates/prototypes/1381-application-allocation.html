@@ -8,13 +8,13 @@
 
 	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
 		<style>
-			#assessor-list tbody tr{
+			#application-list tbody tr{
 				display: none;
 			}
 			.pagination{
 				display: none;
 			}
-			#assessor-list tbody tr.filtered-result{
+			#application-list tbody tr.filtered-result{
 				display: table-row;
 			}
 		</style>
@@ -22,7 +22,7 @@
 
 </head>
 
-<body th:class="${(param.fullWidth == null ? 'comp-assessors' : 'comp-assessors full-width')}">
+<body th:class="${(param.fullWidth != null ? 'comp-assessors show-applications' : 'comp-assessors full-width show-applications')}">
 
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -37,53 +37,47 @@
 	
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Application allocation'})" th:remove="tag" />
 
-	<section class="boxed">
-        <div class="grid-row">
-            <div class="column-half">
-                <ul>
-                	<li><span class="heading-medium">50</span> applications</li>
-                	<li><span class="heading-medium">25</span> assessors available</li>
-                </ul>
-            </div>
-            <div class="column-half">
-                <ul>
-                	<li><span class="heading-medium">22/12/15</span> assessment opened</li>
-                	<li><span class="heading-medium">27/12/15</span> assessment close</li>
-                </ul>
-            </div>
-        </div>
+	<div id="sticky-zone">
+
+		<div class="info-area">
+			<div th:include="prototypes/fragments/comp-admin :: prototype-allocation-summary" th:remove="tag" />
+
+			<div th:if="${param.sendAssignments != null}" th:remove="tag">
+			    <div class="highlight-panel">
+			        <div id="added-assessors">
+						<a href="/prototypes/1385-application-allocation-confirm" class="button large">Confirm assignments</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
 		
 		
+		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		
+	
+		<div class="data-area">
 
-    </section>
-
-    <div th:if="${param.sendAssignments != null}" th:remove="tag">
-    	<div class="highlight-panel extra-margin">
-	        <div class="alignright-button" id="added-assessors">
-				<a href="/prototypes/1385-application-allocation-confirm" class="button large">Confirm assignments</a>
+			<h2 class="heading-large" id="current-assessors">Application list</h2>
+			
+			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}" th:remove="tag" />
+			
+			<div th:include="prototypes/fragments/comp-admin :: prototype-application-list-table" th:remove="tag" />
+			
+			<div th:if="${param.filterStatus == null}" th:remove="tag">
+			
+				<ul class="pagination">
+				    <li class="next">
+				        <a href="#" rel="next" title="Navigate to next part">
+				            <span class="pagination-label">Next</span>
+				            <span class="pagination-part-title">2 of 4</span>
+				        </a>
+				    </li>
+				</ul>
+			
 			</div>
 		</div>
-	</div>
 
-
-	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
-
-	<h2 class="heading-large" id="current-assessors">Application list</h2>
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}" th:remove="tag" />
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-application-list-table" th:remove="tag" />
-	
-	<div th:if="${param.filterStatus == null}" th:remove="tag">
-
-		<ul class="pagination">
-		    <li class="next">
-		        <a href="#" rel="next" title="Navigate to next part">
-		            <span class="pagination-label">Next</span>
-		            <span class="pagination-part-title">2 of 4</span>
-		        </a>
-		    </li>
-		</ul>
 
 	</div>
 
@@ -94,6 +88,7 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 </body>
 </html>

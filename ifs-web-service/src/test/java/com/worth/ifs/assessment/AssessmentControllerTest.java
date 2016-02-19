@@ -1,11 +1,17 @@
 package com.worth.ifs.assessment;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.viewmodel.AssessmentDashboardModel;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -21,18 +27,26 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
+import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -42,7 +56,6 @@ public class AssessmentControllerTest extends BaseUnitTest {
     private AssessmentController assessmentController;
 
     /* pages */
-    private final String competitionAssessments = "assessor-competition-applications";
     private final String assessorDashboard = "assessor-dashboard";
     private final String assessmentDetails = "assessment-details";
     private final String assessmentSubmitReview = "assessment-submit-review";
@@ -75,13 +88,18 @@ public class AssessmentControllerTest extends BaseUnitTest {
         List<Assessment> nonSubmittedAssessments = assessments.stream().filter(a -> !a.isSubmitted()).collect(toList());
         nonSubmittedAssessments.sort(new AssessmentStatusComparator());
 
+        long noOfAssessmentsStartedAwaitingSubmission = nonSubmittedAssessments.stream().filter(Assessment::hasAssessmentStarted).count();
+        boolean hasAssesmentsStartedAwaitingSubmission = noOfAssessmentsStartedAwaitingSubmission > 0;
+
         MvcResult mvcResult = mockMvc.perform(get("/assessor/competitions/{competitionId}/applications", competition.getId())).andReturn();
         AssessmentDashboardModel model = this.attributeFromMvcResultModel(mvcResult, "model");
         assertNotNull(model);
-        assertEquals(2, model.getAssessments().size());
+        assertEquals(3, model.getAssessments().size());
         assertEquals(nonSubmittedAssessments.get(0).getId(), model.getAssessments().get(0).getAssessment().getId());
         assertEquals(submittedAssessments.get(0).getId(), model.getSubmittedAssessments().get(0).getAssessment().getId());
         assertEquals(competition.getId(), model.getCompetition().getId());
+        assertEquals(noOfAssessmentsStartedAwaitingSubmission, model.getNoOfAsssessmentsStartedAwaitingSubmission());
+        assertEquals(hasAssesmentsStartedAwaitingSubmission, model.hasAssesmentsForSubmission());
     }
 
     @Test
@@ -104,7 +122,8 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsPendingApplication() throws Exception {
         ApplicationResource application = applications.get(1);
         Assessment assessment = getAssessment(application);
-        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(restSuccess(assessment));
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());
@@ -121,7 +140,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsRejectedApplication() throws Exception {
         ApplicationResource application = applications.get(0);
         Assessment assessment = getAssessment(application);
-        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(restSuccess(assessment));
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());
@@ -137,19 +156,22 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsInvalidApplication() throws Exception {
         ApplicationResource application = applications.get(2);
         Assessment assessment = getAssessment(application);
-        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(restSuccess(assessment));
 
         when(applicationService.getById(anyLong())).thenReturn(application);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(sectionService.getById(anyLong())).thenReturn(null);
+        when(sectionService.getByName("Your finances")).thenReturn(sectionResources.get(0));
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}", competition.getId(), application.getId()))
                 .andExpect(view().name(assessmentDetails))
-                .andExpect(model().attribute("userOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItems(organisations.get(0), organisations.get(1))))
-                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
+                .andExpect(model().attribute("userOrganisation", application3Organisations.get(0)))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application3Organisations.size())))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItems(application3Organisations.get(0))))
+                .andExpect(model().attribute("leadOrganisation", application3Organisations.get(0)))
                 .andExpect(model().attribute("currentApplication", application))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(application.getCompetition())));
     }
@@ -162,7 +184,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         when(responseService.saveQuestionResponseAssessorFeedback(assessor.getId(), 26L,
                 Optional.of("Some Feedback Value"), Optional.of("Some Feedback Text")))
-                .thenReturn(true);
+                .thenReturn(restSuccess(OK));
 
         mockMvc.perform(
                 put("/assessor/competitions/{competitionId}/applications/{applicationId}/response/{responseId}"
@@ -172,8 +194,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
                         .param("feedbackText", "Some Feedback Text")
                         .accept(MediaType.APPLICATION_JSON)
         )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -182,7 +203,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         when(responseService.saveQuestionResponseAssessorFeedback(assessor.getId(), 26L,
                 Optional.of("Some Feedback Value"), Optional.of("Some Feedback Text")))
-                .thenReturn(false);
+                .thenReturn(restFailure(BAD_REQUEST));
 
         mockMvc.perform(
                 put("/assessor/competitions/{competitionId}/applications/{applicationId}/response/{responseId}"
@@ -199,7 +220,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
     public void testApplicationAssessmentDetailsReject() throws Exception {
         ApplicationResource application = applications.get(1);
         Assessment assessment = getAssessment(application);
-        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(assessment);
+        when(assessmentRestService.getOneByProcessRole(assessment.getProcessRole().getId())).thenReturn(restSuccess(assessment));
 
         mockMvc.perform(get("/assessor/competitions/{competitionId}/applications/{applicationId}/reject-invitation", competition.getId(), application.getId()))
                 .andExpect(view().name(rejectInvitation))

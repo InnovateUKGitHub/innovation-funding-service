@@ -1,75 +1,111 @@
 package com.worth.ifs.util;
 
-import java.util.Optional;
-import java.util.function.Function;
+import com.worth.ifs.commons.service.ExceptionThrowingFunction;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
 /**
  * This class represents a return type that can have 2 possible return types, either a "left" value or a "right"
  * value.  Typically in functional programming, an Either is used to represent success and failure cases, where
  * the "left" type is the failure type and the "right" type is the success type.  Either producers can then be
- * chained together using the {@link Either#mapLeftOrRight(Function, Function)} method so that the if a "left" value is
- * encountered during the execution of the chain, the processing will "short circuit" and return the left response
- * without evaluating any further Either producers in the chain.
- *
- * Created by dwatson on 05/10/15.
+ * chained together using the {@link Either#mapLeftOrRight(ExceptionThrowingFunction, ExceptionThrowingFunction)} method
+ * so that the if a "left" value is encountered during the execution of the chain, the processing will "short circuit"
+ * and return the left response without evaluating any further Either producers in the chain.
  */
 public class Either<L, R> {
 
+    private static final Log LOG = LogFactory.getLog(Either.class);
+
+    private boolean leftSet = false;
+    private boolean rightSet = false;
+
+    public static <R> Either<Void, R> left() {
+        Either<Void, R> leftEither = new Either<>(null, null);
+        leftEither.leftSet = true;
+        return leftEither;
+    }
+
     public static <L, R> Either<L, R> left(L value) {
-        return new Either<>(Optional.of(value), Optional.empty());
+        Either<L, R> leftEither = new Either<>(value, null);
+        leftEither.leftSet = true;
+        return leftEither;
     }
 
     public static <L, R> Either<L, R> right(R value) {
-        return new Either<>(Optional.empty(), Optional.of(value));
+        Either<L, R> rightEither = new Either<>(null, value);
+        rightEither.rightSet = true;
+        return rightEither;
     }
 
-    private final Optional<L> left;
-    private final Optional<R> right;
+    private final L left;
+    private final R right;
 
-    protected Either(Optional<L> l, Optional<R> r) {
+    protected Either(L l, R r) {
         left = l;
         right = r;
     }
 
     public <T> T mapLeftOrRight(
-            Function<? super L, ? extends T> lFunc,
-            Function<? super R, ? extends T> rFunc) {
-        return left.map(lFunc).orElseGet(() -> right.map(rFunc).get());
+            ExceptionThrowingFunction<? super L, ? extends T> lFunc,
+            ExceptionThrowingFunction<? super R, ? extends T> rFunc) {
+        try {
+            return isLeft() ? lFunc.apply(left) : rFunc.apply(right);
+        } catch (Exception e) {
+            LOG.warn("Exception caught while processing function - throwing as a runtime exception", e);
+            throw new RuntimeException(e);
+        }
     }
 
     public <T> Either<L, T> map(
-            Function<? super R, Either<L, T>> rFunc) {
-        return isLeft() ? left(left.get()) : rFunc.apply(right.get());
+            ExceptionThrowingFunction<? super R, Either<L, T>> rFunc) {
+        try {
+            return isLeft() ? left(left) : rFunc.apply(right);
+        } catch (Exception e) {
+            LOG.warn("Exception caught while processing function - throwing as a runtime exception", e);
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean isLeft() {
         checkEitherState();
-        return left.isPresent();
+        return leftSet;
     }
 
     private void checkEitherState() {
-        if (left.isPresent() && right.isPresent()) {
+        if (leftSet && rightSet) {
             throw new IllegalStateException("Illegal state of Either - both left and right present");
         }
-        if (!left.isPresent() && !right.isPresent()) {
+        if (!leftSet && !rightSet) {
             throw new IllegalStateException("Illegal state of Either - both left and right not present");
         }
     }
 
     public boolean isRight() {
         checkEitherState();
-        return right.isPresent();
+        return rightSet;
     }
 
     public L getLeft() {
         checkEitherState();
-        return left.get();
+
+        if (!isLeft()) {
+            throw new NoSuchElementException("Not a left value");
+        }
+
+        return left;
     }
 
     public R getRight() {
         checkEitherState();
-        return right.get();
+
+        if (!isRight()) {
+            throw new NoSuchElementException("Not a right value");
+        }
+
+        return right;
     }
 
     public static <L, R> Supplier<Either<L, R>> toSuppliedLeft(Supplier<L> leftValueSupplier) {

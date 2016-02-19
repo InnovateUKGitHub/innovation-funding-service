@@ -1,56 +1,39 @@
 package com.worth.ifs.finance.controller;
 
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.repository.OrganisationRepository;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class ApplicationFinanceControllerTest {
+public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<ApplicationFinanceController> {
 
     @Mock
-    ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Mock
-    OrganisationRepository organisationRepository;
-
-    @Mock
-    ApplicationRepository applicationRepository;
+    private CostService costServiceMock;
 
     private ApplicationFinance applicationFinance;
-
     private ApplicationFinanceResource applicationFinanceResource;
-
     private Organisation organisation;
-
     private Application application;
 
-    private MockMvc mockMvc;
-
-    @InjectMocks
-    private ApplicationFinanceController applicationFinanceController;
+    @Override
+    protected ApplicationFinanceController supplyControllerUnderTest() {
+        return new ApplicationFinanceController();
+    }
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(applicationFinanceController)
-                .build();
-
         application = new Application();
         application.setId(1L);
         organisation = new Organisation(1L, "Worth Internet Systems");
@@ -60,31 +43,27 @@ public class ApplicationFinanceControllerTest {
 
     @Test
     public void applicationFinanceControllerShouldReturnApplicationByApplicationIdAndOrganisationId() throws Exception {
-        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(anyLong(), anyLong())).thenReturn(applicationFinance);
 
-        mockMvc.perform(get("/applicationfinance/findByApplicationOrganisation/{applicationId}/{organisationId}", "1", "1"))
+        when(costServiceMock.findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
+
+        mockMvc.perform(get("/applicationfinance/findByApplicationOrganisation/{applicationId}/{organisationId}", "123", "456"))
                 .andExpect(status().isOk());
 
-        verify(applicationFinanceRepository, times(1)).findByApplicationIdAndOrganisationId(anyLong(),anyLong());
-        verifyNoMoreInteractions(applicationFinanceRepository);
+        verify(costServiceMock, times(1)).findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L);
     }
 
     @Test
     public void applicationFinanceControllerShouldReturnNotFoundOnMissingParams() throws Exception {
-        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(anyLong(), anyLong())).thenReturn(applicationFinance);
 
         mockMvc.perform(get("/applicationfinance/findByApplicationOrganisation/{applicationId}/", "1"))
                 .andExpect(status().isNotFound());
 
         mockMvc.perform(get("/applicationfinance/findByApplicationOrganisation/"))
                 .andExpect(status().isNotFound());
-
-        verifyNoMoreInteractions(applicationFinanceRepository);
     }
 
     @Test
     public void applicationFinanceControllerShouldReturnBadRequestOnWrongParamType() throws Exception {
-        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(anyLong(), anyLong())).thenReturn(applicationFinance);
 
         mockMvc.perform(get("/applicationfinance/findByApplicationOrganisation/{applicationId}/{organisationId}", "1", "wrong"))
                 .andExpect(status().isBadRequest());
@@ -94,56 +73,42 @@ public class ApplicationFinanceControllerTest {
 
         mockMvc.perform(get("/applicationfinance/findByApplicationOrganisation/{applicationId}/{organisationId}", "wrong", "wrong"))
                 .andExpect(status().isBadRequest());
-
-        verifyNoMoreInteractions(applicationFinanceRepository);
     }
 
     @Test
     public void findByApplicationShouldReturnApplicationByApplicationId() throws Exception {
-        when(applicationFinanceRepository.findByApplicationId(anyLong())).thenReturn(singletonList(applicationFinance));
 
-        mockMvc.perform(get("/applicationfinance/findByApplication/{applicationId}", "1"))
+        when(costServiceMock.findApplicationFinanceByApplication(123L)).thenReturn(serviceSuccess(singletonList(applicationFinanceResource)));
+
+        mockMvc.perform(get("/applicationfinance/findByApplication/{applicationId}", "123"))
                 .andExpect(status().isOk());
 
-        verify(applicationFinanceRepository, times(1)).findByApplicationId(anyLong());
-        verifyNoMoreInteractions(applicationFinanceRepository);
+        verify(costServiceMock, times(1)).findApplicationFinanceByApplication(123L);
     }
 
     @Test
     public void findByApplicationShouldReturnNotFoundOnMissingParams() throws Exception {
-        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(anyLong(), anyLong())).thenReturn(applicationFinance);
 
         mockMvc.perform(get("/applicationfinance/findByApplication/"))
                 .andExpect(status().isNotFound());
-
-        verifyNoMoreInteractions(applicationFinanceRepository);
     }
 
     @Test
     public void findByApplicationShouldReturnBadRequestOnWrongParamType() throws Exception {
-        when(applicationFinanceRepository.findByApplicationIdAndOrganisationId(anyLong(), anyLong())).thenReturn(applicationFinance);
 
         mockMvc.perform(get("/applicationfinance/findByApplication/{applicationId}", "wrong"))
                 .andExpect(status().isBadRequest());
-
-        verifyNoMoreInteractions(applicationFinanceRepository);
     }
 
     @Test
     public void addShouldReturnApplicationByApplicationIdAndOrganisationId() throws Exception {
-        when(applicationFinanceRepository.save(any(ApplicationFinance.class))).thenReturn(applicationFinance);
-        when(applicationRepository.findOne(anyLong())).thenReturn(application);
-        when(organisationRepository.findOne(anyLong())).thenReturn(organisation);
 
-        mockMvc.perform(get("/applicationfinance/add/{applicationId}/{organisationId}", "1", "1"))
-                .andExpect(status().isOk());
+        when(costServiceMock.addCost(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
 
-        verify(applicationRepository, times(1)).findOne(anyLong());
-        verifyNoMoreInteractions(applicationRepository);
-        verify(organisationRepository, times(1)).findOne(anyLong());
-        verifyNoMoreInteractions(organisationRepository);
-        verify(applicationFinanceRepository, times(1)).save(any(ApplicationFinance.class));
-        verifyNoMoreInteractions(organisationRepository);
+        mockMvc.perform(get("/applicationfinance/add/{applicationId}/{organisationId}", "123", "456"))
+                .andExpect(status().isCreated());
+
+        verify(costServiceMock, times(1)).addCost(123L, 456L);
     }
 
     @Test
@@ -153,8 +118,6 @@ public class ApplicationFinanceControllerTest {
 
         mockMvc.perform(get("/applicationfinance/add/"))
                 .andExpect(status().isNotFound());
-
-        verifyNoMoreInteractions(applicationFinanceRepository);
     }
 
     @Test
@@ -167,8 +130,6 @@ public class ApplicationFinanceControllerTest {
 
         mockMvc.perform(get("/applicationfinance/add/{applicationId}/{organisationId}", "wronger", "wronger"))
                 .andExpect(status().isBadRequest());
-
-        verifyNoMoreInteractions(applicationFinanceRepository);
     }
 
 }

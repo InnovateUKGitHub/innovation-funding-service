@@ -84,11 +84,6 @@ public class SilEmailMessage {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("from", from)
-                .append("to", to)
-                .append("subject", subject)
-                .append("body", body)
-                .toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 }

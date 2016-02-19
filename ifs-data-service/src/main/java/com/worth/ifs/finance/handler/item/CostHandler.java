@@ -4,6 +4,7 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,5 +22,10 @@ public abstract class CostHandler {
 
     public void setCostFields(List<CostField> costFields) {
         this.costFields =  costFields.stream().collect(Collectors.toMap(CostField::getTitle, Function.<CostField>identity()));;
+    }
+
+    public List<Cost> initializeCost() {
+        ArrayList<Cost> costs = new ArrayList<>();
+        return costs;
     }
 }

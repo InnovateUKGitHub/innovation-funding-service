@@ -1,12 +1,13 @@
 package com.worth.ifs.application.mapper;
 
 import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -16,14 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
         QuestionMapper.class
     }
 )
-public abstract class QuestionStatusMapper {
+public abstract class QuestionStatusMapper  extends BaseMapper<QuestionStatus, QuestionStatusResource, Long> {
 
-    @Autowired
-    QuestionStatusRepository repository;
-
-    public abstract QuestionStatusResource mapQuestionStatusToResource(QuestionStatus object);
-
-    public abstract QuestionStatus resourceToQuestionStatus(QuestionStatusResource resource);
+    @Mappings({
+            @Mapping(source = "assignee.user.name", target = "assigneeName"),
+            @Mapping(source = "assignee.user.id", target = "assigneeUserId"),
+            @Mapping(source = "assignedBy.user.name", target = "assignedByName"),
+            @Mapping(source = "assignedBy.user.id", target = "assignedByUserId")
+    })
+    public abstract QuestionStatusResource mapToResource(QuestionStatus domain);
 
     public Long mapQuestionStatusToId(QuestionStatus object) {
         if (object == null) {
@@ -32,7 +34,4 @@ public abstract class QuestionStatusMapper {
         return object.getId();
     }
 
-    public QuestionStatus mapIdToQuestionStatus(Long id) {
-        return repository.findOne(id);
-    }
 }

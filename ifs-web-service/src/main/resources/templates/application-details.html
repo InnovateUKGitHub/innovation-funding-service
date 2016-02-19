@@ -12,7 +12,6 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
     <div th:include="fragments/layout :: header-sub" th:remove="tag"></div>
-    <div th:include="fragments/elements :: notification" th:remove="tag"></div>
 
     <div class="page-title">
         <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
@@ -25,27 +24,27 @@
         </div>
         <div class="column-half">
             <ul class="list-bullet">
-                <li><a href="#">View team members and add collaborators</a></li>
+                <li><a th:href="'/application/'+${currentApplication.getId()}+'/contributors'">View team members and add collaborators</a></li>
             </ul>
         </div>
     </div>
 
 
     <h2 class="bold-medium">Competition details</h2>
-    <p th:text="${currentCompetition.getDescription()}" />
+    <p th:utext="${currentCompetition.getDescription()}" />
 
     <form action="#" method="post" class="application-overview">
         <div th:remove="tag" th:each="section : ${sections.values()}">
             <section th:id="'section-'+${section.getId()}">
                 <h2 th:text="${section.name}" class="heading-medium no-margin-bottom"/>
                 <p th:text="${section.description}"></p>
-                <ul th:switch="${section.getChildSections().size()}" th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
-                    <div th:case="${0}" th:remove="tag">
+                <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
+                    <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
                         <div th:replace="application/single-section-details :: sectionDetails (question=${question}, questionAssignee=${questionAssignee}, questionAssignees=${questionAssignees}, responses=${responses}, currentUser=${currentUser}, userIsLeadApplicant=${userIsLeadApplicant}, leadApplicant=${leadApplicant}, section=${section}, currentApplication=${currentApplication})"></div>
                     </div>
                     <!--/* sections with children like the finance */-->
-                    <div th:case="*" th:remove="tag">
-                        <li class="grid-row" th:classappend="section" th:each="childSection : ${section.getChildSections()}">
+                    <div th:unless="${subSections.get(section.id).size() ==0}" th:remove="tag">
+                        <li class="grid-row" th:classappend="section" th:each="childSection : ${subSections.get(section.id)}">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
                                     <a th:href="'/application/'+${currentApplication.getId()}+'/form/section/'+${childSection.getId()}"
@@ -61,7 +60,7 @@
 
 
     <div class="alignright-button">
-        <a role="button" tabindex="0" class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">Review &amp; submit</a>
+        <a class="button" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">Review &amp; submit</a>
     </div>
 
 

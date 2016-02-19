@@ -1,8 +1,9 @@
 package com.worth.ifs.notifications.service;
 
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.NotificationSource;
 import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.transactional.ServiceResult;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -16,10 +17,8 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.worth.ifs.notifications.service.FreemarkerNotificationTemplateRenderer.ServiceErrors.UNABLE_TO_RENDER_TEMPLATE;
-import static com.worth.ifs.transactional.ServiceResult.failure;
-import static com.worth.ifs.transactional.ServiceResult.handlingErrors;
-import static com.worth.ifs.transactional.ServiceResult.success;
+import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE;
+import static com.worth.ifs.commons.service.ServiceResult.*;
 
 /**
  * A Notification Template Service (a service that can process a template file in order to produce a Notification message string) based
@@ -30,18 +29,13 @@ public class FreemarkerNotificationTemplateRenderer implements NotificationTempl
 
     private static final Log LOG = LogFactory.getLog(FreemarkerNotificationTemplateRenderer.class);
 
-    public enum ServiceErrors {
-
-        UNABLE_TO_RENDER_TEMPLATE
-    }
-
     @Autowired
     private Configuration configuration;
 
     @Override
     public ServiceResult<String> renderTemplate(NotificationSource notificationSource, NotificationTarget notificationTarget, String templatePath, Map<String, Object> templateReplacements) {
 
-        return handlingErrors(UNABLE_TO_RENDER_TEMPLATE, () -> {
+        return handlingErrors(new Error(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE), () -> {
 
             Map<String, Object> replacementsWithCommonObjects = new HashMap<>(templateReplacements);
             replacementsWithCommonObjects.put("notificationSource", notificationSource);
@@ -51,10 +45,10 @@ public class FreemarkerNotificationTemplateRenderer implements NotificationTempl
                 Template temp = configuration.getTemplate(templatePath);
                 StringWriter writer = new StringWriter();
                 temp.process(replacementsWithCommonObjects, writer);
-                return success(writer.getBuffer().toString());
+                return serviceSuccess(writer.getBuffer().toString());
             } catch (IOException | TemplateException e) {
                 LOG.error("Error rendering notification template " + templatePath, e);
-                return failure(UNABLE_TO_RENDER_TEMPLATE);
+                return serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE));
             }
         });
     }

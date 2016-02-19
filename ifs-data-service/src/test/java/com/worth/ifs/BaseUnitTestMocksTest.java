@@ -1,26 +1,29 @@
 package com.worth.ifs;
 
+import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.repository.*;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.ResponseService;
+import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
+import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.transactional.ServiceLocator;
+import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.transactional.UserService;
 import com.worth.ifs.user.transactional.RegistrationService;
 import org.junit.Before;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -38,6 +41,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    protected ApplicationMapper applicationMapperMock;
 
     @Mock
     protected ApplicationFinanceRepository applicationFinanceRepository;
@@ -97,13 +103,22 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected InviteRepository inviteRepositoryMock;
 
     @Mock
+    protected OrganisationService organisationServiceMock;
+
+    @Mock
+    protected UserService userServiceMock;
+
+    @Mock
+    protected CostRepository costRepositoryMock;
+
+    @Mock
+    protected AssessmentRepository assessmentRepositoryMock;
+
+    @Mock
     protected RegistrationService registrationServiceMock;
 
     @Mock
     protected IdentityProviderService idpServiceMock;
-
-    @InjectMocks
-    protected ServiceLocator serviceLocator = new ServiceLocator();
 
     @Before
     public void setupMockInjection() {

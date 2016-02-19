@@ -20,7 +20,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Application Overview',linkUrl=@{/application/{id}/(id=${currentApplication.getId()})},currentApplication=${currentApplication}" th:remove="tag" />
-    
+
      <div class="page-title">
          <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
          <h1 class="heading-xlarge">Application Summary</h1>
@@ -32,13 +32,13 @@
         <form action="#"  method="post" th:object="${form}" class="form-serialize-js section-overview">
             <section th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
                 <h2 th:text="${section.getName()}" class="heading-medium" />
-                <div class="collapsible" th:each="question : ${section.getQuestions()}">
+                <div class="collapsible" th:each="question : ${sectionQuestions.get(section.id)}">
                     <h3>
                         <div th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" th:remove="tag" />
                         <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Complete</div>
                         <div class="section-status section-incomplete" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Incomplete</div>
                     </h3>
-                    <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}' th:with="formInputIndex=(${status.index}), readonly=true, response=(${responses.get(formInput.getId())})" th:id="'form-input-'+${formInput.getId()}" >
+                    <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}' th:with="formInputIndex=(${status.index}), readonly=true, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.get(question.getId())})" th:id="'form-input-'+${formInput.getId()}" >
                         <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' />
                     </div>
                 </div>
@@ -46,7 +46,10 @@
             <section>
                 <h2 class="heading-medium">Finance</h2>
                 <div class="collapsible">
-                    <h3>Finances Summary</h3>
+                    <h3>Finances Summary
+                        <div class="section-status section-complete" th:if="${sectionsMarkedAsComplete.contains(7L)}">Complete</div>
+                        <div class="section-status section-incomplete" th:unless="${sectionsMarkedAsComplete.contains(7L)}">Incomplete</div>
+                    </h3>
                     <div class="question">
                         <p>This is the overview of the finances provided by all partners in this project.</p>
                         <p>To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/7/"}'>your finances</a> section.</p>

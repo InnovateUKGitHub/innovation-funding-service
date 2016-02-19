@@ -1,12 +1,11 @@
 package com.worth.ifs.user.controller;
 
-import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.ProcessRoleResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.worth.ifs.user.transactional.UsersRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * This RestController exposes CRUD operations
@@ -25,50 +22,42 @@ import java.util.stream.Collectors;
 @ExposesResourceFor(ProcessRoleResource.class)
 @RequestMapping("/processrole")
 public class ProcessRoleController {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
-    ApplicationMapper applicationMapper;
+    private UsersRolesService usersRolesService;
 
     @Autowired
-    ProcessRoleRepository processRoleRepository;
+    private ApplicationService applicationService;
 
     @RequestMapping("/{id}")
-    public ProcessRole findOne(@PathVariable("id") final Long id) {
-        return processRoleRepository.findOne(id);
+    public RestResult<ProcessRole> findOne(@PathVariable("id") final Long id) {
+        return usersRolesService.getProcessRoleById(id).toGetResponse();
     }
 
     @RequestMapping("/findByUserApplication/{userId}/{applicationId}")
-    public ProcessRole findByUserApplication(@PathVariable("userId") final Long userId,
+    public RestResult<ProcessRole> findByUserApplication(@PathVariable("userId") final Long userId,
                                                      @PathVariable("applicationId") final Long applicationId) {
-        return processRoleRepository.findByUserIdAndApplicationId(userId, applicationId);
+        return usersRolesService.getProcessRoleByUserIdAndApplicationId(userId, applicationId).toGetResponse();
     }
 
     @RequestMapping("/findByApplicationId/{applicationId}")
-    public List<ProcessRole> findByUserApplication(@PathVariable("applicationId") final Long applicationId) {
-        return processRoleRepository.findByApplicationId(applicationId);
+    public RestResult<List<ProcessRole>> findByUserApplication(@PathVariable("applicationId") final Long applicationId) {
+
+        return usersRolesService.getProcessRolesByApplicationId(applicationId).toGetResponse();
     }
 
     @RequestMapping("/findByUserId/{userId}")
-    public List<ProcessRole> findByUser(@PathVariable("userId") final Long userId) {
-        return processRoleRepository.findByUserId(userId);
+    public RestResult<List<ProcessRole>> findByUser(@PathVariable("userId") final Long userId) {
+        return usersRolesService.getProcessRolesByUserId(userId).toGetResponse();
     }
 
     @RequestMapping("/findAssignable/{applicationId}")
-    public Set<ProcessRole> findAssignable(@PathVariable("applicationId") final Long applicationId) {
-        List<ProcessRole> processRoles = processRoleRepository.findByApplicationId(applicationId);
-        Set<ProcessRole> assignableProcessRoles = processRoles.stream()
-                .filter(r -> r.getRole().getName().equals("leadapplicant") || r.getRole().getName().equals("collaborator"))
-                .collect(Collectors.toSet());
-        return assignableProcessRoles;
+    public RestResult<List<ProcessRole>> findAssignable(@PathVariable("applicationId") final Long applicationId) {
+        return usersRolesService.getAssignableProcessRolesByApplicationId(applicationId).toGetResponse();
     }
 
     @RequestMapping("{id}/application")
-    public ApplicationResource findByProcessRole(@PathVariable("id") final Long id){
-        ProcessRole processRole = processRoleRepository.findOne(id);
-        if (processRole != null && processRole.getApplication() != null){
-               return applicationMapper.mapApplicationToResource(processRole.getApplication());
-        }
-        return null;
+    public RestResult<ApplicationResource> findByProcessRole(@PathVariable("id") final Long id){
+        return applicationService.findByProcessRole(id).toGetResponse();
     }
 }

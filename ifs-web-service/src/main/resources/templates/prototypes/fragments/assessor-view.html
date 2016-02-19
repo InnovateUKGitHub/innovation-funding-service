@@ -105,9 +105,11 @@
             <div class="form-group">
                 
                  <label class="form-label form-label-bold" for="assessor-question-feedback-text">Feedback
-                    <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
+                    <span class="form-hint">Please justify your <span th:text="${(questionTitle == 'scope' ? 'answer' : 'score')}">SCORE</span> by writing two or three sentences which will be returned to the applicant as feedback</span>
                  </label>
-                
+
+                 <div th:replace="prototypes/fragments/assessor-view :: ${'prototype-assessor-guidance-' + questionTitle}"  th:remove="tag" />
+            
                 <div class="textarea-wrapped word-count">
         
                     <textarea rows="3" cols="60" data-max_words="350" id="assessor-question-feedback-text" name="assessor-question-feedback-text" aria-hidden="true"></textarea>
@@ -127,6 +129,515 @@
     </fieldset>
 </div>
 
+<!-- ===================Guidance - scope============================== -->
+<div th:fragment="prototype-assessor-guidance-scope">
+    <details>
+        <summary><span class="summary">Guidance for assessing scope</span></summary>
+        <div class="panel-indent">
+          <p>
+            Your answer should be based upon the following:
+          </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th scope="row">YES</th>
+                        <td>
+                            <p>The application contains the following:</p>
+                            <ul>
+                                <li>Is the consortia business led?</li>
+                                <li>Are there two or more partners to the collaboration?</li>
+                                <li>Does it meet the scope of the competition as defined in the competition brief?</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">NO</th>
+                        <td>  <p>One or more of the above requirements have not been satisfied.</p>  </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="extra-margin">Your assessment of the project scope should be based upon the <a href="#">competition brief</a>.</p>
+      </div>
+    </details>
+</div>
+
+<!-- ===================Guidance - question1 - business opportunity============================== -->
+<div th:fragment="prototype-assessor-guidance-question1">
+    <details>
+        <summary><span class="summary">Guidance for assessing business opportunity</span></summary>
+        <div class="panel-indent">
+          <p>
+            Your score should be based upon the following:
+          </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th scope="row" style="width: 50px">9-10</th>
+                        <td>
+                            The applicants have a very clear understanding of the business opportunity and the problems that must be overcome to enable successful exploitation. The project is well aligned with these needs.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">7-8</th>
+                        <td>
+                            The applicants have a good idea of the potential market and opportunities. The needs of the customer are central to the project's objectives.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">5-6</th>
+                        <td> 
+                            The business opportunity is plausible but not clearly expressed in terms of customer needs.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3-4</th>
+                        <td> 
+                            The business opportunity is unrealistic or poorly defined. The customer's true needs are not well understood and are not linked to the project's objectives.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1-2</th>
+                        <td> 
+                            There is little or no business drive to the project. The results are not relevant to the target customers or no customer interests are provided.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+      </div>
+    </details>
+</div>
+
+
+<!-- ===================Guidance - question2 - potential market============================== -->
+<div th:fragment="prototype-assessor-guidance-question2">
+    <details>
+        <summary><span class="summary">Guidance for assessing market opportunity</span></summary>
+        <div class="panel-indent">
+          <p>
+            Your score should be based upon the following:
+          </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th scope="row" style="width: 50px">9-10</th>
+                        <td>
+                            The market size and dynamics are quantified clearly and to sufficient resolution to be relevant to the project. The market is clearly well understood. The return on investment is clearly stated, quantified and realistic.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">7-8</th>
+                        <td>
+                            The market size and dynamics are described with some quantification relevant to the project. Market understanding is acceptable and the return on investment is achievable.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">5-6</th>
+                        <td> 
+                            The market size and dynamics are understood but poorly quantified or stated at a level not really relevant for the project. Return on investment is plausible or badly defined.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3-4</th>
+                        <td>  
+                            The market size is not quantified but there is some understanding. Return on investment is ill defined or unrealistic.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1-2</th>
+                        <td> 
+                           The market is not well defined or is wrong. No sensible return on investment is provided.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+      </div>
+    </details>
+</div>
+
+
+<!-- ===================Guidance - question3 - exploitation============================== -->
+<div th:fragment="prototype-assessor-guidance-question3">
+    <details>
+        <summary><span class="summary">Guidance for assessing project exploitation</span></summary>
+        <div class="panel-indent">
+          <p>
+            Your score should be based upon the following:
+          </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th scope="row" style="width: 50px">9-10</th>
+                        <td>
+                            The principle exploitable outputs of the project are identified together with clear and achievable exploitation methods. Dissemination opportunities are also identified and appropriate.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">7-8</th>
+                        <td>
+                            The main exploitable output of the project is identified and a realistic method defined. Some dissemination is also explained.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">5-6</th>
+                        <td> 
+                            An exploitation method is defined but lacking in detail or is only just feasible. Dissemination is mentioned.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3-4</th>
+                        <td>  
+                            The exploitation and dissemination methods described are unrealistic or ill-defined.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1-2</th>
+                        <td> 
+                           The exploitation method is missing or un-feasible and unlikely to succeed.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+      </div>
+    </details>
+</div>
+
+<!-- ===================Guidance - question4 - economic benefits============================== -->
+<div th:fragment="prototype-assessor-guidance-question4">
+    <details>
+        <summary><span class="summary">Guidance for assessing project benefits</span></summary>
+        <div class="panel-indent">
+          <p>
+            Your score should be based upon the following:
+          </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th scope="row" style="width: 50px">9-10</th>
+                        <td>
+                            Inside and outside benefits are well defined, realistic and of significantly positive economic, environmental or social impact. Routes to exploit these benefits are also provided.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">7-8</th>
+                        <td>
+                            Some positive outside benefits are defined and are realistic. Methods of addressing these opportunities are described.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">5-6</th>
+                        <td> 
+                            Some positive outside benefits are described but the methods to exploit these are not obvious. Or the project is likely to have a negative impact but some mitigation or a balance against the internal benefits is proposed.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3-4</th>
+                        <td>  
+                            The project has no outside benefits or is potentially damaging to other stakeholders. No mitigation or exploitation is suggested.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1-2</th>
+                        <td> 
+                            The project is damaging to other stakeholders with no realistic mitigation or balance described.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+      </div>
+    </details>
+</div>
+
+
+<!-- ===================Guidance - question5 - economic benefits============================== -->
+<div th:fragment="prototype-assessor-guidance-question5">
+    <details>
+        <summary><span class="summary">Guidance for assessing technical approach</span></summary>
+        <div class="panel-indent">
+          <p>
+            Your score should be based upon the following:
+          </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th scope="row" style="width: 50px">9-10</th>
+                        <td>
+                            The project plan is fully described and complete with milestones and timeframes. The plan is realistic and should meet the objectives of the project.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">7-8</th>
+                        <td>  
+                            The plan is well described and complete. There is a reasonable chance that it will meet the objectives of the project.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">5-6</th>
+                        <td> 
+                            The plan is not completely described or there may be deficiencies in some aspects. More work will be required before the plan can be said to be realistic.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3-4</th>
+                        <td>  
+                            The plan has serious deficiencies or major missing aspects. The plan has little chance of meeting the objectives of the project.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1-2</th>
+                        <td>   
+                            The plan is totally unrealistic or fails to meet the objectives of the project.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+      </div>
+    </details>
+</div>
+
+
+<!-- ===================Guidance - question6 - innovation============================== -->
+<div th:fragment="prototype-assessor-guidance-question6">
+    <details>
+        <summary><span class="summary">Guidance for assessing innovation</span></summary>
+        <div class="panel-indent">
+          <p>
+            Your score should be based upon the following:
+          </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th scope="row" style="width: 50px">9-10</th>
+                        <td>
+                            The project is significantly innovative either commercially or technically and will make a substantial contribution to the field. Solid evidence is presented to substantiate the level of innovation.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">7-8</th>
+                        <td>  
+                            The project will be innovative and relevant to the market. There is high confidence that there is freedom to operate.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">5-6</th>
+                        <td> 
+                            The project is innovative but there is a lack of presented evidence as to the freedom to operate.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3-4</th>
+                        <td>  
+                            The project lacks sufficient innovation both technically and commercially.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1-2</th>
+                        <td>   
+                            The project is either not innovative or there is no exploitable route due to previous IP.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+      </div>
+    </details>
+</div>
+
+<!-- ===================Guidance - question7 - riske============================== -->
+<div th:fragment="prototype-assessor-guidance-question7">
+    <details>
+        <summary><span class="summary">Guidance for assessing risks</span></summary>
+        <div class="panel-indent">
+          <p>
+            Your score should be based upon the following:
+          </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th scope="row" style="width: 50px">9-10</th>
+                        <td>
+                            A thorough risk analysis has been presented across all 3 risk categories. The mitigation and risk management strategies proposed are also appropriate and professional.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">7-8</th>
+                        <td>  
+                            A good risk analysis has been carried out and the management methods and mitigation strategies proposed are realistic.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">5-6</th>
+                        <td> 
+                            Most major risks have been identified but there are some gaps or the mitigation and management is insufficient to properly control the risks.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3-4</th>
+                        <td>  
+                            The risk analysis is poor or misses major areas of risk. The mitigation and management is poor.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1-2</th>
+                        <td>   
+                            The risk analysis is superficial with minimal mitigation or management suggested.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+      </div>
+    </details>
+</div>
+
+<!-- ===================Guidance - question8 - team============================== -->
+<div th:fragment="prototype-assessor-guidance-question8">
+    <details>
+        <summary><span class="summary">Guidance for assessing team skills</span></summary>
+        <div class="panel-indent">
+          <p>
+            Your score should be based upon the following:
+          </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th scope="row" style="width: 50px">9-10</th>
+                        <td>
+                            The consortium is ideally placed to carry out the project AND exploit the results. The skills are well balanced and the partners likely to form a strong consortium with good knowledge transfer.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">7-8</th>
+                        <td>  
+                            The consortium is strong and contains all the required skills and experience. The consortium is likely to work well.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">5-6</th>
+                        <td> 
+                            The consortium has most of the required skills and experience but there are a few gaps. The consortium will need to work hard to maintain a good working relationship.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3-4</th>
+                        <td>  
+                            There are significant gaps in the consortium or the formation objectives are unclear. There could be some passengers or the balance of work/commitment is poor.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1-2</th>
+                        <td>   
+                            The consortium is not capable of either carrying out the project or exploiting the results.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+      </div>
+    </details>
+</div>
+
+<!-- ===================Guidance - question9 - team============================== -->
+<div th:fragment="prototype-assessor-guidance-question9">
+    <details>
+        <summary><span class="summary">Guidance for assessing financial commitment</span></summary>
+        <div class="panel-indent">
+          <p>
+            Your score should be based upon the following:
+          </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th scope="row" style="width: 50px">9-10</th>
+                        <td>
+                            The project costs are entirely appropriate. Any mix of research and development types (eg industrial research with some work packages of experimental development) is justified and costed correctly.
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">7-8</th>
+                        <td>  
+                            The project costs are appropriate and should be sufficient to successfully complete the project. Any mix of research and development types is justified and costed correctly.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">5-6</th>
+                        <td> 
+                            The project costs and justifications are broadly correct but there are some concerns. Any mix of research and development types is just about acceptable.
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3-4</th>
+                        <td>  
+                            The costs are either too high or too low to carry out the project. Poor justification is provided for any research and development type mix.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1-2</th>
+                        <td>   
+                            The costs are not appropriate or justified. Any mix of research and development type is not justified.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+      </div>
+    </details>
+</div>
+
+
+<!-- ===================Guidance - question9 - team============================== -->
+<div th:fragment="prototype-assessor-guidance-question10">
+    <details>
+        <summary><span class="summary">Guidance for assessing added value</span></summary>
+        <div class="panel-indent">
+          <p>
+            Your score should be based upon the following:
+          </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <th scope="row" style="width: 50px">9-10</th>
+                        <td>
+                            The project will significantly increase the industrial partners' R&#38;D spend during the project and afterwards. The additionality arguments are very strong and believable.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">7-8</th>
+                        <td>  
+                            The project will increase the industrial partners' commitment to R&#38;D. The additionality arguments are good and justified.
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">5-6</th>
+                        <td> 
+                            The project will improve the industrial partners' commitment to R&#38;D. The additionality arguments are just about acceptable.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3-4</th>
+                        <td>  
+                            There is not likely to be any improvement to the industrial partner's commitment to R&#38;D. The additionality arguments are poor or not sufficiently justified.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1-2</th>
+                        <td>   
+                            The work should be funded internally and does not deserve state funding.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+      </div>
+    </details>
+</div>
 
 <!-- ===================Assessor dashboard============================== -->
 <div th:fragment="prototype-assessor-dashboard-invites">
@@ -155,13 +666,13 @@
 
 <div th:fragment="prototype-assessor-dashboard-invite-accepted">
     <div class="invite-to-assess">
-        <h2 class="heading-medium">Upcoming competions to assess</h2>
+        <h2 class="heading-medium">Upcoming competitions to assess</h2>
         <ul class="boxed-list">
             <li>
                 <div class="grid-row">
                     <div class="column-assessment-details">
                         <h3 class="heading-medium">Technology inspired</h3>
-                        <p class="form-hint">Upcoming application</p>
+                        <p class="form-hint">Upcoming competition</p>
                         <p class="no-margin">Applications allocated 15th April</p>
                     </div>
                     <div class="column-assessment-status navigation-right">
@@ -230,7 +741,7 @@
         <div class="in-progress">
             <h3 class="heading-large">Applications for Assessment (<span>3</span>)</h3>
             <ul class="boxed-list bulk-select">
-                <form id="bulk_assessments_submission" action="/assessor/submit-assessments" method="POST">
+                <form id="bulk_assessments_submission" action="/prototypes/871-assessor-comp-dashboard" method="POST">
                     
                     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
                         
@@ -501,7 +1012,7 @@
     <p>9.5 The time of commitment shall be of the essence and failure to commence the provision of the Services within the time promised or specified shall entitle the Contracting Authority (at its option) to be released from any obligation to accept and pay for the Services or to cancel all or part of the Services, in either case without prejudice to the other rights and remedies of the Contracting Authority.</p>
     <p>9.6 The services must be delivered in accordance with the specific competition Assessor Guidance and associated scoring matrices. Failure to deliver the services in this way will be construed as non-performance of the Services under the terms of this Contract.</p>
 
-    <h3 class="heading-small">10. TERMINATION</h3>
+    <h3 class="heading-small" id="end-of-terms">10. TERMINATION</h3>
 
     <p>10.1 This Contract may be terminated by either party giving to the other party at least 30 days notice in writing without further liability. For the avoidance of doubt, in the event that such termination happens, liability for Services will arise only up to the point of termination.</p>
     <p>10.2 Notwithstanding the provisions of clause 3, the Contracting Authority may terminate the Contract with immediate effect with no liability to make any further payment to the Contractor (other than in respect of amounts accrued prior to the date of termination) if at any time the Contractor:</p>
@@ -524,6 +1035,7 @@
 
     <h3 class="heading-small">12. LAW AND JURISDICTION</h3>
     <p>This Contract shall be governed by and interpreted in accordance with English Law and the parties submit to the exclusive jurisdiction of the English courts </p>
+
 
 </div>
 

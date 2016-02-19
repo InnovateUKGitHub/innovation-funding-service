@@ -1,45 +1,35 @@
 package com.worth.ifs.finance.controller;
 
-import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.finance.repository.CostFieldRepository;
-import org.junit.Before;
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.finance.resource.CostFieldResource;
+import com.worth.ifs.finance.transactional.CostService;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CostFieldControllerTest {
+public class CostFieldControllerTest extends BaseControllerMockMVCTest<CostFieldController> {
+
     @Mock
-    CostFieldRepository costFieldRepository;
+    private CostService costFieldService;
 
-    private MockMvc mockMvc;
-
-    @InjectMocks
-    private CostFieldController costFieldController;
-
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(costFieldController)
-                .build();
+    @Override
+    protected CostFieldController supplyControllerUnderTest() {
+        return new CostFieldController();
     }
 
     @Test
     public void findAllShouldReturnListOfCostFields() throws Exception{
-        when(costFieldRepository.findAll()).thenReturn(Arrays.asList(new CostField(), new CostField()));
+        when(costFieldService.findAllCostFields()).thenReturn(serviceSuccess(asList(new CostFieldResource(), new CostFieldResource())));
 
         mockMvc.perform(get("/costfield/findAll/"))
                 .andExpect(status().isOk());
 
-        verify(costFieldRepository, times(1)).findAll();
-        verifyNoMoreInteractions(costFieldRepository);
+        verify(costFieldService, times(1)).findAllCostFields();
+        verifyNoMoreInteractions(costFieldService);
     }
 }

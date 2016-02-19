@@ -33,8 +33,11 @@ public class LabourCostHandler extends CostHandler {
                         role = fieldValue;
                         break;
                     case "labourDays":
+                        labourDays = getIntegerValue(fieldValue, 0);
+                        break;
                     case "workingDays":
                         labourDays = getIntegerValue(fieldValue, 0);
+                        description = "Working days per year";
                         break;
                     default:
                         log.info("Unused costField: " + costFormField.getCostName());

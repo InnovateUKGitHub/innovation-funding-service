@@ -4,8 +4,8 @@ import com.worth.ifs.application.finance.model.CostFormField;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.item.*;
-import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
@@ -43,16 +43,39 @@ public class FinanceFormHandler {
 
     public boolean handle(HttpServletRequest request) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
+        if (applicationFinanceResource == null){
+            applicationFinanceResource = financeService.addApplicationFinance(applicationId, userId);
+        }
+
         storeFinancePosition(request, applicationFinanceResource.getId());
 
+
         List<CostItem> costItems = getCostItems(request);
-        return storeCostItems(costItems);
+        boolean storingResult = storeCostItems(costItems);
+
+        addRemoveCostRows(request, applicationId, userId, applicationFinanceResource.getId());
+
+        return storingResult;
     }
 
+    private void addRemoveCostRows(HttpServletRequest request, Long applicationId, Long userId, Long applicationFinanceId) {
+        Map<String, String[]> requestParams = request.getParameterMap();
+        if (requestParams.containsKey("add_cost")) {
+            String addCostParam = request.getParameter("add_cost");
+            ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(applicationId, userId);
+            financeService.addCost(applicationFinance.getId(), Long.valueOf(addCostParam));
+        }
+        if (requestParams.containsKey("remove_cost")) {
+            String removeCostParam = request.getParameter("remove_cost");
+            costService.delete(Long.valueOf(removeCostParam));
+        }
+    }
+
+    // TODO DW - INFUND-1555 - handle rest results
     private void storeFinancePosition(HttpServletRequest request, @NotNull Long applicationFinanceId) {
         List<String> financePositionKeys = request.getParameterMap().keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
-        if(!financePositionKeys.isEmpty()){
-            ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getById(applicationFinanceId);
+        if (!financePositionKeys.isEmpty()) {
+            ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getById(applicationFinanceId).getSuccessObjectOrNull();
 
             financePositionKeys.stream().forEach(k -> {
                 String values = request.getParameterValues(k)[0];
@@ -62,7 +85,8 @@ public class FinanceFormHandler {
             applicationFinanceRestService.update(applicationFinance.getId(), applicationFinance);
         }
     }
-    private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value){
+
+    private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value) {
         fieldName = fieldName.replace("financePosition-", "");
         switch (fieldName) {
             case "organisationSize":
@@ -73,24 +97,22 @@ public class FinanceFormHandler {
         }
     }
 
-    public void ajaxUpdateFinancePosition(HttpServletRequest request, String fieldName, String value){
+    public void ajaxUpdateFinancePosition(String fieldName, String value) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
         updateFinancePosition(applicationFinanceResource, fieldName, value);
         applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
     }
 
-
     private List<CostItem> getCostItems(HttpServletRequest request) {
-        List<CostField> costFields = costService.getCostFields();
+        List<CostFieldResource> costFields = costService.getCostFields();
         return mapRequestParametersToCostItems(request, costFields);
     }
 
-
-    private List<CostItem> mapRequestParametersToCostItems(HttpServletRequest request, List<CostField> costFields) {
+    private List<CostItem> mapRequestParametersToCostItems(HttpServletRequest request, List<CostFieldResource> costFields) {
         List<CostItem> costItems = new ArrayList<>();
-        for(CostType costType : CostType.values()) {
+        for (CostType costType : CostType.values()) {
             List<String> costTypeKeys = request.getParameterMap().keySet().stream().
-                    filter(k -> k.startsWith(costType.getType()+"-")).collect(Collectors.toList());
+                    filter(k -> k.startsWith(costType.getType() + "-")).collect(Collectors.toList());
             Map<Long, List<CostFormField>> costFieldMap = getCostDataRows(request, costTypeKeys);
             List<CostItem> costItemsForType = getCostItems(costFieldMap, costType, costTypeKeys);
             costItems.addAll(costItemsForType);
@@ -105,19 +127,21 @@ public class FinanceFormHandler {
     private Map<Long, List<CostFormField>> getCostDataRows(HttpServletRequest request, List<String> costTypeKeys) {
         // make sure that we have the fields together acting on one cost
         Map<Long, List<CostFormField>> costKeyMap = new HashMap<>();
-        for(String costTypeKey : costTypeKeys) {
+        for (String costTypeKey : costTypeKeys) {
             String value = request.getParameter(costTypeKey);
             CostFormField costFormField = getCostFormField(costTypeKey, value);
             if (costFormField == null)
                 continue;
 
-            Long id = Long.valueOf(costFormField.getId());
-            if(costKeyMap.containsKey(id)) {
-                costKeyMap.get(id).add(costFormField);
-            } else {
-                List<CostFormField> costKeyValues = new ArrayList<>();
-                costKeyValues.add(costFormField);
-                costKeyMap.put(id, costKeyValues);
+            if (costFormField.getId() != null && !costFormField.getId().equals("null")) {
+                Long id = Long.valueOf(costFormField.getId());
+                if (costKeyMap.containsKey(id)) {
+                    costKeyMap.get(id).add(costFormField);
+                } else {
+                    List<CostFormField> costKeyValues = new ArrayList<>();
+                    costKeyValues.add(costFormField);
+                    costKeyMap.put(id, costKeyValues);
+                }
             }
         }
         return costKeyMap;
@@ -131,7 +155,7 @@ public class FinanceFormHandler {
         CostHandler costHandler = getCostItemHandler(costType);
 
         // create new cost items
-        for(Map.Entry<Long, List<CostFormField>> entry : costFieldMap.entrySet()) {
+        for (Map.Entry<Long, List<CostFormField>> entry : costFieldMap.entrySet()) {
             CostItem costItem = costHandler.toCostItem(entry.getKey(), entry.getValue());
             if (costItem != null) {
                 costItems.add(costItem);
@@ -140,28 +164,30 @@ public class FinanceFormHandler {
         return costItems;
     }
 
-
     public void storeField(String fieldName, String value) {
         CostFormField costFormField = getCostFormField(fieldName, value);
         CostType costType = CostType.fromString(costFormField.getKeyType());
         CostHandler costHandler = getCostItemHandler(costType);
-        CostItem costItem = costHandler.toCostItem( Long.valueOf(costFormField.getId()), Arrays.asList(costFormField));
-        costService.update(costItem);
+        Long costFormFieldId = 0L;
+        if (costFormField.getId() != null && !costFormField.getId().equals("null")) {
+            costFormFieldId = Long.parseLong(costFormField.getId());
+        }
+        CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(costFormField));
+        storeCostItem(costItem, costFormField.getQuestionId());
     }
-
 
     private CostFormField getCostFormField(String costTypeKey, String value) {
         String[] keyParts = costTypeKey.split("-");
-        if(keyParts.length > 2) {
-            return new CostFormField(costTypeKey, value, keyParts[2], keyParts[1], keyParts[0]);
-        } else if (keyParts.length == 2) {
-            return new CostFormField(costTypeKey, value, null, keyParts[1], keyParts[0]);
+        if (keyParts.length > 3) {
+            return new CostFormField(costTypeKey, value, keyParts[3], keyParts[2], keyParts[1], keyParts[0]);
+        } else if (keyParts.length == 3) {
+            return new CostFormField(costTypeKey, value, null, keyParts[2], keyParts[1], keyParts[0]);
         }
         return null;
     }
 
     private CostHandler getCostItemHandler(CostType costType) {
-        switch(costType) {
+        switch (costType) {
             case LABOUR:
                 return new LabourCostHandler();
             case MATERIALS:
@@ -185,6 +211,23 @@ public class FinanceFormHandler {
             default:
                 log.error("getCostItem, unsupported type: " + costType);
                 return null;
+        }
+    }
+
+    private void storeCostItem(CostItem costItem, String question) {
+        if (costItem.getId().equals(0L)) {
+            addCostItem(costItem, question);
+        } else {
+            costService.update(costItem);
+        }
+    }
+
+    private void addCostItem(CostItem costItem, String question) {
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
+
+        if (question != null && !question.isEmpty()) {
+            Long questionId = Long.parseLong(question);
+            costService.add(applicationFinanceResource.getId(), questionId, costItem);
         }
     }
 

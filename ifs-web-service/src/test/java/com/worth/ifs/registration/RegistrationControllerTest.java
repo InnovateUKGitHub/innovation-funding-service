@@ -1,22 +1,33 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.commons.resource.ResourceEnvelope;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.RoleBuilder.newRole;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.Collections.emptyList;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -99,7 +110,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
         String email = "alreadyexistingemail@test.test";
 
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
-        when(userService.findUserByEmail(email)).thenReturn(userResourceList);
+        when(userService.findUserByEmail(email)).thenReturn(restSuccess(userResourceList));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -206,35 +217,33 @@ public class RegistrationControllerTest extends BaseUnitTest {
     public void validFormInputShouldInitiateCreateUserServiceCall() throws Exception {
         Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
 
-        String userPassword = "testtest";
-
-        UserResource userResource = new UserResource();
-        userResource.setPassword(userPassword);
-        userResource.setFirstName("firstName");
-        userResource.setLastName("lastName");
-        userResource.setTitle("Mr");
-        userResource.setPhoneNumber("0123456789");
-        userResource.setEmail("test@test.test");
-        userResource.setId(1L);
-
-
-        ResourceEnvelope<UserResource> envelope = new ResourceEnvelope<>("OK", new ArrayList<>(), userResource);
+        UserResource userResource = newUserResource()
+                .withPassword("password")
+                .withFirstName("firstName")
+                .withLastName("lastName")
+                .withTitle("Mr")
+                .withPhoneNumber("0123456789")
+                .withEmail("test@test.test")
+                .withToken("testToken123abc")
+                .withId(1L)
+                .build();
 
 
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
         when(userService.createLeadApplicantForOrganisation(userResource.getFirstName(),
                 userResource.getLastName(),
-                userPassword,
+                userResource.getPassword(),
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
-                1L)).thenReturn(envelope);
+                1L)).thenReturn(restSuccess(userResource));
+        when(userService.findUserByEmail("test@test.test")).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", userResource.getEmail())
-                        .param("password", userPassword)
-                        .param("retypedPassword", userPassword)
+                        .param("password", userResource.getPassword())
+                        .param("retypedPassword", userResource.getPassword())
                         .param("title", userResource.getTitle())
                         .param("firstName", userResource.getFirstName())
                         .param("lastName", userResource.getLastName())
@@ -245,7 +254,6 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 .andExpect(cookie().value("userId", "1"))
                 .andExpect(view().name("redirect:/application/create/initialize-application/"))
         ;
-
         // TODO DW - INFUND-1267 - can  we do the below behaviour with Shib SP / IdP?
 //        verify(tokenAuthenticationService).addAuthentication(Matchers.isA(HttpServletResponse.class), Matchers.isA(UserResource.class));
     }
@@ -258,5 +266,76 @@ public class RegistrationControllerTest extends BaseUnitTest {
         mockMvc.perform(post("/registration/register?organisationId=4")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         ).andExpect(model().attribute("organisationName", "uniqueOrganisationName"));
+    }
+
+    @Test
+    public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
+        when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
+                newUser().withRolesGlobal(
+                        newRole().withName("testrolename").build()
+                ).build()
+        );
+
+        mockMvc.perform(get("/registration/register?organisationId=1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/testrolename/dashboard"))
+        ;
+
+    }
+
+    @Test
+    public void postingRegistrationWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
+        when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
+                newUser().withRolesGlobal(
+                        newRole().withName("testrolename").build()
+                ).build()
+        );
+
+        mockMvc.perform(post("/registration/register?organisationId=1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/testrolename/dashboard"))
+        ;
+
+    }
+
+    @Test
+    public void errorsReturnedInEnvelopeAreAddedToTheModel() throws Exception {
+        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        UserResource userResource = newUserResource()
+                .withPassword("password")
+                .withFirstName("firstName")
+                .withLastName("lastName")
+                .withTitle("Mr")
+                .withPhoneNumber("0123456789")
+                .withEmail("test@test.test")
+                .withToken("testToken123abc")
+                .withId(1L)
+                .build();
+
+        Error error = new Error("errorname", "errordescription", BAD_REQUEST);
+
+        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(userService.createLeadApplicantForOrganisation(userResource.getFirstName(),
+                userResource.getLastName(),
+                userResource.getPassword(),
+                userResource.getEmail(),
+                userResource.getTitle(),
+                userResource.getPhoneNumber(),
+                1L)).thenReturn(restFailure(error));
+        when(userService.findUserByEmail("test@test.test")).thenReturn(restSuccess(emptyList()));
+
+        mockMvc.perform(post("/registration/register?organisationId=1")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("email", userResource.getEmail())
+                        .param("password", userResource.getPassword())
+                        .param("retypedPassword", userResource.getPassword())
+                        .param("title", userResource.getTitle())
+                        .param("firstName", userResource.getFirstName())
+                        .param("lastName", userResource.getLastName())
+                        .param("phoneNumber", userResource.getPhoneNumber())
+                        .param("termsAndConditions", "1")
+        )
+                .andExpect(model().hasErrors())
+        ;
     }
 }

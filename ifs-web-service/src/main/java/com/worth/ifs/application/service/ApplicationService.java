@@ -1,9 +1,11 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 /**
  * Interface for CRUD operations on {@link ApplicationResource} related data.
@@ -15,9 +17,9 @@ public interface ApplicationService {
     Boolean isApplicationReadyForSubmit(Long applicationId);
     void updateStatus(Long applicationId, Long statusId);
     ApplicationResource createApplication(Long competitionId, Long userId, String applicationName);
-    int getCompleteQuestionsPercentage(Long applicationId);
+    Future<Integer> getCompleteQuestionsPercentage(Long applicationId);
     void save(ApplicationResource application);
     Map<Long, Integer> getProgress(Long userId);
     int getAssignedQuestionsCount(Long applicantId, Long processRoleId);
-    ApplicationResource findByProcessRoleId(Long id);
+    RestResult<ApplicationResource> findByProcessRoleId(Long id);
 }

@@ -13,7 +13,9 @@
 
     <h1 class="heading-xlarge">Application status</h1>
 
-    <img src="/images/mockups/application-tracking.png" style="max-width: 100%; margin-top: 30px;" alt=""/>
+    <img src="/images/mockups/application-tracking.png"
+		 th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/mockups/application-tracking.png')}"
+		 style="max-width: 100%; margin-top: 30px;" alt=""/>
 
     <ul class="status-list hidden">
     	<li class="step step-complete">

@@ -2,19 +2,30 @@ package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.mapper.SectionMapper;
+import com.worth.ifs.application.resource.SectionResource;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class SectionServiceTest extends BaseUnitTestMocksTest {
     private final Log log = LogFactory.getLog(getClass());
+
+    @Mock
+    SectionMapper sectionMapper;
 
     @InjectMocks
     protected SectionService sectionService = new SectionServiceImpl();
@@ -22,49 +33,57 @@ public class SectionServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void findByNameTest() throws Exception {
         Section section = newSection().with(name("testname")).build();
+        SectionResource sectionResource = newSectionResource().with(name("testname")).build();
         when(sectionRepositoryMock.findByName(section.getName())).thenReturn(section);
+        when(sectionMapper.mapToResource(section)).thenReturn(sectionResource);
 
-        assertEquals(section, sectionService.findByName(section.getName()));
+        assertEquals(sectionResource, sectionService.findByName(section.getName()).getSuccessObject());
     }
 
     @Test
     public void getNextSectionTest() throws Exception {
         Section section = newSection().withCompetitionAndPriority(newCompetition().build(), 1).build();
         Section nextSection = newSection().build();
-        when(sectionRepositoryMock.findOne(section.getId())).thenReturn(section);
+        SectionResource nextSectionResource = newSectionResource().build();
+        when(sectionRepositoryMock.findOne(anyLong())).thenReturn(section);
         when(sectionRepositoryMock.findFirstByCompetitionIdAndPriorityGreaterThanAndParentSectionIsNullOrderByPriorityAsc(
-                section.getCompetition().getId(), section.getPriority()
+                anyLong(), anyInt()
         )).thenReturn(nextSection);
+        when(sectionMapper.mapToResource(any(Section.class))).thenReturn(nextSectionResource);
 
-        Section returnSection = sectionService.getNextSection(section.getId());
-        assertEquals(nextSection, returnSection);
+        SectionResource returnSection = sectionService.getNextSection(section.getId()).getSuccessObject();
+        assertEquals(nextSectionResource, returnSection);
     }
 
     @Test
     public void getPreviousSectionTest() throws Exception {
         Section section = newSection().withCompetitionAndPriority(newCompetition().build(), 1).build();
         Section previousSection = newSection().build();
-        when(sectionRepositoryMock.findOne(section.getId())).thenReturn(section);
+        SectionResource previousSectionResource = newSectionResource().build();
+        when(sectionRepositoryMock.findOne(anyLong())).thenReturn(section);
         when(sectionRepositoryMock.findFirstByCompetitionIdAndPriorityLessThanAndParentSectionIsNullOrderByPriorityDesc(
-                section.getCompetition().getId(), section.getPriority()
+                anyLong(), anyInt()
         )).thenReturn(previousSection);
+        when(sectionMapper.mapToResource(any(Section.class))).thenReturn(previousSectionResource);
 
-        Section returnSection = sectionService.getPreviousSection(section.getId());
-        assertEquals(previousSection, returnSection);
+        SectionResource returnSection = sectionService.getPreviousSection(section.getId()).getSuccessObject();
+        assertEquals(previousSectionResource, returnSection);
     }
 
     @Test
-    public void getNextSectionWitParentSectionTest() throws Exception {
+    public void getNextSectionWithParentSectionTest() throws Exception {
         Section parentSection = newSection().build();
         Section section = newSection().withCompetitionAndPriorityAndParent(newCompetition().build(), 1, parentSection).build();
         Section siblingSection = newSection().withCompetitionAndPriorityAndParent(newCompetition().build(), 2, parentSection).build();
+        SectionResource siblingSectionResource = newSectionResource().withCompetitionAndPriorityAndParent(newCompetition().build().getId(), 2, parentSection.getId()).build();
         when(sectionRepositoryMock.findOne(section.getId())).thenReturn(section);
         when(sectionRepositoryMock.findFirstByCompetitionIdAndParentSectionIdAndPriorityGreaterThanAndQuestionGroupTrueOrderByPriorityAsc(
-                section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority()
+                anyLong(), anyLong(), anyInt()
         )).thenReturn(siblingSection);
+        when(sectionMapper.mapToResource(any(Section.class))).thenReturn(siblingSectionResource);
 
-        Section returnSection = sectionService.getNextSection(section.getId());
-        assertEquals(siblingSection, returnSection);
+        SectionResource returnSection = sectionService.getNextSection(section.getId()).getSuccessObject();
+        assertEquals(siblingSectionResource, returnSection);
     }
 
     @Test
@@ -72,12 +91,14 @@ public class SectionServiceTest extends BaseUnitTestMocksTest {
         Section parentSection = newSection().build();
         Section section = newSection().withCompetitionAndPriorityAndParent(newCompetition().build(), 1, parentSection).build();
         Section siblingSection = newSection().withCompetitionAndPriorityAndParent(newCompetition().build(), 2, parentSection).build();
+        SectionResource siblingSectionResource = newSectionResource().withCompetitionAndPriorityAndParent(newCompetition().build().getId(), 2, parentSection.getId()).build();
         when(sectionRepositoryMock.findOne(section.getId())).thenReturn(section);
         when(sectionRepositoryMock.findFirstByCompetitionIdAndParentSectionIdAndPriorityLessThanAndQuestionGroupTrueOrderByPriorityDesc(
-                section.getCompetition().getId(), section.getParentSection().getId(), section.getPriority()
+                anyLong(), anyLong(), anyInt()
         )).thenReturn(siblingSection);
+        when(sectionMapper.mapToResource(any(Section.class))).thenReturn(siblingSectionResource);
 
-        Section returnSection = sectionService.getPreviousSection(section.getId());
-        assertEquals(siblingSection, returnSection);
+        SectionResource returnSection = sectionService.getPreviousSection(section.getId()).getSuccessObject();
+        assertEquals(siblingSectionResource, returnSection);
     }
 }

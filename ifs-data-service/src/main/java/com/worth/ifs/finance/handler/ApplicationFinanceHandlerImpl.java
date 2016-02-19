@@ -79,7 +79,8 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal researchParticipation = BigDecimal.ZERO;
-        if(totalCosts != BigDecimal.ZERO) {
+
+        if(totalCosts.compareTo(BigDecimal.ZERO)!=0) {
             researchParticipation = researchCosts.divide(totalCosts, 6, BigDecimal.ROUND_HALF_UP);
         }
         researchParticipation = researchParticipation.multiply(BigDecimal.valueOf(100));

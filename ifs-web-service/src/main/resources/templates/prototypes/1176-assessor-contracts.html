@@ -18,17 +18,17 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <h1 class="heading-large no-margin">Terms of service</h1>
+        <h1 class="heading-large no-margin">Terms of contract</h1>
     </div>
 
-    <div class="boxed" style="max-height: 500px">
+    <div class="boxed" style="max-height: 500px" id="terms-container">
 
 		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-terms" th:remove="tag" />
 
     </div>
 
 	<p class="form-hint extra-margin">
-		You can access these terms of contract at any time from your profile.
+		You can access these terms of contract at any time from your profile. <a href="#">Download terms of contract</a>
 	</p>
 	
 	<form>
@@ -45,7 +45,7 @@
 			</div>
 			
 			<div class="form-block extra-margin">
-				<a class="button button-large" href="/prototypes/865-assessor-dashboard-invites?noInvites">Continue</a>
+				<a class="button button-large disabled" href="/prototypes/865-assessor-dashboard-invites" id="continue">Continue</a>
 			</div>
 		</fieldset>
 
@@ -61,5 +61,31 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery('.disabled').on('click',function(e){ 
+        e.preventDefault();
+    });
+
+
+    jQuery('#end-of-terms').waypoint(function() {
+        jQuery('#continue').removeClass('disabled');
+    }, { context: '#terms-container' });
+	
+
+	$('#continue').click(function (e) {
+	  e.preventDefault();
+	  if (jQuery(this).hasClass('disabled'))
+	    return false; // Do something else in here if required
+	  else
+	    window.location.href = jQuery(this).attr('href');
+	});
+
+
+	// ]]>
+	</script>
+
 </body>
 </html>

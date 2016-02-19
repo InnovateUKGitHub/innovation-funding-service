@@ -1,17 +1,17 @@
 package com.worth.ifs.sil.email.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.sil.email.resource.SilEmailAddress;
 import com.worth.ifs.sil.email.resource.SilEmailBody;
 import com.worth.ifs.sil.email.resource.SilEmailMessage;
-import com.worth.ifs.transactional.ServiceResult;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import static com.worth.ifs.sil.email.service.RestSilEmailEndpoint.ServiceFailures.UNABLE_TO_SEND_MAIL;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.UNEXPECTED_ERROR;
+import static com.worth.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -48,8 +48,8 @@ public class RestSilEmailEndpointTest extends BaseRestServiceUnitTest<RestSilEma
 
         ServiceResult<SilEmailMessage> sendMailResult = service.sendEmail(silEmail);
 
-        assertTrue(sendMailResult.isRight());
-        assertEquals(silEmail, sendMailResult.getRight());
+        assertTrue(sendMailResult.isSuccess());
+        assertEquals(silEmail, sendMailResult.getSuccessObject());
     }
 
     @Test
@@ -68,8 +68,8 @@ public class RestSilEmailEndpointTest extends BaseRestServiceUnitTest<RestSilEma
 
         ServiceResult<SilEmailMessage> sendMailResult = service.sendEmail(silEmail);
 
-        assertTrue(sendMailResult.isLeft());
-        assertTrue(sendMailResult.getLeft().is(UNABLE_TO_SEND_MAIL));
+        assertTrue(sendMailResult.isFailure());
+        assertTrue(sendMailResult.getFailure().is(EMAILS_NOT_SENT_MULTIPLE));
     }
 
     @Test
@@ -81,8 +81,8 @@ public class RestSilEmailEndpointTest extends BaseRestServiceUnitTest<RestSilEma
 
         ServiceResult<SilEmailMessage> sendMailResult = service.sendEmail(silEmail);
 
-        assertTrue(sendMailResult.isLeft());
-        assertTrue(sendMailResult.getLeft().is(UNEXPECTED_ERROR));
+        assertTrue(sendMailResult.isFailure());
+        assertTrue(sendMailResult.getFailure().is(internalServerErrorError()));
     }
 
 }

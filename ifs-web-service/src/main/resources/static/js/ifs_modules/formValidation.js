@@ -24,119 +24,163 @@ IFS.formValidation = (function(){
                 fields : '[type="email"]',
                 messageInvalid : "Please enter a valid emailaddress"
             },
-            typeTimeout : 800
+            required : {
+                fields: '[required]',
+                messageInvalid : "Please enter this field"
+            },
+            minlength : {
+                fields : '[minlength]',
+                messageInvalid : "This field should contain at least %minlength% characters"
+            },
+            typeTimeout : 1500
         },
         init : function(){
             s = this.settings;
-            IFS.formValidation.initPasswordCheck(); //checks if password and retyped password are equal
-            IFS.formValidation.initNumberCheck();   //checks if it is a number by using jQuery.isNumeric (https://api.jquery.com/jQuery.isNumeric/)
-            IFS.formValidation.initEmailCheck();   //checks if the email is valid, the almost rfc compliant check. The same as the java check, see http://www.regular-expressions.info/email.html
-            IFS.formValidation.initMinCheck();
-            IFS.formValidation.initMaxCheck();
-        },
-        initPasswordCheck : function(){
+            //bind the checks if password and retyped password are equal
             jQuery('body').on('change keyup', s.password.field1+','+s.password.field2, function(e){
-                if(e.type == 'keyup'){
-                    clearTimeout(window.IFS.formValidation_timer);
-                    window.IFS.formValidation_timer = setTimeout(function(){
-                        IFS.formValidation.checkPasswords();
-                    }, s.typeTimeout);
-                }
-                else {
-                    IFS.formValidation.checkPasswords();
+                switch(e.type){
+                    case 'keyup':
+                      clearTimeout(window.IFS.formValidation_timer);
+                      window.IFS.formValidation_timer = setTimeout(function(){IFS.formValidation.checkPasswords();}, s.typeTimeout);
+                      break;
+                    default:
+                      IFS.formValidation.checkPasswords();
                 }
             });
+            jQuery('body').on('change', s.email.fields , function(){IFS.formValidation.checkEmail(jQuery(this));});
+            jQuery('body').on('change', s.number.fields , function(){IFS.formValidation.checkNumber(jQuery(this));});
+            jQuery('body').on('change', s.min.fields , function(){IFS.formValidation.checkMin(jQuery(this));});
+            jQuery('body').on('change', s.max.fields , function(){IFS.formValidation.checkMax(jQuery(this));});
+            jQuery('body').on('blur change',s.required.fields,function(){ IFS.formValidation.checkRequired(jQuery(this)); });
+            jQuery('body').on('change',s.minlength.fields,function(){ IFS.formValidation.checkMinLength(jQuery(this)); });
+
         },
         checkPasswords : function(){
             var pw1 = jQuery(s.password.field1);
             var pw2 = jQuery(s.password.field2);
+            var errorMessage = IFS.formValidation.getErrorMessage(pw2,'password');
 
             //if both are on the page and have content (.val)
             if(pw1.length && pw2.length && pw1.val().length && pw2.val().length){
                 if(pw1.val() == pw2.val()){
-                    IFS.formValidation.setValid(pw1,s.password.messageInvalid);
-                    IFS.formValidation.setValid(pw2,s.password.messageInvalid);
+                    IFS.formValidation.setValid(pw1,errorMessage);
+                    IFS.formValidation.setValid(pw2,errorMessage);
                 }
                 else {
-                    IFS.formValidation.setInvalid(pw1,s.password.messageInvalid);
-                    IFS.formValidation.setInvalid(pw2,s.password.messageInvalid);
+                    IFS.formValidation.setInvalid(pw1,errorMessage);
+                    IFS.formValidation.setInvalid(pw2,errorMessage);
                 }
             }
-        },
-        initEmailCheck : function(){
-            jQuery('body').on('change keyup', s.email.fields , function(e){
-                var el = jQuery(e.target);
-                if(e.type == 'keyup'){
-                    clearTimeout(window.IFS.formValidation_timer);
-                    window.IFS.formValidation_timer = setTimeout(function(){
-                        IFS.formValidation.checkEmail(el);
-                    }, s.typeTimeout);
-                }
-                else {
-                    IFS.formValidation.checkEmail(el);
-                }
-            });
         },
         checkEmail : function(field){
+            //checks if the email is valid, the almost rfc compliant check. The same as the java check, see http://www.regular-expressions.info/email.html
             var email = field.val();
             var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
+            var errorMessage = IFS.formValidation.getErrorMessage(field,'email');
+
             var validEmail = re.test(email);
-            if(validEmail){
-                IFS.formValidation.setValid(field,s.email.messageInvalid);
+            if(!validEmail){
+              IFS.formValidation.setInvalid(field,errorMessage);
+              return false;
             }
             else {
-                IFS.formValidation.setInvalid(field,s.email.messageInvalid);
-            }
-        },
-        initNumberCheck : function(){
-            jQuery('body').on('change', s.number.fields , function(){
-                IFS.formValidation.checkNumber(jQuery(this));
-            });
-        },
-        checkNumber : function(field){
-            if(jQuery.isNumeric(field.val())){
-              IFS.formValidation.setValid(field,s.number.messageInvalid);
+              IFS.formValidation.setValid(field,errorMessage);
               return true;
             }
-            else{
+        },
+        checkNumber : function(field){
+            //https://api.jquery.com/jQuery.isNumeric/
+            if(!jQuery.isNumeric(field.val())){
               IFS.formValidation.setInvalid(field,s.number.messageInvalid);
               return false;
             }
-        },
-        initMaxCheck : function(){
-            jQuery('body').on('change', s.max.fields , function(){
-                IFS.formValidation.checkMax(jQuery(this));
-            });
+            else{
+              IFS.formValidation.setValid(field,s.number.messageInvalid);
+              return true;
+            }
         },
         checkMax : function(field){
-            var max = parseInt(field.attr('max'));
+            var max = parseInt(field.attr('max'),10);
+            var errorMessage = IFS.formValidation.getErrorMessage(field,'max');
+
             if(IFS.formValidation.checkNumber(field)){
-              var fieldVal = parseInt(field.val());
+              var fieldVal = parseInt(field.val(),10);
               if(fieldVal > max){
-                IFS.formValidation.setInvalid(field,s.max.messageInvalid.replace('%max%',max));
+                IFS.formValidation.setInvalid(field,errorMessage);
+                return false;
               }
               else {
-                IFS.formValidation.setValid(field,s.max.messageInvalid.replace('%max%',max));
+                IFS.formValidation.setValid(field,errorMessage);
+                return true;
               }
             }
-
-        },
-        initMinCheck : function(){
-            jQuery('body').on('change', s.min.fields , function(){
-                IFS.formValidation.checkMin(jQuery(this));
-            });
         },
         checkMin : function(field){
-            var min = parseInt(field.attr('min'));
+            var min = parseInt(field.attr('min'),10);
+            var errorMessage = IFS.formValidation.getErrorMessage(field,'min');
+
             if(IFS.formValidation.checkNumber(field)){
-              var fieldVal = parseInt(field.val());
+              var fieldVal = parseInt(field.val(),10);
               if(fieldVal < min){
-                IFS.formValidation.setInvalid(field,s.min.messageInvalid.replace('%min%',min));
+                IFS.formValidation.setInvalid(field,errorMessage);
+                return false;
               }
               else {
-                IFS.formValidation.setValid(field,s.min.messageInvalid.replace('%min%',min));
+                IFS.formValidation.setValid(field,errorMessage);
+                return true;
               }
             }
+        },
+        checkRequired : function(field){
+            var errorMessage = IFS.formValidation.getErrorMessage(field,'required');
+            if(field.is(':checkbox')){
+               if(!field.prop('checked')){
+                 IFS.formValidation.setInvalid(field,errorMessage);
+                 return false;
+               }
+               else {
+                 IFS.formValidation.setValid(field,errorMessage);
+                 return true;
+               }
+            }
+            else {
+              if(field.val().length === 0){
+                IFS.formValidation.setInvalid(field,errorMessage);
+                return false;
+              }
+              else {
+                IFS.formValidation.setValid(field,errorMessage);
+                return true;
+              }
+            }
+        },
+        checkMinLength : function(field){
+            var errorMessage = IFS.formValidation.getErrorMessage(field,'minlength');
+            var minlength = parseInt(field.attr('minlength'),10);
+            if(field.val().length < minlength){
+              IFS.formValidation.setInvalid(field,errorMessage);
+              return false;
+            }
+            else {
+              IFS.formValidation.setValid(field,errorMessage);
+              return true;
+            }
+        },
+        getErrorMessage : function(field,type){
+            var errorMessage = field.attr('data-'+type+'-errormessage');
+            //if there is no data-errormessage we use the default messagging
+            if (typeof(errorMessage) == 'undefined') {
+                  switch(type){
+                      case 'min':
+                      case 'max':
+                      case 'minlength':
+                        errorMessage = s[type].messageInvalid.replace('%'+type+'%',field.attr(type));
+                        break;
+                      default:
+                        errorMessage = s[type].messageInvalid;
+                  }
+            }
+            return errorMessage;
         },
         setInvalid : function(field,message){
             var formGroup = field.closest('.form-group');
@@ -147,21 +191,35 @@ IFS.formValidation = (function(){
                 if(errorEl.length === 0){
                     formGroup.addClass('error');
                     var html = '<span class="error-message">'+message+'</span>';
-                    formGroup.find('label').first().append(html);
+                    formGroup.find('legend,label').first().append(html);
                 }
             }
+            if(jQuery('ul.error-summary-list li:contains('+message+')').length === 0){
+                jQuery('.error-summary-list').append('<li>'+message+'</li>');
+            }
+            jQuery('.error-summary').attr('aria-hidden',false);
+
         },
         setValid : function(field,message){
             var formGroup = field.closest('.form-group.error');
             if(formGroup){
-              field.removeClass('field-error');
               formGroup.find('.error-message:contains("'+message+'")').remove();
 
                //if this was the last error we remove this one
                if(formGroup.find('.error-message').length === 0){
                    formGroup.removeClass('error');
+                   field.removeClass('field-error');
                }
             }
+
+            if(jQuery('.error-summary-list li:contains('+message+')').length){
+              jQuery('.error-summary-list li:contains('+message+')').remove();
+            }
+
+            if(jQuery('.error-summary-list li').length === 0){
+              jQuery('.error-summary').attr('aria-hidden',true);
+            }
+
         }
     };
 })();

@@ -16,8 +16,8 @@ IFS.application_page = (function(){
             }
             var handleFormPost = function (data) {
                 var htmlReplacement = jQuery('<div>' + data + '</div>');
-                var questionId = sectionToUpdate.attr('id');
-                var replacement = htmlReplacement.find('#' + questionId);
+                var questionId = sectionToUpdate.data('question-id');
+                var replacement = htmlReplacement.find('[data-question-id=' + questionId+']');
                 sectionToUpdate.replaceWith(replacement);
             IFS.collapsible.collapsibleWithinScope(replacement);
             };

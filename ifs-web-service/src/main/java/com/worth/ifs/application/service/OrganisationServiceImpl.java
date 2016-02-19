@@ -20,6 +20,8 @@ import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.application.service.Futures.call;
+
 /**
  * This class contains methods to retrieve and store {@link Organisation} related data,
  * through the RestService {@link com.worth.ifs.user.service.OrganisationRestService}.
@@ -36,9 +38,9 @@ public class OrganisationServiceImpl  implements OrganisationService {
     private ProcessRoleService processRoleService;
 
     public TreeSet<Organisation> getApplicationOrganisations(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList());
+        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
+                .map(id -> processRoleService.getById(id))
+                .collect(Collectors.toList()));
 
         Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
@@ -46,14 +48,14 @@ public class OrganisationServiceImpl  implements OrganisationService {
 
         return userApplicationRoles.stream()
                 .filter(uar -> (uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName())))
-                        .map(ProcessRole::getOrganisation)
-                        .collect(Collectors.toCollection(supplier));
+                .map(ProcessRole::getOrganisation)
+                .collect(Collectors.toCollection(supplier));
     }
 
     public Optional<Organisation> getApplicationLeadOrganisation(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList());
+        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
+                .map(id -> processRoleService.getById(id))
+                .collect(Collectors.toList()));
 
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
@@ -62,9 +64,9 @@ public class OrganisationServiceImpl  implements OrganisationService {
     }
 
     public Optional<Organisation> getUserOrganisation(ApplicationResource application, Long userId) {
-        List<ProcessRole> userApplicationRoles = application.getProcessRoles().stream()
-            .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList());
+        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
+                .map(id -> processRoleService.getById(id))
+                .collect(Collectors.toList()));
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().getId().equals(userId))
                 .map(ProcessRole::getOrganisation)
@@ -81,20 +83,28 @@ public class OrganisationServiceImpl  implements OrganisationService {
         return  companyHouseRestService.searchOrganisations(searchText);
     }
 
-
-
+    @Override
+    // TODO DW - INFUND-1555 - get below methods to return the RestResults
     public Organisation getOrganisationById(Long organisationId) {
-        return organisationRestService.getOrganisationById(organisationId);
+        return organisationRestService.getOrganisationById(organisationId).getSuccessObjectOrNull();
     }
 
     @Override
+    // TODO DW - INFUND-1555 - get below methods to return the RestResults
     public OrganisationResource save(Organisation organisation) {
-        return organisationRestService.save(organisation);
+        return organisationRestService.save(organisation).getSuccessObjectOrNull();
     }
 
     @Override
+    // TODO DW - INFUND-1555 - get below methods to return the RestResults
+    public OrganisationResource save(OrganisationResource organisation) {
+        return organisationRestService.save(organisation).getSuccessObjectOrNull();
+    }
+
+    @Override
+    // TODO DW - INFUND-1555 - get below methods to return the RestResults
     public OrganisationResource addAddress(OrganisationResource organisation, Address address, AddressType addressType) {
-        return organisationRestService.addAddress(organisation, address, addressType);
+        return organisationRestService.addAddress(organisation, address, addressType).getSuccessObjectOrNull();
     }
 
 }

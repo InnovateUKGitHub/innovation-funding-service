@@ -1,31 +1,17 @@
 package com.worth.ifs.user.controller;
 
-import com.worth.ifs.commons.resource.ResourceEnvelope;
-import com.worth.ifs.commons.resource.ResourceEnvelopeConstants;
-import com.worth.ifs.commons.resource.ResourceError;
-import com.worth.ifs.transactional.ServiceResult;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
-import com.worth.ifs.user.repository.RoleRepository;
-import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.transactional.RegistrationService;
-import com.worth.ifs.user.transactional.UserProfileService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.worth.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.authentication.service.RestIdentityProviderService.ServiceFailures.DUPLICATE_EMAIL_ADDRESS;
-import static com.worth.ifs.transactional.BaseTransactionalService.Failures.USER_NOT_FOUND;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -35,132 +21,57 @@ import static com.worth.ifs.transactional.BaseTransactionalService.Failures.USER
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    @Autowired
-    UserRepository repository;
-    @Autowired
-    ProcessRoleRepository processRoleRepository;
-    @Autowired
-    OrganisationRepository organisationRepository;
-    @Autowired
-    RoleRepository roleRepository;
 
     @Autowired
-    RegistrationService registrationService;
-
-    @Autowired
-    UserProfileService userProfileService;
-
-    private final Log log = LogFactory.getLog(getClass());
-
-    @ExceptionHandler(Exception.class)
-    @ResponseBody
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public String handleException(Exception e) {
-        log.error(e);
-        return "return error object instead";
-    }
+    private UserService userService;
 
     @RequestMapping("/uid/{uid}")
-     public User getUserByUid(@PathVariable("uid") final String uid) {
+    public RestResult<User> getUserByUid(@PathVariable("uid") final String uid) {
         return repository.findOneByUid(uid);
     }
 
     @RequestMapping("/id/{id}")
-    public User getUserById(@PathVariable("id") final Long id) {
+    public RestResult<User> getUserById(@PathVariable("id") final Long id) {
         return repository.findOne(id);
     }
 
+    @RequestMapping("/id/{id}")
+    public RestResult<User> getUserById(@PathVariable("id") final Long id) {
+        return userService.getUserById(id).toGetResponse();
+    }
+
     @RequestMapping("/name/{name}")
-    public List<User> getUserByName(@PathVariable("name") final String name) {
-        return repository.findByName(name);
+    public RestResult<List<User>> getUserByName(@PathVariable("name") final String name) {
+        return userService.getUserByName(name).toGetResponse();
     }
 
     @RequestMapping("/findAll/")
-    public List<User> findAll() {
-        return repository.findAll();
+    public RestResult<List<User>> findAll() {
+        return userService.findAll().toGetResponse();
     }
 
     @RequestMapping("/findByEmail/{email}/")
-    public List<UserResource> findByEmail(@PathVariable("email") final String email) {
-        List<User> users = repository.findByEmail(email);
-
-        return users.stream().map(UserResource::new).collect(Collectors.toList());
+    public RestResult<List<UserResource>> findByEmail(@PathVariable("email") final String email) {
+        return userService.findByEmail(email).toGetResponse();
     }
 
     @RequestMapping("/findAssignableUsers/{applicationId}")
-    public Set<User> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
-        List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
-        return roles.stream()
-                .filter(r -> r.getRole().getName().equals("leadapplicant") || r.getRole().getName().equals("collaborator"))
-                .map(ProcessRole::getUser)
-                .collect(Collectors.toSet());
+    public RestResult<Set<User>> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
+        return userService.findAssignableUsers(applicationId).toGetResponse();
     }
 
     @RequestMapping("/findRelatedUsers/{applicationId}")
-    public Set<User> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
-        List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
-        return roles.stream()
-                .map(ProcessRole::getUser)
-                .collect(Collectors.toSet());
+    public RestResult<Set<User>> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
+        return userService.findRelatedUsers(applicationId).toGetResponse();
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
-    public ResourceEnvelope<UserResource> createLeadApplicant(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-
-        ServiceResult<User> createUserResult = registrationService.createUserLeadApplicantForOrganisation(organisationId, userResource);
-
-        return createUserResult.mapLeftOrRight(
-            failure -> {
-
-                ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
-
-                if (failure.is(DUPLICATE_EMAIL_ADDRESS)) {
-                    addDuplicateEmailError(resourceEnvelope);
-                }
-
-                return resourceEnvelope;
-            },
-            successfullyCreatedUser ->
-                new ResourceEnvelope<>(ResourceEnvelopeConstants.OK.getName(), new ArrayList<>(), new UserResource(successfullyCreatedUser))
-        );
-    }
-
-    private void addDuplicateEmailError(ResourceEnvelope<UserResource> resourceEnvelope) {
-        resourceEnvelope.setStatus(ResourceEnvelopeConstants.ERROR.getName());
-        resourceEnvelope.addError(new ResourceError("email", "This email address is already in use"));
+    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
+        return userService.createUser(organisationId, userResource).toPostCreateResponse();
     }
 
     @RequestMapping("/updateDetails")
-    public ResourceEnvelope<UserResource> updateUser(@RequestBody UserResource userResource) {
-
-        ServiceResult<User> updateResult = userProfileService.updateProfile(userResource);
-
-        return updateResult.mapLeftOrRight(
-            failure -> {
-
-                ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
-
-                if (failure.is(USER_NOT_FOUND)) {
-                    addUserDoesNotExistError(resourceEnvelope);
-                }
-
-                return resourceEnvelope;
-            },
-            success -> {
-                ResourceEnvelope<UserResource> resourceEnvelope = new ResourceEnvelope<>(ResourceEnvelopeConstants.ERROR.getName(), new ArrayList<>(), new UserResource());
-                addUserResource(resourceEnvelope, new UserResource(success));
-                return resourceEnvelope;
-            }
-        );
-    }
-
-    private void addUserResource(ResourceEnvelope<UserResource> resourceEnvelope, UserResource userResource) {
-        resourceEnvelope.setEntity(userResource);
-        resourceEnvelope.setStatus(ResourceEnvelopeConstants.OK.getName());
-    }
-
-    private void addUserDoesNotExistError(ResourceEnvelope<UserResource> resourceEnvelope) {
-        resourceEnvelope.setStatus(ResourceEnvelopeConstants.ERROR.getName());
-        resourceEnvelope.addError(new ResourceError("email", "User with given email address does not exist!"));
+    public RestResult<UserResource> createUser(@RequestBody UserResource userResource) {
+        return userService.updateUser(userResource).toPutWithBodyResponse();
     }
 }

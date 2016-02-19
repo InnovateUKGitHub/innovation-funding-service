@@ -18,16 +18,18 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Project exploitation'})" th:remove="tag" />
 
+    <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p>
+
 	<form action="#" method="post">
 		<div class="form-group">
 			
-			<h2 class="heading-medium no-margin">3. How will you exploit and market your project?</h2>
+			<h2 class="heading-medium">3. How will you exploit and market your project?</h2>
 			
 			<p>The planned end result of the project would be a fully implementable tool that could be rolled out to the industry. Once a fully tested prototype can be demonstrated we can start to take orders and travel to international Industry leaders the exhibit the value of the tool.</p>
 
 		</div>
 
-		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:with="score=3" th:remove="tag" />
+		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:with="score=3, questionTitle='question3'" th:remove="tag" />
 
 	</form>
 

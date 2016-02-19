@@ -9,4 +9,5 @@ import java.util.List;
 public interface InviteRepository extends PagingAndSortingRepository<Invite, Long> {
 
     List<Invite> findByApplicationId(@Param("applicationId") Long applicationId);
+    Invite getByHash(@Param("hash") String hash);
 }

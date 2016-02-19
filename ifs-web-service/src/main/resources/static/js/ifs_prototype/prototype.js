@@ -61,12 +61,12 @@ jQuery(document).ready(function(){
 
     function addTableRow(el){
         el = jQuery(el);
-        var html = '<tr>\
+        var html = '<tr class="form-group">\
                     <td>\
-                        <input type="text" value="" placeholder="name" id="name-item-1" name="name-item-1">\
+                        <input type="text" value="" placeholder="name" id="name-item-1" class="form-control width-full" name="name-item-1">\
                     </td>\
                     <td>\
-                        <input type="e-mail"  value="" placeholder="name@name.com" id="mail-item-1" name="mail-item-1">\
+                        <input type="e-mail"  value="" placeholder="name@name.com" id="mail-item-1" class="form-control width-full" name="mail-item-1">\
                     </td>\
                     <td class="alignright remove">\
                         <a class="delete-row" data-cost-row="12" href="javascript:void(0);">Remove</a>\
@@ -100,15 +100,38 @@ jQuery(document).ready(function(){
     //---- COMP ADMIN ASSIGN ASSESSORS -----//
 
 
-    function addRow(assessor, skills, type, applications){
+    function addRow(assessor, skills, type, applications, innovationArea){
         //alert(assessor+' '+skills+' '+type+' '+applications);
         jQuery('#assessor-assigned').append(
             "<tr><th>"+ assessor +"</th>" +
-            "<td>"+ skills +"</td>" +
             "<td>"+ type +"</td>" +
+            "<td>"+ innovationArea +"</td>" +
+            "<td>"+ skills +"</td>" +
             "<td>"+ applications +"</td>" +
             "<td><a href='#' class='view-assessor'>View</a>" +
+            "<td class='full-view'></td>" +
+            "<td class='full-view'></td>" +
+            "<td class='full-view'></td>" +
             "<td class='alignright'><a href='#' class='undo-assessor'>Undo</a>" +
+            "</tr>"
+            );
+    };
+
+    function addRowApplication(appNumber, projectTitle, lead, category, assessors){
+        //alert(assessor+' '+skills+' '+type+' '+applications);
+        jQuery('#assessor-assigned').append(
+            "<tr><th><a href='/prototypes/1196-readonly-application-view'>"+ appNumber +"</a></th>" +
+            "<td>"+ projectTitle  +"</td>" +
+            "<td>"+ lead +"</td>" +
+            "<td>"+ category +"</td>" +
+            "<td>"+ assessors +"</td>" +
+            "<td><a href='#' class='view-application'>View</a>" +
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" + 
+            "<td class='alignright'><a href='#' class='undo-application'>Undo</a>" +
             "</tr>"
             );
     };
@@ -127,14 +150,18 @@ jQuery(document).ready(function(){
 
     var counter = 0;
 
+
+    //----- Asign assessor to an application ------//
+
     jQuery('.assign-assessor').on('click',function(e){ 
         e.preventDefault();
         counter ++;
 
         var assessor = jQuery(this).parent().parent().find('th').text();
-        var skills = jQuery(this).parent().parent().find('td:eq(0)').text();
-        var type = jQuery(this).parent().parent().find('td:eq(1)').text();
-        var applications = jQuery(this).parent().parent().find('td:eq(2)').text();
+        var type = jQuery(this).parent().parent().find('td:eq(0)').text();
+        var innovationArea = jQuery(this).parent().parent().find('td:eq(1)').text();
+        var skills = jQuery(this).parent().parent().find('td:eq(2)').text();
+        var applications = jQuery(this).parent().parent().find('td:eq(3)').text();
 
         jQuery(this).parent().parent().hide();
         jQuery('.assigned-count').html('('+counter+')');
@@ -146,8 +173,8 @@ jQuery(document).ready(function(){
             jQuery('#added-assessors').show();
         }
 
-        addRow(assessor, skills, type, applications);
-        //alert(skills);
+        addRow(assessor, skills, type, applications, innovationArea);
+        //alert(counter);
     });
 
     jQuery('body').on('click','.undo-assessor',function(e){
@@ -189,5 +216,41 @@ jQuery(document).ready(function(){
         window.location.href = url+assessor+"&assessorType="+type+"&assessorApplications="+applications;
     });
 
+     jQuery('body').on('click','.view-assessor-assigned',function(e){
+        e.preventDefault();
+
+        var url = "/prototypes/1521-application-allocate-applications?assessorName="
+        var assessor = jQuery(this).parent().parent().find('th').text();
+        var type = jQuery(this).parent().parent().find('td:eq(1)').text();
+        var applications = jQuery(this).parent().parent().find('td:eq(2)').text();
+
+        window.location.href = url+assessor+"&assessorType="+type+"&assessorApplications="+applications;
+    });
+
+     //----- Asign application to an assessor ------//
+
+     jQuery('.assign-application').on('click',function(e){ 
+        e.preventDefault();
+        counter ++;
+
+        var appNumber = jQuery(this).parent().parent().find('th').text();
+        var projectTitle = jQuery(this).parent().parent().find('td:eq(0)').text();
+        var lead = jQuery(this).parent().parent().find('td:eq(1)').text();
+        var category = jQuery(this).parent().parent().find('td:eq(2)').text();
+        var assessors = jQuery(this).parent().parent().find('td:eq(3)').text();
+
+        jQuery(this).parent().parent().hide();
+        jQuery('.assigned-count').html('('+counter+')');
+
+        numAvailable('subtract');
+
+        if(counter >= 1){
+            jQuery('#no-assessors').hide();
+            jQuery('#added-assessors').show();
+        }
+
+        addRowApplication(appNumber, projectTitle, lead, category, assessors);
+        //alert(skills);
+    });
 
 });

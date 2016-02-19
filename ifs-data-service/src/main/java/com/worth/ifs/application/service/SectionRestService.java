@@ -1,22 +1,25 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Section;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Future;
+
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.rest.RestResult;
 
 /**
  * Interface for CRUD operations on {@link Section} related data.
  */
 public interface SectionRestService {
-    public Section getById(Long sectionId);
-    public Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId);
-    public List<Long> getCompletedSectionIds(Long applicationId, Long organisationId);
-    public List<Long> getIncompletedSectionIds(Long applicationId);
-    public Section getSection(String name);
-    public Boolean allSectionsMarkedAsComplete(Long applicationId);
-    public Section getPreviousSection(Long sectionId);
-    public Section getNextSection(Long sectionId);
-    public Section getSectionByQuestionId(Long questionId);
+    RestResult<SectionResource> getById(Long sectionId);
+    RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(Long applicationId);
+    RestResult<List<Long>> getCompletedSectionIds(Long applicationId, Long organisationId);
+    RestResult<List<Long>> getIncompletedSectionIds(Long applicationId);
+    RestResult<SectionResource> getSection(String name);
+    RestResult<Boolean> allSectionsMarkedAsComplete(Long applicationId);
+    Future<RestResult<SectionResource>> getPreviousSection(Long sectionId);
+    Future<RestResult<SectionResource>> getNextSection(Long sectionId);
+    RestResult<SectionResource> getSectionByQuestionId(Long questionId);
 }

@@ -1,19 +1,16 @@
 package com.worth.ifs.user.service;
 
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.organisation.domain.Address;
-import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static java.util.Arrays.asList;
 
 /**
  * OrganisationRestServiceImpl is a utility for CRUD operations on {@link Organisation}.
@@ -22,30 +19,32 @@ import static java.util.Arrays.asList;
  */
 @Service
 public class OrganisationRestServiceImpl extends BaseRestService implements OrganisationRestService {
+
     @Value("${ifs.data.service.rest.organisation}")
     String organisationRestURL;
 
-    private final Log log = LogFactory.getLog(getClass());
-
-    public List<Organisation> getOrganisationsByApplicationId(Long applicationId) {
-        return asList(restGet(organisationRestURL + "/findByApplicationId/" + applicationId, Organisation[].class));
-    }
-
-    @NotSecured("When registering a new user, this necessary for the registration form to show which organisation you signing up for")
-    public Organisation getOrganisationById(Long organisationId) {
-        return restGet(organisationRestURL + "/findById/"+organisationId, Organisation.class);
-    }
-
-    @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
     @Override
-    public OrganisationResource save(Organisation organisation) {
-        return restPost(organisationRestURL + "/save", organisation, OrganisationResource.class);
+    public RestResult<List<Organisation>> getOrganisationsByApplicationId(Long applicationId) {
+        return getWithRestResult(organisationRestURL + "/findByApplicationId/" + applicationId, new ParameterizedTypeReference<List<Organisation>>() {});
     }
 
-    @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
     @Override
-    public OrganisationResource addAddress(OrganisationResource organisation, Address address, AddressType type) {
-        return restPost(organisationRestURL + "/addAddress/"+organisation.getId()+"?addressType="+type.name(), address, OrganisationResource.class);
+    public RestResult<Organisation> getOrganisationById(Long organisationId) {
+        return getWithRestResult(organisationRestURL + "/findById/"+organisationId, Organisation.class);
     }
 
+    @Override
+    public RestResult<OrganisationResource> save(Organisation organisation) {
+        return postWithRestResult(organisationRestURL + "/save", organisation, OrganisationResource.class);
+    }
+
+    @Override
+    public RestResult<OrganisationResource> save(OrganisationResource organisation) {
+        return postWithRestResult(organisationRestURL + "/saveResource", organisation, OrganisationResource.class);
+    }
+
+    @Override
+    public RestResult<OrganisationResource> addAddress(OrganisationResource organisation, Address address, AddressType type) {
+        return postWithRestResult(organisationRestURL + "/addAddress/"+organisation.getId()+"?addressType="+type.name(), address, OrganisationResource.class);
+    }
 }

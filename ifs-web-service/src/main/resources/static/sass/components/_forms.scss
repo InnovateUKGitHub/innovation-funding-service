@@ -27,6 +27,10 @@ div.readonly{
     .form-finances-subcontracting-cost{
         text-align: right;
     }
+    &.inline label {
+      display:inline-block;
+      margin-right: 1em;
+    }
 }
 tr.form-group {
   float:none;

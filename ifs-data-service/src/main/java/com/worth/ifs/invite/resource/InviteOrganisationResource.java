@@ -2,6 +2,8 @@ package com.worth.ifs.invite.resource;
 
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.user.domain.Organisation;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,7 +15,7 @@ import java.util.stream.Collectors;
 public class InviteOrganisationResource {
     private Long id;
     private String organisationName;
-    private Long organisationId;
+    private Long organisation;
 
     List<InviteResource> inviteResources;
 
@@ -24,7 +26,7 @@ public class InviteOrganisationResource {
     public InviteOrganisationResource(Long id, String organisationName, Organisation organisation, List<InviteResource> inviteResources) {
         this.id = id;
         this.organisationName = organisationName;
-        this.organisationId = organisation.getId();
+        this.organisation = organisation.getId();
         this.inviteResources = inviteResources;
     }
 
@@ -32,7 +34,7 @@ public class InviteOrganisationResource {
         this.id = invite.getId();
         this.organisationName = invite.getOrganisationName();
         if(invite.getOrganisation() != null && invite.getOrganisation().getId() != null){
-            this.organisationId = invite.getOrganisation().getId();
+            this.organisation = invite.getOrganisation().getId();
         }
         this.setInviteResources(invite.getInvites().stream().map(i -> new InviteResource(i)).collect(Collectors.toList()));
     }
@@ -60,11 +62,37 @@ public class InviteOrganisationResource {
         this.inviteResources = inviteResources;
     }
 
-    public Long getOrganisationId() {
-        return organisationId;
+    public Long getOrganisation() {
+        return organisation;
     }
 
-    public void setOrganisationId(Long organisationId) {
-        this.organisationId = organisationId;
+    public void setOrganisation(Long organisation) {
+        this.organisation = organisation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InviteOrganisationResource that = (InviteOrganisationResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(organisationName, that.organisationName)
+                .append(organisation, that.organisation)
+                .append(inviteResources, that.inviteResources)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(organisationName)
+                .append(organisation)
+                .append(inviteResources)
+                .toHashCode();
     }
 }

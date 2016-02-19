@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.resource.cost;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.math.BigDecimal;
 
 /**
@@ -9,28 +9,27 @@ import java.math.BigDecimal;
  */
 public class Overhead implements CostItem {
     private Long id;
-    private String acceptRate;
-    private Integer customRate;
+    @Enumerated(EnumType.STRING)
+    private OverheadRateType rateType;
+    private Integer rate;
     private CostType costType;
 
     public Overhead() {
         this.costType = CostType.OVERHEADS;
+        this.rateType = OverheadRateType.NONE;
     }
 
-    public Overhead(Long id, String acceptRate, Integer customRate) {
+    public Overhead(Long id, OverheadRateType rateType, Integer rate) {
         this();
         this.id = id;
-        this.acceptRate = acceptRate;
-        this.customRate = customRate;
+        this.rateType = rateType;
+        this.rate = rate;
     }
 
-    public String getAcceptRate() {
-        return acceptRate;
+    public Integer getRate(){
+        return rate;
     }
 
-    public Integer getCustomRate() {
-        return customRate;
-    }
 
     @Override
     public BigDecimal getTotal() {
@@ -46,4 +45,13 @@ public class Overhead implements CostItem {
     public CostType getCostType() {
         return costType;
     }
+
+    public OverheadRateType getRateType() {
+        return rateType;
+    }
+
+    public void setRateType(OverheadRateType rateType) {
+        this.rateType = rateType;
+    }
 }
+

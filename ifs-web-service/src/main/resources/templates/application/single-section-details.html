@@ -3,8 +3,7 @@
 <body>
 
 <ul th:fragment="sectionDetails (question, questionAssignee, questionAssignees, responses, currentUser, userIsLeadApplicant, leadApplicant , section, currentApplication)" th:remove="tag">
-
-    <div th:each="question : ${section.getQuestions()}" th:remove="tag">
+    <div th:each="question : ${sectionQuestions.get(section.id)}" th:remove="tag">
 
         <li class="grid-row section"
             th:each="formInput, status : ${question.getFormInputs()}" th:if="${formInput.isIncludedInApplicationSummary()}"
@@ -29,6 +28,7 @@
                 </div>
                 <img class="section-status complete"
                      src="/images/field/field-done-right.png"
+                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
                      width="30"
                      height="30"
                      th:alt="'The &quot;'+${question.shortName}+'&quot; section is marked as done'"
@@ -36,11 +36,12 @@
                      th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}" />
                 <img class="section-status assigned"
                      src="/images/field/field-assigned-right.png"
+                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"
                      width="30"
                      height="30"
                      th:alt="'The &quot;'+${question.shortName}+'&quot; section is assigned to you'"
                      th:title="'The &quot;'+${question.shortName}+'&quot; section is assigned to you'"
-                     th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.getAssignee()?.getUser()?.getId()) or ((questionAssignee?.getAssignee() == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))}"/>
+                     th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getUser()?.getId() == currentUser.getId())))}"/>
         </li>
     </div>
 </ul>

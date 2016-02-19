@@ -1,18 +1,15 @@
 package com.worth.ifs.assessment.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.dto.Score;
-import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
-import com.worth.ifs.user.controller.ProcessRoleController;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.internal.util.collections.Sets;
 import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
@@ -22,8 +19,10 @@ import static com.worth.ifs.BuilderAmendFunctions.description;
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
-import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,13 +34,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
     private static String applicationControllerPath = "/assessment";
 
     @Mock
-    AssessmentHandler assessmentHandler;
-
-    @Mock
-    AssessmentWorkflowEventHandler assessmentWorkflowEventHandler;
-
-    @Mock
-    ProcessRoleController processRoleController;
+    private AssessorService assessorService;
 
     @Override
     protected AssessmentController supplyControllerUnderTest() {
@@ -57,9 +50,9 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
         assessment.setId(123L);
 
-        when(assessmentHandler.getAllByCompetitionAndAssessor(1L, 1L)).thenReturn(assessments);
+        when(assessorService.getAllByCompetitionAndAssessor(456L, 123L)).thenReturn(serviceSuccess(assessments));
 
-        mockMvc.perform(get(applicationControllerPath+"/findAssessmentsByCompetition/1/1"))
+        mockMvc.perform(get(applicationControllerPath+"/findAssessmentsByCompetition/123/456"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("[0]id", is(123)))
                 .andDo(document("assessment/find-competition-assessment"));
@@ -71,9 +64,9 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
         assessment.setId(456L);
 
-        when(assessmentHandler.getOneByProcessRole(1L)).thenReturn(assessment);
+        when(assessorService.getOneByProcessRole(123L)).thenReturn(serviceSuccess(assessment));
 
-        mockMvc.perform(get(applicationControllerPath+"/findAssessmentByProcessRole/1"))
+        mockMvc.perform(get(applicationControllerPath+"/findAssessmentByProcessRole/123"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(456)))
                 .andDo(document("assessment/find-application-user-assessment"));;
@@ -83,7 +76,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
     public void testGetScore() throws Exception {
         Score score = new Score(200, 20);
         long assessmentId = 1L;
-        when(assessmentHandler.getScore(assessmentId)).thenReturn(score);
+        when(assessorService.getScore(assessmentId)).thenReturn(serviceSuccess(score));
 
         mockMvc.perform(get(applicationControllerPath+"/"+assessmentId+"/score"))
                 .andExpect(status().isOk())
@@ -95,7 +88,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
     @Test
     public void testGetTotalAssignedAssessmentsByProcessRole() throws Exception {
-        when(assessmentHandler.getTotalAssignedAssessmentsByCompetition(1L, 1L)).thenReturn(3);
+        when(assessorService.getTotalAssignedAssessmentsByCompetition(1L, 1L)).thenReturn(serviceSuccess(3));
 
         mockMvc.perform(get(applicationControllerPath+"/totalAssignedAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
@@ -105,7 +98,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
 
     @Test
     public void testGetTotalSubmittedAssessmentsByCompetition() throws Exception {
-        when(assessmentHandler.getTotalSubmittedAssessmentsByCompetition(1L, 1L)).thenReturn(35);
+        when(assessorService.getTotalSubmittedAssessmentsByCompetition(1L, 1L)).thenReturn(serviceSuccess(35));
 
         mockMvc.perform(get(applicationControllerPath+"/totalSubmittedAssessmentsByCompetition/1/1"))
                 .andExpect(status().isOk())
@@ -119,7 +112,9 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         long processRoleId = 2L;
         Assessment assessment = newAssessment().withId(assessmentId).build();
         String json = new ObjectMapper().writeValueAsString(assessment);
-        when(assessmentHandler.getOneByProcessRole(processRoleId)).thenReturn(assessment);
+
+        when(assessorService.acceptAssessmentInvitation(eq(processRoleId), isA(Assessment.class))).thenReturn(serviceSuccess());
+
         mockMvc.perform(post(applicationControllerPath + "/acceptAssessmentInvitation/" + processRoleId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
@@ -135,9 +130,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
                 .withOutcome("conflict-of-interest")
                 .build();
         long processRoleId = 1L;
-        String processState = "test";
-        Assessment a = newAssessment().withProcessState(processState).build();
-        when(assessmentHandler.getOneByProcessRole(processRoleId)).thenReturn(a);
+        when(assessorService.rejectAssessmentInvitation(eq(processRoleId), isA(ProcessOutcome.class))).thenReturn(serviceSuccess());
 
         String json = new ObjectMapper().writeValueAsString(processOutcome);
         mockMvc.perform(post(applicationControllerPath + "/rejectAssessmentInvitation/" + processRoleId)
@@ -159,17 +152,18 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode jsonNode = mapper.createObjectNode();
         jsonNode.put("assessorId", assessorId);
-        ArrayNode arrayNode = mapper.createArrayNode();
         jsonNode.putArray("assessmentsToSubmit").add(assessmentId1).add(assessmentId2);
         String json = mapper.writeValueAsString(jsonNode);
 
-        when(assessmentHandler.getOne(assessmentId1)).thenReturn(assessment1);
-        when(assessmentHandler.getOne(assessmentId2)).thenReturn(assessment2);
+        when(assessorService.getOne(assessmentId1)).thenReturn(serviceSuccess(assessment1));
+        when(assessorService.getOne(assessmentId2)).thenReturn(serviceSuccess(assessment2));
+
+        when(assessorService.submitAssessments(Sets.newSet(assessmentId1, assessmentId2))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(applicationControllerPath + "/submitAssessments").contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"))
+                .andExpect(content().string(""))
                 .andDo(document("assessment/submit-assessments-assessment"));
     }
 
@@ -177,12 +171,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
     public void testSubmitAssessment() throws Exception {
 
         long assessorId = 1L;
-        long assessmentId = 2L;
         long applicationId = 3L;
-        long processRoleId = 4L;
         String suitableValue = "yes";
-        Assessment assessment = newAssessment().withId(assessmentId).build();
-        ProcessRole processRole = newProcessRole().withId(processRoleId).build();
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode jsonNode = mapper.createObjectNode()
@@ -193,14 +183,12 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest {
                 .put("suitableFeedback", "feedback");
         String json = mapper.writeValueAsString(jsonNode);
 
-        when(processRoleController.findByUserApplication(assessorId, applicationId)).thenReturn(processRole);
-        when(assessmentHandler.getOneByProcessRole(processRole.getId())).thenReturn(assessment);
-        when(assessmentHandler.getRecommendedValueFromString(suitableValue)).thenReturn(RecommendedValue.YES);
+        when(assessorService.submitAssessment(assessorId, applicationId, suitableValue, "feedback", "comments")).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(applicationControllerPath + "/saveAssessmentSummary").contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"))
+                .andExpect(content().string(""))
                 .andDo(document("assessment/submit-assessment-assessment"));
     }
 }

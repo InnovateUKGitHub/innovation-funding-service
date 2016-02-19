@@ -21,7 +21,7 @@
 <div th:fragment="header-logo">
     <div class="header-logo">
         <a href="https://www.gov.uk" title="Go to the GOV.UK homepage" id="logo" class="content">
-          <img src="/images/gov.uk_logotype_crown.png" width="35" height="31" alt="GOV.UK" />GOV.UK
+          <img src="/images/gov.uk_logotype_crown.png" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/gov.uk_logotype_crown.png')}" width="35" height="31" alt="GOV.UK" />GOV.UK
         </a>
     </div>
     <p class="innovate-title">Innovation Funding Service</p>
@@ -64,8 +64,7 @@
 
 <!-- =========================== Element: Application Title =========================== -->
 <div th:fragment="application-title (application, competition) ">
-    <h2 class="subtitle" th:if="${application.getName() != ''}" th:text="${application.getName()} +' - Application number ' + ${application.getId()} "/>
-    <h2 class="subtitle" th:unless="${application.getName() != ''}" th:text="${competition.getName()} +' - Application number ' + ${application.getId()} "/>
+    <p class="subtitle" th:text="${application.getApplicationDisplayName()} +' - Application number ' + ${#numbers.formatInteger(application.id,6)} "/>
 </div>
 <!-- =========================== Element: Pie chart =========================== -->
 <div th:fragment="pie-small">
@@ -73,7 +72,7 @@
         <div class="pie small" th:text="${daysPercentage}+'%'"></div>
         <div class="pie-overlay">
             <div th:text=" (${daysLeft} &lt; 0 ? '0' : ${daysLeft}) ">18</div>
-            <span>Days left</span>
+            <span class="visuallyhidden">Days left</span>
         </div>
     </div>
 </div>
@@ -91,36 +90,44 @@
 <div th:fragment="progress-indicator">
     <div  th:class="*{size != null} ? 'progress-container '+${size} : 'progress-container'">
         <div class="progress-indicator">
-            <div class="start">0%</div>
-            <div class="progress" th:style="'width:'+${percentage}+'%'">
-                <div th:text="${percentage}+'%'">
-                    0%
+            <div class="progress" th:attr="aria-valuenow=${percentage}" aria-valuemin="0" aria-valuemax="100" role="progressbar" th:style="'width:'+${percentage}+'%'">
+                <div>
+                    <span th:text="${percentage}+'%'" th:remove="tag"/>
+                    <span class="visuallyhidden"> Complete</span>
                 </div>
             </div>
-            <div class="end">100%</div>
         </div>
     </div>
 </div>
 
 <!-- =========================== Element: Notification / event =========================== -->
 <div th:fragment="notification">
-    <div class="event-alert is-open" th:if="${!notifications.isEmpty()}" th:with="notification=${notifications.get(0)}, questions=${notifications?.size()>1 ? 'questions' : 'a question'}">
-        <p>
-            <span th:text="${notification?.assignedBy?.user?.name + ' has assigned ' + questions + ' to you'}"></span>
-        </p>
+    <div class="event-alert" th:if="${notifications} and ${!notifications.isEmpty()}" th:with="notification=${notifications.get(0)}, questions=${notifications?.size()>1 ? 'questions' : 'a question'}">
+        <p><span th:text="${notification?.assignedByName + ' has assigned ' + questions + ' to you'}"></span></p>
     </div>
 
-    <div th:if="${applicationSaved}" th:unless="${assignedQuestion}" class="event-alert" th:classappend="is-open">
-        <p>
-            <span>You have saved your field successfully</span>
-        </p>
+    <div th:if="${applicationSaved}" th:unless="${assignedQuestion}" class="event-alert" >
+        <p><span>You have saved your field successfully</span></p>
     </div>
 
-    <div th:if="${assignedQuestion}" class="event-alert" th:classappend="is-open">
-        <p>
-            <span>Question assigned successfully</span>
-        </p>
+    <div th:if="${assignedQuestion}" class="event-alert" >
+        <p><span>Question assigned successfully</span></p>
     </div>
+
+    <div th:if="${invitesSend}" class="event-alert">
+        <p><span>Invites send!</span></p>
+    </div>
+
+    <div th:if="${inviteNotValid}" class="event-alert">
+        <p><span>Invite not valid or expired</span></p>
+    </div>
+    <div th:if="${inviteAlreadyAccepted}" class="event-alert">
+        <p><span>Invite already accepted</span></p>
+    </div>
+
+
+
+
 </div>
 
 <!-- =========================== Element: Formatted Date =========================== -->

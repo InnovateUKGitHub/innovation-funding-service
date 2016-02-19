@@ -1,24 +1,22 @@
 package com.worth.ifs.finance.handler.item;
 
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
-import com.worth.ifs.finance.resource.category.CostCategory;
-import com.worth.ifs.finance.resource.category.DefaultCostCategory;
-import com.worth.ifs.finance.resource.category.LabourCostCategory;
-import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
+import com.worth.ifs.finance.resource.category.*;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -31,10 +29,40 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
     EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
 
     @Autowired
+    QuestionService questionService;
+
+    @Autowired
     CostRepository costRepository;
 
     @Autowired
     CostFieldRepository costFieldRepository;
+
+    @Override
+    public Iterable<Cost> initialiseCostType(ApplicationFinance applicationFinance, CostType costType){
+        Question question = getQuestionByCostType(costType);
+        try{
+            List<Cost> cost = getCostHandler(costType).initializeCost();
+            cost.forEach(c -> {
+                c.setQuestion(question);
+                c.setApplicationFinance(applicationFinance);
+            });
+            if(!cost.isEmpty()){
+                costRepository.save(cost);
+                return cost;
+            }else{
+                return new ArrayList<>();
+            }
+
+        }catch (IllegalArgumentException e){
+            log.error(String.format("No CostHandler for type: ", costType.getType()));
+        }
+        return null;
+    }
+
+    // TODO DW - INFUND-1555 - handle rest result
+    private Question getQuestionByCostType(CostType costType) {
+        return questionService.getQuestionByFormInputType(costType.getType()).getSuccessObjectOrNull();
+    }
 
     @Override
     public EnumMap<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {
@@ -79,6 +107,14 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
     private void calculateTotals() {
         costCategories.values()
                 .forEach(cc -> cc.calculateTotal());
+        calculateOverheadTotal();
+    }
+
+    private void calculateOverheadTotal() {
+        CostCategory labourCostCategory = costCategories.get(CostType.LABOUR);
+        OverheadCostCategory overheadCategory = (OverheadCostCategory) costCategories.get(CostType.OVERHEADS);
+        overheadCategory.setLabourCostTotal(labourCostCategory.getTotal());
+        overheadCategory.calculateTotal();
     }
 
     private void resetCosts() {
@@ -91,6 +127,13 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
         List<CostField> costFields = costFieldRepository.findAll();
         costHandler.setCostFields(costFields);
         return costHandler.toCost(costItem);
+    }
+
+    @Override
+    public CostItem costToCostItem(Cost cost) {
+        CostType costType = CostType.fromString(cost.getQuestion().getFormInputs().get(0).getFormInputType().getTitle());
+        CostHandler costHandler = getCostHandler(costType);
+        return costHandler.toCostItem(cost);
     }
 
     public List<Cost> costItemsToCost(List<CostItem> costItems) {
@@ -131,6 +174,10 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
                 return new LabourCostCategory();
             case OTHER_FUNDING:
                 return new OtherFundingCostCategory();
+            case OVERHEADS:
+                return new OverheadCostCategory();
+            case FINANCE:
+                return new GrantClaimCategory();
             default:
                 return new DefaultCostCategory();
         }

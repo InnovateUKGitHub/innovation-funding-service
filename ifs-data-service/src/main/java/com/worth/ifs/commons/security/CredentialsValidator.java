@@ -5,5 +5,5 @@ import com.worth.ifs.user.domain.User;
 
 public interface CredentialsValidator {
 
-    User retrieveUserByUid(String token);
+    RestResult<User> retrieveUserByUid(String token);
 }
