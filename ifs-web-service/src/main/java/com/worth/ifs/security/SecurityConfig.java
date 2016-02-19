@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-                .authorizeRequests().anyRequest().authenticated()
+                .anonymous()
             .and()
                 .exceptionHandling()
             .and()
