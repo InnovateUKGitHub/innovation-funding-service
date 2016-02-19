@@ -31,7 +31,6 @@ public class OrganisationServiceImpl  implements OrganisationService {
     @Autowired
     OrganisationRestService organisationRestService;
 
-
     @Autowired
     CompanyHouseRestService companyHouseRestService;
     @Autowired
@@ -85,8 +84,8 @@ public class OrganisationServiceImpl  implements OrganisationService {
 
     @Override
     // TODO DW - INFUND-1555 - get below methods to return the RestResults
-    public Organisation getOrganisationById(Long organisationId) {
-        return organisationRestService.getOrganisationById(organisationId).getSuccessObjectOrNull();
+    public OrganisationResource getOrganisationById(Long organisationId) {
+        return orgMorganisationRestService.getOrganisationById(organisationId).getSuccessObjectOrNull();
     }
 
     @Override

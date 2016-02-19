@@ -39,16 +39,16 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     private OrganisationMapper organisationMapper;
 
     @Override
-    public ServiceResult<Set<Organisation>> findByApplicationId(final Long applicationId) {
+    public ServiceResult<Set<OrganisationResource>> findByApplicationId(final Long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<Organisation> organisations = roles.stream().map(role -> organisationRepository.findByProcessRoles(role)).collect(toCollection(LinkedHashSet::new));
-        return serviceSuccess(organisations);
+        return serviceSuccess(organisations.stream().map(organisationMapper::mapToResource).collect(Collectors.toSet()));
     }
 
     @Override
-    public ServiceResult<Organisation> findById(final Long organisationId) {
-        return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
+    public ServiceResult<OrganisationResource> findById(final Long organisationId) {
+        return find(organisationMapper.mapToResource(organisationRepository.findOne(organisationId)), notFoundError(Organisation.class, organisationId));
     }
 
     @Override

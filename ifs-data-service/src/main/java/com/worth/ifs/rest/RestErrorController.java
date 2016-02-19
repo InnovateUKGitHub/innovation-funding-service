@@ -1,7 +1,12 @@
 package com.worth.ifs.rest;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
+
 import org.springframework.boot.autoconfigure.web.AbstractErrorController;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
@@ -10,14 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
-
-import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * This Error Controller catches errors thrown by the DispatcherServlet and low-level Spring MVC and Security code.  This Controller
@@ -46,10 +50,10 @@ public class RestErrorController extends AbstractErrorController implements org.
 
         if (status != null) {
             if (NOT_FOUND.value() == status) {
-                RestErrorResponse restErrorResponse = new RestErrorResponse(new Error(GENERAL_NOT_FOUND.getErrorKey(), "The requested URL could not be found.", NOT_FOUND));
+                RestErrorResponse restErrorResponse = new RestErrorResponse(new Error(GENERAL_NOT_FOUND.getErrorKey(), "The requested resource could not be found.", NOT_FOUND));
                 return new ResponseEntity<>(restErrorResponse, restErrorResponse.getStatusCode());
             } else if (FORBIDDEN.value() == status) {
-                RestErrorResponse restErrorResponse = new RestErrorResponse(forbiddenError("You do not have permission to access the requested URL."));
+                RestErrorResponse restErrorResponse = new RestErrorResponse(forbiddenError("You do not have permission to access the requested resource."));
                 return new ResponseEntity<>(restErrorResponse, restErrorResponse.getStatusCode());
             } else {
                 String message = (String) errorAttributes.get("message");
