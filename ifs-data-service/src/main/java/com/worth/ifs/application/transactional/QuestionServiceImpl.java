@@ -263,7 +263,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {
-        SectionResource nextSection = sectionService.getNextSection(section).getSuccessObject();
+        SectionResource nextSection = sectionService.getNextSection(section).getSuccessObjectOrNull();
         if (nextSection != null) {
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, nextSection.getId());
         }
@@ -272,7 +272,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private Question getPreviousQuestionBySection(Long section, Long competitionId) {
-        SectionResource previousSection = sectionService.getPreviousSection(section).getSuccessObject();
+        SectionResource previousSection = sectionService.getPreviousSection(section).getSuccessObjectOrNull();
 
         if (previousSection != null) {
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(competitionId, previousSection.getId());

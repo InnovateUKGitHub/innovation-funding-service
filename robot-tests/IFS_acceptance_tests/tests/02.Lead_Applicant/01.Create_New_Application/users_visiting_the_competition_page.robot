@@ -46,7 +46,9 @@ the Applicant is in Competition details page
 
 the Applicant will click on "Sign in to Apply" button
     Click Element    jQuery=.column-third .button:contains('Sign in')
-    Wait Until Page Contains    Sign in
+    # TODO DW - INFUND-936 - reinstate expectations
+    # Wait Until Page Contains    Sign in
+    Wait Until Page Contains   Don't Remember Login
 
 the Applicant will redirect to the "Your Details" page
     Location Should Be    ${YOUR_DETAILS}

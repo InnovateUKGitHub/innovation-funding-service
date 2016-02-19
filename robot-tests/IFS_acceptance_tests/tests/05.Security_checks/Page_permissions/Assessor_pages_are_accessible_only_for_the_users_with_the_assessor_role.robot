@@ -71,7 +71,9 @@ the user enters the url of the assessors dashboard page
     go to    ${ASSESSOR_DASHBOARD}
 
 The user should get the log-in page
-    Page Should Contain    Sign in
+    # TODO DW - INFUND-936 - reinstate expectations
+    # Page Should Contain    Sign in
+    Page Should Contain   Don't Remember Login
 
 the user is logged in as applicant
     Login as user    &{collaborator2_credentials}
