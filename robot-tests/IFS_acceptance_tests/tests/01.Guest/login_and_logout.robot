@@ -15,12 +15,11 @@ Log-out
     [Tags]    Guest    HappyPath
     [Setup]    Login as user    &{lead_applicant_credentials}
     Given the Applicant is logged-in
-    When The Applicant clicks the log-out button
     # TODO DW - INFUND-936 - reinstate expectations
+    # When The Applicant clicks the log-out button
     # Then user should be redirected to the correct page    ${LOGIN_URL}
+    Logout as user
     
-    Go to   ${LOGIN_URL}
-
 Invalid Login
     [Tags]    Guest
     Given the user is not logged-in
