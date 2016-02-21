@@ -268,6 +268,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         String type = costItem.getCostType().getType();
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
+        Set<Long> markedAsComplete = new TreeSet<>();
+        model.addAttribute("markedAsComplete", markedAsComplete);
         financeModelManager.addCost(model, costItem, applicationId, user.getId(), questionId, type);
         return String.format("question-type/types :: %s_row", type);
     }

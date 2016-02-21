@@ -86,6 +86,10 @@ public class FinanceModelManager {
         model.addAttribute("organisationType", organisation.getOrganisationType());
         model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
         model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
+        addGrantClaim(model, form, applicationFinanceResource);
+    }
+
+    private void addGrantClaim(Model model, Form form, ApplicationFinanceResource applicationFinanceResource) {
         if(applicationFinanceResource.getGrantClaim()!=null) {
             model.addAttribute("organisationGrantClaimPercentage", applicationFinanceResource.getGrantClaim().getGrantClaimPercentage());
             model.addAttribute("organisationgrantClaimPercentageId", applicationFinanceResource.getGrantClaim().getId());
@@ -113,8 +117,6 @@ public class FinanceModelManager {
             model.addAttribute("costCategory", costCategory);
         }
 
-        Set<Long> markedAsComplete = new TreeSet<>();
-        model.addAttribute("markedAsComplete", markedAsComplete);
         model.addAttribute("type", costType);
         model.addAttribute("question", questionService.getById(questionId));
         model.addAttribute("cost", costItem);
