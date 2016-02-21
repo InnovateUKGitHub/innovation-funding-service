@@ -10,9 +10,9 @@ import java.util.List;
  * consists of costs.
  */
 public interface FinanceService {
-    public ApplicationFinanceResource addApplicationFinance(Long applicationId, Long userId);
-    public ApplicationFinanceResource getApplicationFinance(Long applicationId, Long userId);
-    public ApplicationFinanceResource getApplicationFinanceDetails(Long applicationId, Long userId);
+    public ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId);
+    public ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId);
+    public ApplicationFinanceResource getApplicationFinanceDetails( Long userId, Long applicationId);
     public List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId);
     public CostItem addCost(Long applicationFinanceId , Long questionId);
     public List<CostItem> getCosts(Long applicationFinanceId);

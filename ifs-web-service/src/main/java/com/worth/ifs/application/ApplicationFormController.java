@@ -55,6 +55,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     @Autowired
     private CostService costService;
 
+    @Autowired
+    private FinanceFormHandler financeFormHandler;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -266,19 +268,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         String type = costItem.getCostType().getType();
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
-
-        if (CostType.fromString(type).equals(CostType.LABOUR)) {
-            ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, user.getId());
-            LabourCostCategory costCategory = (LabourCostCategory) applicationFinanceResource.getFinanceOrganisationDetails(CostType.fromString(type));
-            model.addAttribute("costCategory", costCategory);
-        }
-
-        Set<Long> markedAsComplete = new TreeSet<>();
-        model.addAttribute("markedAsComplete", markedAsComplete);
-        model.addAttribute("type", type);
-        model.addAttribute("question", questionService.getById(questionId));
-        model.addAttribute("cost", costItem);
-
+        financeModelManager.addCost(model, costItem, applicationId, user.getId(), questionId, type);
         return String.format("question-type/types :: %s_row", type);
     }
 
@@ -293,8 +283,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private CostItem addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
-        return costService.add(applicationFinance.getId(), questionId, null);
+        return financeFormHandler.addCost(applicationId, user.getId(), questionId);
     }
 
     private BindingResult saveApplicationForm(ApplicationForm form,
@@ -320,8 +309,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         applicationService.save(application);
         markApplicationQuestions(application, user.getId(), request, response, errors);
 
-        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, user.getId(), application.getId());
-        if (financeFormHandler.handle(request)) {
+        if (financeFormHandler.handle(request, user.getId(), applicationId)) {
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
         }
 
@@ -495,30 +483,14 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (fieldName.startsWith("application.")) {
             errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
-            FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
-            financeFormHandler.ajaxUpdateFinancePosition(fieldName, value);
+            financeFormHandler.ajaxUpdateFinancePosition(userId, applicationId, fieldName, value);
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-            storeCostField(userId, applicationId, fieldName, value);
+            financeFormHandler.storeCostField(userId, applicationId, fieldName, value);
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             errors = formInputResponseService.save(userId, applicationId, formInputId, value);
         }
         return errors;
-    }
-
-    private void storeCostField(Long userId, Long applicationId, String fieldName, String value) {
-        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
-
-        if (fieldName != null && value != null) {
-            String cleanedFieldName = fieldName;
-            if (fieldName.startsWith("cost-")) {
-                cleanedFieldName = fieldName.replace("cost-", "");
-            } else if (fieldName.startsWith("formInput[")) {
-                cleanedFieldName = fieldName.replace("formInput[", "").replace("]", "");
-            }
-            log.info("store field: " + cleanedFieldName + " val: " + value);
-            financeFormHandler.storeField(cleanedFieldName, value);
-        }
     }
 
     private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {

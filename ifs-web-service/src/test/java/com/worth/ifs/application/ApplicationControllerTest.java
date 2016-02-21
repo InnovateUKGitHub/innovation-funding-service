@@ -1,6 +1,7 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.application.finance.view.FinanceModelManager;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.user.domain.User;
@@ -92,7 +93,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
     public void testNotExistingApplicationDetails() throws Exception {
         ApplicationResource app = applications.get(0);
 
-        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
 
         System.out.println("Show dashboard for application: " + app.getId());
@@ -105,13 +105,10 @@ public class ApplicationControllerTest extends BaseUnitTest {
         ApplicationResource app = applications.get(0);
         SectionResource section = sectionResources.get(2);
 
-
-
         Map<Long, SectionResource> collectedSections =
                 sectionResources.stream().collect(Collectors.toMap(SectionResource::getId,
                         Function.identity()));
 
-        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
@@ -149,8 +146,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
     public void testApplicationSubmit() throws Exception {
         ApplicationResource app = applications.get(0);
 
-
-        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 

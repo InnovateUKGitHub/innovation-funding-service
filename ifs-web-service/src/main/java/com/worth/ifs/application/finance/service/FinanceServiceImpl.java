@@ -29,7 +29,7 @@ public class FinanceServiceImpl implements FinanceService {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Override
-    public ApplicationFinanceResource addApplicationFinance(Long applicationId, Long userId) {
+    public ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId) {
         ProcessRole processRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrNull();
 
         if(processRole.getOrganisation()!=null) {
@@ -39,13 +39,13 @@ public class FinanceServiceImpl implements FinanceService {
     }
 
     @Override
-    public ApplicationFinanceResource getApplicationFinance(Long applicationId, Long userId) {
+    public ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId) {
         ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrNull();
         return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId()).getSuccessObjectOrNull();
     }
 
     @Override
-    public ApplicationFinanceResource getApplicationFinanceDetails(Long applicationId, Long userId) {
+    public ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId) {
         ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrNull();
         return applicationFinanceRestService.getFinanceDetails(applicationId, userApplicationRole.getOrganisation().getId()).getSuccessObjectOrNull();
     }
