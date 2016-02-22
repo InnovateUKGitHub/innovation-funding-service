@@ -9,5 +9,9 @@ public interface InviteOrganisationService {
     @NotSecured("TODO")
     ServiceResult<InviteOrganisationResource> findOne(Long id);
 
+    @NotSecured("TODO")
+    ServiceResult<Iterable<InviteOrganisationResource>> findAll();
+
+    @NotSecured("TODO")
     ServiceResult<InviteOrganisationResource> save(InviteOrganisationResource inviteOrganisationResource);
 }

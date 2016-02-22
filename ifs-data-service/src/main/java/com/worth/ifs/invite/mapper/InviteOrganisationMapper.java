@@ -29,10 +29,4 @@ public abstract class InviteOrganisationMapper extends BaseMapper<InviteOrganisa
     })
     public abstract InviteOrganisation mapToDomain(InviteOrganisationResource resource);
 
-    public Long mapInviteOrganisationToId(InviteOrganisation object) {
-        if (object == null) {
-            return null;
-        }
-        return object.getId();
-    }
 }

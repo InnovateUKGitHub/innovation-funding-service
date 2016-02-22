@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -31,16 +32,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
 @RequestMapping("/registration")
 public class RegistrationController {
-    Validator validator;
-    @Autowired
     public void setValidator(Validator validator) {
         this.validator = validator;
     }
+
+    @Autowired
+    Validator validator;
     @Autowired
     private UserService userService;
 
@@ -99,13 +102,15 @@ public class RegistrationController {
 
     private void setInviteeEmailAddress(RegistrationForm registrationForm, HttpServletRequest request, Model model) {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
-        RestResult<InviteResource> invite = inviteRestService.getInviteByHash(inviteHash);
-        if(invite.isSuccess() && InviteStatusConstants.SEND.equals(invite.getSuccessObject().getStatus())){
-            InviteResource inviteResource = invite.getSuccessObject();
-            registrationForm.setEmail(inviteResource.getEmail());
-            model.addAttribute("invitee", true);
-        }else{
-            log.debug("Invite already accepted.");
+        if(StringUtils.hasText(inviteHash)){
+            RestResult<InviteResource> invite = inviteRestService.getInviteByHash(inviteHash);
+            if(invite.isSuccess() && InviteStatusConstants.SEND.equals(invite.getSuccessObject().getStatus())){
+                InviteResource inviteResource = invite.getSuccessObject();
+                registrationForm.setEmail(inviteResource.getEmail());
+                model.addAttribute("invitee", true);
+            }else{
+                log.debug("Invite already accepted.");
+            }
         }
     }
 
@@ -114,9 +119,13 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String registerFormSubmit(@ModelAttribute RegistrationForm registrationForm, BindingResult bindingResult, HttpServletResponse response, HttpServletRequest request, Model model) {
+    public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
+                                     BindingResult bindingResult,
+                                     HttpServletResponse response,
+                                     HttpServletRequest request,
+                                     Model model) {
         setInviteeEmailAddress(registrationForm, request, model);
-
+        // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
         validator.validate(registrationForm, bindingResult);
 
         User user = userAuthenticationService.getAuthenticatedUser(request);
@@ -149,20 +158,21 @@ public class RegistrationController {
     }
 
     private void linkToInvite(HttpServletRequest request, UserResource userResource) {
-        log.debug("linkToInvite");
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
-        inviteRestService.getInviteByHash(inviteHash).andOnSuccessReturn(i -> {
-            log.debug("Found invite, link to created user now.");
-            i.setStatus(InviteStatusConstants.ACCEPTED);
-            HttpStatus statusCode = inviteRestService.acceptedInvite(inviteHash, userResource.getId()).getStatusCode();
-            log.debug("Found invite, changed status " +statusCode.toString());
-            return i;
-        });
+        if(StringUtils.hasText(inviteHash)){
+            inviteRestService.getInviteByHash(inviteHash).andOnSuccessReturn(i -> {
+                log.debug("Found invite, link to created user now.");
+                i.setStatus(InviteStatusConstants.ACCEPTED);
+                HttpStatus statusCode = inviteRestService.acceptedInvite(inviteHash, userResource.getId()).getStatusCode();
+                log.debug("Found invite, changed status " +statusCode.toString());
+                return i;
+            });
+        }
     }
 
     private void checkForExistingEmail(String email, BindingResult bindingResult) {
-        if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME)) {
-            List<UserResource> users = userService.findUserByEmail(email).getSuccessObjectOrNull();
+        if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME) && StringUtils.hasText(email)) {
+            List<UserResource> users = userService.findUserByEmail(email).getSuccessObject();
             if (users != null && !users.isEmpty()) {
                 bindingResult.addError(new FieldError(EMAIL_FIELD_NAME, EMAIL_FIELD_NAME, email, false, null, null, "Email address is already in use"));
             }

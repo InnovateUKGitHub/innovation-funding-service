@@ -1,5 +1,6 @@
 package com.worth.ifs.invite.transactional;
 
+import com.google.common.collect.Sets;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
@@ -32,6 +33,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.worth.ifs.commons.error.CommonErrors.*;
@@ -175,22 +177,16 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
-        return getByHash(hash).andOnSuccessReturn(invite -> new InviteOrganisationResource(invite.getInviteOrganisation()));
+        return getByHash(hash).andOnSuccessReturn(invite -> inviteOrganisationMapper.mapToResource(inviteOrganisationRepository.findOne(invite.getInviteOrganisation().getId())));
     }
 
     @Override
     public ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
-
         return findByApplicationId(applicationId).andOnSuccessReturn(invites -> {
-            List<InviteOrganisationResource> inviteOrganisations = simpleMap(invites, invite -> {
-                InviteOrganisation inviteOrg = invite.getInviteOrganisation();
-                List<Invite> invitesTmp = inviteOrg.getInvites();
-                invitesTmp.removeIf(i -> !i.getApplication().getId().equals(applicationId));
-                inviteOrg.setInvites(invitesTmp);
-                return inviteOrganisationMapper.mapToResource(inviteOrg);
-            });
 
-            return new HashSet<>(inviteOrganisations);
+            List<Long> inviteOrganisationIds = invites.stream().map(i -> i.getInviteOrganisation().getId()).collect(Collectors.toList());
+            Iterable<InviteOrganisation> inviteOrganisations = inviteOrganisationRepository.findAll(inviteOrganisationIds);
+            return Sets.newHashSet(inviteOrganisationMapper.mapToResource(inviteOrganisations));
         });
     }
 

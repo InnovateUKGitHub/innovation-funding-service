@@ -24,7 +24,7 @@ public class InviteOrganisation {
     private Organisation organisation;
 
     @OneToMany(mappedBy = "inviteOrganisation")
-    private List<Invite> invites = new ArrayList<>();
+    private List<Invite> invites;
 
     public InviteOrganisation() {
 
@@ -61,7 +61,7 @@ public class InviteOrganisation {
     }
 
     public List<Invite> getInvites() {
-        return invites;
+        return (invites == null)? new ArrayList<>() : invites;
     }
 
     public void setInvites(List<Invite> invites) {
