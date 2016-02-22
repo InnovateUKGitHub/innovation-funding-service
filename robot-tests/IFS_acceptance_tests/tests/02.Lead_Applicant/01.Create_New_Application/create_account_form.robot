@@ -31,6 +31,7 @@ First name left blank
     And the user submits their information
     Then the user should see an error    Please enter a first name
     And the user cannot login with their new details
+    And the user logs out if they are logged in
 
 Last name left blank
     [Documentation]    -INFUND-885
@@ -45,6 +46,7 @@ Last name left blank
     And the user submits their information
     Then the user should see an error    Please enter a last name
     And the user cannot login with their new details
+    And the user logs out if they are logged in
 
 Phone number left blank
     [Documentation]    -INFUND-885
@@ -59,6 +61,7 @@ Phone number left blank
     And the user submits their information
     Then the user should see an error    Please enter a phone number
     And the user cannot login with their new details
+    And the user logs out if they are logged in
 
 Email left blank
     [Documentation]    -INFUND-885
@@ -72,6 +75,7 @@ Email left blank
     And the user retypes the password correctly
     And the user submits their information
     Then the user should see an error    Please enter your email
+    And the user logs out if they are logged in
 
 Password left blank
     [Documentation]    -INFUND-885
@@ -86,6 +90,7 @@ Password left blank
     And the user submits their information
     Then the user should see an error    Please enter your password
     And the user cannot login with their new details
+    And the user logs out if they are logged in
 
 Re-type password left blank
     [Documentation]    -INFUND-885
@@ -100,6 +105,7 @@ Re-type password left blank
     And the user submits their information
     Then the user should see an error    Please re-type your password
     And the user cannot login with their new details
+    And the user logs out if they are logged in
 
 Password and re-typed password do not match
     [Documentation]    -INFUND-885
@@ -114,6 +120,7 @@ Password and re-typed password do not match
     And the user submits their information
     Then the user should see an error    Passwords must match
     And the user cannot login with either password
+    And the user logs out if they are logged in
 
 Password is too short
     [Documentation]    -INFUND-885
@@ -128,6 +135,7 @@ Password is too short
     And the user submits their information
     Then the user should see an error    Password size should be between 6 and 30 characters
     And the user cannot login with the short password
+    And the user logs out if they are logged in
 
 Password is too long
     [Documentation]    -INFUND-885
@@ -142,6 +150,7 @@ Password is too long
     And the user submits their information
     Then the user should see an error    Password size should be between 6 and 30 characters
     And the user cannot login with the long password
+    And the user logs out if they are logged in
 
 Valid account creation
     [Documentation]    -INFUND-885
@@ -173,6 +182,7 @@ Email duplication check
     And the user retypes the password correctly
     And the user submits their information
     Then the user should see an error    Email address is already in use
+    And the user logs out if they are logged in
 
 *** Keywords ***
 the user follows the standard path to the account creation page
@@ -308,3 +318,6 @@ the user follows the standard path to the account creation page for non register
     Click Element    id=postcode-lookup
     Click Element    css=#select-address-block > button
     click element    jQuery=.button:contains("Save organisation and")
+
+the user logs out if they are logged in
+    run keyword and ignore error        log out as user
