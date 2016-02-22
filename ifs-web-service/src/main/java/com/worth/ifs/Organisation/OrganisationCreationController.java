@@ -349,8 +349,6 @@ public class OrganisationCreationController {
                 },
                 s -> {
                     log.error(String.format("found the invite.. %s", cookieHash));
-
-
                     return inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
                         f -> {
                             log.error(String.format("Did not find the invite organisation.. %s", s.getInviteOrganisation()));

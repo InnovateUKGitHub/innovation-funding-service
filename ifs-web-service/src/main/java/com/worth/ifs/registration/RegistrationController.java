@@ -22,10 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
-import org.springframework.validation.Validator;
+import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -100,7 +97,7 @@ public class RegistrationController {
         model.addAttribute("registrationForm", registrationForm);
     }
 
-    private void setInviteeEmailAddress(RegistrationForm registrationForm, HttpServletRequest request, Model model) {
+    private boolean setInviteeEmailAddress(RegistrationForm registrationForm, HttpServletRequest request, Model model) {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
             RestResult<InviteResource> invite = inviteRestService.getInviteByHash(inviteHash);
@@ -108,10 +105,12 @@ public class RegistrationController {
                 InviteResource inviteResource = invite.getSuccessObject();
                 registrationForm.setEmail(inviteResource.getEmail());
                 model.addAttribute("invitee", true);
+                return true;
             }else{
                 log.debug("Invite already accepted.");
             }
         }
+        return false;
     }
 
     private Organisation getOrganisation(HttpServletRequest request) {
@@ -124,9 +123,16 @@ public class RegistrationController {
                                      HttpServletResponse response,
                                      HttpServletRequest request,
                                      Model model) {
-        setInviteeEmailAddress(registrationForm, request, model);
-        // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
-        validator.validate(registrationForm, bindingResult);
+        log.error(String.format("errors before: %s => %s", bindingResult.getAllErrors().size(), registrationForm.getEmail()));
+        bindingResult.getFieldErrors().stream().forEach(e -> log.error(String.format("Before: Field Error %s message: %s", e.getField(), e.getDefaultMessage())));
+        if(setInviteeEmailAddress(registrationForm, request, model)){
+            // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
+            bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
+            validator.validate(registrationForm, bindingResult);
+            bindingResult.recordSuppressedField("email");
+            log.error(String.format("errors after: %s => %s", bindingResult.getAllErrors().size(), registrationForm.getEmail()));
+            bindingResult.getFieldErrors().stream().forEach(e -> log.error(String.format("After Field Error %s message: %s", e.getField(), e.getDefaultMessage())));
+        }
 
         User user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
@@ -142,8 +148,12 @@ public class RegistrationController {
 
             if (createUserResult.isSuccess()) {
                 loginUser(createUserResult.getSuccessObject(), response);
-                linkToInvite(request, createUserResult.getSuccessObject());
-                destination = "redirect:/application/create/initialize-application/";
+                if(linkToInvite(request, createUserResult.getSuccessObject())){
+                    // user is invitee, no need to initialize application.
+                    destination = "redirect:/applicant/dashboard/";
+                }else{
+                    destination = "redirect:/application/create/initialize-application/";
+                }
             } else {
                 addEnvelopeErrorsToBindingResultErrors(createUserResult.getFailure().getErrors(), bindingResult);
             }
@@ -157,17 +167,19 @@ public class RegistrationController {
         return destination;
     }
 
-    private void linkToInvite(HttpServletRequest request, UserResource userResource) {
+    private boolean linkToInvite(HttpServletRequest request, UserResource userResource) {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
-            inviteRestService.getInviteByHash(inviteHash).andOnSuccessReturn(i -> {
+            RestResult<InviteResource> restResult = inviteRestService.getInviteByHash(inviteHash).andOnSuccessReturn(i -> {
                 log.debug("Found invite, link to created user now.");
                 i.setStatus(InviteStatusConstants.ACCEPTED);
                 HttpStatus statusCode = inviteRestService.acceptedInvite(inviteHash, userResource.getId()).getStatusCode();
-                log.debug("Found invite, changed status " +statusCode.toString());
+                log.debug("Found invite, changed status " + statusCode.toString());
                 return i;
             });
+            return restResult.isSuccess();
         }
+        return false;
     }
 
     private void checkForExistingEmail(String email, BindingResult bindingResult) {
