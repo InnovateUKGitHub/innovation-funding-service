@@ -217,3 +217,15 @@ User should be redirected to the correct page
     [Arguments]    ${URL}
     location should be    ${URL}
     Page Should Not Contain    error
+
+User navigates to the page
+    [Arguments]    ${PAGE_URL}
+    go to    ${PAGE_URL}
+
+User enters text to a text field
+    [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
+    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+
+user clicks the button
+    [Arguments]    ${BUTTON}
+    click element    ${BUTTON}
