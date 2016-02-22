@@ -61,7 +61,7 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
         return isRight() ? getRight() : null;
     }
 
-    public T getSuccessObjectOrThrowException(){
+    public T getSuccessObjectOrThrowException() {
         return isRight() ? getRight() :  findAndThrowException(getLeft());
     }
 

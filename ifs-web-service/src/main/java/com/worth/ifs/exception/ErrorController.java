@@ -2,6 +2,7 @@ package com.worth.ifs.exception;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,23 @@ public class ErrorController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = AutosaveElementException.class)
-    public @ResponseBody ObjectNode jsonAutosaveResponseHandler(HttpServletRequest req, AutosaveElementException e) throws AutosaveElementException {
+    public @ResponseBody ObjectNode jsonAutosaveResponseHandler(AutosaveElementException e) throws AutosaveElementException {
         log.debug("ErrorController jsonAutosaveResponseHandler", e);
         return e.createJsonResponse();
+    }
+
+    @ResponseStatus(value= HttpStatus.NOT_FOUND)  // 404
+    @ExceptionHandler(value = ObjectNotFoundException.class)
+    public ModelAndView objectNotFoundHandler(HttpServletRequest req, Exception e) {
+        log.debug("ErrorController  objectNotFoundHandler", e);
+        return createExceptionModelAndView(e, "404", req);
+    }
+
+    @ResponseStatus(value= HttpStatus.FORBIDDEN, reason="Requested operation not allowed")  // 403
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ModelAndView accessDeniedException(HttpServletRequest req, Exception e) {
+        log.debug("ErrorController  actionNotAllowed", e);
+        return createExceptionModelAndView(e, "forbidden", req);
     }
 
     @ExceptionHandler(value = Exception.class)
@@ -35,22 +50,12 @@ public class ErrorController {
         return createExceptionModelAndView(e, "error", req);
     }
 
-    @ExceptionHandler(value = ObjectNotFoundException.class)
-    public ModelAndView objectNotFoundHandler(HttpServletRequest req, Exception e) throws ObjectNotFoundException {
-        log.debug("ErrorController  objectNotFoundHandler", e);
-        return createExceptionModelAndView(e, "404", req);
-    }
-
-    @ExceptionHandler(value = AccessDeniedException.class)
-    public ModelAndView accessDeniedException(HttpServletRequest req, Exception e) {
-        log.debug("ErrorController  actionNotAllowed", e);
-        return createExceptionModelAndView(e, "forbidden", req);
-    }
-
-    private static ModelAndView createExceptionModelAndView(Exception e,String message, HttpServletRequest req){
+    private static ModelAndView createExceptionModelAndView(Exception e, String message, HttpServletRequest req){
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", e);
-        mav.addObject("url", req.getRequestURL());
+        mav.addObject("stacktrace", ExceptionUtils.getStackTrace(e));
+        mav.addObject("message", e.getMessage());
+        mav.addObject("url", req.getRequestURL().toString());
         mav.setViewName(message);
         return mav;
     }

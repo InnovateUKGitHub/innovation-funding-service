@@ -19,6 +19,6 @@ public class FormInputServiceImpl implements FormInputService {
 
     @Override
     public FormInput getOne(Long formInputId) {
-        return formInputRestService.getById(formInputId).getSuccessObjectOrNull();
+        return formInputRestService.getById(formInputId).getSuccessObjectOrThrowException();
     }
 }

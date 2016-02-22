@@ -11,9 +11,32 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
 
+    <h1 class="heading-large">Page or resource not found... </h1>
 
-    <h1>404</h1>
+    <p th:if="${url}">
+        <b>Page:</b> <span th:text="${url}">Page URL</span>
+    </p>
 
+    <p th:if="${status}">
+        <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
+            th:if="${error}" th:text="'('+${error}+')'">error ...</span>
+    </p>
+
+    <!--/* ${ex} is set by ourSimpleMappingExceptionResolver,
+           ${exception} or ${message} are set internally by Spring Boot. */-->
+    <div th:if="(${message} and ${message.length() != 0})">
+        <pre style="padding:10px; white-space: pre-wrap;font-size:15px">
+		<span th:if="${message} and ${message.length() != 0}"
+              th:text="${message}">message ...</span>
+        </pre>
+    </div>
+
+    <p th:unless="${exception} or (${message} and ${message.length() != 0})">
+        Cause unknown (no exception details available)</p>
+
+    <pre th:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
+        Stack trace will be printed here...
+    </pre>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
 </main>

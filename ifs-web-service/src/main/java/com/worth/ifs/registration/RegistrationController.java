@@ -120,7 +120,7 @@ public class RegistrationController {
 
     private void checkForExistingEmail(String email, BindingResult bindingResult) {
         if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME)) {
-            List<UserResource> users = userService.findUserByEmail(email).getSuccessObjectOrNull();
+            List<UserResource> users = userService.findUserByEmail(email).getSuccessObjectOrThrowException();
             if (users != null && !users.isEmpty()) {
                 bindingResult.addError(new FieldError(EMAIL_FIELD_NAME, EMAIL_FIELD_NAME, email, false, null, null, "Email address is already in use"));
             }

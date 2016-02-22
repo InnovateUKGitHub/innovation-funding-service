@@ -42,12 +42,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<Question> findByCompetition(Long competitionId) {
-        return questionRestService.findByCompetition(competitionId).getSuccessObjectOrNull();
+        return questionRestService.findByCompetition(competitionId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId) {
-        return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId).getSuccessObjectOrNull());
+        return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId).getSuccessObjectOrThrowException());
     }
 
     private Map<Long, QuestionStatusResource> mapToQuestionIds(final List<QuestionStatusResource> questionStatusResources){
@@ -79,32 +79,32 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question getById(Long questionId) {
-        return questionRestService.findById(questionId).getSuccessObjectOrNull();
+        return questionRestService.findById(questionId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public Question getNextQuestion(Long questionId) {
-        return questionRestService.getNextQuestion(questionId).getSuccessObjectOrNull();
+        return questionRestService.getNextQuestion(questionId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public Question getPreviousQuestion(Long questionId) {
-        return questionRestService.getPreviousQuestion(questionId).getSuccessObjectOrNull();
+        return questionRestService.getPreviousQuestion(questionId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public Question getPreviousQuestionBySection(Long sectionId) {
-        return questionRestService.getPreviousQuestionBySection(sectionId).getSuccessObjectOrNull();
+        return questionRestService.getPreviousQuestionBySection(sectionId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public Question getNextQuestionBySection(Long sectionId) {
-        return questionRestService.getNextQuestionBySection(sectionId).getSuccessObjectOrNull();
+        return questionRestService.getNextQuestionBySection(sectionId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
-        List<QuestionStatusResource> questionStatuses = questionStatusRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId).getSuccessObjectOrNull();
+        List<QuestionStatusResource> questionStatuses = questionStatusRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId).getSuccessObjectOrThrowException();
         if(questionStatuses == null || questionStatuses.size() == 0){
             return null;
         }
@@ -113,6 +113,6 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId){
-        return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccessObjectOrNull());
+        return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccessObjectOrThrowException());
     }
 }

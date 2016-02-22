@@ -86,25 +86,25 @@ public class OrganisationServiceImpl  implements OrganisationService {
     @Override
     // TODO DW - INFUND-1555 - get below methods to return the RestResults
     public Organisation getOrganisationById(Long organisationId) {
-        return organisationRestService.getOrganisationById(organisationId).getSuccessObjectOrNull();
+        return organisationRestService.getOrganisationById(organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override
     // TODO DW - INFUND-1555 - get below methods to return the RestResults
     public OrganisationResource save(Organisation organisation) {
-        return organisationRestService.save(organisation).getSuccessObjectOrNull();
+        return organisationRestService.save(organisation).getSuccessObjectOrThrowException();
     }
 
     @Override
     // TODO DW - INFUND-1555 - get below methods to return the RestResults
     public OrganisationResource save(OrganisationResource organisation) {
-        return organisationRestService.save(organisation).getSuccessObjectOrNull();
+        return organisationRestService.save(organisation).getSuccessObjectOrThrowException();
     }
 
     @Override
     // TODO DW - INFUND-1555 - get below methods to return the RestResults
     public OrganisationResource addAddress(OrganisationResource organisation, Address address, AddressType addressType) {
-        return organisationRestService.addAddress(organisation, address, addressType).getSuccessObjectOrNull();
+        return organisationRestService.addAddress(organisation, address, addressType).getSuccessObjectOrThrowException();
     }
 
 }

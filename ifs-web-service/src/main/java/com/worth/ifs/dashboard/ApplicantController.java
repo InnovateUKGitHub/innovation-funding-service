@@ -95,7 +95,7 @@ public class ApplicantController {
             .collect(
                 Collectors.toMap(
                     ApplicationResource::getId,
-                    application -> applicationStatusService.getApplicationStatusById(application.getApplicationStatus()).getSuccessObjectOrNull()
+                    application -> applicationStatusService.getApplicationStatusById(application.getApplicationStatus()).getSuccessObjectOrThrowException()
                 )
             );
     }

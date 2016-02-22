@@ -47,4 +47,16 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     public HandlerInterceptor getMenuLinksHandlerInterceptor() {
         return new MenuLinksHandlerInterceptor();
     }
+
+   /* @Bean
+    public SimpleMappingExceptionResolver createSimpleMappingExceptionResolver() {
+        SimpleMappingExceptionResolver resolver = new SimpleMappingExceptionResolver();
+        Properties errorMaps = new Properties();
+        errorMaps.setProperty("ObjectNotFoundException", "404");
+        errorMaps.setProperty("NullPointerException", "error");
+        resolver.setExceptionMappings(errorMaps);
+        //resolver.setDefaultErrorView("globalerror");
+        resolver.setExceptionAttribute("exception");
+        return resolver;
+    }*/
 }

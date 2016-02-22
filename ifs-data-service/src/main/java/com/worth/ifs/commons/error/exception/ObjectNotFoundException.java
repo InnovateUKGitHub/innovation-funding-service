@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * so the object is not found on the date-service side. We can then handle this
  * exception in a way to show the error message to the user.
  */
-@ResponseStatus(value= HttpStatus.NOT_FOUND, reason="No such application")  // 404
+@ResponseStatus(value= HttpStatus.NOT_FOUND, reason="Unable to find requested entity")  // 404
 public class ObjectNotFoundException extends RuntimeException {
     public ObjectNotFoundException(String message) {
         super(message);

@@ -2,6 +2,7 @@ package com.worth.ifs.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseWebIntegrationTest;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import org.junit.Test;
@@ -12,7 +13,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
@@ -64,7 +64,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
             assertEquals(FORBIDDEN, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            assertTrue(restErrorResponse.is(new Error(GENERAL_FORBIDDEN.getErrorKey(), "You do not have permission to access the requested URL.", FORBIDDEN)));
+            assertTrue(restErrorResponse.is(CommonErrors.forbiddenError("You do not have permission to access the requested URL.")));
         }
     }
 

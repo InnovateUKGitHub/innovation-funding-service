@@ -3,6 +3,7 @@ package com.worth.ifs.application;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.user.domain.User;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
+import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -89,15 +91,20 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses));
     }
 
+    @Test
     public void testNotExistingApplicationDetails() throws Exception {
         ApplicationResource app = applications.get(0);
 
-        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
+        when(applicationService.getById(1234l)).thenThrow(new ObjectNotFoundException("Application not found"));
 
         System.out.println("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/1234"))
-                .andExpect(view().name("404"));
+                .andExpect(view().name("404"))
+                .andExpect(model().attribute("url", "http://localhost/application/1234"))
+                .andExpect(model().attribute("exception", new InstanceOf(ObjectNotFoundException.class)))
+                .andExpect(model().attribute("message", "Application not found"))
+                .andExpect(model().attributeExists("stacktrace"));
     }
 
     @Test
