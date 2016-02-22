@@ -19,6 +19,10 @@ import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -204,13 +208,24 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
             if(invite.getEmail().equals(user.getEmail())){
                 invite.setStatus(InviteStatusConstants.ACCEPTED);
-                inviteRepository.save(invite);
+                invite = inviteRepository.save(invite);
+                initializeInvitee(invite, user);
                 return serviceSuccess();
             }
             LOG.error(String.format("Invited emailaddress not the same as the users emailaddress %s => %s ", user.getEmail(), invite.getEmail()));
             Error e = new Error("Invited emailaddress not the same as the users emailaddress", HttpStatus.NOT_ACCEPTABLE);
             return serviceFailure(e);
         });
+    }
+
+    private void initializeInvitee(Invite invite, User user) {
+        LOG.error("initializeInvitee");
+        Application application = invite.getApplication();
+        Role role = roleRepository.findByName("collaborator").get(0);
+        Organisation organisation = invite.getInviteOrganisation().getOrganisation();
+        ProcessRole processRole = new ProcessRole(user, application, role, organisation);
+        processRoleRepository.save(processRole);
+        LOG.error("initializeInvitee saved");
     }
 
 
