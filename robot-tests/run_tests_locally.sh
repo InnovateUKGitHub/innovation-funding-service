@@ -37,8 +37,11 @@ function stopServers {
 
 function resetDB {
     echo "********DROP THE DATABASE********"
+    cd ${scriptDir}
     `mysql -u${mysqlUser} -p${mysqlPassword} -e"DROP DATABASE ifs"`
     `mysql -u${mysqlUser} -p${mysqlPassword} -e"CREATE DATABASE ifs CHARACTER SET utf8"`
+    cd ../ifs-data-service
+    ./gradlew flywayClean flywayMigrate
 }
 
 function buildAndDeploy {
@@ -79,19 +82,20 @@ function startServers {
     do
       [[ "${logLine}" == *"Deployment of web application archive"* ]] && pkill -P $$ tail
     done
-    sleep 5
 }
+
 
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase --exclude Failing --exclude Pending --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  --exclude Failing --exclude Pending --name IFS $testDirectory
 }
+
 
 function runHappyPathTests {
     echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase --include HappyPath --exclude Failing --exclude Pending --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase --include HappyPath --name IFS $testDirectory
 }
 
 cd "$(dirname "$0")"
@@ -135,10 +139,12 @@ echo "webPort:           ${webPort}"
 webBase="localhost:"${webPort}
 echo "webBase:           ${webBase}"
 
+
 unset opt
 unset quickTest
 unset testScrub
 unset happyPath
+
 
 testDirectory='IFS_acceptance_tests/tests/*'
 while getopts ":q :t :h :d:" opt ; do

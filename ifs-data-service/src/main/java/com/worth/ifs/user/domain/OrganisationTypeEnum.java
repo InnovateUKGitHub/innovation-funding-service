@@ -1,6 +1,7 @@
 package com.worth.ifs.user.domain;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 public enum OrganisationTypeEnum {
@@ -30,6 +31,8 @@ public enum OrganisationTypeEnum {
         this.parentOrganisationType = parent;
     }
 
+
+
     public static OrganisationTypeEnum getFromId(Long organisationTypeId){
         return lookup.get(organisationTypeId);
     }
@@ -43,6 +46,11 @@ public enum OrganisationTypeEnum {
         } else {
             return false;
         }
+    }
+
+    public boolean hasChildren(){
+        Optional<OrganisationTypeEnum> child = lookup.values().stream().filter(o -> o.getParentOrganisationType() != null && o.getParentOrganisationType().equals(this)).findAny();
+        return child.isPresent();
     }
 
     public Long getOrganisationTypeId() {

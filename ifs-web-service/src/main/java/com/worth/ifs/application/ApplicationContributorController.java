@@ -1,5 +1,18 @@
 package com.worth.ifs.application;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.worth.ifs.application.form.ContributorsForm;
 import com.worth.ifs.application.form.InviteeForm;
 import com.worth.ifs.application.form.OrganisationInviteForm;
@@ -12,6 +25,8 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.CookieUtil;
+
+import com.worth.ifs.util.JsonUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +35,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 // TODO DW - INFUND-1555 - handle rest results
 @Controller
@@ -43,7 +56,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
     private Validator validator;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String displayContributors(@PathVariable("applicationId") final Long applicationId, HttpServletRequest request, Model model) throws Exception {
+    public String displayContributors(@PathVariable("applicationId") final Long applicationId, HttpServletRequest request, Model model) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -77,7 +90,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
                                      HttpServletRequest request,
-                                     Model model) throws Exception {
+                                     Model model) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -131,12 +144,12 @@ public class ApplicationContributorController extends AbstractApplicationControl
         String json = CookieUtil.getCookieValue(request, CONTRIBUTORS_COOKIE);
 
         if (json != null && !json.equals("")) {
-            ContributorsForm contributorsFormCookie = ApplicationCreationController.getObjectFromJson(json, ContributorsForm.class);
+            ContributorsForm contributorsFormCookie = JsonUtil.getObjectFromJson(json, ContributorsForm.class);
             if (contributorsFormCookie.getApplicationId().equals(applicationId)) {
                 if (contributorsFormCookie.isTriedToSave()) {
                     // if the form was saved, validate and update cookie.
                     contributorsFormCookie.setTriedToSave(false);
-                    String jsonState = ApplicationCreationController.getSerializedObject(contributorsFormCookie);
+                    String jsonState = JsonUtil.getSerializedObject(contributorsFormCookie);
                     CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
 
                     contributorsForm.merge(contributorsFormCookie);
@@ -162,7 +175,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
                                      @ModelAttribute ContributorsForm contributorsForm,
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
-                                     HttpServletRequest request) throws Exception {
+                                     HttpServletRequest request) {
         ApplicationResource application = applicationService.getById(applicationId);
         ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         // User should never be able to set the organisation name or id of the lead-organisation.
@@ -230,7 +243,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
                 inviteRestService.saveInvites(invites);
                 cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
             } else if (existingOrganisation != null) {
-                // Save invites, and link to existing Organisation.
+                // Save invites, and link to existing organisation.
                 inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
                 cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
             } else {
@@ -268,7 +281,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
 
     private void saveFormValuesToCookie(HttpServletResponse response, ContributorsForm contributorsForm, Long applicationId) {
         contributorsForm.setApplicationId(applicationId);
-        String jsonState = ApplicationCreationController.getSerializedObject(contributorsForm);
+        String jsonState = JsonUtil.getSerializedObject(contributorsForm);
         CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
     }
 

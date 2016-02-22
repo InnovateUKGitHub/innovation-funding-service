@@ -12,6 +12,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class InviteResource {
     private String leadOrganisation;
     private String leadApplicant;
+    private String leadApplicantEmail;
     private Long id;
     private String name;
     private String email;
@@ -20,6 +21,7 @@ public class InviteResource {
     private String competitionName;
     private String applicationName;
     private Long inviteOrganisation;
+    private String inviteOrganisationName;
     private String hash;
     private InviteStatusConstants status;
 
@@ -51,9 +53,10 @@ public class InviteResource {
         this.applicationName = i.getApplication().getName();
         this.competitionId = i.getApplication().getCompetition().getId();
         this.competitionName = i.getApplication().getCompetition().getName();
-        this.leadOrganisation = i.getApplication().getLeadOrganisation().get().getName();
-        this.leadApplicant = i.getApplication().getLeadApplicant().get().getName();
+        this.leadOrganisation = i.getApplication().getLeadOrganisation().getName();
+        this.leadApplicant = i.getApplication().getLeadApplicant().getName();
         this.inviteOrganisation = i.getInviteOrganisation().getId();
+        this.inviteOrganisationName = i.getInviteOrganisation().getOrganisationName();
         this.hash = i.getHash();
         this.status = i.getStatus();
     }
@@ -194,5 +197,21 @@ public class InviteResource {
                 .append(hash)
                 .append(status)
                 .toHashCode();
+    }
+
+    public String getInviteOrganisationName() {
+        return inviteOrganisationName;
+    }
+
+    public void setInviteOrganisationName(String inviteOrganisationName) {
+        this.inviteOrganisationName = inviteOrganisationName;
+    }
+
+    public String getLeadApplicantEmail() {
+        return leadApplicantEmail;
+    }
+
+    public void setLeadApplicantEmail(String leadApplicantEmail) {
+        this.leadApplicantEmail = leadApplicantEmail;
     }
 }

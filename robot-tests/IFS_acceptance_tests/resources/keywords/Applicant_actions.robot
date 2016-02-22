@@ -217,3 +217,29 @@ User should be redirected to the correct page
     [Arguments]    ${URL}
     location should be    ${URL}
     Page Should Not Contain    error
+
+User navigates to the page
+    [Arguments]    ${PAGE_URL}
+    go to    ${PAGE_URL}
+
+User enters text to a text field
+    [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
+    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+
+user clicks the button/link
+    [Arguments]    ${BUTTON}
+    click element    ${BUTTON}
+
+User should see the text in the page
+    [Arguments]    ${VISIBLE_TEXT}
+    wait until page contains    ${VISIBLE_TEXT}
+
+User should see an error
+    [Arguments]    ${ERROR_TEXT}
+    Page should contain element    css=.error-message
+    Page should contain    ${ERROR_TEXT}
+
+the guest user enters the log in credentials
+    [Arguments]    ${USER_NAME}    ${PASSWORD}
+    Input Text    id=id_email    ${USER_NAME}
+    Input Password    id=id_password    ${PASSWORD}

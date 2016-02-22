@@ -31,13 +31,13 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'#'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${''}, ${''})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Competition open'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Innovate UK, 4891061'}, ${'Technology inspired'}, ${'Competition closed'})" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='applications', status='closed'" th:remove="tag" />
 
 	<div id="sticky-zone">
 
@@ -48,10 +48,10 @@
 				
 				<div class="grid-row">
 					<div class="column-half">
-				 		<p><span class="heading-medium">30th March 2016</span> <br />Assessment deadline</p>
+				 		<p><span class="heading-medium">12th April 2016</span> <br />Assessment deadline</p>
 				 	</div>
 				 	<div class="column-half">
-					 	<p><span class="heading-medium">4</span> <br />Applications</p>
+					 	<p><span class="heading-medium">4</span> <br />Applications submitted</p>
 					</div>
 				</div>
 
@@ -67,9 +67,9 @@
 	
 		<div class="data-area">
 
-			<h2 class="heading-large" id="current-assessors">Application list</h2>
+			<h2 class="heading-large" id="current-assessors">Applications submitted</h2>
 			
-			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='closedApplications'" th:remove="tag" />
+			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}, type='submittedApplications'" th:remove="tag" />
 			
 			<div class="table-overflow">
 				<table id="application-list">
@@ -100,6 +100,23 @@
 							<td class="alignright">203,000</td>
 							<td class="alignright">12</td>
 						</tr>
+						<tr class="filtered-result">
+							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5433</a></th>
+							<td>AI in learning</td>
+							<td>BBC</td>
+							<td class="alignright">3</td>
+							<td class="alignright">67,000</td>
+							<td class="alignright">13</td>
+						</tr>
+						<tr class="filtered-result">
+							<th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5434</a></th>
+							<td>Progressive machines</td>
+							<td>Kingfisher</td>
+							<td class="alignright">7</td>
+							<td class="alignright">100,000</td>
+							<td class="alignright">14</td>
+						</tr>
+
 
 					</tbody>
 				</table>
@@ -107,14 +124,14 @@
 			
 			<div th:if="${param.filterStatus == null}" th:remove="tag">
 			
-				<ul class="pagination">
+				<!-- <ul class="pagination">
 				    <li class="next">
 				        <a href="#" rel="next" title="Navigate to next part">
 				            <span class="pagination-label">Next</span>
 				            <span class="pagination-part-title">2 of 4</span>
 				        </a>
 				    </li>
-				</ul>
+				</ul> -->
 			
 			</div>
 		</div>
