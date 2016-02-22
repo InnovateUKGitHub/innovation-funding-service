@@ -97,6 +97,9 @@ public class RegistrationController {
         model.addAttribute("registrationForm", registrationForm);
     }
 
+    /**
+     * When the current user is a invitee, user the invite email-address in the registration flow.
+     */
     private boolean setInviteeEmailAddress(RegistrationForm registrationForm, HttpServletRequest request, Model model) {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
@@ -123,15 +126,11 @@ public class RegistrationController {
                                      HttpServletResponse response,
                                      HttpServletRequest request,
                                      Model model) {
-        log.error(String.format("errors before: %s => %s", bindingResult.getAllErrors().size(), registrationForm.getEmail()));
-        bindingResult.getFieldErrors().stream().forEach(e -> log.error(String.format("Before: Field Error %s message: %s", e.getField(), e.getDefaultMessage())));
+
         if(setInviteeEmailAddress(registrationForm, request, model)){
             // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
             bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
             validator.validate(registrationForm, bindingResult);
-            bindingResult.recordSuppressedField("email");
-            log.error(String.format("errors after: %s => %s", bindingResult.getAllErrors().size(), registrationForm.getEmail()));
-            bindingResult.getFieldErrors().stream().forEach(e -> log.error(String.format("After Field Error %s message: %s", e.getField(), e.getDefaultMessage())));
         }
 
         User user = userAuthenticationService.getAuthenticatedUser(request);
