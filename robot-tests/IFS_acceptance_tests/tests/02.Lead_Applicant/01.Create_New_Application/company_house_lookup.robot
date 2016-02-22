@@ -14,7 +14,7 @@ Search using valid company name
     [Tags]    Applicant    Company house    HappyPath
     Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When user enters text to a text field    id=org-name    innovate
-    And user clicks the button    id=org-search
+    And user clicks the button/link    id=org-search
     Then the valid company names matching the search criteria should be displayed
 
 Search using invalid company name
@@ -22,7 +22,7 @@ Search using invalid company name
     [Tags]    Applicant    Company house
     Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When user enters text to a text field    id=org-name    innoavte
-    And user clicks the button    id=org-search
+    And user clicks the button/link    id=org-search
     Then the search criteria should not fetch any result
 
 Search using valid registration number
@@ -30,7 +30,7 @@ Search using valid registration number
     [Tags]    Applicant    Company house    HappyPath
     Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When user enters text to a text field    id=org-name    05493105
-    And user clicks the button    id=org-search
+    And user clicks the button/link    id=org-search
     Then the valid company names matching the search criteria should be displayed
 
 search using invalid registration number
@@ -38,7 +38,7 @@ search using invalid registration number
     [Tags]    Applicant    Company house
     Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When user enters text to a text field    id=org-name    64536
-    And user clicks the button    id=org-search
+    And user clicks the button/link    id=org-search
     Then the search criteria should not fetch any result
 
 Search for invalid characters
@@ -46,7 +46,7 @@ Search for invalid characters
     [Tags]    Applicant    Company house    Pending
     Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When user enters text to a text field    id=org-name    {}{}
-    And user clicks the button    id=org-search
+    And user clicks the button/link    id=org-search
     Then the applicant should get a validation error for the company house
 
 *** Keywords ***

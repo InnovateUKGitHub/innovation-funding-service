@@ -226,6 +226,10 @@ User enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     input text    ${TEXT_FIELD}    ${TEXT_INPUT}
 
-user clicks the button
+user clicks the button/link
     [Arguments]    ${BUTTON}
     click element    ${BUTTON}
+
+User should see the text in the page
+    [Arguments]    ${VISIBLE_TEXT}
+    page should contain    ${VISIBLE_TEXT}
