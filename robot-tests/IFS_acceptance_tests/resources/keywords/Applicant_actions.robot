@@ -233,3 +233,8 @@ user clicks the button/link
 User should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
     page should contain    ${VISIBLE_TEXT}
+
+User should see an error
+    [Arguments]    ${ERROR_TEXT}
+    Page should contain element    css=.error-message
+    Page should contain    ${ERROR_TEXT}
