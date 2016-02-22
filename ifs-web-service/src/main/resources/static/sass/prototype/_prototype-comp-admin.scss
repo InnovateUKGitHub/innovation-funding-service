@@ -100,11 +100,13 @@ table{
 				margin: 0;
 			}
 			
+			.column-one,
 			.column-half,
 			.column-quarter,
 			.column-third{
 				width: 100%;
-				clear: both; 
+				clear: both;
+				padding: 0;
 			}
 	
 		}

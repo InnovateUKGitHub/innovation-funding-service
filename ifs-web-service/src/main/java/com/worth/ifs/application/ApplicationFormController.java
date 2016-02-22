@@ -1,20 +1,5 @@
 package com.worth.ifs.application;
 
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +21,6 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,14 +30,15 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.util.*;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -70,6 +55,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     @Autowired
     private CostService costService;
 
+    @Autowired
+    private FinanceFormHandler financeFormHandler;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -281,27 +268,15 @@ public class ApplicationFormController extends AbstractApplicationController {
         String type = costItem.getCostType().getType();
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
-
-        if (CostType.fromString(type).equals(CostType.LABOUR)) {
-            ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, user.getId());
-            LabourCostCategory costCategory = (LabourCostCategory) applicationFinanceResource.getFinanceOrganisationDetails(CostType.fromString(type));
-            model.addAttribute("costCategory", costCategory);
-        }
-
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
-        model.addAttribute("type", type);
-        model.addAttribute("question", questionService.getById(questionId));
-        model.addAttribute("cost", costItem);
-
+        financeModelManager.addCost(model, costItem, applicationId, user.getId(), questionId, type);
         return String.format("question-type/types :: %s_row", type);
     }
 
     @RequestMapping(value = "/remove_cost/{costId}")
-    public @ResponseBody String removeCostRow(@ModelAttribute("form") ApplicationForm form, Model model,
-                         @PathVariable("applicationId") final Long applicationId,
-                         @PathVariable("costId") final Long costId,
-                         HttpServletRequest request) throws JsonProcessingException {
+    public @ResponseBody String removeCostRow(@ModelAttribute("form") ApplicationForm form,
+                                              @PathVariable("costId") final Long costId) throws JsonProcessingException {
         costService.delete(costId);
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
@@ -310,8 +285,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private CostItem addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
-        return costService.add(applicationFinance.getId(), questionId, null);
+        return financeFormHandler.addCost(applicationId, user.getId(), questionId);
     }
 
     private BindingResult saveApplicationForm(ApplicationForm form,
@@ -337,8 +311,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         applicationService.save(application);
         markApplicationQuestions(application, user.getId(), request, response, errors);
 
-        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, user.getId(), application.getId());
-        if (financeFormHandler.handle(request)) {
+        if (financeFormHandler.handle(request, user.getId(), applicationId)) {
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
         }
 
@@ -512,30 +485,14 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (fieldName.startsWith("application.")) {
             errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
-            FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
-            financeFormHandler.ajaxUpdateFinancePosition(fieldName, value);
+            financeFormHandler.ajaxUpdateFinancePosition(userId, applicationId, fieldName, value);
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-            storeCostField(userId, applicationId, fieldName, value);
+            financeFormHandler.storeCostField(userId, applicationId, fieldName, value);
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             errors = formInputResponseService.save(userId, applicationId, formInputId, value);
         }
         return errors;
-    }
-
-    private void storeCostField(Long userId, Long applicationId, String fieldName, String value) {
-        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
-
-        if (fieldName != null && value != null) {
-            String cleanedFieldName = fieldName;
-            if (fieldName.startsWith("cost-")) {
-                cleanedFieldName = fieldName.replace("cost-", "");
-            } else if (fieldName.startsWith("formInput[")) {
-                cleanedFieldName = fieldName.replace("formInput[", "").replace("]", "");
-            }
-            log.info("store field: " + cleanedFieldName + " val: " + value);
-            financeFormHandler.storeField(cleanedFieldName, value);
-        }
     }
 
     private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {

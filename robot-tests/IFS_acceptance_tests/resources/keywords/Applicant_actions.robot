@@ -212,3 +212,24 @@ Create new application
     go to    ${CREATE_APPLICATION_PAGE}
     Input Text    id=application_name    Form test application
     Click Element    css=#content > form > input
+
+User should be redirected to the correct page
+    [Arguments]    ${URL}
+    location should be    ${URL}
+    Page Should Not Contain    error
+
+User navigates to the page
+    [Arguments]    ${PAGE_URL}
+    go to    ${PAGE_URL}
+
+User enters text to a text field
+    [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
+    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+
+user clicks the button/link
+    [Arguments]    ${BUTTON}
+    click element    ${BUTTON}
+
+User should see the text in the page
+    [Arguments]    ${VISIBLE_TEXT}
+    page should contain    ${VISIBLE_TEXT}
