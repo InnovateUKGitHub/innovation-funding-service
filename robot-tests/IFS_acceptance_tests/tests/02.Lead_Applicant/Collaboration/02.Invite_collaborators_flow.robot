@@ -31,7 +31,7 @@ ${YOUR_FINANCES_URL}    ${SERVER}/application/1/form/section/7
 *** Test Cases ***
 Valid invitation submit
     [Documentation]    INFUND-901
-    [Tags]  HappyPath
+    [Tags]    HappyPath
     Given the applicant is in the invite contributors page
     When the applicant enters valid inputs
     Then the applicant should be redirected to the overview page
@@ -39,7 +39,7 @@ Valid invitation submit
 
 Lead applicant can access the Application team page(Link in the overview page)
     [Documentation]    INFUND-928
-    [Tags]      HappyPath
+    [Tags]    HappyPath
     Given Applicant goes to the Overview page
     When Lead Applicant clicks link "View team members and add collaborators"
     Then Lead Applicant should be redirected to the Application team page
@@ -47,20 +47,20 @@ Lead applicant can access the Application team page(Link in the overview page)
 
 Status of the invited people(Application team page)
     [Documentation]    INFUND-929
-    [Tags]      HappyPath
+    [Tags]    HappyPath
     Given the applicant goes to the application 1 team page
     Then The status of the Invited people should be correct in the application team page
 
 Status of the invited people(Manage contributors page)
     [Documentation]    Infund-928
-    [Tags]      HappyPath
+    [Tags]    HappyPath
     Given Application goes to the Application Team page
     And Applicant clicks on "Invite new contributors"
     Then the status of the people should be correct in the Manage contributors page
 
 The Lead Applicant can add new collaborators
     [Documentation]    INFUND-928
-    [Tags]      HappyPath
+    [Tags]    HappyPath
     Given Application goes to the Application Team page
     And Applicant clicks on "Invite new contributors"
     And the applicant clicks the add person link
@@ -94,16 +94,16 @@ the applicant is in the invite contributors page
 
 the applicant enters valid inputs
     click element    jquery=button:contains('Add person')
-    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    tester
-    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    test@example.com
+    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    tester
+    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    test@example.com
     Click Element    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
-    Input Text    name=organisations[1].organisationName    Fannie May
-    Input Text    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
-    Input Text    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    collaborator2@fanniemay.com
-    Click Element    jquery=li:nth-child(2) button:contains('Add person')
-    Input Text    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
-    Input Text    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(2) input    collaborator3@fanniemay.com
-    focus    jquery=li:nth-child(2) button:contains('Add person')
+    Input Text    name=organisations[2].organisationName    Fannie May
+    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
+    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(2) input    collaborator2@fanniemay.com
+    Click Element    jquery=li:nth-child(3) button:contains('Add person')
+    Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
+    Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(2) input    collaborator3@fanniemay.com
+    focus    jquery=li:nth-child(3) button:contains('Add person')
     Sleep    1s
     Click Element    jquery=button:contains("Begin application")
 
@@ -134,9 +134,9 @@ the applicant clicks the add person link
     Click Element    jquery=li:nth-child(1) button:contains('Add person')
 
 the user adds new collaborator
-    Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1)
-    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    Roger Axe
-    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    roger.axe@gmail.com
+    Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(1)
+    Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(1) input    Roger Axe
+    Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(2) input    roger.axe@gmail.com
     focus    jquery=li:nth-child(1) button:contains('Add person')
     sleep    1s
 
@@ -149,9 +149,9 @@ Applicant is redirected to Application Team page
 
 the applicant can enter Organisation name, Name and E-mail
     Click Element    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
-    Input Text    name=organisations[2].organisationName    Z Ltd
-    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Elvis Furcic
-    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(2) input    elvis.furcic@gmail.com
+    Input Text    name=organisations[3].organisationName    Z Ltd
+    Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(1) input    Elvis Furcic
+    Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(2) input    elvis.furcic@gmail.com
     focus    jquery=li:nth-child(2) button:contains('Add person')
     Sleep    2s
 
