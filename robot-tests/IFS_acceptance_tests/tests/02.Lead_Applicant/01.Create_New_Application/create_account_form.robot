@@ -184,7 +184,7 @@ Email duplication check
 
 *** Keywords ***
 the user follows the standard path to the account creation page
-    Go To    ${SERVER}/application/create/selected-business/05063042
+    Go To    ${SERVER}/organisation/create/selected-business/05063042
     Select Checkbox    id=address-same
     Select Checkbox    name=useCompanyHouseAddress
     Click Button    Save organisation and continue
@@ -242,4 +242,5 @@ the user follows the standard path to the account creation page for non register
     Click Element    css=#select-address-block > button
     click element    jQuery=.button:contains("Save organisation and")
 
-the user logs out if they are logged in    run keyword and ignore error    log out as user
+the user logs out if they are logged in
+    run keyword and ignore error    log out as user

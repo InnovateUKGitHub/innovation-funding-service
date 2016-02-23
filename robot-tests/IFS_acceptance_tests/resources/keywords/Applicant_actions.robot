@@ -232,9 +232,18 @@ user clicks the button/link
 
 User should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
-    page should contain    ${VISIBLE_TEXT}
+    wait until page contains    ${VISIBLE_TEXT}
 
 User should see an error
     [Arguments]    ${ERROR_TEXT}
     Page should contain element    css=.error-message
     Page should contain    ${ERROR_TEXT}
+
+the guest user enters the log in credentials
+    [Arguments]    ${USER_NAME}    ${PASSWORD}
+    Input Text    id=id_email    ${USER_NAME}
+    Input Password    id=id_password    ${PASSWORD}
+
+User should see the element
+    [Arguments]    ${ELEMENT}
+    element should be visible    ${ELEMENT}
