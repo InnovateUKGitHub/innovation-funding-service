@@ -32,10 +32,9 @@ The lead applicant shouldn't be able to remove himself
     Given user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     Then the lead applicant cannot be removed
 
-Validations for the Email field user renains in the invite page
+Validations for the Email field user remains in the invite page
     [Documentation]    INFUND-901
     [Tags]
-    #Given the applicant is in the invite contributors page
     When user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
     And the applicant enters some invalid emails
     Then user should see the text in the page    Inviting Contributors
@@ -43,7 +42,6 @@ Validations for the Email field user renains in the invite page
 Validation for the name field user remains in the invite page
     [Documentation]    INFUND-901
     [Tags]
-    #Given the applicant is in the invite contributors page
     When the applicant submits the page without entering a name
     Then user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) .field-error
     And user should see the text in the page    Inviting Contributors
@@ -52,7 +50,6 @@ Link to remove partner organisation
     [Documentation]    INFUND-1039
     [Tags]    Collaboration
     # on the user interface.    All we can test is that the state is saved in cookie, so not lost on page reload.
-    #Given the applicant is in the invite contributors page
     When user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
     And the applicant inputs details    1
     Then user should see the element    jquery=li:nth-child(2) button:contains('Remove')
@@ -62,7 +59,6 @@ Link to remove partner organisation
 Applicant inputs Organisation and other details should be autosaved (in cookie)
     [Documentation]    INFUND-1039
     [Tags]    Collaboration    HappyPath
-    #Given the applicant is in the invite contributors page
     When user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
     And the applicant can enter Organisation name, Name and E-mail
     Then the applicant's inputs should be visible
@@ -70,7 +66,6 @@ Applicant inputs Organisation and other details should be autosaved (in cookie)
 Blank organisation name is not allowed
     [Documentation]    INFUND-896
     [Tags]    Collaboration
-    #Given the applicant is in the invite contributors page
     And the applicant leaves organisation name blank    1
     And user clicks the button/link    jquery=button:contains('Begin application')
     Then a validation error is shown on organisation name    1
@@ -78,40 +73,35 @@ Blank organisation name is not allowed
 Blank person name is not allowed
     [Documentation]    INFUND-896
     [Tags]    Collaboration
-    #Given the applicant is in the invite contributors page
     When the applicant leaves person name blank    1
     And user clicks the button/link    jquery=button:contains('Begin application')
-    #user should get valisation error
+    #user should get validation error
     Then user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input.field-error
 
 Blank email is not allowed
     [Documentation]    INFUND-896
     [Tags]    Collaboration
-    #Given the applicant is in the invite contributors page
     When the applicant leaves email name blank    1
     And user clicks the button/link    jquery=button:contains('Begin application')
-    #user should get valisation error
+    #user should get validation error
     Then user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
 
 Invalid email address is not allowed
     [Documentation]    INFUND-896
     [Tags]    Collaboration
-    #Given the applicant is in the invite contributors page
     And the applicant inputs invalid email address    1
     And user clicks the button/link    jquery=button:contains('Begin application')
-    #user should get valisation error
+    #user should get validation error
     Then user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
 
 Already invite email should not allowed
-    #Given the applicant is in the invite contributors page
     When the applicant inserts and already invited email    1
     And user clicks the button/link    jquery=button:contains('Begin application')
-    #user should get valisation error
+    #user should get validation error
     Then user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
 
 Link to add multiple partner organisation
     [Tags]    Failing
-    #Given the applicant is in the invite contributors page
     When user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
     And user should see the element    css=li:nth-child(3)
     And user clicks the button/link    jQuery=li:nth-child(3) button:contains("Remove")
@@ -119,7 +109,6 @@ Link to add multiple partner organisation
 
 The user's inputs should be autosaved
     [Documentation]    INFUND-901
-    #Given the applicant is in the invite contributors page
     When the user fills the name and email field and reloads the page    1
     Then the user's inputs should still be visible    1
     And user navigates to the page    ${INVITE_COLLABORATORS2_PAGE}
