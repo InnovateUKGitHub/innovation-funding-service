@@ -8,11 +8,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.ContentVersionStrategy;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
+
+import java.util.Locale;
 
 @Configuration
 public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
@@ -48,15 +52,10 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
         return new MenuLinksHandlerInterceptor();
     }
 
-   /* @Bean
-    public SimpleMappingExceptionResolver createSimpleMappingExceptionResolver() {
-        SimpleMappingExceptionResolver resolver = new SimpleMappingExceptionResolver();
-        Properties errorMaps = new Properties();
-        errorMaps.setProperty("ObjectNotFoundException", "404");
-        errorMaps.setProperty("NullPointerException", "error");
-        resolver.setExceptionMappings(errorMaps);
-        //resolver.setDefaultErrorView("globalerror");
-        resolver.setExceptionAttribute("exception");
-        return resolver;
-    }*/
+    @Bean
+    public LocaleResolver localeResolver() {
+        SessionLocaleResolver slr = new SessionLocaleResolver();
+        slr.setDefaultLocale(Locale.UK);
+        return slr;
+    }
 }

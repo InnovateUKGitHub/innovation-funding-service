@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -41,12 +42,10 @@ public class ApplicationControllerTest extends BaseUnitTest {
         super.setup();
         MockitoAnnotations.initMocks(this);
 
-
         mockMvc = MockMvcBuilders.standaloneSetup(applicationController)
                 .setViewResolvers(viewResolver())
                 .setHandlerExceptionResolvers(createExceptionResolver())
                 .build();
-
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -63,7 +62,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        System.out.println("Show dashboard for application: " + app.getId());
+        log.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-details"))
@@ -95,15 +94,20 @@ public class ApplicationControllerTest extends BaseUnitTest {
     public void testNotExistingApplicationDetails() throws Exception {
         ApplicationResource app = applications.get(0);
 
+        when(env.acceptsProfiles("uat", "dev", "test")).thenReturn(true);
+        when(messageSource.getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH)).thenReturn(
+                testMessageSource().getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH));
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(applicationService.getById(1234l)).thenThrow(new ObjectNotFoundException("Application not found"));
+        when(applicationService.getById(1234l)).thenThrow(new ObjectNotFoundException(testMessageSource().getMessage
+                (ObjectNotFoundException.class.getName(), null, Locale.ENGLISH)));
 
-        System.out.println("Show dashboard for application: " + app.getId());
+        log.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/1234"))
                 .andExpect(view().name("404"))
                 .andExpect(model().attribute("url", "http://localhost/application/1234"))
                 .andExpect(model().attribute("exception", new InstanceOf(ObjectNotFoundException.class)))
-                .andExpect(model().attribute("message", "Application not found"))
+                .andExpect(model().attribute("message",
+                        testMessageSource().getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH)))
                 .andExpect(model().attributeExists("stacktrace"));
     }
 
@@ -119,7 +123,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        System.out.println("Show dashboard for application: " + app.getId());
+        log.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId() +"/section/"+ section.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-details"))
