@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 set -e
 
 shibboleth_id=$(./_get-shibboleth-instance-id.sh)

@@ -33,6 +33,10 @@ function stopServers {
     rm -rf ROOT ROOT.war
     cd ${webWebappsPath}
     rm -rf ROOT ROOT.war
+
+    echo "********STOPPING SHIBBOLETH*********"
+    cd ${shibbolethScriptsPath}
+    ./stop-shibboleth.sh
 }
 
 function resetDB {
@@ -82,25 +86,37 @@ function startServers {
     do
       [[ "${logLine}" == *"Deployment of web application archive"* ]] && pkill -P $$ tail
     done
+    
+    echo "********START SHIBBOLETH***********"
+    cd ${shibbolethScriptsPath}
+    ./start-shibboleth.sh
+
+    echo "********RESET SHIBBOLETH USERS**********"
+    sleep 10
+    ./reset-users.sh
 }
 
 
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' --exclude Failing --exclude Pending --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --name IFS $testDirectory
 }
 
 function runHappyPathTests {
     echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' --include HappyPath --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v VIRTUAL_DISPLAY:$useXvfb --include HappyPath --name IFS $testDirectory
 }
 
 cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
 echo "scriptDir:        ${scriptDir}"
+cd ../setup-files/scripts/shibboleth
+shibbolethScriptsPath=$(pwd)
+echo "shibbolethScriptsPath:        ${shibbolethScriptsPath}"
+cd -
 dateFormat=`date +%Y-%m-%d`
 cd ../ifs-data-service
 dataServiceCodeDir=`pwd`
@@ -143,21 +159,25 @@ unset opt
 unset quickTest
 unset testScrub
 unset happyPath
+unset useXvfb
 
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :d:" opt ; do
+while getopts ":q :t :h :d: :x" opt ; do
     case $opt in
-        q)
-         quickTest=1
-        ;;
+    q)
+     quickTest=1
+    ;;
 	t)
 	 testScrub=1
 	;;
 	h)
 	 happyPath=1
 	;;
-        d)
+	x)
+	 useXvfb=true
+	;;
+    d)
          testDirectory="$OPTARG"
         ;;
         \?)

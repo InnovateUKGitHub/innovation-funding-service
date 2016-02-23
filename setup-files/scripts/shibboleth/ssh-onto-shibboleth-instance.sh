@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 docker_id=$(./_get-shibboleth-instance-id.sh)
 
 if [ -z "$docker_id" ]; then

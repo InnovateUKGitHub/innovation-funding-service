@@ -1,5 +1,6 @@
-cp /etc/hosts /tmp/hostsbackup
+#!/usr/bin/env bash
 
+cp /etc/hosts /tmp/hostsbackup
 
 ip_address=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' $(docker ps | tail -n 1 | awk '{print $1}')`
 

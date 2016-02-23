@@ -1,4 +1,8 @@
+#!/usr/bin/env bash
+
 filename=$(./_get-latest-shibboleth-image-filename.sh)
+
+cd $(./_get-shibboleth-install-location.sh)
 
 if [ -z "$filename" ]; then
 
@@ -9,4 +13,3 @@ fi
 
 
 docker load < $filename
-

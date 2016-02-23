@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 image_id=$(docker images | grep g2g3/ifs-local-dev | awk '{print $3}')
 
 if [ -z "$image_id" ]; then

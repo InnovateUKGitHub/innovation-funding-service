@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 installed=$(docker images | grep 'g2g3/ifs-local-dev')
 
 if [ -n "$installed" ]; then
@@ -6,7 +8,6 @@ if [ -n "$installed" ]; then
   exit 0
 
 fi
-
 
 ./_install-latest-shibboleth-image.sh
 
