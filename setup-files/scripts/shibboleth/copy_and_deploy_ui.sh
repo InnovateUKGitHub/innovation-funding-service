@@ -11,7 +11,7 @@ fi
 docker exec $docker_id rm -rf  /opt/shibboleth-idp/views
 docker exec $docker_id rm -rf  /opt/shibboleth-idp/webapp
 docker exec $docker_id rm -rf  /opt/shibboleth-idp/messages
-docker cp /home/richardpopple/Projects/ifs/Code/shibboleth-login-styling/views $docker_id:/opt/shibboleth-idp/views
-docker cp /home/richardpopple/Projects/ifs/Code/shibboleth-login-styling/webapp $docker_id:/opt/shibboleth-idp/webapp
-docker cp /home/richardpopple/Projects/ifs/Code/shibboleth-login-styling/messages $docker_id:/opt/shibboleth-idp/messages
+docker cp ../../../ifs-auth-service/views $docker_id:/opt/shibboleth-idp/views
+docker cp ../../../ifs-auth-service/webapp $docker_id:/opt/shibboleth-idp/webapp
+docker cp ../../../ifs-auth-service/messages $docker_id:/opt/shibboleth-idp/messages
 
