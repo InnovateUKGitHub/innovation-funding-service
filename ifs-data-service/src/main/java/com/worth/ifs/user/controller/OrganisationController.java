@@ -39,27 +39,17 @@ public class OrganisationController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public RestResult<OrganisationResource> create(@RequestBody Organisation organisation) {
-        LOG.debug("OrganisationController , create method");
-        LOG.debug("OrganisationController , create method " + organisation.getName());
-
         return organisationService.create(organisation).toPostCreateResponse();
     }
 
     @RequestMapping(value = "/saveResource", method = RequestMethod.POST)
     public RestResult<OrganisationResource> saveResource(@RequestBody OrganisationResource organisationResource) {
-        LOG.debug("OrganisationController , create method");
-
         return organisationService.saveResource(organisationResource).toPostCreateResponse();
     }
 
     // TODO DW - INFUND-1555 - do we want to be returning an OrganisationResource from this call?
     @RequestMapping(value = "/addAddress/{organisationId}", method = RequestMethod.POST)
     public RestResult<OrganisationResource> addAddress(@PathVariable("organisationId") final Long organisationId, @RequestParam("addressType") final AddressType addressType, @RequestBody Address address) {
-        LOG.info("OrganisationController , add address");
-        LOG.info("OrganisationController , add address2 " + organisationId);
-        LOG.info("OrganisationController , add addresstype " + addressType.name());
-        LOG.info("OrganisationController , add getAddressLine1 " + address.getAddressLine1());
-
         return organisationService.addAddress(organisationId, addressType, address).toPutWithBodyResponse();
     }
 }

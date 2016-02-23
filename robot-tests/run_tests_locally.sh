@@ -36,7 +36,7 @@ function stopServers {
 
     echo "********STOPPING SHIBBOLETH*********"
     cd ${shibbolethScriptsPath}
-    ./stop-shibboleth.sh
+    # ./stop-shibboleth.sh
 }
 
 function resetDB {
@@ -89,7 +89,7 @@ function startServers {
     
     echo "********START SHIBBOLETH***********"
     cd ${shibbolethScriptsPath}
-    ./start-shibboleth.sh
+    # ./start-shibboleth.sh
 
     echo "********RESET SHIBBOLETH USERS**********"
     sleep 10
@@ -165,9 +165,9 @@ unset useXvfb
 testDirectory='IFS_acceptance_tests/tests/*'
 while getopts ":q :t :h :d: :x" opt ; do
     case $opt in
-    q)
-     quickTest=1
-    ;;
+        q)
+         quickTest=1
+        ;;
 	t)
 	 testScrub=1
 	;;
@@ -177,7 +177,7 @@ while getopts ":q :t :h :d: :x" opt ; do
 	x)
 	 useXvfb=true
 	;;
-    d)
+        d)
          testDirectory="$OPTARG"
         ;;
         \?)

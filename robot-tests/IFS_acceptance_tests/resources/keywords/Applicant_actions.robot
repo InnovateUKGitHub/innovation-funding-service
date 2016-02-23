@@ -246,4 +246,14 @@ the guest user enters the log in credentials
 
 User should see the element
     [Arguments]    ${ELEMENT}
-    element should be visible    ${ELEMENT}
+    Wait Until Element Is Visible    ${ELEMENT}
+
+User should not see the element
+    [Arguments]    ${NOT_VISIBLE_ELEMENT}
+    sleep    500ms
+    Element Should Not Be Visible    ${NOT_VISIBLE_ELEMENT}
+
+User should not see the text in the page
+    [Arguments]    ${NOT_VISIBLE_TEXT}
+    sleep    500ms
+    Page should not contain    ${NOT_VISIBLE_TEXT}

@@ -6,6 +6,7 @@ import com.worth.ifs.application.form.ConfirmCompanyDetailsForm;
 import com.worth.ifs.application.form.CreateApplicationForm;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.organisation.domain.Address;
@@ -18,6 +19,7 @@ import com.worth.ifs.util.JsonUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -37,6 +39,8 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
 
 @Controller
 @RequestMapping("/organisation/create")
@@ -189,12 +193,13 @@ public class OrganisationCreationController {
         } else if (request.getParameter(CONFIRM_COMPANY_DETAILS) != null) {
             companyHouseForm.setInCompanyHouse(false);
             companyHouseForm.setManualAddress(true);
-            bindingResult.getFieldErrors().stream().forEach(e -> log.debug(e.getDefaultMessage()));
+            BindingResult selectedPostcodeBindingResult =new BeanPropertyBindingResult(companyHouseForm.getSelectedPostcode(), "selectedPostcode");
+            validator.validate(companyHouseForm.getSelectedPostcode(), selectedPostcodeBindingResult);
 
-            if (!bindingResult.hasFieldErrors(ORGANISATION_NAME)) {
+            if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !selectedPostcodeBindingResult.hasFieldErrors()) {
                 // save state into cookie.
                 CookieUtil.saveToCookie(response, COMPANY_NAME, String.valueOf(companyHouseForm.getOrganisationName()));
-                CookieUtil.saveToCookie(response, COMPANY_ADDRESS, String.valueOf(companyHouseForm.getSelectedPostcode()));
+                CookieUtil.saveToCookie(response, COMPANY_ADDRESS, JsonUtil.getSerializedObject(companyHouseForm.getSelectedPostcode()));
                 return "redirect:/organisation/create/confirm-company";
             } else {
                 // Prepare data for displaying validation messages after redirect.
@@ -204,6 +209,7 @@ public class OrganisationCreationController {
                 companyHouseForm.setManualAddress(true);
                 companyHouseForm.setTriedToSave(true);
 
+                CookieUtil.saveToCookie(response, COMPANY_ADDRESS, JsonUtil.getSerializedObject(companyHouseForm.getSelectedPostcode()));
                 CookieUtil.saveToCookie(response, "companyHouseForm", JsonUtil.getSerializedObject(companyHouseForm));
                 return "redirect:/organisation/create/find-business/invalid-entry";
             }
@@ -338,39 +344,40 @@ public class OrganisationCreationController {
     private OrganisationResource saveNewOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
         log.error("saveNewOrganisation");
         organisationResource = organisationService.save(organisationResource);
+        linkOrganisationToInvite(organisationResource, request);
+        return organisationResource;
+    }
 
+    /**
+     * If current user is a invitee, then link the organisation that is created, to the InviteOrganisation.
+     */
+    private void linkOrganisationToInvite(OrganisationResource organisationResource, HttpServletRequest request) {
         String cookieHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
-        if(StringUtils.hasText(cookieHash)){
+        if (StringUtils.hasText(cookieHash)) {
             final OrganisationResource finalOrganisationResource = organisationResource;
-            inviteRestService.getInviteByHash(cookieHash).handleSuccessOrFailure(
-                f -> {
-                    log.error(String.format("Did not find the invite.. %s", cookieHash));
-                    return false;
-                },
+
+            RestResult<Void> inviteRestResult = inviteRestService.getInviteByHash(cookieHash).andOnSuccess(
                 s -> {
                     log.error(String.format("found the invite.. %s", cookieHash));
                     return inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
-                        f -> {
-                            log.error(String.format("Did not find the invite organisation.. %s", s.getInviteOrganisation()));
-                            return false;
-                        },
-                        i -> {
-                            if (i.getOrganisation() == null) {
-                                i.setOrganisation(finalOrganisationResource.getId());
-                                // Save the created organisation Id, so the next invitee does not have to..
-                                log.error("saving newly create organisation to inviteOrganisation");
-                                inviteOrganisationRestService.put(i);
-                            }else{
-                                log.error("invite organisation is already connected to a organisation.");
+                            f -> {
+                                log.info(String.format("Did not find the invite organisation.. %s", s.getInviteOrganisation()));
+                                return restFailure(HttpStatus.NOT_FOUND);
+                            },
+                            i -> {
+                                if (i.getOrganisation() == null) {
+                                    i.setOrganisation(finalOrganisationResource.getId());
+                                    // Save the created organisation Id, so the next invitee does not have to..
+                                    log.debug("saving newly create organisation to inviteOrganisation");
+                                    return inviteOrganisationRestService.put(i);
+                                }
+                                log.info("invite organisation is already connected to a organisation.");
+                                return restFailure(HttpStatus.ALREADY_REPORTED);
                             }
-                            return true;
-                        }
                     );
                 }
             );
         }
-
-        return organisationResource;
     }
 
     /**
