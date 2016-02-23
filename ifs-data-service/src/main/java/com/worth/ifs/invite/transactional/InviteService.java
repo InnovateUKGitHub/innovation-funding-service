@@ -35,5 +35,8 @@ public interface InviteService {
     ServiceResult<InviteResultsResource> saveInvites(List<InviteResource> inviteResources);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
+    ServiceResult<Void> acceptInvite(String inviteHash, Long userId);
+
+    @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<InviteResource> getInviteByHash(String hash);
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Organisation defines database relations and a model to use client side and server side.
+ * organisation defines database relations and a model to use client side and server side.
  */
 @Entity
 public class Organisation {

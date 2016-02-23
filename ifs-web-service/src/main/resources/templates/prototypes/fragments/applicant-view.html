@@ -10,7 +10,6 @@
                 <div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
                 <div class="pie-overlay">
                     <div>0</div>
-                    <span>Days left</span>
                 </div>
             </div>
         </div>
@@ -21,7 +20,7 @@
 <!-- ========Applicant view - sub header back to comp dashboard======= -->
 <div th:fragment="prototype-subheader(link, url)">
     <div class="sub-header">
-        <div th:if="${url == ''}" th:remove="tag">
+        <div th:if="${url == ''} and ${link != ''}" th:remove="tag">
             <h2 class="heading-small no-margin" style="margin-top: 5px" th:text="${link}">Title text</h2>
         </div>
         <div th:if="${url != ''}" th:remove="tag">

@@ -6,12 +6,21 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,20 +31,27 @@ import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Collections.emptyList;
-import static org.mockito.Matchers.isA;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@RunWith(MockitoJUnitRunner.class)
+@TestPropertySource(locations = "classpath:application.properties")
 public class RegistrationControllerTest extends BaseUnitTest {
     @InjectMocks
     private RegistrationController registrationController;
 
+    @Mock
+    Validator validator;
+
     @Before
     public void setUp() {
         super.setup();
+
         setupUserRoles();
 
         MockitoAnnotations.initMocks(this);
@@ -43,6 +59,11 @@ public class RegistrationControllerTest extends BaseUnitTest {
         mockMvc = MockMvcBuilders.standaloneSetup(registrationController)
                 .setViewResolvers(viewResolver())
                 .build();
+
+        registrationController.setValidator(new LocalValidatorFactoryBean());
+
+        when(userService.findUserByEmail(anyString())).thenReturn(restSuccess(new ArrayList<>(), HttpStatus.OK));
+        when(userService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(restSuccess(new UserResource()));
     }
 
     @Test
@@ -317,8 +338,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
                 1L)).thenReturn(restFailure(error));
-        when(userService.findUserByEmail("test@test.test")).thenReturn(restSuccess(emptyList()));
-
+        
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", userResource.getEmail())

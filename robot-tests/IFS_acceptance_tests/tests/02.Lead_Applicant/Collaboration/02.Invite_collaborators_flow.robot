@@ -9,6 +9,9 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...
 ...               INFUND-929: As a lead applicant i want to be able to have a separate screen, so that i can invite contributors to the application
+...
+...
+...               INFUND-1815: Small text changes to registration journey following user testing
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Create new application    collaboration
@@ -23,6 +26,7 @@ ${INVITE_COLLABORATORS_PAGE}    ${SERVER}/application/1/contributors/invite?newA
 ${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/2/contributors/invite?newApplication
 ${INVITE_COLLABORATORS_PAGE}    ${SERVER}/application/1/contributors/invite?newApplication
 ${APPLICATION_TEAM_PAGE}    ${SERVER}/application/1/contributors
+${YOUR_FINANCES_URL}    ${SERVER}/application/1/form/section/7
 
 *** Test Cases ***
 Valid invitation submit
@@ -77,6 +81,12 @@ Pending collaborators should not be available in the assign list
     [Tags]
     Given Applicant goes to the 'Public description' question
     Then the applicant should not be able to assign the question to the users that still pending the invite    tester
+
+Verify the Organisation name in the Finance section
+    [Documentation]    INFUND-1815
+    [Tags]
+    When Applicant goes to the Your finances section
+    Then the Organisation name should be seen in the Finance section
 
 *** Keywords ***
 the applicant is in the invite contributors page
@@ -176,3 +186,7 @@ the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    That's you!
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-child(3)    (pending)
     Element Should Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
+
+the Organisation name should be seen in the Finance section
+    page should contain    Provide the project costs for 'Empire Ltd'
+    page should contain    'Empire Ltd' Total project costs

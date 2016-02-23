@@ -58,17 +58,25 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
         antPathRequestMatchers.add(new AntPathRequestMatcher("/favicon.ico"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/docs/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/prototypes/**"));
+
+        /****** For Application creation *******/
         antPathRequestMatchers.add(new AntPathRequestMatcher("/competition/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/application/create/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/application/createApplicationByName/**"));
+        /****** For organisation creation *******/
+        antPathRequestMatchers.add(new AntPathRequestMatcher("/organisation/create/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/organisation/save/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/organisation/saveResource/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/organisationtype/**"));
-        antPathRequestMatchers.add(new AntPathRequestMatcher("/invite/getInviteByHash/**"));
-        antPathRequestMatchers.add(new AntPathRequestMatcher("/invite/getInviteOrganisationByHash/**"));
-        antPathRequestMatchers.add(new AntPathRequestMatcher("/accept-invite/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/organisation/addAddress/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/companyhouse/**"));
+        /****** For Invites *******/
+        antPathRequestMatchers.add(new AntPathRequestMatcher("/inviteorganisation/**"));
+        antPathRequestMatchers.add(new AntPathRequestMatcher("/invite/getInviteByHash/**"));
+        antPathRequestMatchers.add(new AntPathRequestMatcher("/invite/acceptedInvite/**"));
+        antPathRequestMatchers.add(new AntPathRequestMatcher("/invite/getInviteOrganisationByHash/**"));
+        antPathRequestMatchers.add(new AntPathRequestMatcher("/accept-invite/**"));
+        /****** For Registration *******/
         antPathRequestMatchers.add(new AntPathRequestMatcher("/registration/**"));
         return new OrRequestMatcher(antPathRequestMatchers);
     }

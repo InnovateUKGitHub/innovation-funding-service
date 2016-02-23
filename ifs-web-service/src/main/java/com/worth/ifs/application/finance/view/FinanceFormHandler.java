@@ -13,6 +13,7 @@ import com.worth.ifs.user.domain.OrganisationSize;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
@@ -24,45 +25,57 @@ import java.util.stream.Collectors;
  * transfered to view or stored. The costs retrieved from the {@link CostService} are converted
  * to {@link CostItem}.
  */
+@Component
 public class FinanceFormHandler {
     private final Log log = LogFactory.getLog(getClass());
-    private final Long applicationId;
-    private final Long userId;
     private CostService costService;
     private FinanceService financeService;
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Autowired
-    public FinanceFormHandler(CostService costService, FinanceService financeService, ApplicationFinanceRestService applicationFinanceRestService, Long userId, Long applicationId) {
+    public FinanceFormHandler(CostService costService, FinanceService financeService, ApplicationFinanceRestService applicationFinanceRestService) {
         this.costService = costService;
         this.financeService = financeService;
         this.applicationFinanceRestService = applicationFinanceRestService;
-        this.userId = userId;
-        this.applicationId = applicationId;
     }
 
-    public boolean handle(HttpServletRequest request) {
-        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
+    public boolean handle(HttpServletRequest request, Long userId, Long applicationId) {
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         if (applicationFinanceResource == null){
-            applicationFinanceResource = financeService.addApplicationFinance(applicationId, userId);
+            applicationFinanceResource = financeService.addApplicationFinance(userId, applicationId);
         }
 
         storeFinancePosition(request, applicationFinanceResource.getId());
-
-
         List<CostItem> costItems = getCostItems(request);
         boolean storingResult = storeCostItems(costItems);
 
-        addRemoveCostRows(request, applicationId, userId, applicationFinanceResource.getId());
-
+        addRemoveCostRows(request, applicationId, userId);
         return storingResult;
     }
 
-    private void addRemoveCostRows(HttpServletRequest request, Long applicationId, Long userId, Long applicationFinanceId) {
+    public void storeCostField(Long userId, Long applicationId, String fieldName, String value) {
+        if (fieldName != null && value != null) {
+            String cleanedFieldName = fieldName;
+            if (fieldName.startsWith("cost-")) {
+                cleanedFieldName = fieldName.replace("cost-", "");
+            } else if (fieldName.startsWith("formInput[")) {
+                cleanedFieldName = fieldName.replace("formInput[", "").replace("]", "");
+            }
+            log.info("store field: " + cleanedFieldName + " val: " + value);
+            storeField(cleanedFieldName, value, userId, applicationId);
+        }
+    }
+
+    public CostItem addCost(Long applicationId, Long userId, Long questionId) {
+        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
+        return costService.add(applicationFinance.getId(), questionId, null);
+    }
+
+    private void addRemoveCostRows(HttpServletRequest request, Long applicationId, Long userId) {
         Map<String, String[]> requestParams = request.getParameterMap();
         if (requestParams.containsKey("add_cost")) {
             String addCostParam = request.getParameter("add_cost");
-            ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(applicationId, userId);
+            ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
             financeService.addCost(applicationFinance.getId(), Long.valueOf(addCostParam));
         }
         if (requestParams.containsKey("remove_cost")) {
@@ -97,8 +110,8 @@ public class FinanceFormHandler {
         }
     }
 
-    public void ajaxUpdateFinancePosition(String fieldName, String value) {
-        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
+    public void ajaxUpdateFinancePosition(Long userId, Long applicationId, String fieldName, String value) {
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         updateFinancePosition(applicationFinanceResource, fieldName, value);
         applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
     }
@@ -164,7 +177,7 @@ public class FinanceFormHandler {
         return costItems;
     }
 
-    public void storeField(String fieldName, String value) {
+    public void storeField(String fieldName, String value, Long userId, Long applicationId) {
         CostFormField costFormField = getCostFormField(fieldName, value);
         CostType costType = CostType.fromString(costFormField.getKeyType());
         CostHandler costHandler = getCostItemHandler(costType);
@@ -173,7 +186,7 @@ public class FinanceFormHandler {
             costFormFieldId = Long.parseLong(costFormField.getId());
         }
         CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(costFormField));
-        storeCostItem(costItem, costFormField.getQuestionId());
+        storeCostItem(costItem, userId, applicationId, costFormField.getQuestionId());
     }
 
     private CostFormField getCostFormField(String costTypeKey, String value) {
@@ -214,16 +227,16 @@ public class FinanceFormHandler {
         }
     }
 
-    private void storeCostItem(CostItem costItem, String question) {
+    private void storeCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
         if (costItem.getId().equals(0L)) {
-            addCostItem(costItem, question);
+            addCostItem(costItem, userId, applicationId, question);
         } else {
             costService.update(costItem);
         }
     }
 
-    private void addCostItem(CostItem costItem, String question) {
-        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, userId);
+    private void addCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
 
         if (question != null && !question.isEmpty()) {
             Long questionId = Long.parseLong(question);

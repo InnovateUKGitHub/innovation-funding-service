@@ -22,7 +22,18 @@ public class InviteOrganisationServiceImpl extends BaseTransactionalService impl
     private InviteOrganisationMapper mapper;
 
     @Override
-    public ServiceResult<InviteOrganisationResource> findOne(Long id) {
+     public ServiceResult<InviteOrganisationResource> findOne(Long id) {
         return find(repository.findOne(id), notFoundError(InviteOrganisation.class, id)).andOnSuccessReturn(mapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<Iterable<InviteOrganisationResource>> findAll() {
+        return find(repository.findAll(), notFoundError(InviteOrganisation.class)).andOnSuccessReturn(mapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<InviteOrganisationResource> save(InviteOrganisationResource inviteOrganisationResource) {
+        InviteOrganisation inviteOrganisation = repository.save(mapper.mapToDomain(inviteOrganisationResource));
+        return ServiceResult.serviceSuccess(mapper.mapToResource(inviteOrganisation));
     }
 }
