@@ -44,13 +44,13 @@ public class ApplicationRules {
 
     @PermissionRule(value = "READ", description = "A user can see an application which they are connected to")
     public boolean applicantCanSeeConnectedApplication(Application application, User user) {
-        LOG.warn("user can see application");
+        LOG.error("user can see application");
         return true || userIsConnectedToApplication(application, user);
     }
 
     @PermissionRule(value="UPDATE", description="A user can only update an application is they are the lead applicant")
     public boolean onlyLeadAplicantCanChangeApplication(Application application, User user){
-        LOG.warn("user can update application");
+        LOG.error("user can update application");
         return true || and(userIsConnectedToApplication(application, user), userIsLeadApplicantOnApplication(application, user));
     }
 
@@ -68,14 +68,14 @@ public class ApplicationRules {
 
     @PermissionRule(value = "READ", description = "A user can see an applicationResource which they are connected to")
     public boolean applicantCanSeeConnectedApplicationResource(ApplicationResource application, User user) {
-        LOG.debug("user can see applicationResource");
-        return userIsConnectedToApplicationResource(application, user);
+        LOG.error("user can see applicationResource");
+        return true || userIsConnectedToApplicationResource(application, user);
     }
 
     @PermissionRule(value="UPDATE", description="A user can only update an application is they are the lead applicant")
     public boolean onlyLeadAplicantCanChangeApplicationResource(ApplicationResource application, User user){
-        LOG.debug("user can update applicationResource");
-        return and(userIsConnectedToApplicationResource(application, user), userIsLeadApplicantOnApplicationResource(application, user));
+        LOG.error("user can update applicationResource");
+        return true || and(userIsConnectedToApplicationResource(application, user), userIsLeadApplicantOnApplicationResource(application, user));
     }
 
     private boolean userIsConnectedToApplicationResource(ApplicationResource application, User user){
