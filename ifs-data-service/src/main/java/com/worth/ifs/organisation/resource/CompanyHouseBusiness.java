@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.worth.ifs.commons.resource.ResourceWithEmbeddeds;
 import com.worth.ifs.organisation.domain.Address;
 
+import javax.validation.Valid;
+
 /**
  * Resource object to store the company details, from the company house api.
  */
@@ -15,6 +17,7 @@ public class CompanyHouseBusiness extends ResourceWithEmbeddeds{
     private String type;
     private String dateOfCreation;
     private String description;
+    @Valid
     private Address officeAddress;
 
     public CompanyHouseBusiness() {

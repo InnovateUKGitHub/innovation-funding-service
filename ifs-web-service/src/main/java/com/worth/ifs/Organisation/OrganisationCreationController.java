@@ -193,12 +193,13 @@ public class OrganisationCreationController {
         } else if (request.getParameter(CONFIRM_COMPANY_DETAILS) != null) {
             companyHouseForm.setInCompanyHouse(false);
             companyHouseForm.setManualAddress(true);
-            bindingResult.getFieldErrors().stream().forEach(e -> log.debug(e.getDefaultMessage()));
+            BindingResult selectedPostcodeBindingResult =new BeanPropertyBindingResult(companyHouseForm.getSelectedPostcode(), "selectedPostcode");
+            validator.validate(companyHouseForm.getSelectedPostcode(), selectedPostcodeBindingResult);
 
-            if (!bindingResult.hasFieldErrors(ORGANISATION_NAME)) {
+            if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !selectedPostcodeBindingResult.hasFieldErrors()) {
                 // save state into cookie.
                 CookieUtil.saveToCookie(response, COMPANY_NAME, String.valueOf(companyHouseForm.getOrganisationName()));
-                CookieUtil.saveToCookie(response, COMPANY_ADDRESS, String.valueOf(companyHouseForm.getSelectedPostcode()));
+                CookieUtil.saveToCookie(response, COMPANY_ADDRESS, JsonUtil.getSerializedObject(companyHouseForm.getSelectedPostcode()));
                 return "redirect:/organisation/create/confirm-company";
             } else {
                 // Prepare data for displaying validation messages after redirect.
@@ -208,6 +209,7 @@ public class OrganisationCreationController {
                 companyHouseForm.setManualAddress(true);
                 companyHouseForm.setTriedToSave(true);
 
+                CookieUtil.saveToCookie(response, COMPANY_ADDRESS, JsonUtil.getSerializedObject(companyHouseForm.getSelectedPostcode()));
                 CookieUtil.saveToCookie(response, "companyHouseForm", JsonUtil.getSerializedObject(companyHouseForm));
                 return "redirect:/organisation/create/find-business/invalid-entry";
             }
