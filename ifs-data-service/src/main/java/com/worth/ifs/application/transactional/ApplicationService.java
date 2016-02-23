@@ -1,10 +1,5 @@
 package com.worth.ifs.application.transactional;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.List;
-import java.util.function.Supplier;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
@@ -13,11 +8,15 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.UserRoleType;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Transactional and secure service for Application processing work
@@ -39,8 +38,8 @@ public interface ApplicationService {
     @PreAuthorize("hasPermission(#fileEntry, 'com.worth.ifs.application.resource.FormInputResponseFileEntryResource', 'READ')")
     ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId);
 
-    @PreAuthorize("hasPermission(#application, 'READ')")
-    ServiceResult<ApplicationResource> getApplicationById(@P("application") final Long id);
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
+    ServiceResult<ApplicationResource> getApplicationById(@P("applicationId") final Long applicationId);
 
     @PostFilter("hasPermission(#application, 'READ')")
     ServiceResult<List<ApplicationResource>> findAll();

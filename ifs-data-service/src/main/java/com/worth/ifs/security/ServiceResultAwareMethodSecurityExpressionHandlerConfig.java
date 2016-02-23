@@ -11,7 +11,9 @@ import org.springframework.security.access.expression.method.DefaultMethodSecuri
 public class ServiceResultAwareMethodSecurityExpressionHandlerConfig {
 
     @Bean
-    public DefaultMethodSecurityExpressionHandler getCustomMethodSecurityExpressionHandler() {
-        return new ServiceResultAwareMethodSecurityExpressionHandler();
+    public DefaultMethodSecurityExpressionHandler getCustomMethodSecurityExpressionHandler(CustomPermissionEvaluator permissionEvaluator) {
+        ServiceResultAwareMethodSecurityExpressionHandler expressionHandler = new ServiceResultAwareMethodSecurityExpressionHandler();
+        expressionHandler.setPermissionEvaluator(permissionEvaluator);
+        return expressionHandler;
     }
 }
