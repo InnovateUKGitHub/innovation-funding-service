@@ -54,10 +54,10 @@ Status of the invited people(Application team page)
     Then The status of the Invited people should be correct in the application team page
 
 Status of the invited people(Manage contributors page)
-    [Documentation]    Infund-928
+    [Documentation]    INFUND-928
     [Tags]    HappyPath
     Given user navigates to the page    ${APPLICATION_TEAM_URL}
-    When user clicks the button/link    jQuery=.button:contains("Invite new contributors"
+    When user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then user should see the text in the page    Manage Contributors
     And the status of the people should be correct in the Manage contributors page
 
@@ -65,7 +65,7 @@ The Lead Applicant can add new collaborators
     [Documentation]    INFUND-928
     [Tags]    HappyPath
     Given user navigates to the page    ${APPLICATION_TEAM_URL}
-    When user clicks the button/link    jQuery=.button:contains("Invite new contributors"
+    When user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then user should see the text in the page    Manage Contributors
     And user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
     When the user adds new collaborator
@@ -77,7 +77,7 @@ Verify the invited collaborators are not editable
     [Documentation]    INFUND-929
     [Tags]
     Given user navigates to the page    ${APPLICATION_TEAM_URL}
-    When user clicks the button/link    jQuery=.button:contains("Invite new contributors"
+    When user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then user should see the text in the page    Manage Contributors
     And the invited collaborators are not editable
 
