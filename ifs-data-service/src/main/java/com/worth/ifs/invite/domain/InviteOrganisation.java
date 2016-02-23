@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
-* The InviteOrganisation entity serves the purpose of grouping Invites by Organisation name entered in the application.
-* When an actual Organisation exists the InviteOrganisation can link the associated Invites to that Organisation.
+* The InviteOrganisation entity serves the purpose of grouping Invites by organisation name entered in the application.
+* When an actual organisation exists the InviteOrganisation can link the associated Invites to that organisation.
 * */
 
 @Entity
@@ -24,7 +24,7 @@ public class InviteOrganisation {
     private Organisation organisation;
 
     @OneToMany(mappedBy = "inviteOrganisation")
-    private List<Invite> invites = new ArrayList<>();
+    private List<Invite> invites;
 
     public InviteOrganisation() {
 
@@ -61,7 +61,7 @@ public class InviteOrganisation {
     }
 
     public List<Invite> getInvites() {
-        return invites;
+        return (invites == null)? new ArrayList<>() : invites;
     }
 
     public void setInvites(List<Invite> invites) {

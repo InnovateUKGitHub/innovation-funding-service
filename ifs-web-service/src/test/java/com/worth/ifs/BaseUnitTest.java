@@ -8,6 +8,8 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
+import com.worth.ifs.application.finance.view.FinanceFormHandler;
+import com.worth.ifs.application.finance.view.FinanceModelManager;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.model.UserRole;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -123,6 +125,10 @@ public class BaseUnitTest {
     public SectionService sectionService;
     @Mock
     public CompetitionService competitionService;
+    @Mock
+    public FinanceModelManager financeModelManager;
+    @Mock
+    public FinanceFormHandler financeFormHandler;
 
     public List<ApplicationResource> applications;
     public List<Section> sections;
@@ -529,7 +535,7 @@ public class BaseUnitTest {
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), OrganisationSize.LARGE);
-        when(financeService.getApplicationFinanceDetails(application.getId(), loggedInUser.getId())).thenReturn(applicationFinanceResource);
+        when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
     }

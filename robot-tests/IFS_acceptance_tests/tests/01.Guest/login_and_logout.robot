@@ -16,22 +16,22 @@ Log-out
     [Setup]    Login as user    &{lead_applicant_credentials}
     Given the Applicant is logged-in
     # TODO DW - INFUND-936 - reinstate expectations
-    # When The Applicant clicks the log-out button
-    # Then user should be redirected to the correct page    ${LOGIN_URL}
+    # When user clicks the button/link    link=Logout
+    # Then user should be redirected to the correct page    ${LOGIN_URL}    ${LOGIN_URL}
     Logout as user
 
 Invalid Login
     [Tags]    Guest
     Given the user is not logged-in
     When the guest user enters the log in credentials    steve.smith@empire.com    testtest
-    And the guest user clicks the log-in button
+    And user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
 
 Valid login as Applicant
     [Tags]    Guest    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    steve.smith@empire.com    test
-    And the guest user clicks the log-in button
+    And user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the Applicant is logged-in
     And user should be redirected to the correct page    ${applicant_dashboard_url}
     [Teardown]    Logout as user
@@ -40,7 +40,7 @@ Valid login as Collaborator
     [Tags]    Guest    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${collaborator1_credentials["email"]}    ${collaborator1_credentials["password"]}
-    And the guest user clicks the log-in button
+    And user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the Applicant is logged-in
     And user should be redirected to the correct page    ${applicant_dashboard_url}
     [Teardown]    Logout as user
@@ -50,7 +50,7 @@ Valid login as Assessor
     [Tags]    Assessor    Guest    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
-    And the guest user clicks the log-in button
+    And user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the Applicant is logged-in
     And user should be redirected to the correct page    ${assessor_dashboard_url}
     And the user should be logged-in as an Assessor
@@ -60,11 +60,6 @@ Valid login as Assessor
 the user is not logged-in
     Element Should Not Be Visible    link=My dashboard
     Element Should Not Be Visible    link=Logout
-
-the guest user enters the log in credentials
-    [Arguments]    ${USER_NAME}    ${PASSWORD}
-    Input Text    id=username    ${USER_NAME}
-    Input Password    id=password    ${PASSWORD}
 
 the guest user should get an error message
     # TODO DW - INFUND-936 - reinstate expected text

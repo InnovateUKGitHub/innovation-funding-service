@@ -26,6 +26,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.CookieUtil;
 
+import com.worth.ifs.util.JsonUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,12 +144,12 @@ public class ApplicationContributorController extends AbstractApplicationControl
         String json = CookieUtil.getCookieValue(request, CONTRIBUTORS_COOKIE);
 
         if (json != null && !json.equals("")) {
-            ContributorsForm contributorsFormCookie = ApplicationCreationController.getObjectFromJson(json, ContributorsForm.class);
+            ContributorsForm contributorsFormCookie = JsonUtil.getObjectFromJson(json, ContributorsForm.class);
             if (contributorsFormCookie.getApplicationId().equals(applicationId)) {
                 if (contributorsFormCookie.isTriedToSave()) {
                     // if the form was saved, validate and update cookie.
                     contributorsFormCookie.setTriedToSave(false);
-                    String jsonState = ApplicationCreationController.getSerializedObject(contributorsFormCookie);
+                    String jsonState = JsonUtil.getSerializedObject(contributorsFormCookie);
                     CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
 
                     contributorsForm.merge(contributorsFormCookie);
@@ -242,7 +243,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
                 inviteRestService.saveInvites(invites);
                 cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
             } else if (existingOrganisation != null) {
-                // Save invites, and link to existing Organisation.
+                // Save invites, and link to existing organisation.
                 inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
                 cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
             } else {
@@ -280,7 +281,7 @@ public class ApplicationContributorController extends AbstractApplicationControl
 
     private void saveFormValuesToCookie(HttpServletResponse response, ContributorsForm contributorsForm, Long applicationId) {
         contributorsForm.setApplicationId(applicationId);
-        String jsonState = ApplicationCreationController.getSerializedObject(contributorsForm);
+        String jsonState = JsonUtil.getSerializedObject(contributorsForm);
         CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, jsonState);
     }
 

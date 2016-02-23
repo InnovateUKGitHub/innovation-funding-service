@@ -32,7 +32,6 @@ import org.mockito.MockitoAnnotations;
  * place to store and initialise Mockito mocks.  Mocks can then be injected into particular attributes using the @InjectMocks
  * annotation.
  *
- * Created by dwatson on 02/10/15.
  */
 public abstract class BaseUnitTestMocksTest extends BaseTest {
 

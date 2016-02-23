@@ -10,7 +10,7 @@ import org.springframework.util.StringUtils;
 import javax.persistence.*;
 
 /*
-* The Invite is used for saving invites into the database. Data about the Invitee and related Application and Organisation is saved through this entity.
+* The Invite is used for saving invites into the database. Data about the Invitee and related Application and organisation is saved through this entity.
 * */
 @Table(
     uniqueConstraints= @UniqueConstraint(columnNames={"applicationId", "email"})
