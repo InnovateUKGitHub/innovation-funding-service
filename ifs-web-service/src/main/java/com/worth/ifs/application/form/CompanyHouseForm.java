@@ -4,6 +4,7 @@ import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,7 +26,9 @@ public class CompanyHouseForm extends CreateApplicationForm implements Serializa
     @NotEmpty
     private String organisationName;
     private String selectedPostcodeIndex;
+    @Valid
     private transient Address selectedPostcode = null;
+    @Valid
     private transient List<Address> postcodeOptions;
 
     private boolean manualAddress = false;

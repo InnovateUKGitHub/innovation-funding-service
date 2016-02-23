@@ -243,3 +243,7 @@ the guest user enters the log in credentials
     [Arguments]    ${USER_NAME}    ${PASSWORD}
     Input Text    id=id_email    ${USER_NAME}
     Input Password    id=id_password    ${PASSWORD}
+
+User should see the element
+    [Arguments]    ${ELEMENT}
+    element should be visible    ${ELEMENT}
