@@ -97,4 +97,4 @@ the user cannot login with the invalid email
     # TODO DW - reinstante expectations
     # Page Should Contain    Your login was unsuccessful
     # Page Should Contain    Please enter a valid e-mail address
-    Page Should Contain    The username you entered cannot be identified
+    Page Should Contain    Your username/password combination doesn't seem to work

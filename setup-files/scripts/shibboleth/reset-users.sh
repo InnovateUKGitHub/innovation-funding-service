@@ -20,6 +20,8 @@ function executeMySQLCommand {
     mysql ${dbName} -u${dbUsername} -p${dbPassword} -N -s -e "$1"
 }
 
+export -f executeMySQLCommand
+
 function addUserToShibboleth {
     emailAddress=$1
     response=$(curl -k -d "{\"email\": \"${emailAddress}\",\"password\": \"test\"}" -H 'Content-type: application/json' -H "api-key: 1234567890" https://ifs-local-dev/regapi/identities/)

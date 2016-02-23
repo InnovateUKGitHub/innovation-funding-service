@@ -65,6 +65,4 @@ Close Browser
     Close All Browsers
 
 guest user should get a log-in page
-    # TODO DW - INFUND-936 - reinstate expectations
-    # Page Should Contain    Sign in
-    Page Should Contain    Don't Remember Login
+    Page Should Contain    Sign in

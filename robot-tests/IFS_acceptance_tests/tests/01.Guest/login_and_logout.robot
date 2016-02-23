@@ -62,9 +62,8 @@ the user is not logged-in
     Element Should Not Be Visible    link=Logout
 
 the guest user should get an error message
-    # TODO DW - INFUND-936 - reinstate expected text
-    # Page Should Contain    Your login was unsuccessful because of the following issue(s)
-    # Page Should Contain    Your username/password combination doesn't seem to work
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
     Page Should Not Contain Element    link=Logout
 
 the guest user clicks the log-in button

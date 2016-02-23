@@ -202,23 +202,22 @@ the user cannot login with their new details
     Input Text    id=username    ${email}
     Input Password    id=password    ${password}
     Click Button    css=button[name="_eventId_proceed"]
-    # TODO DW - INFUND-936 - reinstate expectations
-    # Page Should Contain    Your login was unsuccessful because of the following issue(s)
-    Page Should Contain    The username you entered cannot be identified
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
 
 the user cannot login with either password
     go to    ${LOGIN_URL}
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${correct_password}
     Click Button    css=button[name="_eventId_proceed"]
-    # Page Should Contain    Your login was unsuccessful because of the following issue(s)
-    Page Should Contain    The username you entered cannot be identified
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
     go to    ${LOGIN_URL}
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${incorrect_password}
     Click Button    css=button[name="_eventId_proceed"]
-    # Page Should Contain    Your login was unsuccessful because of the following issue(s)
-    Page Should Contain    The username you entered cannot be identified
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
 
 the user can login with their new details
     go to    ${LOGIN_URL}

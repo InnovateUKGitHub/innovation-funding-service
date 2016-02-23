@@ -32,10 +32,8 @@
     	<meta charset="utf-8">
     	<title>IFS login page TEST</title>
 
-      <!-- <link rel="stylesheet" type="text/css" href="$request.getContextPath()/css/fonts.css">
-    	<link rel="stylesheet" type="text/css" href="$request.getContextPath()/css/screen.css"> -->
-      <link rel="stylesheet" type="text/css" href="https://ifs.dev.innovateuk.org/css/fonts.css" >
-      <link rel="stylesheet" type="text/css" href="https://ifs.dev.innovateuk.org/css/screen.css" >
+      <link rel="stylesheet" type="text/css" href="/css/fonts.css" >
+      <link rel="stylesheet" type="text/css" href="/css/screen.css" >
   	</head>
   	<body>
 
@@ -46,7 +44,7 @@
                 <div>
                     <div class="header-logo">
                         <a href="https://www.gov.uk" title="Go to the GOV.UK homepage" id="logo" class="content">
-                            <img src="https://ifs.dev.innovateuk.org/images/gov.uk_logotype_crown.png" width="35" height="31" alt="GOV.UK">
+                            <img src="/images/gov.uk_logotype_crown.png" width="35" height="31" alt="GOV.UK">
                             GOV.UK
                         </a>
                     </div>
@@ -144,7 +142,7 @@
           </section>
           <section class="column-half">
             <h1 class="heading-large">New to this service?</h1>
-            <p>If you haven’t used this service before you must <a href="#">create an account</a>, even if you already have an existing account with "Innovate UK".</p>
+            <p>If you haven't used this service before you must <a href="#">create an account</a>, even if you already have an existing account with "Innovate UK".</p>
             <ul class="list-bullet extra-margin">
               #if ($passwordEnabled)
                 <li class="list-help-item"><a href="#springMessageText("idp.url.password.reset", "#")">#springMessageText("idp.login.forgotPassword", "Forgot your password?")</a></li>
