@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+#
+# This script is used to synchronise the users in the Shibboleth LDAP directory with the current users in the IFS MySQL database.
+#
+# It does this in 4 steps:
+#
+# 1) Clear down the current users in the LDAP directory
+# 2) Select the current set of email addresses from the MySQL database
+# 3) For each email address, POST to the Shib Rest API to create the user, and get back the uuid of the user
+# 4) Feed the uuid from the Shib Rest API back into MySQL
+#
 function executeMySQLCommand {
 
     dbUrl=$(./read-dev-build-property.sh ext.ifsDatasourceUrl)
@@ -9,8 +19,6 @@ function executeMySQLCommand {
 
     mysql ${dbName} -u${dbUsername} -p${dbPassword} -N -s -e "$1"
 }
-
-export -f executeMySQLCommand
 
 function addUserToShibboleth {
     emailAddress=$1

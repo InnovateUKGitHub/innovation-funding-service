@@ -46,6 +46,9 @@ function resetDB {
     `mysql -u${mysqlUser} -p${mysqlPassword} -e"CREATE DATABASE ifs CHARACTER SET utf8"`
     cd ../ifs-data-service
     ./gradlew flywayClean flywayMigrate
+    
+    cd ${shibbolethScriptsPath}
+    ./reset-users.sh
 }
 
 function buildAndDeploy {
