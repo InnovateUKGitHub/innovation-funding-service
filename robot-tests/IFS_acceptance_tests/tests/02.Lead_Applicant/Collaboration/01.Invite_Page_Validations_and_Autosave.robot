@@ -20,128 +20,114 @@ ${APPLICATION_3_TEAM_PAGE}    ${SERVER}/application/3/contributors
 *** Test Cases ***
 The lead applicant should be able to add/remove a collaborator
     [Documentation]    INFUND-901
-    [Tags]      HappyPath
-    Given the applicant is in the invite contributors page
-    And the applicant clicks the add person link
-    When a new line is added to the collaborator table
-    And the applicant clicks the remove link
-    Then the line should be removed
+    [Tags]    HappyPath
+    Given user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
+    And user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
+    When user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
+    And user clicks the button/link    jquery=li:nth-child(1) button:contains('Remove')
+    Then user should not see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
 
 The lead applicant shouldn't be able to remove himself
     [Documentation]    INFUND-901
-    Given the applicant is in the invite contributors page
+    Given user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     Then the lead applicant cannot be removed
 
-Validations for the Email field
+Validations for the Email field user renains in the invite page
     [Documentation]    INFUND-901
     [Tags]
-    Given the applicant is in the invite contributors page
-    And the applicant clicks the add person link
-    When the applicant enters some invalid emails
-    Then the applicant should not be redirected to the next page
+    #Given the applicant is in the invite contributors page
+    When user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
+    And the applicant enters some invalid emails
+    Then user should see the text in the page    Inviting Contributors
 
-Validation for the name field
+Validation for the name field user remains in the invite page
     [Documentation]    INFUND-901
     [Tags]
-    Given the applicant is in the invite contributors page
+    #Given the applicant is in the invite contributors page
     When the applicant submits the page without entering a name
-    Then the applicant should get a validation error for the name field
-    And the applicant should not be redirected to the next page
+    Then user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) .field-error
+    And user should see the text in the page    Inviting Contributors
 
 Link to remove partner organisation
     [Documentation]    INFUND-1039
     [Tags]    Collaboration
     # on the user interface.    All we can test is that the state is saved in cookie, so not lost on page reload.
-    Given the applicant is in the invite contributors page
-    And the applicant clicks link "Add partner organisation"
+    #Given the applicant is in the invite contributors page
+    When user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
     And the applicant inputs details    1
-    And the applicant should see link "Remove"
-    When the applicant click on link "Remove"
-    Then the organisation section is removed
-    Capture Page Screenshot
+    Then user should see the element    jquery=li:nth-child(2) button:contains('Remove')
+    When user clicks the button/link    jquery=li:nth-child(2) button:contains('Remove')
+    Then user should not see the text in the page    Organisation name
 
 Applicant inputs Organisation and other details should be autosaved (in cookie)
     [Documentation]    INFUND-1039
-    [Tags]    Collaboration     HappyPath
-    Given the applicant is in the invite contributors page
-    And the applicant clicks link "Add partner organisation"
+    [Tags]    Collaboration    HappyPath
+    #Given the applicant is in the invite contributors page
+    When user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
     And the applicant can enter Organisation name, Name and E-mail
     Then the applicant's inputs should be visible
 
 Blank organisation name is not allowed
     [Documentation]    INFUND-896
     [Tags]    Collaboration
-    Given the applicant is in the invite contributors page
+    #Given the applicant is in the invite contributors page
     And the applicant leaves organisation name blank    1
-    And the applicant clicks begin application
+    And user clicks the button/link    jquery=button:contains('Begin application')
     Then a validation error is shown on organisation name    1
 
 Blank person name is not allowed
     [Documentation]    INFUND-896
     [Tags]    Collaboration
-    Given the applicant is in the invite contributors page
-    And the applicant leaves person name blank    1
-    And the applicant clicks begin application
-    Then a validation error is shown on the person name field
+    #Given the applicant is in the invite contributors page
+    When the applicant leaves person name blank    1
+    And user clicks the button/link    jquery=button:contains('Begin application')
+    #user should get valisation error
+    Then user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input.field-error
 
 Blank email is not allowed
     [Documentation]    INFUND-896
     [Tags]    Collaboration
-    Given the applicant is in the invite contributors page
-    And the applicant leaves email name blank    1
-    And the applicant clicks begin application
-    Then a validation error is shown on email field
+    #Given the applicant is in the invite contributors page
+    When the applicant leaves email name blank    1
+    And user clicks the button/link    jquery=button:contains('Begin application')
+    #user should get valisation error
+    Then user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
 
 Invalid email address is not allowed
     [Documentation]    INFUND-896
     [Tags]    Collaboration
-    Given the applicant is in the invite contributors page
+    #Given the applicant is in the invite contributors page
     And the applicant inputs invalid email address    1
-    And the applicant clicks begin application
-    Then a validation error is shown on email field
+    And user clicks the button/link    jquery=button:contains('Begin application')
+    #user should get valisation error
+    Then user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
 
 Already invite email should not allowed
-    Given the applicant is in the invite contributors page
+    #Given the applicant is in the invite contributors page
     When the applicant inserts and already invited email    1
-    And the applicant clicks begin application
-    Then a validation error is shown on email field
-    Capture Page Screenshot
+    And user clicks the button/link    jquery=button:contains('Begin application')
+    #user should get valisation error
+    Then user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
 
 Link to add multiple partner organisation
-    [Tags]      Failing
-    Given the applicant is in the invite contributors page
-    And the applicant clicks link "Add partner organisation"
-    And the applicant should see another link "Add partner organisation" below the previously clicked partner organisation
-    When the applicant removes the new added partner organisation
-    Then the new added organisation should be removed
+    [Tags]    Failing
+    #Given the applicant is in the invite contributors page
+    When user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
+    And user should see the element    css=li:nth-child(3)
+    And user clicks the button/link    jQuery=li:nth-child(3) button:contains("Remove")
+    Then user should not see the element    jQuery=li:nth-child(3) button:contains("Remove")
 
 The user's inputs should be autosaved
     [Documentation]    INFUND-901
-    Given the applicant is in the invite contributors page
+    #Given the applicant is in the invite contributors page
     When the user fills the name and email field and reloads the page    1
     Then the user's inputs should still be visible    1
-    And the user goes to the second invite page
+    And user navigates to the page    ${INVITE_COLLABORATORS2_PAGE}
     And the inputs of the first invite should not be visible
     And the user goes to the application team page of application 3
     And the inputs of the first invite should not be visible
 
 *** Keywords ***
-the applicant is in the invite contributors page
-    go to    ${INVITE_COLLABORATORS_PAGE}
-
-the applicant clicks the add person link
-    Click Element    jquery=li:nth-child(1) button:contains('Add person')
-
-a new line is added to the collaborator table
-    Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
-
-the applicant clicks the remove link
-    Click Element    jquery=li:nth-child(1) button:contains('Remove')
-    sleep    1s
-
-the line should be removed
-    Element Should Not Be Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
-
 the user fills the name and email field and reloads the page
     [Arguments]    ${group_number}
     Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
@@ -167,9 +153,6 @@ the user's inputs should still be visible
 the lead applicant cannot be removed
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-of-type(3)    That's you!
 
-the user goes to the second invite page
-    go to    ${INVITE_COLLABORATORS2_PAGE}
-
 the inputs of the first invite should not be visible
     Element Should Not Be Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
     Page Should Not Contain    Collaborator01
@@ -185,23 +168,11 @@ the applicant enters some invalid emails
     Click Element    jquery=button:contains("Begin application")
     sleep    1s
 
-the applicant should not be redirected to the next page
-    page should contain    Inviting Contributors
-
 the applicant submits the page without entering a name
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    test@example.com
     Click Element    jquery=button:contains("Begin application")
     sleep    1s
-
-the applicant should get a validation error for the name field
-    Element Should Be Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) .field-error
-
-the applicant should see another link "Add partner organisation" below the previously clicked partner organisation
-    Element Should Be Visible    css=li:nth-child(3)
-
-the applicant clicks link "Add partner organisation"
-    Click Element    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
 
 the applicant can enter Organisation name, Name and E-mail
     Input Text    name=organisations[1].organisationName    Fannie May
@@ -224,15 +195,6 @@ the applicant's inputs should be visible
     Textfield Value Should Be    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
     ${input_value} =    Get Value    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(1) input
     Should Be Equal As Strings    ${input_value}    Collaborator 3
-
-the applicant should see link "Remove"
-    Element Should Be Visible    jquery=li:nth-child(2) button:contains('Remove')
-
-the applicant click on link "Remove"
-    Click Element    jquery=li:nth-child(2) button:contains('Remove')
-
-the organisation section is removed
-    Page Should Not Contain    Organisation name
 
 the applicant inputs details
     [Arguments]    ${group_number}
@@ -266,24 +228,9 @@ the applicant leaves email name blank
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 9
     Clear Element Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input
 
-the applicant clicks begin application
-    Click Element    jquery=button:contains('Begin application')
-
-a validation error is shown on the person name field
-    Wait Until Element Is Visible    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input.field-error
-
-a validation error is shown on email field
-    Wait Until Element Is Visible    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
-
 a validation error is shown on organisation name
     [Arguments]    ${group_number}
     Wait Until Element Is Visible    css=input[name='organisations[${group_number}].organisationName'].field-error
-
-the applicant removes the new added partner organisation
-    Click Element    jQuery=li:nth-child(3) button:contains("Remove")
-
-the new added organisation should be removed
-    Element Should Not Be Visible    jQuery=li:nth-child(3) button:contains("Remove")
 
 the applicant inserts and already invited email
     [Arguments]    ${group_number}
