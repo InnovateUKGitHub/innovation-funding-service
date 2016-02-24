@@ -17,4 +17,4 @@ Do nothing at all
 
 *** Keywords ***
 Don't do anything
-    Applicant goes to the Overview page
+    the user navigates to the page    ${application_overview_url}
