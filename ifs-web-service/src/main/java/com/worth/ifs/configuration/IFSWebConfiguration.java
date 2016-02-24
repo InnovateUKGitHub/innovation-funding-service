@@ -58,4 +58,9 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
         slr.setDefaultLocale(Locale.UK);
         return slr;
     }
+
+    /*@Bean
+    public Filter errorHandlerFilter(){
+        return new ErrorHandlerFilter();
+    }*/
 }
