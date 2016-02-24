@@ -1,5 +1,9 @@
 #!/bin/bash
 
+
+
+
+
 function coloredEcho(){
     local exp=$1;
     local color=$2;
@@ -88,14 +92,14 @@ function startServers {
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// --exclude Failing --exclude Pending --name IFS $testDirectory
+    pabot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// --exclude Failing --exclude Pending --name IFS $testDirectory
 }
 
 
 function runHappyPathTests {
     echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:http:// --include HappyPath --name IFS $testDirectory
+    pabot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:http:// --include HappyPath --name IFS $testDirectory
 }
 
 cd "$(dirname "$0")"

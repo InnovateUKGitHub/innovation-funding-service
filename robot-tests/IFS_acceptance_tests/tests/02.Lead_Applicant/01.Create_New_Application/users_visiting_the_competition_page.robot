@@ -11,67 +11,31 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 The user is logged in
     [Documentation]    INFUND-921
-    [Tags]    Applicant    Details page     HappyPath
-    Given the Applicant is in Competition details page
-    When the Applicant clicks on "Create application" button
-    Then the Applicant should redirect to the Check Eligibility
+    [Tags]    Applicant    Details page    HappyPath
+    Given user navigates to the page    ${COMPETITION_DETAILS_URL}
+    When user clicks the button/link    jQuery=.column-third .button:contains('Create application')
+    Then user should be redirected to the correct page    ${CHECK_ELIGIBILITY}
 
 The user is not logged in and later enters correct login
     [Documentation]    INFUND-921
     [Tags]    Applicant    Details page
-    Given the applicant is logged-out
-    When the Applicant is in Competition details page
-    Then the Applicant should see "Sign in to Apply" button
-    And the Applicant will click on "Sign in to Apply" button
-    And the Applicant will input correct login details
-    And the Applicant will redirect to the "Your Details" page
+    Given user navigates to the page    ${LOG_OUT}
+    When user navigates to the page    ${COMPETITION_DETAILS_URL}
+    Then user should see the element    jQuery=.column-third .button:contains('Sign in')
+    And user clicks the button/link    jQuery=.column-third .button:contains('Sign in')
+    And the guest user enters the login credentials    steve.smith@empire.com    test
+    And user clicks the button/link    css=input.button
+    Then user should be redirected to the correct page    ${YOUR_DETAILS}
 
 The user is not logged in and later enters incorrect login
     [Documentation]    INFUND-921
     [Tags]    Applicant    Details page
-    Given the applicant is logged-out
-    and the Applicant is in Competition details page
-    and the Applicant should see "Sign in to Apply" button
-    When the Applicant will click on "Sign in to Apply" button
-    And the Applicant will input incorrect login details
-    and the Applicant will input correct login details
-    And the Applicant will redirect to the "Your Details" page
+    Given user navigates to the page    ${LOG_OUT}
+    When user navigates to the page    ${COMPETITION_DETAILS_URL}
+    And user should see the element    jQuery=.column-third .button:contains('Sign in')
+    And user clicks the button/link    jQuery=.column-third .button:contains('Sign in')
+    And the guest user enters the login credentials    steve.smith@empire.com    testpsw123
+    And user clicks the button/link    css=input.button
+    Then user should see an error    Your username/password combination doesn't seem to work
 
 *** Keywords ***
-the Applicant should see "Sign in to Apply" button
-    Page Should Contain Element    jQuery=.column-third .button:contains('Sign in')
-
-the Applicant is in Competition details page
-    go to    ${COMPETITION_DETAILS_URL}
-
-the Applicant will click on "Sign in to Apply" button
-    Click Element    jQuery=.column-third .button:contains('Sign in')
-    Wait Until Page Contains    Sign in
-
-the Applicant will redirect to the "Your Details" page
-    Location Should Be    ${YOUR_DETAILS}
-    Page Should Not Contain Element    css=.error
-
-the Applicant will input incorrect login details
-    Input Text    id=id_email    steve.smith@empire.com
-    Input Password    id=id_password    abcd
-    Click Button    css=input.button
-
-the Applicant will input correct login details
-    Input Text    id=id_email    steve.smith@empire.com
-    Input Password    id=id_password    test
-    Click Button    css=input.button
-
-the applicant is logged-out
-    go to    ${LOG_OUT}
-    go to    ${LOG_OUT}
-
-the Applicant should see "Create Application" button
-    Page Should Contain Element    css=.column-third a.button
-
-the Applicant clicks on "Create application" button
-    Click Element    jQuery=.column-third .button:contains('Create application')
-
-the Applicant should redirect to the Check Eligibility
-    Location should be    ${CHECK_ELIGIBILITY}
-    Page Should Not Contain Element    css=.error

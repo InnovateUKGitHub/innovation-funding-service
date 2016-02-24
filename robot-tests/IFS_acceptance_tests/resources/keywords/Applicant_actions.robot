@@ -215,7 +215,7 @@ Create new application
 
 User should be redirected to the correct page
     [Arguments]    ${URL}
-    location should be    ${URL}
+    Location Should Contain    ${URL}
     Page Should Not Contain    error
 
 User navigates to the page
@@ -224,6 +224,8 @@ User navigates to the page
 
 User enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Wait Until Element Is Visible    ${TEXT_FIELD}
+    Clear Element Text    ${TEXT_FIELD}
     input text    ${TEXT_FIELD}    ${TEXT_INPUT}
 
 user clicks the button/link
