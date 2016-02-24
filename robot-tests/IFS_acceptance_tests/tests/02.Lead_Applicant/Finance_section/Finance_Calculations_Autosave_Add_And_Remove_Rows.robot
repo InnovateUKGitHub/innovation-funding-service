@@ -2,9 +2,9 @@
 Documentation     INFUND-736: As an applicant I want to be able to add all the finance details for all the sections so I can sent in all the info necessary to apply
 ...
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
-Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags          HappyPath
+Force Tags        HappyPath
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -15,7 +15,6 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 ${OTHER_FUNDING_SOURCE}    Alice
 ${OTHER_FUNDING_AMOUNT}    10000
 ${OTHER_FUNDING_DATE}    12-2008
-
 
 *** Test Cases ***
 Labour
@@ -173,7 +172,7 @@ the applicant fills a second row in the labour costs
 
 the applicant edits the working days field
     Click Element    css=[aria-controls="collapsible-1"]
-    Wait Until Element Is Visible         css=#cost-labour-1-workingDays
+    Wait Until Element Is Visible    css=#cost-labour-1-workingDays
     Clear Element Text    css=#cost-labour-1-workingDays
     Input Text    css=#cost-labour-1-workingDays    250
     Focus    css=.app-submit-btn
@@ -183,39 +182,37 @@ the labour total should have been updated
     Textfield Value Should Be    css=#section-total-9    £ 48,000
     Element Should Contain    css=[data-mirror="#section-total-9"]    £ 48,000
 
-
-
 the applicant fills in the overheads costs
     Click Element    css=[aria-controls="collapsible-2"]
-    Select Radio Button     overheads-rateType-29-51   DEFAULT_PERCENTAGE
+    Select Radio Button    overheads-rateType-29-51    DEFAULT_PERCENTAGE
     focus    css=.app-submit-btn
     sleep    1s
 
 the calculations of the overheads should be correct
-    Wait Until Element Is Visible   id=section-total-10-default
-    Textfield Value Should Be       id=section-total-10-default      £ 9,600
+    Wait Until Element Is Visible    id=section-total-10-default
+    Textfield Value Should Be    id=section-total-10-default    £ 9,600
     Element Should Contain    css=[aria-controls="collapsible-2"] [data-mirror]    £ 9,600
 
 the applicant changes the data in the overheads section
-    Select Radio Button     overheads-rateType-29-51    CUSTOM_RATE
-    Input Text              id=cost-overheads-51-customRate     30
+    Select Radio Button    overheads-rateType-29-51    CUSTOM_RATE
+    Input Text    id=cost-overheads-51-customRate    30
     focus    css=.app-submit-btn
     sleep    1s
 
 the calculations of the overheads should still be correct
-    Wait Until Element Is Visible   id=section-total-10-custom
-    Textfield Value Should Be       id=section-total-10-custom      £ 14,400
+    Wait Until Element Is Visible    id=section-total-10-custom
+    Textfield Value Should Be    id=section-total-10-custom    £ 14,400
     Element Should Contain    css=[aria-controls="collapsible-2"] [data-mirror]    £ 14,400
 
 the applicant changes the data in the overheads section again
-    Select Radio Button     overheads-rateType-29-51    SPECIAL_AGREED_RATE
-    Input Text              id=cost-overheads-51-agreedRate     40
+    Select Radio Button    overheads-rateType-29-51    SPECIAL_AGREED_RATE
+    Input Text    id=cost-overheads-51-agreedRate    40
     focus    css=.app-submit-btn
     sleep    1s
 
 the calculations of the overheads should be correct again
-    Wait Until Element Is Visible  id=section-total-10-special
-    Textfield Value Should Be      id=section-total-10-special     £ 19,200
+    Wait Until Element Is Visible    id=section-total-10-special
+    Textfield Value Should Be    id=section-total-10-special    £ 19,200
     Element Should Contain    css=[aria-controls="collapsible-2"] [data-mirror]    £ 19,200
 
 the calculations of the overheads should be correct once more
@@ -360,7 +357,7 @@ the applicant adds a second row for the other costs fields
     Input Text    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
     Mouse Out    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     focus    css=.app-submit-btn
-    sleep   1s
+    sleep    1s
 
 the other costs total should be correct
     Textfield Value Should Be    id=section-total-15    £ 200

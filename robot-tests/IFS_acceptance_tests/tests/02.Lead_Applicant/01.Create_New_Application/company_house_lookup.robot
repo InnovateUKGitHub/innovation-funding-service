@@ -23,7 +23,7 @@ Search using invalid company name
     Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When user enters text to a text field    id=org-name    innoavte
     And user clicks the button/link    id=org-search
-    Then the search criteria should not fetch any result
+    Then user should see the text in the page    Sorry we couldn't find any results within Companies House.
 
 Search using valid registration number
     [Documentation]    INFUND-887
@@ -39,7 +39,7 @@ search using invalid registration number
     Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When user enters text to a text field    id=org-name    64536
     And user clicks the button/link    id=org-search
-    Then the search criteria should not fetch any result
+    Then user should see the text in the page    Sorry we couldn't find any results within Companies House.
 
 Search for invalid characters
     [Documentation]    INFUND-887
@@ -60,9 +60,6 @@ the valid company names matching the search criteria should be displayed
     Page should contain    05493105
     # Page Should Contain    Address
     # Page Should Contain    M45 8QP
-
-the search criteria should not fetch any result
-    Page Should Contain    Sorry we couldn't find any results within Companies House.
 
 the applicant should get a validation error for the company house
     Element Should Be Visible    css=.error-message

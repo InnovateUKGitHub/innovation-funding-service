@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-406: As an applicant, and on the application form I have validation error, I cannot mark questions or sections as complete in order to submit my application
-Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -48,7 +48,7 @@ the applicant inserts some text again in the "Project Summary" question
     Input Text    css=#form-input-11 .editor    test if the applicant can mark the question as complete
     Click Element    css=.bold_button
     Focus    css=.app-submit-btn
-    Sleep   1s
+    Sleep    1s
     Reload Page
 
 applicant should be able to mark the question as complete
@@ -61,7 +61,7 @@ Applicant goes to the Project summary of the new application
     go to    ${PROJECT_SUMMARY_URL}
 
 the applicant can click edit to make the section editable again
-    Sleep   5s
-    Wait Until Element Is Visible       name=mark_as_incomplete
-    Click Element      name=mark_as_incomplete
-    Wait Until Element is Visible       css=#form-input-11 .buttonlink[name="mark_as_complete"]
+    Sleep    5s
+    Wait Until Element Is Visible    name=mark_as_incomplete
+    Click Element    name=mark_as_incomplete
+    Wait Until Element is Visible    css=#form-input-11 .buttonlink[name="mark_as_complete"]

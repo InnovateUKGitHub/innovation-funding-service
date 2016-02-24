@@ -22,6 +22,12 @@ Lead applicant details should show in the invite page
     Then user should see the text in the page    Lead organisation: Empire Ltd
     And user should see the text in the page    Lead applicant: Steve Smith
 
+User can not continue if an organisation type is not selected
+    [Tags]    Pending
+    #pending because there is no validation
+    When user clicks the button/link    jQuery=.button:contains("Continue")
+    Then user should see the text in the page    Please select your organisation type
+
 Accept Invitation flow (Business organisation)
     [Documentation]    INFUND-1005
     ...    INFUND-1779

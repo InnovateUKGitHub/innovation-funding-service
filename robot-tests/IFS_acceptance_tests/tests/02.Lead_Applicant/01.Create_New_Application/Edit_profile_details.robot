@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
-Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -102,7 +102,7 @@ the Applicant fills the Phone field
     Click Element    css=.extra-margin
 
 the Applicant can change their details back again
-    Login as User    &{lead_applicant_credentials}
+    Guest user log-in    &{lead_applicant_credentials}
     user navigates to the page    ${DASHBOARD_URL}
     user clicks the button/link    link=View and edit your profile details
     user clicks the button/link    link=Edit your details
@@ -117,6 +117,6 @@ the Applicant enters their old profile details
 
 other contributors should see the Applicant's updated name for the assignation options
     Logout as user
-    Login as user    &{collaborator1_credentials}
+    Guest user log-in    &{collaborator1_credentials}
     go to    ${APPLICATION_OVERVIEW_URL}
     page should contain    chris brown
