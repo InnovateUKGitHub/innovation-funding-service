@@ -1,22 +1,7 @@
 package com.worth.ifs.security;
 
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.annotation.PostConstruct;
-
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.user.domain.User;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,6 +11,14 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.Map.Entry;
 
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static java.util.Arrays.asList;
@@ -239,6 +232,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         try {
             return (Boolean) methodAndBean.getRight().invoke(methodAndBean.getLeft(), dto, finalAuthentication);
         } catch (Exception e) {
+            LOG.error("Error whilst processing a permissions method", e);
             throw new RuntimeException(e);
         }
     }
