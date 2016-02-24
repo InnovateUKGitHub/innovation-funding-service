@@ -8,7 +8,7 @@ Documentation     This test has been put last (with the 1.) because the other ap
 ...
 ...
 ...               -INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
-Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant    Submit
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot

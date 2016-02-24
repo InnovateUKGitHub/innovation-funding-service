@@ -3,7 +3,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...
 ...               INFUND-896: As a lead applicant i want to invite partner organisations to collaborate on line in my application, so that i can create the consortium needed to complete the proposed project
-Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Create new application    collaboration
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
