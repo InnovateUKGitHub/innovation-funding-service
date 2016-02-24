@@ -215,7 +215,7 @@ Create new application
 
 User should be redirected to the correct page
     [Arguments]    ${URL}
-    location should be    ${URL}
+    Location Should Contain    ${URL}
     Page Should Not Contain    error
 
 User navigates to the page

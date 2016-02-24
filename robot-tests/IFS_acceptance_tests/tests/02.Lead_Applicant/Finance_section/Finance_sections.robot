@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation     INFUND-45: As an applicant and I am on the application form on an open application, I expect the form to help me fill in financial details, so I can have a clear overview and less chance of making mistakes.
+...
+...               INFUND-1815: Small text changes to registration journey following user testing
 Suite Setup       Login as User    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -18,6 +20,13 @@ Finance sub-sections
     [Tags]    Applicant    Finance
     When Applicant goes to the Your finances section
     Then the Applicant should see all the "Your Finance" Sections
+
+
+Organisation name visible in the Finance section
+    [Documentation]    INFUND-1815
+    [Tags]  Applicant   Finance
+    Given user navigates to the page    ${YOUR_FINANCES_URL}
+    Then the Organisation name should be seen in the Finance section
 
 Guidance in the 'Your Finances' section
     [Documentation]    INFUND-192
@@ -45,3 +54,8 @@ the Applicant clicks the "Labour costs guidance"
 
 the guidance text should be visible
     Element Should Be Visible    css=#details-content-0 p
+
+
+the Organisation name should be seen in the Finance section
+    page should contain    Provide the project costs for 'Empire Ltd'
+    page should contain    'Empire Ltd' Total project costs
