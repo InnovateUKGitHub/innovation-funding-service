@@ -10,7 +10,6 @@ import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.util.Either;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.IOException;
@@ -59,63 +58,71 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
      */
     @Override
     public T findAndThrowException(RestFailure restFailure) {
+        final Error error = getMostRelevantErrorForEndUser(restFailure.getErrors());
+
         if(restFailure.has(CommonFailureKeys.GENERAL_NOT_FOUND)){
-            throw new ObjectNotFoundException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new ObjectNotFoundException(error.getErrorMessage(), error.getArguments());
         }
 
         if(restFailure.has(CommonFailureKeys.GENERAL_FORBIDDEN)){
-            throw new AccessDeniedException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new ForbiddenActionException(error.getErrorMessage(), error.getArguments());
         }
 
         if(restFailure.has(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE)){
-            throw new UnableToRenderNotificationTemplateException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new UnableToRenderNotificationTemplateException(error.getErrorMessage(), error.getArguments());
         }
 
         if(restFailure.has(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR) || restFailure.has(CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE)){
-            throw new GeneralUnexpectedErrorException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new GeneralUnexpectedErrorException(error.getErrorMessage(), error.getArguments());
         }
 
         if(restFailure.has(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE)){
-            throw new UnableToSendEmailsException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new UnableToSendEmailsException(error.getErrorMessage(), error.getArguments());
         }
 
         if(restFailure.has(CommonFailureKeys.FILES_DUPLICATE_FILE_CREATED)){
-            throw new DuplicateFileCreatedException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new DuplicateFileCreatedException(error.getErrorMessage(), error.getArguments());
         }
 
         if(restFailure.has(CommonFailureKeys.FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE)){
-            throw new FileAlreadyLinkedToFormInputResponseException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new FileAlreadyLinkedToFormInputResponseException(error.getErrorMessage(), error.getArguments());
         }
 
         if(restFailure.has(CommonFailureKeys.FILES_INCORRECTLY_REPORTED_FILESIZE)){
-            throw new IncorrectlyReportedFileSizeException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new IncorrectlyReportedFileSizeException(error.getErrorMessage(), error.getArguments());
         }
 
         if(restFailure.has(CommonFailureKeys.FILES_INCORRECTLY_REPORTED_MEDIA_TYPE)){
-            throw new IncorrectlyReportedMediaTypeException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new IncorrectlyReportedMediaTypeException(error.getErrorMessage(), error.getArguments());
         }
 
         if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_CREATE_FILE)){
-            throw new UnableToCreateFileException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new UnableToCreateFileException(error.getErrorMessage(), error.getArguments());
         }
 
         if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_CREATE_FOLDERS)){
-            throw new UnableToCreateFoldersException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new UnableToCreateFoldersException(error.getErrorMessage(), error.getArguments());
         }
 
         if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE)){
-            throw new UnableToDeleteFileException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new UnableToDeleteFileException(error.getErrorMessage(), error.getArguments());
         }
 
         if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_UPDATE_FILE)){
-            throw new UnableToUpdateFileException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new UnableToUpdateFileException(error.getErrorMessage(), error.getArguments());
         }
 
         if (restFailure.has(CommonFailureKeys.GENERAL_INCORRECT_TYPE)){
-            throw new IncorrectArgumentTypeException(restFailure.getErrors().get(0).getErrorMessage());
+            throw new IncorrectArgumentTypeException(error.getErrorMessage(), error.getArguments());
         }
 
         throw new RuntimeException();
+    }
+
+    /* TODO: We need to possibly decide on some sort of precedence.  Only once exception can be thrown and a single
+       HTTP error code returned.  So if there are multiple errors then we need to pick the high precedence one.*/
+    private Error getMostRelevantErrorForEndUser(final List<Error> errors){
+        return errors.get(0);
     }
 
     @Override

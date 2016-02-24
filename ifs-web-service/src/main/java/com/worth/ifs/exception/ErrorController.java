@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This controller can handle all Exceptions, so the user should always gets a
@@ -43,73 +44,120 @@ public class ErrorController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)     // 400
-    @ExceptionHandler(value = {AutosaveElementException.class, IncorrectArgumentTypeException.class})
+    @ExceptionHandler(value = {AutosaveElementException.class})
     public @ResponseBody ObjectNode jsonAutosaveResponseHandler(AutosaveElementException e) throws AutosaveElementException {
         log.debug("ErrorController jsonAutosaveResponseHandler", e);
         return e.createJsonResponse();
     }
 
-    @ResponseStatus(value= HttpStatus.NOT_FOUND)  // 404
-    @ExceptionHandler(value = ObjectNotFoundException.class)
-    public ModelAndView objectNotFoundHandler(HttpServletRequest req, Exception e) {
-        log.debug("ErrorController  objectNotFoundHandler", e);
-        return createExceptionModelAndView(e, "404", req);
+    @ResponseStatus(HttpStatus.BAD_REQUEST)     // 400
+    @ExceptionHandler(value = IncorrectArgumentTypeException.class)
+    public ModelAndView incorrectArgumentTypeErrorHandler(HttpServletRequest req, IncorrectArgumentTypeException e) {
+        log.debug("ErrorController incorrectArgumentTypeErrorHandler", e);
+        return createExceptionModelAndView(e, "error", req, e.getArguments());
     }
 
     @ResponseStatus(value= HttpStatus.FORBIDDEN)  // 403
-    @ExceptionHandler(value = AccessDeniedException.class)
-    public ModelAndView accessDeniedException(HttpServletRequest req, Exception e) {
+    @ExceptionHandler(value = ForbiddenActionException.class)
+    public ModelAndView accessDeniedException(HttpServletRequest req, ForbiddenActionException e) {
         log.debug("ErrorController  actionNotAllowed", e);
-        return createExceptionModelAndView(e, "forbidden", req);
+        return createExceptionModelAndView(e, "forbidden", req, e.getArguments());
     }
 
-    @ResponseStatus(value= HttpStatus.UNSUPPORTED_MEDIA_TYPE)  // 415
-    @ExceptionHandler(value = UnsupportedMediaTypeException.class)
-    public ModelAndView unsupportedMediaTypeErrorHandler(HttpServletRequest req, Exception e){
-        log.debug("ErrorController unsupportedMediaType", e );
-        return createExceptionModelAndView(e, "error", req);
-    }
-
-    @ResponseStatus(value= HttpStatus.PAYLOAD_TOO_LARGE)  // 413
-    @ExceptionHandler(value = PayloadTooLargeException.class)
-    public ModelAndView payloadTooLargeErrorHandler(HttpServletRequest req, Exception e){
-        log.debug("ErrorController payloadTooLarge", e );
-        return createExceptionModelAndView(e, "error", req);
-    }
-
-    @ResponseStatus(value= HttpStatus.LENGTH_REQUIRED)  // 411
-    @ExceptionHandler(value = LengthRequiredException.class)
-    public ModelAndView lengthRequiredErrorHandler(HttpServletRequest req, Exception e){
-        log.debug("ErrorController lengthRequired", e );
-        return createExceptionModelAndView(e, "error", req);
+    @ResponseStatus(value= HttpStatus.NOT_FOUND)  // 404
+    @ExceptionHandler(value = ObjectNotFoundException.class)
+    public ModelAndView objectNotFoundHandler(HttpServletRequest req, ObjectNotFoundException e) {
+        log.debug("ErrorController  objectNotFoundHandler", e);
+        return createExceptionModelAndView(e, "404", req, e.getArguments());
     }
 
     @ResponseStatus(value = HttpStatus.CONFLICT)    // 409
     @ExceptionHandler(value = FileAlreadyLinkedToFormInputResponseException.class)
-    public ModelAndView fileAlreadyLinkedToFormInputResponse(HttpServletRequest req, Exception e){
+    public ModelAndView fileAlreadyLinkedToFormInputResponse(HttpServletRequest req, FileAlreadyLinkedToFormInputResponseException e){
         log.debug("ErrorController fileAlreadyLinkedToFormInputResponse", e );
-        return createExceptionModelAndView(e, "error", req);
+        return createExceptionModelAndView(e, "error", req, e.getArguments());
+    }
+
+    @ResponseStatus(value= HttpStatus.LENGTH_REQUIRED)  // 411
+    @ExceptionHandler(value = LengthRequiredException.class)
+    public ModelAndView lengthRequiredErrorHandler(HttpServletRequest req, LengthRequiredException e){
+        log.debug("ErrorController lengthRequired", e );
+        return createExceptionModelAndView(e, "error", req, e.getArguments());
+    }
+
+    @ResponseStatus(value= HttpStatus.PAYLOAD_TOO_LARGE)  // 413
+    @ExceptionHandler(value = PayloadTooLargeException.class)
+    public ModelAndView payloadTooLargeErrorHandler(HttpServletRequest req, PayloadTooLargeException e){
+        log.debug("ErrorController payloadTooLarge", e );
+        return createExceptionModelAndView(e, "error", req, e.getArguments());
+    }
+
+    @ResponseStatus(value= HttpStatus.UNSUPPORTED_MEDIA_TYPE)  // 415
+    @ExceptionHandler(value = UnsupportedMediaTypeException.class)
+    public ModelAndView unsupportedMediaTypeErrorHandler(HttpServletRequest req, UnsupportedMediaTypeException e){
+        log.debug("ErrorController unsupportedMediaType", e );
+        return createExceptionModelAndView(e, "error", req, e.getArguments());
     }
 
     @ResponseStatus(value= HttpStatus.INTERNAL_SERVER_ERROR)    //500
-    @ExceptionHandler(value = {GeneralUnexpectedErrorException.class, UnableToCreateFileException.class,
-            UnableToCreateFoldersException.class, UnableToSendNotificationException.class,
-            UnableToUpdateFileException.class, UnableToDeleteFileException.class,
-            UnableToRenderNotificationTemplateException.class, Exception.class})
-    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+    @ExceptionHandler(value = UnableToCreateFileException.class)
+    public ModelAndView defaultErrorHandler(HttpServletRequest req, UnableToCreateFileException e) {
         log.debug("ErrorController  defaultErrorHandler", e);
-        return createExceptionModelAndView(e, "error", req);
+        return createExceptionModelAndView(e, "error", req, e.getArguments());
     }
 
-    private ModelAndView createExceptionModelAndView(Exception e, String message, HttpServletRequest req){
+    @ResponseStatus(value= HttpStatus.INTERNAL_SERVER_ERROR)    //500
+    @ExceptionHandler(value = UnableToCreateFoldersException.class)
+    public ModelAndView defaultErrorHandler(HttpServletRequest req, UnableToCreateFoldersException e) {
+        log.debug("ErrorController  defaultErrorHandler", e);
+        return createExceptionModelAndView(e, "error", req, e.getArguments());
+    }
+
+    @ResponseStatus(value= HttpStatus.INTERNAL_SERVER_ERROR)    //500
+    @ExceptionHandler(value = UnableToSendNotificationException.class)
+    public ModelAndView defaultErrorHandler(HttpServletRequest req, UnableToSendNotificationException e) {
+        log.debug("ErrorController  defaultErrorHandler", e);
+        return createExceptionModelAndView(e, "error", req, e.getArguments());
+    }
+
+    @ResponseStatus(value= HttpStatus.INTERNAL_SERVER_ERROR)    //500
+    @ExceptionHandler(value = UnableToUpdateFileException.class)
+    public ModelAndView defaultErrorHandler(HttpServletRequest req, UnableToUpdateFileException e) {
+        log.debug("ErrorController  defaultErrorHandler", e);
+        return createExceptionModelAndView(e, "error", req, e.getArguments());
+    }
+
+    @ResponseStatus(value= HttpStatus.INTERNAL_SERVER_ERROR)    //500
+    @ExceptionHandler(value = UnableToDeleteFileException.class)
+    public ModelAndView defaultErrorHandler(HttpServletRequest req, UnableToDeleteFileException e) {
+        log.debug("ErrorController  defaultErrorHandler", e);
+        return createExceptionModelAndView(e, "error", req, e.getArguments());
+    }
+
+
+    @ResponseStatus(value= HttpStatus.INTERNAL_SERVER_ERROR)    //500
+    @ExceptionHandler(value = UnableToRenderNotificationTemplateException.class)
+    public ModelAndView defaultErrorHandler(HttpServletRequest req, UnableToRenderNotificationTemplateException e) {
+        log.debug("ErrorController  defaultErrorHandler", e);
+        return createExceptionModelAndView(e, "error", req, e.getArguments());
+    }
+
+    @ResponseStatus(value= HttpStatus.INTERNAL_SERVER_ERROR)    //500
+    @ExceptionHandler(value = {GeneralUnexpectedErrorException.class, Exception.class})
+    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+        log.debug("ErrorController  defaultErrorHandler", e);
+        return createExceptionModelAndView(e, "error", req, Collections.emptyList());
+    }
+
+    private ModelAndView createExceptionModelAndView(Exception e, String message, HttpServletRequest req, List<Object> arguments){
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", e);
 
         if(env.acceptsProfiles("uat", "dev", "test")) {
             mav.addObject("stacktrace", ExceptionUtils.getStackTrace(e));
         }
-        String msg = messageSource.getMessage(e.getClass().getName(), null, req.getLocale());
-        if(msg != null){
+        String msg = messageSource.getMessage(e.getClass().getName(), arguments.toArray(), req.getLocale());
+        if(msg == null){
             msg = e.getMessage();
         }
         mav.addObject("message", msg);

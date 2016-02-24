@@ -1,25 +1,31 @@
 package com.worth.ifs.commons.error.exception;
 
+import java.util.List;
+
 /**
  * Created by rav on 18/02/2016.
  */
-public class UnableToCreateFileException extends RuntimeException {
+public class UnableToCreateFileException extends IFSRuntimeException {
     public UnableToCreateFileException() {
     }
 
-    public UnableToCreateFileException(String message) {
-        super(message);
+    public UnableToCreateFileException(List<Object> arguments) {
+        super(arguments);
     }
 
-    public UnableToCreateFileException(String message, Throwable cause) {
-        super(message, cause);
+    public UnableToCreateFileException(String message, List<Object> arguments) {
+        super(message, arguments);
     }
 
-    public UnableToCreateFileException(Throwable cause) {
-        super(cause);
+    public UnableToCreateFileException(String message, Throwable cause, List<Object> arguments) {
+        super(message, cause, arguments);
     }
 
-    public UnableToCreateFileException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public UnableToCreateFileException(Throwable cause, List<Object> arguments) {
+        super(cause, arguments);
+    }
+
+    public UnableToCreateFileException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, List<Object> arguments) {
+        super(message, cause, enableSuppression, writableStackTrace, arguments);
     }
 }

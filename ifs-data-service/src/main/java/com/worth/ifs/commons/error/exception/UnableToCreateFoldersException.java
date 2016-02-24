@@ -1,25 +1,31 @@
 package com.worth.ifs.commons.error.exception;
 
+import java.util.List;
+
 /**
  * Created by rav on 18/02/2016.
  */
-public class UnableToCreateFoldersException extends RuntimeException {
+public class UnableToCreateFoldersException extends IFSRuntimeException {
     public UnableToCreateFoldersException() {
     }
 
-    public UnableToCreateFoldersException(String message) {
-        super(message);
+    public UnableToCreateFoldersException(List<Object> arguments) {
+        super(arguments);
     }
 
-    public UnableToCreateFoldersException(String message, Throwable cause) {
-        super(message, cause);
+    public UnableToCreateFoldersException(String message, List<Object> arguments) {
+        super(message, arguments);
     }
 
-    public UnableToCreateFoldersException(Throwable cause) {
-        super(cause);
+    public UnableToCreateFoldersException(String message, Throwable cause, List<Object> arguments) {
+        super(message, cause, arguments);
     }
 
-    public UnableToCreateFoldersException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public UnableToCreateFoldersException(Throwable cause, List<Object> arguments) {
+        super(cause, arguments);
+    }
+
+    public UnableToCreateFoldersException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, List<Object> arguments) {
+        super(message, cause, enableSuppression, writableStackTrace, arguments);
     }
 }

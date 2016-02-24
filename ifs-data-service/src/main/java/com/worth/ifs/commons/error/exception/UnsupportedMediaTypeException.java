@@ -1,25 +1,31 @@
 package com.worth.ifs.commons.error.exception;
 
+import java.util.List;
+
 /**
  * Created by rav on 18/02/2016.
  */
-public class UnsupportedMediaTypeException extends RuntimeException {
+public class UnsupportedMediaTypeException extends IFSRuntimeException {
     public UnsupportedMediaTypeException() {
     }
 
-    public UnsupportedMediaTypeException(String message) {
-        super(message);
+    public UnsupportedMediaTypeException(List<Object> arguments) {
+        super(arguments);
     }
 
-    public UnsupportedMediaTypeException(String message, Throwable cause) {
-        super(message, cause);
+    public UnsupportedMediaTypeException(String message, List<Object> arguments) {
+        super(message, arguments);
     }
 
-    public UnsupportedMediaTypeException(Throwable cause) {
-        super(cause);
+    public UnsupportedMediaTypeException(String message, Throwable cause, List<Object> arguments) {
+        super(message, cause, arguments);
     }
 
-    public UnsupportedMediaTypeException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public UnsupportedMediaTypeException(Throwable cause, List<Object> arguments) {
+        super(cause, arguments);
+    }
+
+    public UnsupportedMediaTypeException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, List<Object> arguments) {
+        super(message, cause, enableSuppression, writableStackTrace, arguments);
     }
 }

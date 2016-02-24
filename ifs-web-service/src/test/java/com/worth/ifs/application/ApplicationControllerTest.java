@@ -1,5 +1,6 @@
 package com.worth.ifs.application;
 
+import com.worth.ifs.Application;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -17,10 +18,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -99,7 +97,11 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 testMessageSource().getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH));
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(applicationService.getById(1234l)).thenThrow(new ObjectNotFoundException(testMessageSource().getMessage
-                (ObjectNotFoundException.class.getName(), null, Locale.ENGLISH)));
+                (ObjectNotFoundException.class.getName(), null, Locale.ENGLISH), Arrays.asList(1234l)));
+
+        List<Object> arguments = new ArrayList();
+        arguments.add(Application.class.getName());
+        arguments.add(1234l);
 
         log.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/1234"))
@@ -107,7 +109,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("url", "http://localhost/application/1234"))
                 .andExpect(model().attribute("exception", new InstanceOf(ObjectNotFoundException.class)))
                 .andExpect(model().attribute("message",
-                        testMessageSource().getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH)))
+                        testMessageSource().getMessage(ObjectNotFoundException.class.getName(), arguments.toArray(), Locale.ENGLISH)))
                 .andExpect(model().attributeExists("stacktrace"));
     }
 

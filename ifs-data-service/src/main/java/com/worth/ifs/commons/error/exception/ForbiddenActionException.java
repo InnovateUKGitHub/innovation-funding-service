@@ -1,20 +1,33 @@
 package com.worth.ifs.commons.error.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import java.util.List;
 
 /**
  * Created by rav on 18/02/2016.
  *
  */
-@ResponseStatus(value= HttpStatus.FORBIDDEN, reason="User is forbidden from performing requested action")
-public class ForbiddenActionException extends AccessDeniedException {
-    public ForbiddenActionException(String msg) {
-        super(msg);
+public class ForbiddenActionException extends IFSRuntimeException {
+
+    public ForbiddenActionException() {
     }
 
-    public ForbiddenActionException(String msg, Throwable t) {
-        super(msg, t);
+    public ForbiddenActionException(List<Object> arguments) {
+        super(arguments);
+    }
+
+    public ForbiddenActionException(String message, List<Object> arguments) {
+        super(message, arguments);
+    }
+
+    public ForbiddenActionException(String message, Throwable cause, List<Object> arguments) {
+        super(message, cause, arguments);
+    }
+
+    public ForbiddenActionException(Throwable cause, List<Object> arguments) {
+        super(cause, arguments);
+    }
+
+    public ForbiddenActionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, List<Object> arguments) {
+        super(message, cause, enableSuppression, writableStackTrace, arguments);
     }
 }

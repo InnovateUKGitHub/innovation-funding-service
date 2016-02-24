@@ -1,30 +1,32 @@
 package com.worth.ifs.commons.error.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import java.util.List;
 
 /**
  * Represents an unexpected error that occurred in the data layer while processing a request
  *
  */
-@ResponseStatus(value= HttpStatus.INTERNAL_SERVER_ERROR, reason="An unexpected error occurred")
-public class GeneralUnexpectedErrorException extends RuntimeException {
+public class GeneralUnexpectedErrorException extends IFSRuntimeException {
     public GeneralUnexpectedErrorException() {
     }
 
-    public GeneralUnexpectedErrorException(String message) {
-        super(message);
+    public GeneralUnexpectedErrorException(List<Object> arguments) {
+        super(arguments);
     }
 
-    public GeneralUnexpectedErrorException(String message, Throwable cause) {
-        super(message, cause);
+    public GeneralUnexpectedErrorException(String message, List<Object> arguments) {
+        super(message, arguments);
     }
 
-    public GeneralUnexpectedErrorException(Throwable cause) {
-        super(cause);
+    public GeneralUnexpectedErrorException(String message, Throwable cause, List<Object> arguments) {
+        super(message, cause, arguments);
     }
 
-    public GeneralUnexpectedErrorException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public GeneralUnexpectedErrorException(Throwable cause, List<Object> arguments) {
+        super(cause, arguments);
+    }
+
+    public GeneralUnexpectedErrorException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, List<Object> arguments) {
+        super(message, cause, enableSuppression, writableStackTrace, arguments);
     }
 }

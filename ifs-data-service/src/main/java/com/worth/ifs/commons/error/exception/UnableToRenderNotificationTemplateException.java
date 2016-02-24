@@ -1,26 +1,32 @@
 package com.worth.ifs.commons.error.exception;
 
+import java.util.List;
+
 /**
  * Created by rav on 18/02/2016.
  *
  */
-public class UnableToRenderNotificationTemplateException extends RuntimeException {
+public class UnableToRenderNotificationTemplateException extends IFSRuntimeException {
     public UnableToRenderNotificationTemplateException() {
     }
 
-    public UnableToRenderNotificationTemplateException(String message) {
-        super(message);
+    public UnableToRenderNotificationTemplateException(List<Object> arguments) {
+        super(arguments);
     }
 
-    public UnableToRenderNotificationTemplateException(String message, Throwable cause) {
-        super(message, cause);
+    public UnableToRenderNotificationTemplateException(String message, List<Object> arguments) {
+        super(message, arguments);
     }
 
-    public UnableToRenderNotificationTemplateException(Throwable cause) {
-        super(cause);
+    public UnableToRenderNotificationTemplateException(String message, Throwable cause, List<Object> arguments) {
+        super(message, cause, arguments);
     }
 
-    public UnableToRenderNotificationTemplateException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public UnableToRenderNotificationTemplateException(Throwable cause, List<Object> arguments) {
+        super(cause, arguments);
+    }
+
+    public UnableToRenderNotificationTemplateException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, List<Object> arguments) {
+        super(message, cause, enableSuppression, writableStackTrace, arguments);
     }
 }

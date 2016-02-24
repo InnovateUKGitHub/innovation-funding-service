@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -70,7 +71,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test(expected= ObjectNotFoundException.class)
     public void testGetByIdNotFound() throws Exception {
         Long applicationId = 5L;
-        when(applicationRestService.getApplicationById(applicationId)).thenThrow(new ObjectNotFoundException(""));
+        when(applicationRestService.getApplicationById(applicationId)).thenThrow(new ObjectNotFoundException("Application not found", Arrays.asList(applicationId)));
         ApplicationResource returnedApplication = service.getById(applicationId);
         assertEquals(null, returnedApplication);
     }
