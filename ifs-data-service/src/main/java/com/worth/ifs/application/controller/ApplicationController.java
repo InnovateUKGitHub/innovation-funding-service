@@ -10,6 +10,8 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+
 /**
  * ApplicationController exposes Application data and operations through a REST API.
  */
@@ -27,12 +32,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/application")
 public class ApplicationController {
 
+    private static Log LOG = LogFactory.getLog(ApplicationController.class);
+
     @Autowired
     private ApplicationService applicationService;
 
     @RequestMapping("/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
-        return applicationService.getApplicationById(id).toGetResponse();
+        try {
+            return applicationService.getApplicationById(id).toGetResponse();
+        }catch(Exception e){
+            LOG.error(e);
+            return restFailure(notFoundError(ApplicationResource.class, id));
+        }
     }
 
     @RequestMapping("/")

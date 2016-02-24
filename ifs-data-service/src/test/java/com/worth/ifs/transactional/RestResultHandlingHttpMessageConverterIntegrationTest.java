@@ -1,14 +1,19 @@
 package com.worth.ifs.transactional;
 
+import java.io.IOException;
+import java.util.concurrent.Future;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseWebIntegrationTest;
-import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationRestService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.security.SecuritySetter;
 import com.worth.ifs.user.domain.User;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,15 +25,14 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.util.concurrent.Future;
-
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -72,7 +76,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
         try {
 
-            String url = dataUrl + "/application/normal/9999";
+            String url = dataUrl + "/application/9999";
             restTemplate.exchange(url, GET, headersEntity(), String.class);
             fail("Should have had a Not Found on the server side, as a non-existent id was specified");
 
@@ -80,7 +84,9 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
             assertEquals(NOT_FOUND, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            assertTrue(restErrorResponse.is(notFoundError(Application.class, 9999L)));
+            Error expectedError = notFoundError(ApplicationResource.class, 9999L);
+            RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
+            assertEquals(expectedResponse, restErrorResponse);
         }
     }
 

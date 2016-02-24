@@ -45,7 +45,9 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
             assertEquals(NOT_FOUND, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            assertTrue(restErrorResponse.is(new Error(GENERAL_NOT_FOUND.getErrorKey(), "The requested URL could not be found.", NOT_FOUND)));
+            Error expectedError = new Error(GENERAL_NOT_FOUND.getErrorKey(), "The requested resource could not be found.", NOT_FOUND);
+            RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
+            assertEquals(expectedResponse, restErrorResponse);
         }
     }
 
@@ -64,7 +66,9 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
             assertEquals(FORBIDDEN, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            assertTrue(restErrorResponse.is(new Error(GENERAL_FORBIDDEN.getErrorKey(), "You do not have permission to access the requested URL.", FORBIDDEN)));
+            Error expectedError = new Error(GENERAL_FORBIDDEN.getErrorKey(), "You do not have permission to access the requested resource.", FORBIDDEN);
+            RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
+            assertEquals(expectedResponse, restErrorResponse);
         }
     }
 
