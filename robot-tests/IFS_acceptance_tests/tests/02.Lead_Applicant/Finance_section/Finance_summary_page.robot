@@ -72,7 +72,7 @@ Green check should show when the applicant marks the finance as complete
 
 *** Keywords ***
 The user logs in as lead applicant
-    Login as user    &{lead_applicant_credentials}
+    Guest user log-in    &{lead_applicant_credentials}
 
 the user goes to the finance summary of the Providing sustainable childcare application
     go to    ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}
@@ -82,10 +82,10 @@ The user logs out
     Logout as user
 
 The user logs in as first collaborator
-    Login as user    &{collaborator1_credentials}
+    Guest user log-in    &{collaborator1_credentials}
 
 The user logs in as second collaborator
-    Login as user    &{collaborator2_credentials}
+    Guest user log-in    &{collaborator2_credentials}
 
 the finance Project cost breakdown calculations should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £0

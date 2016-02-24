@@ -60,7 +60,8 @@ Verify that the field has been reassigned to the lead applicant
     [Documentation]    INFUND-275
     [Tags]    Collaboration
     Given the Applicant can log in
-    When Applicant goes to the 'public description' question
+    And Applicant goes to the 'public description' question
+    When the Applicant gets the reassigned notification
     Then the public description question should be assigned to the applicant
     And the Applicant can see the 'Reassigned to: You' in the overview page
 
@@ -142,6 +143,9 @@ the collaborator can mark the question as ready for review
     Wait Until Page Contains    You have reassigned this question to
     Wait Until Page Contains    Steve Smith
 
+the Applicant gets the reassigned notification
+    Wait Until Element Is Visible    css=#content > div.event-alert
+    Element Should Contain    css=#content > div.event-alert > p    Jessica Doe has assigned a question to you
 
 the public description question should be assigned to the applicant
     Page Should Contain Element    css=#form-input-12 > div > div.textarea-wrapped.assigned-to-me.word-count
@@ -153,7 +157,7 @@ the Applicant can see the 'Reassigned to: You' in the overview page
     Element Should Contain    css=#form-input-12 .assign-container    You
 
 the Applicant can log in
-    Login as user    &{lead_applicant_credentials}
+    Guest user log-in    &{lead_applicant_credentials}
 
 the Applicant marks the public description question as complete
     Click Button    name=mark_as_complete
