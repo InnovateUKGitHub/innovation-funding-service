@@ -54,7 +54,7 @@ Verify the name of the new application
     When the guest user enters the log in credentials    robot@test.com    testtest
     And user clicks the button/link    css=input.button
     and the user edits the competition title
-    Then user should see the text in the page    test title - Application number 00000
+    Then user should see the text in the page    test title - Application number 0000
     And the progress indicator should show 0
     And user clicks the button/link    link=View team members and add collaborators
     and user should see the text in the page    Application team
@@ -68,7 +68,7 @@ the new application should be visible in the dashboard page
     Click Link    link= My dashboard
     sleep    1s
     Wait Until Page Contains    test title
-    Page Should Contain    Application number: 00000
+    Page Should Contain    Application number: 0000
 
 the user enters the details and clicks the create account
     Input Text    id=firstName    John
