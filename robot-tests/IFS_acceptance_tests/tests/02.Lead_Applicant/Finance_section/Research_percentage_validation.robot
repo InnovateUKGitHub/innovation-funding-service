@@ -32,7 +32,7 @@ If research participation is below the maximum level, no error is shown
 
 *** Keywords ***
 The applicant logs in
-    Login as user    &{lead_applicant_credentials}
+    Guest user log-in    &{lead_applicant_credentials}
 
 The research participation on the second application is too high
     Go To    ${FINANCES_OVERVIEW_URL_APPLICATION_2}
@@ -49,7 +49,7 @@ The applicant can log out
     Logout as user
 
 The first collaborator logs in
-    Login as user    &{collaborator1_credentials}
+    Guest user log-in    &{collaborator1_credentials}
 
 The first collaborator edits financial details to bring down the research participation level
     Go To    ${your_finances_url_application_2}
