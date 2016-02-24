@@ -1,9 +1,6 @@
 #!/bin/bash
 
 
-
-
-
 function coloredEcho(){
     local exp=$1;
     local color=$2;
@@ -90,14 +87,14 @@ function startServers {
 
 
 function runTests {
-    echo "**********RUN THE WEB TESTS**********"
+    echo "**********RUN THE WEB TESTS IN PARALLEL FOR AN EXTRA FAST RUN, NOTE THIS WILL MAKE YOUR MACHINE WORK VERY HARD!**********"
     cd ${scriptDir}
     pabot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// --exclude Failing --exclude Pending --name IFS $testDirectory
 }
 
 
 function runHappyPathTests {
-    echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
+    echo "*********RUN THE HAPPY PATH TESTS ONLY IN PARALLEL FOR AN EXTRA FAST RUN, NOTE THIS WILL MAKE YOUR MACHINE WORK VERY HARD!*********"
     cd ${scriptDir}
     pabot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:http:// --include HappyPath --name IFS $testDirectory
 }
