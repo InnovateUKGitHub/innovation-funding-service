@@ -56,7 +56,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
         try {
 
-            String url = dataUrl + "/application/normal/1";
+            String url = dataUrl + "/application/2";
             restTemplate.exchange(url, GET, new HttpEntity<>(new HttpHeaders()), String.class);
             fail("Should have had a Forbidden on the server side, as we are not specifying a user token to this restricted resource");
 

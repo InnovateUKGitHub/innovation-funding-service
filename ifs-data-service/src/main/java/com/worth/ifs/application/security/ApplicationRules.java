@@ -2,7 +2,6 @@ package com.worth.ifs.application.security;
 
 import java.util.List;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -40,42 +39,14 @@ public class ApplicationRules {
     @Autowired
     ApplicationMapper applicationMapper;
 
-    //Application section
-
-    @PermissionRule(value = "READ", description = "A user can see an application which they are connected to")
-    public boolean applicantCanSeeConnectedApplication(Application application, User user) {
-        LOG.error("user can see application");
-        return true || userIsConnectedToApplication(application, user);
-    }
-
-    @PermissionRule(value="UPDATE", description="A user can only update an application is they are the lead applicant")
-    public boolean onlyLeadAplicantCanChangeApplication(Application application, User user){
-        LOG.error("user can update application");
-        return true || and(userIsConnectedToApplication(application, user), userIsLeadApplicantOnApplication(application, user));
-    }
-
-    private boolean userIsConnectedToApplication(Application application, User user){
-        List<ProcessRole> processRole = processRoleRepository.findByUserAndApplication(user, application);
-        return !processRole.isEmpty();
-    }
-
-    private boolean userIsLeadApplicantOnApplication(Application application, User user){
-        Role role = onlyElement(roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName()));
-        return !processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(), role, application.getId()).isEmpty();
-    }
-
-    //applicationResource section
-
     @PermissionRule(value = "READ", description = "A user can see an applicationResource which they are connected to")
     public boolean applicantCanSeeConnectedApplicationResource(ApplicationResource application, User user) {
-        LOG.error("user can see applicationResource");
-        return true || userIsConnectedToApplicationResource(application, user);
+        return userIsConnectedToApplicationResource(application, user);
     }
 
     @PermissionRule(value="UPDATE", description="A user can only update an application is they are the lead applicant")
     public boolean onlyLeadAplicantCanChangeApplicationResource(ApplicationResource application, User user){
-        LOG.error("user can update applicationResource");
-        return true || and(userIsConnectedToApplicationResource(application, user), userIsLeadApplicantOnApplicationResource(application, user));
+        return and(userIsConnectedToApplicationResource(application, user), userIsLeadApplicantOnApplicationResource(application, user));
     }
 
     private boolean userIsConnectedToApplicationResource(ApplicationResource application, User user){
