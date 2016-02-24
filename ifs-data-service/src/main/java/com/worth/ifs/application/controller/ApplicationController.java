@@ -21,9 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.rest.RestResult.restFailure;
-
 /**
  * ApplicationController exposes Application data and operations through a REST API.
  */
@@ -39,12 +36,7 @@ public class ApplicationController {
 
     @RequestMapping("/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
-        try {
             return applicationService.getApplicationById(id).toGetResponse();
-        }catch(Exception e){
-            LOG.error(e);
-            return restFailure(notFoundError(ApplicationResource.class, id));
-        }
     }
 
     @RequestMapping("/")

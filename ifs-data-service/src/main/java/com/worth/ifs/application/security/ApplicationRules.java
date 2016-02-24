@@ -2,8 +2,6 @@ package com.worth.ifs.application.security;
 
 import java.util.List;
 
-import com.worth.ifs.application.mapper.ApplicationMapper;
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
@@ -14,8 +12,6 @@ import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,19 +21,11 @@ import static com.worth.ifs.util.CollectionFunctions.onlyElement;
 @PermissionRules
 @Component
 public class ApplicationRules {
-    private static Log LOG = LogFactory.getLog(ApplicationRules.class);
-
-    @Autowired
-    ApplicationRepository applicationRepository;
-
     @Autowired
     ProcessRoleRepository processRoleRepository;
 
     @Autowired
     RoleRepository roleRepository;
-
-    @Autowired
-    ApplicationMapper applicationMapper;
 
     @PermissionRule(value = "READ", description = "A user can see an applicationResource which they are connected to")
     public boolean applicantCanSeeConnectedApplicationResource(ApplicationResource application, User user) {
@@ -50,7 +38,7 @@ public class ApplicationRules {
     }
 
     private boolean userIsConnectedToApplicationResource(ApplicationResource application, User user){
-        List<ProcessRole> processRole = processRoleRepository.findByUserAndApplication(user, applicationMapper.mapToDomain(application));
+        List<ProcessRole> processRole = processRoleRepository.findByUserAndApplicationId(user, application.getId());
         return !processRole.isEmpty();
     }
 

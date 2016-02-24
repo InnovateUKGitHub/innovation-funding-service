@@ -92,7 +92,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
     @Test
     public void testFailureRestResultHandledAsync() throws Exception {
-        final User initial = SecuritySetter.swapOutForUser(new User("","","", "123abc", "", emptyList()));
+        final User initial = SecuritySetter.swapOutForUser(new User(1L, "","","", "123abc", "", emptyList()));
         try {
             final long applicationIdThatDoesNotExist = -1L;
             final Future<RestResult<Double>> completeQuestionsPercentage = applicationRestService.getCompleteQuestionsPercentage(applicationIdThatDoesNotExist);
@@ -109,7 +109,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
     private <T> HttpEntity<T> headersEntity(){
         HttpHeaders headers = getJSONHeaders();
-        headers.set(AUTH_TOKEN, "789ghi");
+        headers.set(AUTH_TOKEN, "123abc");
         return new HttpEntity<>(headers);
     }
 }
