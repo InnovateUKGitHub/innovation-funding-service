@@ -1,30 +1,19 @@
 package com.worth.ifs.login.controller;
 
-import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.login.HomeController;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 
-public class HomeControllerTest  extends BaseUnitTest {
-    @InjectMocks
-    private HomeController homeController;
-    @Before
-    public void setUp(){
-        super.setup();
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
+public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController> {
 
-        mockMvc = MockMvcBuilders.standaloneSetup(homeController)
-                .setViewResolvers(viewResolver())
-                .build();
+    @Override
+    protected HomeController supplyControllerUnderTest() {
+        return new HomeController();
     }
 
     /**
@@ -32,8 +21,11 @@ public class HomeControllerTest  extends BaseUnitTest {
      */
     @Test
     public void testHome() throws Exception {
+
+        setLoggedInUser(null);
+
         mockMvc.perform(get("/"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/login"));
+                .andExpect(view().name("redirect:/"));
     }
 }

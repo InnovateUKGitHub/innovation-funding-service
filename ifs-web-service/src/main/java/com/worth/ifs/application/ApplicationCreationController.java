@@ -1,7 +1,6 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.util.CookieUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,7 +41,6 @@ public class ApplicationCreationController extends AbstractApplicationController
                                    @PathVariable(COMPETITION_ID) Long competitionId,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
-        model.addAttribute("loginForm", new LoginForm());
         model.addAttribute(COMPETITION_ID, competitionId);
         CookieUtil.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
         return "create-application/check-eligibility";

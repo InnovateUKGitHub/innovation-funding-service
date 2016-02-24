@@ -7,7 +7,6 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -45,7 +44,6 @@ public class AcceptInviteController extends AbstractApplicationController {
     @RequestMapping(value = "/accept-invite/{hash}", method = RequestMethod.GET)
     public String displayContributors(
             @PathVariable("hash") final String hash,
-            HttpServletRequest request,
             HttpServletResponse response,
             Model model) {
 
@@ -58,7 +56,6 @@ public class AcceptInviteController extends AbstractApplicationController {
         if(invite.isSuccess()){
             InviteResource inviteResource = invite.getSuccessObject();
             if(InviteStatusConstants.SEND.equals(inviteResource.getStatus())){
-                LoginForm loginForm = new LoginForm();
 
                 // check if there already is a user with this emailaddress
                 List<UserResource> existingUsers = userService.findUserByEmail(inviteResource.getEmail()).getSuccessObjectOrNull();
@@ -67,7 +64,6 @@ public class AcceptInviteController extends AbstractApplicationController {
                 }
 
                 model.addAttribute("invite", inviteResource);
-                model.addAttribute("loginForm", loginForm);
                 CookieUtil.saveToCookie(response, INVITE_HASH, hash);
                 return "application-contributors/invite/accept-invite";
             }else{
@@ -85,7 +81,6 @@ public class AcceptInviteController extends AbstractApplicationController {
     // TODO DW - INFUND-1555 - handle rest results
     @RequestMapping(value = "/accept-invite/new-account-organisation-type", method = RequestMethod.GET)
     public String chooseOrganisationType(HttpServletRequest request,
-                                         HttpServletResponse response,
                                          Model model,
                                          @ModelAttribute OrganisationTypeForm organisationTypeForm,
                                          @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId
@@ -124,9 +119,7 @@ public class AcceptInviteController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/accept-invite/new-account-organisation-type", method = RequestMethod.POST)
-    public String chooseOrganisationType(HttpServletRequest request,
-                                         HttpServletResponse response,
-                                         Model model,
+    public String chooseOrganisationType(HttpServletResponse response,
                                          @ModelAttribute @Valid OrganisationTypeForm organisationTypeForm,
                                          BindingResult bindingResult
 
@@ -152,10 +145,7 @@ public class AcceptInviteController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/accept-invite/create-organisation", method = RequestMethod.GET)
-    public String chooseOrganisationType(HttpServletRequest request,
-                                         HttpServletResponse response,
-                                         Model model,
-                                         @ModelAttribute("companyHouseForm") CompanyHouseForm companyHouseForm,
+    public String chooseOrganisationType(@ModelAttribute("companyHouseForm") CompanyHouseForm companyHouseForm,
                                          @RequestParam(value = ORGANISATION_TYPE) Long organisationTypeId
     ){
         if(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationTypeId)){

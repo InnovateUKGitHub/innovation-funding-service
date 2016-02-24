@@ -3,6 +3,7 @@ package com.worth.ifs.login;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,13 @@ public class HomeController {
 
     public static String getRedirectUrlForUser() {
 
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (unauthenticated(authentication)) {
+            return "redirect:/";
+        }
+
+        User user = (User) authentication.getDetails();
 
         return getRedirectUrlForUser(user);
     }
@@ -40,5 +47,9 @@ public class HomeController {
         }
 
         return "redirect:/" + roleName + "/dashboard";
+    }
+
+    private static boolean unauthenticated(Authentication authentication) {
+        return authentication == null || !authentication.isAuthenticated() || authentication.getDetails() == null;
     }
 }
