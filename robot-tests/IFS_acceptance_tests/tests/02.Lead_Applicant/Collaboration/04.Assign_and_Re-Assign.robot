@@ -16,7 +16,7 @@ Verify the applicant can assign a question
     [Documentation]    INFUND-275, INFUND-280
     [Tags]    Collaboration    HappyPath
     Given the Applicant can log in
-    Given Applicant goes to the 'public description' question
+    Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     When the Applicant assigns the public description question to the collaborator    Jessica Doe
     Then the success message should show
     And the field of the public description question should be disabled
@@ -60,7 +60,7 @@ Verify that the field has been reassigned to the lead applicant
     [Documentation]    INFUND-275
     [Tags]    Collaboration
     Given the Applicant can log in
-    And Applicant goes to the 'public description' question
+    And the user navigates to the page  ${PUBLIC_DESCRIPTION_URL}
     When the Applicant gets the reassigned notification
     Then the public description question should be assigned to the applicant
     And the Applicant can see the 'Reassigned to: You' in the overview page
@@ -70,7 +70,7 @@ Verify that the applicant can assign a question and still mark it as complete
     [Tags]    Collaboration    Pending
     # marked as pending because this functionality now seems to have been deleted! Possibly a bug?
     Given the Applicant can log in
-    And Applicant goes to the 'public description' question
+    And the user navigates to the page      ${PUBLIC_DESCRIPTION_URL}
     When the Applicant assigns the public description question to the collaborator    Jessica Doe
     And the Applicant marks the public description question as complete
     Then the public description question shows as complete
@@ -96,14 +96,14 @@ the Collaborator is in the public description section
     Input Text    id=id_email    jessica.doe@ludlow.co.uk
     Input Password    id=id_password    test
     Click Element    css=input.button
-    Applicant goes to the 'public description' question
+    The user navigates to the page  ${public_description_url}
 
 the Collaborator gets the assigned notification
     Wait Until Element Is Visible    css=#content > div.event-alert
     Element Should Contain    css=#content > div.event-alert > p    Steve Smith has assigned a question to you
 
 the collaborator can see the 'assigned to you' in the overview page
-    Applicant goes to the Overview page
+    The user navigates to the page      ${application_overview_url}
     Element Should Contain    css=#form-input-12 .assign-container    You
 
 the public description question should not be editable
@@ -121,10 +121,10 @@ the public description question should be assigned to the collaborator
     Element Should Be Enabled    id=12
 
 the second Collaborator is in the public description question
-    Applicant goes to the 'public description' question
+    the user navigates to the page  ${public_description_url}
 
 the collaborator edits public description question
-    Applicant goes to the Application form
+    The user navigates to the page      ${PUBLIC_DESCRIPTION_URL}
     Clear Element Text    css=#form-input-12 .editor
     Focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    collaborator's text
@@ -153,7 +153,7 @@ the public description question should be assigned to the applicant
     Element Should Be Enabled    id=12
 
 the Applicant can see the 'Reassigned to: You' in the overview page
-    Applicant goes to the Overview page
+    The user navigates to the page      ${application_overview_url}
     Element Should Contain    css=#form-input-12 .assign-container    You
 
 the Applicant can log in

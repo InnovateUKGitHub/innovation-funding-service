@@ -1,6 +1,5 @@
 *** Keywords ***
-Applicant goes to the Overview page
-    go to    ${APPLICATION_OVERVIEW_URL}
+
 
 Applicant goes to the Application form
     Go To    ${PUBLIC_DESCRIPTION_URL}
@@ -20,8 +19,7 @@ Applicant goes to the 'application overview' page for application 3
 Applicant goes to the 'economic benefits' question for application 3
     Go To    ${ECONOMIC_BENEFIT_URL_APPLICATION_3}
 
-Applicant goes to the 'project summary' question
-    Go To    ${PROJECT_SUMMARY_URL}
+
 
 Applicant goes to the 'public description' question
     Go To    ${PUBLIC_DESCRIPTION_URL}
@@ -67,6 +65,13 @@ Applicant goes to the finance overview
 
 Application goes to the Application Team page
     Go To    ${APPLICATION_TEAM_URL}
+
+The user navigates to the page
+    [Arguments]     ${TARGET_URL}
+    Go To           ${TARGET_URL}
+    Page Should Not Contain         Error
+    Page Should Not Contain         error
+
 
 Applicant edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
