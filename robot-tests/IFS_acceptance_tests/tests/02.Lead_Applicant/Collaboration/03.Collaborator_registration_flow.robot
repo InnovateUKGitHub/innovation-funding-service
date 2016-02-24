@@ -60,6 +60,14 @@ User who accepted the invite should be able to log-in
     And user clicks the button/link    css=input.button
     Then user should be redirected to the correct page    ${DASHBOARD_URL}
     And user should see the text in the page    A novel solution to an old problem
+    [Teardown]    User closes the browser
+
+The collaborator who accepted the invite should be visible in the assign list
+    [Documentation]    INFUND-1779
+    Guest user log-in    steve.smith@empire.com    test
+    And user navigates to the page    ${PROJECT_SUMMARY_URL}
+    When user clicks the button/link    css=.assign-button
+    Then user should see the element    jQuery=button:contains("Rogier De Regt")
 
 *** Keywords ***
 user selects the radio button
