@@ -64,6 +64,7 @@ User who accepted the invite should be able to log-in
 
 The collaborator who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
+    [Tags]    HappyPath
     Guest user log-in    steve.smith@empire.com    test
     And user navigates to the page    ${PROJECT_SUMMARY_URL}
     When user clicks the button/link    css=.assign-button
