@@ -18,19 +18,19 @@ ${APPLICANT_PSW}    test
 Finance sub-sections
     [Documentation]    INFUND-192
     [Tags]    Applicant    Finance
-    When Applicant goes to the Your finances section
+    When the user navigates to the page      ${YOUR_FINANCES_URL}
     Then the Applicant should see all the "Your Finance" Sections
 
 Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]    Applicant    Finance
-    Given user navigates to the page    ${YOUR_FINANCES_URL}
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     Then the Organisation name should be seen in the Finance section
 
 Guidance in the 'Your Finances' section
     [Documentation]    INFUND-192
     [Tags]    Applicant    Finance
-    Given Applicant goes to the Your finances section
+    Given the user navigates to the page      ${YOUR_FINANCES_URL}
     When the Applicant is in the Labour sub-section
     And the Applicant clicks the "Labour costs guidance"
     Then the guidance text should be visible
