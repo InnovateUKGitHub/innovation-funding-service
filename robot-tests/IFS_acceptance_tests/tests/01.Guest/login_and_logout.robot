@@ -13,7 +13,7 @@ Resource          ../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 Log-out
     [Tags]    Guest    HappyPath
-    [Setup]    Login as user    &{lead_applicant_credentials}
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the Applicant is logged-in
     # TODO DW - INFUND-936 - reinstate expectations
     # When user clicks the button/link    link=Logout

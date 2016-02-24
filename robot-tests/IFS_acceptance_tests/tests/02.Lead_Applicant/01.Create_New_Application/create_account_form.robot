@@ -166,7 +166,8 @@ Valid account creation
     And the user submits their information
     #Then user should be redirected to the correct page    ${LOGIN_URL}
     And the user can login with their new details
-    And the user can logout
+    And user should see the element    link=Logout
+    And user clicks the button/link    link=Logout
 
 Email duplication check
     [Documentation]    INFUND-886
@@ -225,9 +226,6 @@ the user can login with their new details
     Input Password    id=password    ${correct_password}
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Not Contain    something has gone wrong
-
-the user can logout
-    logout as user
 
 the user follows the standard path to the account creation page for non registered users
     go to    ${COMPETITION_DETAILS_URL}

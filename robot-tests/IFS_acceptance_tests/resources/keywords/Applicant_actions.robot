@@ -224,6 +224,8 @@ User navigates to the page
 
 User enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Wait Until Element Is Visible    ${TEXT_FIELD}
+    Clear Element Text    ${TEXT_FIELD}
     input text    ${TEXT_FIELD}    ${TEXT_INPUT}
 
 user clicks the button/link
@@ -257,3 +259,8 @@ User should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
     sleep    500ms
     Page should not contain    ${NOT_VISIBLE_TEXT}
+
+User should get an error page
+    [Arguments]    ${ERROR_TEXT}
+    Page should contain element    css=.error
+    Page should contain    ${ERROR_TEXT}

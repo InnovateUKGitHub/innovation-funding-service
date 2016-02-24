@@ -157,7 +157,7 @@ the Applicant can see the 'Reassigned to: You' in the overview page
     Element Should Contain    css=#form-input-12 .assign-container    You
 
 the Applicant can log in
-    Login as user    &{lead_applicant_credentials}
+    Guest user log-in    &{lead_applicant_credentials}
 
 the Applicant marks the public description question as complete
     Click Button    name=mark_as_complete
