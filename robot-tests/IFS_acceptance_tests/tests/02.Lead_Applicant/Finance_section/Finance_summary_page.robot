@@ -75,7 +75,7 @@ The user logs in as lead applicant
     Guest user log-in    &{lead_applicant_credentials}
 
 the user goes to the finance summary of the Providing sustainable childcare application
-    go to    ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}
+    the user navigates to the page      ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}
     click element    link=Finances overview
 
 The user logs out
@@ -117,7 +117,7 @@ the contribution to project and funding sought should be 0 and not a negative nu
     Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(5)    £0
 
 the collaborator goes to the finance summary of the completed application
-    go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
+    the user navigates to the page        ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
 
 applicant marks one finance sub-section as incomplete
     Click Element    css=[aria-controls="collapsible-1"]
@@ -132,6 +132,6 @@ the applicant marks the finance question as complete
     click element    jQuery=#collapsible-1 button:contains("Mark as complete")
 
 both green checks should be visible
-    go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
+    the user navigates to the page     ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img

@@ -27,7 +27,7 @@ ${FINANCE_SECTION_7}    ${SERVER}/application/7/form/section/7
 Submit button disabled when the application is incomplete
     [Documentation]    INFUND-195
     [Tags]    Summary
-    Given the applicant goes to the overview page of the application 7
+    Given the user navigates to the page        ${OVERVIEW_PAGE_APPLICATION_7}
     When the applicant clicks the review and submit button
     and the applicant redirects to the summary page
     and the applicant marks the first question as incomplete
@@ -37,9 +37,9 @@ Submit button disabled when the application is incomplete
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
     [Tags]    Summary
-    Given applicant is in the finance summary of the application 7
+    Given the user navigates to the page    ${FINANCE_SECTION_7}
     When the applicant marks the finance section as incomplete
-    And the applicant goes to the overview page of the application 7
+    And the user navigates to the page      ${OVERVIEW_PAGE_APPLICATION_7}
     And the applicant clicks the review and submit button
     And the applicant redirects to the summary page
     Then the submit button should be disabled
@@ -50,7 +50,7 @@ Submit flow (complete application)
     ...
     ...    This test case test the submit modal(cancel option) and the the submit of the form, the confirmation page and the new status of the application
     [Tags]    Summary    HappyPath
-    Given the applicant goes to the overview page of the application 7
+    Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
     When the applicant clicks the review and submit button
     and the applicant redirects to the summary page
     Then the applicant clicks the submit button and the clicks cancel in the submit modal
@@ -92,8 +92,6 @@ the applicant redirects to the application submitted page
     Location Should Be    ${SUBMITTED_PAGE_APPLICATION_7}
     Page Should Contain    Application submitted
 
-applicant is in the finance summary of the application 7
-    go to    ${FINANCE_SECTION_7}
 
 the applicant marks the finance section as incomplete
     Click Element    css=[aria-controls="collapsible-1"]

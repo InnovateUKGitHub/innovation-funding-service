@@ -29,7 +29,7 @@ The lead applicant should be able to add/remove a collaborator
 
 The lead applicant shouldn't be able to remove himself
     [Documentation]    INFUND-901
-    Given user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
+    Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     Then the lead applicant cannot be removed
 
 Validations for the Email field user remains in the invite page
@@ -230,5 +230,5 @@ the applicant inserts and already invited email
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
 
 the user goes to the application team page of application 3
-    go to    ${APPLICATION_3_TEAM_PAGE}
+    the user navigates to the page    ${APPLICATION_3_TEAM_PAGE}
     Click Element    jQuery=.button:contains("Invite new contributors")
