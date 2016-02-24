@@ -2,8 +2,8 @@
 Documentation     INFUND-1005: As a collaborator I want to select my organisation type, so that I can create the correct account type for my organisation
 ...
 ...               INFUND-1779: As a collaborator registering my company as Business, I want to be able provide my organisation name and address details so I can successfully register for the competition
-Test Setup        The guest user opens the browser
-Test Teardown     TestTeardown User closes the browser
+Suite Setup       The guest user opens the browser
+Suite Teardown    TestTeardown User closes the browser
 Force Tags        Create new application    collaboration
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -23,10 +23,17 @@ Lead applicant details should show in the invite page
     And user should see the text in the page    Lead applicant: Steve Smith
 
 User can not continue if an organisation type is not selected
+    [Documentation]    Infund-1005
     [Tags]    Pending
-    #pending because there is no validation
+    #pending because there is no validation and the user gets an error page
     When user clicks the button/link    jQuery=.button:contains("Continue")
     Then user should see the text in the page    Please select your organisation type
+
+User is able to select only one type
+    [Documentation]    Infund-1005
+    When user selects the radio button    2
+    And user selects the radio button    3
+    Then the radio button should have the new selection    3
 
 Accept Invitation flow (Business organisation)
     [Documentation]    INFUND-1005
@@ -34,7 +41,7 @@ Accept Invitation flow (Business organisation)
     [Tags]    HappyPath
     Given user navigates to the page    ${INVITE_LINK}
     When user clicks the button/link    jQuery=.button:contains("Create")
-    And user selects the radio button
+    And user selects the radio button    1
     And user clicks the button/link    jQuery=.button:contains("Continue")
     Then user should be redirected to the correct page    ${SERVER}/accept-invite/create-organisation/?organisationType=1
     When user enters text to a text field    id=org-name    Empire
@@ -56,7 +63,8 @@ User who accepted the invite should be able to log-in
 
 *** Keywords ***
 user selects the radio button
-    Select Radio Button    organisationType    1
+    [Arguments]    ${ORG_TYPE}
+    Select Radio Button    organisationType    ${ORG_TYPE}
 
 the user fills the create account form
     Input Text    id=firstName    Rogier
@@ -66,3 +74,7 @@ the user fills the create account form
     Input Password    id=retypedPassword    testtest
     Select Checkbox    termsAndConditions
     Submit Form
+
+the radio button should have the new selection
+    [Arguments]    ${ORG_TYPE}
+    Radio Button Should Be Set To    organisationType    ${ORG_TYPE}
