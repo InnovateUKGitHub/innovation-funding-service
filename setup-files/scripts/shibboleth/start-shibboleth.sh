@@ -19,4 +19,10 @@ echo ""
 ./_run-shibboleth-image.sh
 
 echo ""
+echo "Resetting users..."
+echo ""
+sleep 10
+./reset-users.sh
+
+echo ""
 echo "Shibboleth started successfully"
