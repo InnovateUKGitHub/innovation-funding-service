@@ -39,6 +39,7 @@ User is able to select only one type
     Then the radio button should have the new selection    1
 
 User can go back and change the selection
+    [Documentation]    INFUND-1780
     Given user clicks the button/link    jQuery=.button:contains("Continue")
     And user should be redirected to the correct page    ${SERVER}/accept-invite/create-organisation/?organisationType=1
     When user goes back to the previous page
