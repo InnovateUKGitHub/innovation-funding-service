@@ -41,19 +41,19 @@ Applicant can see the List with the sections
 Only the main questions should show and not the file uploads
     [Documentation]    INFUND-428
     [Tags]    Applicant    Overview
-    When the Applicant is in the application overview page
+    When the user is on the page    ${application_overview_url}
     Then the uploads should not be visible
 
 The days left to submit should be visible
     [Documentation]    -INFUND-37
     [Tags]    Applicant    Overview    HappyPath
-    When the Applicant is in the application overview page
+    When the user is on the page    ${application_overview_url}
     Then the "Days left to submit" should be visible in the overview page
 
 The Progress bar should be visible in the overview page
     [Documentation]    INFUND-32
     [Tags]    Applicant    Overview    HappyPath
-    When the Applicant is in the application overview page
+    When the user is on the page    ${application_overview_url}
     The Progress bar should be visible in the overview page
 
 *** Keywords ***
@@ -65,9 +65,6 @@ the Applicant clicks the "Rovel Additive Manufacturing Process" application
 
 the Applicant should see the overview of the selected application
     Location Should Be    ${APPLICATION_OVERVIEW_URL}
-
-the Applicant is in the application overview page
-    the user navigates to the page      ${application_overview_url}
 
 the applicant should see three sections
     Element Should Be Visible    css=#section-1 .heading-medium
