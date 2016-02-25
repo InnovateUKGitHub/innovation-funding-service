@@ -57,7 +57,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
     public ServiceResult<CompanyHouseBusiness> getOrganisationById(String id) {
         LOG.debug("getOrganisationById " + id);
 
-        return ofNullable(restGet("company/" + id, JsonNode.class)).
+        return ofNullable(restGet(COMPANY_HOUSE_API + "company/" + id, JsonNode.class)).
             map(jsonNode -> serviceSuccess(companyProfileMapper(jsonNode))).
             orElse(serviceFailure(internalServerErrorError("No response from Companies House")));
     }
