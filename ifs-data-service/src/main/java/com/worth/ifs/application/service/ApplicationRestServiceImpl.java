@@ -1,5 +1,8 @@
 package com.worth.ifs.application.service;
 
+import java.util.List;
+import java.util.concurrent.Future;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
@@ -7,11 +10,9 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.UserRoleType;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.concurrent.Future;
 
 import static com.worth.ifs.application.service.Futures.adapt;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
@@ -32,7 +33,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public RestResult<ApplicationResource> getApplicationById(Long applicationId) {
-        return getWithRestResult(applicationRestURL + "/normal/" + applicationId, ApplicationResource.class);
+        return getWithRestResult(applicationRestURL + "/" + applicationId, ApplicationResource.class);
     }
 
     @Override

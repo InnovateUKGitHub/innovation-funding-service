@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
                 PreAuthorize.class,
                 PreFilter.class,
                 PostAuthorize.class,
-                PostAuthorize.class,
+                PostFilter.class,
                 NotSecured.class
             );
 

@@ -39,6 +39,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.method.HandlerMethod;
@@ -129,6 +133,12 @@ public class BaseUnitTest {
     public FinanceModelManager financeModelManager;
     @Mock
     public FinanceFormHandler financeFormHandler;
+
+    @Mock
+    public Environment env;
+
+    @Mock
+    public MessageSource messageSource;
 
     public List<ApplicationResource> applications;
     public List<Section> sections;
@@ -579,10 +589,17 @@ public class BaseUnitTest {
         ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {
             protected ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception exception) {
                 Method method = new ExceptionHandlerMethodResolver(ErrorController.class).resolveMethod(exception);
-                return new ServletInvocableHandlerMethod(new ErrorController(), method);
+                return new ServletInvocableHandlerMethod(new ErrorController(env, messageSource), method);
             }
         };
         exceptionResolver.afterPropertiesSet();
         return exceptionResolver;
+    }
+
+    @Bean(name = "messageSource")
+    public MessageSource testMessageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("messages");
+        return messageSource;
     }
 }

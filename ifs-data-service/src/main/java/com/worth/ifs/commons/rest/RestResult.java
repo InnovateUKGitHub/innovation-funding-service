@@ -1,7 +1,9 @@
 package com.worth.ifs.commons.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.exception.*;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ExceptionThrowingFunction;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
@@ -50,6 +52,80 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     @Override
     public <R> RestResult<R> andOnSuccessReturn(ExceptionThrowingFunction<? super T, R> successHandler) {
         return (RestResult<R>) super.andOnSuccessReturn(successHandler);
+    }
+
+    /**
+     *
+     * @param restFailure - Failure object with details about the failure
+     * @return Always returns null
+     */
+    @Override
+    public T findAndThrowException(RestFailure restFailure) {
+        final Error error = getMostRelevantErrorForEndUser(restFailure.getErrors());
+
+        if(restFailure.has(CommonFailureKeys.GENERAL_NOT_FOUND)){
+            throw new ObjectNotFoundException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.GENERAL_FORBIDDEN)){
+            throw new ForbiddenActionException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE)){
+            throw new UnableToRenderNotificationTemplateException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR) || restFailure.has(CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE)){
+            throw new GeneralUnexpectedErrorException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE)){
+            throw new UnableToSendEmailsException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_DUPLICATE_FILE_CREATED)){
+            throw new DuplicateFileCreatedException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE)){
+            throw new FileAlreadyLinkedToFormInputResponseException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_INCORRECTLY_REPORTED_FILESIZE)){
+            throw new IncorrectlyReportedFileSizeException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_INCORRECTLY_REPORTED_MEDIA_TYPE)){
+            throw new IncorrectlyReportedMediaTypeException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_CREATE_FILE)){
+            throw new UnableToCreateFileException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_CREATE_FOLDERS)){
+            throw new UnableToCreateFoldersException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE)){
+            throw new UnableToDeleteFileException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_UPDATE_FILE)){
+            throw new UnableToUpdateFileException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if (restFailure.has(CommonFailureKeys.GENERAL_INCORRECT_TYPE)){
+            throw new IncorrectArgumentTypeException(error.getErrorMessage(), error.getArguments());
+        }
+
+        throw new RuntimeException();
+    }
+
+    /* TODO: We need to possibly decide on some sort of precedence.  Only once exception can be thrown and a single
+       HTTP error code returned.  So if there are multiple errors then we need to pick the high precedence one.*/
+    private Error getMostRelevantErrorForEndUser(final List<Error> errors){
+        return errors.get(0);
     }
 
     @Override

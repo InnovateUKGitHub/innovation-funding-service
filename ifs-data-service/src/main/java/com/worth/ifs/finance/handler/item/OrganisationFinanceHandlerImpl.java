@@ -61,7 +61,7 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
 
     // TODO DW - INFUND-1555 - handle rest result
     private Question getQuestionByCostType(CostType costType) {
-        return questionService.getQuestionByFormInputType(costType.getType()).getSuccessObjectOrNull();
+        return questionService.getQuestionByFormInputType(costType.getType()).getSuccessObjectOrThrowException();
     }
 
     @Override

@@ -50,6 +50,16 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         return (ServiceResult<R>) super.andOnSuccessReturn(successHandler);
     }
 
+    /**
+     * Not used currently TODO Implement this in future for consistency with RestResult
+     * @param serviceFailure - failure object with information about failure
+     * @return always returns null
+     */
+    @Override
+    public T findAndThrowException(ServiceFailure serviceFailure) {
+        throw new UnsupportedOperationException();
+    }
+
     @Override
     protected <R> BaseEitherBackedResult<R, ServiceFailure> createSuccess(FailingOrSucceedingResult<R, ServiceFailure> success) {
         return serviceSuccess(success.getSuccessObject());

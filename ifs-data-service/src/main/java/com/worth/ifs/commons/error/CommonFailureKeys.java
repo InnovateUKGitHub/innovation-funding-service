@@ -16,7 +16,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
     GENERAL_UNEXPECTED_ERROR("An unexpected error occurred", INTERNAL_SERVER_ERROR),
     GENERAL_NOT_FOUND("Unable to find entity", NOT_FOUND),
     GENERAL_INCORRECT_TYPE("Argument was of an incorrect type", BAD_REQUEST),
-    GENERAL_FORBIDDEN("Argument was of an incorrect type", FORBIDDEN),
+    GENERAL_FORBIDDEN("User is forbidden from performing requested action", FORBIDDEN),
 
     /**
      * Files

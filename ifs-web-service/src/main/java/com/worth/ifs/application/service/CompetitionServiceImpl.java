@@ -22,11 +22,11 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public CompetitionResource getById(Long competitionId){
-        return competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrNull();
+        return competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public List<CompetitionResource> getAllCompetitions() {
-        return competitionsRestService.getAll().getSuccessObjectOrNull();
+        return competitionsRestService.getAll().getSuccessObjectOrThrowException();
    }
 }

@@ -1,5 +1,7 @@
 package com.worth.ifs.application.controller;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerMockMVCTest;
@@ -7,9 +9,8 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.User;
-import org.junit.Test;
 
-import java.util.List;
+import org.junit.Test;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -26,7 +27,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
 
@@ -46,7 +49,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getApplicationById(testApplication1.getId())).thenReturn(serviceSuccess(testApplicationResource1));
         when(applicationService.getApplicationById(testApplication2.getId())).thenReturn(serviceSuccess(testApplicationResource2));
 
-        mockMvc.perform(get("/application/normal/1"))
+        mockMvc.perform(get("/application/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(testApplicationResource1)))
                 .andDo(document("application/get-application",
@@ -60,7 +63,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                                 fieldWithPath("competition").description("Competition Id"),
                                 fieldWithPath("competitionName").description("Competition Name"),
                                 fieldWithPath("applicationFinances").description("list of ApplicationFinance Id's"))));
-        mockMvc.perform(get("/application/normal/2"))
+        mockMvc.perform(get("/application/2"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(testApplicationResource2)));
     }

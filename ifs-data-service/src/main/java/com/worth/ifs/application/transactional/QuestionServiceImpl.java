@@ -151,7 +151,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return sectionService.getById(sectionId).andOnSuccessReturn(section -> {
 
             if (section.getParentSection() != null) {
-                SectionResource previousSection = sectionService.getPreviousSection(section).getSuccessObjectOrNull();
+                SectionResource previousSection = sectionService.getPreviousSection(section).getSuccessObjectOrThrowException();
                 if (previousSection != null) {
                     Optional<Question> lastQuestionInSection = previousSection.getQuestions()
                             .stream()
@@ -171,7 +171,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return sectionService.getById(sectionId).andOnSuccessReturn(section -> {
 
             if (section.getParentSection() != null) {
-                SectionResource nextSection = sectionService.getNextSection(section).getSuccessObjectOrNull();
+                SectionResource nextSection = sectionService.getNextSection(section).getSuccessObjectOrThrowException();
                 if(nextSection!=null) {
                     Optional<Question> firstQuestionInSection = nextSection.getQuestions()
                             .stream()

@@ -88,7 +88,7 @@ public class FinanceFormHandler {
     private void storeFinancePosition(HttpServletRequest request, @NotNull Long applicationFinanceId) {
         List<String> financePositionKeys = request.getParameterMap().keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
         if (!financePositionKeys.isEmpty()) {
-            ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getById(applicationFinanceId).getSuccessObjectOrNull();
+            ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getById(applicationFinanceId).getSuccessObjectOrThrowException();
 
             financePositionKeys.stream().forEach(k -> {
                 String values = request.getParameterValues(k)[0];

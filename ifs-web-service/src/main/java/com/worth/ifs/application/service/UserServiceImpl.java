@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     // TODO DW - INFUND-1555 - get service to return RestResult
     public List<User> getAssignable(Long applicationId) {
-        return userRestService.findAssignableUsers(applicationId).getSuccessObjectOrNull();
+        return userRestService.findAssignableUsers(applicationId).getSuccessObjectOrThrowException();
     }
 
     @Override

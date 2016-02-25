@@ -4,12 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.Application;
 import com.worth.ifs.BaseWebIntegrationTest;
 import com.worth.ifs.application.service.ApplicationRestService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.commons.service.HttpHeadersUtils;
 import com.worth.ifs.security.SecuritySetter;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.repository.UserRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,9 +25,10 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.concurrent.Future;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
-import static java.util.Collections.emptyList;
+import static com.worth.ifs.commons.service.HttpHeadersUtils.getJSONHeaders;
+import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpMethod.GET;
@@ -48,6 +50,9 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     public ApplicationRestService applicationRestService;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     public UserAuthenticationService userAuthenticationService;
 
     @Test
@@ -57,7 +62,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
         try {
             String url = dataUrl + "/response/saveQuestionResponse/25/assessorFeedback?assessorUserId=3&feedbackText=Nicework";
-            ResponseEntity<String> response = restTemplate.exchange(url, PUT, headersEntity(), String.class);
+            ResponseEntity<String> response = restTemplate.exchange(url, PUT, assessorHeadersEntity(), String.class);
             assertEquals(OK, response.getStatusCode());
             assertTrue(isBlank(response.getBody()));
         } catch (HttpClientErrorException | HttpServerErrorException e) {
@@ -72,24 +77,23 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
         try {
 
-            String url = dataUrl + "/application/normal/9999";
-            restTemplate.exchange(url, GET, headersEntity(), String.class);
+            String url = dataUrl + "/application/9999";
+            restTemplate.exchange(url, GET, leadApplicantHeadersEntity(), String.class);
             fail("Should have had a Not Found on the server side, as a non-existent id was specified");
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
 
             assertEquals(NOT_FOUND, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            assertTrue(restErrorResponse.getErrors().size() == 1);
-            assertEquals(notFoundError(Application.class, 9999L).getErrorMessage(), restErrorResponse.getErrors().get(0).getErrorMessage());
-            assertEquals(notFoundError(Application.class, 9999L).getArguments(), restErrorResponse.getErrors().get(0).getArguments());
-            assertEquals(notFoundError(Application.class, 9999L).getErrorKey(), restErrorResponse.getErrors().get(0).getErrorKey());
+            Error expectedError = new Error(GENERAL_NOT_FOUND, "Application not found", asList(Application.class.getSimpleName(), 9999L), null);
+            RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
+            assertEquals(expectedResponse, restErrorResponse);
         }
     }
 
     @Test
     public void testFailureRestResultHandledAsync() throws Exception {
-        final User initial = SecuritySetter.swapOutForUser(new User("","","", "", emptyList(), "6b50cb4f-7222-33a5-99c5-8c068cd0b03c"));
+        final User initial = SecuritySetter.swapOutForUser(leadApplicantUser());
         try {
             final long applicationIdThatDoesNotExist = -1L;
             final Future<RestResult<Double>> completeQuestionsPercentage = applicationRestService.getCompleteQuestionsPercentage(applicationIdThatDoesNotExist);
@@ -104,9 +108,25 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     }
 
 
-    private <T> HttpEntity<T> headersEntity(){
-        HttpHeaders headers = HttpHeadersUtils.getJSONHeaders();
-        headers.set(AUTH_TOKEN, "847ac08d-5486-3f3a-9e15-06303fb01ffb");
+    private <T> HttpEntity<T> leadApplicantHeadersEntity(){
+        return getUserJSONHeaders(leadApplicantUser());
+    }
+
+    private <T> HttpEntity<T> assessorHeadersEntity(){
+        return getUserJSONHeaders(assessorUser());
+    }
+
+    private <T> HttpEntity<T> getUserJSONHeaders(User user) {
+        HttpHeaders headers = getJSONHeaders();
+        headers.set(AUTH_TOKEN, user.getUid());
         return new HttpEntity<>(headers);
+    }
+
+    private User leadApplicantUser(){
+        return userRepository.findByEmail("steve.smith@empire.com").get(0);
+    }
+
+    private User assessorUser(){
+        return userRepository.findByEmail("paul.plum@gmail.com").get(0);
     }
 }

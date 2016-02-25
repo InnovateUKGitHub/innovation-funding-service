@@ -1,21 +1,15 @@
 package com.worth.ifs.application.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.Future;
-
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.concurrent.Future;
 
 import static com.worth.ifs.application.service.Futures.adapt;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -37,27 +31,27 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public SectionResource getById(Long sectionId) {
-        return sectionRestService.getById(sectionId).getSuccessObjectOrNull();
+        return sectionRestService.getById(sectionId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public List<Long> getInCompleted(Long applicationId) {
-        return sectionRestService.getIncompletedSectionIds(applicationId).getSuccessObjectOrNull();
+        return sectionRestService.getIncompletedSectionIds(applicationId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public List<Long> getCompleted(Long applicationId, Long organisationId) {
-        return sectionRestService.getCompletedSectionIds(applicationId, organisationId).getSuccessObjectOrNull();
+        return sectionRestService.getCompletedSectionIds(applicationId, organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId) {
-        return sectionRestService.getCompletedSectionsByOrganisation(applicationId).getSuccessObjectOrNull();
+        return sectionRestService.getCompletedSectionsByOrganisation(applicationId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public Boolean allSectionsMarkedAsComplete(Long applicationId) {
-        return sectionRestService.allSectionsMarkedAsComplete(applicationId).getSuccessObjectOrNull();
+        return sectionRestService.allSectionsMarkedAsComplete(applicationId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -85,7 +79,7 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public SectionResource getByName(String name) {
-        return sectionRestService.getSection(name).getSuccessObjectOrNull();
+        return sectionRestService.getSection(name).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -140,13 +134,13 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public Future<SectionResource> getNextSection(Optional<SectionResource> section) {
         if(section!=null && section.isPresent()) {
-            return adapt(sectionRestService.getNextSection(section.get().getId()), RestResult::getSuccessObjectOrNull);
+            return adapt(sectionRestService.getNextSection(section.get().getId()), RestResult::getSuccessObjectOrThrowException);
         }
         return null;
     }
 
     @Override
     public SectionResource getSectionByQuestionId(Long questionId) {
-        return sectionRestService.getSectionByQuestionId(questionId).getSuccessObjectOrNull();
+        return sectionRestService.getSectionByQuestionId(questionId).getSuccessObjectOrThrowException();
     }
 }

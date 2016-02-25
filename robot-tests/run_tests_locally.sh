@@ -36,7 +36,7 @@ function stopServers {
 
     echo "********STOPPING SHIBBOLETH*********"
     cd ${shibbolethScriptsPath}
-    # ./stop-shibboleth.sh
+    ./stop-shibboleth.sh
 }
 
 function resetDB {
@@ -92,11 +92,7 @@ function startServers {
     
     echo "********START SHIBBOLETH***********"
     cd ${shibbolethScriptsPath}
-    # ./start-shibboleth.sh
-
-    echo "********RESET SHIBBOLETH USERS**********"
-    sleep 10
-    ./reset-users.sh
+    ./start-shibboleth-with-customisations.sh
 }
 
 

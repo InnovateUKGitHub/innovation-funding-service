@@ -58,7 +58,7 @@ public class AcceptInviteController extends AbstractApplicationController {
             if(InviteStatusConstants.SEND.equals(inviteResource.getStatus())){
 
                 // check if there already is a user with this emailaddress
-                List<UserResource> existingUsers = userService.findUserByEmail(inviteResource.getEmail()).getSuccessObjectOrNull();
+                List<UserResource> existingUsers = userService.findUserByEmail(inviteResource.getEmail()).getSuccessObjectOrThrowException();
                 if(existingUsers != null && !existingUsers.isEmpty()){
                     model.addAttribute("emailAddressRegistered", "true");
                 }
@@ -92,7 +92,7 @@ public class AcceptInviteController extends AbstractApplicationController {
         if(invite.isSuccess() && InviteStatusConstants.SEND.equals(invite.getSuccessObject().getStatus())){
             InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObject();
 
-            List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccessObjectOrNull();
+            List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccessObjectOrThrowException();
             if(organisationTypeId == null){
                 types = types.stream()
                         .filter(t -> t.getParentOrganisationType() == null)

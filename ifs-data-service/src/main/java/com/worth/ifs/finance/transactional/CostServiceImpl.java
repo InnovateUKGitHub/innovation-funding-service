@@ -221,7 +221,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
             return costRepository.save(cost);
         } else {
             ServiceResult<Cost> updated = doUpdate(existingCost.getId(), newCostItem);
-            return updated.getSuccessObjectOrNull();
+            return updated.getSuccessObjectOrThrowException();
         }
     }
 
