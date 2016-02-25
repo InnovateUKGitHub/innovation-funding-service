@@ -66,9 +66,6 @@ the applicant clicks Yes in the submit modal
     click element    link=Submit application
     click link    link=Yes, I want to submit my application
 
-the applicant goes to the overview page of the application 7
-    go to    ${OVERVIEW_PAGE_APPLICATION_7}
-
 the applicant clicks the review and submit button
     click element    link=Review & submit
 
