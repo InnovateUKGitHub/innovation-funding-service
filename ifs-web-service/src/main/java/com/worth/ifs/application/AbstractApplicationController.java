@@ -2,9 +2,7 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.FinanceModelManager;
-import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.model.UserApplicationRole;
@@ -14,8 +12,6 @@ import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.security.CookieFlashMessageFilter;
@@ -138,7 +134,7 @@ public abstract class AbstractApplicationController {
         }
         form.application = application;
 
-        addOrganisationDetails(model, application, userOrganisation, userApplicationRoles);
+        addOrganisationDetails(model, userOrganisation, userApplicationRoles);
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
@@ -162,7 +158,7 @@ public abstract class AbstractApplicationController {
         form.setFormInput(formInputs);
     }
 
-    protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation,
+    protected void addOrganisationDetails(Model model, Optional<Organisation> userOrganisation,
                                           List<ProcessRole> userApplicationRoles) {
 
 
@@ -249,8 +245,6 @@ public abstract class AbstractApplicationController {
                                             Optional<Organisation> userOrganisation,
                                             List<ProcessRole> userApplicationRoles) {
         List<SectionResource> sectionsList = sectionService.getParentSections(competition.getSections());
-        Future<SectionResource> previousSection = sectionService.getPreviousSection(currentSection);
-        Future<SectionResource> nextSection = sectionService.getNextSection(currentSection);
 
         Map<Long, SectionResource> sections =
                 sectionsList.stream().collect(Collectors.toMap(SectionResource::getId,
@@ -258,8 +252,6 @@ public abstract class AbstractApplicationController {
 
         userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
 
-        model.addAttribute("previousSection", previousSection);
-        model.addAttribute("nextSection", nextSection);
         model.addAttribute("sections", sections);
         Map<Long, List<Question>> sectionQuestions = sectionsList.stream()
                 .collect(Collectors.toMap(
