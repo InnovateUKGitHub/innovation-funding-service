@@ -5,7 +5,14 @@ The user navigates to the page
     [Arguments]     ${TARGET_URL}
     Go To           ${TARGET_URL}
     Page Should Not Contain         Error
-    Page Should Not Contain         Something went wrong
+    Page Should Not Contain         something went wrong
+
+
+The user is on the page
+    [Arguments]     ${TARGET_URL}
+    Location Should Be           ${TARGET_URL}
+    Page Should Not Contain         Error
+    Page Should Not Contain         something went wrong
 
 
 Applicant edits the 'Project Summary' question

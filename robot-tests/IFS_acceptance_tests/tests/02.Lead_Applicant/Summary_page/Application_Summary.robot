@@ -23,7 +23,7 @@ Application overview button
     [Tags]    Applicant    Summary
     Given the Applicant is in the Summary page
     When the applicant clicks the overview button
-    Then applicant is on the overview page
+    Then the user is on the page        ${application_overview_url}
 
 Verify all questions are present in the summary page
     [Documentation]    INFUND-1075
@@ -44,7 +44,7 @@ Verify that clicking the edit link in the summary redirects the applicant to the
     Given the Applicant is in the Summary page
     When the Applicant clicks the "Project Summary" section
     And the user clicks the edit link in the summary section
-    Then Applicant is on the 'project summary' edit page
+    Then the user is on the page        ${project_summary_edit_url}
 
 *** Keywords ***
 the Applicant is in the Summary page
@@ -77,8 +77,6 @@ the "Scope" section should be expanded
     Page Should Contain Element    css=.section-overview > section:first-child .collapsible:nth-of-type(4) > h3 button[aria-expanded="true"]
     Page Should Contain Element    css=.section-overview > section:first-child .collapsible:nth-of-type(4) > div[aria-hidden="false"]
 
-Applicant is on the 'project summary' edit page
-    Location Should Be    ${SERVER}/application/1/form/question/edit/11
 
 the applicant clicks the overview button
     Click Link    link=Application Overview
