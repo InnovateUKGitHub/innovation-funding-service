@@ -12,14 +12,14 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 Verify the validation error when the Project title field is empty
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
-    Given Applicant goes to the 'application details' question
+    Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     When the applicant clears the application title field
     Then The applicant should get a validation error message    Please enter the full title of the project.
 
 Verify the validation error for an invalid date (Year)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations    HappyPath
-    Given Applicant goes to the 'application details' question
+    Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an invalid date "18-11-2015"
     Then the applicant should get a validation error message    Please enter a future date
     And the field is empty    id=application_details-startdate_year
@@ -30,7 +30,7 @@ Verify the validation error for an invalid date (Year)
 Verify the validation error for an invalid date (day)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
-    Given Applicant goes to the 'application details' question
+    Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an input    id=application_details-startdate_day    32
     And the applicant should get a validation error message    Please enter a valid date
     And the applicant inserts an input    id=application_details-startdate_day    0
@@ -45,7 +45,7 @@ Verify the validation error for an invalid date (day)
 Verify the validation error for an invalid date (month)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
-    Given Applicant goes to the 'application details' question
+    Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an input    id=application_details-startdate_month    0
     And the applicant should get a validation error message    Please enter a valid date
     When the applicant inserts an input    id=application_details-startdate_month    13
@@ -60,7 +60,7 @@ Verify the validation error for an invalid date (month)
 Verify the validation error for the duration field
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
-    Given Applicant goes to the 'application details' question
+    Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an input    id=application_details-duration    0
     And the applicant should get a validation error message    Please enter a valid duration
     When the applicant inserts an input    id=application_details-duration    -1
@@ -73,7 +73,7 @@ Verify the validation error for the duration field
 Verify the validation error when the text area is empty
     [Documentation]    -INFUND-43
     [Tags]    Applicant    Validations
-    Given Applicant goes to the 'project summary' question
+    Given the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the applicant clears the text area of the "Project Summary"
     Then the applicant should get a validation error message    Please enter some text
 

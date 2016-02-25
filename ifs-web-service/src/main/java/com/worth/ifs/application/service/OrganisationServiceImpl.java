@@ -1,5 +1,12 @@
 package com.worth.ifs.application.service;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.TreeSet;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.organisation.domain.Address;
@@ -10,15 +17,9 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.TreeSet;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.service.Futures.call;
 
@@ -30,7 +31,6 @@ import static com.worth.ifs.application.service.Futures.call;
 public class OrganisationServiceImpl  implements OrganisationService {
     @Autowired
     OrganisationRestService organisationRestService;
-
 
     @Autowired
     CompanyHouseRestService companyHouseRestService;

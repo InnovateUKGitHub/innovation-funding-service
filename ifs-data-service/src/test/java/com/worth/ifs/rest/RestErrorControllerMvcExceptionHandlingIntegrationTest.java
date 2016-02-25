@@ -2,7 +2,6 @@ package com.worth.ifs.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseWebIntegrationTest;
-import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import org.junit.Test;
@@ -13,6 +12,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
@@ -45,7 +45,9 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
             assertEquals(NOT_FOUND, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            assertTrue(restErrorResponse.is(new Error(GENERAL_NOT_FOUND.getErrorKey(), "The requested URL could not be found.", NOT_FOUND)));
+            Error expectedError = new Error(GENERAL_NOT_FOUND.getErrorKey(), "The requested resource could not be found.", NOT_FOUND);
+            RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
+            assertEquals(expectedResponse, restErrorResponse);
         }
     }
 
@@ -56,7 +58,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
         try {
 
-            String url = dataUrl + "/application/normal/1";
+            String url = dataUrl + "/application/2";
             restTemplate.exchange(url, GET, new HttpEntity<>(new HttpHeaders()), String.class);
             fail("Should have had a Forbidden on the server side, as we are not specifying a user token to this restricted resource");
 
@@ -64,7 +66,9 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
             assertEquals(FORBIDDEN, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            assertTrue(restErrorResponse.is(CommonErrors.forbiddenError("You do not have permission to access the requested URL.")));
+            Error expectedError = new Error(GENERAL_FORBIDDEN.getErrorKey(), "You do not have permission to access the requested resource.", FORBIDDEN);
+            RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
+            assertEquals(expectedResponse, restErrorResponse);
         }
     }
 

@@ -14,7 +14,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 Status changes when we assign a question to the collaborator
     [Documentation]    INFUND-39
     [Tags]    Applicant    Overview    HappyPath
-    Given Applicant goes to the 'project summary' question
+    Given the user navigates to the page    ${project_summary_url}
     When the Applicant edits the "Project summary" question
     And the applicant assigns the "Project Summary" question to Jessica Doe    Jessica Doe
     Then the "assign to" should be correct for the "Project summary" question
@@ -23,7 +23,7 @@ Status changes when we assign a question to the collaborator
 The applicant can assign re-assign a question from the overview page
     [Documentation]    INFUND-39
     [Tags]    Applicant    Overview
-    Given Applicant goes to the overview page
+    Given the user navigates to the page    ${application_overview_url}
     When the applicant assigns the "Project summary" question to "Steve Smith"    Steve Smith
     Then the applicant should see a blue flag in the Public description (overview page)
     And the assign button should say Assign to:You

@@ -14,7 +14,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 Verify that the user can't mark as complete empty text areas
     [Documentation]    -INFUND-406
     [Tags]    Applicant    Validations
-    Given Applicant goes to the Project summary of the new application
+    Given the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the "Project Summary" question is empty
     And the applicant marks the public description question as complete
     Then the applicant should get a warning to enter data in the "Project Summary" question
@@ -23,7 +23,7 @@ Verify that the user can't mark as complete empty text areas
 Verify that the user doesn't get the error when the text area is not empty anymore
     [Documentation]    -INFUND-406
     [Tags]    Applicant    Validations
-    Given Applicant goes to the Project summary of the new application
+    Given the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the "Project Summary" question is empty
     And the applicant inserts some text again in the "Project Summary" question
     Then applicant should be able to mark the question as complete
@@ -56,9 +56,7 @@ applicant should be able to mark the question as complete
     Wait Until Element Is Not Visible    css=#form-input-11 .error-message
     Wait Until Element Is Not Visible    css=.error-summary li
 
-Applicant goes to the Project summary of the new application
-    #go to    ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}
-    go to    ${PROJECT_SUMMARY_URL}
+
 
 the applicant can click edit to make the section editable again
     Sleep    5s

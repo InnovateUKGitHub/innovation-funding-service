@@ -18,42 +18,32 @@ ${404_error_messsage}    Page or resource not found
 Guest user can't access the Assessor's dashboard page
     [Documentation]    INFUND-1683
     Given the guest user opens the browser
-    #When the user enters the url of the assessors dashboard page
     When User navigates to the page    ${ASSESSOR_DASHBOARD}
-    #Then the user should get the log-in page
     Then user should be redirected to the correct page    ${LOGIN_URL}
 
 Guest user can't access the competitions details page
     [Documentation]    INFUND-1683
     Given the guest user opens the browser
-    #When the user enters the url of the competitions details page
     When User navigates to the page    ${ASSESSOR_COPMETITIONS_DETAILS}
-    #Then the user should get the log-in page
     Then user should be redirected to the correct page    ${LOGIN_URL}
 
 Guest user can't access assessor's review application page
     [Documentation]    INFUND-1683
     Given the guest user opens the browser
-    #When the user enters the url of the assessors review application page
     When User navigates to the page    ${ASSESSOR_REVIEW_APPLICATION}
-    #Then the user should get the log-in page
     Then user should be redirected to the correct page    ${LOGIN_URL}
 
 Guest user can't access the Assessors details page
     [Documentation]    INFUND-1683
     Given the guest user opens the browser
-    #When the user enters the url of the Assessors details page
     When User navigates to the page    ${ASSESSOR_DETAILS_PAGE}
-    #Then the user should get the log-in page
     Then user should be redirected to the correct page    ${LOGIN_URL}
 
 Applicant can't access Assessor's dashboard page
     [Documentation]    INFUND-1683
     [Tags]    Pending
     #Pending infund-1753
-    #Given the user is logged in as applicant
     Given guest user log-in    &{collaborator2_credentials}
-    #When the user enters the url of the assessors dashboard page
     When User navigates to the page    ${ASSESSOR_DASHBOARD}
     Then User should get an error page    Oops, something went wrong
 
@@ -61,26 +51,20 @@ Applicant can't access the competitions details page
     [Documentation]    INFUND-1683
     [Tags]    Pending
     #Pending infund-1753
-    #Given the user is logged in as applicant
     Given guest user log-in    &{collaborator2_credentials}
-    #When the user enters the url of the competitions details page
     When User navigates to the page    ${ASSESSOR_COPMETITIONS_DETAILS}
     Then User should get an error page    Oops, something went wrong
 
 Applicant can't access the Assessor's review application page
     [Documentation]    INFUND-1683
-    #Given the user is logged in as applicant
     Given guest user log-in    &{collaborator2_credentials}
-    #When the user enters the url of the assessors review application page
     When User navigates to the page    ${ASSESSOR_REVIEW_APPLICATION}
     # Then User should get an error page    Oops, something went wrong
     Then the user can see a custom error message
 
 Applicant can't access the Assessor's details page
     [Documentation]    INFUND-1683
-    #Given the user is logged in as applicant
     Given guest user log-in    &{collaborator2_credentials}
-    #When the user enters the url of the Assessors details page
     When User navigates to the page    ${ASSESSOR_DETAILS_PAGE}
     Then the user can see a custom error message
 

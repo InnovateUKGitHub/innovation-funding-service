@@ -7,6 +7,7 @@ import com.worth.ifs.commons.error.exception.*;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ExceptionThrowingFunction;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.util.Either;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,8 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
@@ -152,6 +155,12 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
     public HttpStatus getStatusCode() {
         return isFailure() ? result.getLeft().getStatusCode() : successfulStatusCode;
+    }
+
+    public ServiceResult<T> toServiceResult() {
+        return handleSuccessOrFailure(
+                failure -> serviceFailure(getFailure().getErrors()),
+                success -> serviceSuccess(success));
     }
 
     public static <T1> T1 getLeftOrRight(Either<T1, T1> either) {
