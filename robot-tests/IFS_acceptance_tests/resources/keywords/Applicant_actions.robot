@@ -1,76 +1,11 @@
 *** Keywords ***
 
 
-Applicant goes to the Application form
-    Go To    ${PUBLIC_DESCRIPTION_URL}
-
-Applicant goes to the 'application details' question
-    Go To    ${APPLICATION_DETAILS_URL}
-
-Applicant goes to the 'application summary' page for application 2
-    Go To    ${APPLICATION_2_SUMMARY_URL}
-
-Applicant goes to the 'economic benefit' question for application 2
-    Go To    ${ECONOMIC_BENEFIT_URL_APPLICATION_2}
-
-Applicant goes to the 'application overview' page for application 3
-    Go To    ${APPLICATION_3_OVERVIEW_URL}
-
-Applicant goes to the 'economic benefits' question for application 3
-    Go To    ${ECONOMIC_BENEFIT_URL_APPLICATION_3}
-
-
-
-Applicant goes to the 'public description' question
-    Go To    ${PUBLIC_DESCRIPTION_URL}
-
-Applicant goes to the 'scope' question
-    Go To    ${SCOPE_URL}
-
-Applicant goes to the 'business opportunity' question
-    Go To    ${BUSINESS_OPPORTUNITY_URL}
-
-Applicant goes to the 'potential market' question
-    Go To    ${POTENTIAL_MARKET_URL}
-
-Applicant goes to the 'project exploitation' question
-    Go To    ${PROJECT_EXPLOITATION_URL}
-
-Applicant goes to the 'economic benefits' question
-    Go To    ${ECONOMIC_BENEFIT_URL}
-
-Applicant goes to the 'technical approach' question
-    Go To    ${TECHNICAL_APPROACH_URL}
-
-Applicant goes to the 'innovation' question
-    Go To    ${INNOVATION_URL}
-
-Applicant goes to the 'risks' question
-    Go To    ${RISKS_URL}
-
-Applicant goes to the 'funding' question
-    Go To    ${FUNDING_URL}
-
-Applicant goes to the 'project team' question
-    Go To    ${PROJECT_TEAM_URL}
-
-Applicant goes to the 'adding value' question
-    Go To    ${ADDING_VALUE_URL}
-
-Applicant goes to the Your finances section
-    Go To    ${YOUR_FINANCES_URL}
-
-Applicant goes to the finance overview
-    Go To    ${FINANCES_OVERVIEW_URL}
-
-Application goes to the Application Team page
-    Go To    ${APPLICATION_TEAM_URL}
-
 The user navigates to the page
     [Arguments]     ${TARGET_URL}
     Go To           ${TARGET_URL}
     Page Should Not Contain         Error
-    Page Should Not Contain         error
+    Page Should Not Contain         error 
 
 
 Applicant edits the 'Project Summary' question
@@ -98,14 +33,6 @@ Applicant is in the 'Your Finance' sub-section
     Go To    ${FINANCES}
     Click Element    Link=Your finances
 
-Applicant goes to the scope section
-    go to    ${SCOPE_SECTION_URL}
-
-Applicant goes to the Application questions section
-    Go to    ${APPLICATION_QUESTIONS_SECTION_URL}
-
-Applicant goes to the "Your approach..." section
-    Go to    ${PROJECT_URL}
 
 the applicant is in the "Your Finances" sub-section
     Applicant is in the 'Your Finance' sub-section
