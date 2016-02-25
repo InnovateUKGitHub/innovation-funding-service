@@ -5,7 +5,7 @@ import java.util.concurrent.Future;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseWebIntegrationTest;
-import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.service.ApplicationRestService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
@@ -13,6 +13,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.security.SecuritySetter;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.repository.UserRepository;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,6 @@ import org.springframework.web.client.RestTemplate;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
 import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
-import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -52,6 +52,9 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     public ApplicationRestService applicationRestService;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     public UserAuthenticationService userAuthenticationService;
 
     @Test
@@ -61,7 +64,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
         try {
             String url = dataUrl + "/response/saveQuestionResponse/25/assessorFeedback?assessorUserId=3&feedbackText=Nicework";
-            ResponseEntity<String> response = restTemplate.exchange(url, PUT, headersEntity(), String.class);
+            ResponseEntity<String> response = restTemplate.exchange(url, PUT, assessorHeadersEntity(), String.class);
             assertEquals(OK, response.getStatusCode());
             assertTrue(isBlank(response.getBody()));
         } catch (HttpClientErrorException | HttpServerErrorException e) {
@@ -77,14 +80,14 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
         try {
 
             String url = dataUrl + "/application/9999";
-            restTemplate.exchange(url, GET, headersEntity(), String.class);
+            restTemplate.exchange(url, GET, leadApplicantHeadersEntity(), String.class);
             fail("Should have had a Not Found on the server side, as a non-existent id was specified");
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
 
             assertEquals(NOT_FOUND, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            Error expectedError = notFoundError(ApplicationResource.class, 9999L);
+            Error expectedError = notFoundError(Application.class, 9999L);
             RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
             assertEquals(expectedResponse, restErrorResponse);
         }
@@ -92,9 +95,9 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
     @Test
     public void testFailureRestResultHandledAsync() throws Exception {
-        final User initial = SecuritySetter.swapOutForUser(new User(1L, "","","", "123abc", "", emptyList()));
+        final User initial = SecuritySetter.swapOutForUser(leadApplicantUser());
         try {
-            final long applicationIdThatDoesNotExist = -1L;
+            final long applicationIdThatDoesNotExist = 9999L;
             final Future<RestResult<Double>> completeQuestionsPercentage = applicationRestService.getCompleteQuestionsPercentage(applicationIdThatDoesNotExist);
             // We have set the future going but now we need to call it. This call should not throw
             final RestResult<Double> doubleRestResult = completeQuestionsPercentage.get();
@@ -107,9 +110,19 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     }
 
 
-    private <T> HttpEntity<T> headersEntity(){
+    private <T> HttpEntity<T> assessorHeadersEntity(){
+        HttpHeaders headers = getJSONHeaders();
+        headers.set(AUTH_TOKEN, "789ghi");
+        return new HttpEntity<>(headers);
+    }
+
+    private <T> HttpEntity<T> leadApplicantHeadersEntity(){
         HttpHeaders headers = getJSONHeaders();
         headers.set(AUTH_TOKEN, "123abc");
         return new HttpEntity<>(headers);
+    }
+
+    private User leadApplicantUser(){
+        return userRepository.findOne(1L);
     }
 }

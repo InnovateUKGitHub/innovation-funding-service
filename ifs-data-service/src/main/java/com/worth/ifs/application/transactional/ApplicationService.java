@@ -42,7 +42,7 @@ public interface ApplicationService {
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<ApplicationResource> getApplicationById(@P("applicationId") final Long applicationId);
 
-    @PostFilter("hasPermission(#application, 'READ')")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> findAll();
 
     @NotSecured("TODO")
@@ -62,7 +62,7 @@ public interface ApplicationService {
     ServiceResult<ApplicationResource> updateApplicationStatus(@P("applicationId") final Long id,
                                                                final Long statusId);
 
-    @PostFilter("hasPermission(#application, 'READ')")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                                      final Long userId,
                                                                                      final UserRoleType role);

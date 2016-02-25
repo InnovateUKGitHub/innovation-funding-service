@@ -2,6 +2,7 @@ package com.worth.ifs.application.security;
 
 import java.util.List;
 
+import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
@@ -21,15 +22,19 @@ import static com.worth.ifs.util.CollectionFunctions.onlyElement;
 @PermissionRules
 @Component
 public class ApplicationRules {
+
+    @Autowired
+    ApplicationRepository applicationRepository;
+
     @Autowired
     ProcessRoleRepository processRoleRepository;
 
     @Autowired
     RoleRepository roleRepository;
 
-    @PermissionRule(value = "READ", description = "A user can see an applicationResource which they are connected to")
+    @PermissionRule(value = "READ", description = "A user can see an applicationResource which they are connected to and if the application exists")
     public boolean applicantCanSeeConnectedApplicationResource(ApplicationResource application, User user) {
-        return userIsConnectedToApplicationResource(application, user);
+        return !(applicationExists(application) && !userIsConnectedToApplicationResource(application, user));
     }
 
     @PermissionRule(value="UPDATE", description="A user can only update an application is they are the lead applicant")
@@ -45,5 +50,10 @@ public class ApplicationRules {
     private boolean userIsLeadApplicantOnApplicationResource(ApplicationResource application, User user){
         Role role = onlyElement(roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName()));
         return !processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(), role, application.getId()).isEmpty();
+    }
+
+    private boolean applicationExists(ApplicationResource applicationResource){
+        Long id = applicationResource.getId();
+        return id!=null && applicationRepository.exists(id);
     }
 }
