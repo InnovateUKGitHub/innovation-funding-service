@@ -61,6 +61,10 @@ User navigates to the page
     Page Should Not Contain     something went wrong
 
 
+The user receives a custom error message
+    [Arguments]     ${custom_error_message}
+    Page Should Contain     ${custom_error_message}
+
 User enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible    ${TEXT_FIELD}
