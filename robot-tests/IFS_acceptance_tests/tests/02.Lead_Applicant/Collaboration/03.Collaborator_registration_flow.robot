@@ -13,6 +13,7 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/4e09372b85241cb03137ffbeb2110a1552daa1086b0bce0ff7d8ff5d2063c8ffc10e943acf4a3c7a
+${SELECT_ORGANISATION}    ${SERVER}/accept-invite/new-account-organisation-type
 
 *** Test Cases ***
 Lead applicant details should show in the invite page
@@ -23,7 +24,9 @@ Lead applicant details should show in the invite page
     And user should see the text in the page    Lead applicant: Steve Smith
 
 User can not continue if an organisation type is not selected
-    [Documentation]    Infund-1005
+    [Documentation]    INFUND-1005
+    ...
+    ...    INFUND-1780
     [Tags]    Pending
     #pending because there is no validation and the user gets an error page
     When user clicks the button/link    jQuery=.button:contains("Continue")
@@ -32,8 +35,14 @@ User can not continue if an organisation type is not selected
 User is able to select only one type
     [Documentation]    Infund-1005
     When user selects the radio button    2
-    And user selects the radio button    3
-    Then the radio button should have the new selection    3
+    And user selects the radio button    1
+    Then the radio button should have the new selection    1
+
+User can go back and change the selection
+    Given user clicks the button/link    jQuery=.button:contains("Continue")
+    And user should be redirected to the correct page    ${SERVER}/accept-invite/create-organisation/?organisationType=1
+    When user goes back to the previous page
+    Then user should be redirected to the correct page    ${SELECT_ORGANISATION}
 
 Accept Invitation flow (Business organisation)
     [Documentation]    INFUND-1005
@@ -87,3 +96,6 @@ the user fills the create account form
 the radio button should have the new selection
     [Arguments]    ${ORG_TYPE}
     Radio Button Should Be Set To    organisationType    ${ORG_TYPE}
+
+user goes back to the previous page
+    Go Back
