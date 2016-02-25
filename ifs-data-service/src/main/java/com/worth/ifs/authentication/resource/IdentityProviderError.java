@@ -1,8 +1,5 @@
 package com.worth.ifs.authentication.resource;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.util.List;
 
 /**
@@ -10,7 +7,7 @@ import java.util.List;
  */
 public class IdentityProviderError {
 
-    private String messageKey;
+    private String key;
     private List<String> arguments;
 
     /**
@@ -19,38 +16,37 @@ public class IdentityProviderError {
     public IdentityProviderError() {
     }
 
-    public IdentityProviderError(String messageKey, List<String> arguments) {
-        this.messageKey = messageKey;
+    public IdentityProviderError(String key, List<String> arguments) {
+        this.key = key;
         this.arguments = arguments;
     }
 
-    public String getMessageKey() {
-        return messageKey;
+    public String getKey() {
+        return key;
     }
 
     public List<String> getArguments() {
         return arguments;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
 
         IdentityProviderError that = (IdentityProviderError) o;
 
-        return new EqualsBuilder()
-                .append(messageKey, that.messageKey)
-                .append(arguments, that.arguments)
-                .isEquals();
+        if (key != null ? !key.equals(that.key) : that.key != null) return false;
+        if (arguments != null ? !arguments.equals(that.arguments) : that.arguments != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(messageKey)
-                .append(arguments)
-                .toHashCode();
+        int result = key != null ? key.hashCode() : 0;
+        result = 31 * result + (arguments != null ? arguments.hashCode() : 0);
+        return result;
     }
 }

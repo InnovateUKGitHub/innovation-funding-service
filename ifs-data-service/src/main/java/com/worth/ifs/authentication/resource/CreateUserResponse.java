@@ -1,47 +1,44 @@
 package com.worth.ifs.authentication.resource;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 /**
  * Represents the return result from creating a User
  */
 public class CreateUserResponse {
 
-    private String uniqueId;
+    private String uuid;
+    private String email;
+    private String created;
+    private String modified;
 
-    /**
-     * For JSON marshalling
-     */
-    public CreateUserResponse() {
-
+    public String getUuid() {
+        return uuid;
     }
 
-    public CreateUserResponse(String uniqueId) {
-        this.uniqueId = uniqueId;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
-    public String getUniqueId() {
-        return uniqueId;
+    public String getEmail() {
+        return email;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CreateUserResponse that = (CreateUserResponse) o;
-
-        return new EqualsBuilder()
-                .append(uniqueId, that.uniqueId)
-                .isEquals();
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(uniqueId)
-                .toHashCode();
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
+
+    public String getModified() {
+        return modified;
+    }
+
+    public void setModified(String modified) {
+        this.modified = modified;
     }
 }

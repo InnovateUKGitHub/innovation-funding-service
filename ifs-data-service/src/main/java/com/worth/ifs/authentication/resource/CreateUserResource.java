@@ -1,15 +1,12 @@
 package com.worth.ifs.authentication.resource;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 /**
  * Represents a request to an Identity Provider to create a new User record
  */
 public class CreateUserResource {
 
-    private String emailAddress;
-    private String plainTextPassword;
+    private String email;
+    private String password;
 
     /**
      * For JSON marshalling
@@ -17,46 +14,45 @@ public class CreateUserResource {
     public CreateUserResource() {
     }
 
-    public CreateUserResource(String emailAddress, String plainTextPassword) {
-        this.emailAddress = emailAddress;
-        this.plainTextPassword = plainTextPassword;
+    public CreateUserResource(String email, String password) {
+        this.email= email;
+        this.password = password;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getEmail() {
+        return email;
     }
 
-    public String getPlainTextPassword() {
-        return plainTextPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void setPlainTextPassword(String plainTextPassword) {
-        this.plainTextPassword = plainTextPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
 
         CreateUserResource that = (CreateUserResource) o;
 
-        return new EqualsBuilder()
-                .append(emailAddress, that.emailAddress)
-                .append(plainTextPassword, that.plainTextPassword)
-                .isEquals();
+        if (email != null ? !email.equals(that.email) : that.email != null) return false;
+        if (password != null ? !password.equals(that.password) : that.password != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(emailAddress)
-                .append(plainTextPassword)
-                .toHashCode();
+        int result = email != null ? email.hashCode() : 0;
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        return result;
     }
 }
