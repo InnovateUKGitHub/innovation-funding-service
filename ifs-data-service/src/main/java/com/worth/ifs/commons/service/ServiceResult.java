@@ -161,7 +161,14 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      * A factory method to generate a failing ServiceResult based upon an Error.
      */
     public static <T> ServiceResult<T> serviceFailure(Error error) {
-        return new ServiceResult<>(left(new ServiceFailure(singletonList(error))));
+        return serviceFailure(singletonList(error));
+    }
+
+    /**
+     * A factory method to generate a failing ServiceResult based upon an Error.
+     */
+    public static <T> ServiceResult<T> serviceFailure(List<Error> errors) {
+        return new ServiceResult<>(left(new ServiceFailure(errors)));
     }
 
     /**

@@ -53,14 +53,14 @@ Large organisation can choose up to 50% funding
 *** Keywords ***
 The applicant enters organisation size details
     [Arguments]    ${org_size_option}    ${funding_level}
-    Applicant goes to the your finances section
+    The user navigates to the page      ${YOUR_FINANCES_URL}
     Applicant enters the organisation size    ${org_size_option}
     Applicant enters the funding level    ${funding_level}
     Applicant chooses to save and return to application overview
 
 The 'your finances' section can be successfully saved
     [Arguments]    ${org_size_option}    ${funding_level}
-    Applicant goes to the Your finances section
+    The user navigates to the page      ${YOUR_FINANCES_URL}
     Applicant can see the correct organisation size has been selected    ${org_size_option}
     Applicant can see the correct funding level has been saved    ${funding_level}
 

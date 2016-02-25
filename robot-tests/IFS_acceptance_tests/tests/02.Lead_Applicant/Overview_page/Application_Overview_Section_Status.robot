@@ -14,21 +14,21 @@ Resource          ../../../resources/keywords/Application_question_edit_actions.
 Section status is updated on the overview page after marking a section as complete
     [Documentation]    INFUND-539
     [Tags]    HappyPath
-    Given applicant goes to the 'application overview' page for application 3
+    Given the user navigates to the page    ${APPLICATION_3_OVERVIEW_URL}
     And none of the sections are marked as complete
-    When applicant goes to the 'economic benefits' question for application 3
+    When the user navigates to the page     ${ECONOMIC_BENEFIT_URL_APPLICATION_3}
     And the applicant adds some content and marks this section as complete
-    And applicant goes to the 'application overview' page for application 3
+    And the user navigates to the page    ${APPLICATION_3_OVERVIEW_URL}
     Then the applicant can see that the 'economics benefit' section is marked as complete
 
 Section status is updated on the overview page after editing a section so it is no longer complete
     [Documentation]    INFUND-539
     [Tags]    HappyPath
-    Given applicant goes to the 'application overview' page for application 3
+    Given the user navigates to the page    ${APPLICATION_3_OVERVIEW_URL}
     And the applicant can see that the 'economics benefit' section is marked as complete
-    When applicant goes to the 'economic benefits' question for application 3
+    When the user navigates to the page     ${ECONOMIC_BENEFIT_URL_APPLICATION_3}
     And the applicant edits the "economic benefit" question
-    And applicant goes to the 'application overview' page for application 3
+    And the user navigates to the page      ${APPLICATION_3_OVERVIEW_URL}
     Then none of the sections are marked as complete
 
 *** Keywords ***

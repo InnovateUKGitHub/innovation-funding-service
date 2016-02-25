@@ -28,14 +28,14 @@ Verify the "Review and submit" button (overview page)
     [Documentation]    -INFUND-195
     ...    -INFUND-214
     [Tags]    Applicant    Submit    Review and Submit    Overview    HappyPath
-    Given Applicant goes to the Overview page
+    Given the user navigates to the page        ${application_overview_url}
     And the overview page should have the "Review & Submit" button
     When the applicant clicks the submit button
     Then the applicant redirects to the summary page
 
 Applicant can see the List with the sections
     [Tags]    Applicant    Overview
-    When Applicant goes to the Overview page
+    When the user navigates to the page        ${application_overview_url}
     Then the applicant should see three sections
 
 Only the main questions should show and not the file uploads
@@ -67,7 +67,7 @@ the Applicant should see the overview of the selected application
     Location Should Be    ${APPLICATION_OVERVIEW_URL}
 
 the Applicant is in the application overview page
-    Applicant goes to the Overview page
+    the user navigates to the page      ${application_overview_url}
 
 the applicant should see three sections
     Element Should Be Visible    css=#section-1 .heading-medium
