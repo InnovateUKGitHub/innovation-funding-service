@@ -1,19 +1,15 @@
 *** Keywords ***
-
-
 The user navigates to the page
-    [Arguments]     ${TARGET_URL}
-    Go To           ${TARGET_URL}
-    Page Should Not Contain         Error
-    Page Should Not Contain         something went wrong
-
+    [Arguments]    ${TARGET_URL}
+    Go To    ${TARGET_URL}
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
 
 The user is on the page
-    [Arguments]     ${TARGET_URL}
-    Location Should Be           ${TARGET_URL}
-    Page Should Not Contain         Error
-    Page Should Not Contain         something went wrong
-
+    [Arguments]    ${TARGET_URL}
+    Location Should Be    ${TARGET_URL}
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
 
 Applicant edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
@@ -39,7 +35,6 @@ Switch to the first browser
 Applicant is in the 'Your Finance' sub-section
     Go To    ${FINANCES}
     Click Element    Link=Your finances
-
 
 the applicant is in the "Your Finances" sub-section
     Applicant is in the 'Your Finance' sub-section
@@ -203,3 +198,18 @@ User should get an error page
     [Arguments]    ${ERROR_TEXT}
     Page should contain element    css=.error
     Page should contain    ${ERROR_TEXT}
+
+User should see the notification
+    [Arguments]    ${MESSAGE}
+    Wait Until Element Is Visible    css=#content > div.event-alert
+    Wait Until Page Contains    ${MESSAGE}
+
+Applicant assigns the question to the collaborator
+    [Arguments]    ${TEXT_AREA}    ${TEXT}    ${NAME}
+    focus    ${TEXT_AREA}
+    user enters text to a text field    ${TEXT_AREA}    ${TEXT}
+    When user clicks the button/link    css=.assign-button
+    Then user clicks the button/link    jQuery=button:contains("${NAME}")
+
+user goes back to the previous page
+    Go Back
