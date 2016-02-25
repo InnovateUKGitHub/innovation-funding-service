@@ -6,7 +6,7 @@ ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${LOGIN_URL}      ${SERVER}/login
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/1/summary
-${QUESTION11_URL}    ${SERVER}/application-form/1/section/1/#question-11
+${QUESTION11_URL}      ${SERVER}/application-form/1/section/1/#question-11
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/1
 ${APPLICATION_OVERVIEW_URL_APPLICATION_2}    ${SERVER}/application/2
 ${APPLICATION_SUBMITTED_URL}    ${SERVER}/application/1/submit
