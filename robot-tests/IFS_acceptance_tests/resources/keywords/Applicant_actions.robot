@@ -5,7 +5,6 @@ The user navigates to the page
     [Arguments]     ${TARGET_URL}
     Go To           ${TARGET_URL}
     Page Should Not Contain         Error
-    Page Should Not Contain         error 
 
 
 Applicant edits the 'Project Summary' question
