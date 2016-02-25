@@ -89,7 +89,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question getPreviousQuestion(Long questionId) {
-        return questionRestService.getPreviousQuestion(questionId).getSuccessObjectOrThrowException();
+        return questionRestService.getPreviousQuestion(questionId).getSuccessObjectOrNull();
     }
 
     @Override
@@ -99,7 +99,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question getNextQuestionBySection(Long sectionId) {
-        return questionRestService.getNextQuestionBySection(sectionId).getSuccessObjectOrThrowException();
+        return questionRestService.getNextQuestionBySection(sectionId).getSuccessObjectOrNull();
     }
 
     @Override
