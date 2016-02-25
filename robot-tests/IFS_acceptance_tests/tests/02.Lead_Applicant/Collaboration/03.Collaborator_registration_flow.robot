@@ -97,6 +97,3 @@ the user fills the create account form
 the radio button should have the new selection
     [Arguments]    ${ORG_TYPE}
     Radio Button Should Be Set To    organisationType    ${ORG_TYPE}
-
-user goes back to the previous page
-    Go Back
