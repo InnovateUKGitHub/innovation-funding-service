@@ -24,7 +24,7 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
 
     @Override
     public List<FormInputResponse> getByApplication(Long applicationId) {
-        return responseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
+        return responseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrNull();
     }
 
     @Override

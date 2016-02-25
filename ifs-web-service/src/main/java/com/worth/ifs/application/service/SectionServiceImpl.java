@@ -1,21 +1,15 @@
 package com.worth.ifs.application.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.Future;
-
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.concurrent.Future;
 
 import static com.worth.ifs.application.service.Futures.adapt;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -132,7 +126,7 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public Future<SectionResource> getPreviousSection(Optional<SectionResource> section) {
         if(section!=null && section.isPresent()) {
-            return adapt(sectionRestService.getPreviousSection(section.get().getId()), RestResult::getSuccessObjectOrThrowException);
+            return adapt(sectionRestService.getPreviousSection(section.get().getId()), RestResult::getSuccessObjectOrNull);
         }
         return null;
     }
