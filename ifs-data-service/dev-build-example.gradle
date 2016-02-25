@@ -11,6 +11,7 @@ ext.ifsDataServiceRestBaseURL="http://localhost:8090"
 ext.ifsWebBaseURL="http://localhost:8080"
 ext.silRestBaseURL="http://localhost:8090/silstub"
 ext.idpRestBaseURL="http://localhost:8090/idpstub"
+ext.idpRestKey="1234567890"
 ext.tomcatWebAppsDir="/Users/rogier/Projects/misc/ifs/apache-tomcat-data/webapps"
 
 project.ext['flyway.url']='jdbc:mysql://127.0.0.1:3306?characterEncoding=utf8'
