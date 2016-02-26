@@ -36,6 +36,8 @@ import static com.worth.ifs.login.HomeController.getRedirectUrlForUser;
 @Controller
 @RequestMapping("/registration")
 public class RegistrationController {
+    public static final String BASE_URL = "/registration/register";
+
     public void setValidator(Validator validator) {
         this.validator = validator;
     }
@@ -244,6 +246,6 @@ public class RegistrationController {
 
     private void setFormActionURL(RegistrationForm registrationForm, HttpServletRequest request) {
         Long organisationId = getOrganisationId(request);
-        registrationForm.setActionUrl("/registration/register?" + ORGANISATION_ID_PARAMETER_NAME + "=" + organisationId);
+        registrationForm.setActionUrl(BASE_URL + "?" + ORGANISATION_ID_PARAMETER_NAME + "=" + organisationId);
     }
 }

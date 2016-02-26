@@ -12,10 +12,13 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 Enter Valid Postcode and the results should be displayed in the dropdown
     [Documentation]    INFUND-890    # note that I have used the word "postcode" as a postcode - any actual postcode will fail as the postcode lookup    # functionality does not yet exist
     ...
-    ...
     [Tags]    HappyPath
-    Given user navigates to the page    ${POSTCODE_LOOKUP_URL}
-    sleep     4s
+    Given user navigates to the page    ${COMPETITION_DETAILS_URL}
+    When user clicks the button/link    jQuery=.column-third .button:contains("Sign in to apply")
+    And user clicks the button/link    jQuery=.button:contains("Create")
+    and user enters text to a text field    id=org-name    Innovate
+    And user clicks the button/link    id=org-search
+    And user clicks the button/link    LINK=INNOVATE LTD
     When user enters text to a text field    css=#postcode-check    postcode
     And user clicks the button/link    id=postcode-lookup
     Then user should see the element    css=#select-address-block
@@ -42,7 +45,6 @@ Same Operating address
 *** Keywords ***
 the user selects the checkbox "The registered test is the same as the operating address"
     Select Checkbox    id=address-same
-    Select Checkbox    name=useCompanyHouseAddress
 
 the user unselects the checkbox "The registered test is the same as the operating address"
     Unselect Checkbox    id=address-same

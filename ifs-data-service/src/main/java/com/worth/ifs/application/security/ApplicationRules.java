@@ -38,21 +38,21 @@ public class ApplicationRules {
     }
 
     @PermissionRule(value="UPDATE", description="A user can only update an application is they are the lead applicant")
-    public boolean onlyLeadAplicantCanChangeApplicationResource(ApplicationResource application, User user){
+    public boolean onlyLeadApplicantCanChangeApplicationResource(ApplicationResource application, User user){
         return and(userIsConnectedToApplicationResource(application, user), userIsLeadApplicantOnApplicationResource(application, user));
     }
 
-    private boolean userIsConnectedToApplicationResource(ApplicationResource application, User user){
+    boolean userIsConnectedToApplicationResource(ApplicationResource application, User user){
         List<ProcessRole> processRole = processRoleRepository.findByUserAndApplicationId(user, application.getId());
         return !processRole.isEmpty();
     }
 
-    private boolean userIsLeadApplicantOnApplicationResource(ApplicationResource application, User user){
+    boolean userIsLeadApplicantOnApplicationResource(ApplicationResource application, User user){
         Role role = onlyElement(roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName()));
         return !processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(), role, application.getId()).isEmpty();
     }
 
-    private boolean applicationExists(ApplicationResource applicationResource){
+    boolean applicationExists(ApplicationResource applicationResource){
         Long id = applicationResource.getId();
         return id!=null && applicationRepository.exists(id);
     }

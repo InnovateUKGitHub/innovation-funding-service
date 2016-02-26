@@ -1,19 +1,18 @@
 package com.worth.ifs.organisation.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.worth.ifs.commons.resource.ResourceWithEmbeddeds;
-import com.worth.ifs.organisation.domain.Address;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.worth.ifs.organisation.domain.Address;
 
 /**
  * Resource object to store the company details, from the company house api.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class OrganisationSearchResult extends ResourceWithEmbeddeds implements Serializable{
+public class OrganisationSearchResult implements Serializable{
     private String organisationSearchId;
     private String name;
     private Address organisationAddress;

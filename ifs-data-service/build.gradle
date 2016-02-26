@@ -64,15 +64,11 @@ configurations {
 
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile "org.springframework.boot:spring-boot-starter-data-rest"
     compile "org.springframework.security:spring-security-crypto"
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.springframework.data:spring-data-rest-hal-browser"
     compile "mysql:mysql-connector-java"
     compile "org.springframework:spring-web"
-    compile "org.projectlombok:lombok:1.16.2"
     compile "com.jayway.jsonpath:json-path-assert:2.0.0"
-    compile "org.springframework.hateoas:spring-hateoas"
     compile "com.jayway.jsonpath:json-path"
     compile "org.springframework.statemachine:spring-statemachine-core:1.0.0.RC1"
     compile "org.springframework.statemachine:spring-statemachine-recipes-common:1.0.0.RC1"
@@ -86,6 +82,7 @@ dependencies {
 
     compile 'javax.mail:mail:1.4.7'
     compile "org.apache.httpcomponents:httpasyncclient"
+    compile "com.google.guava:guava:19.0"
 
 
     // the below dependency can be removed when Shib REST API is available

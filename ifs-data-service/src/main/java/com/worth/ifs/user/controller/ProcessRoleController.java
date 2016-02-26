@@ -1,25 +1,23 @@
 package com.worth.ifs.user.controller;
 
+import java.util.List;
+
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.transactional.UsersRolesService;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * This RestController exposes CRUD operations
  * to manage {@link ProcessRole} related data.
  */
 @RestController
-@ExposesResourceFor(ProcessRoleResource.class)
 @RequestMapping("/processrole")
 public class ProcessRoleController {
 

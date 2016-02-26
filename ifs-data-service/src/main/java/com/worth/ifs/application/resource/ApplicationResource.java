@@ -1,16 +1,15 @@
 package com.worth.ifs.application.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.springframework.hateoas.core.Relation;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Relation(value="application", collectionRelation="applications")
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class ApplicationResource {
 
     private Long id;
