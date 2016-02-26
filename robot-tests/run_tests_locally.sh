@@ -71,6 +71,10 @@ function buildAndDeploy {
 }
 
 function startServers {
+    echo "********START SHIBBOLETH***********"
+    cd ${shibbolethScriptsPath}
+    ./start-shibboleth-with-customisations.sh
+
     echo "********START THE DATA SERVER********"
     cd ${dataTomcatBinPath}
     ./startup.sh
@@ -89,10 +93,6 @@ function startServers {
     do
       [[ "${logLine}" == *"Deployment of web application archive"* ]] && pkill -P $$ tail
     done
-    
-    echo "********START SHIBBOLETH***********"
-    cd ${shibbolethScriptsPath}
-    ./start-shibboleth-with-customisations.sh
 }
 
 
