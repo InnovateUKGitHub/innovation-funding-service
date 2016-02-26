@@ -18,7 +18,8 @@ The user is logged in
 
 The user is not logged in and later enters correct login
     [Documentation]    INFUND-921
-    [Tags]    Applicant    Details page
+    [Tags]    Applicant    Details page  Pending
+    # pending due to login changes INFUND-1859 shib
     Given user navigates to the page    ${LOG_OUT}
     When user navigates to the page    ${COMPETITION_DETAILS_URL}
     Then user should see the element    jQuery=.column-third .button:contains('Sign in')
@@ -29,7 +30,8 @@ The user is not logged in and later enters correct login
 
 The user is not logged in and later enters incorrect login
     [Documentation]    INFUND-921
-    [Tags]    Applicant    Details page
+    [Tags]    Applicant    Details page  Pending
+    # pending due to login changes INFUND-1859 shib
     Given user navigates to the page    ${LOG_OUT}
     When user navigates to the page    ${COMPETITION_DETAILS_URL}
     And user should see the element    jQuery=.column-third .button:contains('Sign in')

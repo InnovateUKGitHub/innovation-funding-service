@@ -42,8 +42,6 @@ the applicant is in the "Your Finances" sub-section
 the applicant is in the Finance section
     Go To    ${FINANCES}
 
-
-
 Create new application
     go to    ${CREATE_APPLICATION_PAGE}
     Input Text    id=application_name    Form test application
@@ -57,13 +55,12 @@ User should be redirected to the correct page
 User navigates to the page
     [Arguments]    ${PAGE_URL}
     go to    ${PAGE_URL}
-    Page Should Not Contain     Error
-    Page Should Not Contain     something went wrong
-
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
 
 The user receives a custom error message
-    [Arguments]     ${custom_error_message}
-    Page Should Contain     ${custom_error_message}
+    [Arguments]    ${custom_error_message}
+    Page Should Contain    ${custom_error_message}
 
 User enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
@@ -110,7 +107,7 @@ User should get an error page
 
 User should see the notification
     [Arguments]    ${MESSAGE}
-    Wait Until Element Is Visible    css=#content > div.event-alert
+    Wait Until Element Is Visible    css=div.event-alert
     Wait Until Page Contains    ${MESSAGE}
 
 Applicant assigns the question to the collaborator

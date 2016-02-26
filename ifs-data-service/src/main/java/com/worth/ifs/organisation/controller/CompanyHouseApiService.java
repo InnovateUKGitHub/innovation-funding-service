@@ -1,7 +1,7 @@
 package com.worth.ifs.organisation.controller;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
+import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface CompanyHouseApiService {
 
-    ServiceResult<List<CompanyHouseBusiness>> searchOrganisations(String encodedSearchText);
+    ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText);
 
-    ServiceResult<CompanyHouseBusiness> getOrganisationById(String id);
+    ServiceResult<OrganisationSearchResult> getOrganisationById(String id);
 }

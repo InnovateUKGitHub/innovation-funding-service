@@ -51,3 +51,4 @@ Logout as user
     # TODO DW - INFUND-936 - remove temp login step
     Location Should Be    ${TEMPORARY_LOGOUT_URL}
     Go to    ${LOGIN_URL}
+

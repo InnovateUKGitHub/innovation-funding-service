@@ -16,15 +16,18 @@ import com.worth.ifs.util.JsonUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 // TODO DW - INFUND-1555 - handle rest results
@@ -40,6 +43,15 @@ public class AcceptInviteController extends AbstractApplicationController {
 
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
+    @Autowired
+    private MessageSource messageSource;
+
+    Validator validator;
+
+    @Autowired
+    public void setValidator(Validator validator) {
+        this.validator = validator;
+    }
 
     @RequestMapping(value = "/accept-invite/{hash}", method = RequestMethod.GET)
     public String displayContributors(
@@ -83,11 +95,19 @@ public class AcceptInviteController extends AbstractApplicationController {
     public String chooseOrganisationType(HttpServletRequest request,
                                          Model model,
                                          @ModelAttribute OrganisationTypeForm organisationTypeForm,
-                                         @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId
+                                         BindingResult bindingResult,
+                                         Locale locale,
+                                         @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId,
+                                         @RequestParam(value = "invalid", required = false) String invalid
+
     ){
 
         String hash = CookieUtil.getCookieValue(request, INVITE_HASH);
         RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
+
+        if(invalid != null){
+            validator.validate(organisationTypeForm, bindingResult);
+        }
 
         if(invite.isSuccess() && InviteStatusConstants.SEND.equals(invite.getSuccessObject().getStatus())){
             InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObject();
@@ -124,13 +144,11 @@ public class AcceptInviteController extends AbstractApplicationController {
                                          BindingResult bindingResult
 
     ){
-        log.error("Type "+ organisationTypeForm.getOrganisationType().toString());
-
         Long organisationTypeId = organisationTypeForm.getOrganisationType();
 
         if(bindingResult.hasErrors()){
             log.error("redirect because validation errors");
-            return "redirect:/application-contributors/invite/organisation-type";
+            return "redirect:/accept-invite/new-account-organisation-type?invalid";
         }else if(OrganisationTypeEnum.getFromId(organisationTypeId).hasChildren()){
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
             CookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
@@ -148,8 +166,11 @@ public class AcceptInviteController extends AbstractApplicationController {
     public String chooseOrganisationType(@ModelAttribute("companyHouseForm") CompanyHouseForm companyHouseForm,
                                          @RequestParam(value = ORGANISATION_TYPE) Long organisationTypeId
     ){
+        log.warn("OrganisationType: ");
         if(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationTypeId)){
-            return "create-application/find-business";
+            return "redirect:/organisation/create/find-organisation";
+        }else if(OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId().equals(organisationTypeId)){
+            return "redirect:/organisation/create/find-organisation";
         }else{
             return "application-contributors/invite/organisation-type";
         }

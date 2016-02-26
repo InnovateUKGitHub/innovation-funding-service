@@ -26,6 +26,7 @@ public class Address {
     @NotBlank
     private String locality;
     private String poBox;
+    @NotBlank
     @Length(max = 9)
     private String postalCode;
     private String region;

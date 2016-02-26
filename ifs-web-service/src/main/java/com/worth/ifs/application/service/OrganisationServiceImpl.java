@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.organisation.domain.Address;
-import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
+import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.organisation.service.CompanyHouseRestService;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
@@ -74,12 +74,12 @@ public class OrganisationServiceImpl  implements OrganisationService {
     }
 
     @Override
-    public CompanyHouseBusiness getCompanyHouseOrganisation(String organisationId) {
+    public OrganisationSearchResult getCompanyHouseOrganisation(String organisationId) {
         return  companyHouseRestService.getOrganisationById(organisationId);
     }
 
     @Override
-    public List<CompanyHouseBusiness> searchCompanyHouseOrganisations(String searchText) {
+    public List<OrganisationSearchResult> searchCompanyHouseOrganisations(String searchText) {
         return  companyHouseRestService.searchOrganisations(searchText);
     }
 

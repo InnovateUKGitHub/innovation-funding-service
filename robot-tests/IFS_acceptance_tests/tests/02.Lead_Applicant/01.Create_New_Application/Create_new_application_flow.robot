@@ -17,19 +17,21 @@ ${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9
 *** Test Cases ***
 Create application flow for non registered users CH route
     [Documentation]    INNFUND-669
-    [Tags]    Create application    HappyPath
+    [Tags]    Create application    HappyPath   Failing
+    # failing because of auto login not working shib
     Given user navigates to the page    ${COMPETITION_DETAILS_URL}
     When user clicks the button/link    jQuery=.column-third .button:contains("Sign in to apply")
     And user clicks the button/link    jQuery=.button:contains("Create")
     and user enters text to a text field    id=org-name    Innovate
     And user clicks the button/link    id=org-search
     And user clicks the button/link    LINK=INNOVATE LTD
-    and user enters text to a text field    css=#postcode-check    postcode
+    and user enters text to a text field    css=#postcode-check    2234
     And user clicks the button/link    id=postcode-lookup
     And user clicks the button/link    css=#select-address-block > button
-    And user clicks the button/link    jQuery=.button:contains("Save organisation and")
+    And user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And user clicks the button/link    jQuery=.button:contains("Save")
     and the user enters the details and clicks the create account
-    And user clicks the button/link    JQuery=.button:contains("Begin application")
+    And user clicks the button/link    jQuery=.button:contains("Begin application")
     Then user should see the text in the page    Application overview
     And user should see the text in the page    Technology Inspired - Application number 0000
 
