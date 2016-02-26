@@ -34,6 +34,8 @@ public class ExternalOrganisationSearchController {
     @Autowired
     private CompanyHouseApiService companyHouseService;
 
+    private static final int SEARCH_ITEMS_MAX = 10;
+
 
     @RequestMapping("/searchOrganisations/{organisationType}/{organisationSearchText}")
     public RestResult<List<OrganisationSearchResult>> searchOrganisations(@PathVariable("organisationType") final Long organisationTypeId,
@@ -44,7 +46,7 @@ public class ExternalOrganisationSearchController {
             case BUSINESS:
                 return companyHouseService.searchOrganisations(organisationSearchText).toGetResponse();
             case ACADEMIC:
-                return organisationService.searchAcademic(organisationSearchText).toGetResponse();
+                return organisationService.searchAcademic(organisationSearchText, SEARCH_ITEMS_MAX).toGetResponse();
             default:
 
                 break;

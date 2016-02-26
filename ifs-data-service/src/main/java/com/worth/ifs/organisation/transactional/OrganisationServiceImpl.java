@@ -1,7 +1,10 @@
 package com.worth.ifs.organisation.transactional;
 
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.organisation.domain.Academic;
 import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.organisation.repository.AcademicRepository;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.AddressType;
@@ -13,14 +16,16 @@ import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.stream.Collectors.toCollection;
@@ -33,6 +38,8 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private OrganisationRepository organisationRepository;
+    @Autowired
+    private AcademicRepository academicRepository;
 
     @Autowired
     private OrganisationTypeRepository organisationTypeRepository;
@@ -92,22 +99,32 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
 
     @Override
-    public ServiceResult<List<OrganisationSearchResult>> searchAcademic(final String organisationName){
-        ArrayList<OrganisationSearchResult> organisations = new ArrayList<>();
+    public ServiceResult<List<OrganisationSearchResult>> searchAcademic(final String organisationName, int maxItems){
+        List<OrganisationSearchResult> organisations;
+        organisations = academicRepository.findByNameContainingIgnoreCase(organisationName, new PageRequest(0, 10))
+                .stream()
+                .map(a -> new OrganisationSearchResult(a.getId().toString(), a.getName()))
+                .collect(Collectors.toList());
 
-        organisations.add(new OrganisationSearchResult("1", "Aberystwyth University"));
-        organisations.add(new OrganisationSearchResult("2", "American University of Beirut"));
-        organisations.add(new OrganisationSearchResult("3", "Catholic University of Louvain"));
-
-        ServiceResult organisationResults = serviceSuccess(organisations);
+        ServiceResult organisationResults;
+        if(organisations.isEmpty()){
+            organisationResults = serviceFailure(CommonErrors.notFoundError(Academic.class, organisationName));
+        }else{
+            organisationResults = serviceSuccess(organisations);
+        }
         return organisationResults;
     }
 
     @Override
     public ServiceResult<OrganisationSearchResult> getSearchOrganisation(final Long searchOrganisationId){
-        ArrayList<OrganisationSearchResult> organisations = new ArrayList<>();
+        Academic academic = academicRepository.findById(searchOrganisationId);
 
-        ServiceResult organisationResults = serviceSuccess(new OrganisationSearchResult("1", "Aberystwyth University"));
+        ServiceResult organisationResults;
+        if(academic==null){
+            organisationResults = serviceFailure(CommonErrors.notFoundError(Academic.class, searchOrganisationId));
+        }else{
+            organisationResults = serviceSuccess(new OrganisationSearchResult(academic.getId().toString(), academic.getName()));
+        }
         return organisationResults;
     }
 

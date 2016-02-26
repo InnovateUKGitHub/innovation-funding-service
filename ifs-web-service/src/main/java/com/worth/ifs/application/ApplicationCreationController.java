@@ -72,6 +72,4 @@ public class ApplicationCreationController extends AbstractApplicationController
         }
         return null;
     }
-
-
 }
