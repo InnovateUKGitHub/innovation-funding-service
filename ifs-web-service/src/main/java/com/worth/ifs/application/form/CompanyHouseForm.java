@@ -1,6 +1,6 @@
 package com.worth.ifs.application.form;
 
-import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -27,9 +27,9 @@ public class CompanyHouseForm extends CreateApplicationForm implements Serializa
     private String organisationName;
     private String selectedPostcodeIndex;
     @Valid
-    private transient Address selectedPostcode = null;
+    private transient AddressResource selectedPostcode = null;
     @Valid
-    private transient List<Address> postcodeOptions;
+    private transient List<AddressResource> postcodeOptions;
 
     private boolean manualAddress = false;
     private boolean inCompanyHouse = true;
@@ -77,19 +77,19 @@ public class CompanyHouseForm extends CreateApplicationForm implements Serializa
         this.selectedPostcodeIndex = selectedPostcodeIndex;
     }
 
-    public Address getSelectedPostcode() {
+    public AddressResource getSelectedPostcode() {
         return selectedPostcode;
     }
 
-    public void setSelectedPostcode(Address selectedPostcode) {
+    public void setSelectedPostcode(AddressResource selectedPostcode) {
         this.selectedPostcode = selectedPostcode;
     }
 
-    public List<Address> getPostcodeOptions() {
+    public List<AddressResource> getPostcodeOptions() {
         return postcodeOptions;
     }
 
-    public void setPostcodeOptions(List<Address> postcodeOptions) {
+    public void setPostcodeOptions(List<AddressResource> postcodeOptions) {
         this.postcodeOptions = postcodeOptions;
     }
 

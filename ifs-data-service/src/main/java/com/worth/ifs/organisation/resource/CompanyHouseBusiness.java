@@ -2,8 +2,8 @@ package com.worth.ifs.organisation.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.resource.ResourceWithEmbeddeds;
-import com.worth.ifs.organisation.domain.Address;
 
 import javax.validation.Valid;
 
@@ -18,12 +18,12 @@ public class CompanyHouseBusiness extends ResourceWithEmbeddeds{
     private String dateOfCreation;
     private String description;
     @Valid
-    private Address officeAddress;
+    private AddressResource officeAddress;
 
     public CompanyHouseBusiness() {
     }
 
-    public CompanyHouseBusiness(String companyNumber, String name, String type, String dateOfCreation, String description, Address officeAddress) {
+    public CompanyHouseBusiness(String companyNumber, String name, String type, String dateOfCreation, String description, AddressResource officeAddress) {
         this.companyNumber = companyNumber;
         this.name = name;
         this.type = type;
@@ -36,8 +36,8 @@ public class CompanyHouseBusiness extends ResourceWithEmbeddeds{
     public String getLocation() {
         String locationString = "";
         locationString +=  officeAddress.getAddressLine1();
-        locationString +=  ", "+ officeAddress.getLocality();
-        locationString +=  ", "+ officeAddress.getPostalCode();
+        locationString +=  ", "+ officeAddress.getTown();
+        locationString +=  ", "+ officeAddress.getPostcode();
         return locationString;
     }
 
@@ -81,11 +81,11 @@ public class CompanyHouseBusiness extends ResourceWithEmbeddeds{
         this.description = description;
     }
 
-    public Address getOfficeAddress() {
+    public AddressResource getOfficeAddress() {
         return officeAddress;
     }
 
-    public void setOfficeAddress(Address officeAddress) {
+    public void setOfficeAddress(AddressResource officeAddress) {
         this.officeAddress = officeAddress;
     }
 }

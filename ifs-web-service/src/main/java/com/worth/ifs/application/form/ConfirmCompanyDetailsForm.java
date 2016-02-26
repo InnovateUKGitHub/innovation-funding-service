@@ -1,6 +1,6 @@
 package com.worth.ifs.application.form;
 
-import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.address.resource.AddressResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -18,9 +18,9 @@ public class ConfirmCompanyDetailsForm extends CreateApplicationForm{
     @NotEmpty
     private String postcodeInput;
     private String selectedPostcodeIndex;
-    private Address selectedPostcode = null;
+    private AddressResource selectedPostcode = null;
     @Valid
-    private List<Address> postcodeOptions;
+    private List<AddressResource> postcodeOptions;
     private boolean useCompanyHouseAddress = false;
     private boolean manualAddress = false;
 
@@ -36,11 +36,11 @@ public class ConfirmCompanyDetailsForm extends CreateApplicationForm{
         this.postcodeInput = postcodeInput;
     }
 
-    public List<Address> getPostcodeOptions() {
+    public List<AddressResource> getPostcodeOptions() {
         return postcodeOptions;
     }
 
-    public void setPostcodeOptions(List<Address> postcodeOptions) {
+    public void setPostcodeOptions(List<AddressResource> postcodeOptions) {
         this.postcodeOptions = postcodeOptions;
     }
 
@@ -52,16 +52,16 @@ public class ConfirmCompanyDetailsForm extends CreateApplicationForm{
         this.selectedPostcodeIndex = selectedPostcodeIndex;
     }
 
-    public Address getSelectedPostcode() {
+    public AddressResource getSelectedPostcode() {
         if(selectedPostcode == null){
             if(getSelectedPostcodeIndex() == null || getSelectedPostcodeIndex().equals("")){
                 log.warn("Returning new postcode a");
-                selectedPostcode = new Address();
+                selectedPostcode = new AddressResource();
             }else{
                 int indexInt = Integer.parseInt(getSelectedPostcodeIndex());
                 if(postcodeOptions == null || postcodeOptions.size() <= indexInt ||postcodeOptions.get(indexInt) == null){
                     log.warn("Returning new postcode b");
-                    return new Address();
+                    return new AddressResource();
                 }else{
                     selectedPostcode = postcodeOptions.get(indexInt);
                 }
@@ -73,7 +73,7 @@ public class ConfirmCompanyDetailsForm extends CreateApplicationForm{
         return selectedPostcode;
     }
 
-    public void setSelectedPostcode(Address selectedPostcode) {
+    public void setSelectedPostcode(AddressResource selectedPostcode) {
         this.selectedPostcode = selectedPostcode;
     }
 

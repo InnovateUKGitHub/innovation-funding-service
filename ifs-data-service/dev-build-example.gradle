@@ -49,3 +49,5 @@ ext.ifsSmtpAuth=true
 ext.ifsSmtpPassword="example-password"
 ext.ifsSmtpTlsEnabled=true
 ext.ifsMailTimeoutMillis=10000
+
+ext.postcodeLookupAPIKey=""

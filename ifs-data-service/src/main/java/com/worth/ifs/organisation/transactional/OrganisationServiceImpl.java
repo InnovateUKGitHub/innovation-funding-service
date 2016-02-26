@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.address.mapper.AddressMapper;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
@@ -38,6 +40,9 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private OrganisationMapper organisationMapper;
+
+    @Autowired
+    private AddressMapper addressMapper;
 
     @Override
     public ServiceResult<Set<Organisation>> findByApplicationId(final Long applicationId) {
@@ -76,9 +81,10 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressType addressType, Address address) {
+    public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressType addressType, AddressResource addressResource) {
 
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
+            Address address = addressMapper.mapToDomain(addressResource);
             organisation.addAddress(address, addressType);
             Organisation updatedOrganisation = organisationRepository.save(organisation);
             return serviceSuccess(organisationMapper.mapToResource(updatedOrganisation));

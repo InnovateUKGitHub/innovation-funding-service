@@ -46,26 +46,26 @@
                 <input class="form-control" id="street-3" th:field="*{selectedPostcode.addressLine3}" name="street-2" type="text" />
                 <span class="error-message" th:if="${#fields.hasErrors('*{selectedPostcode.addressLine3}') and form.triedToSave}" th:errors="*{selectedPostcode.addressLine3}"></span>
             </div>
-            <div th:class="${#fields.hasErrors('*{selectedPostcode.locality}') and form.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{selectedPostcode.town}') and form.triedToSave} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="town">
                     <span class="form-label-bold">Town</span>
                 </label>
-                <input class="form-control" id="town"  th:field="*{selectedPostcode.locality}" name="town" type="text" />
-                <span class="error-message" th:if="${#fields.hasErrors('*{selectedPostcode.locality}') and form.triedToSave}" th:errors="*{selectedPostcode.locality}"></span>
+                <input class="form-control" id="town"  th:field="*{selectedPostcode.town}" name="town" type="text" />
+                <span class="error-message" th:if="${#fields.hasErrors('*{selectedPostcode.town}') and form.triedToSave}" th:errors="*{selectedPostcode.town}"></span>
             </div>
-            <div th:class="${#fields.hasErrors('*{selectedPostcode.region}') and form.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{selectedPostcode.county}') and form.triedToSave} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="county">
                     <span class="form-label-bold">County</span>
                 </label>
-                <input class="form-control" id="county" th:field="*{selectedPostcode.region}" name="county" type="text" />
-                <span class="error-message" th:if="${#fields.hasErrors('*{selectedPostcode.region}') and form.triedToSave}" th:errors="*{selectedPostcode.region}"></span>
+                <input class="form-control" id="county" th:field="*{selectedPostcode.county}" name="county" type="text" />
+                <span class="error-message" th:if="${#fields.hasErrors('*{selectedPostcode.county}') and form.triedToSave}" th:errors="*{selectedPostcode.county}"></span>
             </div>
-            <div th:class="${#fields.hasErrors('*{selectedPostcode.postalCode}') and form.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{selectedPostcode.postcode}') and form.triedToSave} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="postcode">
                     <span class="form-label-bold">Postcode</span>
                 </label>
-                <input class="form-control" id="postcode" th:field="*{selectedPostcode.postalCode}" name="postcode" type="text" />
-                <span class="error-message" th:if="${#fields.hasErrors('*{selectedPostcode.postalCode}') and form.triedToSave}" th:errors="*{selectedPostcode.postalCode}"></span>
+                <input class="form-control" id="postcode" th:field="*{selectedPostcode.postcode}" name="postcode" type="text" />
+                <span class="error-message" th:if="${#fields.hasErrors('*{selectedPostcode.postcode}') and form.triedToSave}" th:errors="*{selectedPostcode.postcode}"></span>
             </div>
         </fieldset>
     </div>
@@ -115,9 +115,9 @@
                 <div th:text="${business?.officeAddress?.addressLine1}"></div>
                 <div th:text="${business?.officeAddress?.addressLine2}"></div>
                 <div th:text="${business?.officeAddress?.addressLine3}"></div>
-                <div th:text="${business?.officeAddress?.locality}"></div>
-                <div th:text="${business?.officeAddress?.region}"></div>
-                <div th:text="${business?.officeAddress?.postalCode}"></div>
+                <div th:text="${business?.officeAddress?.town}"></div>
+                <div th:text="${business?.officeAddress?.county}"></div>
+                <div th:text="${business?.officeAddress?.postcode}"></div>
             </div>
         </div>
     </fieldset>

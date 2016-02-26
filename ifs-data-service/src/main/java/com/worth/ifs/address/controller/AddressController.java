@@ -1,0 +1,37 @@
+package com.worth.ifs.address.controller;
+
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.transactional.AddressLookupService;
+import com.worth.ifs.address.transactional.AddressService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+/**
+ *  Controller for the addresses for retrieving existing addresses but also for finding
+ *  ones by postcode or address.
+ */
+@RestController
+@RequestMapping("/address")
+public class AddressController {
+
+    @Autowired
+    private AddressService service;
+
+    @Autowired
+    private AddressLookupService addressLookupService;
+
+    @RequestMapping("/{id}")
+    public RestResult<AddressResource> findById(@PathVariable("id") final Long id) {
+        return service.findOne(id).toGetResponse();
+    }
+
+    @RequestMapping("/doLookup/{lookup}")
+    public RestResult<List<AddressResource>> doLookup(@PathVariable("lookup") final String lookup) {
+        return addressLookupService.doLookup(lookup).toGetResponse();
+    }
+}

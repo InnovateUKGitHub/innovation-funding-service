@@ -46,9 +46,9 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
         assertEquals("ltd", company.getType());
         assertThat("MONTROSE HOUSE", IsEqualIgnoringCase.equalToIgnoringCase(company.getOfficeAddress().getAddressLine1()));
         assertThat("Clayhill Park", IsEqualIgnoringCase.equalToIgnoringCase(company.getOfficeAddress().getAddressLine2()));
-        assertThat("NESTON", IsEqualIgnoringCase.equalToIgnoringCase(company.getOfficeAddress().getLocality()));
-        assertThat("Cheshire", IsEqualIgnoringCase.equalToIgnoringCase(company.getOfficeAddress().getRegion()));
-        assertThat("CH64 3RU", IsEqualIgnoringCase.equalToIgnoringCase(company.getOfficeAddress().getPostalCode()));
+        assertThat("NESTON", IsEqualIgnoringCase.equalToIgnoringCase(company.getOfficeAddress().getTown()));
+        assertThat("Cheshire", IsEqualIgnoringCase.equalToIgnoringCase(company.getOfficeAddress().getCounty()));
+        assertThat("CH64 3RU", IsEqualIgnoringCase.equalToIgnoringCase(company.getOfficeAddress().getPostcode()));
     }
 
     @Test
@@ -63,9 +63,9 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
         assertEquals("ltd", company.getType());
         assertEquals("Montrose House", company.getOfficeAddress().getAddressLine1());
         assertEquals("Clayhill Park", company.getOfficeAddress().getAddressLine2());
-        assertEquals("Neston", company.getOfficeAddress().getLocality());
-        assertEquals("Cheshire", company.getOfficeAddress().getRegion());
-        assertEquals("CH64 3RU", company.getOfficeAddress().getPostalCode());
+        assertEquals("Neston", company.getOfficeAddress().getTown());
+        assertEquals("Cheshire", company.getOfficeAddress().getCounty());
+        assertEquals("CH64 3RU", company.getOfficeAddress().getPostcode());
     }
 
     @Test

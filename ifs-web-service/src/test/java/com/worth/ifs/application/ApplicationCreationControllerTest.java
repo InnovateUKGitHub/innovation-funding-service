@@ -1,9 +1,9 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.exception.ErrorController;
-import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -43,7 +43,7 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
     private String COMPANY_ID = "08241216";
     private String COMPANY_NAME = "NETWORTHNET LTD";
     private String POSTCODE_LOOKUP = "CH64 3RU";
-    private Address address;
+    private AddressResource address;
     private CompanyHouseBusiness companyHouseBusiness;
     private OrganisationResource organisationResource;
     private ApplicationResource applicationResource;
@@ -60,7 +60,7 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
                 .build();
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
-        address = new Address("line1", "line2", "line3", "careof", "country", "locality", "pobox", "postcode", "region");
+        address = new AddressResource("line1", "line2", "line3", "locality", "region", "postcode");
         companyHouseBusiness = new CompanyHouseBusiness(COMPANY_ID, COMPANY_NAME, null, null, null, address);
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
         when(organisationService.getCompanyHouseOrganisation(COMPANY_ID)).thenReturn(companyHouseBusiness);

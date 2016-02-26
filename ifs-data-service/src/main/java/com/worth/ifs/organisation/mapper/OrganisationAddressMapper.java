@@ -1,5 +1,6 @@
 package com.worth.ifs.organisation.mapper;
 
+import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.organisation.domain.OrganisationAddress;

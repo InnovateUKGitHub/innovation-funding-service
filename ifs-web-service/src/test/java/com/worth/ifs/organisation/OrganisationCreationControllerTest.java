@@ -1,13 +1,15 @@
 package com.worth.ifs.organisation;
 
 import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.form.CompanyHouseForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.exception.ErrorController;
-import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.organisation.OrganisationCreationController;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +28,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
@@ -44,10 +50,13 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
     @Mock
     private Validator validator;
 
+    @Mock
+    private AddressRestService addressRestService;
+
     private String COMPANY_ID = "08241216";
     private String COMPANY_NAME = "NETWORTHNET LTD";
     private String POSTCODE_LOOKUP = "CH64 3RU";
-    private Address address;
+    private AddressResource address;
     private CompanyHouseBusiness companyHouseBusiness;
     private OrganisationResource organisationResource;
 
@@ -62,13 +71,16 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .build();
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
-        address = new Address("line1", "line2", "line3", "careof", "country", "locality", "pobox", "postcode", "region");
+        address = new AddressResource("line1", "line2", "line3", "locality", "region", "postcode");
         companyHouseBusiness = new CompanyHouseBusiness(COMPANY_ID, COMPANY_NAME, null, null, null, address);
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
+        List<AddressResource> addressResourceList = new ArrayList<>();
+        addressResourceList.add(address);
         when(organisationService.getCompanyHouseOrganisation(COMPANY_ID)).thenReturn(companyHouseBusiness);
         when(organisationService.save(any(Organisation.class))).thenReturn(organisationResource);
         when(organisationService.save(any(OrganisationResource.class))).thenReturn(organisationResource);
         when(applicationService.createApplication(anyLong(), anyLong(), anyString())).thenReturn(applicationResource);
+        when(addressRestService.doLookup(POSTCODE_LOOKUP)).thenReturn(restSuccess(addressResourceList));
     }
 
     @Test
@@ -274,7 +286,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name(String.format("redirect:/organisation/create/selected-business/%s/postcode/%s/use-address/%s", COMPANY_ID, POSTCODE_LOOKUP, "0")));
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(String.format("/organisation/create/selected-business/%s/postcode/%s/use-address/%s", COMPANY_ID, POSTCODE_LOOKUP, "0"))
+        mockMvc.perform(MockMvcRequestBuilders.get(String.format("/organisation/create/selected-business/%s/postcode/%s/use-address/%s", COMPANY_ID, POSTCODE_LOOKUP, "0"))
 
         )
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())

@@ -1,5 +1,7 @@
 package com.worth.ifs.organisation;
 
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.application.form.CompanyHouseForm;
 import com.worth.ifs.application.form.ConfirmCompanyDetailsForm;
@@ -9,7 +11,6 @@ import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.organisation.domain.Address;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
@@ -45,11 +46,6 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 @Controller
 @RequestMapping("/organisation/create")
 public class OrganisationCreationController {
-    @Autowired
-    private InviteRestService inviteRestService;
-    @Autowired
-    private InviteOrganisationRestService inviteOrganisationRestService;
-
     public static final String COMPANY_HOUSE_COMPANY_ID = "companyId";
     public static final String NOT_IN_COMPANY_HOUSE = "not-in-company-house";
     public static final String MANUAL_ADDRESS = "manual-address";
@@ -66,8 +62,18 @@ public class OrganisationCreationController {
     public static final String POSTCODE = "postcode";
 
     private final Log log = LogFactory.getLog(this.getClass());
+
     @Autowired
     protected OrganisationService organisationService;
+
+    @Autowired
+    private InviteRestService inviteRestService;
+
+    @Autowired
+    private InviteOrganisationRestService inviteOrganisationRestService;
+
+    @Autowired
+    private AddressRestService addressRestService;
 
     Validator validator;
 
@@ -75,7 +81,6 @@ public class OrganisationCreationController {
     public void setValidator(Validator validator) {
         this.validator = validator;
     }
-
 
     @RequestMapping("/create-organisation-type")
     public String createAccountOrganisationType(@ModelAttribute Form form, Model model) {
@@ -183,7 +188,7 @@ public class OrganisationCreationController {
             companyHouseForm.setInCompanyHouse(false);
             companyHouseForm.setManualAddress(true);
             companyHouseForm.setSelectedPostcodeIndex(null);
-            companyHouseForm.setSelectedPostcode(new Address());
+            companyHouseForm.setSelectedPostcode(new AddressResource());
         } else if (request.getParameter(SEARCH_ADDRESS) != null) {
             return String.format("redirect:/organisation/create/find-business/postcode/%s", companyHouseForm.getPostcodeInput());
         } else if (request.getParameter(SELECT_ADDRESS) != null) {
@@ -226,7 +231,7 @@ public class OrganisationCreationController {
                                  HttpServletRequest request) throws IOException {
         // Get data form cookie, convert json to Address object
         String jsonAddress = CookieUtil.getCookieValue(request, COMPANY_ADDRESS);
-        Address address = JsonUtil.getObjectFromJson(jsonAddress, Address.class);
+        AddressResource address = JsonUtil.getObjectFromJson(jsonAddress, AddressResource.class);
 
         // For displaying information only!
         CompanyHouseBusiness org = new CompanyHouseBusiness();
@@ -388,8 +393,7 @@ public class OrganisationCreationController {
         // Get data form cookie, convert json to Address object
 
         String jsonAddress = CookieUtil.getCookieValue(request, COMPANY_ADDRESS);
-        Address address = JsonUtil.getObjectFromJson(jsonAddress, Address.class);
-
+        AddressResource address = JsonUtil.getObjectFromJson(jsonAddress, AddressResource.class);
 
         OrganisationResource organisationResource = new OrganisationResource();
         organisationResource.setName(CookieUtil
@@ -402,31 +406,10 @@ public class OrganisationCreationController {
         return "redirect:/registration/register?organisationId=" + organisationResource.getId();
     }
 
-    public List<Address> searchPostcode(String postcodeInput) {
-        List<Address> addresses = new ArrayList<Address>();
-        addresses.add(new Address(
-                "Montrose House 1",
-                "Clayhill Park",
-                "",
-                "Cheshire West and Chester",
-                "England",
-                "Neston",
-                "po_bo",
-                "CH64 3RU",
-                "Cheshire"
-        ));
-        addresses.add(new Address(
-                "Montrose House",
-                "Clayhill Park",
-                "",
-                "Cheshire West and Chester",
-                "England",
-                "Neston",
-                "po_bo",
-                "CH64 3RU",
-                "Cheshire"
-        ));
-        return addresses;
+    public List<AddressResource> searchPostcode(String postcodeInput) {
+        RestResult<List<AddressResource>>  addressLookupRestResult = addressRestService.doLookup(postcodeInput);
+        List<AddressResource> addressResourceList = addressLookupRestResult.andOnSuccessReturn(result -> result).getSuccessObject();
+        return addressResourceList;
     }
 
     public List<CompanyHouseBusiness> searchCompanyHouse(String organisationName) {
