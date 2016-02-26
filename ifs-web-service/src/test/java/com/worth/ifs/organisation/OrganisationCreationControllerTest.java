@@ -431,15 +431,4 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.model().attribute("selectedOrganisation", Matchers.hasProperty("name", Matchers.equalTo(COMPANY_NAME))))
                 .andExpect(MockMvcResultMatchers.view().name("create-application/confirm-organisation"));
     }
-
-    @Test
-    public void testSaveCompany() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/organisation/create/save-company/")
-                        .cookie(new Cookie(OrganisationCreationController.COMPANY_ADDRESS, "{}"))
-                        .cookie(new Cookie(OrganisationCreationController.COMPANY_NAME, "SOME NAME"))
-        )
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name("redirect:/registration/register?organisationId=" + organisationResource.getId()));
-
-    }
 }
