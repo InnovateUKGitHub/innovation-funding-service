@@ -32,7 +32,7 @@ Valid invitation submit
     Given user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     When the applicant enters valid inputs
     Then user should see the text in the page    Application overview
-    And the invite notification should be visible
+    And user should see the notification    Invites send
 
 Lead applicant can access the Application team page(Link in the overview page)
     [Documentation]    INFUND-928
@@ -142,10 +142,6 @@ the applicant should not be able to assign the question to the users that still 
     [Arguments]    ${assignee_name}
     Click Element    css=#form-input-12 .assign-button button
     Page Should Not Contain Element    xpath=//div[@id="form-input-12"]//button[contains(text(),"${assignee_name}")]
-
-the invite notification should be visible
-    Wait Until Element Is Visible    css=.event-alert
-    page should contain    Invites send
 
 the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    That's you!
