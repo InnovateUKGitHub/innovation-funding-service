@@ -1,12 +1,12 @@
 package com.worth.ifs.organisation.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.worth.ifs.organisation.domain.Address;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.worth.ifs.organisation.domain.Address;
 
 /**
  * Resource object to store the company details, from the company house api.
