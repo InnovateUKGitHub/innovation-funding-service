@@ -67,7 +67,7 @@ public interface ApplicationService {
                                                                                      final Long userId,
                                                                                      final UserRoleType role);
 
-    @PreAuthorize("hasAuthority('applicant')")
+    @NotSecured("used by new (not signed up.in) users to create an application")
     ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
             final Long competitionId,
             final Long userId,
