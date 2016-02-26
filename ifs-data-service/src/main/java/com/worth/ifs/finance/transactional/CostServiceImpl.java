@@ -209,7 +209,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     private ServiceResult<ApplicationFinanceResource> getApplicationFinanceForOrganisation(Long applicationId, Long organisationId, ApplicationFinanceResourceId applicationFinanceResourceId) {
-        return find(applicationFinanceHandler.getApplicationOrganisationFinances(applicationFinanceResourceId), notFoundError(ApplicationFinance.class, applicationId, organisationId));
+        return serviceSuccess(applicationFinanceHandler.getApplicationOrganisationFinances(applicationFinanceResourceId));
     }
 
     private Cost addCostItem(ApplicationFinance applicationFinance, Question question, CostItem newCostItem) {
