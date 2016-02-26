@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-45: As an applicant and I am on the application form on an open application, I expect the form to help me fill in financial details, so I can have a clear overview and less chance of making mistakes.
-Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -13,13 +13,13 @@ Resource          ../../../resources/keywords/Applicant_actions.robot
 *** Test Cases ***
 Auto-save test for the "Grant" field
     [Tags]    Applicant    Autosave    Finance    HappyPath
-    Given Applicant goes to the Your finances section
+    Given the user navigates to the page      ${YOUR_FINANCES_URL}
     Then auto-save should work for the "Grant" field
     And the grant value should be correct in the finance summary page
 
 *** Keywords ***
 the grant value should be correct in the finance summary page
-    Applicant goes to the finance overview
+    The user navigates to the page      ${FINANCES_OVERVIEW_URL}
     Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
 
 auto-save should work for the "Grant" field

@@ -1,14 +1,18 @@
 package com.worth.ifs.commons.rest;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.ErrorTemplate;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
-
-import java.util.LinkedHashMap;
-import java.util.List;
 
 import static com.worth.ifs.util.MapFunctions.getSortedGroupingCounts;
 import static java.util.Collections.singletonList;
@@ -73,5 +77,36 @@ public class RestErrorResponse {
         }
 
         return errors.containsAll(expectedErrors);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        RestErrorResponse rhs = (RestErrorResponse) obj;
+        return new EqualsBuilder()
+                .append(this.errors, rhs.errors)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(errors)
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("errors", errors)
+                .toString();
     }
 }

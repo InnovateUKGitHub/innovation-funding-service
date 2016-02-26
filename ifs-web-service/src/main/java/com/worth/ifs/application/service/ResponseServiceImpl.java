@@ -22,7 +22,7 @@ public class ResponseServiceImpl implements ResponseService {
 
     @Override
     public List<Response> getByApplication(Long applicationId) {
-        return responseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrNull();
+        return responseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
     }
 
     @Override

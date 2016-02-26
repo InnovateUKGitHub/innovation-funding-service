@@ -1,72 +1,15 @@
 *** Keywords ***
-Applicant goes to the Overview page
-    go to    ${APPLICATION_OVERVIEW_URL}
+The user navigates to the page
+    [Arguments]    ${TARGET_URL}
+    Go To    ${TARGET_URL}
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
 
-Applicant goes to the Application form
-    Go To    ${PUBLIC_DESCRIPTION_URL}
-
-Applicant goes to the 'application details' question
-    Go To    ${APPLICATION_DETAILS_URL}
-
-Applicant goes to the 'application summary' page for application 2
-    Go To    ${APPLICATION_2_SUMMARY_URL}
-
-Applicant goes to the 'economic benefit' question for application 2
-    Go To    ${ECONOMIC_BENEFIT_URL_APPLICATION_2}
-
-Applicant goes to the 'application overview' page for application 3
-    Go To    ${APPLICATION_3_OVERVIEW_URL}
-
-Applicant goes to the 'economic benefits' question for application 3
-    Go To    ${ECONOMIC_BENEFIT_URL_APPLICATION_3}
-
-Applicant goes to the 'project summary' question
-    Go To    ${PROJECT_SUMMARY_URL}
-
-Applicant goes to the 'public description' question
-    Go To    ${PUBLIC_DESCRIPTION_URL}
-
-Applicant goes to the 'scope' question
-    Go To    ${SCOPE_URL}
-
-Applicant goes to the 'business opportunity' question
-    Go To    ${BUSINESS_OPPORTUNITY_URL}
-
-Applicant goes to the 'potential market' question
-    Go To    ${POTENTIAL_MARKET_URL}
-
-Applicant goes to the 'project exploitation' question
-    Go To    ${PROJECT_EXPLOITATION_URL}
-
-Applicant goes to the 'economic benefits' question
-    Go To    ${ECONOMIC_BENEFIT_URL}
-
-Applicant goes to the 'technical approach' question
-    Go To    ${TECHNICAL_APPROACH_URL}
-
-Applicant goes to the 'innovation' question
-    Go To    ${INNOVATION_URL}
-
-Applicant goes to the 'risks' question
-    Go To    ${RISKS_URL}
-
-Applicant goes to the 'funding' question
-    Go To    ${FUNDING_URL}
-
-Applicant goes to the 'project team' question
-    Go To    ${PROJECT_TEAM_URL}
-
-Applicant goes to the 'adding value' question
-    Go To    ${ADDING_VALUE_URL}
-
-Applicant goes to the Your finances section
-    Go To    ${YOUR_FINANCES_URL}
-
-Applicant goes to the finance overview
-    Go To    ${FINANCES_OVERVIEW_URL}
-
-Application goes to the Application Team page
-    Go To    ${APPLICATION_TEAM_URL}
+The user is on the page
+    [Arguments]    ${TARGET_URL}
+    Location Should Be    ${TARGET_URL}
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
 
 Applicant edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
@@ -93,120 +36,13 @@ Applicant is in the 'Your Finance' sub-section
     Go To    ${FINANCES}
     Click Element    Link=Your finances
 
-Applicant goes to the scope section
-    go to    ${SCOPE_SECTION_URL}
-
-Applicant goes to the Application questions section
-    Go to    ${APPLICATION_QUESTIONS_SECTION_URL}
-
-Applicant goes to the "Your approach..." section
-    Go to    ${PROJECT_URL}
-
 the applicant is in the "Your Finances" sub-section
     Applicant is in the 'Your Finance' sub-section
 
 the applicant is in the Finance section
     Go To    ${FINANCES}
 
-Applicant is on the overview page
-    Location Should contain    ${APPLICATION_OVERVIEW_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
 
-Applicant is on the Application form
-    Location Should Be    ${APPLICATION_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'application details' question
-    Location Should Be    ${APPLICATION_DETAILS_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'project summary' question
-    Location Should Be    ${PROJECT_SUMMARY_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'public description' question
-    Location Should Be    ${PUBLIC_DESCRIPTION_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'scope' question
-    Location Should Be    ${SCOPE_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'business opportunity question'
-    Location Should Be    ${BUSINESS_OPPORTUNITY_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'potential market' question
-    Location Should Be    ${POTENTIAL_MARKET_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'project exploitation' question
-    Location Should Be    ${PROJECT_EXPLOITATION_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'economic benefit' question
-    Location Should Be    ${ECONOMIC_BENEFIT_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'technical approach' question
-    Location Should Be    ${TECHNICAL APPROACH_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'innovation' question
-    Location Should Be    ${INNOVATION_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'risks' question
-    Location Should Be    ${RISKS_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'funding' question
-    Location Should Be    ${FUNDING_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'project team' question
-    Location Should Be    ${PROJECT_TEAM_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'adding value' question
-    Location Should Be    ${ADDING_VALUE_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the scope section
-    Location Should Be    ${SCOPE_SECTION_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the Application questions section
-    Location Should Be    ${APPLICATION_QUESTIONS_SECTION_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the "Your approach..." section
-    Location Should Be    ${PROJECT_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the Finances section
-    Location Should Be    ${FINANCES}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
 
 Create new application
     go to    ${CREATE_APPLICATION_PAGE}
@@ -215,15 +51,24 @@ Create new application
 
 User should be redirected to the correct page
     [Arguments]    ${URL}
-    location should be    ${URL}
+    Location Should Contain    ${URL}
     Page Should Not Contain    error
 
 User navigates to the page
     [Arguments]    ${PAGE_URL}
     go to    ${PAGE_URL}
+    Page Should Not Contain     Error
+    Page Should Not Contain     something went wrong
+
+
+The user receives a custom error message
+    [Arguments]     ${custom_error_message}
+    Page Should Contain     ${custom_error_message}
 
 User enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Wait Until Element Is Visible    ${TEXT_FIELD}
+    Clear Element Text    ${TEXT_FIELD}
     input text    ${TEXT_FIELD}    ${TEXT_INPUT}
 
 user clicks the button/link
@@ -246,4 +91,34 @@ the guest user enters the log in credentials
 
 User should see the element
     [Arguments]    ${ELEMENT}
-    element should be visible    ${ELEMENT}
+    Wait Until Element Is Visible    ${ELEMENT}
+
+User should not see the element
+    [Arguments]    ${NOT_VISIBLE_ELEMENT}
+    sleep    500ms
+    Element Should Not Be Visible    ${NOT_VISIBLE_ELEMENT}
+
+User should not see the text in the page
+    [Arguments]    ${NOT_VISIBLE_TEXT}
+    sleep    500ms
+    Page should not contain    ${NOT_VISIBLE_TEXT}
+
+User should get an error page
+    [Arguments]    ${ERROR_TEXT}
+    Page should contain element    css=.error
+    Page should contain    ${ERROR_TEXT}
+
+User should see the notification
+    [Arguments]    ${MESSAGE}
+    Wait Until Element Is Visible    css=#content > div.event-alert
+    Wait Until Page Contains    ${MESSAGE}
+
+Applicant assigns the question to the collaborator
+    [Arguments]    ${TEXT_AREA}    ${TEXT}    ${NAME}
+    focus    ${TEXT_AREA}
+    user enters text to a text field    ${TEXT_AREA}    ${TEXT}
+    When user clicks the button/link    css=.assign-button
+    Then user clicks the button/link    jQuery=button:contains("${NAME}")
+
+user goes back to the previous page
+    Go Back

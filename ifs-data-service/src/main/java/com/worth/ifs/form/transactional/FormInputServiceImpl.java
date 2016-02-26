@@ -57,7 +57,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     @Override
     public ServiceResult<List<FormInputResponse>> findResponsesByApplication(final Long applicationId) {
-        return find(formInputResponseRepository.findByApplicationId(applicationId), notFoundError(FormInputResponse.class, applicationId));
+        return serviceSuccess(formInputResponseRepository.findByApplicationId(applicationId));
     }
 
     @Override

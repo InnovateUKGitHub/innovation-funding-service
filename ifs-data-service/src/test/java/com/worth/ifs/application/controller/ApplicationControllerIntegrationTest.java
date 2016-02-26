@@ -1,5 +1,9 @@
 package com.worth.ifs.application.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -7,18 +11,16 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.mapper.ApplicationStatusMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
 import static org.junit.Assert.assertEquals;
@@ -77,6 +79,12 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     @Autowired
     public void setQuestionController(QuestionController questionController) {
         this.questionController = questionController;
+    }
+
+    @Test
+    public void testFindAll() {
+        RestResult<List<ApplicationResource>> all = controller.findAll();
+        assertEquals(5, all.getSuccessObject().size());
     }
 
     @Test

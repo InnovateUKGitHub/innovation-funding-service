@@ -66,7 +66,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     @ProfileExecution
     @RequestMapping
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -82,7 +82,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                BindingResult bindingResult, Model model,
                                @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("questionId") final Long questionId,
-                               HttpServletRequest request) {
+                               HttpServletRequest request) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         SectionResource section = sectionService.getSectionByQuestionId(questionId);
@@ -102,7 +102,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationFormWithOpenSection(@Valid @ModelAttribute("form") ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
-                                                 HttpServletRequest request) {
+                                                 HttpServletRequest request) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         SectionResource section = sectionService.getById(sectionId);
 
@@ -138,7 +138,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                      @PathVariable("applicationId") final Long applicationId,
                                      @PathVariable("questionId") final Long questionId,
                                      HttpServletRequest request,
-                                     HttpServletResponse response) {
+                                     HttpServletResponse response) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         SectionResource section = sectionService.getSectionByQuestionId(questionId);
@@ -190,7 +190,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                          BindingResult bindingResult, Model model,
                                          @PathVariable("applicationId") final Long applicationId,
                                          @PathVariable("questionId") final Long questionId,
-                                         HttpServletRequest request) {
+                                         HttpServletRequest request) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         if (processRole != null) {
@@ -290,7 +290,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private BindingResult saveApplicationForm(ApplicationForm form,
                                               Long applicationId, Long sectionId, Question question,
-                                              HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
+                                              HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -355,7 +355,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         @PathVariable("applicationId") final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
                                         HttpServletRequest request,
-                                        HttpServletResponse response) {
+                                        HttpServletResponse response) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Map<String, String[]> params = request.getParameterMap();
 
@@ -480,7 +480,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
+    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) throws Exception {
         List<String> errors = new ArrayList<>();
         if (fieldName.startsWith("application.")) {
             errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
@@ -507,7 +507,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return node;
     }
 
-    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value, List<String> errors) {
+    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value, List<String> errors) throws Exception {
         ApplicationResource application = applicationService.getById(applicationId);
 
         if ("application.name".equals(fieldName)) {

@@ -1,5 +1,7 @@
 package com.worth.ifs.application.controller;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -7,11 +9,17 @@ import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -21,12 +29,14 @@ import java.util.List;
 @RequestMapping("/application")
 public class ApplicationController {
 
+    private static Log LOG = LogFactory.getLog(ApplicationController.class);
+
     @Autowired
     private ApplicationService applicationService;
 
-    @RequestMapping("/normal/{id}")
+    @RequestMapping("/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
-        return applicationService.getApplicationById(id).toGetResponse();
+            return applicationService.getApplicationById(id).toGetResponse();
     }
 
     @RequestMapping("/")

@@ -58,8 +58,8 @@ public class AssessorController {
         Map<Long, Integer> competitionsSubmittedAssessments = new HashMap<>();
 
         for ( CompetitionResource c : competitions ) {
-            competitionsTotalAssignedAssessments.put(c.getId(), assessmentRestService.getTotalAssignedByAssessorAndCompetition(getLoggedUser(request).getId(), c.getId()).getSuccessObjectOrNull());
-            competitionsSubmittedAssessments.put(c.getId(), assessmentRestService.getTotalSubmittedByAssessorAndCompetition(getLoggedUser(request).getId(), c.getId()).getSuccessObjectOrNull());
+            competitionsTotalAssignedAssessments.put(c.getId(), assessmentRestService.getTotalAssignedByAssessorAndCompetition(getLoggedUser(request).getId(), c.getId()).getSuccessObjectOrThrowException());
+            competitionsSubmittedAssessments.put(c.getId(), assessmentRestService.getTotalSubmittedByAssessorAndCompetition(getLoggedUser(request).getId(), c.getId()).getSuccessObjectOrThrowException());
         }
 
         //pass to view

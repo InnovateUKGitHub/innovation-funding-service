@@ -24,7 +24,7 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
 
     @Override
     public List<FormInputResponse> getByApplication(Long applicationId) {
-        return responseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrNull();
+        return responseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -38,6 +38,6 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
 
     @Override
     public List<String> save(Long userId, Long applicationId, Long formInputId, String value) {
-        return responseRestService.saveQuestionResponse(userId, applicationId, formInputId, value).getSuccessObjectOrNull();
+        return responseRestService.saveQuestionResponse(userId, applicationId, formInputId, value).getSuccessObjectOrThrowException();
     }
 }

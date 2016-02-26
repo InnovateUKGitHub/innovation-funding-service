@@ -9,10 +9,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...
 ...               INFUND-929: As a lead applicant i want to be able to have a separate screen, so that i can invite contributors to the application
-...
-...
-...               INFUND-1815: Small text changes to registration journey following user testing
-Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Create new application    collaboration
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -31,92 +28,77 @@ ${YOUR_FINANCES_URL}    ${SERVER}/application/1/form/section/7
 *** Test Cases ***
 Valid invitation submit
     [Documentation]    INFUND-901
-    [Tags]  HappyPath
-    Given the applicant is in the invite contributors page
+    [Tags]    HappyPath
+    Given user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     When the applicant enters valid inputs
-    Then the applicant should be redirected to the overview page
+    Then user should see the text in the page    Application overview
     And the invite notification should be visible
 
 Lead applicant can access the Application team page(Link in the overview page)
     [Documentation]    INFUND-928
-    [Tags]      HappyPath
-    Given Applicant goes to the Overview page
-    When Lead Applicant clicks link "View team members and add collaborators"
-    Then Lead Applicant should be redirected to the Application team page
-    Then Lead Applicant should have the correct status
+    [Tags]    HappyPath
+    Given user navigates to the page    ${APPLICATION_OVERVIEW_URL}
+    And user should see the text in the page    View team members and add collaborators
+    When user clicks the button/link    link=View team members and add collaborators
+    Then user should see the text in the page    Application team
+    And user should see the text in the page    View and manage your partner companies and individuals contributing to the application. If a partner is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email
+    And Lead Applicant should have the correct status
 
 Status of the invited people(Application team page)
     [Documentation]    INFUND-929
-    [Tags]      HappyPath
-    Given the applicant goes to the application 1 team page
+    [Tags]    HappyPath
+    Given user navigates to the page    ${APPLICATION_TEAM_PAGE}
     Then The status of the Invited people should be correct in the application team page
 
 Status of the invited people(Manage contributors page)
-    [Documentation]    Infund-928
-    [Tags]      HappyPath
-    Given Application goes to the Application Team page
-    And Applicant clicks on "Invite new contributors"
-    Then the status of the people should be correct in the Manage contributors page
+    [Documentation]    INFUND-928
+    [Tags]    HappyPath
+    Given user navigates to the page    ${APPLICATION_TEAM_URL}
+    When user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    Then user should see the text in the page    Manage Contributors
+    And the status of the people should be correct in the Manage contributors page
 
 The Lead Applicant can add new collaborators
     [Documentation]    INFUND-928
-    [Tags]      HappyPath
-    Given Application goes to the Application Team page
-    And Applicant clicks on "Invite new contributors"
-    And the applicant clicks the add person link
+    [Tags]    HappyPath
+    Given user navigates to the page    ${APPLICATION_TEAM_URL}
+    When user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    Then user should see the text in the page    Manage Contributors
+    And user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
     When the user adds new collaborator
     And the applicant can enter Organisation name, Name and E-mail
-    And Applicant clicks on "Save Changes"
-    Then Applicant is redirected to Application Team page
+    And user clicks the button/link    jquery=button:contains("Save Changes")
+    Then user should be redirected to the correct page    ${APPLICATION_TEAM_URL}
 
 Verify the invited collaborators are not editable
     [Documentation]    INFUND-929
     [Tags]
-    Given Application goes to the Application Team page
-    and Applicant clicks on "Invite new contributors"
-    Then the invited collaborators are not editable
+    Given user navigates to the page    ${APPLICATION_TEAM_URL}
+    When user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    Then user should see the text in the page    Manage Contributors
+    And the invited collaborators are not editable
 
 Pending collaborators should not be available in the assign list
     [Documentation]    INFUND-928
     [Tags]
-    Given Applicant goes to the 'Public description' question
+    Given user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then the applicant should not be able to assign the question to the users that still pending the invite    tester
 
-Verify the Organisation name in the Finance section
-    [Documentation]    INFUND-1815
-    [Tags]
-    When Applicant goes to the Your finances section
-    Then the Organisation name should be seen in the Finance section
-
 *** Keywords ***
-the applicant is in the invite contributors page
-    go to    ${INVITE_COLLABORATORS_PAGE}
-
 the applicant enters valid inputs
     click element    jquery=button:contains('Add person')
-    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    tester
-    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    test@example.com
+    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    tester
+    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    test@example.com
     Click Element    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
-    Input Text    name=organisations[1].organisationName    Fannie May
-    Input Text    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
-    Input Text    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    collaborator2@fanniemay.com
-    Click Element    jquery=li:nth-child(2) button:contains('Add person')
-    Input Text    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
-    Input Text    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(2) input    collaborator3@fanniemay.com
-    focus    jquery=li:nth-child(2) button:contains('Add person')
+    Input Text    name=organisations[2].organisationName    Fannie May
+    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
+    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(2) input    collaborator2@fanniemay.com
+    Click Element    jquery=li:nth-child(3) button:contains('Add person')
+    Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
+    Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(2) input    collaborator3@fanniemay.com
+    focus    jquery=li:nth-child(3) button:contains('Add person')
     Sleep    1s
     Click Element    jquery=button:contains("Begin application")
-
-the applicant should be redirected to the overview page
-    Wait Until Page Contains    Application overview
-
-Lead Applicant clicks link "View team members and add collaborators"
-    page should contain link    View team members and add collaborators
-    click link    View team members and add collaborators
-
-Lead Applicant should be redirected to the Application team page
-    page should contain    Application team
-    Page Should Contain    View and manage your partner companies and individuals contributing to the application. If a partner is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email
 
 Lead Applicant should have the correct status
     page should contain element    css=#content h2.heading-medium
@@ -126,37 +108,20 @@ Lead Applicant should have the correct status
     ${input_value} =    get text    css=.list-bullet li small
     Should Be Equal As Strings    ${input_value}    (Lead Applicant)
 
-Applicant clicks on "Invite new contributors"
-    click Element    css=a.button
-    wait until page contains    Manage Contributors
-
-the applicant clicks the add person link
-    Click Element    jquery=li:nth-child(1) button:contains('Add person')
-
 the user adds new collaborator
-    Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1)
-    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    Roger Axe
-    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    roger.axe@gmail.com
+    Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(1)
+    Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(1) input    Roger Axe
+    Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(2) input    roger.axe@gmail.com
     focus    jquery=li:nth-child(1) button:contains('Add person')
     sleep    1s
 
-Applicant clicks on "Save Changes"
-    Click Element    css=.contributorsForm button.button
-    Sleep    1s
-
-Applicant is redirected to Application Team page
-    Location Should be    ${APPLICATION_TEAM_URL}
-
 the applicant can enter Organisation name, Name and E-mail
     Click Element    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
-    Input Text    name=organisations[2].organisationName    Z Ltd
-    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Elvis Furcic
-    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(2) input    elvis.furcic@gmail.com
+    Input Text    name=organisations[3].organisationName    Z Ltd
+    Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(1) input    Elvis Furcic
+    Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(2) input    elvis.furcic@gmail.com
     focus    jquery=li:nth-child(2) button:contains('Add person')
     Sleep    2s
-
-the applicant goes to the application 1 team page
-    GO TO    ${APPLICATION_TEAM_PAGE}
 
 The status of the Invited people should be correct in the application team page
     Element Should Contain    css=#content ul li:nth-child(1)    (Lead Applicant)
@@ -186,7 +151,3 @@ the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    That's you!
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-child(3)    (pending)
     Element Should Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
-
-the Organisation name should be seen in the Finance section
-    page should contain    Provide the project costs for 'Empire Ltd'
-    page should contain    'Empire Ltd' Total project costs

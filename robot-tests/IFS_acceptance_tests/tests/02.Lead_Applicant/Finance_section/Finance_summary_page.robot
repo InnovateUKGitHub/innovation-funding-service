@@ -56,7 +56,7 @@ Green check shouldn't show when the finances are incomplete
     [Documentation]    INFUND-927
     [Tags]    HappyPath
     Given the user logs in as first collaborator
-    When the collaborator goes to the finance summary of the completed application
+    When the user navigates to the page        ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     And applicant marks one finance sub-section as incomplete
     Then the green check should not be visible
     And the user logs out
@@ -65,27 +65,27 @@ Green check should show when the applicant marks the finance as complete
     [Documentation]    INFUND-927
     [Tags]    HappyPath
     Given the user logs in as first collaborator
-    And the collaborator goes to the finance summary of the completed application
+    And the user navigates to the page        ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     When the applicant marks the finance question as complete
     Then both green checks should be visible
     And the user logs out
 
 *** Keywords ***
 The user logs in as lead applicant
-    Login as user    &{lead_applicant_credentials}
+    Guest user log-in    &{lead_applicant_credentials}
 
 the user goes to the finance summary of the Providing sustainable childcare application
-    go to    ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}
+    the user navigates to the page      ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}
     click element    link=Finances overview
 
 The user logs out
     Logout as user
 
 The user logs in as first collaborator
-    Login as user    &{collaborator1_credentials}
+    Guest user log-in    &{collaborator1_credentials}
 
 The user logs in as second collaborator
-    Login as user    &{collaborator2_credentials}
+    Guest user log-in    &{collaborator2_credentials}
 
 the finance Project cost breakdown calculations should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £0
@@ -116,9 +116,6 @@ the contribution to project and funding sought should be 0 and not a negative nu
     Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(3)    £0
     Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(5)    £0
 
-the collaborator goes to the finance summary of the completed application
-    go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
-
 applicant marks one finance sub-section as incomplete
     Click Element    css=[aria-controls="collapsible-1"]
     click element    jQuery=#collapsible-1 button:contains("Edit")
@@ -132,6 +129,6 @@ the applicant marks the finance question as complete
     click element    jQuery=#collapsible-1 button:contains("Mark as complete")
 
 both green checks should be visible
-    go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
+    the user navigates to the page     ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img

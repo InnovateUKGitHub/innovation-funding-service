@@ -24,7 +24,7 @@ public class CostServiceImpl implements CostService {
 
     @Override
     public List<CostFieldResource> getCostFields() {
-        return costFieldRestService.getCostFields().getSuccessObjectOrNull();
+        return costFieldRestService.getCostFields().getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class CostServiceImpl implements CostService {
 
     @Override
     public CostItem getById(Long costId) {
-        return costRestService.findById(costId).getSuccessObjectOrNull();
+        return costRestService.findById(costId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -42,6 +42,6 @@ public class CostServiceImpl implements CostService {
 
     @Override
     public CostItem add(Long applicationFinanceId, Long questionId, CostItem costItem) {
-        return costRestService.add(applicationFinanceId, questionId, costItem).getSuccessObjectOrNull();
+        return costRestService.add(applicationFinanceId, questionId, costItem).getSuccessObjectOrThrowException();
     }
 }
