@@ -28,8 +28,6 @@ User can not continue if an organisation type is not selected
     ...
     ...    INFUND-1780
     [Tags]
-
-${EMPTY}
     When user clicks the button/link    jQuery=.button:contains("Continue")
     Then user should see the text in the page    may not be null
 
@@ -55,7 +53,7 @@ Accept Invitation flow (Business organisation)
     And user selects the radio button    1
     And user clicks the button/link    jQuery=.button:contains("Continue")
     Then user should be redirected to the correct page    ${SERVER}/organisation/create/find-organisation
-    When user entes text to a text field    id=org-name    Empire
+    When user enters text to a text field    id=org-name    Empire
     And user clicks the button/link    id=org-search
     And user clicks the button/link    link=EMPIRE LTD
     and user enters text to a text field    css=#postcode-check    postcode

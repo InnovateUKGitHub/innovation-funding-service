@@ -24,12 +24,13 @@ Create application flow for non registered users CH route
     and user enters text to a text field    id=org-name    Innovate
     And user clicks the button/link    id=org-search
     And user clicks the button/link    LINK=INNOVATE LTD
-    and user enters text to a text field    css=#postcode-check    postcode
+    and user enters text to a text field    css=#postcode-check    2234
     And user clicks the button/link    id=postcode-lookup
     And user clicks the button/link    css=#select-address-block > button
-    And user clicks the button/link    jQuery=.button:contains("Save organisation and")
+    And user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And user clicks the button/link    jQuery=.button:contains("Save")
     and the user enters the details and clicks the create account
-    And user clicks the button/link    JQuery=.button:contains("Begin application")
+    And user clicks the button/link    jQuery=.button:contains("Begin application")
     Then user should see the text in the page    Application overview
     And user should see the text in the page    Technology Inspired - Application number 0000
 
