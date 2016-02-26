@@ -27,10 +27,11 @@ User can not continue if an organisation type is not selected
     [Documentation]    INFUND-1005
     ...
     ...    INFUND-1780
-    [Tags]    Pending
-    #pending because there is no validation and the user gets an error page
+    [Tags]
+
+${EMPTY}
     When user clicks the button/link    jQuery=.button:contains("Continue")
-    Then user should see the text in the page    Please select your organisation type
+    Then user should see the text in the page    may not be null
 
 User is able to select only one type
     [Documentation]    Infund-1005
@@ -41,7 +42,7 @@ User is able to select only one type
 User can go back and change the selection
     [Documentation]    INFUND-1780
     Given user clicks the button/link    jQuery=.button:contains("Continue")
-    And user should be redirected to the correct page    ${SERVER}/accept-invite/create-organisation/?organisationType=1
+    And user should be redirected to the correct page    ${SERVER}/organisation/create/find-organisation
     When user goes back to the previous page
     Then user should be redirected to the correct page    ${SELECT_ORGANISATION}
 
@@ -53,14 +54,15 @@ Accept Invitation flow (Business organisation)
     When user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    1
     And user clicks the button/link    jQuery=.button:contains("Continue")
-    Then user should be redirected to the correct page    ${SERVER}/accept-invite/create-organisation/?organisationType=1
-    When user enters text to a text field    id=org-name    Empire
+    Then user should be redirected to the correct page    ${SERVER}/organisation/create/find-organisation
+    When user entes text to a text field    id=org-name    Empire
     And user clicks the button/link    id=org-search
     And user clicks the button/link    link=EMPIRE LTD
     and user enters text to a text field    css=#postcode-check    postcode
     And user clicks the button/link    id=postcode-lookup
     And user clicks the button/link    css=#select-address-block > button
     And user clicks the button/link    jQuery=.button:contains("Save organisation and")
+    And user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form
     Then user should be redirected to the correct page    ${DASHBOARD_URL}
 
