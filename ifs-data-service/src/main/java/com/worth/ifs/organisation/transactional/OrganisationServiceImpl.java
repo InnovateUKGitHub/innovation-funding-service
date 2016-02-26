@@ -87,11 +87,8 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressType addressType, Address address) {
 
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
-            System.out.println("organisation.addAddress : "+ address.getAddressLine1());
-            System.out.println("organisation address count before "+ organisation.getAddresses().size());
             organisation.addAddress(address, addressType);
             Organisation updatedOrganisation = organisationRepository.save(organisation);
-            System.out.println("organisation address count after "+ organisation.getAddresses().size());
             return serviceSuccess(organisationMapper.mapToResource(updatedOrganisation));
         });
     }
