@@ -90,7 +90,7 @@ the user clicks the Not on company house link
     Input Text    id=town    town
     Input Text    id=county    country
     Input Text    id=postcode    post code
-    Input Text    name=companyHouseName    org1
+    #Input Text    id=org-name    org1
     Input Text    name=organisationName    org2
     Input Text    id=postcode-check    2323
     Click Element    jQuery=.button:contains("Continue")
