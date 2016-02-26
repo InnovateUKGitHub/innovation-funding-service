@@ -455,8 +455,7 @@ public class OrganisationCreationController {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
         Address address = organisationForm.getAddressForm().getSelectedPostcode();
-
-
+        
         OrganisationResource organisationResource = new OrganisationResource();
         organisationResource.setName(organisationForm.getOrganisationName());
         organisationResource.setOrganisationType(organisationForm.getOrganisationType().getId());

@@ -73,7 +73,6 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     // TODO DW - INFUND-1555 - lot of duplication between create() and saveResource()
     @Override
     public ServiceResult<OrganisationResource> saveResource(final OrganisationResource organisationResource) {
-
         Organisation organisation = organisationMapper.mapToDomain(organisationResource);
 
         if (organisation.getOrganisationType() == null) {
@@ -85,7 +84,6 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressType addressType, Address address) {
-
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
             organisation.addAddress(address, addressType);
             Organisation updatedOrganisation = organisationRepository.save(organisation);
@@ -94,9 +92,8 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
 
-
     @Override
-    public ServiceResult<List<OrganisationSearchResult>> searchAcademic(final String organisationName, int maxItems){
+    public ServiceResult<List<OrganisationSearchResult>> searchAcademic(final String organisationName, int maxItems) {
         List<OrganisationSearchResult> organisations;
         organisations = academicRepository.findByNameContainingIgnoreCase(organisationName, new PageRequest(0, 10))
                 .stream()
@@ -104,26 +101,24 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
                 .collect(Collectors.toList());
 
         ServiceResult organisationResults;
-        if(organisations.isEmpty()){
+        if (organisations.isEmpty()) {
             organisationResults = serviceFailure(CommonErrors.notFoundError(Academic.class, organisationName));
-        }else{
+        } else {
             organisationResults = serviceSuccess(organisations);
         }
         return organisationResults;
     }
 
     @Override
-    public ServiceResult<OrganisationSearchResult> getSearchOrganisation(final Long searchOrganisationId){
+    public ServiceResult<OrganisationSearchResult> getSearchOrganisation(final Long searchOrganisationId) {
         Academic academic = academicRepository.findById(searchOrganisationId);
 
         ServiceResult organisationResults;
-        if(academic==null){
+        if (academic == null) {
             organisationResults = serviceFailure(CommonErrors.notFoundError(Academic.class, searchOrganisationId));
-        }else{
+        } else {
             organisationResults = serviceSuccess(new OrganisationSearchResult(academic.getId().toString(), academic.getName()));
         }
         return organisationResults;
     }
-
-
 }
