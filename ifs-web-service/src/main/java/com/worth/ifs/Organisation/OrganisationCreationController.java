@@ -27,7 +27,6 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -172,7 +171,6 @@ public class OrganisationCreationController {
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         return "redirect:/organisation/create/find-organisation";
     }
-
 
     @RequestMapping(value = {"/selected-organisation/{searchOrganisationId}"}, method = RequestMethod.GET)
     public String amendOrganisationAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
@@ -348,7 +346,6 @@ public class OrganisationCreationController {
             organisationForm.getAddressForm().setTriedToSave(true);
             CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
 
-
             return getRedirectUrlInvalidSave(organisationForm, referer);
         }
     }
@@ -408,271 +405,14 @@ public class OrganisationCreationController {
         return "create-application/confirm-organisation";
     }
 
-
     @RequestMapping(value = "/find-business", method = RequestMethod.GET)
-    public String createOrganisationBusiness(@ModelAttribute("companyHouseForm") CompanyHouseForm companyHouseForm, HttpServletResponse response) {
+    public String createOrganisationBusiness(HttpServletResponse response) {
+        // when user comes to this page, set the organisationTypeForm, and redirect.
         OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
         organisationTypeForm.setOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
         String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
         CookieUtil.saveToCookie(response, AcceptInviteController.ORGANISATION_TYPE, orgTypeForm);
         return "redirect:/organisation/create/find-organisation";
-    }// Get Handler needed to allow browser history. Otherwise user would get message about posting information (when going back to previous page)
-
-
-    @RequestMapping(value = "/find-business/not-in-company-house", method = RequestMethod.GET)
-    public ModelAndView findBusinessNotInCompanyHouse(@ModelAttribute("companyHouseForm") CompanyHouseForm companyHouseForm,
-                                                      BindingResult bindingResult) {
-        ModelAndView mav = new ModelAndView("create-application/find-business");
-        companyHouseForm.setInCompanyHouse(false);
-        return mav;
-    }
-
-    /**
-     * CompanyHouseForm saved in cookie, get data and display validation messages.
-     */
-    @RequestMapping(value = "/find-business/invalid-entry", method = RequestMethod.GET)
-    public String findBusinessInvalidEntry(@ModelAttribute("companyHouseForm") CompanyHouseForm companyHouseForm,
-                                           BindingResult bindingResult,
-                                           Model model,
-                                           HttpServletRequest request,
-                                           HttpServletResponse response) throws IOException {
-
-        String companyHouseFormJson = CookieUtil.getCookieValue(request, "companyHouseForm");
-        companyHouseForm = JsonUtil.getObjectFromJson(companyHouseFormJson, CompanyHouseForm.class);
-        companyHouseForm.bindingResult = bindingResult;
-        companyHouseForm.objectErrors = bindingResult.getAllErrors();
-
-        bindingResult = new BeanPropertyBindingResult(companyHouseForm, "companyHouseForm");
-        validator.validate(companyHouseForm, bindingResult);
-        model.addAttribute("companyHouseForm", companyHouseForm);
-        model.addAttribute("org.springframework.validation.BindingResult.companyHouseForm", bindingResult);
-        return "create-application/find-business";
-    }
-
-    @RequestMapping(value = "/find-business/postcode/", method = RequestMethod.GET)
-    public ModelAndView findBusinessSearchPostcode(@ModelAttribute("companyHouseForm") CompanyHouseForm companyHouseForm,
-                                                   BindingResult bindingResult) {
-        ModelAndView mav = new ModelAndView("create-application/find-business");
-        companyHouseForm.setPostcodeInput("");
-
-        validator.validate(companyHouseForm, bindingResult);
-        companyHouseForm.setInCompanyHouse(false);
-        return mav;
-    }
-
-    @RequestMapping(value = "/find-business/postcode/{postcode}", method = RequestMethod.GET)
-    public ModelAndView findBusinessSearchPostcode(@ModelAttribute("companyHouseForm") CompanyHouseForm companyHouseForm,
-                                                   BindingResult bindingResult,
-                                                   @PathVariable(POSTCODE) final String postcode) {
-        ModelAndView mav = new ModelAndView("create-application/find-business");
-        companyHouseForm.setPostcodeInput(postcode);
-
-        validator.validate(companyHouseForm, bindingResult);
-        companyHouseForm.setInCompanyHouse(false);
-        searchPostcodes(companyHouseForm);
-
-        return mav;
-    }
-
-    @RequestMapping(value = "/find-business/postcode/{postcode}/use-address/{postcodeIndex}", method = RequestMethod.GET)
-    public ModelAndView findBusinessUseSelectedPostcode(@ModelAttribute("companyHouseForm") CompanyHouseForm companyHouseForm,
-                                                        BindingResult bindingResult,
-                                                        @PathVariable(POSTCODE) final String postcode,
-                                                        @PathVariable("postcodeIndex") final String postcodeIndex) {
-        companyHouseForm.setPostcodeInput(postcode);
-        companyHouseForm.setSelectedPostcodeIndex(postcodeIndex);
-
-        validator.validate(companyHouseForm, bindingResult);
-        companyHouseForm.setInCompanyHouse(false);
-        searchPostcodes(companyHouseForm);
-        selectPostcodeAddress(companyHouseForm);
-        ModelAndView mav = new ModelAndView("create-application/find-business");
-        return mav;
-    }
-
-    @RequestMapping(value = "/find-business", method = RequestMethod.POST)
-    public String createOrganisationBusinessPost(@Valid @ModelAttribute("companyHouseForm") CompanyHouseForm companyHouseForm,
-                                                 BindingResult bindingResult,
-                                                 HttpServletRequest request,
-                                                 HttpServletResponse response) {
-
-        if (request.getParameter(NOT_IN_COMPANY_HOUSE) != null) {
-            return "redirect:/organisation/create/find-business/not-in-company-house";
-        } else if (request.getParameter(MANUAL_ADDRESS) != null) {
-            companyHouseForm.setInCompanyHouse(false);
-            companyHouseForm.setManualAddress(true);
-            companyHouseForm.setSelectedPostcodeIndex(null);
-            companyHouseForm.setSelectedPostcode(new Address());
-        } else if (request.getParameter(SEARCH_ADDRESS) != null) {
-            return String.format("redirect:/organisation/create/find-business/postcode/%s", companyHouseForm.getPostcodeInput());
-        } else if (request.getParameter(SELECT_ADDRESS) != null) {
-            return String.format("redirect:/organisation/create/find-business/postcode/%s/use-address/%s", companyHouseForm.getPostcodeInput(), companyHouseForm.getSelectedPostcodeIndex());
-        } else if (request.getParameter(SEARCH_COMPANY_HOUSE) != null) {
-            return String.format("redirect:/organisation/create/find-business/search/%s", companyHouseForm.getCompanyHouseName());
-        } else if (request.getParameter(CONFIRM_COMPANY_DETAILS) != null) {
-            companyHouseForm.setInCompanyHouse(false);
-            companyHouseForm.setManualAddress(true);
-            BindingResult selectedPostcodeBindingResult =new BeanPropertyBindingResult(companyHouseForm.getSelectedPostcode(), "selectedPostcode");
-            validator.validate(companyHouseForm.getSelectedPostcode(), selectedPostcodeBindingResult);
-
-            if (!bindingResult.hasFieldErrors(ORGANISATION_NAME) && !selectedPostcodeBindingResult.hasFieldErrors()) {
-                // save state into cookie.
-                CookieUtil.saveToCookie(response, COMPANY_NAME, String.valueOf(companyHouseForm.getOrganisationName()));
-                CookieUtil.saveToCookie(response, COMPANY_ADDRESS, JsonUtil.getSerializedObject(companyHouseForm.getSelectedPostcode()));
-                return "redirect:/organisation/create/confirm-company";
-            } else {
-                // Prepare data for displaying validation messages after redirect.
-                searchPostcodes(companyHouseForm);
-                selectPostcodeAddress(companyHouseForm);
-                companyHouseForm.setInCompanyHouse(false);
-                companyHouseForm.setManualAddress(true);
-                companyHouseForm.setTriedToSave(true);
-
-                CookieUtil.saveToCookie(response, COMPANY_ADDRESS, JsonUtil.getSerializedObject(companyHouseForm.getSelectedPostcode()));
-                CookieUtil.saveToCookie(response, "companyHouseForm", JsonUtil.getSerializedObject(companyHouseForm));
-                return "redirect:/organisation/create/find-business/invalid-entry";
-            }
-        }
-
-        return "create-application/find-business";
-    }
-
-
-
-    /**
-     * Confirm the company details (user input, not from company-house)
-     */
-    @RequestMapping(value = "/confirm-company", method = RequestMethod.GET)
-    public String confirmCompany(Model model,
-                                 HttpServletRequest request) throws IOException {
-        // Get data form cookie, convert json to Address object
-        String jsonAddress = CookieUtil.getCookieValue(request, COMPANY_ADDRESS);
-        Address address = JsonUtil.getObjectFromJson(jsonAddress, Address.class);
-
-        // For displaying information only!
-        OrganisationSearchResult org = new OrganisationSearchResult();
-        org.setName(CookieUtil.getCookieValue(request, COMPANY_NAME));
-        org.setOrganisationAddress(address);
-        model.addAttribute("business", org);
-
-        return "create-application/confirm-company";
-    }
-
-    @RequestMapping(value = "/selected-business/{companyId}", method = RequestMethod.GET)
-    public String confirmBusiness(@ModelAttribute("confirmCompanyDetailsForm") ConfirmCompanyDetailsForm confirmCompanyDetailsForm,
-                                  @ModelAttribute("organisationForm") OrganisationCreationForm organisationForm,
-                                  BindingResult bindingResult,
-                                  Model model,
-                                  @PathVariable(COMPANY_ID) final String companyId,
-                                  HttpServletResponse response, HttpServletRequest request) {
-        addOrganisationType(organisationForm, request);
-        CookieUtil.saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, companyId);
-        OrganisationSearchResult org = organisationService.getCompanyHouseOrganisation(companyId);
-        organisationForm.setOrganisationName(org.getName());
-        organisationForm.getAddressForm().setSelectedPostcode(org.getOrganisationAddress());
-        model.addAttribute("business", org);
-        return "create-application/confirm-selected-organisation";
-    }
-
-    @RequestMapping(value = "/selected-business/{companyId}/postcode/{postcode}", method = RequestMethod.GET)
-    public ModelAndView findBusinessSubmitted(@ModelAttribute("confirmCompanyDetailsForm") ConfirmCompanyDetailsForm confirmCompanyDetailsForm,
-                                              @ModelAttribute("organisationForm") OrganisationCreationForm organisationForm,
-                                              @PathVariable(COMPANY_ID) final String companyId,
-                                              @PathVariable(POSTCODE) final String postcode,
-                                              HttpServletRequest request) {
-        addOrganisationType(organisationForm, request);
-        ModelAndView mav = new ModelAndView("create-application/confirm-selected-organisation");
-        confirmCompanyDetailsForm.setPostcodeInput(postcode);
-
-        OrganisationSearchResult org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
-        mav.addObject("business", org);
-        searchPostcodes(confirmCompanyDetailsForm);
-        return mav;
-    }
-
-    @RequestMapping(value = "/selected-business/{companyId}/postcode/", method = RequestMethod.GET)
-    public ModelAndView findBusinessSubmitted(@Valid @ModelAttribute("confirmCompanyDetailsForm") ConfirmCompanyDetailsForm confirmCompanyDetailsForm,
-                                              @ModelAttribute("organisationForm") OrganisationCreationForm organisationForm,
-                                              BindingResult bindingResult,
-                                              @PathVariable(COMPANY_ID) final String companyId,
-                                              HttpServletRequest request) {
-        addOrganisationType(organisationForm, request);
-        ModelAndView mav = new ModelAndView("create-application/confirm-selected-organisation");
-        OrganisationSearchResult org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
-        mav.addObject("business", org);
-
-        confirmCompanyDetailsForm.setPostcodeInput("");
-        return mav;
-    }
-
-    @RequestMapping(value = "/selected-business/{companyId}/postcode/{postcode}/use-address/{postcodeIndex}", method = RequestMethod.GET)
-    public ModelAndView confirmBusinessSubmitted(@ModelAttribute("confirmCompanyDetailsForm") ConfirmCompanyDetailsForm confirmCompanyDetailsForm,
-                                                 @ModelAttribute("organisationForm") OrganisationCreationForm organisationForm,
-                                                 @PathVariable(COMPANY_ID) final String companyId,
-                                                 @PathVariable(POSTCODE) final String postcode,
-                                                 @PathVariable("postcodeIndex") final String postcodeIndex,
-                                                 HttpServletRequest request) {
-        addOrganisationType(organisationForm, request);
-        ModelAndView mav = new ModelAndView("create-application/confirm-selected-organisation");
-        confirmCompanyDetailsForm.setPostcodeInput(postcode);
-        confirmCompanyDetailsForm.setSelectedPostcodeIndex(postcodeIndex);
-        OrganisationSearchResult org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
-        mav.addObject("business", org);
-
-        searchPostcodes(confirmCompanyDetailsForm);
-        selectPostcodeAddress(confirmCompanyDetailsForm);
-
-        return mav;
-    }
-
-    @RequestMapping(value = "/selected-business/{companyId}", method = RequestMethod.POST)
-    public String confirmBusinessSubmit(@Valid @ModelAttribute("confirmCompanyDetailsForm") ConfirmCompanyDetailsForm confirmCompanyDetailsForm,
-                                        BindingResult bindingResult,
-                                        Model model,
-                                        @PathVariable(COMPANY_ID) final String companyId,
-                                        HttpServletRequest request,
-                                        HttpServletResponse response) {
-        CookieUtil.saveToCookie(response, COMPANY_HOUSE_COMPANY_ID, String.valueOf(companyId));
-
-        if (organisationService == null) {
-            log.error("companyHouseService is null");
-        }
-        OrganisationSearchResult org = organisationService.getCompanyHouseOrganisation(String.valueOf(companyId));
-        if (org == null) {
-            log.error("org is null");
-        }
-        model.addAttribute("business", org);
-        model.addAttribute(COMPANY_ID, companyId);
-        if (StringUtils.hasText(confirmCompanyDetailsForm.getPostcodeInput())) {
-            confirmCompanyDetailsForm.setPostcodeOptions(searchPostcode(confirmCompanyDetailsForm.getPostcodeInput()));
-        }
-
-        if (request.getParameter(MANUAL_ADDRESS) != null) {
-            confirmCompanyDetailsForm.setManualAddress(true);
-        } else if (request.getParameter(SEARCH_ADDRESS) != null) {
-            return String.format("redirect:/organisation/create/selected-business/%s/postcode/%s", companyId, confirmCompanyDetailsForm.getPostcodeInput());
-        } else if (request.getParameter(SELECT_ADDRESS) != null) {
-            return String.format("redirect:/organisation/create/selected-business/%s/postcode/%s/use-address/%s", companyId, confirmCompanyDetailsForm.getPostcodeInput(), confirmCompanyDetailsForm.getSelectedPostcodeIndex());
-        } else if (request.getParameter(SAVE_COMPANY_DETAILS) != null) {
-            String name = org.getName();
-            String companyHouseNumber = org.getOrganisationSearchId();
-            // NOTE: Setting organisation size to null as this will eventually be moved to finance details section.
-            OrganisationResource organisationResource = new OrganisationResource();
-            organisationResource.setName(name);
-            organisationResource.setCompanyHouseNumber(companyHouseNumber);
-            organisationResource.setOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
-
-            organisationResource = saveNewOrganisation(organisationResource, request);
-            if (!confirmCompanyDetailsForm.isUseCompanyHouseAddress()) {
-                //Save address manually entered.
-                organisationService.addAddress(organisationResource, confirmCompanyDetailsForm.getSelectedPostcode(), AddressType.OPERATING);
-            }
-            // Save address from company house api
-            organisationService.addAddress(organisationResource, org.getOrganisationAddress(), AddressType.REGISTERED);
-
-            return String.format("redirect:/registration/register?organisationId=%d", organisationResource.getId());
-        }
-        return "create-application/confirm-selected-organisation";
     }
 
     private OrganisationResource saveNewOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
@@ -715,7 +455,7 @@ public class OrganisationCreationController {
     }
 
     @RequestMapping("/save-organisation")
-    public String saveOrganisation(@ModelAttribute("organisationForm") OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) throws IOException {
+    public String saveOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
         Address address = organisationForm.getAddressForm().getSelectedPostcode();
@@ -739,31 +479,13 @@ public class OrganisationCreationController {
         if(selectedOrganisation.getOrganisationAddress()!= null){
             organisationService.addAddress(organisationResource, selectedOrganisation.getOrganisationAddress(), AddressType.REGISTERED);
         }
+
+
+        CookieUtil.removeCookie(response, ORGANISATION_FORM);
+        CookieUtil.removeCookie(response, AcceptInviteController.ORGANISATION_TYPE);
         return "redirect:/registration/register?organisationId=" + organisationResource.getId();
     }
-
-    /**
-     * Save company from user input ( without company house ). The data should be in the cookies.
-     */
-    @RequestMapping("/save-company")
-    public String saveCompany(HttpServletRequest request) throws IOException {
-        // Get data form cookie, convert json to Address object
-
-        String jsonAddress = CookieUtil.getCookieValue(request, COMPANY_ADDRESS);
-        Address address = JsonUtil.getObjectFromJson(jsonAddress, Address.class);
-
-
-        OrganisationResource organisationResource = new OrganisationResource();
-        organisationResource.setName(CookieUtil
-                .getCookieValue(request, COMPANY_NAME));
-
-        organisationResource = saveNewOrganisation(organisationResource, request);
-        if (address != null) {
-            organisationService.addAddress(organisationResource, address, AddressType.OPERATING);
-        }
-        return "redirect:/registration/register?organisationId=" + organisationResource.getId();
-    }
-
+    
     public List<Address> searchPostcode(String postcodeInput) {
         List<Address> addresses = new ArrayList<Address>();
         addresses.add(new Address(
