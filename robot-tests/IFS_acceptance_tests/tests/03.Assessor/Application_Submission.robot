@@ -6,7 +6,7 @@ Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Assessor_actions.robot
+Resource          ../../resources/keywords/Applicant_actions.robot
 
 *** Variables ***
 ${application_name}    Mobile Phone Data for Logistics Analytics
@@ -16,7 +16,7 @@ ${competition_name}    Technology Inspired
 Submitting an application shows a confirmation popup
     [Documentation]    INFUND-342
     [Tags]    Assessor    HappyPath
-    Given Assessor clicks the competition
+    Given user clicks the button/link  link=${competition_name}
     When Select Application Checkbox    ${application_name}
     And Submit Selected Applications
     Then Cancel the confirmation popup
@@ -59,3 +59,6 @@ Application is not submitted
 Application is submitted
     Reload Page
     Page Should Contain Element    xpath=//*[@class="submitted"]//*[contains(text(),'${application_name}')]
+
+
+
