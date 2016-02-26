@@ -455,7 +455,7 @@ public class OrganisationCreationController {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
         Address address = organisationForm.getAddressForm().getSelectedPostcode();
-        
+
         OrganisationResource organisationResource = new OrganisationResource();
         organisationResource.setName(organisationForm.getOrganisationName());
         organisationResource.setOrganisationType(organisationForm.getOrganisationType().getId());
@@ -468,7 +468,7 @@ public class OrganisationCreationController {
         if (address != null) {
             organisationService.addAddress(organisationResource, address, AddressType.OPERATING);
         }
-        if (selectedOrganisation.getOrganisationAddress() != null) {
+        if (selectedOrganisation != null && selectedOrganisation.getOrganisationAddress() != null) {
             organisationService.addAddress(organisationResource, selectedOrganisation.getOrganisationAddress(), AddressType.REGISTERED);
         }
 
