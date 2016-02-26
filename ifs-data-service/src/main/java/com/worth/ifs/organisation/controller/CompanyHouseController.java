@@ -1,7 +1,7 @@
 package com.worth.ifs.organisation.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
+import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +20,12 @@ public class CompanyHouseController {
     private CompanyHouseApiService companyHouseService;
 
     @RequestMapping("/searchCompanyHouse/{searchText}")
-    public RestResult<List<CompanyHouseBusiness>> searchCompanyHouse(@PathVariable("searchText") final String searchText) {
+    public RestResult<List<OrganisationSearchResult>> searchCompanyHouse(@PathVariable("searchText") final String searchText) {
         return companyHouseService.searchOrganisations(searchText).toGetResponse();
     }
 
     @RequestMapping("/getCompanyHouse/{id}")
-    public RestResult<CompanyHouseBusiness> getCompanyHouse(@PathVariable("id") final String id) {
+    public RestResult<OrganisationSearchResult> getCompanyHouse(@PathVariable("id") final String id) {
         return companyHouseService.getOrganisationById(id).toGetResponse();
     }
 }

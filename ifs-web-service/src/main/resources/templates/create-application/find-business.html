@@ -17,40 +17,41 @@
 
         <h2 class="heading-medium">Business organisation</h2>
 
-        <form th:action="@{/organisation/create/find-business}" th:object="${companyHouseForm}" method="POST">
+        <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
             <fieldset>
                 <legend class="visuallyhidden">Business organisation</legend>
 
-                <div th:class="${#fields.hasErrors('*{companyHouseName}') and companyHouseForm.companyHouseSearching} ? 'form-group error' : 'form-group'">
+                <div th:class="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-group error' : 'form-group'">
                     <label class="form-label" for="org-name">
                        <span class="form-label-bold">Find your organisation on Companies House</span>
                        <span class="form-hint">Enter your company name or registration number</span>
-                        <span class="error-message" th:if="${#fields.hasErrors('*{companyHouseName}') and companyHouseForm.companyHouseSearching}" th:errors="*{companyHouseName}" />
+                        <span class="error-message" th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}" th:errors="*{organisationSearchName}" />
                     </label>
-                    <input class="form-control" id="org-name" th:field="*{companyHouseName}" type="text" value="" />
-                    <button type="submit" id="org-search" name="search-company-house" class="button">Search</button>
+                    <input class="form-control" id="org-name" th:field="*{organisationSearchName}" type="text" value="" />
+                    <button type="submit" id="org-search" name="search-organisation" class="button">Search</button>
                 </div>
 
-                <ul id="org-results" class="results-list panel-indent" th:if="${companyHouseForm.companyHouseSearching}" th:unless="${#fields.hasErrors('*{companyHouseName}')}">
-                    <li class="type-company" th:each="company : ${companyHouseForm.companyHouseList}">
+                <ul id="org-results" class="results-list panel-indent" th:if="${organisationForm.organisationSearching}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
+                    <li class="type-company" th:each="company : ${organisationForm.organisationSearchResults}">
                         <h3>
-                            <a th:href="${'/organisation/create/selected-business/'+ company.companyNumber}" title="View company" th:text="${company.name}">
+                            <a th:href="${'/organisation/create/selected-organisation/'+ company.organisationSearchId}" title="View company" th:text="${company.name}">
                             </a>
                         </h3>
-                        <p class="meta crumbtrail" th:text="${company.description}"></p>
+                        <p class="meta crumbtrail" th:text="${company.extraAttributes.description}"></p>
                         <p th:text="${company.location}"></p>
                     </li>
-                    <li th:unless="${companyHouseForm.companyHouseList.size()}">
+                    <li th:unless="${organisationForm.organisationSearchResults.size()}">
                         <p>Sorry we couldn't find any results within Companies House.<br/> Are you sure you didn't make mistake?</p>
                     </li>
                 </ul>
             </fieldset>
+            <input type="hidden" th:field="*{manualEntry}" />
             <button type="submit" class="buttonlink" name="not-in-company-house">Not on Companies House?</button>
 
-            <div th:unless="${companyHouseForm.inCompanyHouse}" th:remove="tag">
-                <div th:include="create-application/fragments :: organisation-name" th:with="form=${companyHouseForm}" th:remove="tag"></div>
-                <div th:include="create-application/fragments :: company-address-details" th:with="form=${companyHouseForm}" th:remove="tag"></div>
-                <button type="submit button-large extra-margin" name="confirm-company-details" class="button">Continue</button>
+            <div th:if="${organisationForm.manualEntry}" th:remove="tag">
+                <div th:include="create-application/fragments :: organisation-name" th:with="form=${organisationForm}" th:remove="tag"></div>
+                <div th:include="create-application/fragments :: company-address-details" th:with="form=${organisationForm}" th:remove="tag"></div>
+                <button type="submit button-large extra-margin" name="save-organisation-details" class="button">Continue</button>
             </div>
         </form>
 

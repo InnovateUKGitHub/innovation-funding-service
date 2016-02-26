@@ -147,7 +147,7 @@ public class RegistrationController {
 
             if (createUserResult.isSuccess()) {
                 loginUser(createUserResult.getSuccessObject(), response);
-                if(linkToInvite(request, createUserResult.getSuccessObject())){
+                if(linkToInvite(request, response, createUserResult.getSuccessObject())){
                     // user is invitee, no need to initialize application.
                     destination = "redirect:/applicant/dashboard/";
                 }else{
@@ -166,7 +166,7 @@ public class RegistrationController {
         return destination;
     }
 
-    private boolean linkToInvite(HttpServletRequest request, UserResource userResource) {
+    private boolean linkToInvite(HttpServletRequest request, HttpServletResponse response, UserResource userResource) {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
             RestResult<InviteResource> restResult = inviteRestService.getInviteByHash(inviteHash).andOnSuccessReturn(i -> {
@@ -176,6 +176,8 @@ public class RegistrationController {
                 log.debug("Found invite, changed status " + statusCode.toString());
                 return i;
             });
+
+            CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
             return restResult.isSuccess();
         }
         return false;

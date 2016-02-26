@@ -1,21 +1,19 @@
 package com.worth.ifs.application.form;
 
-import com.worth.ifs.organisation.domain.Address;
+import javax.validation.Valid;
 
-import java.util.List;
-
-public abstract class CreateApplicationForm  extends Form{
+public abstract class CreateApplicationForm extends Form {
+    @Valid
+    private AddressForm addressForm = new AddressForm();
     private boolean triedToSave = false;
 
-    public abstract String getPostcodeInput();
+    public AddressForm getAddressForm() {
+        return addressForm;
+    }
 
-    public abstract void setPostcodeOptions(List<Address> addresses);
-
-    public abstract List<Address> getPostcodeOptions();
-
-    public abstract String getSelectedPostcodeIndex();
-
-    public abstract void setSelectedPostcode(Address address);
+    public void setAddressForm(AddressForm addressForm) {
+        this.addressForm = addressForm;
+    }
 
     public boolean isTriedToSave() {
         return triedToSave;
@@ -24,5 +22,6 @@ public abstract class CreateApplicationForm  extends Form{
     public void setTriedToSave(boolean triedToSave) {
         this.triedToSave = triedToSave;
     }
+
 }
 

@@ -2,6 +2,7 @@ package com.worth.ifs.organisation.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
@@ -14,6 +15,7 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -78,10 +80,36 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressType addressType, Address address) {
 
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
+            System.out.println("organisation.addAddress : "+ address.getAddressLine1());
+            System.out.println("organisation address count before "+ organisation.getAddresses().size());
             organisation.addAddress(address, addressType);
             Organisation updatedOrganisation = organisationRepository.save(organisation);
+            System.out.println("organisation address count after "+ organisation.getAddresses().size());
             return serviceSuccess(organisationMapper.mapToResource(updatedOrganisation));
         });
     }
+
+
+
+    @Override
+    public ServiceResult<List<OrganisationSearchResult>> searchAcademic(final String organisationName){
+        ArrayList<OrganisationSearchResult> organisations = new ArrayList<>();
+
+        organisations.add(new OrganisationSearchResult("1", "Aberystwyth University"));
+        organisations.add(new OrganisationSearchResult("2", "American University of Beirut"));
+        organisations.add(new OrganisationSearchResult("3", "Catholic University of Louvain"));
+
+        ServiceResult organisationResults = serviceSuccess(organisations);
+        return organisationResults;
+    }
+
+    @Override
+    public ServiceResult<OrganisationSearchResult> getSearchOrganisation(final Long searchOrganisationId){
+        ArrayList<OrganisationSearchResult> organisations = new ArrayList<>();
+
+        ServiceResult organisationResults = serviceSuccess(new OrganisationSearchResult("1", "Aberystwyth University"));
+        return organisationResults;
+    }
+
 
 }
