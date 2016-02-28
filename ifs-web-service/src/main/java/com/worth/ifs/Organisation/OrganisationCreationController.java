@@ -45,8 +45,26 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 public class OrganisationCreationController {
     private final Log log = LogFactory.getLog(this.getClass());
     public static final String ORGANISATION_FORM = "organisationForm";
-    public static final String COMPANY_NAME = "company_name";
-    public static final String COMPANY_ADDRESS = "company_address";
+    public static final String CREATE_APPLICATION = "create-application";
+    public static final String CONFIRM_SELECTED_ORGANISATION = "confirm-selected-organisation";
+    public static final String ADD_ADDRESS_DETAILS = "add-address-details";
+    public static final String CREATE_ORGANISATION_TYPE = "create-organisation-type";
+    public static final String FIND_BUSINESS = "find-business";
+    public static final String FIND_ORGANISATION = "find-organisation";
+    public static final String SELECTED_ORGANISATION = "selected-organisation";
+    public static final String CONFIRM_ORGANISATION = "confirm-organisation";
+    public static final String BINDING_RESULT_ORGANISATION_FORM = "org.springframework.validation.BindingResult.organisationForm";
+    public static final String BASE_URL = "/organisation/create";
+    public static final String USE_SEARCH_RESULT_ADDRESS = "useSearchResultAddress";
+    public static final String SELECTED_POSTCODE = "selectedPostcode";
+    public static final String SAVE_ORGANISATION_DETAILS = "save-organisation-details";
+    public static final String REFERER = "referer";
+    public static final String SEARCH_ORGANISATION = "search-organisation";
+    public static final String NOT_IN_COMPANY_HOUSE = "not-in-company-house";
+    public static final String MANUAL_ADDRESS = "manual-address";
+    public static final String SEARCH_ADDRESS = "search-address";
+    public static final String SELECT_ADDRESS = "select-address";
+    public static final String ORGANISATION_NAME = "organisationName";
 
     @Autowired
     protected InviteRestService inviteRestService;
@@ -176,33 +194,6 @@ public class OrganisationCreationController {
         }
     }
 
-    public List<Address> searchPostcode(String postcodeInput) {
-        List<Address> addresses = new ArrayList<Address>();
-        addresses.add(new Address(
-                "Montrose House 1",
-                "Clayhill Park",
-                "",
-                "Cheshire West and Chester",
-                "England",
-                "Neston",
-                "po_bo",
-                "CH64 3RU",
-                "Cheshire"
-        ));
-        addresses.add(new Address(
-                "Montrose House",
-                "Clayhill Park",
-                "",
-                "Cheshire West and Chester",
-                "England",
-                "Neston",
-                "po_bo",
-                "CH64 3RU",
-                "Cheshire"
-        ));
-        return addresses;
-    }
-
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = SEARCH_ORGANISATION, method = RequestMethod.POST)
     public String searchOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                      HttpServletRequest request, HttpServletResponse response) {
@@ -294,14 +285,6 @@ public class OrganisationCreationController {
             return CREATE_APPLICATION + "/" + CONFIRM_SELECTED_ORGANISATION;
         } else {
             return CREATE_APPLICATION + "/" + ADD_ADDRESS_DETAILS;
-        }
-    }
-
-    private void addSelectedAddress(OrganisationCreationForm organisationForm) {
-        AddressForm addressForm = organisationForm.getAddressForm();
-        if(StringUtils.hasText(addressForm.getSelectedPostcodeIndex()) && addressForm.getSelectedPostcode() == null){
-            addressForm.setSelectedPostcode(addressForm.getPostcodeOptions().get(Integer.parseInt(addressForm.getSelectedPostcodeIndex())));
-            organisationForm.setAddressForm(addressForm);
         }
     }
 
@@ -450,7 +433,7 @@ public class OrganisationCreationController {
     public String saveOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
-        Address address = organisationForm.getAddressForm().getSelectedPostcode();
+        AddressResource address = organisationForm.getAddressForm().getSelectedPostcode();
 
         OrganisationResource organisationResource = new OrganisationResource();
         organisationResource.setName(organisationForm.getOrganisationName());
@@ -505,37 +488,6 @@ public class OrganisationCreationController {
         }
     }
 
-    @RequestMapping("/save-organisation")
-    public String saveOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        organisationForm = getFormDataFromCookie(organisationForm, model, request);
-        OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
-        AddressResource address = organisationForm.getAddressForm().getSelectedPostcode();
-
-
-        OrganisationResource organisationResource = new OrganisationResource();
-        organisationResource.setName(organisationForm.getOrganisationName());
-        organisationResource.setOrganisationType(organisationForm.getOrganisationType().getId());
-
-        if (OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())){
-            organisationResource.setCompanyHouseNumber(organisationForm.getSearchOrganisationId());
-        }
-
-
-        organisationResource = saveNewOrganisation(organisationResource, request);
-
-
-        if (address != null) {
-            organisationService.addAddress(organisationResource, address, AddressType.OPERATING);
-        }
-        if(selectedOrganisation.getOrganisationAddress()!= null){
-            organisationService.addAddress(organisationResource, selectedOrganisation.getOrganisationAddress(), AddressType.REGISTERED);
-        }
-
-
-        CookieUtil.removeCookie(response, ORGANISATION_FORM);
-        CookieUtil.removeCookie(response, AcceptInviteController.ORGANISATION_TYPE);
-        return "redirect:/registration/register?organisationId=" + organisationResource.getId();
-    }
 
     public List<AddressResource> searchPostcode(String postcodeInput) {
         RestResult<List<AddressResource>>  addressLookupRestResult = addressRestService.doLookup(postcodeInput);
