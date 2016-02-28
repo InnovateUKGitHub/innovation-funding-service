@@ -3,69 +3,69 @@
     <div id="manual-company-input" class="extra-margin">
         <fieldset>
             <legend class="visuallyhidden">Organisation details</legend>
-            <div th:class="${#fields.hasErrors('*{postcodeInput}') and !form.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="postcode-check">
                     <span class="form-label-bold">Postcode</span>
-                    <span class="error-message" th:if="${#fields.hasErrors('*{postcodeInput}') and !form.triedToSave}" th:errors="*{postcodeInput}"></span>
+                    <span class="error-message" th:if="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSave}" th:errors="*{addressForm.postcodeInput}"></span>
                 </label>
-                <input class="form-control" id="postcode-check" th:field="*{postcodeInput}" type="text" value="" />
+                <input class="form-control" id="postcode-check" th:field="*{addressForm.postcodeInput}" type="text" />
                 <button type="submit" id="postcode-lookup" class="button" name="search-address">Find UK address</button>
             </div>
 
-            <div class="form-group" id="select-address-block" th:if="${form.postcodeOptions.size() != 0}">
+            <div class="form-group" id="select-address-block" th:if="${form.addressForm.postcodeOptions != null and form.addressForm.postcodeOptions.size() != 0}">
                 <label class="form-label" for="select-address">
                     <span class="form-label-bold">Select your address</span>
                 </label>
-                <select class="form-control" id="select-address" th:field="*{selectedPostcodeIndex}">
-                    <option th:value="${status.index}" th:each="address,status : ${form.postcodeOptions}" th:text="${address.combinedString}"></option>
+                <select class="form-control" id="select-address" th:field="*{addressForm.selectedPostcodeIndex}">
+                    <option th:value="${status.index}" th:each="address,status : ${form.addressForm.postcodeOptions}" th:text="${address.combinedString}"></option>
                 </select>
                 <button type="submit" class="button" name="select-address">Use selected address</button>
             </div>
             <button type="submit" class="buttonlink" name="manual-address">Enter address manually</button>
         </fieldset>
-        <fieldset id="address-details" class="extra-margin" th:if="${form.selectedPostcodeIndex != null or form.manualAddress}">
+        <fieldset id="address-details" class="extra-margin" th:if="${form.addressForm.selectedPostcodeIndex != null or form.addressForm.manualAddress}">
             <legend class="visuallyhidden">Address details</legend>
-            <div th:class="${#fields.hasErrors('*{selectedPostcode.addressLine1}') and form.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine1}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="street">
                     <span class="form-label-bold">Street</span>
                 </label>
-                <input class="form-control" id="street" th:field="*{selectedPostcode.addressLine1}" name="street" type="text" />
-                <span class="error-message" th:if="${#fields.hasErrors('*{selectedPostcode.addressLine1}') and form.triedToSave}" th:errors="*{selectedPostcode.addressLine1}"></span>
+                <input class="form-control" id="street" th:field="*{addressForm.selectedPostcode.addressLine1}" name="street" type="text" />
+                <span class="error-message" th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine1}') and form.addressForm.triedToSave}" th:errors="*{addressForm.selectedPostcode.addressLine1}"></span>
             </div>
-            <div th:class="${#fields.hasErrors('*{selectedPostcode.addressLine2}') and form.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine2}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
                 <label class="form-label visuallyhidden" for="street-2">
                     <span class="form-label-bold">Street line 2</span>
                 </label>
-                <input class="form-control" id="street-2" th:field="*{selectedPostcode.addressLine2}" name="street-2" type="text" />
-                <span class="error-message" th:if="${#fields.hasErrors('*{selectedPostcode.addressLine2}') and form.triedToSave}" th:errors="*{selectedPostcode.addressLine2}"></span>
+                <input class="form-control" id="street-2" th:field="*{addressForm.selectedPostcode.addressLine2}" name="street-2" type="text" />
+                <span class="error-message" th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine2}') and form.addressForm.triedToSave}" th:errors="*{addressForm.selectedPostcode.addressLine2}"></span>
             </div>
-            <div th:class="${#fields.hasErrors('*{selectedPostcode.addressLine3}') and form.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine3}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="street-2">
                     <span class="form-label-bold visuallyhidden">Street line 3</span>
                 </label>
-                <input class="form-control" id="street-3" th:field="*{selectedPostcode.addressLine3}" name="street-2" type="text" />
-                <span class="error-message" th:if="${#fields.hasErrors('*{selectedPostcode.addressLine3}') and form.triedToSave}" th:errors="*{selectedPostcode.addressLine3}"></span>
+                <input class="form-control" id="street-3" th:field="*{addressForm.selectedPostcode.addressLine3}" name="street-2" type="text" />
+                <span class="error-message" th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine3}') and form.addressForm.triedToSave}" th:errors="*{addressForm.selectedPostcode.addressLine3}"></span>
             </div>
-            <div th:class="${#fields.hasErrors('*{selectedPostcode.town}') and form.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.town}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="town">
                     <span class="form-label-bold">Town</span>
                 </label>
-                <input class="form-control" id="town"  th:field="*{selectedPostcode.town}" name="town" type="text" />
-                <span class="error-message" th:if="${#fields.hasErrors('*{selectedPostcode.town}') and form.triedToSave}" th:errors="*{selectedPostcode.town}"></span>
+                <input class="form-control" id="town"  th:field="*{addressForm.selectedPostcode.town}" name="town" type="text" />
+                <span class="error-message" th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.town}') and form.addressForm.triedToSave}" th:errors="*{addressForm.selectedPostcode.town}"></span>
             </div>
-            <div th:class="${#fields.hasErrors('*{selectedPostcode.county}') and form.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.county}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="county">
                     <span class="form-label-bold">County</span>
                 </label>
-                <input class="form-control" id="county" th:field="*{selectedPostcode.county}" name="county" type="text" />
-                <span class="error-message" th:if="${#fields.hasErrors('*{selectedPostcode.county}') and form.triedToSave}" th:errors="*{selectedPostcode.county}"></span>
+                <input class="form-control" id="county" th:field="*{addressForm.selectedPostcode.county}" name="county" type="text" />
+                <span class="error-message" th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.county}') and form.addressForm.triedToSave}" th:errors="*{addressForm.selectedPostcode.county}"></span>
             </div>
-            <div th:class="${#fields.hasErrors('*{selectedPostcode.postcode}') and form.triedToSave} ? 'form-group error' : 'form-group'">
+            <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.postcode}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="postcode">
                     <span class="form-label-bold">Postcode</span>
                 </label>
-                <input class="form-control" id="postcode" th:field="*{selectedPostcode.postcode}" name="postcode" type="text" />
-                <span class="error-message" th:if="${#fields.hasErrors('*{selectedPostcode.postcode}') and form.triedToSave}" th:errors="*{selectedPostcode.postcode}"></span>
+                <input class="form-control" id="postcode" th:field="*{addressForm.selectedPostcode.postcode}" name="postcode" type="text" />
+                <span class="error-message" th:if="${#fields.hasErrors('*{addressForm.selectedPostcode.postcode}') and form.addressForm.triedToSave}" th:errors="*{addressForm.selectedPostcode.postcode}"></span>
             </div>
         </fieldset>
     </div>
@@ -74,12 +74,12 @@
 
 <!--<div th:fragment="organisation-size">-->
     <!--<h2 class="heading-small">Organisation size</h2>-->
-    <!--<div th:class="${#fields.hasErrors('*{organisationSize}') and form.triedToSave} ? 'form-group error' : 'form-group'">-->
+    <!--<div th:class="${#fields.hasErrors('*{organisationSize}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">-->
         <!--<fieldset>-->
             <!--<legend>-->
                 <!--<span class="visuallyhidden">Organisation size</span>-->
                 <!--<p class="form-hint">More information on defining your company size is available from the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">EU Definition</a></p>-->
-                <!--<span class="error-message" th:if="${#fields.hasErrors('*{organisationSize}') and form.triedToSave}" th:errors="*{organisationSize}"></span>-->
+                <!--<span class="error-message" th:if="${#fields.hasErrors('*{organisationSize}') and form.addressForm.triedToSave}" th:errors="*{organisationSize}"></span>-->
             <!--</legend>-->
             <!--<div class="form-block">-->
                 <!--<label class="block-label" for="radio-1">-->
@@ -100,12 +100,65 @@
 <!--</div>-->
 
 
-<div th:fragment="organisation-details">
+<div th:fragment="organisation-details-minimal">
     <fieldset>
-        <legend class="visuallyhidden">Business Organisation</legend>
+        <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ' organisation'">? Organisation</legend>
         <div class="form-block">
             <h3 class="heading-small">Organisation name</h3>
-            <p th:text="${business?.name}"></p>
+            <p th:text="${organisationForm.organisationName}"></p>
+        </div>
+
+        <!--<h3 class="heading-small" th:if="${selectedOrganisation?.organisationAddress}">Registered Address</h3>-->
+        <!--<div>-->
+            <!--<div th:text="${selectedOrganisation?.organisationAddress?.addressLine1}"></div>-->
+            <!--<div th:text="${selectedOrganisation?.organisationAddress?.addressLine2}"></div>-->
+            <!--<div th:text="${selectedOrganisation?.organisationAddress?.addressLine3}"></div>-->
+            <!--<div th:text="${selectedOrganisation?.organisationAddress?.locality}"></div>-->
+            <!--<div th:text="${selectedOrganisation?.organisationAddress?.region}"></div>-->
+            <!--<div th:text="${selectedOrganisation?.organisationAddress?.postalCode}"></div>-->
+        <!--</div>-->
+    </fieldset>
+</div>
+
+<div th:fragment="organisation-details">
+    <fieldset>
+        <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ' organisation'">? Organisation</legend>
+        <div class="form-block">
+            <h3 class="heading-small">Organisation name</h3>
+            <p th:text="${organisationForm.organisationName}"></p>
+
+            <h3 th:if="${selectedOrganisation?.organisationSearchId}" class="heading-small">Registration number</h3>
+            <p  th:text="${selectedOrganisation?.organisationSearchId}"></p>
+
+            <div th:if="${selectedOrganisation?.organisationAddress != null}">
+                <h3 class="heading-small">Registered Address</h3>
+                <div th:text="${selectedOrganisation?.organisationAddress?.addressLine1}"></div>
+                <div th:text="${selectedOrganisation?.organisationAddress?.addressLine2}"></div>
+                <div th:text="${selectedOrganisation?.organisationAddress?.addressLine3}"></div>
+                <div th:text="${selectedOrganisation?.organisationAddress?.town}"></div>
+                <div th:text="${selectedOrganisation?.organisationAddress?.county}"></div>
+                <div th:text="${selectedOrganisation?.organisationAddress?.postcode}"></div>
+            </div>
+
+            <div th:if="${confirmDetails == true and organisationForm.addressForm.selectedPostcode != null}">
+                <h3 class="heading-small">Operating Address</h3>
+                <div th:text="${organisationForm.addressForm.selectedPostcode?.addressLine1}"></div>
+                <div th:text="${organisationForm.addressForm.selectedPostcode?.addressLine2}"></div>
+                <div th:text="${organisationForm.addressForm.selectedPostcode?.addressLine3}"></div>
+                <div th:text="${organisationForm.addressForm.selectedPostcode?.town}"></div>
+                <div th:text="${organisationForm.addressForm.selectedPostcode?.county}"></div>
+                <div th:text="${organisationForm.addressForm.selectedPostcode?.postcode}"></div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<div th:fragment="business-details">
+    <fieldset>
+        <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ' organisation'">? Organisation</legend>
+        <div class="form-block">
+            <h3 class="heading-small">Organisation name</h3>
+            <p th:text="${organisationForm.organisationName}"></p>
 
             <h3 th:if="${business?.companyNumber}" class="heading-small">Registration number</h3>
             <p th:if="${business?.companyNumber}" th:text="${business.companyNumber}"></p>
@@ -124,10 +177,10 @@
 </div>
 
 <div th:fragment="organisation-name">
-    <div th:class="${#fields.hasErrors('*{organisationName}') and form.triedToSave} ? 'form-group error' : 'form-group'">
+    <div th:class="${#fields.hasErrors('*{organisationName}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
         <label class="form-label" for="org-name">
             <span class="form-label-bold">Organisation name</span>
-            <span class="error-message" th:if="${#fields.hasErrors('*{organisationName}') and form.triedToSave}" th:errors="*{organisationName}"></span>
+            <span class="error-message" th:if="${#fields.hasErrors('*{organisationName}') and form.addressForm.triedToSave}" th:errors="*{organisationName}"></span>
         </label>
         <input class="form-control" id="org-name" th:field="*{organisationName}" type="text" value="" />
     </div>

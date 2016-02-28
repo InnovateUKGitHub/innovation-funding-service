@@ -42,106 +42,6 @@ the applicant is in the "Your Finances" sub-section
 the applicant is in the Finance section
     Go To    ${FINANCES}
 
-Applicant is on the overview page
-    Location Should contain    ${APPLICATION_OVERVIEW_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the Application form
-    Location Should Be    ${APPLICATION_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'application details' question
-    Location Should Be    ${APPLICATION_DETAILS_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'project summary' question
-    Location Should Be    ${PROJECT_SUMMARY_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'public description' question
-    Location Should Be    ${PUBLIC_DESCRIPTION_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'scope' question
-    Location Should Be    ${SCOPE_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'business opportunity question'
-    Location Should Be    ${BUSINESS_OPPORTUNITY_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'potential market' question
-    Location Should Be    ${POTENTIAL_MARKET_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'project exploitation' question
-    Location Should Be    ${PROJECT_EXPLOITATION_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'economic benefit' question
-    Location Should Be    ${ECONOMIC_BENEFIT_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'technical approach' question
-    Location Should Be    ${TECHNICAL APPROACH_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'innovation' question
-    Location Should Be    ${INNOVATION_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'risks' question
-    Location Should Be    ${RISKS_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'funding' question
-    Location Should Be    ${FUNDING_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'project team' question
-    Location Should Be    ${PROJECT_TEAM_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the 'adding value' question
-    Location Should Be    ${ADDING_VALUE_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the scope section
-    Location Should Be    ${SCOPE_SECTION_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the Application questions section
-    Location Should Be    ${APPLICATION_QUESTIONS_SECTION_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the "Your approach..." section
-    Location Should Be    ${PROJECT_URL}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
-Applicant is on the Finances section
-    Location Should Be    ${FINANCES}
-    Page Should Not Contain    error
-    Page Should Not Contain    Error
-
 Create new application
     go to    ${CREATE_APPLICATION_PAGE}
     Input Text    id=application_name    Form test application
@@ -155,6 +55,12 @@ User should be redirected to the correct page
 User navigates to the page
     [Arguments]    ${PAGE_URL}
     go to    ${PAGE_URL}
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+
+The user receives a custom error message
+    [Arguments]    ${custom_error_message}
+    Page Should Contain    ${custom_error_message}
 
 User enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
@@ -201,7 +107,7 @@ User should get an error page
 
 User should see the notification
     [Arguments]    ${MESSAGE}
-    Wait Until Element Is Visible    css=#content > div.event-alert
+    Wait Until Element Is Visible    css=div.event-alert
     Wait Until Page Contains    ${MESSAGE}
 
 Applicant assigns the question to the collaborator

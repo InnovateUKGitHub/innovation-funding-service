@@ -46,3 +46,6 @@ ${POSTCODE_LOOKUP_URL}    ${SERVER}/organisation/create/selected-business/050630
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
 ${APPLICATION_TEAM_URL}    ${SERVER}/application/1/contributors
 ${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/1/contributors/invite
+
+${404_error_message}    Page or resource not found
+${403_error_message}    You are not authorised to perform the requested action

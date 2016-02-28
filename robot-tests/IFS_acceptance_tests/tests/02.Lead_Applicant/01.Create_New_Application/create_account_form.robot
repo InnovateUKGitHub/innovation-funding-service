@@ -21,7 +21,7 @@ ${valid_email}    ___ewan_@worth.systems
 First name left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
+    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When user enters text to a text field    id=firstName    ${EMPTY}
     And user enters text to a text field    id=lastName    Smith
     And user enters text to a text field    id=phoneNumber    01141234567
@@ -37,7 +37,7 @@ First name left blank
 Last name left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
+    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When user enters text to a text field    id=firstName    John
     And user enters text to a text field    id=lastName    ${EMPTY}
     And user enters text to a text field    id=phoneNumber    01141234567
@@ -52,7 +52,7 @@ Last name left blank
 Phone number left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
+    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When user enters text to a text field    id=firstName    John
     And user enters text to a text field    id=lastName    Smith
     And user enters text to a text field    id=phoneNumber    ${EMPTY}
@@ -64,10 +64,23 @@ Phone number left blank
     And the user cannot login with their new details    ${valid_email}    ${correct_password}
     And the user logs out if they are logged in
 
+Phone number validation
+    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When user enters text to a text field    id=firstName    John
+    And user enters text to a text field    id=lastName    Smith
+    And user enters text to a text field    id=phoneNumber    invalidphone
+    And user enters text to a text field    id=email    ${valid_email}
+    And user enters text to a text field    id=password    ${correct_password}
+    And user enters text to a text field    id=retypedPassword    ${correct_password}
+    And the user submits their information
+    Then user should see an error    Please enter a valid phone number
+    And the user cannot login with their new details    ${valid_email}    ${correct_password}
+    And the user logs out if they are logged in
+
 Email left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
+    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When user enters text to a text field    id=firstName    John
     And user enters text to a text field    id=lastName    Smith
     And user enters text to a text field    id=phoneNumber    01141234567
@@ -81,7 +94,7 @@ Email left blank
 Password left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
+    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When user enters text to a text field    id=firstName    John
     And user enters text to a text field    id=lastName    Smith
     And user enters text to a text field    id=phoneNumber    01141234567
@@ -96,7 +109,7 @@ Password left blank
 Re-type password left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
+    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When user enters text to a text field    id=firstName    ${EMPTY}
     And user enters text to a text field    id=lastName    Smith
     And user enters text to a text field    id=phoneNumber    01141234567
@@ -111,7 +124,7 @@ Re-type password left blank
 Password and re-typed password do not match
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
+    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When user enters text to a text field    id=firstName    John
     And user enters text to a text field    id=lastName    Smith
     And user enters text to a text field    id=phoneNumber    01141234567
@@ -126,7 +139,7 @@ Password and re-typed password do not match
 Password is too short
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
+    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When user enters text to a text field    id=firstName    John
     And user enters text to a text field    id=lastName    Smith
     And user enters text to a text field    id=phoneNumber    01141234567
@@ -141,7 +154,7 @@ Password is too short
 Password is too long
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
+    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When user enters text to a text field    id=firstName    John
     And user enters text to a text field    id=lastName    Smith
     And user enters text to a text field    id=phoneNumber    01141234567
@@ -156,7 +169,7 @@ Password is too long
 Valid account creation
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations    HappyPath
-    Given the user follows the standard path to the account creation page for non registered users
+    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When user enters text to a text field    id=firstName    John
     And user enters text to a text field    id=lastName    Smith
     And user enters text to a text field    id=phoneNumber    01141234567
@@ -172,7 +185,7 @@ Valid account creation
 Email duplication check
     [Documentation]    INFUND-886
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
+    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When user enters text to a text field    id=firstName    John
     And user enters text to a text field    id=lastName    Smith
     And user enters text to a text field    id=phoneNumber    01141234567
@@ -184,14 +197,6 @@ Email duplication check
     And the user logs out if they are logged in
 
 *** Keywords ***
-the user follows the standard path to the account creation page
-    Go To    ${SERVER}/organisation/create/selected-business/05063042
-    Select Checkbox    id=address-same
-    Select Checkbox    name=useCompanyHouseAddress
-    Click Button    Save organisation and continue
-    Sleep    1s
-    Page Should Contain    The profile that you are creating will be linked to the following organisation
-
 the user submits their information
     Select Checkbox    termsAndConditions
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');

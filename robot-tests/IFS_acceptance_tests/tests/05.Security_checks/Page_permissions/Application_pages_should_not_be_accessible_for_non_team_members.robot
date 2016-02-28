@@ -28,24 +28,24 @@ Applicant who is not team member can't access overview page
     [Documentation]    INFUND-1683
     Given guest user log-in    &{collaborator2_credentials}
     When User navigates to the page    ${APPLICATION_7_OVERVIEW_PAGE}
-    Then User should get an error page    Oops, something went wrong
+    Then the user receives a custom error message   ${403_error_message}
 
 Applicant who is not team member can't access application form page
     [Documentation]    INFUND-1683
     Given Guest user log-in    &{collaborator2_credentials}
     When User navigates to the page    ${APPLICATION_7_FORM}
-    Then User should get an error page    Oops, something went wrong
+    Then the user receives a custom error message   ${403_error_message}
 
 Assessor can't access the overview page
     [Documentation]    INFUND-1683
     [Setup]    Guest user log-in    &{assessor_credentials}
     When User navigates to the page    ${APPLICATION_7_OVERVIEW_PAGE}
-    Then User should get an error page    Oops, something went wrong
+    Then the user receives a custom error message   ${403_error_message}
 
 Assessor can't access the application form
     [Documentation]    INFUND-1683
     [Setup]    Guest user log-in    &{assessor_credentials}
     When User navigates to the page    ${APPLICATION_7_FORM}
-    Then User should get an error page    Oops, something went wrong
+    Then the user receives a custom error message   ${403_error_message}
 
 *** Keywords ***

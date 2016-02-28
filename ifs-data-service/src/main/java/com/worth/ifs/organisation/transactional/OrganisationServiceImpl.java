@@ -1,13 +1,10 @@
 package com.worth.ifs.organisation.transactional;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
@@ -17,9 +14,13 @@ import com.worth.ifs.user.mapper.OrganisationMapper;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -84,11 +85,35 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressType addressType, AddressResource addressResource) {
 
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
-            Address address = addressMapper.mapToDomain(addressResource);
+	    Address address = addressMapper.mapToDomain(addressResource);
             organisation.addAddress(address, addressType);
             Organisation updatedOrganisation = organisationRepository.save(organisation);
+
             return serviceSuccess(organisationMapper.mapToResource(updatedOrganisation));
         });
     }
+
+
+
+    @Override
+    public ServiceResult<List<OrganisationSearchResult>> searchAcademic(final String organisationName){
+        ArrayList<OrganisationSearchResult> organisations = new ArrayList<>();
+
+        organisations.add(new OrganisationSearchResult("1", "Aberystwyth University"));
+        organisations.add(new OrganisationSearchResult("2", "American University of Beirut"));
+        organisations.add(new OrganisationSearchResult("3", "Catholic University of Louvain"));
+
+        ServiceResult organisationResults = serviceSuccess(organisations);
+        return organisationResults;
+    }
+
+    @Override
+    public ServiceResult<OrganisationSearchResult> getSearchOrganisation(final Long searchOrganisationId){
+        ArrayList<OrganisationSearchResult> organisations = new ArrayList<>();
+
+        ServiceResult organisationResults = serviceSuccess(new OrganisationSearchResult("1", "Aberystwyth University"));
+        return organisationResults;
+    }
+
 
 }

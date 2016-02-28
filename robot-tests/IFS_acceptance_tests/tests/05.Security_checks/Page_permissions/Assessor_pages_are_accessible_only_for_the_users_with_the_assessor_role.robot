@@ -12,7 +12,7 @@ ${ASSESSOR_DASHBOARD}    ${SERVER}/assessor/dashboard
 ${ASSESSOR_COPMETITIONS_DETAILS}    ${SERVER}/assessor/competitions/1/applications
 ${ASSESSOR_REVIEW_APPLICATION}    ${SERVER}/assessor/competitions/1/applications/4
 ${ASSESSOR_DETAILS_PAGE}    ${SERVER}/assessor/competitions/1/applications/3
-${404_error_messsage}    Page or resource not found
+
 
 *** Test Cases ***
 Guest user can't access the Assessor's dashboard page
@@ -45,7 +45,7 @@ Applicant can't access Assessor's dashboard page
     #Pending infund-1753
     Given guest user log-in    &{collaborator2_credentials}
     When User navigates to the page    ${ASSESSOR_DASHBOARD}
-    Then User should get an error page    Oops, something went wrong
+    Then the user receives a custom error message       ${403_error_message}
 
 Applicant can't access the competitions details page
     [Documentation]    INFUND-1683
@@ -53,25 +53,24 @@ Applicant can't access the competitions details page
     #Pending infund-1753
     Given guest user log-in    &{collaborator2_credentials}
     When User navigates to the page    ${ASSESSOR_COPMETITIONS_DETAILS}
-    Then User should get an error page    Oops, something went wrong
+    Then the user receives a custom error message       ${403_error_message}
 
 Applicant can't access the Assessor's review application page
     [Documentation]    INFUND-1683
     Given guest user log-in    &{collaborator2_credentials}
     When User navigates to the page    ${ASSESSOR_REVIEW_APPLICATION}
     # Then User should get an error page    Oops, something went wrong
-    Then the user can see a custom error message
+    Then the user receives a custom error message       ${404_error_message}
 
 Applicant can't access the Assessor's details page
     [Documentation]    INFUND-1683
     Given guest user log-in    &{collaborator2_credentials}
     When User navigates to the page    ${ASSESSOR_DETAILS_PAGE}
-    Then the user can see a custom error message
+    Then the user receives a custom error message       ${404_error_message}
 
 *** Keywords ***
 
-the user can see a custom error message
-    Page Should Contain         ${404_error_messsage}
+
 #the user enters the url of the assessors dashboard page
 #   go to    ${ASSESSOR_DASHBOARD}
 
