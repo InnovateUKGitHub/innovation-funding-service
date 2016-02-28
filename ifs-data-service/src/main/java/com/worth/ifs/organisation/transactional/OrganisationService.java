@@ -32,7 +32,7 @@ public interface OrganisationService {
     ServiceResult<OrganisationResource> addAddress(Long organisationId, AddressType addressType, AddressResource addressResource);
     
     @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
-    ServiceResult<List<OrganisationSearchResult>> searchAcademic(String organisationName);
+    ServiceResult<List<OrganisationSearchResult>> searchAcademic(String organisationName, int maxItems);
 
     @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
     ServiceResult<OrganisationSearchResult> getSearchOrganisation(Long searchOrganisationId);

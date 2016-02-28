@@ -1,17 +1,16 @@
 package com.worth.ifs.organisation.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.commons.resource.ResourceWithEmbeddeds;
-
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import com.worth.ifs.address.resource.AddressResource;
 /**
  * Resource object to store the company details, from the company house api.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class CompanyHouseBusiness extends ResourceWithEmbeddeds{
+public class CompanyHouseBusiness{
     private String companyNumber;
     private String name;
     private String type;

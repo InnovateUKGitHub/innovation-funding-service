@@ -6,7 +6,7 @@ Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${find_org_on_company_house_url}    ${SERVER_BASE}/organisation/create/find-business
@@ -44,7 +44,7 @@ Applicant can manually can enter and see details pass to the confirmation page
     And user enters text to a text field    id=county    Poppleshire
     And user enters text to a text field    id=postcode    POPPS123
     And user enters text to a text field    name=organisationName    Top of the Popps
-    And user clicks the button/link    name=confirm-company-details
+    And user clicks the button/link    jQuery=button:contains("Continue")
     Then User should see the text in the page    The East Wing
     And User should see the text in the page    Popple Manor
     And User should see the text in the page    1, Popple Boulevard
@@ -54,4 +54,7 @@ Applicant can manually can enter and see details pass to the confirmation page
 *** Keywords ***
 the applicant can reload the page
     Reload Page
-    Alert Should Be Present
+    #Alert Should Be Present
+
+user selects the checkbox
+    Select Checkbox    name=manual-address

@@ -16,6 +16,7 @@ import com.worth.ifs.user.domain.UserRoleType;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -45,7 +46,7 @@ public interface ApplicationService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> findAll();
 
-    @NotSecured("TODO")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> findByUserId(final Long userId);
 
     /**
@@ -67,15 +68,15 @@ public interface ApplicationService {
                                                                                      final Long userId,
                                                                                      final UserRoleType role);
 
-    @NotSecured("used by new (not signed up.in) users to create an application")
+    @NotSecured("user only has to be authenticated")
     ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
             final Long competitionId,
             final Long userId,
             String applicationName);
 
-    @NotSecured("TODO DW - INFUND-1555 - secure")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationResource> findByProcessRole(Long id);
 
-    @NotSecured("TODO DW - INFUND-1555 - secure")
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<ObjectNode> applicationReadyForSubmit(final Long id);
 }

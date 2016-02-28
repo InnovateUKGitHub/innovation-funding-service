@@ -1,13 +1,11 @@
 package com.worth.ifs.user.resource;
 
-import com.worth.ifs.user.domain.OrganisationSize;
-import com.worth.ifs.user.domain.User;
-import org.springframework.hateoas.core.Relation;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Relation(value="organisation", collectionRelation="organisations")
+import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.domain.User;
+
 public class OrganisationResource {
     private Long id;
     private String name;

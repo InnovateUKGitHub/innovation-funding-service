@@ -25,7 +25,6 @@ dependencies {
     compile "javax.servlet:javax.servlet-api:3.1.0"
     providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
     compile "org.projectlombok:lombok:1.16.2"
-    compile "org.springframework.hateoas:spring-hateoas"
     compile "org.springframework.plugin:spring-plugin-core"
     compile "com.jayway.jsonpath:json-path"
     compile 'org.apache.commons:commons-lang3:3.4'

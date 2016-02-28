@@ -13,7 +13,6 @@ import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
  * ApplicationController exposes Application data and operations through a REST API.
  */
 @RestController
-@ExposesResourceFor(ApplicationResource.class)
 @RequestMapping("/application")
 public class ApplicationController {
 

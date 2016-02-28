@@ -107,16 +107,6 @@
             <h3 class="heading-small">Organisation name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
         </div>
-
-        <!--<h3 class="heading-small" th:if="${selectedOrganisation?.organisationAddress}">Registered Address</h3>-->
-        <!--<div>-->
-            <!--<div th:text="${selectedOrganisation?.organisationAddress?.addressLine1}"></div>-->
-            <!--<div th:text="${selectedOrganisation?.organisationAddress?.addressLine2}"></div>-->
-            <!--<div th:text="${selectedOrganisation?.organisationAddress?.addressLine3}"></div>-->
-            <!--<div th:text="${selectedOrganisation?.organisationAddress?.locality}"></div>-->
-            <!--<div th:text="${selectedOrganisation?.organisationAddress?.region}"></div>-->
-            <!--<div th:text="${selectedOrganisation?.organisationAddress?.postalCode}"></div>-->
-        <!--</div>-->
     </fieldset>
 </div>
 
@@ -127,8 +117,10 @@
             <h3 class="heading-small">Organisation name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
 
-            <h3 th:if="${selectedOrganisation?.organisationSearchId}" class="heading-small">Registration number</h3>
-            <p  th:text="${selectedOrganisation?.organisationSearchId}"></p>
+            <span th:if="${T(com.worth.ifs.user.domain.OrganisationTypeEnum).BUSINESS.organisationTypeId == organisationForm.organisationType.id}">
+                <h3 th:if="${selectedOrganisation?.organisationSearchId}" class="heading-small">Registration number</h3>
+                <p th:text="${selectedOrganisation?.organisationSearchId}"></p>
+            </span>
 
             <div th:if="${selectedOrganisation?.organisationAddress != null}">
                 <h3 class="heading-small">Registered Address</h3>
