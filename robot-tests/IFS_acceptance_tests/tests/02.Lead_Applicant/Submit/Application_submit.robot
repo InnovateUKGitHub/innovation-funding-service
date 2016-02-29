@@ -27,7 +27,7 @@ ${FINANCE_SECTION_7}    ${SERVER}/application/7/form/section/7
 Submit button disabled when the application is incomplete
     [Documentation]    INFUND-195
     [Tags]    Summary    Pending
-    # Pending because of INFUND-2017
+    # Pending because of INFUND-2018
     Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
     When the applicant clicks the review and submit button
     and the applicant redirects to the summary page
@@ -38,7 +38,7 @@ Submit button disabled when the application is incomplete
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
     [Tags]    Summary    Pending
-    # Pending because of INFUND-2017
+    # Pending because of INFUND-2018
     Given the user navigates to the page    ${FINANCE_SECTION_7}
     When the applicant marks the finance section as incomplete
     And the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
@@ -52,7 +52,7 @@ Submit flow (complete application)
     ...
     ...    This test case test the submit modal(cancel option) and the the submit of the form, the confirmation page and the new status of the application
     [Tags]    Summary    HappyPath    Pending
-    # Pending because of INFUND-2017
+    # Pending because of INFUND-2018
     Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
     When the applicant clicks the review and submit button
     and the applicant redirects to the summary page

@@ -15,14 +15,14 @@ Verify all sections present in the summary page
     [Documentation]    -INFUND-193
     ...    -INFUND-1075
     [Tags]    Applicant    Summary    HappyPath    Pending
-    # Pending because of INFUND-2017
+    # Pending because of INFUND-2018
     Given the user navigates to the page    ${SUMMARY_URL}
     Then all the sections should be visible
 
 Application overview button
     [Documentation]    INFUND-1075
     [Tags]    Applicant    Summary    Pending
-    # Pending because of INFUND-2017
+    # Pending because of INFUND-2018
     Given the user navigates to the page    ${SUMMARY_URL}
     When the applicant clicks the overview button
     Then the user is on the page    ${application_overview_url}
@@ -30,14 +30,14 @@ Application overview button
 Verify all questions are present in the summary page
     [Documentation]    INFUND-1075
     [Tags]    Applicant    Summary    Pending
-    # Pending because of INFUND-2017
+    # Pending because of INFUND-2018
     Given the user navigates to the page    ${SUMMARY_URL}
     Then all the questions should be visible
 
 Verify that when Applicant clicks the "Scope" this section is expanded
     [Documentation]    INFUND-1075
     [Tags]    Applicant    Overview Summary    Pending
-    # Pending because of INFUND-2017
+    # Pending because of INFUND-2018
     Given the user navigates to the page    ${SUMMARY_URL}
     When the Applicant clicks the "Scope" section
     Then the "Scope" section should be expanded
@@ -45,7 +45,7 @@ Verify that when Applicant clicks the "Scope" this section is expanded
 Verify that clicking the edit link in the summary redirects the applicant to the application
     [Documentation]    -INFUND-193
     [Tags]    Applicant    Summary    Pending
-    # Pending because of INFUND-2017
+    # Pending because of INFUND-2018
     Given the user navigates to the page    ${SUMMARY_URL}
     When the Applicant clicks the "Project Summary" section
     And the user clicks the edit link in the summary section

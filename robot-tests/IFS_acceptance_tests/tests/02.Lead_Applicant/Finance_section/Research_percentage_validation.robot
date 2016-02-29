@@ -14,7 +14,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 If research participation is too high, an error is shown on the form and also the overview page
     [Documentation]    INFUND-1436
     [Tags]    HappyPath    Research percentage    Validation    Pending
-    # Pending because of INFUND-2017
+    # Pending because of INFUND-2018
     Given the applicant logs in
     When the research participation on the second application is too high
     Then there is an error message on the finances form
@@ -24,7 +24,7 @@ If research participation is too high, an error is shown on the form and also th
 If research participation is below the maximum level, no error is shown
     [Documentation]    INFUND-1436
     [Tags]    HappyPath    Pending
-    # Pending because of INFUND-2017
+    # Pending because of INFUND-2018
     Given the first collaborator logs in
     When the first collaborator edits financial details to bring down the research participation level
     And the applicant logs in
