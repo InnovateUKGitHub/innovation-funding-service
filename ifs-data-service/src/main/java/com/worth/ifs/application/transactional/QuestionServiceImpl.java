@@ -245,6 +245,11 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return getOnlyFormInputTypeByTitle(formInputTypeTitle).andOnSuccessReturn(inputType -> inputType.getFormInput().get(0).getQuestion());
     }
 
+    @Override
+    public ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(Long applicationId, Long assigneeId){
+        return serviceSuccess(questionStatusRepository.countByApplicationIdAndAssigneeId(applicationId, assigneeId));
+    }
+
     private ServiceResult<Void> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
 
         return find(processRole(processRoleId), application(applicationId), question(questionId)).andOnSuccess((markedAsCompleteBy, application, question) -> {
