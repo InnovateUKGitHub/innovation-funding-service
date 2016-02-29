@@ -168,22 +168,4 @@ public class AcceptInviteController extends AbstractApplicationController {
             return "redirect:/accept-invite/create-organisation/?"+ORGANISATION_TYPE+'='+organisationTypeForm.getOrganisationType();
         }
     }
-
-    @RequestMapping(value = "/accept-invite/create-organisation", method = RequestMethod.GET)
-    public String chooseOrganisationType(HttpServletRequest request,
-                                         HttpServletResponse response,
-                                         Model model,
-                                         @ModelAttribute("companyHouseForm") CompanyHouseForm companyHouseForm,
-                                         @RequestParam(value = ORGANISATION_TYPE) Long organisationTypeId
-    ){
-        log.warn("OrganisationType: ");
-        if(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationTypeId)){
-            return "redirect:/organisation/create/find-organisation";
-        }else if(OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId().equals(organisationTypeId)){
-            return "redirect:/organisation/create/find-organisation";
-        }else{
-            return "application-contributors/invite/organisation-type";
-        }
-    }
-
 }

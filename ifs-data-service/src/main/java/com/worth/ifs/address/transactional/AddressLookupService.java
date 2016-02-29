@@ -12,4 +12,6 @@ import java.util.List;
 public interface AddressLookupService {
     @NotSecured("Everyone may do a lookup it is used as part of the registration process")
     ServiceResult<List<AddressResource>> doLookup(String lookup);
+    @NotSecured("Everyone should be able to do a postcode verification")
+    ServiceResult<Boolean> validatePostcode(String postcode);
 }

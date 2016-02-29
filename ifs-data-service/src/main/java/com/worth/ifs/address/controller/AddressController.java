@@ -34,4 +34,9 @@ public class AddressController {
     public RestResult<List<AddressResource>> doLookup(@PathVariable("lookup") final String lookup) {
         return addressLookupService.doLookup(lookup).toGetResponse();
     }
+
+    @RequestMapping("/validatePostcode/{postcode}")
+    public RestResult<Boolean> validatePostcode(@PathVariable("postcode") final String postcode) {
+        return addressLookupService.validatePostcode(postcode).toGetResponse();
+    }
 }

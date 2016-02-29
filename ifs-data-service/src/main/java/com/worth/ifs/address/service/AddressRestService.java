@@ -8,4 +8,5 @@ import java.util.List;
 public interface AddressRestService {
     RestResult<AddressResource> findOne(Long id);
     RestResult<List<AddressResource>> doLookup(String lookup);
+    RestResult<Boolean> validatePostcode(String postcode);
 }
