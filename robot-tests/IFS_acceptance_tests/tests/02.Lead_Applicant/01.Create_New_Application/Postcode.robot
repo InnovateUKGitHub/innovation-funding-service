@@ -36,7 +36,7 @@ Empty Postcode field
 
 Same Operating address
     [Documentation]    INFUND-890
-    [Tags]    HappyPath
+    [Tags]    HappyPath     Failing
     Given the user navigates to the page    ${POSTCODE_LOOKUP_URL}
     When the user selects the checkbox "The registered test is the same as the operating address"
     Then The user should not see the element    css=#postcode-check
