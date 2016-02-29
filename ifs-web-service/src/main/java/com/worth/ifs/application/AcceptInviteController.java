@@ -7,6 +7,7 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.login.LoginForm;
+import com.worth.ifs.organisation.OrganisationCreationController;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -60,6 +61,7 @@ public class AcceptInviteController extends AbstractApplicationController {
 
         RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
         CookieUtil.saveToCookie(response, INVITE_HASH, "");
+        CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
 
         if(invite.isSuccess()){
             InviteResource inviteResource = invite.getSuccessObject();
@@ -93,12 +95,14 @@ public class AcceptInviteController extends AbstractApplicationController {
                                          Model model,
                                          @ModelAttribute OrganisationTypeForm organisationTypeForm,
                                          BindingResult bindingResult,
+                                         HttpServletResponse response,
                                          @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId,
                                          @RequestParam(value = "invalid", required = false) String invalid
 
     ){
 
         String hash = CookieUtil.getCookieValue(request, INVITE_HASH);
+        CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
         RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if(invalid != null){
@@ -140,6 +144,7 @@ public class AcceptInviteController extends AbstractApplicationController {
                                          BindingResult bindingResult
 
     ){
+        CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
         Long organisationTypeId = organisationTypeForm.getOrganisationType();
         if(bindingResult.hasErrors()){
             log.debug("redirect because validation errors");
