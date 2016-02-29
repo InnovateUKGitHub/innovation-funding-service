@@ -27,15 +27,16 @@ Applicant can access the Overview page
 Verify the "Review and submit" button (overview page)
     [Documentation]    -INFUND-195
     ...    -INFUND-214
-    [Tags]    Applicant    Submit    Review and Submit    Overview    HappyPath
-    Given the user navigates to the page        ${application_overview_url}
+    [Tags]    Applicant    Submit    Review and Submit    Overview    HappyPath    Pending
+    # Pending because of INFUND-2017
+    Given the user navigates to the page    ${application_overview_url}
     And the overview page should have the "Review & Submit" button
     When the applicant clicks the submit button
     Then the applicant redirects to the summary page
 
 Applicant can see the List with the sections
     [Tags]    Applicant    Overview
-    When the user navigates to the page        ${application_overview_url}
+    When the user navigates to the page    ${application_overview_url}
     Then the applicant should see three sections
 
 Only the main questions should show and not the file uploads

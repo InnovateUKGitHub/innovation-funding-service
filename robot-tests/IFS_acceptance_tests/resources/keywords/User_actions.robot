@@ -5,6 +5,7 @@ The user navigates to the page
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
     Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You are not authorised to perform the requested action
 
 The user is on the page
     [Arguments]    ${TARGET_URL}
@@ -12,6 +13,7 @@ The user is on the page
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
     Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You are not authorised to perform the requested action
 
 Applicant edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
@@ -38,6 +40,7 @@ Applicant is in the 'Your Finance' sub-section
     Go To    ${FINANCES}
     Click Element    Link=Your finances
     Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You are not authorised to perform the requested action
 
 the applicant is in the "Your Finances" sub-section
     Applicant is in the 'Your Finance' sub-section
@@ -45,12 +48,14 @@ the applicant is in the "Your Finances" sub-section
 the applicant is in the Finance section
     Go To    ${FINANCES}
     Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You are not authorised to perform the requested action
 
 Create new application
     go to    ${CREATE_APPLICATION_PAGE}
     Input Text    id=application_name    Form test application
     Click Element    css=#content > form > input
     Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You are not authorised to perform the requested action
 
 User should be redirected to the correct page
     [Arguments]    ${URL}
@@ -64,6 +69,7 @@ User navigates to the page
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
     Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You are not authorised to perform the requested action
 
 The user receives a custom error message
     [Arguments]    ${custom_error_message}
