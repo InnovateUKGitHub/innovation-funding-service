@@ -40,6 +40,13 @@ import java.util.List;
 
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 
+
+/**
+ * This Controller handles the users request to create an organisation. This is done when the users creates a new account. In most cases the user will first
+ * choose his organisation Type in the AcceptInviteController. Pending on that choice, the related form will be rendered with this controller.
+ *
+ * This controller is using the OrganisationSearchRestService to provide the user a quick way to reuse information about a existing organisation.OrganisationSearchRestService
+ */
 @Controller
 @RequestMapping("/organisation/create")
 public class OrganisationCreationController {
@@ -65,6 +72,7 @@ public class OrganisationCreationController {
     public static final String SEARCH_ADDRESS = "search-address";
     public static final String SELECT_ADDRESS = "select-address";
     public static final String ORGANISATION_NAME = "organisationName";
+    public static final String MANUAL_ORGANISATION = "manual-organisation";
 
     @Autowired
     protected InviteRestService inviteRestService;
@@ -87,7 +95,7 @@ public class OrganisationCreationController {
     }
 
 
-    @RequestMapping("/create-organisation-type")
+    @RequestMapping("/" + CREATE_ORGANISATION_TYPE)
     public String createAccountOrganisationType(@ModelAttribute Form form, Model model) {
         model.addAttribute("form", form);
         return CREATE_APPLICATION + "/" + CREATE_ORGANISATION_TYPE;
@@ -108,8 +116,10 @@ public class OrganisationCreationController {
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         if (OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
             return CREATE_APPLICATION + "/" + FIND_BUSINESS;
-        } else {
+        } else if(organisationForm.getOrganisationTypeEnum().isUseOrganisationSearch()) {
             return CREATE_APPLICATION + "/" + FIND_ORGANISATION;
+        }else{
+            return CREATE_APPLICATION + "/" + MANUAL_ORGANISATION;
         }
     }
 

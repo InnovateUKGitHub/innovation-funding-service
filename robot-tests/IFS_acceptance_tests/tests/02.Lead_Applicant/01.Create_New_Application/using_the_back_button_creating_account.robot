@@ -13,17 +13,17 @@ Resource          ../../../resources/keywords/User_actions.robot
 The user presses the back button while on the create account page
     [Documentation]    INFUND-1423
     [Tags]    Create account    Back button
-    Given user navigates to the page    ${LOGIN_URL}
-    When user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    Given the user navigates to the page    ${LOGIN_URL}
+    When the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     And the user presses the back button
-    Then user should be redirected to the correct page    ${LOGIN_URL}
+    Then the user should be redirected to the correct page    ${LOGIN_URL}
 
 The user logs in and visits the create account page
     [Documentation]    INFUND-1423
     [Tags]    Create account    Back button
     Given Guest user log-in    steve.smith@empire.com    test
-    When user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
-    Then user should see the text in the page    Your Profile
+    When the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    Then The user should see the text in the page    Your Profile
 
 *** Keywords ***
 the user presses the back button

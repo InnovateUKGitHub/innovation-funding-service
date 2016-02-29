@@ -102,7 +102,7 @@
 
 <div th:fragment="organisation-details-minimal">
     <fieldset>
-        <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ' organisation'">? Organisation</legend>
+        <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? Organisation</legend>
         <div class="form-block">
             <h3 class="heading-small">Organisation name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
@@ -112,7 +112,7 @@
 
 <div th:fragment="organisation-details">
     <fieldset>
-        <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ' organisation'">? Organisation</legend>
+        <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? Organisation</legend>
         <div class="form-block">
             <h3 class="heading-small">Organisation name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
@@ -147,7 +147,7 @@
 
 <div th:fragment="business-details">
     <fieldset>
-        <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ' organisation'">? Organisation</legend>
+        <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? Organisation</legend>
         <div class="form-block">
             <h3 class="heading-small">Organisation name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
