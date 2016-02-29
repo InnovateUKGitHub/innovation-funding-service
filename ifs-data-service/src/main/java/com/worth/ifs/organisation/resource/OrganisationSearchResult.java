@@ -1,12 +1,15 @@
 package com.worth.ifs.organisation.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.worth.ifs.address.resource.AddressResource;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.worth.ifs.organisation.domain.Address;
 
 /**
  * Resource object to store the company details, from the company house api.
@@ -15,7 +18,7 @@ import com.worth.ifs.organisation.domain.Address;
 public class OrganisationSearchResult implements Serializable{
     private String organisationSearchId;
     private String name;
-    private Address organisationAddress;
+    private AddressResource organisationAddress;
     private Map<String, Object> extraAttributes;
 
     public OrganisationSearchResult(String id, String name) {
@@ -32,8 +35,8 @@ public class OrganisationSearchResult implements Serializable{
     public String getLocation() {
         String locationString = "";
         locationString +=  organisationAddress.getAddressLine1();
-        locationString +=  ", "+ organisationAddress.getLocality();
-        locationString +=  ", "+ organisationAddress.getPostalCode();
+        locationString +=  ", "+ organisationAddress.getTown();
+        locationString +=  ", "+ organisationAddress.getPostcode();
         return locationString;
     }
 
@@ -45,11 +48,11 @@ public class OrganisationSearchResult implements Serializable{
         this.name = name;
     }
 
-    public Address getOrganisationAddress() {
+    public AddressResource getOrganisationAddress() {
         return organisationAddress;
     }
 
-    public void setOrganisationAddress(Address organisationAddress) {
+    public void setOrganisationAddress(AddressResource organisationAddress) {
         this.organisationAddress = organisationAddress;
     }
 

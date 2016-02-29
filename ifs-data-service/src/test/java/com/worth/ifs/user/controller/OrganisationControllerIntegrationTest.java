@@ -1,7 +1,7 @@
 package com.worth.ifs.user.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
-import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationSize;
@@ -107,20 +107,16 @@ public class OrganisationControllerIntegrationTest  extends BaseControllerIntegr
     @Test
     public void testAddAddress() throws Exception {
         OrganisationResource organisationResource = createOrganisation();
-        Address address = new Address("Line1", "Line2",  "Line3", "careof", "Country", "locality", "po_box", "postal_code", "region");
-        controller.addAddress(organisationResource.getId(), AddressType.OPERATING, address);
-
+        AddressResource addressResource = new AddressResource("Line1", "Line2",  "Line3", "town", "county", "postcode");
+        controller.addAddress(organisationResource.getId(), AddressType.OPERATING, addressResource);
 
         Organisation cleanOrganisation = controller.findById(organisationResource.getId()).getSuccessObject();
         assertEquals(1, cleanOrganisation.getAddresses().size());
         assertEquals("Line1", cleanOrganisation.getAddresses().get(0).getAddress().getAddressLine1());
         assertEquals("Line2", cleanOrganisation.getAddresses().get(0).getAddress().getAddressLine2());
         assertEquals("Line3", cleanOrganisation.getAddresses().get(0).getAddress().getAddressLine3());
-        assertEquals("careof", cleanOrganisation.getAddresses().get(0).getAddress().getCareOf());
-        assertEquals("Country", cleanOrganisation.getAddresses().get(0).getAddress().getCountry());
-        assertEquals("locality", cleanOrganisation.getAddresses().get(0).getAddress().getLocality());
-        assertEquals("po_box", cleanOrganisation.getAddresses().get(0).getAddress().getPoBox());
-        assertEquals("postal_code", cleanOrganisation.getAddresses().get(0).getAddress().getPostalCode());
-        assertEquals("region", cleanOrganisation.getAddresses().get(0).getAddress().getRegion());
+        assertEquals("town", cleanOrganisation.getAddresses().get(0).getAddress().getTown());
+        assertEquals("postcode", cleanOrganisation.getAddresses().get(0).getAddress().getPostcode());
+        assertEquals("county", cleanOrganisation.getAddresses().get(0).getAddress().getCounty());
     }
 }

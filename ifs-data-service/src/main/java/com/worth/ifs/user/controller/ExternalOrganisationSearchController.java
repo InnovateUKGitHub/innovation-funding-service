@@ -2,8 +2,8 @@ package com.worth.ifs.user.controller;
 
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.organisation.controller.CompanyHouseApiService;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
+import com.worth.ifs.organisation.transactional.CompanyHouseApiService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.transactional.OrganisationTypeService;

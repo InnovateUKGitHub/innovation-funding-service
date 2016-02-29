@@ -44,28 +44,27 @@ Applicant can't access Assessor's dashboard page
     [Tags]    Pending
     #Pending infund-1753
     Given guest user log-in    &{collaborator2_credentials}
-    When the user navigates to the page    ${ASSESSOR_DASHBOARD}
-    Then the user receives a custom error message       ${403_error_message}
+    When the user navigates to the page and gets a custom error message    ${ASSESSOR_DASHBOARD}    ${403_error_message}
+
 
 Applicant can't access the competitions details page
     [Documentation]    INFUND-1683
     [Tags]    Pending
     #Pending infund-1753
     Given guest user log-in    &{collaborator2_credentials}
-    When the user navigates to the page    ${ASSESSOR_COMPETITIONS_DETAILS}
-    Then the user receives a custom error message       ${403_error_message}
+    When the user navigates to the page and gets a custom error message    ${ASSESSOR_COMPETITIONS_DETAILS}     ${403_error_message}
 
 Applicant can't access the Assessor's review application page
     [Documentation]    INFUND-1683
     Given guest user log-in    &{collaborator2_credentials}
-    When the user navigates to the page    ${ASSESSOR_REVIEW_APPLICATION}
-    Then the user receives a custom error message       ${404_error_message}
+    When the user navigates to the page and gets a custom error message    ${ASSESSOR_REVIEW_APPLICATION}    ${404_error_message}
+
 
 Applicant can't access the Assessor's details page
     [Documentation]    INFUND-1683
     Given guest user log-in    &{collaborator2_credentials}
-    When the user navigates to the page    ${ASSESSOR_DETAILS_PAGE}
-    Then the user receives a custom error message       ${404_error_message}
+    When the user navigates to the page and gets a custom error message   ${ASSESSOR_DETAILS_PAGE}       ${404_error_message}
+
 
 *** Keywords ***
 

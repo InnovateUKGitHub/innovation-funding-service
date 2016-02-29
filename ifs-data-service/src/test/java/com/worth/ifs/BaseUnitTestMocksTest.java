@@ -15,6 +15,9 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.organisation.repository.AddressRepository;
+import com.worth.ifs.address.transactional.AddressLookupService;
+import com.worth.ifs.address.transactional.AddressService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -35,6 +38,9 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected ResponseService responseService;
+
+    @Mock
+    protected AddressRepository addressRepositoryMock;
 
     @Mock
     protected ApplicationRepository applicationRepositoryMock;
@@ -98,6 +104,12 @@ public abstract class BaseUnitTestMocksTest {
 
     @Mock
     protected InviteRepository inviteRepositoryMock;
+
+    @Mock
+    protected AddressLookupService addressLookupServiceMock;
+
+    @Mock
+    protected AddressService addressServiceMock;
 
     @Mock
     protected OrganisationService organisationServiceMock;

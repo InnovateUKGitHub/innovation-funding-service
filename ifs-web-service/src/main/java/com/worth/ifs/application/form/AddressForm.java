@@ -1,22 +1,27 @@
 package com.worth.ifs.application.form;
 
-import com.worth.ifs.organisation.domain.Address;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.validator.constraints.Postcode;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddressForm  implements Serializable {
     private boolean triedToSave = false;
-    @NotEmpty
+
+    //@Postcode(message = "Please enter a valid postcode")
     private String postcodeInput = "";
     private String selectedPostcodeIndex;
     @Valid
-    private transient Address selectedPostcode = null;
+    private transient AddressResource selectedPostcode = null;
     @Valid
-    private transient List<Address> postcodeOptions;
+    private transient List<AddressResource> postcodeOptions;
     private boolean manualAddress = false;
 
     public AddressForm(String postcodeInput) {
@@ -44,19 +49,20 @@ public class AddressForm  implements Serializable {
         this.selectedPostcodeIndex = selectedPostcodeIndex;
     }
 
-    public Address getSelectedPostcode() {
+    public AddressResource getSelectedPostcode() {
         return selectedPostcode;
     }
 
-    public void setSelectedPostcode(Address selectedPostcode) {
+    public void setSelectedPostcode(AddressResource selectedPostcode) {
         this.selectedPostcode = selectedPostcode;
     }
 
-    public List<Address> getPostcodeOptions() {
+    @JsonIgnore
+    public List<AddressResource> getPostcodeOptions() {
         return postcodeOptions;
     }
 
-    public void setPostcodeOptions(List<Address> postcodeOptions) {
+    public void setPostcodeOptions(List<AddressResource> postcodeOptions) {
         this.postcodeOptions = postcodeOptions;
     }
 

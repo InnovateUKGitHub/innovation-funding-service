@@ -1,7 +1,7 @@
-package com.worth.ifs.organisation.transactional;
+package com.worth.ifs.address.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.organisation.resource.AddressResource;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.security.NotSecured;
 
 public interface AddressService {

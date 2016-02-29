@@ -1,4 +1,4 @@
-package com.worth.ifs.organisation.controller;
+package com.worth.ifs.organisation.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;

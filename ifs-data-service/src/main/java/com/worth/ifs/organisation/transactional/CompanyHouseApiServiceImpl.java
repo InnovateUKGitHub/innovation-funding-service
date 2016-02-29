@@ -1,11 +1,12 @@
-package com.worth.ifs.organisation.controller;
+package com.worth.ifs.organisation.transactional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.commons.service.RestTemplateAdaptor;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -85,9 +86,7 @@ public class CompanyHouseApiServiceImpl extends BaseRestService implements Compa
 
     private OrganisationSearchResult companyProfileMapper(JsonNode jsonNode) {
         String description = null;
-        Address officeAddress = getAddress(jsonNode, "registered_office_address");
-
-
+        AddressResource officeAddress = getAddress(jsonNode, "registered_office_address");
         ObjectMapper mapper = new ObjectMapper();
 
         OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path("company_number").asText(), jsonNode.path("company_name").asText());
@@ -96,18 +95,15 @@ public class CompanyHouseApiServiceImpl extends BaseRestService implements Compa
         return org;
     }
 
-    private Address getAddress(JsonNode jsonNode, String path) {
-        Address address = new Address(
+    private AddressResource getAddress(JsonNode jsonNode, String path) {
+        AddressResource address = new AddressResource(
                 jsonNode.path(path).path("address_line_1").asText(),
                 jsonNode.path(path).path("address_line_2").asText(),
                 jsonNode.path(path).path("address_line_3").asText(),
-                jsonNode.path(path).path("care_of").asText(),
-                jsonNode.path(path).path("country").asText(),
                 jsonNode.path(path).path("locality").asText(),
-                jsonNode.path(path).path("po_box").asText(),
-                jsonNode.path(path).path("postal_code").asText(),
-                jsonNode.path(path).path("region").asText()
-        );
+                jsonNode.path(path).path("region").asText(),
+                jsonNode.path(path).path("postal_code").asText()
+                );
         return address;
     }
 
@@ -121,7 +117,7 @@ public class CompanyHouseApiServiceImpl extends BaseRestService implements Compa
     }
 
     private OrganisationSearchResult companySearchMapper(JsonNode jsonNode) {
-        Address officeAddress = getAddress(jsonNode, "address");
+        AddressResource officeAddress = getAddress(jsonNode, "address");
 
         ObjectMapper mapper = new ObjectMapper();
 
