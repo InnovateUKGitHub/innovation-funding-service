@@ -30,23 +30,21 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// TODO DW - INFUND-1555 - handle rest results
+/**
+ * This class is use as an entry point to accept a invite, to a application.
+ */
 @Controller
 public class AcceptInviteController extends AbstractApplicationController {
-    private final Log log = LogFactory.getLog(getClass());
-
     public static final String INVITE_HASH = "invite_hash";
     public static final String ORGANISATION_TYPE = "organisationType";
-
+    private final Log log = LogFactory.getLog(getClass());
+    Validator validator;
     @Autowired
     private InviteRestService inviteRestService;
-
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
     @Autowired
     private MessageSource messageSource;
-
-    Validator validator;
 
     @Autowired
     public void setValidator(Validator validator) {
@@ -58,19 +56,18 @@ public class AcceptInviteController extends AbstractApplicationController {
             @PathVariable("hash") final String hash,
             HttpServletResponse response,
             Model model) {
-
         RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
         CookieUtil.saveToCookie(response, INVITE_HASH, "");
         CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
 
-        if(invite.isSuccess()){
+        if (invite.isSuccess()) {
             InviteResource inviteResource = invite.getSuccessObject();
-            if(InviteStatusConstants.SEND.equals(inviteResource.getStatus())){
+            if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
                 LoginForm loginForm = new LoginForm();
 
                 // check if there already is a user with this emailaddress
                 List<UserResource> existingUsers = userService.findUserByEmail(inviteResource.getEmail()).getSuccessObjectOrThrowException();
-                if(existingUsers != null && !existingUsers.isEmpty()){
+                if (existingUsers != null && !existingUsers.isEmpty()) {
                     model.addAttribute("emailAddressRegistered", "true");
                 }
 
@@ -78,18 +75,17 @@ public class AcceptInviteController extends AbstractApplicationController {
                 model.addAttribute("loginForm", loginForm);
                 CookieUtil.saveToCookie(response, INVITE_HASH, hash);
                 return "application-contributors/invite/accept-invite";
-            }else{
+            } else {
                 cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
                 return "redirect:/login";
             }
 
-        }else {
+        } else {
             cookieFlashMessageFilter.setFlashMessage(response, "inviteNotValid");
             return "redirect:/login";
         }
     }
 
-    // TODO DW - INFUND-1555 - handle rest results
     @RequestMapping(value = "/accept-invite/new-account-organisation-type", method = RequestMethod.GET)
     public String chooseOrganisationType(HttpServletRequest request,
                                          Model model,
@@ -99,25 +95,24 @@ public class AcceptInviteController extends AbstractApplicationController {
                                          @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId,
                                          @RequestParam(value = "invalid", required = false) String invalid
 
-    ){
-
+    ) {
         String hash = CookieUtil.getCookieValue(request, INVITE_HASH);
         CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
         RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
 
-        if(invalid != null){
+        if (invalid != null) {
             validator.validate(organisationTypeForm, bindingResult);
         }
 
-        if(invite.isSuccess() && InviteStatusConstants.SEND.equals(invite.getSuccessObject().getStatus())){
+        if (invite.isSuccess() && InviteStatusConstants.SEND.equals(invite.getSuccessObject().getStatus())) {
             InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObject();
 
             List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccessObjectOrThrowException();
-            if(organisationTypeId == null){
+            if (organisationTypeId == null) {
                 types = types.stream()
                         .filter(t -> t.getParentOrganisationType() == null)
                         .collect(Collectors.toList());
-            }else{
+            } else {
                 model.addAttribute("organisationParentType", OrganisationTypeEnum.getFromId(organisationTypeId));
                 organisationTypeRestService.findOne(organisationTypeId).andOnSuccessReturn(r -> {
                     model.addAttribute("organisationParentTypeTitle", r.getName());
@@ -132,7 +127,7 @@ public class AcceptInviteController extends AbstractApplicationController {
             model.addAttribute("organisationTypes", types);
             model.addAttribute("inviteOrganisation", inviteOrganisation);
             model.addAttribute("invite", invite.getSuccessObject());
-        }else{
+        } else {
             return "redirect:/login";
         }
         return "application-contributors/invite/organisation-type";
@@ -143,18 +138,18 @@ public class AcceptInviteController extends AbstractApplicationController {
                                          @ModelAttribute @Valid OrganisationTypeForm organisationTypeForm,
                                          BindingResult bindingResult
 
-    ){
+    ) {
         CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
         Long organisationTypeId = organisationTypeForm.getOrganisationType();
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             log.debug("redirect because validation errors");
             return "redirect:/accept-invite/new-account-organisation-type?invalid";
-        }else if(OrganisationTypeEnum.getFromId(organisationTypeId).hasChildren()){
+        } else if (OrganisationTypeEnum.getFromId(organisationTypeId).hasChildren()) {
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
             CookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
             log.debug("redirect for organisation subtype");
-            return "redirect:/accept-invite/new-account-organisation-type/?"+ORGANISATION_TYPE+'='+organisationTypeForm.getOrganisationType();
-        }else{
+            return "redirect:/accept-invite/new-account-organisation-type/?" + ORGANISATION_TYPE + '=' + organisationTypeForm.getOrganisationType();
+        } else {
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
             CookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
             log.debug("redirect for organisation creation");

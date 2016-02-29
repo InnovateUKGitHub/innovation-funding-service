@@ -14,11 +14,11 @@
     <h1 class="heading-large">Create your account</h1>
     <p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from innovate UK</p>
 
-    <h2 class="heading-medium" th:text="${organisationForm.organisationType.name} + ' organisation'">? organisation</h2>
+    <h2 class="heading-medium" th:text="${organisationForm.organisationType.name} + ''">? organisation</h2>
 
     <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
         <fieldset>
-            <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ' organisation'">? organisation</legend>
+            <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? organisation</legend>
             <div th:include="create-application/fragments :: organisation-name" th:with="form=${organisationForm}" th:remove="tag"></div>
             <div th:include="create-application/fragments :: company-address-details" th:with="form=${organisationForm}" th:remove="tag"></div>
 
