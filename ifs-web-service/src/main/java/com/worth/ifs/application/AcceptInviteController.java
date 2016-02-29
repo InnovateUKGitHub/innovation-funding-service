@@ -1,6 +1,5 @@
 package com.worth.ifs.application;
 
-import com.worth.ifs.application.form.CompanyHouseForm;
 import com.worth.ifs.application.form.OrganisationTypeForm;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
@@ -28,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 // TODO DW - INFUND-1555 - handle rest results
@@ -57,15 +55,11 @@ public class AcceptInviteController extends AbstractApplicationController {
     @RequestMapping(value = "/accept-invite/{hash}", method = RequestMethod.GET)
     public String displayContributors(
             @PathVariable("hash") final String hash,
-            HttpServletRequest request,
             HttpServletResponse response,
             Model model) {
 
         RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
         CookieUtil.saveToCookie(response, INVITE_HASH, "");
-
-
-//        model.addAttribute("currentApplication", application);
 
         if(invite.isSuccess()){
             InviteResource inviteResource = invite.getSuccessObject();
@@ -91,17 +85,14 @@ public class AcceptInviteController extends AbstractApplicationController {
             cookieFlashMessageFilter.setFlashMessage(response, "inviteNotValid");
             return "redirect:/login";
         }
-
     }
 
     // TODO DW - INFUND-1555 - handle rest results
     @RequestMapping(value = "/accept-invite/new-account-organisation-type", method = RequestMethod.GET)
     public String chooseOrganisationType(HttpServletRequest request,
-                                         HttpServletResponse response,
                                          Model model,
                                          @ModelAttribute OrganisationTypeForm organisationTypeForm,
                                          BindingResult bindingResult,
-                                         Locale locale,
                                          @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId,
                                          @RequestParam(value = "invalid", required = false) String invalid
 
@@ -144,46 +135,25 @@ public class AcceptInviteController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/accept-invite/new-account-organisation-type", method = RequestMethod.POST)
-    public String chooseOrganisationType(HttpServletRequest request,
-                                         HttpServletResponse response,
-                                         Model model,
+    public String chooseOrganisationType(HttpServletResponse response,
                                          @ModelAttribute @Valid OrganisationTypeForm organisationTypeForm,
                                          BindingResult bindingResult
 
     ){
         Long organisationTypeId = organisationTypeForm.getOrganisationType();
-
         if(bindingResult.hasErrors()){
-            log.error("redirect because validation errors");
+            log.debug("redirect because validation errors");
             return "redirect:/accept-invite/new-account-organisation-type?invalid";
         }else if(OrganisationTypeEnum.getFromId(organisationTypeId).hasChildren()){
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
             CookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
-            log.error("redirect for organisation subtype");
+            log.debug("redirect for organisation subtype");
             return "redirect:/accept-invite/new-account-organisation-type/?"+ORGANISATION_TYPE+'='+organisationTypeForm.getOrganisationType();
         }else{
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
             CookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
-            log.error("redirect for organisation creation");
-            return "redirect:/accept-invite/create-organisation/?"+ORGANISATION_TYPE+'='+organisationTypeForm.getOrganisationType();
+            log.debug("redirect for organisation creation");
+            return "redirect:/organisation/create/find-organisation";
         }
     }
-
-    @RequestMapping(value = "/accept-invite/create-organisation", method = RequestMethod.GET)
-    public String chooseOrganisationType(HttpServletRequest request,
-                                         HttpServletResponse response,
-                                         Model model,
-                                         @ModelAttribute("companyHouseForm") CompanyHouseForm companyHouseForm,
-                                         @RequestParam(value = ORGANISATION_TYPE) Long organisationTypeId
-    ){
-        log.warn("OrganisationType: ");
-        if(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationTypeId)){
-            return "redirect:/organisation/create/find-organisation";
-        }else if(OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId().equals(organisationTypeId)){
-            return "redirect:/organisation/create/find-organisation";
-        }else{
-            return "application-contributors/invite/organisation-type";
-        }
-    }
-
 }

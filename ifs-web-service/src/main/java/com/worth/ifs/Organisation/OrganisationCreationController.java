@@ -62,6 +62,7 @@ public class OrganisationCreationController {
     public static final String SEARCH_ADDRESS = "search-address";
     public static final String SELECT_ADDRESS = "select-address";
     public static final String ORGANISATION_NAME = "organisationName";
+    public static final String MANUAL_ORGANISATION = "manual-organisation";
     private final Log log = LogFactory.getLog(this.getClass());
     @Autowired
     private OrganisationService organisationService;
@@ -102,8 +103,10 @@ public class OrganisationCreationController {
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         if (OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
             return CREATE_APPLICATION + "/" + FIND_BUSINESS;
-        } else {
+        } else if(organisationForm.getOrganisationTypeEnum().isUseOrganisationSearch()) {
             return CREATE_APPLICATION + "/" + FIND_ORGANISATION;
+        }else{
+            return CREATE_APPLICATION + "/" + MANUAL_ORGANISATION;
         }
     }
 
