@@ -77,4 +77,7 @@ public interface QuestionService {
 
     @NotSecured("TODO DW - implement when permissions available")
     ServiceResult<QuestionStatus> getQuestionStatusResourceById(Long id);
+
+    @NotSecured("TODO")
+    ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(Long applicationId, Long assigneeId);
 }
