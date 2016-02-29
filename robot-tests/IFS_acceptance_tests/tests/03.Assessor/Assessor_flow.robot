@@ -14,7 +14,7 @@ Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Assessor_actions.robot
+Resource          ../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${reject_application_name}    Security for the Internet of Things
@@ -41,7 +41,7 @@ Assessment progress is 1 out of 4
 Assessor can see the applications details page
     [Documentation]    INFUND-337
     [Tags]    Assessor    HappyPath
-    When Assessor clicks the competition
+    When user clicks the button/link        link=${competition_name}
     Then Competition's details page should be visible
 
 Application invitation review page shows the title
@@ -290,3 +290,5 @@ the feedback should be present
     ${selected_value} =    Get Selected List Value    xpath=//*[@class="question"]//select
     Should Be Equal As Strings    ${selected_value}    ${feedback_dropdown_value}
     Textarea Value Should Be    xpath=//*[@class="question"]//textarea    ${feedback_text_value}
+
+
