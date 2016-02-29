@@ -7,6 +7,12 @@ The user navigates to the page
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You are not authorised to perform the requested action
 
+The user navigates to the page and gets a custom error message
+    [Arguments]     ${TARGET_URL}   ${CUSTOM_ERROR_MESSAGE}
+    Go To   ${TARGET_URL}
+    Page Should Contain     ${CUSTOM_ERROR_MESSAGE}
+
+
 The user is on the page
     [Arguments]    ${TARGET_URL}
     Location Should Be    ${TARGET_URL}
@@ -125,3 +131,4 @@ Applicant assigns the question to the collaborator
 
 The user goes back to the previous page
     Go Back
+
