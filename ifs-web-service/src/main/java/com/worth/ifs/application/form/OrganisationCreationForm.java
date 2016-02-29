@@ -1,6 +1,7 @@
 package com.worth.ifs.application.form;
 
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
+import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -21,6 +22,7 @@ public class OrganisationCreationForm implements Serializable {
 
     @NotNull
     private OrganisationTypeResource organisationType;
+    private OrganisationTypeEnum organisationTypeEnum;
     @NotEmpty
     // on empty value don't check pattern since then there already is a validation message.
     @Pattern(regexp = "^$|^[A-Za-z0-9 _\\&-,.:;\\@]+$", message = "Please enter valid characters")
@@ -56,6 +58,7 @@ public class OrganisationCreationForm implements Serializable {
 
     public void setOrganisationType(OrganisationTypeResource organisationType) {
         this.organisationType = organisationType;
+        this.organisationTypeEnum = OrganisationTypeEnum.getFromId(organisationType.getId());
     }
 
     public String getOrganisationName() {
@@ -122,4 +125,7 @@ public class OrganisationCreationForm implements Serializable {
         this.useSearchResultAddress = useSearchResultAddress;
     }
 
+    public OrganisationTypeEnum getOrganisationTypeEnum() {
+        return organisationTypeEnum;
+    }
 }

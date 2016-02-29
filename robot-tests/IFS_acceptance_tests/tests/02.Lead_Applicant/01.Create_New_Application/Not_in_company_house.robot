@@ -24,7 +24,8 @@ Applicant can see the Not in Companies House company link
 
 Applicant can manually add the address and this persists on refresh
     [Documentation]    INFUND-888
-    [Tags]    Applicant    Company    Companies House
+    [Tags]    Applicant    Company    Companies House   Pending
+    # Pending due to INFUND-2019
     When user clicks the button/link    name=manual-address
     Then User should see the text in the page    Street
     And User should see the text in the page    Town

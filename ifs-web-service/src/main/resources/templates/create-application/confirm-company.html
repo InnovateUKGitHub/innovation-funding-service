@@ -15,7 +15,7 @@
 
     <p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from Innovate UK</p>
 
-    <h2 class="heading-medium">Business Organisation</h2>
+    <h2 class="heading-medium" th:text="${organisationForm.organisationType.name}"></h2>
 
     <div th:include="create-application/fragments :: organisation-details" th:remove="tag"/>
 

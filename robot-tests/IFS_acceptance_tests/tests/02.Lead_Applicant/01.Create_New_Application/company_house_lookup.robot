@@ -53,7 +53,7 @@ Search for invalid characters
 the valid company names matching the search criteria should be displayed
     Page Should Contain    05493105 - Incorporated on 28 June 2005
     Click Link    INNOVATE LTD
-    Page Should Contain    Business Organisation
+    Page Should Contain    Business
     Page Should Contain    Organisation name
     Element Should Contain    css=.form-block p:nth-child(2)    INNOVATE LTD
     Page Should Contain    Registration number
