@@ -52,12 +52,11 @@ public class AcceptInviteController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/accept-invite/{hash}", method = RequestMethod.GET)
-    public String displayContributors(
+    public String inviteEntryPage(
             @PathVariable("hash") final String hash,
             HttpServletResponse response,
             Model model) {
         RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
-        CookieUtil.saveToCookie(response, INVITE_HASH, "");
         CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
 
         if (invite.isSuccess()) {
@@ -76,14 +75,16 @@ public class AcceptInviteController extends AbstractApplicationController {
                 CookieUtil.saveToCookie(response, INVITE_HASH, hash);
                 return "application-contributors/invite/accept-invite";
             } else {
+                CookieUtil.removeCookie(response, INVITE_HASH);
                 cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
                 return "redirect:/login";
             }
-
-        } else {
-            cookieFlashMessageFilter.setFlashMessage(response, "inviteNotValid");
-            return "redirect:/login";
         }
+
+        CookieUtil.removeCookie(response, INVITE_HASH);
+        cookieFlashMessageFilter.setFlashMessage(response, "inviteNotValid");
+        return "redirect:/login";
+
     }
 
     @RequestMapping(value = "/accept-invite/new-account-organisation-type", method = RequestMethod.GET)
@@ -137,7 +138,6 @@ public class AcceptInviteController extends AbstractApplicationController {
     public String chooseOrganisationType(HttpServletResponse response,
                                          @ModelAttribute @Valid OrganisationTypeForm organisationTypeForm,
                                          BindingResult bindingResult
-
     ) {
         CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
         Long organisationTypeId = organisationTypeForm.getOrganisationType();

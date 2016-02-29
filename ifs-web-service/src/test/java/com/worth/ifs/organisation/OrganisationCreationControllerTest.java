@@ -10,9 +10,7 @@ import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.service.OrganisationSearchRestService;
-import com.worth.ifs.user.service.OrganisationTypeRestService;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,8 +48,6 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
     @Mock
     private Validator validator;
     @Mock
-    private OrganisationTypeRestService organisationTypeRestService;
-    @Mock
     private OrganisationSearchRestService organisationSearchRestService;
 
     private String COMPANY_ID = "08241216";
@@ -72,6 +68,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
         mockMvc = MockMvcBuilders.standaloneSetup(organisationCreationController, new ErrorController())
                 .setViewResolvers(viewResolver())
                 .build();
+        this.setupOrganisationTypes();
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
         address = new Address("line1", "line2", "line3", "careof", "country", "locality", "pobox", "postcode", "region");
@@ -82,10 +79,6 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
         when(organisationService.save(any(Organisation.class))).thenReturn(organisationResource);
         when(organisationService.save(any(OrganisationResource.class))).thenReturn(organisationResource);
         when(applicationService.createApplication(anyLong(), anyLong(), anyString())).thenReturn(applicationResource);
-        OrganisationTypeResource organisationTypeResource = new OrganisationTypeResource();
-        organisationTypeResource.setId(1L);
-        organisationTypeResource.setName("Business");
-        when(organisationTypeRestService.findOne(1L)).thenReturn(RestResult.restSuccess(organisationTypeResource));
         when(organisationSearchRestService.getOrganisation(organisationTypeResource.getId(), COMPANY_ID)).thenReturn(RestResult.restSuccess(organisationSearchResult));
         when(organisationSearchRestService.searchOrganisation(anyLong(), anyString())).thenReturn(RestResult.restSuccess(new ArrayList<>()));
 

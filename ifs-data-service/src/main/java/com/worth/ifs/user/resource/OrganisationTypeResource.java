@@ -5,6 +5,15 @@ public class OrganisationTypeResource {
     private String name;
     private Long parentOrganisationType;
 
+    public OrganisationTypeResource(Long id, String name, Long parentOrganisationType) {
+        this.id = id;
+        this.name = name;
+        this.parentOrganisationType = parentOrganisationType;
+    }
+
+    public OrganisationTypeResource() {
+    }
+
     public Long getId() {
         return this.id;
     }

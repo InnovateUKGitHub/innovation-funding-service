@@ -167,8 +167,11 @@ public class OrganisationCreationController {
     private OrganisationTypeResource addOrganisationType(OrganisationCreationForm organisationForm, HttpServletRequest request) {
         String organisationTypeJson = CookieUtil.getCookieValue(request, AcceptInviteController.ORGANISATION_TYPE);
         OrganisationTypeForm organisationTypeForm = JsonUtil.getObjectFromJson(organisationTypeJson, OrganisationTypeForm.class);
-        OrganisationTypeResource organisationType = organisationTypeRestService.findOne(organisationTypeForm.getOrganisationType()).getSuccessObject();
-        organisationForm.setOrganisationType(organisationType);
+        OrganisationTypeResource organisationType = null;
+        if(organisationTypeForm.getOrganisationType()!=null){
+            organisationType = organisationTypeRestService.findOne(organisationTypeForm.getOrganisationType()).getSuccessObject();
+            organisationForm.setOrganisationType(organisationType);
+        }
         return organisationType;
     }
 

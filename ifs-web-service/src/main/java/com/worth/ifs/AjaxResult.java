@@ -4,6 +4,9 @@ import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 
+/**
+ * Class to send results in a structured way, to the client (the browser). This is only used for sending results of a AJAX request.
+ */
 public class AjaxResult implements Serializable {
 
 
@@ -14,7 +17,6 @@ public class AjaxResult implements Serializable {
         this.status = status;
         this.body = body;
     }
-
 
     public HttpStatus getStatus() {
         return status;

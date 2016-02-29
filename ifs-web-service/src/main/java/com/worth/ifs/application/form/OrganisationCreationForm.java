@@ -58,7 +58,11 @@ public class OrganisationCreationForm implements Serializable {
 
     public void setOrganisationType(OrganisationTypeResource organisationType) {
         this.organisationType = organisationType;
-        this.organisationTypeEnum = OrganisationTypeEnum.getFromId(organisationType.getId());
+        if(organisationType != null){
+            this.organisationTypeEnum = OrganisationTypeEnum.getFromId(organisationType.getId());
+        }else{
+            this.organisationTypeEnum = null;
+        }
     }
 
     public String getOrganisationName() {

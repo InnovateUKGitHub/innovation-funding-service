@@ -35,7 +35,10 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.resource.OrganisationTypeResource;
+import com.worth.ifs.user.service.OrganisationTypeRestService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mockito.ArgumentCaptor;
@@ -75,6 +78,7 @@ import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputRe
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
@@ -83,6 +87,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 public class BaseUnitTest {
+
     public MockMvc mockMvc;
     public User loggedInUser;
     public User assessor;
@@ -127,9 +132,13 @@ public class BaseUnitTest {
     @Mock
     public OrganisationService organisationService;
     @Mock
+    public OrganisationTypeRestService organisationTypeRestService;
+    @Mock
     public SectionService sectionService;
     @Mock
     public CompetitionService competitionService;
+    @Mock
+    public InviteRestService inviteRestService;
     @Mock
     public TokenAuthenticationService tokenAuthenticationService;
     @Mock
@@ -180,6 +189,7 @@ public class BaseUnitTest {
     private Random randomGenerator;
     private FormInput formInput;
     private FormInputType formInputType;
+    public OrganisationTypeResource organisationTypeResource;
 
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -209,6 +219,28 @@ public class BaseUnitTest {
         questions = new HashMap<>();
         organisations = new ArrayList<>();
         randomGenerator = new Random();
+        
+    }
+
+    public void setupOrganisationTypes() {
+        ArrayList<OrganisationTypeResource> organisationTypes = new ArrayList<>();
+        organisationTypeResource = new OrganisationTypeResource(1L, "Business", null);
+        organisationTypes.add(organisationTypeResource);
+        OrganisationTypeResource research = new OrganisationTypeResource(2L, "Research", null);
+        organisationTypes.add(research);
+        organisationTypes.add(new OrganisationTypeResource(3L, "Public Sector", null));
+        organisationTypes.add(new OrganisationTypeResource(4L, "Charity", null));
+        organisationTypes.add(new OrganisationTypeResource(5L, "Academic", 2L));
+        organisationTypes.add(new OrganisationTypeResource(6L, "Research & technology organisation (RTO)", 2L));
+        organisationTypes.add(new OrganisationTypeResource(7L, "Catapult", 2L));
+        organisationTypes.add(new OrganisationTypeResource(8L, "Public sector research establishment", 2L));
+        organisationTypes.add(new OrganisationTypeResource(9L, "Research council institute", 2L));
+
+        when(organisationTypeRestService.getAll()).thenReturn(restSuccess(organisationTypes));
+        when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource(99L, "Unknown organisation type", null)));
+        when(organisationTypeRestService.findOne(1L)).thenReturn(restSuccess(organisationTypeResource));
+        when(organisationTypeRestService.findOne(2L)).thenReturn(restSuccess(research));
+
     }
 
     public void loginDefaultUser(){
@@ -586,6 +618,10 @@ public class BaseUnitTest {
         when(organisationService.getUserOrganisation(applications.get(2), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
 
         assessments.forEach(assessment -> when(assessmentRestService.getScore(assessment.getId())).thenReturn(restSuccess(new Score())));
+    }
+
+    public void setupInvites() {
+        when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
     }
 
     public ExceptionHandlerExceptionResolver createExceptionResolver() {
