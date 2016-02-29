@@ -28,7 +28,9 @@ Verify the field is disabled for other collaborators
     [Tags]    Collaboration    HappyPath
     [Setup]    Guest user log-in    &{collaborator2_credentials}
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
+    Capture Page Screenshot
     Then user should see the element    css=#form-input-12 .readonly
+    Capture Page Screenshot
     [Teardown]    User closes the browser
 
 Verify the field is enabled for the collaborator/assignee
@@ -41,6 +43,7 @@ Verify the field is enabled for the collaborator/assignee
     And user should not see the element    css=#form-input-12 .readonly
     And the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
     And the question should contain the correct status/name    css=#form-input-12 .assign-container    You
+    Capture Page Screenshot
 
 Verify the ' Last update message'
     [Documentation]    INFUND-280
@@ -48,6 +51,7 @@ Verify the ' Last update message'
     Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     When the collaborator edits public description question
     Then the question should contain the correct status/name    css=#form-input-12 .textarea-footer    Last updated: Today by you
+    Capture Page Screenshot
 
 Verify collaborator can mark as ready for review
     [Documentation]    INFUND-877
@@ -56,6 +60,7 @@ Verify collaborator can mark as ready for review
     When user clicks the button/link    jQuery=button:contains("Ready for review")
     Then user should see the notification    Question assigned successfully
     And user should see the text in the page    You have reassigned this question to
+    Capture Page Screenshot
 
 Verify the field is disabled for the collaborator
     [Documentation]    INFUND-275
