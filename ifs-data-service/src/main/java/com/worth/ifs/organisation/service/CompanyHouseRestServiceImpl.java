@@ -1,7 +1,7 @@
 package com.worth.ifs.organisation.service;
 
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
+import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,16 +23,16 @@ public class CompanyHouseRestServiceImpl  extends BaseRestService implements Com
     @Value("${ifs.data.service.rest.companyhouse}")
     String companyHouseRestUrl;
 
-    public List<CompanyHouseBusiness> searchOrganisations(String searchText){
+    public List<OrganisationSearchResult> searchOrganisations(String searchText){
         try {
             searchText = UriUtils.encode(searchText, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             log.error(e);
         }
-        return asList(restGet(companyHouseRestUrl + "/searchCompanyHouse/"+searchText, CompanyHouseBusiness[].class));
+        return asList(restGet(companyHouseRestUrl + "/searchCompanyHouse/"+searchText, OrganisationSearchResult[].class));
     }
-    public CompanyHouseBusiness getOrganisationById(String id){
+    public OrganisationSearchResult getOrganisationById(String id){
 
-        return restGet(companyHouseRestUrl + "/getCompanyHouse/"+id, CompanyHouseBusiness.class);
+        return restGet(companyHouseRestUrl + "/getCompanyHouse/"+id, OrganisationSearchResult.class);
     }
 }

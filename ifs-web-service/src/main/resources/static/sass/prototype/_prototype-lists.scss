@@ -99,6 +99,7 @@ li.type-company{
         display: block;
         float: left;
         width: 50%;
+        max-width: 250px; 
         margin-bottom: 0.5em;
 
         @include media-down(tablet) {

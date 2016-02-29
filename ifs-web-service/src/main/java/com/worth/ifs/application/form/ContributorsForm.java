@@ -51,29 +51,38 @@ public class ContributorsForm implements Serializable {
         this.setTriedToSave(contributorsFormCookie.isTriedToSave());
 
         if(!contributorsFormCookie.getOrganisations().isEmpty()){
-            contributorsFormCookie.getOrganisations().forEach(oC ->{
-                Optional<OrganisationInviteForm> existingOrgOptional = this.getOrganisations().stream().filter(o -> StringUtils.isNotEmpty(o.getOrganisationName()) && o.getOrganisationName().equals(oC.getOrganisationName())).findAny();
+            contributorsFormCookie.getOrganisations().forEach(oC -> mergeOrganisation(oC));
+        }
+    }
 
-                if(!existingOrgOptional.isPresent()){
-                    this.getOrganisations().add(oC);
-                }else{
-                    OrganisationInviteForm existingOrg = existingOrgOptional.get();
-                    List<InviteeForm> existingInvites = existingOrg.getInvites();
-                    oC.getInvites().forEach(iC -> {
-                        Optional<InviteeForm> cookieInviteFound = existingInvites.stream()
-                                .filter(i -> StringUtils.isNotEmpty(iC.getEmail()) && i.getEmail().equals(iC.getEmail()) && StringUtils.isNotEmpty(iC.getPersonName()) && i.getPersonName().equals(iC.getPersonName())).findAny();
-                        if(!cookieInviteFound.isPresent()){
-                            existingInvites.add(iC);
-                        }
-                    });
+    private void mergeOrganisation(OrganisationInviteForm oC) {
+        Optional<OrganisationInviteForm> existingOrgOptional = this.getOrganisations().stream()
+                .filter(o -> StringUtils.isNotEmpty(o.getOrganisationName()) && o.getOrganisationName().equals(oC.getOrganisationName()))
+                .findAny();
 
+        if(!existingOrgOptional.isPresent()){
+            this.getOrganisations().add(oC);
+        }else{
+            OrganisationInviteForm existingOrg = existingOrgOptional.get();
+            List<InviteeForm> existingInvites = existingOrg.getInvites();
 
-                    existingOrgOptional = this.getOrganisations().stream().filter(o -> StringUtils.isNotEmpty(o.getOrganisationName()) && o.getOrganisationName().equals(oC.getOrganisationName())).findAny();
-                    if(existingOrgOptional.isPresent()){
-                        log.info("merge after " + existingOrgOptional.get().getOrganisationName() + " invite count: " + existingOrgOptional.get().getInvites().size());
-                    }
-                }
-            });
+            oC.getInvites().forEach(iC -> mergeInvite(iC, existingInvites));
+
+            existingOrgOptional = this.getOrganisations().stream()
+                    .filter(o -> StringUtils.isNotEmpty(o.getOrganisationName()) && o.getOrganisationName().equals(oC.getOrganisationName()))
+                    .findAny();
+            if(existingOrgOptional.isPresent()){
+                log.debug("merge after " + existingOrgOptional.get().getOrganisationName() + " invite count: " + existingOrgOptional.get().getInvites().size());
+            }
+        }
+    }
+
+    private void mergeInvite(InviteeForm iC, List<InviteeForm> existingInvites) {
+        Optional<InviteeForm> cookieInviteFound = existingInvites.stream()
+                .filter(i -> StringUtils.isNotEmpty(iC.getEmail()) && i.getEmail().equals(iC.getEmail()) && StringUtils.isNotEmpty(iC.getPersonName()) && i.getPersonName().equals(iC.getPersonName()))
+                .findAny();
+        if(!cookieInviteFound.isPresent()){
+            existingInvites.add(iC);
         }
     }
 }

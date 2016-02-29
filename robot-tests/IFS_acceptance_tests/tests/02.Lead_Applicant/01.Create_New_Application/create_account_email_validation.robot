@@ -7,7 +7,7 @@ Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${valid_email}    _ewan__@worth.systems
@@ -47,46 +47,21 @@ Invalid email no @ symbol
 *** Keywords ***
 Invalid Email Check
     [Arguments]    ${invalid_email}
-    Given the user is on the account creation page
-    When the user inputs a first name
-    And the user inputs a last name
-    And the user inputs a phone number
-    And the user inputs the invalid email address    ${invalid_email}
-    And the user inputs a valid password
-    And the user retypes the password correctly
+    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When user enters text to a text field    id=firstName    John
+    And user enters text to a text field    id=lastName    Smith
+    And user enters text to a text field    id=phoneNumber    01141234567
+    And user enters text to a text field    id=email    ${invalid_email}
+    And user enters text to a text field    id=password    password
+    And user enters text to a text field    id=retypedPassword    password
     And the user submits their information
-    Then the user should see an error
+    Then user should see an error    We were unable to create your account
     And the user cannot login with the invalid email    ${invalid_email}
-
-the user is on the account creation page
-    go to    ${ACCOUNT_CREATION_FORM_URL}
-
-the user inputs a first name
-    Input Text    id=firstName    John
-
-the user inputs a last name
-    Input Text    id=lastName    Smith
-
-the user inputs a phone number
-    Input Text    id=phoneNumber    01141234567
-
-the user inputs the invalid email address
-    [Arguments]    ${invalid_email_addy}
-    Input Text    id=email    ${invalid_email_addy}
-
-the user inputs a valid password
-    Input Password    id=password    password
-
-the user retypes the password correctly
-    Input Password    id=retypedPassword    password
 
 the user submits their information
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Select Checkbox    termsAndConditions
     Submit Form
-
-the user should see an error
-    Page Should Contain    We were unable to create your account
 
 the user cannot login with the invalid email
     [Arguments]    ${invalid_email_addy}

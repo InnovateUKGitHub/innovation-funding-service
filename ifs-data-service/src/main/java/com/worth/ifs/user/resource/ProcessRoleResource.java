@@ -1,16 +1,14 @@
 package com.worth.ifs.user.resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import org.springframework.hateoas.core.Relation;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Relation(value="processRole", collectionRelation="processRoles")
 public class ProcessRoleResource {
     private Long id;
     private User user;

@@ -1,16 +1,18 @@
 package com.worth.ifs.competition.service;
 
+import java.util.List;
+
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
 
 /**
  * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link Competition}.
@@ -26,11 +28,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @SuppressWarnings("unused")
     private final Log log = LogFactory.getLog(getClass());
 
-    public RestResult<List<Competition>> getAll() {
-        return getWithRestResult(competitionsRestURL + "/findAll", competitionListType());
+    public RestResult<List<CompetitionResource>> getAll() {
+        return getWithRestResult(competitionsRestURL + "/findAll", competitionResourceListType());
     }
 
-    public RestResult<Competition> getCompetitionById(Long competitionId) {
-        return getWithRestResult(competitionsRestURL + "/findById/" + competitionId, Competition.class);
+    public RestResult<CompetitionResource> getCompetitionById(Long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
     }
 }

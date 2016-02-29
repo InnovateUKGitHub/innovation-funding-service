@@ -49,7 +49,7 @@
 
             <li th:each="invite, inviteStats: ${organisationInviteResource.inviteResources}">
                 <a th:href="${'mailto:'+invite.email}" th:text="${invite.name}" />
-                <small th:if="${invite.status.name() == 'CREATED' || invite.status.name() == 'SEND'}">(pending)</small>
+                <small th:if="${invite.status.name() ==  T(com.worth.ifs.invite.constant.InviteStatusConstants).CREATED.name() || invite.status.name() == T(com.worth.ifs.invite.constant.InviteStatusConstants).SEND.name()}">(pending)</small>
             </li>
         </ul>
     </div>

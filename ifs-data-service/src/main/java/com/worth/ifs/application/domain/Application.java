@@ -143,21 +143,21 @@ public class Application {
     }
 
     @JsonIgnore
-    public Optional<User> getLeadApplicant(){
+    public User getLeadApplicant(){
         Optional<ProcessRole> role = this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
         if(role.isPresent()){
-            return Optional.ofNullable(role.get().getUser());
+            return role.get().getUser();
         }
-        return Optional.empty();
+        return null;
     }
 
     @JsonIgnore
-    public Optional<Organisation> getLeadOrganisation(){
+    public Organisation getLeadOrganisation(){
         Optional<ProcessRole> role = this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
         if(role.isPresent()){
-            return Optional.ofNullable(role.get().getOrganisation());
+            return role.get().getOrganisation();
         }
-        return Optional.empty();
+        return null;
     }
 
     @JsonIgnore

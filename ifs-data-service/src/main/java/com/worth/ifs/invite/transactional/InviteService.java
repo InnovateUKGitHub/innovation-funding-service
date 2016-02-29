@@ -9,6 +9,7 @@ import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.security.NotSecured;
 
 import java.util.List;
+import java.util.Set;
 
 public interface InviteService {
 
@@ -28,10 +29,13 @@ public interface InviteService {
     ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId);
+    ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<InviteResultsResource> saveInvites(List<InviteResource> inviteResources);
+
+    @NotSecured("TODO DW - implement when permissions matrix available")
+    ServiceResult<Void> acceptInvite(String inviteHash, Long userId);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<InviteResource> getInviteByHash(String hash);

@@ -84,11 +84,6 @@ public class Notification {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("from", from)
-                .append("to", to)
-                .append("messageKey", messageKey)
-                .append("arguments", arguments)
-                .toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 }

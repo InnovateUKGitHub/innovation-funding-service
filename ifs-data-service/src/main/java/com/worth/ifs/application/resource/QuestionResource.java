@@ -1,19 +1,18 @@
 package com.worth.ifs.application.resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.competition.domain.Competition;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.hateoas.core.Relation;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Question defines database relations and a model to use client side and server side.
  */
-@Relation(value="question", collectionRelation="questions")
 public class QuestionResource {
     private Long id;
     private String name;
@@ -211,28 +210,7 @@ public class QuestionResource {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-            .append("id", this.id)
-            .append("name", this.name)
-            .append("shortName", this.shortName)
-            .append("description", this.description)
-            .append("guidanceQuestion", this.guidanceQuestion)
-            .append("guidanceAnswer", this.guidanceAnswer)
-            .append("formInputIds", this.formInputs)
-            .append("markAsCompletedEnabled", this.markAsCompletedEnabled)
-            .append("assignEnabled", this.assignEnabled)
-            .append("multipleStatuses", this.multipleStatuses)
-            .append("priority", this.priority)
-            .append("needingAssessorScore", this.needingAssessorScore)
-            .append("needingAssessorFeedback", this.needingAssessorFeedback)
-            .append("assessorConfirmationQuestion", this.assessorConfirmationQuestion)
-            .append("competitionId", this.competition)
-            .append("sectionId", this.section)
-            .append("responseIds", this.responses)
-            .append("questionStatusIds", this.questionStatuses)
-            .append("costIds", this.costs)
-            .append("questionNumber", this.questionNumber)
-            .toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 
     public Boolean getAssignEnabled() {

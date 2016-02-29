@@ -2,6 +2,8 @@ package com.worth.ifs.invite.resource;
 
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.domain.Invite;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /*
 * InviteResource is a DTO which enables to application to transfer Invite entities.
@@ -10,6 +12,7 @@ import com.worth.ifs.invite.domain.Invite;
 public class InviteResource {
     private String leadOrganisation;
     private String leadApplicant;
+    private String leadApplicantEmail;
     private Long id;
     private String name;
     private String email;
@@ -18,6 +21,7 @@ public class InviteResource {
     private String competitionName;
     private String applicationName;
     private Long inviteOrganisation;
+    private String inviteOrganisationName;
     private String hash;
     private InviteStatusConstants status;
 
@@ -49,9 +53,10 @@ public class InviteResource {
         this.applicationName = i.getApplication().getName();
         this.competitionId = i.getApplication().getCompetition().getId();
         this.competitionName = i.getApplication().getCompetition().getName();
-        this.leadOrganisation = i.getApplication().getLeadOrganisation().get().getName();
-        this.leadApplicant = i.getApplication().getLeadApplicant().get().getName();
+        this.leadOrganisation = i.getApplication().getLeadOrganisation().getName();
+        this.leadApplicant = i.getApplication().getLeadApplicant().getName();
         this.inviteOrganisation = i.getInviteOrganisation().getId();
+        this.inviteOrganisationName = i.getInviteOrganisation().getOrganisationName();
         this.hash = i.getHash();
         this.status = i.getStatus();
     }
@@ -150,5 +155,63 @@ public class InviteResource {
 
     public void setLeadApplicant(String leadApplicant) {
         this.leadApplicant = leadApplicant;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InviteResource that = (InviteResource) o;
+
+        return new EqualsBuilder()
+                .append(leadOrganisation, that.leadOrganisation)
+                .append(leadApplicant, that.leadApplicant)
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(email, that.email)
+                .append(application, that.application)
+                .append(competitionId, that.competitionId)
+                .append(competitionName, that.competitionName)
+                .append(applicationName, that.applicationName)
+                .append(inviteOrganisation, that.inviteOrganisation)
+                .append(hash, that.hash)
+                .append(status, that.status)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(leadOrganisation)
+                .append(leadApplicant)
+                .append(id)
+                .append(name)
+                .append(email)
+                .append(application)
+                .append(competitionId)
+                .append(competitionName)
+                .append(applicationName)
+                .append(inviteOrganisation)
+                .append(hash)
+                .append(status)
+                .toHashCode();
+    }
+
+    public String getInviteOrganisationName() {
+        return inviteOrganisationName;
+    }
+
+    public void setInviteOrganisationName(String inviteOrganisationName) {
+        this.inviteOrganisationName = inviteOrganisationName;
+    }
+
+    public String getLeadApplicantEmail() {
+        return leadApplicantEmail;
+    }
+
+    public void setLeadApplicantEmail(String leadApplicantEmail) {
+        this.leadApplicantEmail = leadApplicantEmail;
     }
 }

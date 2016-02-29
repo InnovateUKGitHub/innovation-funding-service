@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;

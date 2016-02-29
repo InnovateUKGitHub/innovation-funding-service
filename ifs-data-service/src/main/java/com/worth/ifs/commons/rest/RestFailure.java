@@ -51,9 +51,19 @@ public class RestFailure {
         return this.errors.size() == expectedErrorsList.size() && errors.containsAll(expectedErrorsList);
     }
 
+    public boolean has(Error... expectedErrors) {
+        List<Error> expectedErrorsList = asList(expectedErrors);
+        return expectedErrorsList.size() > 0 && this.errors.size() >= expectedErrorsList.size() && hasMatchingErrorKey(errors, expectedErrorsList.get(0));
+    }
+
     public boolean is(ErrorTemplate... expectedErrorTemplates) {
         List<Error> errorList = simpleMap(asList(expectedErrorTemplates), Error::new);
         return is(errorList.toArray(new Error[errorList.size()]));
+    }
+
+    public boolean has(ErrorTemplate... expectedErrorTemplates) {
+        List<Error> errorList = simpleMap(asList(expectedErrorTemplates), Error::new);
+        return has(errorList.toArray(new Error[errorList.size()]));
     }
 
     public boolean is(ErrorTemplate expectedErrorTemplate, Object... arguments) {
@@ -81,5 +91,9 @@ public class RestFailure {
 
     private LinkedHashMap<HttpStatus, Integer> getHttpStatusCounts() {
         return getSortedGroupingCounts(errors, Error::getStatusCode);
+    }
+
+    private boolean hasMatchingErrorKey(final List<Error> errors, final Error expectedError){
+        return errors.stream().anyMatch(e -> e.getErrorKey().equals(expectedError.getErrorKey()));
     }
 }

@@ -6,16 +6,18 @@ import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.invite.transactional.InviteService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static com.worth.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -25,8 +27,8 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Ignore("TODO DW - INFUND-1555 - reinstate")
 public class InviteControllerTest extends BaseControllerMockMVCTest<InviteController> {
+
     @Override
     protected InviteController supplyControllerUnderTest() {
         return new InviteController();
@@ -59,65 +61,20 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
         ObjectMapper mapper = new ObjectMapper();
         String organisationResourceString = mapper.writeValueAsString(inviteOrganisationResource);
 
-        mockMvc.perform(post("/invite/createApplicationInvites", "json")
-                .contentType(APPLICATION_JSON)
-                .content(organisationResourceString))
-                .andExpect(status().isOk())
-                .andDo(document("invite/createApplicationInvites"));
-
-        // TODO DW - INFUND-1555 - reinstate line when reinstating test
-//        verify(inviteService, times(1)).save(Matchers.anyListOf(Invite.class));
-        verify(inviteOrganisationRepositoryMock, times(1)).save(Matchers.isA(InviteOrganisation.class));
-    }
-
-    @Test
-    public void validInviteOrganisationResourceWithOrganisationNameShouldReturnSuccessMessage() throws Exception {
-        List<InviteResource> inviteResources = newInviteResource()
-                .withApplication(1L)
-                .withName("testname")
-                .withEmail("testemail")
-                .build(5);
-
-        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
-                .withInviteResources(inviteResources)
-                .withOrganisationName("new organisation")
-                .build();
-
-        ObjectMapper mapper = new ObjectMapper();
-        String organisationResourceString = mapper.writeValueAsString(inviteOrganisationResource);
+        InviteResultsResource inviteResultsResource = new InviteResultsResource();
+        when(inviteService.createApplicationInvites(inviteOrganisationResource)).thenReturn(serviceSuccess(inviteResultsResource));
 
         mockMvc.perform(post("/invite/createApplicationInvites", "json")
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andDo(document("invite/createApplicationInvites"));
+
+        verify(inviteService, times(1)).createApplicationInvites(inviteOrganisationResource);
     }
 
     @Test
-    public void validInviteOrganisationResourceWithOrganisationIdShouldReturnSuccessMessage() throws Exception {
-        List<InviteResource> inviteResources = newInviteResource()
-                .withApplication(1L)
-                .withName("testname")
-                .withEmail("testemail")
-                .build(5);
-
-        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
-                .withInviteResources(inviteResources)
-                .withOrganisation(1L)
-                .build();
-
-        ObjectMapper mapper = new ObjectMapper();
-        String organisationResourceString = mapper.writeValueAsString(inviteOrganisationResource);
-
-        mockMvc.perform(post("/invite/createApplicationInvites", "json")
-                .contentType(APPLICATION_JSON)
-                .content(organisationResourceString))
-                .andExpect(status().isOk())
-                .andDo(document("invite/createApplicationInvites"));
-    }
-
-    @Test
-    public void invalidInviteOrganisationResourceMissingOrganisationNameAndIdShouldReturnErrorMessage() throws Exception {
+    public void invalidInviteOrganisationResourceShouldReturnErrorMessage() throws Exception {
         List<InviteResource> inviteResources = newInviteResource()
                 .withApplication(1L)
                 .withName("testname")
@@ -131,76 +88,11 @@ public class InviteControllerTest extends BaseControllerMockMVCTest<InviteContro
         ObjectMapper mapper = new ObjectMapper();
         String organisationResourceString = mapper.writeValueAsString(inviteOrganisationResource);
 
-        mockMvc.perform(post("/invite/createApplicationInvites", "json")
-                .contentType(APPLICATION_JSON)
-                .content(organisationResourceString))
-                .andExpect(status().isOk())
-                .andDo(document("invite/createApplicationInvites"));
-    }
-
-    @Test
-    public void validOrganisationResourceWithInvalidInviteResourceMissingNameShouldReturnError() throws Exception {
-        List<InviteResource> invalidInviteResourceMissingName = newInviteResource()
-                .withApplication(1L)
-                .withEmail("testemail")
-                .build(1);
-
-        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
-                .withInviteResources(invalidInviteResourceMissingName)
-                .withOrganisationName("new organisation")
-                .build();
-
-        ObjectMapper mapper = new ObjectMapper();
-        String organisationResourceString = mapper.writeValueAsString(inviteOrganisationResource);
+        when(inviteService.createApplicationInvites(inviteOrganisationResource)).thenReturn(serviceFailure(badRequestError("no invites")));
 
         mockMvc.perform(post("/invite/createApplicationInvites", "json")
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
-                .andExpect(status().isOk())
-                .andDo(document("invite/createApplicationInvites"));
-    }
-
-    @Test
-    public void validOrganisationResourceWithInvalidInviteResourceMissingEmailShouldReturnError() throws Exception {
-        List<InviteResource> invalidInviteResourceMissingEmail = newInviteResource()
-                .withApplication(1L)
-                .withName("testName")
-                .build(1);
-
-        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
-                .withInviteResources(invalidInviteResourceMissingEmail)
-                .withOrganisationName("new organisation")
-                .build();
-
-        ObjectMapper mapper = new ObjectMapper();
-        String organisationResourceString = mapper.writeValueAsString(inviteOrganisationResource);
-
-        mockMvc.perform(post("/invite/createApplicationInvites", "json")
-                .contentType(APPLICATION_JSON)
-                .content(organisationResourceString))
-                .andExpect(status().isOk())
-                .andDo(document("invite/createApplicationInvites"));
-    }
-
-    @Test
-    public void validOrganisationResourceWithInvalidInviteResourceMissingApplicationIdShouldReturnError() throws Exception {
-        List<InviteResource> invalidInviteResourceMissingApplicationId = newInviteResource()
-                .withName("testName")
-                .withEmail("testemail")
-                .build(1);
-
-        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
-                .withInviteResources(invalidInviteResourceMissingApplicationId)
-                .withOrganisationName("new organisation")
-                .build();
-
-        ObjectMapper mapper = new ObjectMapper();
-        String organisationResourceString = mapper.writeValueAsString(inviteOrganisationResource);
-
-        mockMvc.perform(post("/invite/createApplicationInvites", "json")
-                .contentType(APPLICATION_JSON)
-                .content(organisationResourceString))
-                .andExpect(status().isOk())
-                .andDo(document("invite/createApplicationInvites"));
+                .andExpect(status().isBadRequest());
     }
 }

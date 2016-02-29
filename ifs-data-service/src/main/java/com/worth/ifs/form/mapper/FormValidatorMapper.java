@@ -1,11 +1,10 @@
 package com.worth.ifs.form.mapper;
 
+import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.form.domain.FormValidator;
-import com.worth.ifs.form.repository.FormValidatorRepository;
 import com.worth.ifs.form.resource.FormValidatorResource;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -13,14 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
     }
 )
-public abstract class FormValidatorMapper {
-
-    @Autowired
-    private FormValidatorRepository repository;
-
-    public abstract FormValidatorResource mapFormValidatorToResource(FormValidator object) throws ClassNotFoundException;
-
-    public abstract FormValidator resourceToFormValidator(FormValidatorResource resource) throws ClassNotFoundException;
+public abstract class FormValidatorMapper extends BaseMapper<FormValidator, FormValidatorResource, Long> {
 
     public Long mapFormValidatorToId(FormValidator object) {
         if (object == null) {
@@ -29,8 +21,11 @@ public abstract class FormValidatorMapper {
         return object.getId();
     }
 
-    public FormValidator mapIdToFormValidator(Long id) {
-        return repository.findOne(id);
-    }
 
+    public FormValidatorResource mapToResource(FormValidator domain){
+        return mapToResource(domain);
+    }
+    public FormValidator mapToDomain(FormValidatorResource resource){
+        return mapToDomain(resource);
+    }
 }

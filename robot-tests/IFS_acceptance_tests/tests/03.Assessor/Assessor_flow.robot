@@ -6,7 +6,7 @@ Documentation     -INFUND-225 As an assessor and I am signed in, I have an overv
 ...               -INFUND-284- As an assessor I can log into the system to be redirected to my dashboard, so I can view my assessments
 ...
 ...               INFUND-337
-Suite Setup       Login as user    &{assessor_credentials}
+Suite Setup       Guest user log-in    &{assessor_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Test Setup
 Test Teardown
@@ -14,7 +14,7 @@ Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Assessor_actions.robot
+Resource          ../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${reject_application_name}    Security for the Internet of Things
@@ -40,27 +40,27 @@ Assessment progress is 1 out of 4
 
 Assessor can see the applications details page
     [Documentation]    INFUND-337
-    [Tags]    Assessor
-    When Assessor clicks the competition
+    [Tags]    Assessor    HappyPath
+    When user clicks the button/link        link=${competition_name}
     Then Competition's details page should be visible
 
 Application invitation review page shows the title
     [Documentation]    INFUND-329
-    [Tags]    Assessor
+    [Tags]    Assessor    HappyPath
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Application title
 
 Application invitation review page shows partners
     [Documentation]    INFUND-329
-    [Tags]    Assessor
+    [Tags]    Assessor    HappyPath
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Partners organisations
 
 Application state changes when accepting an invitation for assessment
     [Documentation]    INFUND-338
-    [Tags]    Assessor
+    [Tags]    Assessor    HappyPath
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     And Assessor accepts the application
@@ -116,7 +116,7 @@ Application Summary returns an error message when submitting empty feedback
 
 Assessor can see the competitions that he/she accepted
     [Documentation]    INFUND-292
-    [Tags]    Assessor
+    [Tags]    Assessor    HappyPath
     When Assessor is viewing the Competitions list
     Then Assessor sees competitions he or she accepted
 
@@ -290,3 +290,5 @@ the feedback should be present
     ${selected_value} =    Get Selected List Value    xpath=//*[@class="question"]//select
     Should Be Equal As Strings    ${selected_value}    ${feedback_dropdown_value}
     Textarea Value Should Be    xpath=//*[@class="question"]//textarea    ${feedback_text_value}
+
+

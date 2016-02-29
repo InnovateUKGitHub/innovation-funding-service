@@ -1,9 +1,13 @@
 package com.worth.ifs.commons.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.exception.*;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
+import com.worth.ifs.commons.service.ExceptionThrowingFunction;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.util.Either;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,16 +15,16 @@ import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Function;
 
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * Represents the result of a Rest Controller action, that will be either a failure or a success.  A failure will result in a RestFailure, and a
@@ -41,8 +45,87 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     @Override
-    public <R> RestResult<R> andOnSuccess(Function<? super T, FailingOrSucceedingResult<R, RestFailure>> successHandler) {
+    public <R> RestResult<R> andOnSuccess(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, RestFailure>> successHandler) {
         return (RestResult<R>) super.andOnSuccess(successHandler);
+    }
+
+    @Override
+    public <R> RestResult<R> andOnSuccessReturn(ExceptionThrowingFunction<? super T, R> successHandler) {
+        return (RestResult<R>) super.andOnSuccessReturn(successHandler);
+    }
+
+    /**
+     *
+     * @param restFailure - Failure object with details about the failure
+     * @return Always returns null
+     */
+    @Override
+    public T findAndThrowException(RestFailure restFailure) {
+        final Error error = getMostRelevantErrorForEndUser(restFailure.getErrors());
+
+        if(restFailure.has(CommonFailureKeys.GENERAL_NOT_FOUND)){
+            throw new ObjectNotFoundException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.GENERAL_FORBIDDEN)){
+            throw new ForbiddenActionException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE)){
+            throw new UnableToRenderNotificationTemplateException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR) || restFailure.has(CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE)){
+            throw new GeneralUnexpectedErrorException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE)){
+            throw new UnableToSendEmailsException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_DUPLICATE_FILE_CREATED)){
+            throw new DuplicateFileCreatedException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE)){
+            throw new FileAlreadyLinkedToFormInputResponseException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_INCORRECTLY_REPORTED_FILESIZE)){
+            throw new IncorrectlyReportedFileSizeException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_INCORRECTLY_REPORTED_MEDIA_TYPE)){
+            throw new IncorrectlyReportedMediaTypeException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_CREATE_FILE)){
+            throw new UnableToCreateFileException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_CREATE_FOLDERS)){
+            throw new UnableToCreateFoldersException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE)){
+            throw new UnableToDeleteFileException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if(restFailure.has(CommonFailureKeys.FILES_UNABLE_TO_UPDATE_FILE)){
+            throw new UnableToUpdateFileException(error.getErrorMessage(), error.getArguments());
+        }
+
+        if (restFailure.has(CommonFailureKeys.GENERAL_INCORRECT_TYPE)){
+            throw new IncorrectArgumentTypeException(error.getErrorMessage(), error.getArguments());
+        }
+
+        throw new RuntimeException();
+    }
+
+    /* TODO: We need to possibly decide on some sort of precedence.  Only once exception can be thrown and a single
+       HTTP error code returned.  So if there are multiple errors then we need to pick the high precedence one.*/
+    private Error getMostRelevantErrorForEndUser(final List<Error> errors){
+        return errors.get(0);
     }
 
     @Override
@@ -53,6 +136,11 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         }
 
         return restSuccess(success.getSuccessObject());
+    }
+
+    @Override
+    protected <R> RestResult<R> createSuccess(R success) {
+        return restSuccess(success);
     }
 
     @Override
@@ -69,8 +157,18 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         return isFailure() ? result.getLeft().getStatusCode() : successfulStatusCode;
     }
 
+    public ServiceResult<T> toServiceResult() {
+        return handleSuccessOrFailure(
+                failure -> serviceFailure(getFailure().getErrors()),
+                success -> serviceSuccess(success));
+    }
+
     public static <T1> T1 getLeftOrRight(Either<T1, T1> either) {
         return Either.getLeftOrRight(either);
+    }
+
+    public static RestResult<Void> restSuccess() {
+        return restSuccess(OK);
     }
 
     public static RestResult<Void> restSuccess(HttpStatus statusCode) {
@@ -105,7 +203,6 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         return new RestResult<>(left(RestFailure.error(errors, statusCode)), null);
     }
 
-
     public static <T> Either<Void, T> fromJson(String json, Class<T> clazz) {
         if (Void.class.equals(clazz)) {
             return right(null);
@@ -121,8 +218,8 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     public static <T> RestResult<T> fromException(HttpStatusCodeException e) {
-        return fromJson(e.getResponseBodyAsString(), RestErrorEnvelope.class).mapLeftOrRight(
-                failure -> RestResult.<T>restFailure(internalServerErrorError("Unable to process JSON response as type " + RestErrorEnvelope.class.getSimpleName())),
+        return fromJson(e.getResponseBodyAsString(), RestErrorResponse.class).mapLeftOrRight(
+                failure -> RestResult.<T>restFailure(internalServerErrorError("Unable to process JSON response as type " + RestErrorResponse.class.getSimpleName())),
                 success -> RestResult.<T>restFailure(success.getErrors(), e.getStatusCode())
         );
     }
@@ -134,6 +231,73 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         } else {
             return RestResult.<T>restFailure(new com.worth.ifs.commons.error.Error(INTERNAL_SERVER_ERROR, "Unexpected status code " + response.getStatusCode(), INTERNAL_SERVER_ERROR));
         }
+    }
+
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a GET request that is requesting
+     * data.
+     *
+     * This will be a RestResult containing the body of the ServiceResult and a "200 - OK" response.
+     */
+    public static <T> RestResult<T> toGetResponse(T body) {
+        return restSuccess(body, OK);
+    }
+
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that is
+     * creating data.
+     *
+     * This will be a RestResult containing the body of the ServiceResult and a "201 - Created" response.
+     *
+     * This is an appropriate response for a POST that is creating data.  To update data, consider using a PUT.
+     */
+    public static <T> RestResult<T> toPostCreateResponse(T body) {
+        return restSuccess(body, CREATED);
+    }
+
+    /**
+     * @deprecated should use POSTs to create new data, and PUTs to update data.
+     *
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that is
+     * updating data (although PUTs should really be used).
+     *
+     * This will be a bodiless RestResult with a "200 - OK" response.
+     */
+    public static <T> RestResult<Void> toPostUpdateResponse() {
+        return restSuccess();
+    }
+
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a PUT request that is
+     * updating data.
+     *
+     * This will be a bodiless RestResult with a "200 - OK" response.
+     */
+    public static RestResult<Void> toPutResponse() {
+        return restSuccess();
+    }
+
+    /**
+     * @deprecated PUTs shouldn't generally return results in their bodies
+     *
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a PUT request that is
+     * updating data.
+     *
+     * This will be a RestResult containing the body of the ServiceResult with a "200 - OK" response, although ideally
+     * PUT responses shouldn't need to inculde bodies.
+     */
+    public static <T> RestResult<T> toPutWithBodyResponse(T body) {
+        return restSuccess(body, OK);
+    }
+
+    /**
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a DELETE request that is
+     * deleting data.
+     *
+     * This will be a bodiless RestResult with a "204 - No content" response.
+     */
+    public static RestResult<Void> toDeleteResponse() {
+        return restSuccess(NO_CONTENT);
     }
 
 }

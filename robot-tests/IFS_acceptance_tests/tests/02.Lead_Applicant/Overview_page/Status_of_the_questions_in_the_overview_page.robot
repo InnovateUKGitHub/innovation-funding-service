@@ -2,19 +2,19 @@
 Documentation     INFUND-39: As an applicant and I am on the application overview, I can select a section of the application, so I can see the status of each subsection in this section
 ...
 ...               INFUND-1072: As an Applicant I want to see the Application Overview page redesigned so that they meet the agreed style
-Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
 Status changes when we assign a question to the collaborator
     [Documentation]    INFUND-39
-    [Tags]    Applicant    Overview
-    Given Applicant goes to the 'project summary' question
+    [Tags]    Applicant    Overview    HappyPath
+    Given the user navigates to the page    ${project_summary_url}
     When the Applicant edits the "Project summary" question
     And the applicant assigns the "Project Summary" question to Jessica Doe    Jessica Doe
     Then the "assign to" should be correct for the "Project summary" question
@@ -23,7 +23,7 @@ Status changes when we assign a question to the collaborator
 The applicant can assign re-assign a question from the overview page
     [Documentation]    INFUND-39
     [Tags]    Applicant    Overview
-    Given Applicant goes to the overview page
+    Given the user navigates to the page    ${application_overview_url}
     When the applicant assigns the "Project summary" question to "Steve Smith"    Steve Smith
     Then the applicant should see a blue flag in the Public description (overview page)
     And the assign button should say Assign to:You
@@ -51,6 +51,7 @@ the applicant assigns the "Project summary" question to "Steve Smith"
     Click Element    xpath=//*[@id="collapsible-1"]//button[contains(text(),"${assignee_name}")]
 
 the applicant should see a blue flag in the Public description (overview page)
+    Reload Page
     Wait Until Page Contains Element    css=#form-input-11 .assigned
 
 the blue flag should not be visible

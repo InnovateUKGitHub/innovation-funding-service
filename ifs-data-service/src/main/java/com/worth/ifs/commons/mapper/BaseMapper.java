@@ -1,12 +1,25 @@
 package com.worth.ifs.commons.mapper;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 
-public abstract class BaseMapper<D, R>{
-    protected CrudRepository<D, Long> repository;
+import java.io.Serializable;
 
-//    public abstract void setRepository(CrudRepository repository);
+public abstract class BaseMapper<D, R, I extends Serializable> {
+    protected CrudRepository<D, I> repository;
+    @Autowired
+    public void setRepository(CrudRepository<D, I> repository) {
+        this.repository = repository;
+    }
+
+
+    public D mapIdToDomain(I id) {
+        if(id == null){
+            return null;
+        }
+        return repository.findOne(id);
+    }
 
     public abstract R mapToResource(D domain);
     public abstract Iterable<R> mapToResource(Iterable<D> domain);

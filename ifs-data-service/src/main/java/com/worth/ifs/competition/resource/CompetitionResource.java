@@ -1,10 +1,6 @@
 package com.worth.ifs.competition.resource;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.domain.Application;
-import org.springframework.hateoas.core.Relation;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -13,7 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Relation(value="competition", collectionRelation="competitions")
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.domain.Application;
+
 public class CompetitionResource{
     private Long id;
     private List<Long> applications = new ArrayList<>();

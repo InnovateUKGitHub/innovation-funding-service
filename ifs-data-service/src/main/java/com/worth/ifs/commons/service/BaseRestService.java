@@ -1,12 +1,11 @@
 package com.worth.ifs.commons.service;
 
 import com.worth.ifs.commons.rest.RestResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.concurrent.ListenableFuture;
 
@@ -16,7 +15,6 @@ import java.util.concurrent.Future;
  * BaseRestService provides a base for all Service classes.
  */
 public abstract class BaseRestService {
-    private final static Log LOG = LogFactory.getLog(BaseRestService.class);
 
     @Autowired
     private RestTemplateAdaptor adaptor;
@@ -59,6 +57,14 @@ public abstract class BaseRestService {
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType) {
         return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
+    }
+
+    protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType, HttpStatus expectedStatusCode, HttpStatus... otherExpectedStatusCodes) {
+        return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType, expectedStatusCode, otherExpectedStatusCodes);
+    }
+
+    protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType, HttpStatus expectedStatusCode, HttpStatus... otherExpectedStatusCodes) {
+        return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType, expectedStatusCode, otherExpectedStatusCodes);
     }
 
     protected <T> RestResult<T> putWithRestResult(String path, ParameterizedTypeReference<T> returnType) {

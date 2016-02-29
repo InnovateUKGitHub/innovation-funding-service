@@ -23,7 +23,8 @@ IFS.repeatableRows = (function() {
                   url : url,
                   beforeSend : function(){
                       jQuery(el).before('<span class="form-hint">Adding a new row</span>');
-                  }
+                  },
+                  cache: false
               }).done(function(data){
                   var target = jQuery(el).attr("data-repeatable-rowcontainer");
                   jQuery(el).prev().remove();

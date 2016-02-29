@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class ConfirmCompanyDetailsForm extends CreateApplicationForm{
     private String postcodeInput;
     private String selectedPostcodeIndex;
     private Address selectedPostcode = null;
+    @Valid
     private List<Address> postcodeOptions;
     private boolean useCompanyHouseAddress = false;
     private boolean manualAddress = false;

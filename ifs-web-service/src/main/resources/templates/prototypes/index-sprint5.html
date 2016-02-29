@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<header class="page-header no-margin-bottom group">
+		<div class="hgroup">
+			<h1>Prototype index</h1>
+			<h2 class="subtitle">Directory of front end code to show user journeys</h2>
+		</div>
+	</header>
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:remove="tag" />
+
+	
+	<section class="grid-row">
+		<div class="row">
+			<h1 class="heading-large">Sprint 5</h1>
+
+			<section>
+				<h2 class="heading-medium">Comp admin - BASIC VERSION</h2>
+				<ul class="list-bullet">
+					<li>
+						<h3><strong>INFUND-1570</strong></h3> As the Innovate UK ops teams we need a consistent competition dashboard to facilitate the needs of all internal teams and refine information shown at each stage
+						
+						<ul class="list-bullet">
+							<li><a href="/prototypes/1570-dashboard">INFUND-1570</a> - Open dashboard</li>
+							<li><a href="/prototypes/1570-dashboard?closed">INFUND-1570</a> - Closed dashboard</li>
+						</ul>
+
+					</li>
+
+					<li>
+						<h3><strong>INFUND-1348</strong></h3> As a competition administrator I want to be able to view applications filtered by a series of categories
+
+						<ul class="list-bullet">
+							<li><a href="/prototypes/1348-open-applications">INFUND-1348</a> - Open applications</li>
+							<li><a href="/prototypes/1348-submitted-applications">INFUND-1348</a> - Submitted applications</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2 class="heading-medium">Comp admin - MVP</h2>
+				
+				<ul class="list-bullet">
+					<li><h3><strong>INFUND-1968</strong></h3> Understand and prototype if necessary how we will export all applications and appendices from MVP comp
+							
+						<ul class="list-bullet">
+							<li><a href="/prototypes/1968-dashboard">INFUND-1988</a> Create a view of the Comp Dashboard that will allow the comp team to view supporting information while the competition is open</li>
+							<li><a href="/prototypes/1348-open-applications">INFUND-1989</a> Create a view of the applications that allows the competition team to view the progress of applicants while the competition is open</li>
+							<li><a href="/prototypes/1968-admin-readonly-application">INFUND-1990</a> Create a view of an individual application that allows the comp team to view answers and export the application</li>
+							<li><a href="/prototypes/1968-dashboard?closed&#38;status=assessment">INFUND-1991</a> Create a view of all submitted applications that allows members of the comp team to export the data for assessment.</li>
+							<li><a href="#">INFUND-1991</a> CCreate a view of all submitted applications that allows members of the comp team to export the data for assessment.</li>
+						</ul>
+				
+					</li>
+				</ul>
+				
+			</section>
+
+
+		</div>
+	</section>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>

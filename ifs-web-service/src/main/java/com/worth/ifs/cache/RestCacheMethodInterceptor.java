@@ -6,50 +6,80 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Arrays.asList;
-import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
-import static org.springframework.web.context.request.RequestContextHolder.getRequestAttributes;
 
 @Component
 public class RestCacheMethodInterceptor implements MethodInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(RestCacheMethodInterceptor.class);
-    private static final Cache<String, Map<Method, Map<List<Object>, Object>>> CACHE
+    private final Cache<String, Map<Method, Map<List<Object>, Object>>> cache
             = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).build();
-    private static final String REQUEST_UID_KEY = "REQUEST_UID_KEY";
+
+
+    public UidSupplier getUidSupplier() {
+        return uidSupplier;
+    }
+
+    public RestCacheMethodInterceptor setUidSupplier(final UidSupplier uidSupplier) {
+        this.uidSupplier = uidSupplier;
+        return this;
+    }
+
+    @Autowired
+    private UidSupplier uidSupplier;
+
+    public void invalidate() {
+        final String uid = uidSupplier.get();
+        cache.invalidate(uidSupplier.get());
+        LOG.debug("Invalidating: " + uid);
+    }
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         // Needs to be a List to use as a key as the equals operation defers to the entries unlike an Array
         final List<Object> parameters = asList(invocation.getArguments());
         final Method method = invocation.getMethod();
-
-        // Generate the Uid for this request if there isn't one
-        if (getRequestAttributes().getAttribute(REQUEST_UID_KEY, SCOPE_REQUEST) == null) {
-            getRequestAttributes().setAttribute(REQUEST_UID_KEY, UUID.randomUUID().toString(), SCOPE_REQUEST);
+        // Get the uid to look up in the cache. Basically a uid for the request.
+        final String uid = uidSupplier.get();
+        final Optional cached = get(uid, method, parameters, cache);
+        if (cached.isPresent()) {
+            return cached.get();
+        } else {
+            final Object toCache = invocation.proceed();
+            put(toCache, uid, method, parameters, cache);
+            return toCache;
         }
-        final String requestUid = (String) getRequestAttributes().getAttribute(REQUEST_UID_KEY, SCOPE_REQUEST);
+    }
 
-        final Map<Method, Map<List<Object>, Object>> methodMap = CACHE.get(requestUid, HashMap::new);
+    protected static void put(final Object value, final String uid, final Method method, final List<Object> parameters, final Cache<String, Map<Method, Map<List<Object>, Object>>> cache) throws Exception {
+        final Map<Method, Map<List<Object>, Object>> methodMap = cache.get(uid, HashMap::new);
         methodMap.putIfAbsent(method, new HashMap<>());
         final Map<List<Object>, Object> argsMap = methodMap.get(method);
-        if (argsMap.containsKey(parameters)) { // null is an acceptable return argument
-            final Object cachedResult = argsMap.get(invocation.getArguments());
-            LOG.debug("Returning cached result: " + cachedResult);
-            System.out.println("qqRP returning cached");
-        }
-        final Object result = invocation.proceed();
-        argsMap.put(parameters, result);
-        CACHE.put(requestUid, methodMap);
-        return result;
+        argsMap.put(parameters, value);
     }
+
+    protected static Optional<Object> get(final String uid, final Method method, final List<Object> parameters, final Cache<String, Map<Method, Map<List<Object>, Object>>> cache) throws Exception {
+        final Map<Method, Map<List<Object>, Object>> methodMap = cache.get(uid, HashMap::new);
+        final Map<List<Object>, Object> argsMap = methodMap.get(method);
+        if (argsMap != null) {
+            final Object value = argsMap.get(parameters);
+            if (value != null) {
+                return Optional.of(value);
+
+            }
+        }
+        return Optional.empty();
+    }
+
+
 }

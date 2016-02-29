@@ -64,8 +64,7 @@
 
 <!-- =========================== Element: Application Title =========================== -->
 <div th:fragment="application-title (application, competition) ">
-    <p class="subtitle" th:if="${application.getName() != ''}" th:text="${application.getName()} +' - Application number ' + ${#numbers.formatInteger(application.id,6)} "/>
-    <p class="subtitle" th:unless="${application.getName() != ''}" th:text="${competition.getName()} +' - Application number ' + ${#numbers.formatInteger(application.id,6)} "/>
+    <p class="subtitle" th:text="${application.getApplicationDisplayName()} +' - Application number ' + ${#numbers.formatInteger(application.id,6)} "/>
 </div>
 <!-- =========================== Element: Pie chart =========================== -->
 <div th:fragment="pie-small">
@@ -104,7 +103,7 @@
 <!-- =========================== Element: Notification / event =========================== -->
 <div th:fragment="notification">
     <div class="event-alert" th:if="${notifications} and ${!notifications.isEmpty()}" th:with="notification=${notifications.get(0)}, questions=${notifications?.size()>1 ? 'questions' : 'a question'}">
-        <p><span th:text="${notification?.assignedBy?.user?.name + ' has assigned ' + questions + ' to you'}"></span></p>
+        <p><span th:text="${notification?.assignedByName + ' has assigned ' + questions + ' to you'}"></span></p>
     </div>
 
     <div th:if="${applicationSaved}" th:unless="${assignedQuestion}" class="event-alert" >

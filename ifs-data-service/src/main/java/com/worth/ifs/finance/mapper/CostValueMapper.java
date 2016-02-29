@@ -1,12 +1,11 @@
 package com.worth.ifs.finance.mapper;
 
+import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.finance.domain.CostValue;
 import com.worth.ifs.finance.domain.CostValueId;
-import com.worth.ifs.finance.repository.CostValueRepository;
 import com.worth.ifs.finance.resource.CostValueResource;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -15,14 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
         CostFieldMapper.class
     }
 )
-public abstract class CostValueMapper {
+public abstract class CostValueMapper extends BaseMapper<CostValue, CostValueResource, CostValueId> {
 
-    @Autowired
-    private CostValueRepository repository;
-
-    public abstract CostValueResource mapCostValueToResource(CostValue object);
-
-    public abstract CostValue resourceToCostValue(CostValueResource resource);
 
     public CostValueId mapCostValueToId(CostValue object) {
         if (object == null) {
@@ -30,9 +23,4 @@ public abstract class CostValueMapper {
         }
         return object.getId();
     }
-
-    public CostValue mapIdToCostValue(CostValueId id) {
-        return repository.findOne(id);
-    }
-
 }

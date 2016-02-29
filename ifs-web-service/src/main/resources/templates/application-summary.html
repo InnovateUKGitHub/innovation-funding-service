@@ -19,7 +19,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Application Overview',linkUrl=@{/application/{id}/(id=${currentApplication.getId()})},currentApplication=${currentApplication}" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Application Overview',linkUrl=@{/application/{id}(id=${currentApplication.getId()})},currentApplication=${currentApplication}" th:remove="tag" />
 
      <div class="page-title">
          <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
@@ -32,7 +32,7 @@
         <form action="#"  method="post" th:object="${form}" class="form-serialize-js section-overview">
             <section th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
                 <h2 th:text="${section.getName()}" class="heading-medium" />
-                <div class="collapsible" th:each="question : ${section.getQuestions()}">
+                <div class="collapsible" th:each="question : ${sectionQuestions.get(section.id)}">
                     <h3>
                         <div th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" th:remove="tag" />
                         <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Complete</div>

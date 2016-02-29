@@ -1,5 +1,6 @@
 package com.worth.ifs.commons.security;
 
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +40,14 @@ public class TokenAuthenticationService implements UserAuthenticationService {
      * Authenticate the user by email address and password
      */
     public User authenticate(String emailAddress, String password) {
-        return credentialsValidator.retrieveUserByEmailAndPassword(emailAddress, password).handleSuccessOrFailure(
-                failure -> { throw new BadCredentialsException("Invalid username password combination"); },
-                success -> success
-        );
+
+        RestResult<User> userRestResult = credentialsValidator.retrieveUserByEmailAndPassword(emailAddress, password);
+
+        if (userRestResult.isSuccess()) {
+            return userRestResult.getSuccessObject();
+        }
+
+        throw new BadCredentialsException("Invalid username password combination");
     }
 
     /**

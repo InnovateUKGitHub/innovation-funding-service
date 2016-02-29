@@ -1,5 +1,8 @@
 package com.worth.ifs.application.service;
 
+import java.util.List;
+import java.util.concurrent.Future;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.domain.Application;
@@ -7,14 +10,11 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.UserRoleType;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.concurrent.Future;
-
 import static com.worth.ifs.application.service.Futures.adapt;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 
 /**
@@ -33,7 +33,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public RestResult<ApplicationResource> getApplicationById(Long applicationId) {
-        return getWithRestResult(applicationRestURL + "/normal/" + applicationId, ApplicationResource.class);
+        return getWithRestResult(applicationRestURL + "/" + applicationId, ApplicationResource.class);
     }
 
     @Override
@@ -55,14 +55,14 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Override
     public Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId) {
         Future<RestResult<ObjectNode>> result = getWithRestResultAsync(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
-        return adapt(result, n -> n.andOnSuccess(jsonResponse -> restSuccess(jsonResponse.get("completedPercentage").asDouble())));
+        return adapt(result, n -> n.andOnSuccessReturn(jsonResponse -> jsonResponse.get("completedPercentage").asDouble()));
     }
 
     // TODO DW - INFUND-1555 - remove usages of the ObjectNode from the data side - replace with a dto
     @Override
     public RestResult<Boolean> isApplicationReadyForSubmit(Long applicationId) {
         RestResult<ObjectNode> result = getWithRestResult(applicationRestURL + "/applicationReadyForSubmit/" + applicationId, ObjectNode.class);
-        return result.andOnSuccess(jsonResponse -> restSuccess(jsonResponse.get("readyForSubmit").asBoolean(false)));
+        return result.andOnSuccessReturn(jsonResponse -> jsonResponse.get("readyForSubmit").asBoolean(false));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Override
     public RestResult<Integer> getAssignedQuestionsCount(Long applicationId, Long assigneeId) {
         RestResult<String> count = getWithRestResult("/questionStatuses/search/countByApplicationIdAndAssigneeId?applicationId=" + applicationId + "&assigneeId=" + assigneeId, String.class);
-        return count.andOnSuccess(number -> restSuccess(Integer.valueOf(number)));
+        return count.andOnSuccessReturn(Integer::valueOf);
     }
 
     @Override

@@ -24,8 +24,10 @@ function stopServers {
     echo "********SHUTDOWN TOMCAT********"
     cd ${webTomcatBinPath}
     ./shutdown.sh
+    wait
     cd ${dataTomcatBinPath}
     ./shutdown.sh
+    wait
     echo "********UNDEPLOYING THE APPLICATION********"
     cd ${dataWebappsPath}
     rm -rf ROOT ROOT.war
@@ -35,8 +37,11 @@ function stopServers {
 
 function resetDB {
     echo "********DROP THE DATABASE********"
+    cd ${scriptDir}
     `mysql -u${mysqlUser} -p${mysqlPassword} -e"DROP DATABASE ifs"`
     `mysql -u${mysqlUser} -p${mysqlPassword} -e"CREATE DATABASE ifs CHARACTER SET utf8"`
+    cd ../ifs-data-service
+    ./gradlew flywayClean flywayMigrate
 }
 
 function buildAndDeploy {
@@ -55,7 +60,6 @@ function buildAndDeploy {
 
     cd ${webServiceCodeDir}
     ./gradlew clean deployToTomcat
-    
 
 }
 
@@ -78,19 +82,21 @@ function startServers {
     do
       [[ "${logLine}" == *"Deployment of web application archive"* ]] && pkill -P $$ tail
     done
-    sleep 5
 }
+
 
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase --exclude Failing --exclude Pending --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// --exclude Failing --exclude Pending --name IFS $testDirectory
 }
 
-testDirectory='IFS_acceptance_tests/tests/*'
-if [ -n "$1" ]; then
- testDirectory="$1"
-fi
+
+function runHappyPathTests {
+    echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
+    cd ${scriptDir}
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:http:// --include HappyPath --name IFS $testDirectory
+}
 
 cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
@@ -133,19 +139,24 @@ echo "webPort:           ${webPort}"
 webBase="localhost:"${webPort}
 echo "webBase:           ${webBase}"
 
+
 unset opt
 unset quickTest
 unset testScrub
+unset happyPath
 
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :d:" opt ; do
+while getopts ":q :t :h :d:" opt ; do
     case $opt in
         q)
          quickTest=1
         ;;
 	t)
 	 testScrub=1
+	;;
+	h)
+	 happyPath=1
 	;;
         d)
          testDirectory="$OPTARG"
@@ -180,6 +191,14 @@ then
     resetDB
     buildAndDeploy
     startServers
+elif [ "$happyPath" ]
+then 
+    echo "using happyPath mode: this will run a pared down set of tests as a sanity check for developers pre-commit" >&2
+    stopServers
+    resetDB
+    buildAndDeploy
+    startServers
+    runHappyPathTests
 else
     echo "using quickTest:   FALSE" >&2
     stopServers

@@ -60,9 +60,6 @@ public class SilEmailBody {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("contentType", contentType)
-                .append("content", content)
-                .toString();
+        return ToStringBuilder.reflectionToString(this);
     }
 }

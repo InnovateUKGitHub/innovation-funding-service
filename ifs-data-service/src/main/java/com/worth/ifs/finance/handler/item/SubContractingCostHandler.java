@@ -25,7 +25,7 @@ public class SubContractingCostHandler extends CostHandler {
     public CostItem toCostItem(Cost cost) {
         String country = "";
         for(CostValue costValue : cost.getCostValues()) {
-            if(costValue.getCostField().getTitle().equals(COST_FIELD_COUNTRY)) {
+            if(costValue.getCostField() != null && costValue.getCostField().getTitle().equals(COST_FIELD_COUNTRY)) {
                 country = costValue.getValue();
             }
         }

@@ -6,91 +6,60 @@ Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/Applicant_actions.robot
-
-*** Variables ***
-${Valid_Company_Name}    innovate
-${Valid_Company_Detail}    05493105 - Incorporated on 28 June 2005
-${Valid_Company_Link}    INNOVATE LTD
-${Valid_Company_Registration_Number}    05493105
-${Invalid_Company_Name}    innoavte
-${Invalid_Company_Registration_Number}    64536
+Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
 Search using valid company name
     [Documentation]    INFUND-887
-    [Tags]    Applicant    Company house
-    # seems to have just started failing as of 27/01. Perhaps some change to the company house stuff?
-    Given the user is in "Create your account" page
-    When the user enters the valid company name in the Search text field
+    [Tags]    Applicant    Company house    HappyPath
+    Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
+    When user enters text to a text field    id=org-name    innovate
+    And user clicks the button/link    id=org-search
     Then the valid company names matching the search criteria should be displayed
 
 Search using invalid company name
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house
-    Given the user is in "Create your account" page
-    When the user enters the invalid company name in the Search text field
-    Then the search criteria should not fetch any result
+    Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
+    When user enters text to a text field    id=org-name    innoavte
+    And user clicks the button/link    id=org-search
+    Then user should see the text in the page    Sorry we couldn't find any results within Companies House.
 
 Search using valid registration number
     [Documentation]    INFUND-887
-    [Tags]    Applicant    Company house
-    # seems to have just started failing as of 27/01. Perhaps some change to the company house stuff?
-    Given the user is in "Create your account" page
-    When the user enters the valid registration number in the Search text field
+    [Tags]    Applicant    Company house    HappyPath
+    Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
+    When user enters text to a text field    id=org-name    05493105
+    And user clicks the button/link    id=org-search
     Then the valid company names matching the search criteria should be displayed
 
 search using invalid registration number
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house
-    Given the user is in "Create your account" page
-    When the user enters the invalid registration number in the Search text field
-    Then the search criteria should not fetch any result
+    Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
+    When user enters text to a text field    id=org-name    64536
+    And user clicks the button/link    id=org-search
+    Then user should see the text in the page    Sorry we couldn't find any results within Companies House.
 
 Search for invalid characters
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house    Pending
-    Given the user is in "Create your account" page
-    When the applicant inserts invalid characters
+    Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
+    When user enters text to a text field    id=org-name    {}{}
+    And user clicks the button/link    id=org-search
     Then the applicant should get a validation error for the company house
 
 *** Keywords ***
-the user is in "Create your account" page
-    go to    ${SEARCH_COMPANYHOUSE_URL}
-
-the user enters the valid company name in the Search text field
-    Input Text    id=org-name    ${Valid_Company_Name}
-    Click Element    id=org-search
-
 the valid company names matching the search criteria should be displayed
-    Page Should Contain    ${Valid_Company_Detail}
-    Click Link    ${Valid_Company_Link}
+    Page Should Contain    05493105 - Incorporated on 28 June 2005
+    Click Link    INNOVATE LTD
     Page Should Contain    Business Organisation
     Page Should Contain    Organisation name
-    Element Should Contain    css=.form-block p:nth-child(2)    ${Valid_Company_Link}
+    Element Should Contain    css=.form-block p:nth-child(2)    INNOVATE LTD
     Page Should Contain    Registration number
-    Page should contain    ${Valid_Company_Registration_Number}
+    Page should contain    05493105
     # Page Should Contain    Address
     # Page Should Contain    M45 8QP
-
-the user enters the invalid company name in the Search text field
-    Input Text    id=org-name    ${Invalid_Company_Name}
-    Click Element    id=org-search
-
-the search criteria should not fetch any result
-    Page Should Contain    Sorry we couldn't find any results within Companies House.
-
-the user enters the valid registration number in the Search text field
-    Input Text    id=org-name    ${Valid_Company_Registration_Number}
-    Click Element    id=org-search
-
-the user enters the invalid registration number in the Search text field
-    Input Text    id=org-name    ${Invalid_Company_Registration_Number}
-    Click Element    id=org-search
-
-the applicant inserts invalid characters
-    Input Text    id=org-name    {}{}
-    Click Element    id=org-search
 
 the applicant should get a validation error for the company house
     Element Should Be Visible    css=.error-message

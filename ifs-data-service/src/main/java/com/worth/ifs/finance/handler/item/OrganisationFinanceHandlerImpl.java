@@ -38,7 +38,7 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
     CostFieldRepository costFieldRepository;
 
     @Override
-    public void initialiseCostType(ApplicationFinance applicationFinance, CostType costType){
+    public Iterable<Cost> initialiseCostType(ApplicationFinance applicationFinance, CostType costType){
         Question question = getQuestionByCostType(costType);
         try{
             List<Cost> cost = getCostHandler(costType).initializeCost();
@@ -46,14 +46,22 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
                 c.setQuestion(question);
                 c.setApplicationFinance(applicationFinance);
             });
-            costRepository.save(cost);
+            if(!cost.isEmpty()){
+                costRepository.save(cost);
+                return cost;
+            }else{
+                return new ArrayList<>();
+            }
+
         }catch (IllegalArgumentException e){
             log.error(String.format("No CostHandler for type: ", costType.getType()));
         }
+        return null;
     }
 
+    // TODO DW - INFUND-1555 - handle rest result
     private Question getQuestionByCostType(CostType costType) {
-        return questionService.getQuestionByFormInputType(costType.getType());
+        return questionService.getQuestionByFormInputType(costType.getType()).getSuccessObjectOrThrowException();
     }
 
     @Override

@@ -1,7 +1,9 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.resource.AssessorFeedbackResource;
+import com.worth.ifs.commons.rest.RestResult;
 
 public interface AssessorFeedbackRestService {
-    AssessorFeedbackResource findOne(Long id);
+
+    RestResult<AssessorFeedbackResource> findOne(Long id);
 }

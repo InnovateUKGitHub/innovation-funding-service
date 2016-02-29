@@ -1,6 +1,8 @@
 package com.worth.ifs.organisation.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,13 +17,17 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank
     private String addressLine1;
     private String addressLine2;
     private String addressLine3;
     private String careOf;
     private String country;
+    @NotBlank
     private String locality;
     private String poBox;
+    @NotBlank
+    @Length(max = 9)
     private String postalCode;
     private String region;
 

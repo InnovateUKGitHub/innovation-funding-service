@@ -1,23 +1,22 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import java.beans.Transient;
+import java.util.List;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.dto.Score;
-import com.worth.ifs.competition.domain.Competition;
-
-import java.beans.Transient;
-import java.util.List;
+import com.worth.ifs.competition.resource.CompetitionResource;
 
 public class AssessmentDashboardModel {
 
     public final List<AssessmentWithApplicationAndScore> assessments;
     public final List<AssessmentWithApplicationAndScore> submittedAssessments;
-    public final Competition competition;
+    public final CompetitionResource competition;
 
     public final long noOfAsssessmentsStartedAwaitingSubmission;
 
-    public AssessmentDashboardModel(List<AssessmentWithApplicationAndScore> assessments, List<AssessmentWithApplicationAndScore> submittedAssessments, long noOfAssesmentsStartedAwaitingSubmission, Competition competition) {
+    public AssessmentDashboardModel(List<AssessmentWithApplicationAndScore> assessments, List<AssessmentWithApplicationAndScore> submittedAssessments, long noOfAssesmentsStartedAwaitingSubmission, CompetitionResource competition) {
         this.competition = competition;
         this.assessments = assessments;
         this.submittedAssessments = submittedAssessments;
@@ -32,7 +31,7 @@ public class AssessmentDashboardModel {
         return submittedAssessments;
     }
 
-    public Competition getCompetition() {
+    public CompetitionResource getCompetition() {
         return competition;
     }
 

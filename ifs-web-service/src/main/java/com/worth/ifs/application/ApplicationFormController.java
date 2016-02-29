@@ -7,18 +7,17 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.AjaxResult;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
-import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -41,6 +40,8 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+
 /**
  * This controller will handle all requests that are related to the application form.
  */
@@ -54,6 +55,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     @Autowired
     private CostService costService;
 
+    @Autowired
+    private FinanceFormHandler financeFormHandler;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -63,10 +66,10 @@ public class ApplicationFormController extends AbstractApplicationController {
     @ProfileExecution
     @RequestMapping
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         this.addFormAttributes(application, competition, Optional.empty(), user.getId(), model, form, Optional.empty(),
                 userApplicationRoles);
@@ -79,12 +82,12 @@ public class ApplicationFormController extends AbstractApplicationController {
                                BindingResult bindingResult, Model model,
                                @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("questionId") final Long questionId,
-                               HttpServletRequest request) {
+                               HttpServletRequest request) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
-        Section section = sectionService.getSectionByQuestionId(questionId);
+        SectionResource section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
         this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
@@ -99,14 +102,14 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationFormWithOpenSection(@Valid @ModelAttribute("form") ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
-                                                 HttpServletRequest request) {
+                                                 HttpServletRequest request) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Section section = sectionService.getById(sectionId);
+        SectionResource section = sectionService.getById(sectionId);
 
         ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetition());
-        super.addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-        super.addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
+        addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
 
         addNavigation(section, applicationId, model);
 
@@ -117,8 +120,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addFormAttributes(ApplicationResource application,
-                                   Competition competition,
-                                   Optional<Section> section,
+                                   CompetitionResource competition,
+                                   Optional<SectionResource> section,
                                    Long userId, Model model,
                                    ApplicationForm form, Optional<Question> question,
                                    List<ProcessRole> userApplicationRoles){
@@ -135,12 +138,12 @@ public class ApplicationFormController extends AbstractApplicationController {
                                      @PathVariable("applicationId") final Long applicationId,
                                      @PathVariable("questionId") final Long questionId,
                                      HttpServletRequest request,
-                                     HttpServletResponse response) {
+                                     HttpServletResponse response) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
-        Section section = sectionService.getSectionByQuestionId(questionId);
+        SectionResource section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
         /* Start save action */
@@ -187,7 +190,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                          BindingResult bindingResult, Model model,
                                          @PathVariable("applicationId") final Long applicationId,
                                          @PathVariable("questionId") final Long questionId,
-                                         HttpServletRequest request) {
+                                         HttpServletRequest request) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         if (processRole != null) {
@@ -198,7 +201,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return showQuestion(form, bindingResult, model, applicationId, questionId, request);
     }
 
-    private void addNavigation(Section section, Long applicationId, Model model) {
+    private void addNavigation(SectionResource section, Long applicationId, Model model) {
         if (section == null) {
             return;
         }
@@ -223,7 +226,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         String previousText;
 
         if (previousQuestion != null) {
-            Section previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
+            SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
             if (previousSection.isQuestionGroup()) {
                 previousUrl = "/application/" + applicationId + "/form/section/" + previousSection.getId();
                 previousText = previousSection.getName();
@@ -241,7 +244,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         String nextText;
 
         if (nextQuestion != null) {
-            Section nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
+            SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
 
             if (nextSection.isQuestionGroup()) {
                 nextUrl = "/application/" + applicationId + "/form/section/" + nextSection.getId();
@@ -265,27 +268,15 @@ public class ApplicationFormController extends AbstractApplicationController {
         String type = costItem.getCostType().getType();
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
-
-        if (CostType.fromString(type).equals(CostType.LABOUR)) {
-            ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, user.getId());
-            LabourCostCategory costCategory = (LabourCostCategory) applicationFinanceResource.getFinanceOrganisationDetails(CostType.fromString(type));
-            model.addAttribute("costCategory", costCategory);
-        }
-
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
-        model.addAttribute("type", type);
-        model.addAttribute("question", questionService.getById(questionId));
-        model.addAttribute("cost", costItem);
-
+        financeModelManager.addCost(model, costItem, applicationId, user.getId(), questionId, type);
         return String.format("question-type/types :: %s_row", type);
     }
 
     @RequestMapping(value = "/remove_cost/{costId}")
-    public @ResponseBody String removeCostRow(@ModelAttribute("form") ApplicationForm form, Model model,
-                         @PathVariable("applicationId") final Long applicationId,
-                         @PathVariable("costId") final Long costId,
-                         HttpServletRequest request) throws JsonProcessingException {
+    public @ResponseBody String removeCostRow(@ModelAttribute("form") ApplicationForm form,
+                                              @PathVariable("costId") final Long costId) throws JsonProcessingException {
         costService.delete(costId);
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
@@ -294,22 +285,22 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private CostItem addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
-        return costService.add(applicationFinance.getId(), questionId, null);
+        return financeFormHandler.addCost(applicationId, user.getId(), questionId);
     }
 
     private BindingResult saveApplicationForm(ApplicationForm form,
                                               Long applicationId, Long sectionId, Question question,
-                                              HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
+                                              HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
         Map<Long, List<String>> errors;
         if(question != null) {
             errors = saveQuestionResponses(application, Collections.singletonList(question), request, user.getId(), bindingResult);
         } else {
-            Section selectedSection = getSelectedSection(competition.getSections(), sectionId);
-            errors = saveQuestionResponses(application, selectedSection.getQuestions(), request, user.getId(), bindingResult);
+            SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
+            List<Question> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
+            errors = saveQuestionResponses(application, questions, request, user.getId(), bindingResult);
         }
 
         Map<String, String[]> params = request.getParameterMap();
@@ -320,16 +311,16 @@ public class ApplicationFormController extends AbstractApplicationController {
         applicationService.save(application);
         markApplicationQuestions(application, user.getId(), request, response, errors);
 
-        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, user.getId(), application.getId());
-        if (financeFormHandler.handle(request)) {
+        if (financeFormHandler.handle(request, user.getId(), applicationId)) {
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
         }
 
         return bindingResult;
     }
 
-    private Section getSelectedSection(List<Section> sections, Long sectionId) {
-        return sections.stream()
+    private SectionResource getSelectedSection(List<Long> sectionIds, Long sectionId) {
+        return sectionIds.stream()
+                .map(sectionService::getById)
                 .filter(x -> x.getId().equals(sectionId))
                 .findFirst()
                 .get();
@@ -364,7 +355,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         @PathVariable("applicationId") final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
                                         HttpServletRequest request,
-                                        HttpServletResponse response) {
+                                        HttpServletResponse response) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Map<String, String[]> params = request.getParameterMap();
 
@@ -382,7 +373,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         if(bindingResult.hasErrors()){
             ApplicationResource application = applicationService.getById(applicationId);
-            Competition competition = competitionService.getById(application.getCompetition());
+            CompetitionResource competition = competitionService.getById(application.getCompetition());
             addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
             addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
             return "application-form";
@@ -489,35 +480,19 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
+    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) throws Exception {
         List<String> errors = new ArrayList<>();
         if (fieldName.startsWith("application.")) {
             errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
-            FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
-            financeFormHandler.ajaxUpdateFinancePosition(fieldName, value);
+            financeFormHandler.ajaxUpdateFinancePosition(userId, applicationId, fieldName, value);
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-            storeCostField(userId, applicationId, fieldName, value);
+            financeFormHandler.storeCostField(userId, applicationId, fieldName, value);
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             errors = formInputResponseService.save(userId, applicationId, formInputId, value);
         }
         return errors;
-    }
-
-    private void storeCostField(Long userId, Long applicationId, String fieldName, String value) {
-        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
-
-        if (fieldName != null && value != null) {
-            String cleanedFieldName = fieldName;
-            if (fieldName.startsWith("cost-")) {
-                cleanedFieldName = fieldName.replace("cost-", "");
-            } else if (fieldName.startsWith("formInput[")) {
-                cleanedFieldName = fieldName.replace("formInput[", "").replace("]", "");
-            }
-            log.info("store field: " + cleanedFieldName + " val: " + value);
-            financeFormHandler.storeField(cleanedFieldName, value);
-        }
     }
 
     private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
@@ -532,7 +507,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return node;
     }
 
-    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value, List<String> errors) {
+    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value, List<String> errors) throws Exception {
         ApplicationResource application = applicationService.getById(applicationId);
 
         if ("application.name".equals(fieldName)) {
