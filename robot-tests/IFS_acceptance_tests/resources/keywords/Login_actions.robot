@@ -14,6 +14,10 @@ Guest user log-in
     The guest user opens the browser
     The guest user inserts user email & password    ${email}    ${password}
     The guest user clicks the log-in button
+    sleep    500ms
+    Page should not contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
 
 The guest user inserts user email & password
     [Arguments]    ${USERNAME}    ${PSW}
@@ -22,7 +26,6 @@ The guest user inserts user email & password
 
 The guest user clicks the log-in button
     Click Button    css=input.button
-
 
 The guest user opens the browser
     Start Virtual Display    1920    1080
