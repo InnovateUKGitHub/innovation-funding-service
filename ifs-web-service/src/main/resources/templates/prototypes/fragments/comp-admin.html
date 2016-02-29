@@ -14,7 +14,28 @@
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
         <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>
         <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
-        <h2 th:text="${subheading}" class="heading-small no-margin-top">Sub heading</h2>
+
+        <h2 class="heading-small no-margin-top">
+            <span th:text="${subheading}" th:remove="tag"></span>
+
+            <div th:if="${param.status != null}" th:remove="tag">
+
+                <div th:if="${param.status[0] == 'assessment'}" th:remove="tag">
+                    <span> - in assessment</span>
+                </div>
+
+                <div th:if="${param.status[0] == 'fundingPanel'}" th:remove="tag">
+                    <span> - funders panel</span>
+                </div>
+
+                <div th:if="${param.status[0] == 'feedback'}" th:remove="tag">
+                    <span> - feedback to applicants</span>
+                </div>
+
+            </div>
+
+        </h2>
+
     </div>
 </div>
 
@@ -23,10 +44,22 @@
 
 <!-- ===================Tabbed navigation============================== -->
 <div th:fragment="prototype-comp-navigation">
-    <ul class="inline-nav cf">
-        <li th:class="${(page == 'dashboard' ? 'selected' : '')}"><a th:href="${(status == 'open' ? '/prototypes/1570-dashboard' : '/prototypes/1570-dashboard?closed')}">Overview</a></li>
-        <li th:class="${(page == 'applications' ? 'selected' : '')}"><a th:href="${(status == 'open' ? '/prototypes/1348-open-applications' : '/prototypes/1348-submitted-applications')}">All applications</a></li>
-    </ul>
+
+    <div th:if="${status == 'open'}" th:remove="tag">
+         <ul class="inline-nav cf">
+            <li th:class="${(page == 'dashboard' ? 'selected' : '')}"><a href="/prototypes/1570-dashboard">Overview</a></li>
+            <li th:class="${(page == 'applications' ? 'selected' : '')}"><a href="/prototypes/1348-open-applications">All applications</a></li>
+        </ul>
+    </div>
+
+    <div th:if="${status == 'closed'}" th:remove="tag">
+        <ul class="inline-nav cf">
+            <li th:class="${(page == 'dashboard' ? 'selected' : '')}"><a href="/prototypes/1570-dashboard?closed">Overview</a></li>
+            <li th:class="${(page == 'applications' ? 'selected' : '')}"><a href="/prototypes/1348-submitted-applications">Applications submitted</a></li>
+            <li th:class="${(page == 'not-submitted' ? 'selected' : '')}"><a href="/prototypes/1348-not-submitted-applications">Applications not submitted</a></li>
+        </ul>
+    </div>
+
 </div>
 
 <!-- ===================Applications summary for competition============================== -->
@@ -157,9 +190,12 @@
                         <input type="hidden" id="title" name="title" th:value="${param.title[0]}" />
                     </div>
 
-                    <div class="column-one alignright-button">
+                    <div th:class="${(type == 'submittedApplications' or type == 'openApplications' or type == 'notSubmittedApplications' ? 'column-third' : 'column-one alignright-button')}">
                         <button class="button">Filter</button>
                     </div>
+
+
+
                 </div>
             </fieldset>
         </form>
