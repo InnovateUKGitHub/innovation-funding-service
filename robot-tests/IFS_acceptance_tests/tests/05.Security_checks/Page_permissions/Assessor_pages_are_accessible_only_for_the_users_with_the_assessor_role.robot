@@ -18,33 +18,33 @@ ${ASSESSOR_DETAILS_PAGE}    ${SERVER}/assessor/competitions/1/applications/3
 Guest user can't access the Assessor's dashboard page
     [Documentation]    INFUND-1683
     Given the guest user opens the browser
-    When User navigates to the page    ${ASSESSOR_DASHBOARD}
-    Then user should be redirected to the correct page    ${LOGIN_URL}
+    When the user navigates to the page    ${ASSESSOR_DASHBOARD}
+    Then the user should be redirected to the correct page    ${LOGIN_URL}
 
 Guest user can't access the competitions details page
     [Documentation]    INFUND-1683
     Given the guest user opens the browser
-    When User navigates to the page    ${ASSESSOR_COMPETITIONS_DETAILS}
-    Then user should be redirected to the correct page    ${LOGIN_URL}
+    When the user navigates to the page    ${ASSESSOR_COMPETITIONS_DETAILS}
+    Then the user should be redirected to the correct page    ${LOGIN_URL}
 
 Guest user can't access assessor's review application page
     [Documentation]    INFUND-1683
     Given the guest user opens the browser
-    When User navigates to the page    ${ASSESSOR_REVIEW_APPLICATION}
-    Then user should be redirected to the correct page    ${LOGIN_URL}
+    When the user navigates to the page    ${ASSESSOR_REVIEW_APPLICATION}
+    Then the user should be redirected to the correct page    ${LOGIN_URL}
 
 Guest user can't access the Assessors details page
     [Documentation]    INFUND-1683
     Given the guest user opens the browser
-    When User navigates to the page    ${ASSESSOR_DETAILS_PAGE}
-    Then user should be redirected to the correct page    ${LOGIN_URL}
+    When the user navigates to the page    ${ASSESSOR_DETAILS_PAGE}
+    Then the user should be redirected to the correct page    ${LOGIN_URL}
 
 Applicant can't access Assessor's dashboard page
     [Documentation]    INFUND-1683
     [Tags]    Pending
     #Pending infund-1753
     Given guest user log-in    &{collaborator2_credentials}
-    When User navigates to the page    ${ASSESSOR_DASHBOARD}
+    When the user navigates to the page    ${ASSESSOR_DASHBOARD}
     Then the user receives a custom error message       ${403_error_message}
 
 Applicant can't access the competitions details page
@@ -52,19 +52,19 @@ Applicant can't access the competitions details page
     [Tags]    Pending
     #Pending infund-1753
     Given guest user log-in    &{collaborator2_credentials}
-    When User navigates to the page    ${ASSESSOR_COMPETITIONS_DETAILS}
+    When the user navigates to the page    ${ASSESSOR_COMPETITIONS_DETAILS}
     Then the user receives a custom error message       ${403_error_message}
 
 Applicant can't access the Assessor's review application page
     [Documentation]    INFUND-1683
     Given guest user log-in    &{collaborator2_credentials}
-    When User navigates to the page    ${ASSESSOR_REVIEW_APPLICATION}
+    When the user navigates to the page    ${ASSESSOR_REVIEW_APPLICATION}
     Then the user receives a custom error message       ${404_error_message}
 
 Applicant can't access the Assessor's details page
     [Documentation]    INFUND-1683
     Given guest user log-in    &{collaborator2_credentials}
-    When User navigates to the page    ${ASSESSOR_DETAILS_PAGE}
+    When the user navigates to the page    ${ASSESSOR_DETAILS_PAGE}
     Then the user receives a custom error message       ${404_error_message}
 
 *** Keywords ***
