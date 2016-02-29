@@ -41,7 +41,7 @@ Assessment progress is 1 out of 4
 Assessor can see the applications details page
     [Documentation]    INFUND-337
     [Tags]    Assessor    HappyPath
-    When user clicks the button/link        link=${competition_name}
+    When the user clicks the button/link        link=${competition_name}
     Then Competition's details page should be visible
 
 Application invitation review page shows the title
@@ -292,3 +292,7 @@ the feedback should be present
     Textarea Value Should Be    xpath=//*[@class="question"]//textarea    ${feedback_text_value}
 
 
+
+Assessor clicks the competition
+    Go To    ${SERVER}/assessor/dashboard
+    Click Element    link=${competition_name}

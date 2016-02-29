@@ -16,7 +16,7 @@ ${competition_name}    Technology Inspired
 Submitting an application shows a confirmation popup
     [Documentation]    INFUND-342
     [Tags]    Assessor    HappyPath
-    Given user clicks the button/link  link=${competition_name}
+    Given The user clicks the button/link  link=${competition_name}
     When Select Application Checkbox    ${application_name}
     And Submit Selected Applications
     Then Cancel the confirmation popup
