@@ -21,7 +21,7 @@
         <h1 class="heading-large no-margin" th:text="${(param.edit == null ? 'Create assessor account':'Edit your profile')}">Create assessor account</h1>
     </div>
 
-	<!-- <p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from innovate UK</p> -->
+	<!-- <p class="form-hint icon-info-small-blue">Your business must be UK based to receive funding from Innovate UK</p> -->
 
 	<h2 class="heading-medium">Your details</h2>
 
@@ -161,8 +161,9 @@
 				</div>
 				<div class="form-group">
 					<label class="form-label" for="password">
-						<span class="form-label-bold">Password</span>
+						<span class="form-label-bold">Create password</span>
 					</label>
+					<p class="form-hint">Your password must be between 6 and 30 characters</p>
 					<input class="form-control" id="password" name="password" type="password" />
 				</div>
 				<div class="form-group">

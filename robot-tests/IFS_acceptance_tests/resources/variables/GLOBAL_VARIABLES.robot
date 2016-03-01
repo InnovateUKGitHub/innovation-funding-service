@@ -19,7 +19,7 @@ ${assessor_dashboard_url}    ${SERVER}/assessor/dashboard
 ${COMPETITION_DETAILS_URL}    ${SERVER}/competition/1/details/
 ${LOG_OUT}        ${SERVER}/logout
 ${APPLICATION_QUESTIONS_SECTION_URL}    ${SERVER}/application-form/1/section/2/
-${SEARCH_COMPANYHOUSE_URL}    ${SERVER}/application/create/find-business
+${SEARCH_COMPANYHOUSE_URL}    ${SERVER}/organisation/create/find-business
 ${APPLICATION_DETAILS_URL}    ${SERVER}/application/1/form/question/9
 ${PROJECT_SUMMARY_URL}    ${SERVER}/application/1/form/question/11
 ${PROJECT_SUMMARY_EDIT_URL}    ${SERVER}/application/1/form/question/edit/11
@@ -36,13 +36,17 @@ ${PROJECT_TEAM_URL}    ${SERVER}/application/1/form/question/8
 ${FUNDING_URL}    ${SERVER}/application/1/form/question/15
 ${ADDING_VALUE_URL}    ${SERVER}/application/1/form/question/16
 ${YOUR_FINANCES_URL}    ${SERVER}/application/1/form/section/7
-${YOUR_FINANCES_URL_APPLICATION_2}      ${SERVER}/application/2/form/section/7
+${YOUR_FINANCES_URL_APPLICATION_2}    ${SERVER}/application/2/form/section/7
 ${FINANCES_OVERVIEW_URL}    ${SERVER}/application/1/form/section/8
-${FINANCES_OVERVIEW_URL_APPLICATION_2}      ${SERVER}/application/2/form/section/8
+${FINANCES_OVERVIEW_URL_APPLICATION_2}    ${SERVER}/application/2/form/section/8
 ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
 ${CHECK_ELIGIBILITY}    ${SERVER}/application/create/check-eligibility/1
 ${YOUR_DETAILS}    ${SERVER}/application/create/your-details
-${POSTCODE_LOOKUP_URL}    ${SERVER}/application/create/selected-business/05063042#
+${POSTCODE_LOOKUP_URL}    ${SERVER}/organisation/create/selected-organisation/05063042#
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
 ${APPLICATION_TEAM_URL}    ${SERVER}/application/1/contributors
 ${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/1/contributors/invite
+
+
+${404_error_message}    Page or resource not found
+${403_error_message}    You are not authorised to perform the requested action

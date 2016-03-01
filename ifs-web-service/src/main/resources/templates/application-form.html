@@ -11,7 +11,6 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},url='/application/'+${currentApplication.id},urlText='Application Overview'" th:remove="tag" />
-    <div th:include="fragments/elements :: notification" th:remove="tag" />
 	<div class="page-title">
             <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
             <h1 class="heading-xlarge" th:if="${currentQuestion?.shortName}" th:text="${currentQuestion?.shortName}" />
@@ -39,12 +38,11 @@
 
             <div th:if="${currentSection}" th:remove="tag">
                 <p class="subtitle" th:if="${currentSection.getDescription()}" th:text="${currentSection.getDescription()}" />
-            </div>
-
-            <div th:each="question : ${currentSection?.questions}" th:remove="tag">
-                <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
-                     th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
-                    <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
+                <div th:each="question : ${sectionQuestions.get(currentSection.id)}" th:remove="tag">
+                    <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
+                         th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
+                        <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
+                    </div>
                 </div>
             </div>
 

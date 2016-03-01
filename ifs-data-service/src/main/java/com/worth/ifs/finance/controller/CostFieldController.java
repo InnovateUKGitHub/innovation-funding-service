@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 /**
  * This RestController exposes CRUD operations to both the
  * {@link com.worth.ifs.finance.service.CostFieldRestServiceImpl} and other REST-API users
@@ -26,6 +24,6 @@ public class CostFieldController {
 
     @RequestMapping("/findAll/")
     public RestResult<List<CostFieldResource>> findAll() {
-        return newRestHandler().perform(() -> costFieldService.findAllCostFields());
+        return costFieldService.findAllCostFields().toGetResponse();
     }
 }

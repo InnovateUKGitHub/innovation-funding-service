@@ -8,18 +8,18 @@ Documentation     -INFUND-408: As an applicant, and I am on the application over
 ...               -INFUND-32: As an applicant and I am on the MyApplications page, I can view the status of all my current applications, so I know what actions I need to take
 ...
 ...               -INFUND-1072: As an Applicant I want to see the Application Overview page redesigned so that they meet the agreed style
-Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Default Tags      Applicant    Overview
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/variables/User_credentials.robot
 
 *** Test Cases ***
 Applicant can access the Overview page
-    [Tags]    Applicant    Overview
+    [Tags]    Applicant    Overview    HappyPath
     Given the user is logged in as applicant
     When the Applicant clicks the "Rovel Additive Manufacturing Process" application
     Then the Applicant should see the overview of the selected application
@@ -27,33 +27,33 @@ Applicant can access the Overview page
 Verify the "Review and submit" button (overview page)
     [Documentation]    -INFUND-195
     ...    -INFUND-214
-    [Tags]    Applicant    Submit    Review and Submit    Overview
-    Given Applicant goes to the Overview page
+    [Tags]    Applicant    Submit    Review and Submit    Overview    HappyPath
+    Given the user navigates to the page    ${application_overview_url}
     And the overview page should have the "Review & Submit" button
     When the applicant clicks the submit button
     Then the applicant redirects to the summary page
 
 Applicant can see the List with the sections
     [Tags]    Applicant    Overview
-    When Applicant goes to the Overview page
+    When the user navigates to the page    ${application_overview_url}
     Then the applicant should see three sections
 
 Only the main questions should show and not the file uploads
     [Documentation]    INFUND-428
     [Tags]    Applicant    Overview
-    When the Applicant is in the application overview page
+    When the user is on the page    ${application_overview_url}
     Then the uploads should not be visible
 
 The days left to submit should be visible
     [Documentation]    -INFUND-37
-    [Tags]    Applicant    Overview
-    When the Applicant is in the application overview page
+    [Tags]    Applicant    Overview    HappyPath
+    When the user is on the page    ${application_overview_url}
     Then the "Days left to submit" should be visible in the overview page
 
 The Progress bar should be visible in the overview page
     [Documentation]    INFUND-32
-    [Tags]    Applicant    Overview
-    When the Applicant is in the application overview page
+    [Tags]    Applicant    Overview    HappyPath
+    When the user is on the page    ${application_overview_url}
     The Progress bar should be visible in the overview page
 
 *** Keywords ***
@@ -65,9 +65,6 @@ the Applicant clicks the "Rovel Additive Manufacturing Process" application
 
 the Applicant should see the overview of the selected application
     Location Should Be    ${APPLICATION_OVERVIEW_URL}
-
-the Applicant is in the application overview page
-    Applicant goes to the Overview page
 
 the applicant should see three sections
     Element Should Be Visible    css=#section-1 .heading-medium

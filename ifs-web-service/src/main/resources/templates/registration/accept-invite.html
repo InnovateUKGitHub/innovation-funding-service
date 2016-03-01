@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Create an application'" th:remove="tag"/>
+</head>
+<body class="create-application-eligibility">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"/>
+<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+
+    <div class="hgroup">
+        <h1 class="heading-xlarge no-margin-bottom">Join an application</h1>
+
+        <p>You have been invited to join a new application into the competition '<span th:text="${invite.competitionName}" />'.<br/>
+            Sign up to a new account, or sign in to an existing account to continue.</p>
+    </div>
+
+    <div class="grid-row">
+        <section class="column-half">
+            <div th:unless="${emailAddressRegistered}">
+                <h1 class="heading-large">New to this service?</h1>
+
+                <p>If you haven’t used this service before you must <a href="/application/create/find-business">create an account</a>,
+                    even if you already have an existing account with "Innovate UK".</p>
+
+                <p>When you create an account you can:</p>
+                <ul class="list-bullet">
+                    <li>apply for a competition</li>
+                    <li>track your competition applications</li>
+                    <li>view application feedback</li>
+                    <li>set up successful projects</li>
+                </ul>
+
+                <a th:href="@{'/organisation/create/type/new-account-organisation-type'}" class="button" value="create-account" type="submit">Create</a>
+            </div>
+            <div th:if="${emailAddressRegistered}">
+                <h1 class="heading-large">We found a user account with the invited email address</h1>
+                <p>Please login with your existing account.</p>
+            </div>
+        </section>
+        <section class="column-half">
+            <h1 class="heading-large">Sign in</h1>
+
+            <form action="/login?redirect_url=/application/create/your-details" th:object="${loginForm}" method="POST">
+                <fieldset>
+                    <legend class="visuallyhidden">Sign in</legend>
+                    <div th:class="${#fields.hasErrors('email')}? 'form-group error':'form-group'">
+                        <label class="form-label" for="id_email">E-mail address</label>
+                        <input class="form-control form-control-3-4" type="text" th:field="*{email}" id="id_email"/>
+                            <span class="error-message" th:if="${#fields.hasErrors('email')}"
+                                  th:errors="*{email}"></span>
+                    </div>
+                    <!-- .form-group -->
+
+                    <div th:class="${#fields.hasErrors('password')}? 'form-group error':'form-group'">
+                        <label class="form-label" for="id_password">Password</label>
+                        <input class="form-control form-control-3-4" type="password" th:field="*{password}"
+                               id="id_password"/>
+                        <span class="error-message" th:if="${#fields.hasErrors('password')}"
+                              th:errors="*{password}"></span>
+                    </div>
+                    <!-- .form-group -->
+                </fieldset>
+                <input class="button" value="Sign in" type="submit"></input>
+            </form>
+        </section>
+    </div>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"/>
+<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+</body>
+</html>

@@ -12,7 +12,7 @@ import org.springframework.test.annotation.Rollback;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.commons.error.Errors.forbiddenError;
+import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 

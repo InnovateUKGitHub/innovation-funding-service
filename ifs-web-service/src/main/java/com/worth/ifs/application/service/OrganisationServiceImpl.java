@@ -1,24 +1,25 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.model.UserApplicationRole;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.organisation.domain.Address;
-import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
-import com.worth.ifs.organisation.service.CompanyHouseRestService;
-import com.worth.ifs.user.domain.AddressType;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.service.OrganisationRestService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.application.model.UserApplicationRole;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.organisation.resource.OrganisationSearchResult;
+import com.worth.ifs.organisation.service.CompanyHouseRestService;
+import com.worth.ifs.user.domain.AddressType;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.service.OrganisationRestService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.application.service.Futures.call;
 
@@ -27,10 +28,9 @@ import static com.worth.ifs.application.service.Futures.call;
  * through the RestService {@link com.worth.ifs.user.service.OrganisationRestService}.
  */
 @Service
-public class OrganisationServiceImpl  implements OrganisationService {
+public class OrganisationServiceImpl implements OrganisationService {
     @Autowired
     OrganisationRestService organisationRestService;
-
 
     @Autowired
     CompanyHouseRestService companyHouseRestService;
@@ -74,37 +74,37 @@ public class OrganisationServiceImpl  implements OrganisationService {
     }
 
     @Override
-    public CompanyHouseBusiness getCompanyHouseOrganisation(String organisationId) {
-        return  companyHouseRestService.getOrganisationById(organisationId);
+    public OrganisationSearchResult getCompanyHouseOrganisation(String organisationId) {
+        return companyHouseRestService.getOrganisationById(organisationId);
     }
 
     @Override
-    public List<CompanyHouseBusiness> searchCompanyHouseOrganisations(String searchText) {
-        return  companyHouseRestService.searchOrganisations(searchText);
+    public List<OrganisationSearchResult> searchCompanyHouseOrganisations(String searchText) {
+        return companyHouseRestService.searchOrganisations(searchText);
     }
 
     @Override
     // TODO DW - INFUND-1555 - get below methods to return the RestResults
     public Organisation getOrganisationById(Long organisationId) {
-        return organisationRestService.getOrganisationById(organisationId).getSuccessObjectOrNull();
+        return organisationRestService.getOrganisationById(organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override
     // TODO DW - INFUND-1555 - get below methods to return the RestResults
     public OrganisationResource save(Organisation organisation) {
-        return organisationRestService.save(organisation).getSuccessObjectOrNull();
+        return organisationRestService.save(organisation).getSuccessObjectOrThrowException();
     }
 
     @Override
     // TODO DW - INFUND-1555 - get below methods to return the RestResults
     public OrganisationResource save(OrganisationResource organisation) {
-        return organisationRestService.save(organisation).getSuccessObjectOrNull();
+        return organisationRestService.save(organisation).getSuccessObjectOrThrowException();
     }
 
     @Override
     // TODO DW - INFUND-1555 - get below methods to return the RestResults
-    public OrganisationResource addAddress(OrganisationResource organisation, Address address, AddressType addressType) {
-        return organisationRestService.addAddress(organisation, address, addressType).getSuccessObjectOrNull();
+    public OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, AddressType addressType) {
+        return organisationRestService.addAddress(organisation, address, addressType).getSuccessObjectOrThrowException();
     }
 
 }

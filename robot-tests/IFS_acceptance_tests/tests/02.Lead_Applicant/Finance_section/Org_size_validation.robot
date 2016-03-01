@@ -1,12 +1,12 @@
 *** Settings ***
 Documentation     INFUND-1110: As an applicant/partner applicant I want to add my required Funding Level so that innovate uk know my grant request
-Suite Setup       Login as User    &{lead_applicant_credentials}
+Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${small_org_option}    SMALL
@@ -22,7 +22,7 @@ Small organisation can't choose over 70% funding
 
 Small organisation can choose up to 70% funding
     [Documentation]    INFUND-1100
-    [Tags]    Organisation    Funding    Finance
+    [Tags]    Organisation    Funding    Finance    HappyPath
     When the applicant enters organisation size details    ${small_org_option}    68
     Then the 'your finances' section can be successfully saved    ${small_org_option}    68
 
@@ -53,14 +53,14 @@ Large organisation can choose up to 50% funding
 *** Keywords ***
 The applicant enters organisation size details
     [Arguments]    ${org_size_option}    ${funding_level}
-    Applicant goes to the your finances section
+    The user navigates to the page      ${YOUR_FINANCES_URL}
     Applicant enters the organisation size    ${org_size_option}
     Applicant enters the funding level    ${funding_level}
     Applicant chooses to save and return to application overview
 
 The 'your finances' section can be successfully saved
     [Arguments]    ${org_size_option}    ${funding_level}
-    Applicant goes to the Your finances section
+    The user navigates to the page      ${YOUR_FINANCES_URL}
     Applicant can see the correct organisation size has been selected    ${org_size_option}
     Applicant can see the correct funding level has been saved    ${funding_level}
 

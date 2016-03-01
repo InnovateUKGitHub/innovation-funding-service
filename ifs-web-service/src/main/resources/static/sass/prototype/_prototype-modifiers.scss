@@ -1,4 +1,11 @@
+/*--- Ensure content is centralised for ie8 ---*/
 
+#content{
+	margin: 0 auto;
+}
+
+
+/*--- Table overflows for small screens ---*/
 .total-cost{
 	.heading-medium{
 		margin-left: 20px; 
@@ -33,6 +40,22 @@ table{
 	#content{
 		max-width: 95%;
 		min-width: 960px;
+
+		@include media-down(tablet){
+			min-width: 90%;
+		}
+	}
+}
+
+/*--- Contrain areas within full width layout ---*/
+.full-width{
+	.constrain-width{
+		max-width: 1400px;
+		margin: 0 auto;
+
+		&.extra-margin{
+			margin-top: 30px;
+		}
 	}
 }
 

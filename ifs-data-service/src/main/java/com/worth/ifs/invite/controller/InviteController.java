@@ -5,13 +5,13 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.invite.transactional.InviteService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
-
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 
 /**
  * InviteController is to handle the REST calls from the web-service and contains the handling of all call involving the Invite and InviteOrganisations.
@@ -20,33 +20,39 @@ import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
 @RestController
 @RequestMapping("/invite")
 public class InviteController {
-
+    private static final Log LOG = LogFactory.getLog(InviteController.class);
     @Autowired
     private InviteService inviteService;
 
     @RequestMapping("/createApplicationInvites")
     public RestResult<InviteResultsResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
-        return newRestHandler().perform(() -> inviteService.createApplicationInvites(inviteOrganisationResource));
+        return inviteService.createApplicationInvites(inviteOrganisationResource).toPostCreateResponse();
     }
 
     @RequestMapping("/getInviteByHash/{hash}")
     public RestResult<InviteResource> getInviteByHash(@PathVariable("hash") String hash) {
-        return newRestHandler().perform(() -> inviteService.getInviteByHash(hash));
+        return inviteService.getInviteByHash(hash).toGetResponse();
     }
 
     @RequestMapping("/getInviteOrganisationByHash/{hash}")
     public RestResult<InviteOrganisationResource> getInviteOrganisationByHash(@PathVariable("hash") String hash) {
-        return newRestHandler().perform(() -> inviteService.getInviteOrganisationByHash(hash));
+        return inviteService.getInviteOrganisationByHash(hash).toGetResponse();
     }
 
 
     @RequestMapping("/getInvitesByApplicationId/{applicationId}")
     public RestResult<Set<InviteOrganisationResource>> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
-        return newRestHandler().perform(() -> inviteService.getInvitesByApplication(applicationId));
+        return inviteService.getInvitesByApplication(applicationId).toGetResponse();
     }
 
     @RequestMapping(value = "/saveInvites", method = RequestMethod.POST)
     public RestResult<InviteResultsResource> saveInvites(@RequestBody List<InviteResource> inviteResources) {
-        return newRestHandler().perform(() -> inviteService.saveInvites(inviteResources));
+        return inviteService.saveInvites(inviteResources).toPostCreateResponse();
     }
+
+    @RequestMapping(value = "/acceptInvite/{hash}/{userId}", method = RequestMethod.PUT)
+    public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
+        return inviteService.acceptInvite(hash, userId).toPutResponse();
+    }
+
 }

@@ -4,6 +4,7 @@ import com.worth.ifs.application.service.FutureAdapterWithExceptionHandling;
 import com.worth.ifs.commons.rest.RestResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,23 +32,26 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class RestTemplateAdaptor {
     private final static Log LOG = LogFactory.getLog(RestTemplateAdaptor.class);
 
-    private Supplier<RestTemplate> restTemplateSupplier = RestTemplate::new;
-    private Supplier<AsyncRestTemplate> asyncRestTemplateSupplier = AsyncRestTemplate::new;
+    @Autowired
+    private RestTemplate restTemplate;
 
-    public void setRestTemplateSupplier(Supplier<RestTemplate> restTemplateSupplier) {
-        this.restTemplateSupplier = restTemplateSupplier;
-    }
-
-    public void setAsyncRestTemplate(Supplier<AsyncRestTemplate> asyncRestTemplateSupplier) {
-        this.asyncRestTemplateSupplier = asyncRestTemplateSupplier;
-    }
+    @Autowired
+    private AsyncRestTemplate asyncRestTemplate;
 
     private RestTemplate getRestTemplate() {
-        return restTemplateSupplier.get();
+        return restTemplate;
     }
 
     private AsyncRestTemplate getAsyncRestTemplate() {
-        return asyncRestTemplateSupplier.get();
+        return asyncRestTemplate;
+    }
+
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    public void setAsyncRestTemplate(AsyncRestTemplate asyncRestTemplate) {
+        this.asyncRestTemplate = asyncRestTemplate;
     }
 
     // Synchronous public calls

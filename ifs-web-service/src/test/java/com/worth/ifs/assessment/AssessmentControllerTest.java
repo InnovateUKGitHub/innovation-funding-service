@@ -1,11 +1,17 @@
 package com.worth.ifs.assessment;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.viewmodel.AssessmentDashboardModel;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -21,23 +27,26 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -151,6 +160,8 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
         when(applicationService.getById(anyLong())).thenReturn(application);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(sectionService.getById(anyLong())).thenReturn(null);
+        when(sectionService.getByName("Your finances")).thenReturn(sectionResources.get(0));
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());

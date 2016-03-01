@@ -4,11 +4,8 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.transactional.InviteOrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/inviteorganisation")
@@ -19,6 +16,15 @@ public class InviteOrganisationController {
 
     @RequestMapping("/{id}")
     public RestResult<InviteOrganisationResource> findById(@PathVariable("id") final Long id) {
-        return newRestHandler().perform(() -> service.findOne(id));
+        return service.findOne(id).toGetResponse();
+    }
+
+    @RequestMapping(value= "/save", method = RequestMethod.PUT)
+    public RestResult<Void> put(@RequestBody final InviteOrganisationResource inviteOrganisationResource) {
+        if(service.findOne(inviteOrganisationResource.getId()).isSuccess()){
+            return service.save(inviteOrganisationResource).toPutResponse();
+        }else{
+            return RestResult.restFailure(HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 }

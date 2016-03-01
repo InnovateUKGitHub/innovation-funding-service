@@ -26,7 +26,9 @@ public class InviteOrganisationResource {
     public InviteOrganisationResource(Long id, String organisationName, Organisation organisation, List<InviteResource> inviteResources) {
         this.id = id;
         this.organisationName = organisationName;
-        this.organisation = organisation.getId();
+        if(organisation!=null){
+            this.organisation = organisation.getId();
+        }
         this.inviteResources = inviteResources;
     }
 

@@ -3,7 +3,7 @@
 
 <!-- ===========================Your profile  =========================== --> 
 <div th:fragment="prototype-assessor-profile">
-    <h2 class="heading-large">Your profile</h2> 
+    <h2 class="heading-medium">Your profile</h2> 
     <ul class="list-bullet">
         <li>
             <a href="/prototypes/1178-assessor-profile-details">Your details</a>
@@ -36,7 +36,6 @@
                 <div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
                 <div class="pie-overlay">
                     <div>0</div>
-                    <span>Days left</span>
                 </div>
             </div>
         </div>
@@ -105,7 +104,7 @@
             <div class="form-group">
                 
                  <label class="form-label form-label-bold" for="assessor-question-feedback-text">Feedback
-                    <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
+                    <span class="form-hint">Please justify your <span th:text="${(questionTitle == 'scope' ? 'answer' : 'score')}">SCORE</span> by writing two or three sentences which will be returned to the applicant as feedback</span>
                  </label>
 
                  <div th:replace="prototypes/fragments/assessor-view :: ${'prototype-assessor-guidance-' + questionTitle}"  th:remove="tag" />
@@ -654,8 +653,8 @@
                     </div>
                     <div class="column-assessment-status navigation-right">
                         <div class="application-status invite">
-                            <h4 class="subtitle no-margin">Assessment period:</h4>
-                            <h5 class="heading-medium no-margin">15th - 25th April</h5>
+                            <p class="subtitle no-margin">Assessment period:</p>
+                            <p class="heading-small no-margin">15th - 25th April</p>
                         </div>
                     </div>
                 </div>
@@ -666,13 +665,13 @@
 
 <div th:fragment="prototype-assessor-dashboard-invite-accepted">
     <div class="invite-to-assess">
-        <h2 class="heading-medium">Upcoming competions to assess</h2>
+        <h2 class="heading-medium">Upcoming competitions to assess</h2>
         <ul class="boxed-list">
             <li>
                 <div class="grid-row">
                     <div class="column-assessment-details">
                         <h3 class="heading-medium">Technology inspired</h3>
-                        <p class="form-hint">Upcoming application</p>
+                        <p class="form-hint">Upcoming competition</p>
                         <p class="no-margin">Applications allocated 15th April</p>
                     </div>
                     <div class="column-assessment-status navigation-right">
@@ -1012,7 +1011,7 @@
     <p>9.5 The time of commitment shall be of the essence and failure to commence the provision of the Services within the time promised or specified shall entitle the Contracting Authority (at its option) to be released from any obligation to accept and pay for the Services or to cancel all or part of the Services, in either case without prejudice to the other rights and remedies of the Contracting Authority.</p>
     <p>9.6 The services must be delivered in accordance with the specific competition Assessor Guidance and associated scoring matrices. Failure to deliver the services in this way will be construed as non-performance of the Services under the terms of this Contract.</p>
 
-    <h3 class="heading-small">10. TERMINATION</h3>
+    <h3 class="heading-small" id="end-of-terms">10. TERMINATION</h3>
 
     <p>10.1 This Contract may be terminated by either party giving to the other party at least 30 days notice in writing without further liability. For the avoidance of doubt, in the event that such termination happens, liability for Services will arise only up to the point of termination.</p>
     <p>10.2 Notwithstanding the provisions of clause 3, the Contracting Authority may terminate the Contract with immediate effect with no liability to make any further payment to the Contractor (other than in respect of amounts accrued prior to the date of termination) if at any time the Contractor:</p>
@@ -1035,6 +1034,7 @@
 
     <h3 class="heading-small">12. LAW AND JURISDICTION</h3>
     <p>This Contract shall be governed by and interpreted in accordance with English Law and the parties submit to the exclusive jurisdiction of the English courts </p>
+
 
 </div>
 

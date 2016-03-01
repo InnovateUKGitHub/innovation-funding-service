@@ -2,6 +2,7 @@ package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.domain.FormInputType;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -32,6 +33,10 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
 
     public FormInputBuilder withWordCount(Integer... wordCount) {
         return withArray((id, formInput) -> setField("wordCount", id, formInput), wordCount);
+    }
+
+    public FormInputBuilder withFormInputType(FormInputType formInputType) {
+        return with(formInput -> formInput.setFormInputType(formInputType));
     }
 
     @Override

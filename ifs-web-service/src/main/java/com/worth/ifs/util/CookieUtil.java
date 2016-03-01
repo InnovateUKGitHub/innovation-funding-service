@@ -2,6 +2,7 @@ package com.worth.ifs.util;
 
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.Cookie;
@@ -20,12 +21,23 @@ public final class CookieUtil {
     private static boolean cookieHttpOnly;
 
     public static void saveToCookie(HttpServletResponse response, String fieldName, String fieldValue) {
-        if (fieldName != null) {
+        if (StringUtils.hasText(fieldName)){
             Cookie cookie = new Cookie(fieldName, fieldValue);
             cookie.setSecure(cookieSecure);
             cookie.setHttpOnly(cookieHttpOnly);
             cookie.setPath("/");
             cookie.setMaxAge(3600);
+            response.addCookie(cookie);
+        }
+    }
+
+    public static void removeCookie(HttpServletResponse response, String fieldName) {
+        if (StringUtils.hasText(fieldName)) {
+            Cookie cookie = new Cookie(fieldName, "");
+            cookie.setSecure(cookieSecure);
+            cookie.setHttpOnly(cookieHttpOnly);
+            cookie.setPath("/");
+            cookie.setMaxAge(0);
             response.addCookie(cookie);
         }
     }

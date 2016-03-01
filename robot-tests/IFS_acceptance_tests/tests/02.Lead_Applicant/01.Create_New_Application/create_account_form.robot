@@ -8,7 +8,7 @@ Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${correct_password}    password
@@ -21,248 +21,194 @@ ${valid_email}    ___ewan_@worth.systems
 First name left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
-    When the user leaves the first name field blank
-    And the user inputs a last name
-    And the user inputs a phone number
-    And the user inputs a valid email address
-    And the user inputs a valid password
-    And the user retypes the password correctly
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    ${EMPTY}
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=password    ${correct_password}
+    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
     Then the user should see an error    Please enter a first name
-    And the user cannot login with their new details
+    And the user should see an error    We were unable to create your account
+    And the user cannot login with their new details    ${valid_email}    ${correct_password}
+    And the user logs out if they are logged in
 
 Last name left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
-    When the user inputs a first name
-    And the user leaves the last name field blank
-    And the user inputs a phone number
-    And the user inputs a valid email address
-    And the user inputs a valid password
-    And the user retypes the password correctly
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    John
+    And the user enters text to a text field    id=lastName    ${EMPTY}
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=password    ${correct_password}
+    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
     Then the user should see an error    Please enter a last name
-    And the user cannot login with their new details
+    And the user cannot login with their new details    ${valid_email}    ${correct_password}
+    And the user logs out if they are logged in
 
 Phone number left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
-    When the user inputs a first name
-    And the user inputs a last name
-    And the user leaves the phone number field blank
-    And the user inputs a valid email address
-    And the user inputs a valid password
-    And the user retypes the password correctly
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    John
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    ${EMPTY}
+    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=password    ${correct_password}
+    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
     Then the user should see an error    Please enter a phone number
-    And the user cannot login with their new details
+    And the user cannot login with their new details    ${valid_email}    ${correct_password}
+    And the user logs out if they are logged in
+
+Phone number validation
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    John
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    invalidphone
+    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=password    ${correct_password}
+    And the user enters text to a text field    id=retypedPassword    ${correct_password}
+    And the user submits their information
+    Then the user should see an error    Please enter a valid phone number
+    And the user cannot login with their new details    ${valid_email}    ${correct_password}
+    And the user logs out if they are logged in
 
 Email left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
-    When the user inputs a first name
-    And the user inputs a last name
-    And the user inputs a phone number
-    And the user leaves the email address field blank
-    And the user inputs a valid password
-    And the user retypes the password correctly
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    John
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    ${EMPTY}
+    And the user enters text to a text field    id=password    ${correct_password}
+    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
     Then the user should see an error    Please enter your email
+    And the user logs out if they are logged in
 
 Password left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
-    When the user inputs a first name
-    And the user inputs a last name
-    And the user inputs a phone number
-    And the user inputs a valid email address
-    And the user leaves the password field blank
-    And the user retypes the password correctly
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    John
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=password    ${EMPTY}
+    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
     Then the user should see an error    Please enter your password
-    And the user cannot login with their new details
+    And the user cannot login with their new details    ${valid_email}    ${correct_password}
+    And the user logs out if they are logged in
 
 Re-type password left blank
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
-    When the user leaves the first name field blank
-    And the user inputs a last name
-    And the user inputs a phone number
-    And the user inputs a valid email address
-    And the user inputs a valid password
-    And the user leaves the re-type password field blank
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    ${EMPTY}
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=password    ${correct_password}
+    And the user enters text to a text field    id=retypedPassword    ${EMPTY}
     And the user submits their information
     Then the user should see an error    Please re-type your password
-    And the user cannot login with their new details
+    And the user cannot login with their new details    ${valid_email}    ${correct_password}
+    And the user logs out if they are logged in
 
 Password and re-typed password do not match
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
-    When the user inputs a first name
-    And the user inputs a last name
-    And the user inputs a phone number
-    And the user inputs a valid email address
-    And the user inputs a valid password
-    And the user retypes the password incorrectly
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    John
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=password    ${correct_password}
+    And the user enters text to a text field    id=retypedPassword    ${incorrect_password}
     And the user submits their information
     Then the user should see an error    Passwords must match
     And the user cannot login with either password
+    And the user logs out if they are logged in
 
 Password is too short
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
-    When the user inputs a first name
-    And the user inputs a last name
-    And the user inputs a phone number
-    And the user inputs a valid email address
-    And the user enters a short password
-    And the user re-enters the short password
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    John
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=password    ${short_password}
+    And the user enters text to a text field    id=retypedPassword    ${short_password}
     And the user submits their information
     Then the user should see an error    Password size should be between 6 and 30 characters
-    And the user cannot login with the short password
+    And the user cannot login with their new details    ${valid_email}    ${short_password}
+    And the user logs out if they are logged in
 
 Password is too long
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
-    When the user inputs a first name
-    And the user inputs a last name
-    And the user inputs a phone number
-    And the user inputs a valid email address
-    And the user enters a long password
-    And the user re-enters the long password
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    John
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=password    ${long_password}
+    And the user enters text to a text field    id=retypedPassword    ${long_password}
     And the user submits their information
     Then the user should see an error    Password size should be between 6 and 30 characters
-    And the user cannot login with the long password
+    And the user cannot login with their new details    ${valid_email}    ${long_password}
+    And the user logs out if they are logged in
 
 Valid account creation
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page for non registered users
-    When the user inputs a first name
-    And the user inputs a last name
-    And the user inputs a phone number
-    And the user inputs a valid email address
-    And the user inputs a valid password
-    And the user retypes the password correctly
+    [Tags]    Account    Validations    HappyPath
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    John
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=password    ${correct_password}
+    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
-    Capture Page Screenshot
-    Then the user should be redirected to the login page
-    Capture Page Screenshot
+    #Then user should be redirected to the correct page    ${LOGIN_URL}
     And the user can login with their new details
-    Capture Page Screenshot
-    And the user can logout
+    And the user should see the element    link=Logout
+    And the user clicks the button/link    link=Logout
 
 Email duplication check
     [Documentation]    INFUND-886
     [Tags]    Account    Validations
-    Given the user follows the standard path to the account creation page
-    When the user inputs a first name
-    And the user inputs a last name
-    And the user inputs a phone number
-    And the user inputs a valid email address
-    And the user inputs a valid password
-    And the user retypes the password correctly
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    John
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=password    ${correct_password}
+    And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
     Then the user should see an error    Email address is already in use
+    And the user logs out if they are logged in
 
 *** Keywords ***
-the user follows the standard path to the account creation page
-    Go To    ${SERVER}/application/create/selected-business/05063042
-    Select Checkbox    id=address-same
-    Select Checkbox    name=useCompanyHouseAddress
-    Click Button    Save organisation and continue
-    Sleep    1s
-    Page Should Contain    The profile that you are creating will be linked to the following organisation
-
-the user inputs a first name
-    Input Text    id=firstName    John
-
-the user inputs a last name
-    Input Text    id=lastName    Smith
-
-the user inputs a phone number
-    Input Text    id=phoneNumber    01141234567
-
-the user inputs a valid email address
-    Input Text    id=email    ${valid_email}
-
-the user inputs a valid password
-    Input Password    id=password    ${correct_password}
-
-the user retypes the password correctly
-    Input Password    id=retypedPassword    ${correct_password}
-
-the user leaves the first name field blank
-    Input Text    id=firstName    ${EMPTY}
-
-the user leaves the last name field blank
-    Input Text    id=lastName    ${EMPTY}
-
-the user leaves the phone number field blank
-    Input Text    id=phoneNumber    ${EMPTY}
-
-the user leaves the email address field blank
-    Input Text    id=email    ${EMPTY}
-
-the user leaves the password field blank
-    Input Password    id=password    ${EMPTY}
-
-the user leaves the re-type password field blank
-    Input Password    id=retypedPassword    ${EMPTY}
-
-the user retypes the password incorrectly
-    Input Password    id=retypedPassword    ${incorrect_password}
-
-the user enters a short password
-    Input Password    id=password    ${short_password}
-
-the user re-enters the short password
-    Input Password    id=retypedPassword    ${short_password}
-
-the user enters a long password
-    Input Password    id=password    ${long_password}
-
-the user re-enters the long password
-    Input Password    id=retypedPassword    ${long_password}
-
 the user submits their information
     Select Checkbox    termsAndConditions
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Submit Form
 
-the user should see an error
-    [Arguments]    ${Validation error}
-    Page Should Contain    We were unable to create your account
-    page should contain    ${Validation error}
-
 the user cannot login with their new details
+    [Arguments]    ${email}    ${password}
     go to    ${LOGIN_URL}
-    Disable browser validations
-    Input Text    id=id_email    ${valid_email}
-    Input Password    id=id_password    ${correct_password}
-    Submit Form
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
-
-the user cannot login with the short password
-    go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${valid_email}
-    Input Password    id=id_password    ${short_password}
-    Submit Form
-    Page Should Contain    Your login was unsuccessful because of the following issue(s)
-
-the user cannot login with the long password
-    go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${valid_email}
-    Input Password    id=id_password    ${long_password}
+    #Disable browser validations
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+    Input Text    id=id_email    ${email}
+    Input Password    id=id_password    ${password}
     Submit Form
     Page Should Contain    Your login was unsuccessful because of the following issue(s)
 
@@ -280,26 +226,12 @@ the user cannot login with either password
     Submit Form
     Page Should Contain    Your login was unsuccessful because of the following issue(s)
 
-the user should be redirected to the login page
-    go to    ${LOGIN_URL}
-
 the user can login with their new details
     go to    ${LOGIN_URL}
     Input Text    id=id_email    ${valid_email}
     Input Password    id=id_password    ${correct_password}
     Submit Form
     Page Should Not Contain    something has gone wrong
-
-the user can logout
-    logout as user
-
-Disable browser validations
-    [Documentation]    This keyword disables the browsers validations in order to test the validation errors in all the browsers
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-
-the user should see an error for the email duplication
-    Page Should Contain    We were unable to create your account
-    page should contain    Email address is already in use
 
 the user follows the standard path to the account creation page for non registered users
     go to    ${COMPETITION_DETAILS_URL}
@@ -312,3 +244,6 @@ the user follows the standard path to the account creation page for non register
     Click Element    id=postcode-lookup
     Click Element    css=#select-address-block > button
     click element    jQuery=.button:contains("Save organisation and")
+
+the user logs out if they are logged in
+    run keyword and ignore error    log out as user

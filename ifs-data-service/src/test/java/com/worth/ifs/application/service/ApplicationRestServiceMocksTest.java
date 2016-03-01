@@ -1,19 +1,18 @@
 package com.worth.ifs.application.service;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
+
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-
 import static com.worth.ifs.application.service.Futures.settable;
-
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
 import static org.junit.Assert.assertEquals;
@@ -40,7 +39,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     @Test
     public void test_getApplicationById() {
 
-        String expectedUrl = applicationRestURL + "/normal/" + 123;
+        String expectedUrl = applicationRestURL + "/" + 123;
         ApplicationResource response = newApplicationResource().build();
         setupGetWithRestResultExpectations(expectedUrl, ApplicationResource.class, response);
 

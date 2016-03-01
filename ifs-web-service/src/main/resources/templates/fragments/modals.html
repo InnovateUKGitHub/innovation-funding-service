@@ -4,21 +4,21 @@
 	<button class="js-close close" aria-label="Close Popup">X</button>
 </div>
 
-<!-- overlay --> 
+<!-- overlay -->
 
 <div th:fragment="modal-overlay">
 	<div class="modal-overlay js-close" aria-hidden="true"></div>
 </div>
 
-<!-- confirm submit modal --> 
+<!-- confirm submit modal -->
 
 <div th:fragment="modal-confirm-submit (messageTitle, message, submitLink, submitText, cancelText)">
     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag" />
         <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
         <p th:text="${message}"></p>
-        <div>        
-            <a role="button" tabindex="0" class="button large" th:href="${submitLink}" th:text="${submitText}"></a>
+        <div>
+            <a class="button large" th:href="${submitLink}" th:text="${submitText}"></a>
             <button class="js-close button buttonlink large" th:text="${cancelText}"></button>
         </div>
     </div>
@@ -51,7 +51,7 @@
                     <input type="hidden" name="competitionId" th:value="${competition.id}"/>
 
                     <div class="form-group">
-                   
+
                         <label for="reject-reason" class="form-label">Please let us know why you are rejecting this application</label>
 
                         <select name="decisionReason" id="reject-reason" required="required" class="form-control">
@@ -76,4 +76,3 @@
         </div>
     </div>
 </div>
-

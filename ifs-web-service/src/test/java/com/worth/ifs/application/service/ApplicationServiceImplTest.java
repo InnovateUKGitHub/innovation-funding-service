@@ -1,23 +1,22 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.service.Futures.settable;
-import static com.worth.ifs.commons.error.Errors.notFoundError;
-import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.calls;
@@ -69,10 +68,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ApplicationResource returnedApplication = service.getById(applicationId);
         assertEquals(applications.get(0).getId(), returnedApplication.getId());
     }
-    @Test
+    @Test(expected= ObjectNotFoundException.class)
     public void testGetByIdNotFound() throws Exception {
         Long applicationId = 5L;
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restFailure(notFoundError(Application.class)));
+        when(applicationRestService.getApplicationById(applicationId)).thenThrow(new ObjectNotFoundException("Application not found", Arrays.asList(applicationId)));
         ApplicationResource returnedApplication = service.getById(applicationId);
         assertEquals(null, returnedApplication);
     }

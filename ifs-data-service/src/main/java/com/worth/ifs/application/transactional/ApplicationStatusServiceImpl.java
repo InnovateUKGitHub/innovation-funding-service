@@ -7,18 +7,14 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-
 @Service
 public class ApplicationStatusServiceImpl extends BaseTransactionalService implements ApplicationStatusService {
 
     @Autowired
-    private ApplicationStatusMapper applicationStatusMapper;
+    private ApplicationStatusMapper mapper;
 
     @Override
     public ServiceResult<ApplicationStatusResource> getById(Long id) {
-        return super.getApplicationStatus(id).andOnSuccess(status ->
-            serviceSuccess(applicationStatusMapper.mapApplicationStatusToResource(status))
-        );
+        return getApplicationStatus(id).andOnSuccessReturn(mapper::mapToResource);
     }
 }

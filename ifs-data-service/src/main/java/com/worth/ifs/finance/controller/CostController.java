@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.rest.RestResultBuilder.newRestHandler;
-
 /**
  * This RestController exposes CRUD operations to both the
  * {@link com.worth.ifs.finance.service.CostRestServiceImpl} and other REST-API users
@@ -31,26 +29,26 @@ public class CostController {
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             @PathVariable("questionId") final Long questionId,
             @RequestBody(required=false) final CostItem newCostItem) {
-        return newRestHandler().perform(() -> costService.addCost(applicationFinanceId, questionId, newCostItem));
+        return costService.addCost(applicationFinanceId, questionId, newCostItem).toPostCreateResponse();
     }
 
     @RequestMapping("/update/{id}")
     public RestResult<Void> update(@PathVariable("id") final Long id, @RequestBody final CostItem newCostItem) {
-        return newRestHandler().perform(() -> costService.updateCost(id, newCostItem));
+        return costService.updateCost(id, newCostItem).toPutResponse();
     }
 
     @RequestMapping("/get/{applicationFinanceId}")
     public RestResult<List<Cost>> findByApplicationId(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
-        return newRestHandler().perform(() -> costService.findCostsByApplicationId(applicationFinanceId));
+        return costService.findCostsByApplicationId(applicationFinanceId).toGetResponse();
     }
 
     @RequestMapping("/findById/{id}")
     public RestResult<Cost> findById(@PathVariable("id") final Long id) {
-        return newRestHandler().perform(() -> costService.findCostById(id));
+        return costService.findCostById(id).toGetResponse();
     }
 
     @RequestMapping("/delete/{costId}")
     public RestResult<Void> delete(@PathVariable("costId") final Long costId) {
-        return newRestHandler().perform(() -> costService.deleteCost(costId));
+        return costService.deleteCost(costId).toDeleteResponse();
     }
 }

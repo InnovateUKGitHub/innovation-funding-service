@@ -1,15 +1,15 @@
 package com.worth.ifs.application.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.springframework.hateoas.core.Relation;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Relation(value="application", collectionRelation="applications")
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class ApplicationResource {
 
     private Long id;
@@ -20,6 +20,7 @@ public class ApplicationResource {
     private List<Long> applicationFinances = new ArrayList<>();
     private Long applicationStatus;
     private Long competition;
+    private String competitionName;
     private List<Long> invites;
 
     public Long getId() {
@@ -32,6 +33,15 @@ public class ApplicationResource {
 
     public String getName() {
         return name;
+    }
+
+    @JsonIgnore
+    public String getApplicationDisplayName() {
+        if(StringUtils.isNotEmpty(name)){
+            return name;
+        }else{
+            return competitionName;
+        }
     }
 
     public void setName(String name) {
@@ -129,5 +139,13 @@ public class ApplicationResource {
                 .append(competition)
                 .append(invites)
                 .toHashCode();
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
     }
 }

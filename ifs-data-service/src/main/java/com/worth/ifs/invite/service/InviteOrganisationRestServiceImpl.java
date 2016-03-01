@@ -16,4 +16,9 @@ public class InviteOrganisationRestServiceImpl extends BaseRestService implement
     public RestResult<InviteOrganisationResource> findOne(Long id) {
         return getWithRestResult(restUrl + "/" + id, InviteOrganisationResource.class);
     }
+
+    @Override
+    public RestResult<Void> put(InviteOrganisationResource inviteOrganisation) {
+        return putWithRestResult(restUrl+ "/save", inviteOrganisation, Void.class);
+    }
 }

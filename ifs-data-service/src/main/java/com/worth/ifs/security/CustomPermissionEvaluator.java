@@ -232,6 +232,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         try {
             return (Boolean) methodAndBean.getRight().invoke(methodAndBean.getLeft(), dto, finalAuthentication);
         } catch (Exception e) {
+            LOG.error("Error whilst processing a permissions method", e);
             throw new RuntimeException(e);
         }
     }
@@ -284,7 +285,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             dtoClassToLookupMethod.putAll(map);
             return dtoClassToLookupMethod;
         }
-
     }
 
 
