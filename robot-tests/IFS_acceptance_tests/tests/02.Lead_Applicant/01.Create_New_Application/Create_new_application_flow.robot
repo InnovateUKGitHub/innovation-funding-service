@@ -60,7 +60,7 @@ Verify the name of the new application
     And the progress indicator should show 0
     And The user clicks the button/link    link=View team members and add collaborators
     and The user should see the text in the page    Application team
-    and The user should see the text in the page    View and manage your partner companies
+    and The user should see the text in the page    View and manage your contributors and partners
     And the new application should be visible in the dashboard page
     And The user clicks the button/link    link=test title
     and The user should see the text in the page    test title
