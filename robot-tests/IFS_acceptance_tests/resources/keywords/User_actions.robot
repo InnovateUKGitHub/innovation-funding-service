@@ -8,10 +8,9 @@ The user navigates to the page
     Page Should Not Contain    You are not authorised to perform the requested action
 
 The user navigates to the page and gets a custom error message
-    [Arguments]     ${TARGET_URL}   ${CUSTOM_ERROR_MESSAGE}
-    Go To   ${TARGET_URL}
-    Page Should Contain     ${CUSTOM_ERROR_MESSAGE}
-
+    [Arguments]    ${TARGET_URL}    ${CUSTOM_ERROR_MESSAGE}
+    Go To    ${TARGET_URL}
+    Page Should Contain    ${CUSTOM_ERROR_MESSAGE}
 
 The user is on the page
     [Arguments]    ${TARGET_URL}
@@ -68,7 +67,6 @@ The user should be redirected to the correct page
     Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
-
 
 The user receives a custom error message
     [Arguments]    ${custom_error_message}
@@ -132,3 +130,5 @@ Applicant assigns the question to the collaborator
 The user goes back to the previous page
     Go Back
 
+browser validations have been disabled
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');

@@ -44,6 +44,7 @@ search using invalid registration number
 Search for invalid characters
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house    Pending
+    # Pending INFUND-1493
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When The user enters text to a text field    id=org-name    {}{}
     And The user clicks the button/link    id=org-search
