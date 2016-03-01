@@ -28,10 +28,11 @@ Submit button disabled when the application is incomplete
     [Documentation]    INFUND-195
     [Tags]    Summary
     Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
-    When the applicant clicks the review and submit button
-    and the applicant redirects to the summary page
+    When the user clicks the button/link    link=Review & submit
+    Then the user should be redirected to the correct page    ${SUMMARY_PAGE_APPLICATION_7}
     and the applicant marks the first question as incomplete
-    Then the submit button should be disabled
+    Then the user navigates to the page    ${SUMMARY_PAGE_APPLICATION_7}
+    And the user should see the element    css=.alignright-button button
     [Teardown]    The applicant marks the first question as complete
 
 Submit button disabled when finance section is incomplete
@@ -40,9 +41,9 @@ Submit button disabled when finance section is incomplete
     Given the user navigates to the page    ${FINANCE_SECTION_7}
     When the applicant marks the finance section as incomplete
     And the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
-    And the applicant clicks the review and submit button
-    And the applicant redirects to the summary page
-    Then the submit button should be disabled
+    And the user clicks the button/link    link=Review & submit
+    And the user should be redirected to the correct page    ${SUMMARY_PAGE_APPLICATION_7}
+    Then the user should see the element    css=.alignright-button button
     [Teardown]    The applicant marks the first finance section as complete
 
 Submit flow (complete application)
@@ -51,26 +52,17 @@ Submit flow (complete application)
     ...    This test case test the submit modal(cancel option) and the the submit of the form, the confirmation page and the new status of the application
     [Tags]    Summary    HappyPath
     Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
-    When the applicant clicks the review and submit button
-    and the applicant redirects to the summary page
+    When the user clicks the button/link    link=Review & submit
+    And the user should be redirected to the correct page    ${SUMMARY_PAGE_APPLICATION_7}
     Then the applicant clicks the submit button and the clicks cancel in the submit modal
     And the applicant clicks Yes in the submit modal
-    and the applicant redirects to the application submitted page
+    Then the user should be redirected to the correct page    ${SUBMITTED_PAGE_APPLICATION_7}
+    And the user should see the text in the page    Application submitted
 
 *** Keywords ***
-the submit button should be disabled
-    go to    ${SUMMARY_PAGE_APPLICATION_7}
-    Element Should Be Disabled    css=.alignright-button button
-
 the applicant clicks Yes in the submit modal
     click element    link=Submit application
     click link    link=Yes, I want to submit my application
-
-the applicant clicks the review and submit button
-    click element    link=Review & submit
-
-the applicant redirects to the summary page
-    Location Should Be    ${SUMMARY_PAGE_APPLICATION_7}
 
 the applicant marks the first question as incomplete
     Click Element    css=.section-overview section:nth-of-type(1) .collapsible:nth-of-type(2)
@@ -84,10 +76,6 @@ the applicant marks the first question as complete
 the applicant clicks the submit button and the clicks cancel in the submit modal
     click element    link=Submit application
     Click Element    jquery=button:contains("Cancel")
-
-the applicant redirects to the application submitted page
-    Location Should Be    ${SUBMITTED_PAGE_APPLICATION_7}
-    Page Should Contain    Application submitted
 
 the applicant marks the finance section as incomplete
     Click Element    css=[aria-controls="collapsible-1"]
