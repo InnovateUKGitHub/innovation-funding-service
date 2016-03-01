@@ -50,7 +50,7 @@ Link to remove partner organisation
     [Documentation]    INFUND-1039
     [Tags]    Collaboration
     # on the user interface.    All we can test is that the state is saved in cookie, so not lost on page reload.
-    When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
+    When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     And the applicant inputs details    1
     Then The user should see the element    jquery=li:nth-child(2) button:contains('Remove')
     When The user clicks the button/link    jquery=li:nth-child(2) button:contains('Remove')
@@ -59,7 +59,7 @@ Link to remove partner organisation
 Applicant inputs Organisation and other details should be autosaved (in cookie)
     [Documentation]    INFUND-1039
     [Tags]    Collaboration    HappyPath
-    When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
+    When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     And the applicant can enter Organisation name, Name and E-mail
     Then the applicant's inputs should be visible
 
@@ -102,7 +102,7 @@ Already invite email should not allowed
 
 Link to add multiple partner organisation
     [Tags]    Failing
-    When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
+    When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     And The user should see the element    css=li:nth-child(3)
     And The user clicks the button/link    jQuery=li:nth-child(3) button:contains("Remove")
     Then The user should not see the element    jQuery=li:nth-child(3) button:contains("Remove")
