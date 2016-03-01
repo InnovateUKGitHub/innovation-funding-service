@@ -2,6 +2,7 @@ package com.worth.ifs.form.service;
 
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.service.ResponseRestService;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,10 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
     @Override
     public List<String> save(Long userId, Long applicationId, Long formInputId, String value) {
         return responseRestService.saveQuestionResponse(userId, applicationId, formInputId, value).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public FileEntryResource createFile(Long formInputId, Long applicationId, Long processRoleId, String contentType, Long contentLength, String originalFileName, byte[] file) {
+        return responseRestService.createFileEntry(formInputId, applicationId, processRoleId, contentType, contentLength, originalFileName, file).getSuccessObjectOrThrowException();
     }
 }
