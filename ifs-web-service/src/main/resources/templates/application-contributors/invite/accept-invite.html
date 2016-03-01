@@ -11,10 +11,10 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
 
-    <div class="hgroup no-margin-top" style="padding-top: 20px;">
+    <div class="hgroup">
         <h1 class="heading-xlarge no-margin-bottom">Join an application</h1>
 
-        <p>You have been invited to join a new application into the competition '<span th:text="${invite.competitionName}"></span>'.<br/>
+        <p>You have been invited to join a new application into the competition '<span th:text="${invite.competitionName}" />'.<br/>
             Sign up to a new account, or sign in to an existing account to continue.</p>
     </div>
 
