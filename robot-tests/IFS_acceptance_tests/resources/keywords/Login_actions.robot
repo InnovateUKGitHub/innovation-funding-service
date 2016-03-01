@@ -45,11 +45,11 @@ Log into Shib
 
 TestTeardown User closes the browser
     Run keyword if    '${REMOTE_URL}' != ''    Report Sauce status    'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
-    Close all browsers
+    Run keyword and ignore error        Close all browsers
 
 User closes the browser
     Run keyword if    '${REMOTE_URL}' != ''    Report Sauce status    'IFS | ${SUITE_NAME}'    ${SUITE_STATUS}    ${SUITE_MESSAGE}    ${REMOTE_URL}
-    Close all browsers
+    Run keyword and ignore error        Close all browsers
 
 Logout as user
     Click Element    link=Logout
