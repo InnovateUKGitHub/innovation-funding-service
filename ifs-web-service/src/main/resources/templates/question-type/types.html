@@ -84,7 +84,7 @@
         <input type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'" class="inputfile"/>
         <label th:for="${formInput.getId()}" class="button-secondary extra-margin">+ Upload</label>
         <div>
-            <a href="#" class="uploaded-file" th:text="${responses?.get(formInput.getId())?.getValue()}">The-uploaded-file-example.pdf</a>
+            <a href="#" class="uploaded-file" th:if="${!#strings.isEmpty(responses?.get(formInput.getId())?.getValue())}" th:text="${responses?.get(formInput.getId())?.getValue()}">The-uploaded-file-example.pdf</a>
         </div>
     </div>
 

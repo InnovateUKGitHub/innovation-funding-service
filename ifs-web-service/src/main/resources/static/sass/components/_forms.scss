@@ -236,12 +236,6 @@ select{
 
 // ------- file upload -------- //
 
-.no-js .upload-section .inputfile + label{
-    visibility: hidden;
-    display: none;
-}
-
-
 .upload-section{
 	border: 1px solid $border-colour;
 	background: $grey-4;
@@ -252,6 +246,14 @@ select{
   @extend .warning-alert;
   background: none;
   padding-left: 16px;
+}
+.no-js .upload-section .inputfile + label{
+    visibility: hidden;
+    display: none;
+}
+.no-js .upload-section .inputfile {
+    margin:16px 0;
+    font-size:17px;
 }
 .js-enabled .upload-section .inputfile{
 	width: 0.1px;
