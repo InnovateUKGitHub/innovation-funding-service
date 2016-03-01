@@ -126,6 +126,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         addApplicationDetails(application, competition, userId, section, Optional.ofNullable(question.get().getId()), model, form, userApplicationRoles);
         addNavigation(question.get(), application.getId(), model);
         model.addAttribute("currentQuestion", question.get());
+        if(question.isPresent()) {
+            model.addAttribute("title", question.get().getShortName());
+        }
     }
 
     @ProfileExecution
@@ -270,7 +273,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         model.addAttribute("markedAsComplete", markedAsComplete);
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         organisationService.getUserOrganisation(applicationResource, user.getId());
-        financeHandler.getFinanceModelManager("").addCost(model, costItem, applicationId, user.getId(), questionId, type);
+        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, user.getId(), questionId, type);
         return String.format("question-type/types :: %s_row", type);
     }
 
@@ -285,7 +289,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private CostItem addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        return financeHandler.getFinanceFormHandler("").addCost(applicationId, user.getId(), questionId);
+        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+        return financeHandler.getFinanceFormHandler(organisationType).addCost(applicationId, user.getId(), questionId);
     }
 
     private BindingResult saveApplicationForm(ApplicationForm form,
@@ -310,7 +315,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         applicationService.save(application);
         markApplicationQuestions(application, user.getId(), request, response, errors);
 
-        financeHandler.getFinanceFormHandler("").update(request, user.getId(), applicationId);
+        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+        financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         return bindingResult;
@@ -480,13 +486,14 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) throws Exception {
         List<String> errors = new ArrayList<>();
+        String organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
             errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
-            financeHandler.getFinanceFormHandler("").updateFinancePosition(userId, applicationId, fieldName, value);
+            financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value);
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-            financeHandler.getFinanceFormHandler("").storeCost(userId, applicationId, fieldName, value);
+            financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value);
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             errors = formInputResponseService.save(userId, applicationId, formInputId, value);

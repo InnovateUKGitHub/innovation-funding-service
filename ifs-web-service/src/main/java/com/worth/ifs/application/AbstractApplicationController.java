@@ -316,6 +316,7 @@ public abstract class AbstractApplicationController {
             sectionQuestions.put(currentSection.get().getId(), questions);
 
             model.addAttribute("sectionQuestions", sectionQuestions);
+            model.addAttribute("title", currentSection.get().getName());
         }
     }
 
@@ -359,7 +360,8 @@ public abstract class AbstractApplicationController {
 
     protected void addOrganisationAndUserFinanceDetails(Long applicationId, Long userId,
                                                         Model model, ApplicationForm form) {
-        financeHandler.getFinanceModelManager("").addOrganisationFinanceDetails(model, applicationId, userId, form);
+        String organisationType = organisationService.getOrganisationType(userId, applicationId);
+        financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, userId, form);
         financeOverviewModelManager.addFinanceDetails(model, applicationId);
     }
 

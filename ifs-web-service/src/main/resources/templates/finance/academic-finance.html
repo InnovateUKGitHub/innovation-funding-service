@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-    <div th:fragment="academic_finance" th:remove="tag">
+
+    <div th:fragment="your_finance" th:remove="tag">
 
         <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}" />
         <p th:text="${question.description}" />
@@ -20,8 +21,13 @@
             <p>Enter the figures from the following fields on the Je-S form:</p>
 
             <div class="form-group">
-                <div th:include="question-type/form-elements :: form-textinput-half-width (id='academic_finance-tsbreference', field='academicFinance.reference' ,readonly=${readonly != null ? readonly : question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)})" th:remove="tag" />
+                <label class="form-label" for="tsb-ref">
+		    		<span class="form-label-bold">TSB reference
+		    			<span class="form-hint">This number is found at the top of your proposal output</span>
+		    		</span>
 
+                </label>
+                <input class="form-control" id="tsb-ref" type="text" />
             </div>
         </fieldset>
         <fieldset class="form-inline">

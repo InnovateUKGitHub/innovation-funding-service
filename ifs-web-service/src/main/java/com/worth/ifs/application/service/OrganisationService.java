@@ -24,4 +24,5 @@ public interface OrganisationService {
     public OrganisationSearchResult getCompanyHouseOrganisation(String organisationId);
     public List<OrganisationSearchResult> searchCompanyHouseOrganisations(String searchText);
     public OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, AddressType type);
+    public String getOrganisationType(Long userId, Long applicationId);
 }
