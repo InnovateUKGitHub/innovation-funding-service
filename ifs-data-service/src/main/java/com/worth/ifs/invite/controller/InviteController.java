@@ -48,7 +48,7 @@ public class InviteController {
         return inviteService.saveInvites(inviteResources).toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/acceptedInvite/{hash}/{userId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/acceptInvite/{hash}/{userId}", method = RequestMethod.PUT)
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return inviteService.acceptInvite(hash, userId).toPutResponse();
     }

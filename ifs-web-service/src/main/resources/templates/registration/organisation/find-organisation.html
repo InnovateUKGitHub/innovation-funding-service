@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Create an application'" th:remove="tag"/>
+</head>
+<body class="create-application-find-business">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"/>
+<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+
+
+    <h1 class="heading-large">Create your account</h1>
+    <p class="form-hint icon-info-small-blue">Organisation must be UK based to receive funding from innovate UK</p>
+
+    <h2 class="heading-medium" th:text="${organisationForm.organisationType.name} + ''">? organisation</h2>
+
+    <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
+        <span th:if="${searchEnabled}">
+            <fieldset>
+                <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? organisation</legend>
+
+                <div th:class="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-group error' : 'form-group'">
+                    <label class="form-label" for="org-name">
+                        <span class="form-label-bold"
+                              th:text="${searchLabel}">Find your ? organisation</span>
+                        <span class="form-hint" th:text="${searchHint}">Enter your organisation name</span>
+                        <span class="error-message" th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}"
+                              th:errors="*{organisationSearchName}"/>
+                    </label>
+                    <input class="form-control" id="org-name" th:field="*{organisationSearchName}" type="text" value=""/>
+                    <button type="submit" id="org-search" name="search-organisation" class="button">Search</button>
+                </div>
+
+                <ul id="org-results" class="results-list panel-indent" th:if="${organisationForm.organisationSearching}"
+                    th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
+                    <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">
+                        <h3>
+                            <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}" title="View organisation"
+                               th:text="${organisation.name}">
+                            </a>
+                        </h3>
+                        <span th:if="${organisationForm.isBusiness()}" th:remove="tag">
+                            <p class="meta crumbtrail" th:text="${organisation.extraAttributes.description}"></p>
+                            <p th:text="${organisation.location}"></p>
+                        </span>
+                    </li>
+                    <li th:unless="${organisationForm.organisationSearchResults.size()}">
+                        <p>Sorry we couldn't find any results.<br/> Are you sure you didn't make mistake?</p>
+                    </li>
+                </ul>
+            </fieldset>
+            <span th:if="${organisationForm.isBusiness()}" th:remove="tag">
+                <input type="hidden" th:field="*{manualEntry}" />
+                <button type="submit" class="buttonlink" name="not-in-company-house">Not on Companies House?</button>
+
+                <div th:if="${organisationForm.manualEntry}" th:remove="tag">
+                    <div th:include="create-application/fragments :: organisation-name" th:with="form=${organisationForm}" th:remove="tag"></div>
+                    <div th:include="create-application/fragments :: company-address-details" th:with="form=${organisationForm}" th:remove="tag"></div>
+                    <button type="submit button-large extra-margin" name="save-organisation-details" class="button">Continue</button>
+                </div>
+            </span>
+        </span>
+        <span th:unless="${searchEnabled}">
+            <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? organisation</legend>
+            <div th:include="create-application/fragments :: organisation-name" th:with="form=${organisationForm}" th:remove="tag"></div>
+            <div th:include="create-application/fragments :: company-address-details" th:with="form=${organisationForm}" th:remove="tag"></div>
+            <button type="submit button-large extra-margin" name="save-organisation-details" class="button">Continue</button>
+        </span>
+    </form>
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"/>
+<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+</body>
+</html>

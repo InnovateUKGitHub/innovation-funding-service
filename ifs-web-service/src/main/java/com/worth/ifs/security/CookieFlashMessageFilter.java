@@ -53,6 +53,15 @@ public class CookieFlashMessageFilter extends GenericFilterBean {
         response.addCookie(cookie);
     }
 
+    public void removeFlashMessage(HttpServletResponse response){
+        Cookie cookie = new Cookie(COOKIE_NAME, "");
+        cookie.setMaxAge(0); // in seconds
+        cookie.setSecure(cookieSecure);
+        cookie.setHttpOnly(cookieHttpOnly);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
@@ -67,7 +76,7 @@ public class CookieFlashMessageFilter extends GenericFilterBean {
         }
 
         // reset the flash message.
-        setFlashMessage(httpResponse, "");
+        removeFlashMessage(httpResponse);
 
         chain.doFilter(request, response);
     }
