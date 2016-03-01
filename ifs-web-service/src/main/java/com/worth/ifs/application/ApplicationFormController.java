@@ -8,16 +8,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.AjaxResult;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.service.CostService;
-import com.worth.ifs.application.finance.view.FinanceFormHandler;
+import com.worth.ifs.application.finance.view.DefaultFinanceFormHandler;
+import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.exception.AutosaveElementException;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -56,7 +54,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     private CostService costService;
 
     @Autowired
-    private FinanceFormHandler financeFormHandler;
+    private FinanceHandler financeHandler;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -109,7 +107,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-        addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
+        addOrganisationAndUserFinanceDetails(applicationId, user.getId(), model, form);
 
         addNavigation(section, applicationId, model);
 
@@ -270,7 +268,9 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
-        financeModelManager.addCost(model, costItem, applicationId, user.getId(), questionId, type);
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
+        organisationService.getUserOrganisation(applicationResource, user.getId());
+        financeHandler.getFinanceModelManager("").addCost(model, costItem, applicationId, user.getId(), questionId, type);
         return String.format("question-type/types :: %s_row", type);
     }
 
@@ -285,7 +285,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private CostItem addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        return financeFormHandler.addCost(applicationId, user.getId(), questionId);
+        return financeHandler.getFinanceFormHandler("").addCost(applicationId, user.getId(), questionId);
     }
 
     private BindingResult saveApplicationForm(ApplicationForm form,
@@ -306,14 +306,12 @@ public class ApplicationFormController extends AbstractApplicationController {
         Map<String, String[]> params = request.getParameterMap();
         params.forEach((key, value) -> log.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
 
-
         setApplicationDetails(application, form.getApplication());
         applicationService.save(application);
         markApplicationQuestions(application, user.getId(), request, response, errors);
 
-        if (financeFormHandler.handle(request, user.getId(), applicationId)) {
-            cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
-        }
+        financeHandler.getFinanceFormHandler("").update(request, user.getId(), applicationId);
+        cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         return bindingResult;
     }
@@ -375,7 +373,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             ApplicationResource application = applicationService.getById(applicationId);
             CompetitionResource competition = competitionService.getById(application.getCompetition());
             addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
-            addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
+            addOrganisationAndUserFinanceDetails(application.getId(), user.getId(), model, form);
             return "application-form";
         } else {
             return getRedirectUrl(request, applicationId);
@@ -482,12 +480,13 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) throws Exception {
         List<String> errors = new ArrayList<>();
+
         if (fieldName.startsWith("application.")) {
             errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
-            financeFormHandler.ajaxUpdateFinancePosition(userId, applicationId, fieldName, value);
+            financeHandler.getFinanceFormHandler("").updateFinancePosition(userId, applicationId, fieldName, value);
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-            financeFormHandler.storeCostField(userId, applicationId, fieldName, value);
+            financeHandler.getFinanceFormHandler("").storeCost(userId, applicationId, fieldName, value);
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             errors = formInputResponseService.save(userId, applicationId, formInputId, value);

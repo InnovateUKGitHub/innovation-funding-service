@@ -165,7 +165,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Test
     public void testAjaxAddCost() throws Exception {
         CostItem costItem = new Materials();
-        when(financeFormHandler.addCost(anyLong(), anyLong(), anyLong())).thenReturn(costItem);
+        when(defaultFinanceFormHandler.addCost(anyLong(), anyLong(), anyLong())).thenReturn(costItem);
         MvcResult result = mockMvc.perform(
                 get("/application/{applicationId}/form/add_cost/{questionId}", application.getId(), questionId)
         ).andReturn();

@@ -203,7 +203,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
         User user = new User(1L, "testname", null, null, null, null, null);
 
-
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
         MvcResult result = mockMvc.perform(post("/application/create/1").param("application_name", "     "))
@@ -219,7 +218,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
         application.setId(1L);
 
         User user = new User(1L, "testname", null, null, null, null, null);
-
 
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);

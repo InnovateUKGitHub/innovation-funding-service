@@ -15,7 +15,7 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.organisation.repository.AddressRepository;
+import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.transactional.AddressLookupService;
 import com.worth.ifs.address.transactional.AddressService;
 import com.worth.ifs.organisation.transactional.OrganisationService;

@@ -31,7 +31,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     ApplicationStatusRestService applicationStatusRestService;
 
     @Override
-    public ApplicationResource getById(Long applicationId, Boolean... hateoas) {
+    public ApplicationResource getById(Long applicationId) {
         if (applicationId == null) {
             return null;
         }

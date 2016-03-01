@@ -2,7 +2,10 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.finance.view.FinanceModelManager;
+import com.worth.ifs.application.finance.view.DefaultFinanceModelManager;
+import com.worth.ifs.application.finance.view.FinanceHandler;
+import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
+import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.model.UserApplicationRole;
@@ -76,7 +79,10 @@ public abstract class AbstractApplicationController {
     protected CompetitionService competitionService;
 
     @Autowired
-    protected FinanceModelManager financeModelManager;
+    protected FinanceOverviewModelManager financeOverviewModelManager;
+
+    @Autowired
+    protected FinanceHandler financeHandler;
 
     protected Long extractAssigneeProcessRoleIdFromAssignSubmit(HttpServletRequest request) {
         Long assigneeId = null;
@@ -351,13 +357,10 @@ public abstract class AbstractApplicationController {
         return application;
     }
 
-    protected ApplicationResource addOrganisationAndUserFinanceDetails(ApplicationResource application,
-                                                                             Long userId,
-                                                                             Model model,
-                                                                             ApplicationForm form) {
-        financeModelManager.addOrganisationFinanceDetails(model, application, userId, form);
-        financeModelManager.addFinanceDetails(model, application);
-        return application;
+    protected void addOrganisationAndUserFinanceDetails(Long applicationId, Long userId,
+                                                        Model model, ApplicationForm form) {
+        financeHandler.getFinanceModelManager("").addOrganisationFinanceDetails(model, applicationId, userId, form);
+        financeOverviewModelManager.addFinanceDetails(model, applicationId);
     }
 
     public TreeSet<Organisation> getApplicationOrganisations(List<ProcessRole> userApplicationRoles) {

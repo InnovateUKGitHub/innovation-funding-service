@@ -8,8 +8,8 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
-import com.worth.ifs.application.finance.view.FinanceFormHandler;
-import com.worth.ifs.application.finance.view.FinanceModelManager;
+import com.worth.ifs.application.finance.view.DefaultFinanceFormHandler;
+import com.worth.ifs.application.finance.view.DefaultFinanceModelManager;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.model.UserRole;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -133,9 +133,9 @@ public class BaseUnitTest {
     @Mock
     public TokenAuthenticationService tokenAuthenticationService;
     @Mock
-    public FinanceModelManager financeModelManager;
+    public DefaultFinanceModelManager defaultFinanceModelManager;
     @Mock
-    public FinanceFormHandler financeFormHandler;
+    public DefaultFinanceFormHandler defaultFinanceFormHandler;
 
     @Mock
     public Environment env;
