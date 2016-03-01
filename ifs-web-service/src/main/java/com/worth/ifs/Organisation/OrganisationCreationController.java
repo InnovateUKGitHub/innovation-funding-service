@@ -1,12 +1,14 @@
 package com.worth.ifs.organisation;
 
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.application.form.*;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.registration.RegistrationController;
 import com.worth.ifs.user.domain.AddressType;
@@ -48,6 +50,7 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 @Controller
 @RequestMapping("/organisation/create")
 public class OrganisationCreationController {
+    private final Log log = LogFactory.getLog(this.getClass());
     public static final String ORGANISATION_FORM = "organisationForm";
     public static final String CREATE_APPLICATION = "create-application";
     public static final String CONFIRM_SELECTED_ORGANISATION = "confirm-selected-organisation";
@@ -70,18 +73,21 @@ public class OrganisationCreationController {
     public static final String SELECT_ADDRESS = "select-address";
     public static final String ORGANISATION_NAME = "organisationName";
     public static final String MANUAL_ORGANISATION = "manual-organisation";
-    private final Log log = LogFactory.getLog(this.getClass());
+
     @Autowired
-    private OrganisationService organisationService;
+    protected InviteRestService inviteRestService;
     @Autowired
-    private OrganisationTypeRestService organisationTypeRestService;
+    protected InviteOrganisationRestService inviteOrganisationRestService;
     @Autowired
-    private OrganisationSearchRestService organisationSearchRestService;
-    private Validator validator;
+    protected AddressRestService addressRestService;
     @Autowired
-    private InviteRestService inviteRestService;
+    protected OrganisationService organisationService;
     @Autowired
-    private InviteOrganisationRestService inviteOrganisationRestService;
+    protected OrganisationTypeRestService organisationTypeRestService;
+    @Autowired
+    protected OrganisationSearchRestService organisationSearchRestService;
+
+    Validator validator;
 
     @Autowired
     public void setValidator(Validator validator) {
@@ -198,33 +204,6 @@ public class OrganisationCreationController {
         }
     }
 
-    public List<Address> searchPostcode(String postcodeInput) {
-        List<Address> addresses = new ArrayList<Address>();
-        addresses.add(new Address(
-                "Montrose House 1",
-                "Clayhill Park",
-                "",
-                "Cheshire West and Chester",
-                "England",
-                "Neston",
-                "po_bo",
-                "CH64 3RU",
-                "Cheshire"
-        ));
-        addresses.add(new Address(
-                "Montrose House",
-                "Clayhill Park",
-                "",
-                "Cheshire West and Chester",
-                "England",
-                "Neston",
-                "po_bo",
-                "CH64 3RU",
-                "Cheshire"
-        ));
-        return addresses;
-    }
-
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = SEARCH_ORGANISATION, method = RequestMethod.POST)
     public String searchOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                      HttpServletRequest request, HttpServletResponse response) {
@@ -319,7 +298,7 @@ public class OrganisationCreationController {
         }
     }
 
-    @RequestMapping(value = {"/" + SELECTED_ORGANISATION + "/{searchOrganisationId}/{postcode}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/selected-organisation/{searchOrganisationId}/{postcode}"}, method = RequestMethod.GET)
     public String amendOrganisationAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                            BindingResult bindingResult,
                                            Model model,
@@ -464,7 +443,7 @@ public class OrganisationCreationController {
     public String saveOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
-        Address address = organisationForm.getAddressForm().getSelectedPostcode();
+        AddressResource address = organisationForm.getAddressForm().getSelectedPostcode();
 
         OrganisationResource organisationResource = new OrganisationResource();
         organisationResource.setName(organisationForm.getOrganisationName());
@@ -517,6 +496,14 @@ public class OrganisationCreationController {
                     }
             );
         }
+    }
+
+
+    public List<AddressResource> searchPostcode(String postcodeInput) {
+        RestResult<List<AddressResource>>  addressLookupRestResult = addressRestService.doLookup(postcodeInput);
+        // TODO change way of handling
+        List<AddressResource> addressResourceList = addressLookupRestResult.getSuccessObject();
+        return addressResourceList;
     }
 
     public List<OrganisationSearchResult> searchCompanyHouse(String organisationName) {

@@ -1,4 +1,4 @@
-package com.worth.ifs.organisation.resource;
+package com.worth.ifs.address.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -11,27 +11,21 @@ public class AddressResource {
     private String addressLine1;
     private String addressLine2;
     private String addressLine3;
-    private String careOf;
-    private String country;
-    private String locality;
-    private String poBox;
-    private String postalCode;
-    private String region;
+    private String town;
+    private String county;
+    private String postcode;
     private List<Long> organisations = new ArrayList<>();
 
     public AddressResource() {
     }
 
-    public AddressResource(String addressLine1, String addressLine2, String addressLine3, String careOf, String country, String locality, String po_box, String postal_code, String region) {
+    public AddressResource(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode) {
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
         this.addressLine3 = addressLine3;
-        this.careOf = careOf;
-        this.country = country;
-        this.locality = locality;
-        this.poBox = po_box;
-        this.postalCode = postal_code;
-        this.region = region;
+        this.town = town;
+        this.county = county;
+        this.postcode = postcode;
     }
 
     public String getAddressLine1() {
@@ -58,60 +52,36 @@ public class AddressResource {
         this.addressLine3 = addressLine3;
     }
 
-    public String getCareOf() {
-        return careOf;
+    public String getTown() {
+        return town;
     }
 
-    public void setCareOf(String careOf) {
-        this.careOf = careOf;
+    public void setTown(String town) {
+        this.town = town;
     }
 
-    public String getCountry() {
-        return country;
+    public String getCounty() {
+        return county;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setCounty(String county) {
+        this.county = county;
     }
 
-    public String getLocality() {
-        return locality;
+    public String getPostcode() {
+        return postcode;
     }
 
-    public void setLocality(String locality) {
-        this.locality = locality;
-    }
-
-    public String getPoBox() {
-        return poBox;
-    }
-
-    public void setPoBox(String poBox) {
-        this.poBox = poBox;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
     }
 
     @JsonIgnore
     public String getCombinedString(){
         String[] location = new String[3];
-        location[0] = getPostalCode();
+        location[0] = getPostcode();
         location[1] = getAddressLine1();
-        location[2] = getLocality();
+        location[2] = getTown();
         return String.join(", ", location);
 
     }

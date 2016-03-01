@@ -15,37 +15,37 @@ ${APPLICATION_7_FORM}    ${SERVER}/application/7/form/question/9
 Guest user can't access overview page
     [Documentation]    INFUND-1683
     Given the guest user opens the browser
-    When User navigates to the page    ${APPLICATION_7_OVERVIEW_PAGE}
-    Then user should be redirected to the correct page    ${LOGIN_URL}
+    When the user navigates to the page    ${APPLICATION_7_OVERVIEW_PAGE}
+    Then the user should be redirected to the correct page    ${LOGIN_URL}
 
 Guest user can't be able to access application form
     [Documentation]    INFUND-1683
     Given the guest user opens the browser
-    When User navigates to the page    ${APPLICATION_7_FORM}
-    Then user should be redirected to the correct page    ${LOGIN_URL}
+    When the user navigates to the page    ${APPLICATION_7_FORM}
+    Then the user should be redirected to the correct page    ${LOGIN_URL}
 
 Applicant who is not team member can't access overview page
     [Documentation]    INFUND-1683
     Given guest user log-in    &{collaborator2_credentials}
-    When User navigates to the page    ${APPLICATION_7_OVERVIEW_PAGE}
-    Then the user receives a custom error message   ${403_error_message}
+    Then the user navigates to the page and gets a custom error message    ${APPLICATION_7_OVERVIEW_PAGE}   ${403_error_message}
+
 
 Applicant who is not team member can't access application form page
     [Documentation]    INFUND-1683
     Given Guest user log-in    &{collaborator2_credentials}
-    When User navigates to the page    ${APPLICATION_7_FORM}
-    Then the user receives a custom error message   ${403_error_message}
+    Then the user navigates to the page and gets a custom error message    ${APPLICATION_7_FORM}     ${403_error_message}
+
 
 Assessor can't access the overview page
     [Documentation]    INFUND-1683
     [Setup]    Guest user log-in    &{assessor_credentials}
-    When User navigates to the page    ${APPLICATION_7_OVERVIEW_PAGE}
-    Then the user receives a custom error message   ${403_error_message}
+    When the user navigates to the page and gets a custom error message    ${APPLICATION_7_OVERVIEW_PAGE}   ${403_error_message}
+
 
 Assessor can't access the application form
     [Documentation]    INFUND-1683
     [Setup]    Guest user log-in    &{assessor_credentials}
-    When User navigates to the page    ${APPLICATION_7_FORM}
-    Then the user receives a custom error message   ${403_error_message}
+    When the user navigates to the page and gets a custom error message    ${APPLICATION_7_FORM}    ${403_error_message}
+
 
 *** Keywords ***

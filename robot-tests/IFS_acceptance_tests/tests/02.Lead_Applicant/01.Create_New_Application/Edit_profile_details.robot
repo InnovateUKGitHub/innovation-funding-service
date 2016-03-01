@@ -12,65 +12,65 @@ Resource          ../../../resources/keywords/User_actions.robot
 View and edit profile link is visible in the Dashboard page
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]    HappyPath
-    Given user navigates to the page    ${DASHBOARD_URL}
-    Then user should see the element    link=View and edit your profile details
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    Then The user should see the element    link=View and edit your profile details
 
 View and edit profile link redirects to the Your profile page
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]    HappyPath
-    When user clicks the button/link    link=View and edit your profile details
-    Then user should see the element    link=Edit your details
+    When The user clicks the button/link    link=View and edit your profile details
+    Then The user should see the element    link=Edit your details
 
 Edit the profile and verify if the changes are saved
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]    HappyPath
-    Given user navigates to the page    ${DASHBOARD_URL}
-    When user clicks the button/link    link=View and edit your profile details
-    And user clicks the button/link    link=Edit your details
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    When The user clicks the button/link    link=View and edit your profile details
+    And The user clicks the button/link    link=Edit your details
     And the Applicant enters the profile details
-    Then user should see the text in the page    Chris
-    And user should see the text in the page    Brown
-    And user should see the text in the page    0123456789
+    Then The user should see the text in the page    Chris
+    And The user should see the text in the page    Brown
+    And The user should see the text in the page    0123456789
     And the Applicant can change their details back again
 
 Verify that the applicant's name has been changed on other parts of the site
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]    Pending
     # Pending due to bug INFUND-1967
-    Given user navigates to the page    ${APPLICATION_TEAM_URL}
-    Then user should see the text in the page    Chris Brown
+    Given the user navigates to the page    ${APPLICATION_TEAM_URL}
+    Then The user should see the text in the page    Chris Brown
     And other contributors should see the Applicant's updated name for the assignation options
     And the Applicant can change their details back again
 
 Display errors for invalid inputs of the First name
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
-    Given user navigates to the page    ${EDIT_PROFILE_URL}
+    Given the user navigates to the page    ${EDIT_PROFILE_URL}
     When the Applicant fills the First name    ${EMPTY}
-    Then user should see an error    Please enter a first name
+    Then The user should see an error    Please enter a first name
     And the Applicant fills the First name    testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
-    Then user should see an error    length must be between 2 and 70
+    Then The user should see an error    length must be between 2 and 70
     And the Applicant fills the First name    A
-    Then user should see an error    length must be between 2 and 70
+    Then The user should see an error    length must be between 2 and 70
 
 Display errors for invalid inputs of the Last name
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
-    Given user navigates to the page    ${EDIT_PROFILE_URL}
+    Given the user navigates to the page    ${EDIT_PROFILE_URL}
     When the Applicant fills the last name    ${EMPTY}
-    Then user should see an error    Please enter a last name
+    Then The user should see an error    Please enter a last name
     And the Applicant fills the last name    testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
-    Then user should see an error    length must be between 2 and 70
+    Then The user should see an error    length must be between 2 and 70
     And the Applicant fills the last name    B
-    Then user should see an error    length must be between 2 and 70
+    Then The user should see an error    length must be between 2 and 70
 
 Display errors for invalid inputs of the Phone field
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
-    Given user navigates to the page    ${EDIT_PROFILE_URL}
+    Given the user navigates to the page    ${EDIT_PROFILE_URL}
     When the Applicant fills the Phone field    ${EMPTY}
-    Then user should see an error    Please enter a phone number
+    Then The user should see an error    Please enter a phone number
     When the Applicant fills the Phone field    121212121212121212121
-    Then user should see an error    Input for your phone number has a maximum length of 20 characters
+    Then The user should see an error    Input for your phone number has a maximum length of 20 characters
     When the Applicant fills the Phone field    12
-    Then user should see an error    Input for your phone number has a maximum length of 20 characters
+    Then The user should see an error    Input for your phone number has a maximum length of 20 characters
 
 *** Keywords ***
 the Applicant enters the profile details
@@ -103,9 +103,9 @@ the Applicant fills the Phone field
 
 the Applicant can change their details back again
     Guest user log-in    &{lead_applicant_credentials}
-    user navigates to the page    ${DASHBOARD_URL}
-    user clicks the button/link    link=View and edit your profile details
-    user clicks the button/link    link=Edit your details
+    the user navigates to the page    ${DASHBOARD_URL}
+    The user clicks the button/link    link=View and edit your profile details
+    The user clicks the button/link    link=Edit your details
     the Applicant enters their old profile details
 
 the Applicant enters their old profile details
