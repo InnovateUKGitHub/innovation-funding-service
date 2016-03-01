@@ -1,25 +1,33 @@
 package com.worth.ifs.application.form;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.validation.Valid;
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 public class ContributorsForm implements Serializable {
+    private final Log log = LogFactory.getLog(getClass());
 
     private boolean triedToSave = false;
     private Long applicationId;
 
     @Valid
-    private OrganisationInviteFormList organisations;
+    private List<OrganisationInviteForm> organisations;
 
     public ContributorsForm() {
-        organisations = new OrganisationInviteFormList();
+        organisations = new LinkedList<>();
     }
 
-    public OrganisationInviteFormList getOrganisations() {
+    public List<OrganisationInviteForm> getOrganisations() {
         return organisations;
     }
 
-    public void setOrganisations(OrganisationInviteFormList organisations) {
+    public void setOrganisations(List<OrganisationInviteForm> organisations) {
         this.organisations = organisations;
     }
 
@@ -43,7 +51,38 @@ public class ContributorsForm implements Serializable {
         this.setTriedToSave(contributorsFormCookie.isTriedToSave());
 
         if(!contributorsFormCookie.getOrganisations().isEmpty()){
-            contributorsFormCookie.getOrganisations().merge(contributorsFormCookie.getOrganisations());
+            contributorsFormCookie.getOrganisations().forEach(oC -> mergeOrganisation(oC));
+        }
+    }
+
+    private void mergeOrganisation(OrganisationInviteForm oC) {
+        Optional<OrganisationInviteForm> existingOrgOptional = this.getOrganisations().stream()
+                .filter(o -> StringUtils.isNotEmpty(o.getOrganisationName()) && o.getOrganisationName().equals(oC.getOrganisationName()))
+                .findAny();
+
+        if(!existingOrgOptional.isPresent()){
+            this.getOrganisations().add(oC);
+        }else{
+            OrganisationInviteForm existingOrg = existingOrgOptional.get();
+            List<InviteeForm> existingInvites = existingOrg.getInvites();
+
+            oC.getInvites().forEach(iC -> mergeInvite(iC, existingInvites));
+
+            existingOrgOptional = this.getOrganisations().stream()
+                    .filter(o -> StringUtils.isNotEmpty(o.getOrganisationName()) && o.getOrganisationName().equals(oC.getOrganisationName()))
+                    .findAny();
+            if(existingOrgOptional.isPresent()){
+                log.debug("merge after " + existingOrgOptional.get().getOrganisationName() + " invite count: " + existingOrgOptional.get().getInvites().size());
+            }
+        }
+    }
+
+    private void mergeInvite(InviteeForm iC, List<InviteeForm> existingInvites) {
+        Optional<InviteeForm> cookieInviteFound = existingInvites.stream()
+                .filter(i -> StringUtils.isNotEmpty(iC.getEmail()) && i.getEmail().equals(iC.getEmail()) && StringUtils.isNotEmpty(iC.getPersonName()) && i.getPersonName().equals(iC.getPersonName()))
+                .findAny();
+        if(!cookieInviteFound.isPresent()){
+            existingInvites.add(iC);
         }
     }
 }
