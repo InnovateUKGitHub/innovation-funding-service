@@ -35,7 +35,14 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.resource.OrganisationTypeResource;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.OrganisationTypeRestService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mockito.ArgumentCaptor;
@@ -67,6 +74,7 @@ import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -75,6 +83,7 @@ import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputRe
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
@@ -83,6 +92,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 public class BaseUnitTest {
+
     public MockMvc mockMvc;
     public User loggedInUser;
     public User assessor;
@@ -127,9 +137,13 @@ public class BaseUnitTest {
     @Mock
     public OrganisationService organisationService;
     @Mock
+    public OrganisationTypeRestService organisationTypeRestService;
+    @Mock
     public SectionService sectionService;
     @Mock
     public CompetitionService competitionService;
+    @Mock
+    public InviteRestService inviteRestService;
     @Mock
     public TokenAuthenticationService tokenAuthenticationService;
     @Mock
@@ -180,6 +194,16 @@ public class BaseUnitTest {
     private Random randomGenerator;
     private FormInput formInput;
     private FormInputType formInputType;
+    public OrganisationTypeResource organisationTypeResource;
+    public InviteResource invite;
+    public InviteResource acceptedInvite;
+    public InviteResource existingUserInvite;
+
+    public static final String INVITE_HASH = "b157879c18511630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
+    public static final String INVITE_HASH_EXISTING_USER = "cccccccccc630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
+    public static final String INVALID_INVITE_HASH = "aaaaaaa7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
+    public static final String ACCEPTED_INVITE_HASH = "BBBBBBBBB7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
+
 
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -209,6 +233,28 @@ public class BaseUnitTest {
         questions = new HashMap<>();
         organisations = new ArrayList<>();
         randomGenerator = new Random();
+        
+    }
+
+    public void setupOrganisationTypes() {
+        ArrayList<OrganisationTypeResource> organisationTypes = new ArrayList<>();
+        organisationTypeResource = new OrganisationTypeResource(1L, "Business", null);
+        organisationTypes.add(organisationTypeResource);
+        OrganisationTypeResource research = new OrganisationTypeResource(2L, "Research", null);
+        organisationTypes.add(research);
+        organisationTypes.add(new OrganisationTypeResource(3L, "Public Sector", null));
+        organisationTypes.add(new OrganisationTypeResource(4L, "Charity", null));
+        organisationTypes.add(new OrganisationTypeResource(5L, "Academic", 2L));
+        organisationTypes.add(new OrganisationTypeResource(6L, "Research & technology organisation (RTO)", 2L));
+        organisationTypes.add(new OrganisationTypeResource(7L, "Catapult", 2L));
+        organisationTypes.add(new OrganisationTypeResource(8L, "Public sector research establishment", 2L));
+        organisationTypes.add(new OrganisationTypeResource(9L, "Research council institute", 2L));
+
+        when(organisationTypeRestService.getAll()).thenReturn(restSuccess(organisationTypes));
+        when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource(99L, "Unknown organisation type", null)));
+        when(organisationTypeRestService.findOne(1L)).thenReturn(restSuccess(organisationTypeResource));
+        when(organisationTypeRestService.findOne(2L)).thenReturn(restSuccess(research));
+
     }
 
     public void loginDefaultUser(){
@@ -586,6 +632,43 @@ public class BaseUnitTest {
         when(organisationService.getUserOrganisation(applications.get(2), assessor.getId())).thenReturn(Optional.of(organisations.get(0)));
 
         assessments.forEach(assessment -> when(assessmentRestService.getScore(assessment.getId())).thenReturn(restSuccess(new Score())));
+    }
+
+    public void setupInvites() {
+        when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
+
+
+        invite = new InviteResource();
+        invite.setStatus(InviteStatusConstants.SEND);
+        invite.setApplication(1L);
+        invite.setName("Some Invitee");
+        invite.setHash(INVITE_HASH);
+        String email = "invited@email.com";
+        invite.setEmail(email);
+        when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(restSuccess(invite));
+        when(userService.findUserByEmail(eq(email))).thenReturn(restSuccess(emptyList()));
+        when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(emptyList()));
+
+        acceptedInvite = new InviteResource();
+        acceptedInvite.setStatus(InviteStatusConstants.ACCEPTED);
+        acceptedInvite.setApplication(1L);
+        acceptedInvite.setName("Some Invitee");
+        acceptedInvite.setHash(ACCEPTED_INVITE_HASH);
+        acceptedInvite.setEmail(email);
+        when(inviteRestService.getInviteByHash(eq(ACCEPTED_INVITE_HASH))).thenReturn(restSuccess(acceptedInvite));
+
+        existingUserInvite = new InviteResource();
+        existingUserInvite.setStatus(InviteStatusConstants.SEND);
+        existingUserInvite.setApplication(1L);
+        existingUserInvite.setName("Some Invitee");
+        existingUserInvite.setHash(INVITE_HASH_EXISTING_USER);
+        existingUserInvite.setEmail("existing@email.com");
+        when(userService.findUserByEmail(eq("existing@email.com"))).thenReturn(restSuccess(asList(new UserResource())));
+        when(inviteRestService.getInviteByHash(eq(INVITE_HASH_EXISTING_USER))).thenReturn(restSuccess(existingUserInvite));
+
+        when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
+        when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
+
     }
 
     public ExceptionHandlerExceptionResolver createExceptionResolver() {

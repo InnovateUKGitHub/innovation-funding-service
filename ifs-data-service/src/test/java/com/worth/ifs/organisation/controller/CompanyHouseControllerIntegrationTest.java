@@ -39,12 +39,11 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
         assertNotNull(company);
         assertEquals(COMPANY_NAME, company.getName());
         assertEquals(COMPANY_ID, company.getOrganisationSearchId());
-//        assertEquals("ltd", company.getType());
         assertThat("MONTROSE HOUSE", IsEqualIgnoringCase.equalToIgnoringCase(company.getOrganisationAddress().getAddressLine1()));
         assertThat("Clayhill Park", IsEqualIgnoringCase.equalToIgnoringCase(company.getOrganisationAddress().getAddressLine2()));
-        assertThat("NESTON", IsEqualIgnoringCase.equalToIgnoringCase(company.getOrganisationAddress().getLocality()));
-        assertThat("Cheshire", IsEqualIgnoringCase.equalToIgnoringCase(company.getOrganisationAddress().getRegion()));
-        assertThat("CH64 3RU", IsEqualIgnoringCase.equalToIgnoringCase(company.getOrganisationAddress().getPostalCode()));
+        assertThat("NESTON", IsEqualIgnoringCase.equalToIgnoringCase(company.getOrganisationAddress().getTown()));
+        assertThat("Cheshire", IsEqualIgnoringCase.equalToIgnoringCase(company.getOrganisationAddress().getCounty()));
+        assertThat("CH64 3RU", IsEqualIgnoringCase.equalToIgnoringCase(company.getOrganisationAddress().getPostcode()));
     }
 
     @Test
@@ -56,12 +55,11 @@ public class CompanyHouseControllerIntegrationTest extends BaseControllerIntegra
         assertNotNull(company);
         assertEquals(COMPANY_NAME, company.getName());
         assertEquals(COMPANY_ID, company.getOrganisationSearchId());
-//        assertEquals("ltd", company.getType());
         assertEquals("Montrose House", company.getOrganisationAddress().getAddressLine1());
         assertEquals("Clayhill Park", company.getOrganisationAddress().getAddressLine2());
-        assertEquals("Neston", company.getOrganisationAddress().getLocality());
-        assertEquals("Cheshire", company.getOrganisationAddress().getRegion());
-        assertEquals("CH64 3RU", company.getOrganisationAddress().getPostalCode());
+        assertEquals("Neston", company.getOrganisationAddress().getTown());
+        assertEquals("Cheshire", company.getOrganisationAddress().getCounty());
+        assertEquals("CH64 3RU", company.getOrganisationAddress().getPostcode());
     }
 
     @Test

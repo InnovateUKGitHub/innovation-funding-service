@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.AjaxResult;
+import com.worth.ifs.util.AjaxResult;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
@@ -188,13 +188,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             log.info("default redirect: ");
             return "redirect:/application/" + applicationId;
         }
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/upload")
-    public String provideUploadInfo(@PathVariable("applicationId") final Long applicationId,
-                                    @PathVariable("questionId") final Long questionId,
-                                    HttpServletRequest request) {
-        return getRedirectUrl(request, applicationId);
     }
 
     @ProfileExecution

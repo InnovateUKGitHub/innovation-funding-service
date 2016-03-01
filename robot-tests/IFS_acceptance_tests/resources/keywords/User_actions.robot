@@ -7,6 +7,11 @@ The user navigates to the page
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You are not authorised to perform the requested action
 
+The user navigates to the page and gets a custom error message
+    [Arguments]    ${TARGET_URL}    ${CUSTOM_ERROR_MESSAGE}
+    Go To    ${TARGET_URL}
+    Page Should Contain    ${CUSTOM_ERROR_MESSAGE}
+
 The user is on the page
     [Arguments]    ${TARGET_URL}
     Location Should Be    ${TARGET_URL}
@@ -57,39 +62,31 @@ Create new application
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You are not authorised to perform the requested action
 
-User should be redirected to the correct page
+The user should be redirected to the correct page
     [Arguments]    ${URL}
     Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
 
-User navigates to the page
-    [Arguments]    ${PAGE_URL}
-    go to    ${PAGE_URL}
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You are not authorised to perform the requested action
-
 The user receives a custom error message
     [Arguments]    ${custom_error_message}
     Page Should Contain    ${custom_error_message}
 
-User enters text to a text field
+The user enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
     input text    ${TEXT_FIELD}    ${TEXT_INPUT}
 
-user clicks the button/link
+The user clicks the button/link
     [Arguments]    ${BUTTON}
     click element    ${BUTTON}
 
-User should see the text in the page
+The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
     wait until page contains    ${VISIBLE_TEXT}
 
-User should see an error
+The user should see an error
     [Arguments]    ${ERROR_TEXT}
     Page should contain element    css=.error-message
     Page should contain    ${ERROR_TEXT}
@@ -99,26 +96,26 @@ the guest user enters the log in credentials
     Input Text    id=id_email    ${USER_NAME}
     Input Password    id=id_password    ${PASSWORD}
 
-User should see the element
+The user should see the element
     [Arguments]    ${ELEMENT}
     Wait Until Element Is Visible    ${ELEMENT}
 
-User should not see the element
+The user should not see the element
     [Arguments]    ${NOT_VISIBLE_ELEMENT}
     sleep    500ms
     Element Should Not Be Visible    ${NOT_VISIBLE_ELEMENT}
 
-User should not see the text in the page
+The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
     sleep    500ms
     Page should not contain    ${NOT_VISIBLE_TEXT}
 
-User should get an error page
+The user should get an error page
     [Arguments]    ${ERROR_TEXT}
     Page should contain element    css=.error
     Page should contain    ${ERROR_TEXT}
 
-User should see the notification
+The user should see the notification
     [Arguments]    ${MESSAGE}
     Wait Until Element Is Visible    css=div.event-alert
     Wait Until Page Contains    ${MESSAGE}
@@ -126,9 +123,12 @@ User should see the notification
 Applicant assigns the question to the collaborator
     [Arguments]    ${TEXT_AREA}    ${TEXT}    ${NAME}
     focus    ${TEXT_AREA}
-    user enters text to a text field    ${TEXT_AREA}    ${TEXT}
-    When user clicks the button/link    css=.assign-button
-    Then user clicks the button/link    jQuery=button:contains("${NAME}")
+    The user enters text to a text field    ${TEXT_AREA}    ${TEXT}
+    When The user clicks the button/link    css=.assign-button
+    Then The user clicks the button/link    jQuery=button:contains("${NAME}")
 
-user goes back to the previous page
+The user goes back to the previous page
     Go Back
+
+browser validations have been disabled
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');

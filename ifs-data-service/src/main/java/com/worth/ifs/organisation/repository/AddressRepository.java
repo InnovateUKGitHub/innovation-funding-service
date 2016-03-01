@@ -1,6 +1,6 @@
 package com.worth.ifs.organisation.repository;
 
-import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.address.domain.Address;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**

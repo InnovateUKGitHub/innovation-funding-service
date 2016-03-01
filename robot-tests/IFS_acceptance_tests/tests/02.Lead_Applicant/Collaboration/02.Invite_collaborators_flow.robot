@@ -29,59 +29,59 @@ ${YOUR_FINANCES_URL}    ${SERVER}/application/1/form/section/7
 Valid invitation submit
     [Documentation]    INFUND-901
     [Tags]    HappyPath
-    Given user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
+    Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     When the applicant enters valid inputs
-    Then user should see the text in the page    Application overview
-    And user should see the notification    Invites send
+    Then The user should see the text in the page    Application overview
+    And The user should see the notification    Invites send
 
 Lead applicant can access the Application team page(Link in the overview page)
     [Documentation]    INFUND-928
     [Tags]    HappyPath
-    Given user navigates to the page    ${APPLICATION_OVERVIEW_URL}
-    And user should see the text in the page    View team members and add collaborators
-    When user clicks the button/link    link=View team members and add collaborators
-    Then user should see the text in the page    Application team
-    And user should see the text in the page    View and manage your partner companies and individuals contributing to the application. If a partner is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email
+    Given the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
+    And The user should see the text in the page    View team members and add collaborators
+    When The user clicks the button/link    link=View team members and add collaborators
+    Then The user should see the text in the page    Application team
+    And The user should see the text in the page    View and manage your contributors and partners in the application.
     And Lead Applicant should have the correct status
 
 Status of the invited people(Application team page)
     [Documentation]    INFUND-929
     [Tags]    HappyPath
-    Given user navigates to the page    ${APPLICATION_TEAM_PAGE}
+    Given the user navigates to the page    ${APPLICATION_TEAM_PAGE}
     Then The status of the Invited people should be correct in the application team page
 
 Status of the invited people(Manage contributors page)
     [Documentation]    INFUND-928
     [Tags]    HappyPath
-    Given user navigates to the page    ${APPLICATION_TEAM_URL}
-    When user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then user should see the text in the page    Manage Contributors
+    Given the user navigates to the page    ${APPLICATION_TEAM_URL}
+    When The user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    Then The user should see the text in the page    Manage Contributors
     And the status of the people should be correct in the Manage contributors page
 
 The Lead Applicant can add new collaborators
     [Documentation]    INFUND-928
     [Tags]    HappyPath
-    Given user navigates to the page    ${APPLICATION_TEAM_URL}
-    When user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then user should see the text in the page    Manage Contributors
-    And user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
+    Given the user navigates to the page    ${APPLICATION_TEAM_URL}
+    When The user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    Then The user should see the text in the page    Manage Contributors
+    And The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
     When the user adds new collaborator
     And the applicant can enter Organisation name, Name and E-mail
-    And user clicks the button/link    jquery=button:contains("Save Changes")
-    Then user should be redirected to the correct page    ${APPLICATION_TEAM_URL}
+    And The user clicks the button/link    jquery=button:contains("Save Changes")
+    Then the user should be redirected to the correct page    ${APPLICATION_TEAM_URL}
 
 Verify the invited collaborators are not editable
     [Documentation]    INFUND-929
     [Tags]
-    Given user navigates to the page    ${APPLICATION_TEAM_URL}
-    When user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then user should see the text in the page    Manage Contributors
+    Given the user navigates to the page    ${APPLICATION_TEAM_URL}
+    When The user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    Then The user should see the text in the page    Manage Contributors
     And the invited collaborators are not editable
 
 Pending collaborators should not be available in the assign list
     [Documentation]    INFUND-928
     [Tags]
-    Given user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
+    Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then the applicant should not be able to assign the question to the users that still pending the invite    tester
 
 *** Keywords ***
@@ -89,7 +89,7 @@ the applicant enters valid inputs
     click element    jquery=button:contains('Add person')
     Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    tester
     Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    test@example.com
-    Click Element    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
+    Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[2].organisationName    Fannie May
     Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
     Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(2) input    collaborator2@fanniemay.com
@@ -116,7 +116,7 @@ the user adds new collaborator
     sleep    1s
 
 the applicant can enter Organisation name, Name and E-mail
-    Click Element    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
+    Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[3].organisationName    Z Ltd
     Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(1) input    Elvis Furcic
     Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(2) input    elvis.furcic@gmail.com
