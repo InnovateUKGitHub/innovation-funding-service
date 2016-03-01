@@ -23,7 +23,7 @@ The user logs in and visits the create account page
     [Tags]    Create account    Back button
     Given Guest user log-in    steve.smith@empire.com    test
     When the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
-    Then The user should see the text in the page    Your Profile
+    Then the user should see the text in the page    Your Profile
 
 *** Keywords ***
 the user presses the back button

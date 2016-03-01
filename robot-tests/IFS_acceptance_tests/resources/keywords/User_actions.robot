@@ -124,8 +124,8 @@ Applicant assigns the question to the collaborator
     [Arguments]    ${TEXT_AREA}    ${TEXT}    ${NAME}
     focus    ${TEXT_AREA}
     The user enters text to a text field    ${TEXT_AREA}    ${TEXT}
-    When The user clicks the button/link    css=.assign-button
-    Then The user clicks the button/link    jQuery=button:contains("${NAME}")
+    When the user clicks the button/link    css=.assign-button
+    Then the user clicks the button/link    jQuery=button:contains("${NAME}")
 
 The user goes back to the previous page
     Go Back
