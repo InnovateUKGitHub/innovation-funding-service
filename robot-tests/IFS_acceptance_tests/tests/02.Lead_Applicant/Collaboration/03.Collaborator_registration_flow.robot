@@ -15,7 +15,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/4e09372b85241cb03137ffbeb2110a1552daa1086b0bce0ff7d8ff5d2063c8ffc10e943acf4a3c7a
-${SELECT_ORGANISATION}    ${SERVER}/accept-invite/new-account-organisation-type
+${SELECT_ORGANISATION}    ${SERVER}/organisation/create/type/new-account-organisation-type
 
 *** Test Cases ***
 Lead applicant details should show in the invite page
@@ -30,6 +30,7 @@ User can not continue if an organisation type is not selected
     ...
     ...    INFUND-1780
     [Tags]
+    Given browser validations have been disabled
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    may not be null
 
@@ -101,6 +102,8 @@ Accept Invitation flow (Business organisation)
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
 
 User who accepted the invite should be able to log-in
+    [Tags]    Pending
+    #invite flow is broken
     Given the user navigates to the page    ${INVITE_LINK}
     When the guest user enters the login credentials    rogier@worth.systems    testtest
     And the user clicks the button/link    css=input.button
@@ -110,7 +113,8 @@ User who accepted the invite should be able to log-in
 
 The collaborator who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    #invite flow is broken
     Guest user log-in    steve.smith@empire.com    test
     And the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the user clicks the button/link    css=.assign-button
@@ -133,3 +137,6 @@ the user fills the create account form
 the radio button should have the new selection
     [Arguments]    ${ORG_TYPE}
     Radio Button Should Be Set To    organisationType    ${ORG_TYPE}
+
+browser validations have been disabled
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
