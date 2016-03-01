@@ -77,6 +77,6 @@ public interface ApplicationService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationResource> findByProcessRole(Long id);
 
-    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
+    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<ObjectNode> applicationReadyForSubmit(final Long id);
 }

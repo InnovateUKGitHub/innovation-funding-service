@@ -1,13 +1,5 @@
 package com.worth.ifs.invite.transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import com.google.common.collect.Sets;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.error.Error;
@@ -24,18 +16,13 @@ import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
-import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
-import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.notifications.resource.NotificationSource;
-import com.worth.ifs.notifications.resource.NotificationTarget;
-import com.worth.ifs.notifications.resource.SystemNotificationSource;
+import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,10 +35,12 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import static com.google.common.collect.Lists.newArrayList;
-import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -63,7 +52,6 @@ import static java.util.Collections.singletonList;
 public class InviteServiceImpl extends BaseTransactionalService implements InviteService {
 
     private static final Log LOG = LogFactory.getLog(InviteServiceImpl.class);
-
     enum Notifications {
         INVITE_COLLABORATOR
     }
