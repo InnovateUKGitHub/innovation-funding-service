@@ -13,24 +13,24 @@ Search using valid company name
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house    HappyPath
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When The user enters text to a text field    id=org-name    innovate
-    And The user clicks the button/link    id=org-search
+    When the user enters text to a text field    id=org-name    innovate
+    And the user clicks the button/link    id=org-search
     Then the valid company names matching the search criteria should be displayed
 
 Search using invalid company name
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When The user enters text to a text field    id=org-name    innoavte
-    And The user clicks the button/link    id=org-search
-    Then The user should see the text in the page    Sorry we couldn't find any results
+    When the user enters text to a text field    id=org-name    innoavte
+    And the user clicks the button/link    id=org-search
+    Then the user should see the text in the page    Sorry we couldn't find any results
 
 Search using valid registration number
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house    HappyPath
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When The user enters text to a text field    id=org-name    05493105
-    And The user clicks the button/link    id=org-search
+    When the user enters text to a text field    id=org-name    05493105
+    And the user clicks the button/link    id=org-search
     Then the valid company names matching the search criteria should be displayed
 
 search using invalid registration number
@@ -46,8 +46,8 @@ Search for invalid characters
     [Tags]    Applicant    Company house    Pending
     # Pending INFUND-1493
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When The user enters text to a text field    id=org-name    {}{}
-    And The user clicks the button/link    id=org-search
+    When the user enters text to a text field    id=org-name    {}{}
+    And the user clicks the button/link    id=org-search
     Then the applicant should get a validation error for the company house
 
 *** Keywords ***

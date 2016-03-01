@@ -15,21 +15,21 @@ Log-out
     [Tags]    Guest    HappyPath
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the Applicant is logged-in
-    When The user clicks the button/link    link=Logout
+    When the user clicks the button/link    link=Logout
     Then the user should be redirected to the correct page    ${LOGIN_URL}
 
 Invalid Login
     [Tags]    Guest
     Given the user is not logged-in
     When the guest user enters the log in credentials    steve.smith@empire.com    testtest
-    And The user clicks the button/link    css=input.button
+    And the user clicks the button/link    css=input.button
     Then the guest user should get an error message
 
 Valid login as Applicant
     [Tags]    Guest    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    steve.smith@empire.com    test
-    And The user clicks the button/link    css=input.button
+    And the user clicks the button/link    css=input.button
     Then the Applicant is logged-in
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
     [Teardown]    Logout as user
@@ -38,7 +38,7 @@ Valid login as Collaborator
     [Tags]    Guest    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${collaborator1_credentials["email"]}    ${collaborator1_credentials["password"]}
-    And The user clicks the button/link    css=input.button
+    And the user clicks the button/link    css=input.button
     Then the Applicant is logged-in
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
     [Teardown]    Logout as user
@@ -48,7 +48,7 @@ Valid login as Assessor
     [Tags]    Assessor    Guest    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
-    And The user clicks the button/link    css=input.button
+    And the user clicks the button/link    css=input.button
     Then the Applicant is logged-in
     And the user should be redirected to the correct page    ${assessor_dashboard_url}
     And the user should be logged-in as an Assessor
