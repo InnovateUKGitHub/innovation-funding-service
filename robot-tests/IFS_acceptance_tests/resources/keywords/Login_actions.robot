@@ -44,12 +44,22 @@ Log into Shib
     Location Should Be    ${LOGIN_URL}
 
 TestTeardown User closes the browser
-    Run keyword if    '${REMOTE_URL}' != ''    Report Sauce status    'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
-    Close all browsers
+    Run keyword if      '${REMOTE_URL}' != ''        Get Sauce Labs Test Report
+    Close any open browsers
 
 User closes the browser
-    Run keyword if    '${REMOTE_URL}' != ''    Report Sauce status    'IFS | ${SUITE_NAME}'    ${SUITE_STATUS}    ${SUITE_MESSAGE}    ${REMOTE_URL}
-    Close all browsers
+    Run keyword if    '${REMOTE_URL}' != ''          Get Sauce Labs Suite Report
+    Close any open browsers
 
 Logout as user
     Click Element    link=Logout
+
+Get Sauce Labs Test Report
+    Run keyword and ignore error     Report Sauce status    'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
+
+
+Get Sauce Labs Suite Report
+    Run keyword and ignore error     Report Sauce status    'IFS | ${SUITE_NAME}'    ${SUITE_STATUS}    ${SUITE_MESSAGE}    ${REMOTE_URL}
+
+Close any open browsers
+    Run keyword and ignore error        Close all browsers

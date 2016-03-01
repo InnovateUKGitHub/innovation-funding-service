@@ -1,5 +1,7 @@
-package com.worth.ifs.application.form;
+package com.worth.ifs.registration.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.form.AddressForm;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
@@ -58,7 +60,19 @@ public class OrganisationCreationForm implements Serializable {
 
     public void setOrganisationType(OrganisationTypeResource organisationType) {
         this.organisationType = organisationType;
-        this.organisationTypeEnum = OrganisationTypeEnum.getFromId(organisationType.getId());
+        if(organisationType != null){
+            this.organisationTypeEnum = OrganisationTypeEnum.getFromId(organisationType.getId());
+        }else{
+            this.organisationTypeEnum = null;
+        }
+    }
+
+    @JsonIgnore
+    public boolean isBusiness(){
+        if(this.organisationTypeEnum!=null){
+            return OrganisationTypeEnum.BUSINESS.equals(this.organisationTypeEnum);
+        }
+        return false;
     }
 
     public String getOrganisationName() {

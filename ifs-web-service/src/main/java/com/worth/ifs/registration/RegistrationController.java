@@ -11,6 +11,7 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.login.LoginController;
+import com.worth.ifs.registration.form.RegistrationForm;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -149,16 +150,10 @@ public class RegistrationController {
 
             if (createUserResult.isSuccess()) {
                 loginUser(createUserResult.getSuccessObject(), response);
-                if(linkToInvite(request, response, createUserResult.getSuccessObject())){
-                    // user is invitee, no need to initialize application.
-                    destination = "redirect:/applicant/dashboard/";
-                }else{
-                    destination = "redirect:/application/create/initialize-application/";
-                }
+                destination = getPostRegisterRedirect(request, response, createUserResult);
             } else {
                 addEnvelopeErrorsToBindingResultErrors(createUserResult.getFailure().getErrors(), bindingResult);
             }
-
         } else {
             if (!processOrganisation(request, model)) {
                 destination = "redirect:/login";
@@ -168,17 +163,22 @@ public class RegistrationController {
         return destination;
     }
 
-    private boolean linkToInvite(HttpServletRequest request, HttpServletResponse response, UserResource userResource) {
+    private String getPostRegisterRedirect(HttpServletRequest request, HttpServletResponse response, RestResult<UserResource> createUserResult) {
+        if(acceptInvite(request, response, createUserResult.getSuccessObject())){
+            // user is invitee, no need to initialize application.
+            return "redirect:/applicant/dashboard/";
+        }else{
+            return "redirect:/application/create/initialize-application/";
+        }
+    }
+
+    private boolean acceptInvite(HttpServletRequest request, HttpServletResponse response, UserResource userResource) {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
             RestResult<InviteResource> restResult = inviteRestService.getInviteByHash(inviteHash).andOnSuccessReturn(i -> {
-                log.debug("Found invite, link to created user now.");
-                i.setStatus(InviteStatusConstants.ACCEPTED);
-                HttpStatus statusCode = inviteRestService.acceptedInvite(inviteHash, userResource.getId()).getStatusCode();
-                log.debug("Found invite, changed status " + statusCode.toString());
+                HttpStatus statusCode = inviteRestService.acceptInvite(inviteHash, userResource.getId()).getStatusCode();
                 return i;
             });
-
             CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
             return restResult.isSuccess();
         }

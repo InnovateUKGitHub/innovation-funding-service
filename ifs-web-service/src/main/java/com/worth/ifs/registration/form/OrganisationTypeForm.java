@@ -1,4 +1,4 @@
-package com.worth.ifs.application.form;
+package com.worth.ifs.registration.form;
 
 import javax.validation.constraints.NotNull;
 
