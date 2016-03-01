@@ -155,7 +155,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         bindingResult = saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
 
         Map<String, String[]> params = request.getParameterMap();
-        if (params.containsKey("assign_question")) {
+        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             assignQuestion(applicationId, request);
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
@@ -375,7 +375,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         bindingResult = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
         bindingResult.getAllErrors().forEach((e) -> log.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
-        if (params.containsKey("assign_question")) {
+        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             assignQuestion(applicationId, request);
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
@@ -418,6 +418,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long processRoleId, Long applicationId) {
+        final Map<String, String[]> params = request.getParameterMap();
+
         Map<Long, List<String>> errorMap = new HashMap<>();
         questions.stream()
                 .forEach(question -> question.getFormInputs()
