@@ -32,8 +32,8 @@
     	<meta charset="utf-8">
     	<title>Innovation Funding Service - Sign in</title>
 
-      <link rel="stylesheet" type="text/css" href="/css/fonts.css" >
-      <link rel="stylesheet" type="text/css" href="/css/screen.css" >
+      <link rel="stylesheet" type="text/css" href="//#springMessageText('ifs.webserver.resources.url', '#')/css/fonts.css" >
+      <link rel="stylesheet" type="text/css" href="//#springMessageText('ifs.webserver.resources.url', '#')/css/screen.css" >
     </head>
   	<body>
 
@@ -44,7 +44,7 @@
                 <div>
                     <div class="header-logo">
                         <a href="https://www.gov.uk" title="Go to the GOV.UK homepage" id="logo" class="content">
-                            <img src="/images/gov.uk_logotype_crown.png" width="35" height="31" alt="GOV.UK">
+                            <img src="//#springMessageText('ifs.webserver.resources.url', '#')/images/gov.uk_logotype_crown.png" width="35" height="31" alt="GOV.UK">
                             GOV.UK
                         </a>
                     </div>

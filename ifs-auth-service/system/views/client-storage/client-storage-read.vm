@@ -19,7 +19,7 @@
     <head>
         <meta charset="utf-8" />
         <title>$title - $titleSuffix</title>
-        <link rel="stylesheet" type="text/css" href="$request.getContextPath()/css/main.css">
+        <link rel="stylesheet" type="text/css" href="//#springMessageText('ifs.webserver.resources.url', '#')/css/main.css">
         <script>
         <!--
         #include( "client-storage/local-storage-read.js" )
