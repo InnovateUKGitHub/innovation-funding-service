@@ -42,6 +42,10 @@
                                th:text="${organisation.name}">
                             </a>
                         </h3>
+                        <span th:if="${organisationForm.isBusiness()}" th:remove="tag">
+                            <p class="meta crumbtrail" th:text="${organisation.extraAttributes.description}"></p>
+                            <p th:text="${organisation.location}"></p>
+                        </span>
                     </li>
                     <li th:unless="${organisationForm.organisationSearchResults.size()}">
                         <p>Sorry we couldn't find any results.<br/> Are you sure you didn't make mistake?</p>
@@ -63,6 +67,7 @@
             <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? organisation</legend>
             <div th:include="create-application/fragments :: organisation-name" th:with="form=${organisationForm}" th:remove="tag"></div>
             <div th:include="create-application/fragments :: company-address-details" th:with="form=${organisationForm}" th:remove="tag"></div>
+            <button type="submit button-large extra-margin" name="save-organisation-details" class="button">Continue</button>
         </span>
     </form>
 
