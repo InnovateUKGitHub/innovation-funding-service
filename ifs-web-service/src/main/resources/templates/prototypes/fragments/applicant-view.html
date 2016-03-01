@@ -32,7 +32,7 @@
 <!-- ===================Assessor Page title============================== -->
 <div th:fragment="prototype-applicant-page-title(subtitle, heading)">
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <p class="subtitle no-margin">Innovate UK, Technology inspired - Application number: 1234-5432</p>
+        <p class="subtitle no-margin">1234-5432: Innovate UK, Technology inspired</p>
         <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
     </div>
 </div>
@@ -426,6 +426,17 @@
 <!-- ========Applicant view - readonly application view======= -->
 <div th:fragment="prototype-readonly-application">
     <div th:include="prototypes/fragments/applicant-view :: prototype-application-details-panel" th:remove="tag" />
+    
+
+    <div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'}" th:remove="tag">
+
+        <div class="upload-section">
+            <h3 class="heading-small no-margin">Assessor feedback</h3>
+            <p>Upload the assessor feedback page</p>
+            <label for="file" class="button-secondary extra-margin">+ Upload</label>
+        </div>
+
+    </div>
 
     <h2 class="heading-medium">Details</h2>
 

@@ -18,15 +18,17 @@
     </div>
 
     <div class="my-applications">
+        <h1 class="heading-large">Your dashboard</h1>
+
         <section class="in-progress">
-            <h1 class="heading-large">In Progress</h1>
+            <h2 class="heading-medium">Application in progress</h2>
             <ul class="boxed-list">
                 <li th:each="application : ${applicationsInProcess}" th:classappend="${applicationsAssigned?.contains(application.id) ? 'assigned-to-me' : '' }">
                     <div class="grid-row" th:unless="${applicationStatuses.get(application.getId()).getName() == 'submitted'}" >
                         <div class="column-half">
-                            <h2 class="heading-medium">
+                            <h3 class="heading-medium">
                                 <a th:href="@{/application/{id}(id=${application.getId()})}" th:text="((${application.name} == '') ? ${competitions.get(application.getId()).getName()}: ${application.name})"/>
-                            </h2>
+                            </h3>
                             <p class="form-hint">Application number: <span th:text="${#numbers.formatInteger(application.id,8)}"></span></p>
                             <p class="form-hint">Current progress: </p>
                             <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${applicationProgress.get(application.getId())}" th:remove="tag" />
@@ -38,9 +40,9 @@
                     </div>
                     <div class="grid-row" th:if="${applicationStatuses.get(application.getId()).getName() == 'submitted'}" >
                         <div class="column-two-thirds">
-                            <h2 class="heading-medium">
+                            <h3 class="heading-medium">
                                 <a th:href="@{/application/{id}/track(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
-                            </h2>
+                            </h3>
                             <p class="form-hint">Application number: <span th:text="${#numbers.formatInteger(application.id,8)}"></span></p>
                             <strong class="greentext">Application submitted</strong>
                         </div>
@@ -55,18 +57,18 @@
         </section>
 
         <section class="previous-applications">
-            <h1 class="heading-large">Previous Applications</h1>
+            <h2 class="heading-medium">Previous Applications</h2>
             <ul class="boxed-list">
                 <li th:each="application : ${applicationsFinished}">
                     <div class="grid-row">
                         <div class="column-assessment-details">
-                            <h2 class="heading-medium" th:text="${application.name}"></h2>
+                            <h3 class="heading-medium" th:text="${application.name}"></h3>
                             <p class="form-hint">Application number: <span th:text="${#numbers.formatInteger(application.id,8)}"></span></p>
                         </div>
                         <div class="column-assessment-status navigation-right">
                             <div th:class="((${applicationStatuses.get(application.getId()).name} == 'approved') ? 'yes' : 'no') + ' application-status assessed'">
-                                <h3 th:if="${applicationStatuses.get(application.getId()).name == 'rejected'}" th:text="Unsuccessful" th:class="results-status"></h3>
-                                <h3 th:if="${applicationStatuses.get(application.getId()).name == 'approved'}" th:text="Successful" th:class="results-status"></h3>
+                                <p th:if="${applicationStatuses.get(application.getId()).name == 'rejected'}" th:text="Unsuccessful" th:class="results-status"></p>
+                                <p th:if="${applicationStatuses.get(application.getId()).name == 'approved'}" th:text="Successful" th:class="results-status"></p>
                             </div>
                         </div>
                     </div>
@@ -74,7 +76,7 @@
             </ul>
         </section>
         <section class="your-profile">
-            <h1 class="heading-large">Your Profile</h1>
+            <h2 class="heading-medium">Your Profile</h2>
             <ul class="list-bullet">
           		<li>
                 <a href="/profile/view">View and edit your profile details</a>

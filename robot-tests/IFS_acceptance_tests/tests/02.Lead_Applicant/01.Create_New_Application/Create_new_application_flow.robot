@@ -19,34 +19,34 @@ Create application flow for non registered users CH route
     [Documentation]    INNFUND-669
     [Tags]    Create application    HappyPath
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    When The user clicks the button/link    jQuery=.column-third .button:contains("Sign in to apply")
-    And The user clicks the button/link    jQuery=.button:contains("Create")
-    and The user enters text to a text field    id=org-name    Innovate
-    And The user clicks the button/link    id=org-search
-    And The user clicks the button/link    LINK=INNOVATE LTD
-    and The user enters text to a text field    css=#postcode-check    2234
-    And The user clicks the button/link    id=postcode-lookup
-    And The user clicks the button/link    css=#select-address-block > button
-    And The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And The user clicks the button/link    jQuery=.button:contains("Save")
-    and the user enters the details and clicks the create account
-    And The user clicks the button/link    jQuery=.button:contains("Begin application")
-    Then The user should see the text in the page    Application overview
-    And The user should see the text in the page    Technology Inspired - Application number 0000
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user enters text to a text field    id=org-name    Innovate
+    And the user clicks the button/link    id=org-search
+    And the user clicks the button/link    LINK=INNOVATE LTD
+    And the user enters text to a text field    css=#postcode-check    2234
+    And the user clicks the button/link    id=postcode-lookup
+    And the user clicks the button/link    css=#select-address-block > button
+    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user enters the details and clicks the create account
+    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    Then the user should see the text in the page    Application overview
+    And the user should see the text in the page    Technology Inspired
 
 Create application flow for non registered users non CH route
     [Documentation]    INNFUND-669
     [Tags]    Create application    HappyPath       Pending
     # Pending due to INFUND-2019
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    When The user clicks the button/link    jQuery=.column-third .button:contains("Sign in to apply")
-    And The user clicks the button/link    jQuery=.button:contains("Create")
-    and the user clicks the Not on company house link
-    And The user clicks the button/link    jQuery=.button:contains("Save")
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user clicks the Not on company house link
+    And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details for the non CH
-    And The user clicks the button/link    JQuery=.button:contains("Begin application")
-    Then The user should see the text in the page    Application overview
-    And The user should see the text in the page    Technology Inspired - Application number 0000
+    And the user clicks the button/link    JQuery=.button:contains("Begin application")
+    Then the user should see the text in the page    Application overview
+    And the user should see the text in the page    Technology Inspired
 
 Verify the name of the new application
     [Documentation]    INFUND-669
@@ -54,16 +54,16 @@ Verify the name of the new application
     ...    INFUND-1163
     [Tags]    Applicant    New application    HappyPath
     When the guest user enters the log in credentials    robot@test.com    testtest
-    And The user clicks the button/link    css=input.button
-    and the user edits the competition title
-    Then The user should see the text in the page    test title - Application number 0000
+    And the user clicks the button/link    css=input.button
+    And the user edits the competition title
+    Then the user should see the text in the page    test title
     And the progress indicator should show 0
-    And The user clicks the button/link    link=View team members and add collaborators
-    and The user should see the text in the page    Application team
-    and The user should see the text in the page    View and manage your contributors and partners
+    And the user clicks the button/link    link=View team members and add collaborators
+    And the user should see the text in the page    Application team
+    And the user should see the text in the page    View and manage your contributors and partners
     And the new application should be visible in the dashboard page
-    And The user clicks the button/link    link=test title
-    and The user should see the text in the page    test title
+    And the user clicks the button/link    link=test title
+    And the user should see the text in the page    test title
 
 *** Keywords ***
 the new application should be visible in the dashboard page
