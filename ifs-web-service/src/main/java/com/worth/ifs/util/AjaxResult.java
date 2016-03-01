@@ -1,4 +1,4 @@
-package com.worth.ifs;
+package com.worth.ifs.util;
 
 import org.springframework.http.HttpStatus;
 

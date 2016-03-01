@@ -30,7 +30,7 @@
     <h2 class="heading-large" th:if="${organisationParentType}" th:text="${organisationParentTypeTitle} + ''"></h2>
     <h2 class="heading-medium" th:if="${organisationParentType} and ${organisationParentType.name() == 'RESEARCH'}">Please select your type or research organisation</h2>
 
-    <form th:object="${organisationTypeForm}" th:action="@{/accept-invite/new-account-organisation-type/}" method="POST">
+    <form th:object="${organisationTypeForm}" th:action="@{/organisation/create/type/new-account-organisation-type/}" method="POST">
         <fieldset>
             <legend class="visuallyhidden">Please select your organisation type</legend>
             <div th:class="${#fields.hasErrors('*{organisationType}')} ? 'form-block error' : 'form-block'">

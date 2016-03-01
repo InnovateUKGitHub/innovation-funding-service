@@ -35,9 +35,13 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -70,6 +74,7 @@ import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -190,6 +195,15 @@ public class BaseUnitTest {
     private FormInput formInput;
     private FormInputType formInputType;
     public OrganisationTypeResource organisationTypeResource;
+    public InviteResource invite;
+    public InviteResource acceptedInvite;
+    public InviteResource existingUserInvite;
+
+    public static final String INVITE_HASH = "b157879c18511630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
+    public static final String INVITE_HASH_EXISTING_USER = "cccccccccc630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
+    public static final String INVALID_INVITE_HASH = "aaaaaaa7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
+    public static final String ACCEPTED_INVITE_HASH = "BBBBBBBBB7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
+
 
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -622,6 +636,39 @@ public class BaseUnitTest {
 
     public void setupInvites() {
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
+
+
+        invite = new InviteResource();
+        invite.setStatus(InviteStatusConstants.SEND);
+        invite.setApplication(1L);
+        invite.setName("Some Invitee");
+        invite.setHash(INVITE_HASH);
+        String email = "invited@email.com";
+        invite.setEmail(email);
+        when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(restSuccess(invite));
+        when(userService.findUserByEmail(eq(email))).thenReturn(restSuccess(emptyList()));
+        when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(emptyList()));
+
+        acceptedInvite = new InviteResource();
+        acceptedInvite.setStatus(InviteStatusConstants.ACCEPTED);
+        acceptedInvite.setApplication(1L);
+        acceptedInvite.setName("Some Invitee");
+        acceptedInvite.setHash(ACCEPTED_INVITE_HASH);
+        acceptedInvite.setEmail(email);
+        when(inviteRestService.getInviteByHash(eq(ACCEPTED_INVITE_HASH))).thenReturn(restSuccess(acceptedInvite));
+
+        existingUserInvite = new InviteResource();
+        existingUserInvite.setStatus(InviteStatusConstants.SEND);
+        existingUserInvite.setApplication(1L);
+        existingUserInvite.setName("Some Invitee");
+        existingUserInvite.setHash(INVITE_HASH_EXISTING_USER);
+        existingUserInvite.setEmail("existing@email.com");
+        when(userService.findUserByEmail(eq("existing@email.com"))).thenReturn(restSuccess(asList(new UserResource())));
+        when(inviteRestService.getInviteByHash(eq(INVITE_HASH_EXISTING_USER))).thenReturn(restSuccess(existingUserInvite));
+
+        when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
+        when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
+
     }
 
     public ExceptionHandlerExceptionResolver createExceptionResolver() {
