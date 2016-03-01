@@ -101,7 +101,7 @@ Already invite email should not allowed
     Then The user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
 
 Link to add multiple partner organisation
-    [Tags]    Failing
+    [Tags]
     When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     And The user should see the element    css=li:nth-child(3)
     And The user clicks the button/link    jQuery=li:nth-child(3) button:contains("Remove")
