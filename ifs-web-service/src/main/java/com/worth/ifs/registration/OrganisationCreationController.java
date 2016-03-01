@@ -1,16 +1,17 @@
-package com.worth.ifs.organisation;
+package com.worth.ifs.registration;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.AcceptInviteController;
-import com.worth.ifs.application.form.*;
+import com.worth.ifs.application.form.AddressForm;
+import com.worth.ifs.application.form.Form;
+import com.worth.ifs.registration.form.OrganisationCreationForm;
+import com.worth.ifs.registration.form.OrganisationTypeForm;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
-import com.worth.ifs.registration.RegistrationController;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -22,6 +23,8 @@ import com.worth.ifs.util.JsonUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +40,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 
@@ -52,7 +56,7 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 public class OrganisationCreationController {
     private final Log log = LogFactory.getLog(this.getClass());
     public static final String ORGANISATION_FORM = "organisationForm";
-    public static final String CREATE_APPLICATION = "create-application";
+    public static final String TEMPLATE_PATH = "registration/organisation";
     public static final String CONFIRM_SELECTED_ORGANISATION = "confirm-selected-organisation";
     public static final String ADD_ADDRESS_DETAILS = "add-address-details";
     public static final String CREATE_ORGANISATION_TYPE = "create-organisation-type";
@@ -86,6 +90,8 @@ public class OrganisationCreationController {
     protected OrganisationTypeRestService organisationTypeRestService;
     @Autowired
     protected OrganisationSearchRestService organisationSearchRestService;
+    @Autowired
+    MessageSource messageSource;
 
     Validator validator;
 
@@ -98,7 +104,7 @@ public class OrganisationCreationController {
     @RequestMapping("/" + CREATE_ORGANISATION_TYPE)
     public String createAccountOrganisationType(@ModelAttribute Form form, Model model) {
         model.addAttribute("form", form);
-        return CREATE_APPLICATION + "/" + CREATE_ORGANISATION_TYPE;
+        return TEMPLATE_PATH + "/" + CREATE_ORGANISATION_TYPE;
     }
 
     @RequestMapping(value = {"/" + FIND_ORGANISATION, "/" + FIND_ORGANISATION + "/**"}, method = RequestMethod.GET)
@@ -114,13 +120,28 @@ public class OrganisationCreationController {
 
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        if (OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
-            return CREATE_APPLICATION + "/" + FIND_BUSINESS;
-        } else if(organisationForm.getOrganisationTypeEnum().isUseOrganisationSearch()) {
-            return CREATE_APPLICATION + "/" + FIND_ORGANISATION;
+
+        model.addAttribute("searchLabel",getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel",  request.getLocale()));
+        model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
+
+        if(OrganisationTypeEnum.BUSINESS.equals(organisationForm.getOrganisationTypeEnum()) ||
+            OrganisationTypeEnum.ACADEMIC.equals(organisationForm.getOrganisationTypeEnum())
+        ){
+            model.addAttribute("searchEnabled", true);
         }else{
-            return CREATE_APPLICATION + "/" + MANUAL_ORGANISATION;
+            model.addAttribute("searchEnabled", false);
         }
+        return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
+    }
+
+    private String getMessageByOrganisationType(OrganisationTypeEnum orgTypeEnum, String textKey, Locale locale) {
+        String searchLabel;
+        try{
+            searchLabel = messageSource.getMessage(String.format("com.worth.ifs.registration.%s.%s", orgTypeEnum.toString(), textKey), null, locale);
+        }catch(NoSuchMessageException e){
+            searchLabel = messageSource.getMessage(String.format("com.worth.ifs.registration.DEFAULT.%s", textKey), null, locale);
+        }
+        return searchLabel;
     }
 
     private OrganisationCreationForm getFormDataFromCookie(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request) {
@@ -173,8 +194,11 @@ public class OrganisationCreationController {
     private OrganisationTypeResource addOrganisationType(OrganisationCreationForm organisationForm, HttpServletRequest request) {
         String organisationTypeJson = CookieUtil.getCookieValue(request, AcceptInviteController.ORGANISATION_TYPE);
         OrganisationTypeForm organisationTypeForm = JsonUtil.getObjectFromJson(organisationTypeJson, OrganisationTypeForm.class);
-        OrganisationTypeResource organisationType = organisationTypeRestService.findOne(organisationTypeForm.getOrganisationType()).getSuccessObject();
-        organisationForm.setOrganisationType(organisationType);
+        OrganisationTypeResource organisationType = null;
+        if(organisationTypeForm.getOrganisationType()!=null){
+            organisationType = organisationTypeRestService.findOne(organisationTypeForm.getOrganisationType()).getSuccessObject();
+            organisationForm.setOrganisationType(organisationType);
+        }
         return organisationType;
     }
 
@@ -252,9 +276,9 @@ public class OrganisationCreationController {
 
 
         if (OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
-            return CREATE_APPLICATION + "/" + CONFIRM_SELECTED_ORGANISATION;
+            return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
         } else {
-            return CREATE_APPLICATION + "/" + ADD_ADDRESS_DETAILS;
+            return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         }
     }
 
@@ -292,9 +316,9 @@ public class OrganisationCreationController {
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         if (OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
-            return CREATE_APPLICATION + "/" + CONFIRM_SELECTED_ORGANISATION;
+            return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
         } else {
-            return CREATE_APPLICATION + "/" + ADD_ADDRESS_DETAILS;
+            return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         }
     }
 
@@ -317,9 +341,9 @@ public class OrganisationCreationController {
         model.addAttribute(ORGANISATION_FORM, organisationForm);
 
         if (OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
-            return CREATE_APPLICATION + "/" + CONFIRM_SELECTED_ORGANISATION;
+            return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
         } else {
-            return CREATE_APPLICATION + "/" + ADD_ADDRESS_DETAILS;
+            return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         }
     }
 
@@ -365,7 +389,6 @@ public class OrganisationCreationController {
                 return String.format("redirect:" + BASE_URL + "/%s", redirectPart);
             }
         }
-
     }
 
     @RequestMapping(value = {"/" + SELECTED_ORGANISATION + "/**", "/" + FIND_ORGANISATION + "**"}, params = SELECT_ADDRESS, method = RequestMethod.POST)
@@ -426,7 +449,7 @@ public class OrganisationCreationController {
         OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
         addSelectedOrganisation(organisationForm, model);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        return CREATE_APPLICATION + "/" + CONFIRM_ORGANISATION;
+        return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION;
     }
 
     @RequestMapping(value = "/" + FIND_BUSINESS, method = RequestMethod.GET)
@@ -504,24 +527,5 @@ public class OrganisationCreationController {
         // TODO change way of handling
         List<AddressResource> addressResourceList = addressLookupRestResult.getSuccessObject();
         return addressResourceList;
-    }
-
-    public List<OrganisationSearchResult> searchCompanyHouse(String organisationName) {
-        return organisationService.searchCompanyHouseOrganisations(organisationName);
-    }
-
-    public void searchPostcodes(CreateApplicationForm form) {
-        if (StringUtils.hasText(form.getAddressForm().getPostcodeInput())) {
-            form.getAddressForm().setPostcodeOptions(searchPostcode(form.getAddressForm().getPostcodeInput()));
-        }
-    }
-
-    public void selectPostcodeAddress(CreateApplicationForm form) {
-        if (form.getAddressForm().getPostcodeOptions() != null && form.getAddressForm().getPostcodeOptions().size() != 0) {
-            int indexInt = Integer.parseInt(form.getAddressForm().getSelectedPostcodeIndex());
-            if (form.getAddressForm().getPostcodeOptions().get(indexInt) != null) {
-                form.getAddressForm().setSelectedPostcode(form.getAddressForm().getPostcodeOptions().get(indexInt));
-            }
-        }
     }
 }

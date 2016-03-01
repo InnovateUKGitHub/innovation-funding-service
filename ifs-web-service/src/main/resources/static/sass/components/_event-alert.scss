@@ -36,12 +36,15 @@
 
 
 .event-alert {
+    position:fixed;
+    @include ie-lte(10) {
+      position:relative; //because ie9 and lower don't have css animations we have the content at the top of the page all the time.
+    }
+
     background-color: $grey-3;
     display: block;
     font-size: 19px;
     left: 0;
-    position: fixed;
-    position: relative\9; /* hack for ie9 and below */
     text-align: center;
     top: 0;
     width: 100%;

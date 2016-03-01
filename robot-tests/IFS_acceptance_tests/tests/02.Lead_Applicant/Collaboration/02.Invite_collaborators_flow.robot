@@ -41,7 +41,7 @@ Lead applicant can access the Application team page(Link in the overview page)
     And The user should see the text in the page    View team members and add collaborators
     When The user clicks the button/link    link=View team members and add collaborators
     Then The user should see the text in the page    Application team
-    And The user should see the text in the page    View and manage your partner companies and individuals contributing to the application. If a partner is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email
+    And The user should see the text in the page    View and manage your contributors and partners in the application.
     And Lead Applicant should have the correct status
 
 Status of the invited people(Application team page)
@@ -89,7 +89,7 @@ the applicant enters valid inputs
     click element    jquery=button:contains('Add person')
     Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    tester
     Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    test@example.com
-    Click Element    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
+    Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[2].organisationName    Fannie May
     Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
     Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(2) input    collaborator2@fanniemay.com
@@ -116,7 +116,7 @@ the user adds new collaborator
     sleep    1s
 
 the applicant can enter Organisation name, Name and E-mail
-    Click Element    jquery=li:nth-last-child(1) button:contains('Add partner organisation')
+    Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[3].organisationName    Z Ltd
     Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(1) input    Elvis Furcic
     Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(2) input    elvis.furcic@gmail.com

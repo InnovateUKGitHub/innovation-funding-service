@@ -15,7 +15,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/4e09372b85241cb03137ffbeb2110a1552daa1086b0bce0ff7d8ff5d2063c8ffc10e943acf4a3c7a
-${SELECT_ORGANISATION}    ${SERVER}/accept-invite/new-account-organisation-type
+${SELECT_ORGANISATION}    ${SERVER}/organisation/create/type/new-account-organisation-type
 
 *** Test Cases ***
 Lead applicant details should show in the invite page
@@ -24,12 +24,15 @@ Lead applicant details should show in the invite page
     When the user clicks the button/link    jQuery=.button:contains("Create")
     Then the user should see the text in the page    Lead organisation: Empire Ltd
     And the user should see the text in the page    Lead applicant: Steve Smith
+    And the user should see the element    link=Technology Inspired
+    And the user should see the text in the page    Worth Internet Systems
 
 User can not continue if an organisation type is not selected
     [Documentation]    INFUND-1005
     ...
     ...    INFUND-1780
     [Tags]
+    Given browser validations have been disabled
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    may not be null
 
@@ -43,6 +46,7 @@ The type of organisation navigates to the correct page according to the selectio
     [Documentation]    INFUND-1780
     ...
     ...    INFUND-1231
+    [Tags]    HappyPath
     When user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Find your organisation on Companies House
@@ -64,6 +68,7 @@ The type of organisation navigates to the correct page according to the selectio
 
 Academic organisations search (empty, invalid & valid inputs)
     [Documentation]    INFUND-1231
+    [Tags]    HappyPath
     and user selects the radio button    organisationType    2
     and the user clicks the button/link    jQuery=.button:contains("Continue")
     and user selects the radio button    organisationType    5
@@ -73,7 +78,7 @@ Academic organisations search (empty, invalid & valid inputs)
     When the user enters text to a text field    id=org-name    abcd
     and the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    Sorry we couldn't find any results.
-    When the user enters text to a text field    id=org-name    Liverpool
+    When the user enters text to a text field    id=org-name    Liv
     and the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    University of Liverpool
     when the user clicks the button/link    link= University of Liverpool
@@ -101,6 +106,7 @@ Accept Invitation flow (Business organisation)
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
 
 User who accepted the invite should be able to log-in
+    [Tags]
     Given the user navigates to the page    ${INVITE_LINK}
     When the guest user enters the login credentials    rogier@worth.systems    testtest
     And the user clicks the button/link    css=input.button

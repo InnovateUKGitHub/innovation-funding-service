@@ -1,4 +1,4 @@
-package com.worth.ifs.registration;
+package com.worth.ifs.registration.form;
 
 import com.worth.ifs.validator.constraints.FieldMatch;
 import org.hibernate.validator.constraints.Email;

@@ -37,7 +37,7 @@ public final class CookieUtil {
             cookie.setSecure(cookieSecure);
             cookie.setHttpOnly(cookieHttpOnly);
             cookie.setPath("/");
-            cookie.setMaxAge(1);
+            cookie.setMaxAge(0);
             response.addCookie(cookie);
         }
     }

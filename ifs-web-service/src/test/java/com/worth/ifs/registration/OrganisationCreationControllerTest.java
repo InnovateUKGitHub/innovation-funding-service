@@ -1,19 +1,16 @@
-package com.worth.ifs.organisation;
+package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
-import com.worth.ifs.application.form.OrganisationCreationForm;
+import com.worth.ifs.registration.form.OrganisationCreationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.exception.ErrorController;
-import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.service.OrganisationSearchRestService;
-import com.worth.ifs.user.service.OrganisationTypeRestService;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -32,7 +29,6 @@ import org.springframework.validation.Validator;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
-
 import java.util.ArrayList;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -52,8 +48,6 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
 
     @Mock
     private Validator validator;
-    @Mock
-    private OrganisationTypeRestService organisationTypeRestService;
     @Mock
     private OrganisationSearchRestService organisationSearchRestService;
 
@@ -77,6 +71,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
         mockMvc = MockMvcBuilders.standaloneSetup(organisationCreationController, new ErrorController())
                 .setViewResolvers(viewResolver())
                 .build();
+        this.setupOrganisationTypes();
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
         address = new AddressResource("line1", "line2", "line3", "locality", "region", "postcode");
@@ -86,10 +81,6 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
         when(organisationService.save(any(Organisation.class))).thenReturn(organisationResource);
         when(organisationService.save(any(OrganisationResource.class))).thenReturn(organisationResource);
         when(applicationService.createApplication(anyLong(), anyLong(), anyString())).thenReturn(applicationResource);
-        OrganisationTypeResource organisationTypeResource = new OrganisationTypeResource();
-        organisationTypeResource.setId(1L);
-        organisationTypeResource.setName("Business");
-        when(organisationTypeRestService.findOne(1L)).thenReturn(RestResult.restSuccess(organisationTypeResource));
         when(organisationSearchRestService.getOrganisation(organisationTypeResource.getId(), COMPANY_ID)).thenReturn(RestResult.restSuccess(organisationSearchResult));
         when(organisationSearchRestService.searchOrganisation(anyLong(), anyString())).thenReturn(RestResult.restSuccess(new ArrayList<>()));
         when(addressRestService.validatePostcode("CH64 3RU")).thenReturn(RestResult.restSuccess(true));
@@ -102,7 +93,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
     public void testCreateAccountOrganisationType() throws Exception {
         mockMvc.perform(get("/organisation/create/create-organisation-type"))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("create-application/create-organisation-type"));
+                .andExpect(view().name("registration/organisation/create-organisation-type"));
     }
 
 
@@ -122,7 +113,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .cookie(organisationTypeBusiness)
                 .cookie(cookies))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("create-application/find-business"))
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/find-organisation"))
                 .andExpect(MockMvcResultMatchers.model().attribute("organisationForm", Matchers.hasProperty("manualEntry", Matchers.equalTo(true))))
                 .andReturn();
     }
@@ -158,7 +149,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                     .cookie(organisationTypeBusiness)
                     .cookie(organisationForm))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("create-application/find-business"))
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/find-organisation"))
                 .andExpect(MockMvcResultMatchers.model().attribute("organisationForm", Matchers.hasProperty("manualEntry", Matchers.equalTo(false))))
                 .andReturn();
     }
@@ -178,7 +169,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .cookie(organisationTypeBusiness)
         )
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("create-application/find-business"))
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/find-organisation"))
                 .andExpect(MockMvcResultMatchers.model().attribute("organisationForm", Matchers.hasProperty("manualEntry", Matchers.equalTo(false))))
                 .andReturn();
     }
@@ -202,7 +193,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .cookie(organisationForm)
         )
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("create-application/find-business"))
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/find-organisation"))
                 .andExpect(MockMvcResultMatchers.model().attribute("organisationForm", Matchers.hasProperty("manualEntry", Matchers.equalTo(false))))
                 .andReturn();
     }
@@ -226,7 +217,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .cookie(cookie)
         )
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("create-application/find-business"))
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/find-organisation"))
                 .andExpect(MockMvcResultMatchers.model().attribute("organisationForm", Matchers.hasProperty("organisationSearching", Matchers.equalTo(true))))
                 .andReturn();
     }
@@ -263,7 +254,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .cookie(cookie)
         )
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("create-application/find-business"))
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/find-organisation"))
 //                .andExpect(model().attributeHasFieldErrorCode("companyHouseForm", "organisationName", "NotEmpty"))
                 .andReturn();
 
@@ -300,7 +291,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .cookie(organisationTypeBusiness)
         )
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("create-application/find-business"))
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/find-organisation"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("organisationForm"));
     }
 
@@ -312,7 +303,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .cookie(organisationForm)
         )
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("create-application/confirm-organisation"))
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/confirm-organisation"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("organisationForm"));
     }
 
@@ -349,7 +340,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .cookie(organisationForm)
         )
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("create-application/confirm-selected-organisation"))
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/confirm-selected-organisation"))
                 .andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("organisationForm"))
                 .andReturn();
     }
@@ -374,7 +365,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
 
         )
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("create-application/confirm-selected-organisation"))
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/confirm-selected-organisation"))
                 .andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("organisationForm"))
                 .andReturn();
     }
@@ -437,6 +428,6 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("selectedOrganisation"))
                 .andExpect(MockMvcResultMatchers.model().attribute("selectedOrganisation", Matchers.hasProperty("name", Matchers.equalTo(COMPANY_NAME))))
-                .andExpect(MockMvcResultMatchers.view().name("create-application/confirm-organisation"));
+                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/confirm-organisation"));
     }
 }

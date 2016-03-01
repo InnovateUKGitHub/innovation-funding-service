@@ -5,6 +5,8 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.invite.transactional.InviteService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/invite")
 public class InviteController {
-
+    private static final Log LOG = LogFactory.getLog(InviteController.class);
     @Autowired
     private InviteService inviteService;
 
@@ -48,7 +50,7 @@ public class InviteController {
         return inviteService.saveInvites(inviteResources).toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/acceptedInvite/{hash}/{userId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/acceptInvite/{hash}/{userId}", method = RequestMethod.PUT)
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return inviteService.acceptInvite(hash, userId).toPutResponse();
     }
