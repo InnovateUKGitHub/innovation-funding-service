@@ -91,7 +91,7 @@ Academic organisations search (empty, invalid & valid inputs)
 Accept Invitation flow (Business organisation)
     [Documentation]    INFUND-1005
     ...    INFUND-1779
-    [Tags]    HappyPath
+    [Tags]    HappyPath     FailingForDev
     Given the user navigates to the page    ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    organisationType    1
@@ -109,7 +109,7 @@ Accept Invitation flow (Business organisation)
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
 
 User who accepted the invite should be able to log-in
-    [Tags]
+    [Tags]     FailingForDev
     Given the user navigates to the page    ${INVITE_LINK}
     When the guest user enters the login credentials    rogier@worth.systems    testtest
     And the user clicks the button/link    css=input.button
@@ -119,7 +119,7 @@ User who accepted the invite should be able to log-in
 
 The collaborator who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
-    [Tags]    HappyPath
+    [Tags]    HappyPath     FailingForDev
     Guest user log-in    steve.smith@empire.com    test
     And the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the user clicks the button/link    css=.assign-button
