@@ -38,7 +38,8 @@ Create application flow for non registered users CH route
 
 Create application flow for non registered users non CH route
     [Documentation]    INNFUND-669
-    [Tags]    Create application    HappyPath
+    [Tags]    Create application    HappyPath   Failing
+    # failing because of auto login not working shib
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -54,7 +55,8 @@ Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
-    [Tags]    Applicant    New application    HappyPath     FailingForDev
+    [Tags]    Applicant    New application    HappyPath     Failing
+    # failing because of user not created as part of another test which is failing due to auto login not being functional
     When the guest user enters the log in credentials    robot@test.com    testtest
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     and the user edits the competition title

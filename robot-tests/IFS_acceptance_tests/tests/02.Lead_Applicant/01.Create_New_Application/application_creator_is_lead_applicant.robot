@@ -17,4 +17,5 @@ Do nothing at all
 
 *** Keywords ***
 Don't do anything
-    the user navigates to the page    ${application_overview_url}
+    Sleep   1ms
+
