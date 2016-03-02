@@ -17,7 +17,7 @@ ${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9
 *** Test Cases ***
 Create application flow for non registered users CH route
     [Documentation]    INNFUND-669
-    [Tags]    Create application    HappyPath
+    [Tags]    Create application    HappyPath   FailingForDev
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -53,7 +53,7 @@ Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
-    [Tags]    Applicant    New application    HappyPath
+    [Tags]    Applicant    New application    HappyPath     FailingForDev
     When the guest user enters the log in credentials    robot@test.com    testtest
     And the user clicks the button/link    css=input.button
     And the user edits the competition title

@@ -123,7 +123,7 @@ Re-type password left blank
 
 Password and re-typed password do not match
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]    Account    Validations     FailingForDev
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith

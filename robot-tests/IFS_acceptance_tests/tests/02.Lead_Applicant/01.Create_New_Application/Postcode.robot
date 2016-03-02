@@ -46,6 +46,7 @@ Same Operating address
 
 *** Keywords ***
 the user selects the checkbox "The registered test is the same as the operating address"
+    SLeep   1s
     Select Checkbox    id=address-same
 
 the user unselects the checkbox "The registered test is the same as the operating address"

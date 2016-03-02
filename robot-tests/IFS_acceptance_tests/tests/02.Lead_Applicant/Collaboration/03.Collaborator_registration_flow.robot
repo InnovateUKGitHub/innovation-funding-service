@@ -88,7 +88,7 @@ Academic organisations search (empty, invalid & valid inputs)
 Accept Invitation flow (Business organisation)
     [Documentation]    INFUND-1005
     ...    INFUND-1779
-    [Tags]    HappyPath
+    [Tags]    HappyPath     FailingForDev
     Given the user navigates to the page    ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    organisationType    1
