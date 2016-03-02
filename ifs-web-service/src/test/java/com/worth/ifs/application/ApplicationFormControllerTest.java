@@ -147,7 +147,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         Question question = newQuestion().build();
         ApplicationResource application = applications.get(0);
 
-        when(applicationService.getById(application.getId(), false)).thenReturn(application);
+        when(applicationService.getById(application.getId())).thenReturn(application);
         mockMvc.perform(post("/application/1/form/question/1"))
                 .andExpect(status().is3xxRedirection());
     }
