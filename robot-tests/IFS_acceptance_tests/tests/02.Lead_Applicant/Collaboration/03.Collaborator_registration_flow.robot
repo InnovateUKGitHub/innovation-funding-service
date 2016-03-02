@@ -78,11 +78,14 @@ Academic organisations search (empty, invalid & valid inputs)
     When the user enters text to a text field    id=org-name    abcd
     and the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    Sorry we couldn't find any results.
+    When the user enters text to a text field    id=org-name    !!
+    and the user clicks the button/link    jQuery=.button:contains("Search")
+    Then the user should see the text in the page    Please enter valid characters
     When the user enters text to a text field    id=org-name    Liv
     and the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    University of Liverpool
     when the user clicks the button/link    link= University of Liverpool
-    Then the user should see the text in the page    Create your account
+    Then the user should see the text in the page    Enter address manually
     And the user should see the text in the page    Academic
 
 Accept Invitation flow (Business organisation)
