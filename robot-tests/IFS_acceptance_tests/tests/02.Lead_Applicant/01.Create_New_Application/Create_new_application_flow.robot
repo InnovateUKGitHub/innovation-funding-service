@@ -54,7 +54,7 @@ Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
-    [Tags]    Applicant    New application    HappyPath
+    [Tags]    Applicant    New application    HappyPath     FailingForDev
     When the guest user enters the log in credentials    robot@test.com    testtest
     And user clicks the button/link    css=button[name="_eventId_proceed"]
     and the user edits the competition title

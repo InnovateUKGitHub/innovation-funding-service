@@ -13,7 +13,8 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Verify that the user can't mark as complete empty text areas
     [Documentation]    -INFUND-406
-    [Tags]    Applicant    Validations
+    [Tags]    Applicant    Validations    Pending
+    # pending NFUND-2017
     Given the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the "Project Summary" question is empty
     And the applicant marks the public description question as complete
@@ -55,8 +56,6 @@ applicant should be able to mark the question as complete
     Click Element    css=#form-input-11 .buttonlink[name="mark_as_complete"]
     Wait Until Element Is Not Visible    css=#form-input-11 .error-message
     Wait Until Element Is Not Visible    css=.error-summary li
-
-
 
 the applicant can click edit to make the section editable again
     Sleep    5s
