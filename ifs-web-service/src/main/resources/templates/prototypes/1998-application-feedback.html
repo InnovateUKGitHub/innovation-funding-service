@@ -47,45 +47,47 @@
 			<section class="boxed">
 				
 				<div class="grid-row">
-					<div class="column-half">
+					<div class="column-one">
 				 		<p><span class="heading-medium">12th April 2016</span> <br />Assessment deadline</p>
 				 	</div>
+				 </div>
+				
+				<div class="grid-row">
 				 	<div class="column-half">
 					 	<p><span class="heading-medium">4</span> <br />Applications submitted</p>
 					</div>
+					<div class="column-half">
+					 	<p><span class="heading-medium">3</span> <br />Funded</p>
+					</div>
 				</div>
 
-				<a href="#" class="button-secondary">Export application data</a>
+				<a href="#" class="button" data-js-modal="modal-publish-assessor-feedback">Publish assessor feedback</a>
 
-				<div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'}" th:remove="tag">
+				<div class="modal-publish-assessor-feedback" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+			        <button class="js-close close" aria-label="Close Popup">X</button>
+			        <div>
+						
+						<h2 class="heading-medium no-margin">Publish assessor feedback</h2>
 
-					<a href="#" class="button" data-js-modal="modal-publish-funding-decision">Publish funding decision</a>
+						<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
 
-					<div class="modal-publish-funding-decision" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-				        <button class="js-close close" aria-label="Close Popup">X</button>
-				        <div>
-							
-							<h2 class="heading-medium no-margin">Publish funding decision</h2>
+						<p>This step cannot be undone.</p>
 
-							<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+						<hr />
+			            
+			            <div class="grid-row extra-margin">
+			            	<div class="column-half">
+			            		<a href="#">Cancel</a>
+			            	</div>
+			            	<div class="column-half alignright-button">
+			            		<a href="#" class="button">Inform applicants</a>
+			            	</div>
+			            </div>
 
-							<p>This step cannot be undone.</p>
+			        </div>
+			    </div>
 
-							<hr />
-				            
-				            <div class="grid-row extra-margin">
-				            	<div class="column-half">
-				            		<a href="#">Cancel</a>
-				            	</div>
-				            	<div class="column-half alignright-button">
-				            		<a href="#" class="button">Inform applicants</a>
-				            	</div>
-				            </div>
 
-				        </div>
-				    </div>
-
-				</div>
 
 			</section>
 
@@ -115,6 +117,7 @@
 							<th scope="col" class="alignright">Grant requested (&#163;)</th>
 							<th scope="col" class="alignright">Total project cost (&#163;)</th>
 							<th scope="col" class="alignright">Duration (months)</th>
+							<th scope="col" class="alignright">Funded</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -127,6 +130,7 @@
 							<td class="alignright">203,000</td>
 							<td class="alignright">324,000</td>
 							<td class="alignright">12</td>
+							<td class="alignright">Yes</td>
 						</tr>
 						<tr class="filtered-result">
 							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194732</a></th>
@@ -137,6 +141,7 @@
 							<td class="alignright">203,000</td>
 							<td class="alignright">300,000</td>
 							<td class="alignright">12</td>
+							<td class="alignright">Yes</td>
 						</tr>
 						<tr class="filtered-result">
 							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194733</a></th>
@@ -147,6 +152,7 @@
 							<td class="alignright">67,000</td>
 							<td class="alignright">97,500</td>
 							<td class="alignright">13</td>
+							<td class="alignright">Yes</td>
 						</tr>
 						<tr class="filtered-result">
 							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194734</a></th>
@@ -156,7 +162,8 @@
 							<td class="alignright">7</td>
 							<td class="alignright">100,000</td>
 							<td class="alignright">125,000</td>
-							<td class="alignright">14</td> 
+							<td class="alignright">14</td>
+							<td class="alignright">No</td>
 						</tr>
 
 
