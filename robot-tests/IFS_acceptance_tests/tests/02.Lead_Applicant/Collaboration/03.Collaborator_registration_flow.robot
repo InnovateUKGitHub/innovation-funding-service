@@ -37,7 +37,7 @@ User can not continue if an organisation type is not selected
     Then the user should see the text in the page    may not be null
 
 User is able to select only one type
-    [Documentation]    Infund-1005
+    [Documentation]    INFUND-1005
     When user selects the radio button    organisationType    2
     And user selects the radio button    organisationType    1
     Then the radio button should have the new selection    1
