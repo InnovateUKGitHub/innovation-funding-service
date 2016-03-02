@@ -18,17 +18,29 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/competition")
 public class CompetitionController {
+    public static final String TEMPLATE_PATH = "competition/";
     @Autowired
     UserAuthenticationService userAuthenticationService;
 
     @RequestMapping("/{competitionId}/details")
     public String competitionDetails(Form form, Model model, @PathVariable("competitionId") final Long competitionId,
                                      HttpServletRequest request) {
+        addUserToModel(model, competitionId, request);
+
+        return TEMPLATE_PATH + "details";
+    }
+
+    @RequestMapping("/{competitionId}/info/{templateName}")
+    public String getInfoPage(Model model, @PathVariable("competitionId") final Long competitionId,
+                              HttpServletRequest request, @PathVariable("templateName") String templateName) {
+        addUserToModel(model, competitionId, request);
+        return TEMPLATE_PATH+"info/"+ templateName;
+    }
+
+    private void addUserToModel(Model model, @PathVariable("competitionId") Long competitionId, HttpServletRequest request) {
         boolean userIsLoggedIn = userIsLoggedIn(request);
         model.addAttribute("userIsLoggedIn", userIsLoggedIn);
         model.addAttribute("competitionId", competitionId);
-
-        return "competition-details";
     }
 
     private boolean userIsLoggedIn(HttpServletRequest request) {
