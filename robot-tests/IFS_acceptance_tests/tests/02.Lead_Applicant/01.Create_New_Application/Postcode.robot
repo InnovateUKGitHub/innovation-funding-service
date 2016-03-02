@@ -11,10 +11,10 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Enter Valid Postcode and the results should be displayed in the dropdown
     [Documentation]    INFUND-890    # note that I have used the word "postcode" as a postcode - any actual postcode will fail as the postcode lookup    # functionality does not yet exist
-    ...
     [Tags]    HappyPath
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    When the user clicks the button/link    jQuery=.column-third .button:contains("Sign in to apply")
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=org-name    Innovate
     And the user clicks the button/link    id=org-search
@@ -27,8 +27,9 @@ Enter Valid Postcode and the results should be displayed in the dropdown
 
 Empty Postcode field
     [Documentation]    INFUND-890
-    [Tags]      Failing
+    [Tags]    Failing
     # TODO EC Note that the test expects an error message which no longer exists - check whether it should or not!
+    # INFUND-2045
     Given the user navigates to the page    ${POSTCODE_LOOKUP_URL}
     When the user enters text to a text field    css=#postcode-check    ${EMPTY}
     And the user clicks the button/link    id=postcode-lookup
@@ -36,7 +37,7 @@ Empty Postcode field
 
 Same Operating address
     [Documentation]    INFUND-890
-    [Tags]    HappyPath     Failing
+    [Tags]    HappyPath
     Given the user navigates to the page    ${POSTCODE_LOOKUP_URL}
     When the user selects the checkbox "The registered test is the same as the operating address"
     Then the user should not see the element    css=#postcode-check
