@@ -74,7 +74,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
     @Test
     public void testGetById() throws Exception {
         SectionResource section = controller.getById(sectionId).getSuccessObject();
-        assertEquals("Details", section.getName());
+        assertEquals("Project details", section.getName());
 
         section = controller.getById(2L).getSuccessObject();
         assertEquals("Application questions", section.getName());

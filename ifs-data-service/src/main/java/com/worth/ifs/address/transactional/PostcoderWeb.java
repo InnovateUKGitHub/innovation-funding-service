@@ -1,16 +1,24 @@
 package com.worth.ifs.address.transactional;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.worth.ifs.address.resource.PostcodeWebAddress;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.address.mapper.PostcodeWebMapper;
 import com.worth.ifs.address.resource.AddressResource;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -22,8 +30,9 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 /**
  * Postcode web API implementation
  */
-@Service
-public class  PostcoderWeb extends BaseRestService implements AddressLookupService {
+@Component
+public class PostcoderWeb implements AddressLookupService {
+    private static final Log LOG = LogFactory.getLog(PostcoderWeb.class);
 
     @Value("${ifs.data.postcode-lookup.url}")
     private final String POSTCODE_LOOKUP_URL = null;
@@ -50,7 +59,6 @@ public class  PostcoderWeb extends BaseRestService implements AddressLookupServi
 
     @Override
     public ServiceResult<List<AddressResource>> doLookup(String lookup) {
-
         if(StringUtils.isEmpty(lookup)) {
             return ServiceResult.serviceSuccess(new ArrayList<>());
         } else if(StringUtils.isEmpty(POSTCODE_LOOKUP_URL) || StringUtils.isEmpty(POSTCODE_LOOKUP_KEY)) {
@@ -74,18 +82,40 @@ public class  PostcoderWeb extends BaseRestService implements AddressLookupServi
     private ServiceResult<List<AddressResource>> doAPILookup(String lookup) {
         try {
             String lookupURL = getLookupURL(lookup);
-            setDataRestServiceUrl(lookupURL);
-            return getWithRestResult("", JsonNode.class).toServiceResult().andOnSuccessReturn(mapper::mapToResources);
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<PostcodeWebAddress[]>  responseEntity = restTemplate.getForEntity(lookupURL, PostcodeWebAddress[].class);
+            if(responseEntity!=null && responseEntity.getStatusCode().is2xxSuccessful()) {
+                return ServiceResult.serviceSuccess(mapper.toResources(responseEntity.getBody()));
+            } else {
+                String failure = responseEntity.toString();
+                LOG.error(failure);
+                return ServiceResult.serviceFailure(new Error(failure, HttpStatus.INTERNAL_SERVER_ERROR));
+            }
+        } catch (HttpClientErrorException cle) {
+            LOG.error(cle);
+            return ServiceResult.serviceFailure(new Error(cle.getMessage(), cle.getStatusCode()));
         } catch (URISyntaxException e) {
-            return ServiceResult.serviceFailure(new Error(e.getReason(), HttpStatus.INTERNAL_SERVER_ERROR));
+            LOG.error(e);
+            return ServiceResult.serviceFailure(new Error(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
 
     private ServiceResult<Boolean> doAPIPostcodeVerification(String postcode) {
         try {
             String verificationURL = getPostcodeVerificationURL(postcode);
-            setDataRestServiceUrl(verificationURL);
-            return getWithRestResult("", JsonNode.class).toServiceResult().andOnSuccessReturn(verified -> verified!=null ? verified.asBoolean() : false);
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<Boolean>  responseEntity = restTemplate.getForEntity(verificationURL, Boolean.class);
+
+            if(responseEntity!=null && responseEntity.getStatusCode().is2xxSuccessful()) {
+                return ServiceResult.serviceSuccess(responseEntity.getBody());
+            } else {
+                String failure = responseEntity.toString();
+                LOG.error(failure);
+                return ServiceResult.serviceFailure(new Error(failure, HttpStatus.INTERNAL_SERVER_ERROR));
+            }
+        } catch (HttpClientErrorException cle) {
+            LOG.error(cle);
+            return ServiceResult.serviceFailure(new Error(cle.getMessage(), cle.getStatusCode()));
         } catch (URISyntaxException e) {
             return ServiceResult.serviceFailure(new Error(e.getReason(), HttpStatus.INTERNAL_SERVER_ERROR));
         }
