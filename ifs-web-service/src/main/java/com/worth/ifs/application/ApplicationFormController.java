@@ -425,10 +425,10 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .forEach(question -> question.getFormInputs()
                                 .stream()
                                 .forEach(formInput -> {
-                                            if(formInput.getFormInputType().getTitle().equals("fileupload")) {
-                                                if(request instanceof StandardMultipartHttpServletRequest){
-                                                    final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest)request).getFileMap();
-                                                    MultipartFile file = fileMap.get("formInput[" + formInput.getId() + "]");
+                                            if(formInput.getFormInputType().getTitle().equals("fileupload") && request instanceof StandardMultipartHttpServletRequest) {
+                                                final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest)request).getFileMap();
+                                                final MultipartFile file = fileMap.get("formInput[" + formInput.getId() + "]");
+                                                if(!file.isEmpty()){
                                                     try {
                                                         formInputResponseService.createFile(formInput.getId(), applicationId, processRoleId, file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes());
                                                     } catch (IOException e) {
