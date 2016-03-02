@@ -142,10 +142,18 @@
         </div>
       </div>
     </header>
+
 </div>
 <!-- ===========================Place: <main> content-start =========================== -->
 
-<div th:fragment="main-content-start"></div>
+<div th:fragment="main-content-start">
+  <div class="phase-banner">
+  <p>
+    <strong class="phase-tag">BETA</strong>
+    <span>This is a new service – your <a href="#">feedback</a> will help us to improve it.</span>
+  </p>
+</div>
+</div>
 
 <!-- ===========================Place: <main> content-end =========================== -->
 
@@ -211,11 +219,11 @@
           th:href="${linkUrl}"
           th:text="${linkTitle}" />
 
-        <div class="deadline" th:if="${currentCompetition != null}">Days left to submit&nbsp;&nbsp;
-          <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" th:remove="tag" />
-        </div>
         <div th:remove="tag" th:if='${url}'>
             <a th:href="@{${url}}" th:text="${urlText}"></a>
+        </div>
+        <div class="deadline" th:if="${currentCompetition != null}">Days left to submit&nbsp;&nbsp;
+          <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" th:remove="tag" />
         </div>
     </div>
 </div>
