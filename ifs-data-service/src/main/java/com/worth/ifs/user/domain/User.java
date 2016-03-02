@@ -36,6 +36,9 @@ public class User {
     private String inviteName;
     private String phoneNumber;
     private String imageUrl;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+    private String verificationHash;
 
     @Column(unique=true)
     private String token;
@@ -228,5 +231,21 @@ public class User {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .toHashCode();
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
+    public String getVerificationHash() {
+        return verificationHash;
+    }
+
+    public void setVerificationHash(String verificationHash) {
+        this.verificationHash = verificationHash;
     }
 }

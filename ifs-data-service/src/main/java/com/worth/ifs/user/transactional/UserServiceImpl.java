@@ -15,14 +15,17 @@ import com.worth.ifs.util.EntityLookupCallbacks;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;
@@ -33,11 +36,14 @@ import static java.util.stream.Collectors.toSet;
  */
 @Service
 public class UserServiceImpl extends BaseTransactionalService implements UserService {
-
+    private static final CharSequence HASH_SALT = "klj12nm6nsdgfnlk12ctw476kl";
     private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
     enum Notifications {
         VERIFY_EMAIL_ADDRESS
     }
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     @Autowired
     private UserRepository repository;
@@ -120,6 +126,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         User newUser = assembleUserFromResource(userResource);
         addOrganisationToUser(newUser, organisationId);
         addRoleToUser(newUser, UserRoleType.APPLICANT.getName());
+        newUser.setStatus(UserStatus.INACTIVE);
 
         if (repository.findByEmail(userResource.getEmail()).isEmpty()) {
             UserResource createdUserResource = createUserWithToken(newUser);
@@ -149,15 +156,33 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     }
 
     private ServiceResult<Notification> sendUserVerificationEmail(User user) {
+        String verificationLink = getVerificationLink(user);
+
+
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
 
         Map<String, Object> notificationArguments = new HashMap<>();
-        notificationArguments.put("verificationLink", "VerificationLink");
+        notificationArguments.put("verificationLink", verificationLink);
 
         Notification notification = new Notification(from, singletonList(to), Notifications.VERIFY_EMAIL_ADDRESS, notificationArguments);
         ServiceResult<Notification> result = notificationService.sendNotification(notification, EMAIL);
         return result;
+    }
+
+    private String getVerificationLink(User user) {
+        String hash = generateAndSaveVerificationHash(user);
+        return String.format("%s/verify-email/%s", webBaseUrl, hash);
+    }
+
+    private String generateAndSaveVerificationHash(User user) {
+        StandardPasswordEncoder encoder = new StandardPasswordEncoder(HASH_SALT);
+        int random = (int) Math.ceil(Math.random() * 1000); // random number from 1 to 1000
+        String hash = String.format("%s==%s==%s", user.getId(), user.getEmail(), random);
+        hash = encoder.encode(hash);
+        user.setVerificationHash(hash);
+        userRepository.save(user);
+        return hash;
     }
 
     private User updateExistingUserFromResource(User existingUser, UserResource updatedUserResource) {

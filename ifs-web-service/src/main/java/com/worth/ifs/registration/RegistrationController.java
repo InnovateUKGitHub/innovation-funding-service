@@ -154,6 +154,7 @@ public class RegistrationController {
             RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request));
 
             if (createUserResult.isSuccess()) {
+                acceptInvite(request, response, createUserResult.getSuccessObject());
                 destination = "redirect:/registration/successful";
             } else {
                 addEnvelopeErrorsToBindingResultErrors(createUserResult.getFailure().getErrors(), bindingResult);
@@ -167,14 +168,14 @@ public class RegistrationController {
         return destination;
     }
 
-    private String getPostRegisterRedirect(HttpServletRequest request, HttpServletResponse response, RestResult<UserResource> createUserResult) {
-        if(acceptInvite(request, response, createUserResult.getSuccessObject())){
-            // user is invitee, no need to initialize application.
-            return "redirect:/applicant/dashboard/";
-        }else{
-            return "redirect:/application/create/initialize-application/";
-        }
-    }
+//    private String getPostRegisterRedirect(HttpServletRequest request, HttpServletResponse response, RestResult<UserResource> createUserResult) {
+//        if(acceptInvite(request, response, createUserResult.getSuccessObject())){
+//            // user is invitee, no need to initialize application.
+//            return "redirect:/applicant/dashboard/";
+//        }else{
+//            return "redirect:/application/create/initialize-application/";
+//        }
+//    }
 
     private boolean acceptInvite(HttpServletRequest request, HttpServletResponse response, UserResource userResource) {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
