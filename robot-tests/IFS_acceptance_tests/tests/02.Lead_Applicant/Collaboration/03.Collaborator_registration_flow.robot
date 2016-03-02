@@ -93,19 +93,19 @@ Accept Invitation flow (Business organisation)
     ...    INFUND-1779
     [Tags]    HappyPath     Pending
     # pending due to login changes INFUND-1859 shib
-    Given user navigates to the page    ${INVITE_LINK}
-    When user clicks the button/link    jQuery=.button:contains("Create")
-    And user selects the radio button    1
-    And user clicks the button/link    jQuery=.button:contains("Continue")
-    Then user should be redirected to the correct page    ${SERVER}/organisation/create/find-organisation
-    When user enters text to a text field    id=org-name    Empire
-    And user clicks the button/link    id=org-search
-    And user clicks the button/link    link=EMPIRE LTD
-    and user enters text to a text field    css=#postcode-check    postcode
-    And user clicks the button/link    id=postcode-lookup
-    And user clicks the button/link    css=#select-address-block > button
-    And user clicks the button/link    jQuery=.button:contains("Save organisation and")
-    And user clicks the button/link    jQuery=.button:contains("Save")
+    Given the user navigates to the page    ${INVITE_LINK}
+    When the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user selects the radio button    1
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    Then the user should be redirected to the correct page    ${SERVER}/organisation/create/find-organisation
+    When the user enters text to a text field    id=org-name    Empire
+    And the user clicks the button/link    id=org-search
+    And the user clicks the button/link    link=EMPIRE LTD
+    and the user enters text to a text field    css=#postcode-check    postcode
+    And the user clicks the button/link    id=postcode-lookup
+    And the user clicks the button/link    css=#select-address-block > button
+    And the user clicks the button/link    jQuery=.button:contains("Save organisation and")
+    And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
 
@@ -113,9 +113,9 @@ User who accepted the invite should be able to log-in
     [Tags]     FailingForDev
     Given the user navigates to the page    ${INVITE_LINK}
     When the guest user enters the login credentials    rogier@worth.systems    testtest
-    And user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then user should be redirected to the correct page    ${DASHBOARD_URL}
-    And user should see the text in the page    A novel solution to an old problem
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Then the user should be redirected to the correct page    ${DASHBOARD_URL}
+    And the user should see the text in the page    A novel solution to an old problem
     [Teardown]    User closes the browser
 
 The collaborator who accepted the invite should be visible in the assign list

@@ -56,7 +56,7 @@ Verify the name of the new application
     ...    INFUND-1163
     [Tags]    Applicant    New application    HappyPath     FailingForDev
     When the guest user enters the log in credentials    robot@test.com    testtest
-    And user clicks the button/link    css=button[name="_eventId_proceed"]
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
     and the user edits the competition title
     Then user should see the text in the page    test title - Application number 0000
     And the progress indicator should show 0
