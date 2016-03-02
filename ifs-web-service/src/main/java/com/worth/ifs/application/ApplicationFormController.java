@@ -146,12 +146,9 @@ public class ApplicationFormController extends AbstractApplicationController {
                                      @PathVariable("questionId") final Long questionId,
                                      HttpServletRequest request,
                                      HttpServletResponse response) throws Exception {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
-        SectionResource section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
         /* Start save action */
         bindingResult = saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
@@ -165,14 +162,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
         /* End save action */
-
-        if(bindingResult.hasErrors()){
-            this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
-                    Optional.ofNullable(question), userApplicationRoles);
-            return "application-form";
-        } else {
-            return getRedirectUrl(request, applicationId);
-        }
+        return getRedirectUrl(request, applicationId);
     }
 
     private String getRedirectUrl(HttpServletRequest request, Long applicationId) {

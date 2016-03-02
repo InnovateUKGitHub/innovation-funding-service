@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class InviteOrganisationResource {
     private Long id;
     private String organisationName;
+    private String organisationNameConfirmed;
     private Long organisation;
 
     List<InviteResource> inviteResources;
@@ -96,5 +97,13 @@ public class InviteOrganisationResource {
                 .append(organisation)
                 .append(inviteResources)
                 .toHashCode();
+    }
+
+    public String getOrganisationNameConfirmed() {
+        return organisationNameConfirmed;
+    }
+
+    public void setOrganisationNameConfirmed(String organisationNameConfirmed) {
+        this.organisationNameConfirmed = organisationNameConfirmed;
     }
 }

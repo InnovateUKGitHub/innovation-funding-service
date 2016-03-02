@@ -17,8 +17,6 @@ import org.mapstruct.Mappings;
 )
 public abstract class InviteMapper extends BaseMapper<Invite, InviteResource, Long> {
 
-
-
     @Mappings({
             @Mapping(source = "application.competition.name", target = "competitionName"),
             @Mapping(source = "application.competition.id", target = "competitionId"),
@@ -29,6 +27,7 @@ public abstract class InviteMapper extends BaseMapper<Invite, InviteResource, Lo
             @Mapping(source = "application.id", target = "application"),
             @Mapping(source = "inviteOrganisation.id", target = "inviteOrganisation"),
             @Mapping(source = "inviteOrganisation.organisationName", target = "inviteOrganisationName"),
+            @Mapping(source = "inviteOrganisation.organisation.name", target = "inviteOrganisationNameConfirmed"),
     })
     public abstract InviteResource mapToResource(Invite domain);
 

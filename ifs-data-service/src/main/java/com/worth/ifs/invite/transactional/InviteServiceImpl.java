@@ -230,7 +230,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Override
     public ServiceResult<InviteResource> getInviteByHash(String hash) {
-        return getByHash(hash).andOnSuccessReturn(InviteResource::new);
+        return getByHash(hash).andOnSuccessReturn(inviteMapper::mapToResource);
     }
 
     protected Supplier<ServiceResult<Invite>> invite(final String hash) {
