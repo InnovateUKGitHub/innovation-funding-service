@@ -1,6 +1,7 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.application.AcceptInviteController;
+import com.worth.ifs.application.ApplicationCreationController;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
 import com.worth.ifs.commons.error.Error;
@@ -63,7 +64,7 @@ public class RegistrationController {
     public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
     public final static String EMAIL_FIELD_NAME = "email";
 
-    @RequestMapping(value = "/successful", method = RequestMethod.GET)
+    @RequestMapping(value = "/success", method = RequestMethod.GET)
     public String registrationSuccessful(Model model, HttpServletRequest request) {
         return "registration/successful";
     }
@@ -135,7 +136,9 @@ public class RegistrationController {
                                      HttpServletRequest request,
                                      Model model) {
 
+        log.warn("registerFormSubmit");
         if(setInviteeEmailAddress(registrationForm, request, model)){
+            log.warn("setInviteeEmailAddress"+ registrationForm.getEmail());
             // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
             bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
             validator.validate(registrationForm, bindingResult);
@@ -151,11 +154,12 @@ public class RegistrationController {
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
 
         if(!bindingResult.hasErrors()) {
-            RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request));
+            Long competitionId = Long.valueOf(CookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID));
+            RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request), competitionId);
 
             if (createUserResult.isSuccess()) {
                 acceptInvite(request, response, createUserResult.getSuccessObject());
-                destination = "redirect:/registration/successful";
+                destination = "redirect:/registration/success";
             } else {
                 addEnvelopeErrorsToBindingResultErrors(createUserResult.getFailure().getErrors(), bindingResult);
             }
@@ -216,15 +220,16 @@ public class RegistrationController {
         tokenAuthenticationService.addAuthentication(response, userResource);
     }
 
-    private RestResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {
-        return userService.createLeadApplicantForOrganisation(
+    private RestResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {
+        return userService.createLeadApplicantForOrganisationWithCompetitionId(
                 registrationForm.getFirstName(),
                 registrationForm.getLastName(),
                 registrationForm.getPassword(),
                 registrationForm.getEmail(),
                 registrationForm.getTitle(),
                 registrationForm.getPhoneNumber(),
-                organisationId);
+                organisationId,
+                competitionId);
     }
 
     private void addOrganisationNameToModel(Model model, Organisation organisation) {

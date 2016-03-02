@@ -6,6 +6,7 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -39,6 +40,9 @@ public interface UserService {
 
     @NotSecured("TODO - implement when permissions matrix in place")
     ServiceResult<UserResource> createApplicantUser(final Long organisationId, UserResource userResource);
+
+
+    ServiceResult<UserResource> createApplicantUser(Long organisationId, UserResource userResource, Optional<Long> competitionId);
 
     @NotSecured("TODO - implement when permissions matrix in place")
     ServiceResult<UserResource> updateUser(UserResource userResource);

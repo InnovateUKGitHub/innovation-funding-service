@@ -24,6 +24,9 @@ public interface UserRestService {
     Future<RestResult<ProcessRole[]>> findAssignableProcessRoles(Long applicationId);
     RestResult<List<User>> findRelatedUsers(Long applicationId);
     Future<RestResult<ProcessRole>> findProcessRoleById(Long processRoleId);
+
+    RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId);
+
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
     RestResult<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber);
 }

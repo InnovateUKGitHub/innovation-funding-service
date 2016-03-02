@@ -38,7 +38,6 @@ public class User {
     private String imageUrl;
     @Enumerated(EnumType.STRING)
     private UserStatus status;
-    private String verificationHash;
 
     @Column(unique=true)
     private String token;
@@ -241,11 +240,4 @@ public class User {
         this.status = status;
     }
 
-    public String getVerificationHash() {
-        return verificationHash;
-    }
-
-    public void setVerificationHash(String verificationHash) {
-        this.verificationHash = verificationHash;
-    }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -68,6 +69,10 @@ public class UserController {
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
         return userService.createApplicantUser(organisationId, userResource).toPostCreateResponse();
+    }
+    @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
+    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
+        return userService.createApplicantUser(organisationId, userResource, Optional.ofNullable(competitionId)).toPostCreateResponse();
     }
 
     @RequestMapping("/updateDetails")

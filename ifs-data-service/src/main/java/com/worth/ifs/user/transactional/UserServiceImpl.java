@@ -1,9 +1,13 @@
 package com.worth.ifs.user.transactional;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.token.domain.Token;
+import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.repository.OrganisationRepository;
@@ -36,6 +40,7 @@ import static java.util.stream.Collectors.toSet;
  */
 @Service
 public class UserServiceImpl extends BaseTransactionalService implements UserService {
+    final JsonNodeFactory factory = JsonNodeFactory.instance;
     private static final CharSequence HASH_SALT = "klj12nm6nsdgfnlk12ctw476kl";
     private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
     enum Notifications {
@@ -53,6 +58,8 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Autowired
     private OrganisationRepository organisationRepository;
+    @Autowired
+    private TokenRepository tokenRepository;
     @Autowired
     private NotificationService notificationService;
     @Autowired
@@ -122,6 +129,11 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<UserResource> createApplicantUser(final Long organisationId, UserResource userResource) {
+        return this.createApplicantUser(organisationId, userResource, Optional.empty());
+    }
+
+    @Override
+    public ServiceResult<UserResource> createApplicantUser(final Long organisationId, UserResource userResource, Optional<Long> competitionId) {
         LOG.debug(String.format("createApplicantUser %s for organisation: %s ", userResource.getEmail(), organisationId));
         User newUser = assembleUserFromResource(userResource);
         addOrganisationToUser(newUser, organisationId);
@@ -129,7 +141,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         newUser.setStatus(UserStatus.INACTIVE);
 
         if (repository.findByEmail(userResource.getEmail()).isEmpty()) {
-            UserResource createdUserResource = createUserWithToken(newUser);
+            UserResource createdUserResource = createUserWithToken(newUser, competitionId);
             return serviceSuccess(createdUserResource);
         } else {
             return serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, userResource.getEmail()));
@@ -147,16 +159,16 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         return serviceSuccess(updatedUser);
     }
 
-    private UserResource createUserWithToken(User user) {
+    private UserResource createUserWithToken(User user, Optional<Long> competitionId) {
         user = repository.save(user);
         addTokenBasedOnIdToUser(user);
         user = saveUser(user);
-        sendUserVerificationEmail(user);
+        sendUserVerificationEmail(user, competitionId);
         return new UserResource(user);
     }
 
-    private ServiceResult<Notification> sendUserVerificationEmail(User user) {
-        String verificationLink = getVerificationLink(user);
+    private ServiceResult<Notification> sendUserVerificationEmail(User user, Optional<Long> competitionId) {
+        String verificationLink = getVerificationLink(user, competitionId);
 
 
         NotificationSource from = systemNotificationSource;
@@ -170,18 +182,24 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         return result;
     }
 
-    private String getVerificationLink(User user) {
-        String hash = generateAndSaveVerificationHash(user);
+    private String getVerificationLink(User user, Optional<Long> competitionId) {
+        String hash = generateAndSaveVerificationHash(user, competitionId);
         return String.format("%s/verify-email/%s", webBaseUrl, hash);
     }
 
-    private String generateAndSaveVerificationHash(User user) {
+    private String generateAndSaveVerificationHash(User user, Optional<Long> competitionId) {
         StandardPasswordEncoder encoder = new StandardPasswordEncoder(HASH_SALT);
         int random = (int) Math.ceil(Math.random() * 1000); // random number from 1 to 1000
         String hash = String.format("%s==%s==%s", user.getId(), user.getEmail(), random);
         hash = encoder.encode(hash);
-        user.setVerificationHash(hash);
-        userRepository.save(user);
+
+
+        ObjectNode extraInfo = factory.objectNode();
+        if(competitionId.isPresent()){
+            extraInfo.put("competitionId", competitionId.get());
+        }
+        Token token = new Token(Token.Type.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), hash, extraInfo);
+        tokenRepository.save(token);
         return hash;
     }
 
