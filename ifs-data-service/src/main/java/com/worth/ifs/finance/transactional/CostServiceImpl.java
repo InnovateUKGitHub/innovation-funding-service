@@ -9,7 +9,8 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.domain.CostValue;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
-import com.worth.ifs.finance.handler.item.OrganisationFinanceHandler;
+import com.worth.ifs.finance.handler.OrganisationFinanceDefaultHandler;
+import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
 import com.worth.ifs.finance.mapper.CostFieldMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostFieldRepository;
@@ -62,8 +63,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
 
-    @Autowired
-    private OrganisationFinanceHandler organisationFinanceHandler;
+    private OrganisationFinanceHandler organisationFinanceHandler = new OrganisationFinanceDefaultHandler();
 
     @Override
     public ServiceResult<CostField> getCostFieldById(Long id) {

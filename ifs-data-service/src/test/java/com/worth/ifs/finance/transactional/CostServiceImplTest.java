@@ -4,7 +4,7 @@ import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.handler.item.OrganisationFinanceHandler;
+import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Test;

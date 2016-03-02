@@ -1,4 +1,4 @@
-package com.worth.ifs.finance.handler.item;
+package com.worth.ifs.finance.handler;
 
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
