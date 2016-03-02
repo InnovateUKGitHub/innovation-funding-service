@@ -19,7 +19,8 @@ Create application flow for non registered users CH route
     [Documentation]    INNFUND-669
     [Tags]    Create application    HappyPath
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    When the user clicks the button/link    jQuery=.column-third .button:contains("Sign in to apply")
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=org-name    Innovate
     And the user clicks the button/link    id=org-search
@@ -36,10 +37,11 @@ Create application flow for non registered users CH route
 
 Create application flow for non registered users non CH route
     [Documentation]    INNFUND-669
-    [Tags]    Create application    HappyPath       Pending
+    [Tags]    Create application    HappyPath    Pending
     # Pending due to INFUND-2019
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    When the user clicks the button/link    jQuery=.column-third .button:contains("Sign in to apply")
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
     And the user clicks the button/link    jQuery=.button:contains("Save")
