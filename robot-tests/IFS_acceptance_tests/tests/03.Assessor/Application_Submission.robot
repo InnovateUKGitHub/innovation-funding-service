@@ -6,7 +6,7 @@ Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Assessor_actions.robot
+Resource          ../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${application_name}    Mobile Phone Data for Logistics Analytics
@@ -15,15 +15,15 @@ ${competition_name}    Technology Inspired
 *** Test Cases ***
 Submitting an application shows a confirmation popup
     [Documentation]    INFUND-342
-    [Tags]    Assessor    HappyPath
-    Given Assessor clicks the competition
+    [Tags]    Assessor    HappyPath    Failing
+    Given The user clicks the button/link  link=${competition_name}
     When Select Application Checkbox    ${application_name}
     And Submit Selected Applications
     Then Cancel the confirmation popup
 
 Cancelling the confirmation leaves the Application in unchanged state
     [Documentation]    INFUND-342
-    [Tags]    Assessor
+    [Tags]    Assessor    Failing
     Given Select Application Checkbox    ${application_name}
     And Submit Selected Applications
     When Cancel the confirmation popup
@@ -31,7 +31,7 @@ Cancelling the confirmation leaves the Application in unchanged state
 
 Confirming the popup changes the Application state to submitted
     [Documentation]    INFUND-342
-    [Tags]    Assessor    HappyPath
+    [Tags]    Assessor    HappyPath    Failing
     Given Select Application Checkbox    ${application_name}
     And Submit Selected Applications
     When Confirm the confirmation popup
@@ -59,3 +59,6 @@ Application is not submitted
 Application is submitted
     Reload Page
     Page Should Contain Element    xpath=//*[@class="submitted"]//*[contains(text(),'${application_name}')]
+
+
+

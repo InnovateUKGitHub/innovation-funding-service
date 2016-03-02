@@ -4,8 +4,8 @@ import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.worth.ifs.organisation.domain.Address;
 
+import com.worth.ifs.address.resource.AddressResource;
 /**
  * Resource object to store the company details, from the company house api.
  */
@@ -17,12 +17,12 @@ public class CompanyHouseBusiness{
     private String dateOfCreation;
     private String description;
     @Valid
-    private Address officeAddress;
+    private AddressResource officeAddress;
 
     public CompanyHouseBusiness() {
     }
 
-    public CompanyHouseBusiness(String companyNumber, String name, String type, String dateOfCreation, String description, Address officeAddress) {
+    public CompanyHouseBusiness(String companyNumber, String name, String type, String dateOfCreation, String description, AddressResource officeAddress) {
         this.companyNumber = companyNumber;
         this.name = name;
         this.type = type;
@@ -35,8 +35,8 @@ public class CompanyHouseBusiness{
     public String getLocation() {
         String locationString = "";
         locationString +=  officeAddress.getAddressLine1();
-        locationString +=  ", "+ officeAddress.getLocality();
-        locationString +=  ", "+ officeAddress.getPostalCode();
+        locationString +=  ", "+ officeAddress.getTown();
+        locationString +=  ", "+ officeAddress.getPostcode();
         return locationString;
     }
 
@@ -80,11 +80,11 @@ public class CompanyHouseBusiness{
         this.description = description;
     }
 
-    public Address getOfficeAddress() {
+    public AddressResource getOfficeAddress() {
         return officeAddress;
     }
 
-    public void setOfficeAddress(Address officeAddress) {
+    public void setOfficeAddress(AddressResource officeAddress) {
         this.officeAddress = officeAddress;
     }
 }

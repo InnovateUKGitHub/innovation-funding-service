@@ -57,6 +57,36 @@
 
 				<a href="#" class="button-secondary">Export application data</a>
 
+				<div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'}" th:remove="tag">
+
+					<a href="#" class="button" data-js-modal="modal-publish-funding-decision">Publish funding decision</a>
+
+					<div class="modal-publish-funding-decision" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+				        <button class="js-close close" aria-label="Close Popup">X</button>
+				        <div>
+							
+							<h2 class="heading-medium no-margin">Publish funding decision</h2>
+
+							<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+
+							<p>This step cannot be undone.</p>
+
+							<hr />
+				            
+				            <div class="grid-row extra-margin">
+				            	<div class="column-half">
+				            		<a href="#">Cancel</a>
+				            	</div>
+				            	<div class="column-half alignright-button">
+				            		<a href="#" class="button">Inform applicants</a>
+				            	</div>
+				            </div>
+
+				        </div>
+				    </div>
+
+				</div>
+
 			</section>
 
 
@@ -89,40 +119,40 @@
 					</thead>
 					<tbody>
 						<tr class="filtered-result">
-							<th scope="col"><a href="/prototypes/1968-admin-readonly-application">194731</a></th>
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194731</a></th>
 							<td>Machine learning in robots</td>
 							<td>PWC</td>
-							<td>High value manufacturing</td>
+							<td>HVM</td>
 							<td class="alignright">5</td>
 							<td class="alignright">203,000</td>
 							<td class="alignright">324,000</td>
 							<td class="alignright">12</td>
 						</tr>
 						<tr class="filtered-result">
-							<th scope="col"><a href="/prototypes/1968-admin-readonly-application">194732</a></th>
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194732</a></th>
 							<td>Robots that learn</td>
 							<td>Max Digital</td>
-							<td>High value manufacturing</td>
+							<td>HVM</td>
 							<td class="alignright">5</td>
 							<td class="alignright">203,000</td>
 							<td class="alignright">300,000</td>
 							<td class="alignright">12</td>
 						</tr>
 						<tr class="filtered-result">
-							<th scope="col"><a href="/prototypes/1968-admin-readonly-application">194733</a></th>
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194733</a></th>
 							<td>AI in learning</td>
 							<td>BBC</td>
-							<td>High value manufacturing</td>
+							<td>HVM</td>
 							<td class="alignright">3</td>
 							<td class="alignright">67,000</td>
 							<td class="alignright">97,500</td>
 							<td class="alignright">13</td>
 						</tr>
 						<tr class="filtered-result">
-							<th scope="col"><a href="/prototypes/1968-admin-readonly-application">194734</a></th>
+							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194734</a></th>
 							<td>Progressive machines</td>
 							<td>Kingfisher</td>
-							<td>High value manufacturing</td>
+							<td>HVM</td>
 							<td class="alignright">7</td>
 							<td class="alignright">100,000</td>
 							<td class="alignright">125,000</td>

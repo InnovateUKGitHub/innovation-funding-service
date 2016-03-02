@@ -51,12 +51,3 @@ ext.ifsSmtpAuth=true
 ext.ifsSmtpPassword="example-password"
 ext.ifsSmtpTlsEnabled=true
 ext.ifsMailTimeoutMillis=10000
-
-//
-// The below LDAP credentials allow the application to talk directly to LDAP in lieu of the Shib REST API
-// being made available
-//
-ext.ifsIdpStubLdapUrl="ifs-local-dev"
-ext.ifsIdpStubLdapBase="dc=nodomain"
-ext.ifsIdpStubLdapUser="admin"
-ext.ifsIdpStubLdapPassword="foobar"

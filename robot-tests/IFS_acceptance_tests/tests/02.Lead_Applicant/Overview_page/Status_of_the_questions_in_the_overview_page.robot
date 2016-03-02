@@ -8,7 +8,7 @@ Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
 Status changes when we assign a question to the collaborator
@@ -22,7 +22,8 @@ Status changes when we assign a question to the collaborator
 
 The applicant can assign re-assign a question from the overview page
     [Documentation]    INFUND-39
-    [Tags]    Applicant    Overview
+    [Tags]    Applicant    Overview    Pending
+    #Pending INFUND-2017
     Given the user navigates to the page    ${application_overview_url}
     When the applicant assigns the "Project summary" question to "Steve Smith"    Steve Smith
     Then the applicant should see a blue flag in the Public description (overview page)
@@ -51,7 +52,7 @@ the applicant assigns the "Project summary" question to "Steve Smith"
     Click Element    xpath=//*[@id="collapsible-1"]//button[contains(text(),"${assignee_name}")]
 
 the applicant should see a blue flag in the Public description (overview page)
-    Reload Page
+    #Reload Page
     Wait Until Page Contains Element    css=#form-input-11 .assigned
 
 the blue flag should not be visible

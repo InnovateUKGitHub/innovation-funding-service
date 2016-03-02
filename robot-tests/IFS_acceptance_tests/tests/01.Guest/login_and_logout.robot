@@ -8,7 +8,7 @@ Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
-Resource          ../../resources/keywords/Applicant_actions.robot
+Resource          ../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
 Log-out
@@ -33,7 +33,7 @@ Valid login as Applicant
     When the guest user enters the log in credentials    steve.smith@empire.com    test
     And user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the Applicant is logged-in
-    And user should be redirected to the correct page    ${applicant_dashboard_url}
+    And the user should be redirected to the correct page    ${applicant_dashboard_url}
     [Teardown]    Logout as user
 
 Valid login as Collaborator
@@ -42,7 +42,7 @@ Valid login as Collaborator
     When the guest user enters the log in credentials    ${collaborator1_credentials["email"]}    ${collaborator1_credentials["password"]}
     And user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the Applicant is logged-in
-    And user should be redirected to the correct page    ${applicant_dashboard_url}
+    And the user should be redirected to the correct page    ${applicant_dashboard_url}
     [Teardown]    Logout as user
 
 Valid login as Assessor
@@ -52,7 +52,7 @@ Valid login as Assessor
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
     And user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the Applicant is logged-in
-    And user should be redirected to the correct page    ${assessor_dashboard_url}
+    And the user should be redirected to the correct page    ${assessor_dashboard_url}
     And the user should be logged-in as an Assessor
     [Teardown]    Logout as user
 

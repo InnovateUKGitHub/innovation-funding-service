@@ -6,14 +6,14 @@ Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 
 *** Test Cases ***
 If research participation is too high, an error is shown on the form and also the overview page
     [Documentation]    INFUND-1436
-    [Tags]    HappyPath    Research percentage    Validation    ${EMPTY}
+    [Tags]    HappyPath    Research percentage    Validation
     Given the applicant logs in
     When the research participation on the second application is too high
     Then there is an error message on the finances form

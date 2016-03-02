@@ -7,7 +7,7 @@ Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${valid_email}    _ewan__@worth.systems
@@ -47,15 +47,15 @@ Invalid email no @ symbol
 *** Keywords ***
 Invalid Email Check
     [Arguments]    ${invalid_email}
-    Given User navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
-    When user enters text to a text field    id=firstName    John
-    And user enters text to a text field    id=lastName    Smith
-    And user enters text to a text field    id=phoneNumber    01141234567
-    And user enters text to a text field    id=email    ${invalid_email}
-    And user enters text to a text field    id=password    password
-    And user enters text to a text field    id=retypedPassword    password
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When The user enters text to a text field    id=firstName    John
+    And The user enters text to a text field    id=lastName    Smith
+    And The user enters text to a text field    id=phoneNumber    01141234567
+    And The user enters text to a text field    id=email    ${invalid_email}
+    And The user enters text to a text field    id=password    password
+    And The user enters text to a text field    id=retypedPassword    password
     And the user submits their information
-    Then user should see an error    We were unable to create your account
+    Then The user should see an error    We were unable to create your account
     And the user cannot login with the invalid email    ${invalid_email}
 
 the user submits their information

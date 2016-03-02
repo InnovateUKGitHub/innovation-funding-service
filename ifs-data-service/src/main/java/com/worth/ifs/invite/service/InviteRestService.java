@@ -11,9 +11,7 @@ public interface InviteRestService {
     RestResult<InviteResultsResource> createInvitesByInviteOrganisation(String organisationName, List<InviteResource> invites);
     RestResult<InviteResultsResource> createInvitesByOrganisation(Long organisationId, List<InviteResource> invites);
     RestResult<InviteResultsResource> saveInvites(List<InviteResource> inviteResources);
-
-    RestResult<Void> acceptedInvite(String inviteHash, Long userId);
-
+    RestResult<Void> acceptInvite(String inviteHash, Long userId);
     RestResult<InviteResource> getInviteByHash(String hash);
     RestResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash);
     RestResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId);

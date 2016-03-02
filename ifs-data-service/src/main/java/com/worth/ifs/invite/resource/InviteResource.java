@@ -22,6 +22,7 @@ public class InviteResource {
     private String applicationName;
     private Long inviteOrganisation;
     private String inviteOrganisationName;
+    private String inviteOrganisationNameConfirmed;
     private String hash;
     private InviteStatusConstants status;
 
@@ -213,5 +214,13 @@ public class InviteResource {
 
     public void setLeadApplicantEmail(String leadApplicantEmail) {
         this.leadApplicantEmail = leadApplicantEmail;
+    }
+
+    public String getInviteOrganisationNameConfirmed() {
+        return inviteOrganisationNameConfirmed;
+    }
+
+    public void setInviteOrganisationNameConfirmed(String inviteOrganisationNameConfirmed) {
+        this.inviteOrganisationNameConfirmed = inviteOrganisationNameConfirmed;
     }
 }

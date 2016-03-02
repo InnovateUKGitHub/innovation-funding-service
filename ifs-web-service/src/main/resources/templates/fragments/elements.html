@@ -44,27 +44,30 @@
 <div th:fragment="competition-deadline">
     <div class="competition-deadline">
         <div class="day">
-            <div th:text="${#temporals.day(endDate)}" th:remove="tag" /><span th:switch="${#temporals.day(endDate)}">
-                <span th:case="'1'" th:remove="tag">st</span>
-                <span th:case="'21'" th:remove="tag">st</span>
-                <span th:case="'31'" th:remove="tag">st</span>
-                <span th:case="'2'" th:remove="tag">nd</span>
-                <span th:case="'22'" th:remove="tag">nd</span>
-                <span th:case="'3'" th:remove="tag">rd</span>
-                <span th:case="'23'" th:remove="tag">rd</span>
-                <span th:case="*" th:remove="tag">th</span>
-            </span>
+          <div th:include="fragments/elements :: ordinal-day (date=${endDate})" th:remove="tag" />
         </div>
         <div class="month" th:text="${#temporals.monthName(endDate)}+' deadline'" />
-        <div class="time">
-            <!--<span th:text="${#temporals.format(endDate, 'HH:mm')}" />-->
-        </div>
     </div>
+</div>
+
+<!-- =========================== Element: simple ordinal day =========================== -->
+
+<div th:fragment="ordinal-day (date)">
+  <span th:switch="${#temporals.day(date)}" th:remove="tag">
+      <span th:case="'1'" th:remove="tag" th:text="${#temporals.day(date)}+'st'" />
+      <span th:case="'21'" th:remove="tag" th:text="${#temporals.day(date)}+'st'" />
+      <span th:case="'31'" th:remove="tag" th:text="${#temporals.day(date)}+'st'" />
+      <span th:case="'2'" th:remove="tag" th:text="${#temporals.day(date)}+'nd'" />
+      <span th:case="'22'" th:remove="tag" th:text="${#temporals.day(date)}+'nd'" />
+      <span th:case="'3'" th:remove="tag" th:text="${#temporals.day(date)}+'rd'" />
+      <span th:case="'23'" th:remove="tag" th:text="${#temporals.day(date)}+'rd'" />
+      <span th:case="*" th:remove="tag" th:text="${#temporals.day(date)}+'th'" />
+  </span>
 </div>
 
 <!-- =========================== Element: Application Title =========================== -->
 <div th:fragment="application-title (application, competition) ">
-    <p class="subtitle" th:text="${application.getApplicationDisplayName()} +' - Application number ' + ${#numbers.formatInteger(application.id,6)} "/>
+    <p class="subtitle" th:text="${#numbers.formatInteger(application.id,8)} + ': ' + ${application.getApplicationDisplayName()} "/>
 </div>
 <!-- =========================== Element: Pie chart =========================== -->
 <div th:fragment="pie-small">

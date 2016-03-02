@@ -1,0 +1,110 @@
+.application-progress-list li {
+    position: relative;
+    clear:both;
+    &.column-half,
+    &.column-two-thirds {
+      clear:none;
+    }
+}
+.application-progress-list li h2,
+.application-progress-list li h3,
+.application-progress-list li h4 {
+    margin-top:0;
+}
+
+.application-progress-list .progress-status {
+    border: 3px solid $border-colour;
+    @include border-radius(50%);
+    width:78px;
+    height: 78px;
+    text-align: center;
+    float:left;
+    background: $grey-4  no-repeat center center;
+}
+.application-progress-list .progress-status:after {
+    position: absolute;
+    top:90px;
+    bottom:-10px;
+    content:"";
+    left: 40px;
+    border-right: 3px solid $border-colour;
+}
+
+.application-progress-list .column-half .progress-status:after,
+.application-progress-list li:last-child .progress-status:after {
+    border:none;
+}
+.application-progress-list .progress-info {
+    @include border-radius(5px);
+    border: 3px solid $border-colour;
+    padding:20px;
+    margin: 0 0 20px 100px;
+    position: relative;
+}
+
+.application-progress-list .progress-info:before {
+    content: "";
+    position: absolute;
+    left: -36px;
+    border: 18px solid transparent;
+    border-right: 18px solid $grey-2;
+}
+
+//status current
+.application-progress-list li.current {
+    a {
+      color:$white;
+    }
+    .progress-status,
+    .progress-info {
+        background-color: $link-colour;
+        color:$white;
+        border-color: $link-colour;
+    }
+    .progress-info:before {
+       border-right: 18px solid $link-colour;
+    }
+    .progress-status:after {
+        border-style:dashed;
+    }
+    .progress-status {
+        background-image: url('/images/progress/hourglass.gif');
+    }
+}
+//status complete
+.application-progress-list li.complete  {
+  .progress-status {
+    background-image: url('/images/progress/check.gif');
+    //background-color: #d0dcd6;
+  }
+}
+//status fail
+.application-progress-list li.fail  .progress-status {
+  background-image: url('/images/progress/cross.gif');
+}
+
+//responsive
+@include media-down(tablet) {
+   .application-progress-list .progress-status {
+       width:40px;
+       height: 40px;
+       border-width:2px;
+   }
+  .application-progress-list .progress-info {
+      margin-left:60px;
+  }
+  .application-progress-list .progress-status::after {
+     left:19px;
+     top:50px;
+  }
+  .application-progress-list .progress-info:before,
+  .application-progress-list li.current .progress-info:before {
+     top:5px;
+     border-width: 14px;
+     left:-28px;
+  }
+  .application-progress-list li  .progress-status {
+    @include background-size(auto 50%);
+  }
+
+}

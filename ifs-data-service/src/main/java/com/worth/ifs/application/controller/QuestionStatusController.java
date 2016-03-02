@@ -46,4 +46,11 @@ public class QuestionStatusController {
     public RestResult<QuestionStatus> getQuestionStatusResourceById(@PathVariable("id") Long id){
         return questionService.getQuestionStatusResourceById(id).toGetResponse();
     }
+
+    @RequestMapping("/getAssignedQuestionsCountByApplicationIdAndAssigneeId/{applicationId}/{assigneeId}")
+    public RestResult<Integer> getAssignedQuestionsCountByApplicationIdAndAssigneeId(@PathVariable("applicationId") final Long applicationId,
+                                                                                     @PathVariable("assigneeId") final Long assigneeId) {
+
+        return questionService.getCountByApplicationIdAndAssigneeId(applicationId, assigneeId).toGetResponse();
+    }
 }

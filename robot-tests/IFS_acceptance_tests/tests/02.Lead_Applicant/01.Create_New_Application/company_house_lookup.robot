@@ -6,54 +6,55 @@ Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
 Search using valid company name
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house    HappyPath
-    Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When user enters text to a text field    id=org-name    innovate
-    And user clicks the button/link    id=org-search
+    Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
+    When the user enters text to a text field    id=org-name    innovate
+    And the user clicks the button/link    id=org-search
     Then the valid company names matching the search criteria should be displayed
 
 Search using invalid company name
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house
-    Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When user enters text to a text field    id=org-name    innoavte
-    And user clicks the button/link    id=org-search
-    Then user should see the text in the page    Sorry we couldn't find any results within Companies House.
+    Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
+    When the user enters text to a text field    id=org-name    innoavte
+    And the user clicks the button/link    id=org-search
+    Then the user should see the text in the page    Sorry we couldn't find any results
 
 Search using valid registration number
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house    HappyPath
-    Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When user enters text to a text field    id=org-name    05493105
-    And user clicks the button/link    id=org-search
+    Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
+    When the user enters text to a text field    id=org-name    05493105
+    And the user clicks the button/link    id=org-search
     Then the valid company names matching the search criteria should be displayed
 
 search using invalid registration number
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house
-    Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When user enters text to a text field    id=org-name    64536
-    And user clicks the button/link    id=org-search
-    Then user should see the text in the page    Sorry we couldn't find any results within Companies House.
+    Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
+    When The user enters text to a text field    id=org-name    64536
+    And The user clicks the button/link    id=org-search
+    Then The user should see the text in the page    Sorry we couldn't find any results
 
 Search for invalid characters
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house    Pending
-    Given user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When user enters text to a text field    id=org-name    {}{}
-    And user clicks the button/link    id=org-search
+    # Pending INFUND-1493
+    Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
+    When the user enters text to a text field    id=org-name    {}{}
+    And the user clicks the button/link    id=org-search
     Then the applicant should get a validation error for the company house
 
 *** Keywords ***
 the valid company names matching the search criteria should be displayed
     Page Should Contain    05493105 - Incorporated on 28 June 2005
     Click Link    INNOVATE LTD
-    Page Should Contain    Business Organisation
+    Page Should Contain    Business
     Page Should Contain    Organisation name
     Element Should Contain    css=.form-block p:nth-child(2)    INNOVATE LTD
     Page Should Contain    Registration number

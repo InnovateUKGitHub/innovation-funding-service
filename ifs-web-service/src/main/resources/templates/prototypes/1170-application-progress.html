@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/layout :: prototype-sub-header-no-link" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -22,7 +22,7 @@
 	<ul class="application-progress-list">
 		<li class="complete"><span>
 				<h2 class="heading-medium">Submitted application</h2>
-				<p>You submitted your application on 12 March at 10:17am</p>
+				<p>Your application '<strong>A novel solution to an old problem</strong>' was submitted into the competition '<strong>Technology Inspired</strong>' on 12 March at 10.17am</p>
 				<p><a href="#">View application</a></p>
 			</span></li>
 		<li class="processing"><span>

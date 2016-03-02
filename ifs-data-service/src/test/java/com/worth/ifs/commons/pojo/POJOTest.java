@@ -34,7 +34,7 @@ import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
-import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.user.domain.OrganisationType;
 import com.worth.ifs.workflow.resource.ProcessOutcomeResource;

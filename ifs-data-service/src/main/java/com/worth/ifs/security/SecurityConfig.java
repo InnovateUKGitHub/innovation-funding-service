@@ -44,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/createLeadApplicantForOrganisation/*").permitAll()
                 .antMatchers("/user/findByEmail/*/").permitAll()
                 .antMatchers("/organisation/findById/*").permitAll()
+                .antMatchers("/address/doLookup/*").permitAll()
                 .antMatchers("/browser/**").permitAll()
                 .antMatchers("/idpstub/**").permitAll()
                 .anyRequest().authenticated()

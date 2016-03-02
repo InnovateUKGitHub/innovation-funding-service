@@ -1,7 +1,7 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.organisation.domain.Address;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.user.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -17,5 +17,5 @@ public interface OrganisationRestService {
     RestResult<Organisation> getOrganisationById(Long organisationId);
     RestResult<OrganisationResource> save(Organisation organisation);
     RestResult<OrganisationResource> save(OrganisationResource organisation);
-    RestResult<OrganisationResource> addAddress(OrganisationResource organisation, Address address, AddressType type);
+    RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, AddressType type);
 }

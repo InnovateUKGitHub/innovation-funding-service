@@ -86,7 +86,7 @@ You can add `.small` to `.pie` for a smaller version of both
 		border-radius: 50%;
 	}
   &[aria-hidden="true"]{
-    display: block;
+    display: inline-block;
     visibility:visible;
   }
 

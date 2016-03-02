@@ -11,50 +11,49 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
 
+    <div class="grid-row">
+        <section class="column-half">
+            <h1 class="heading-large">Create Account</h1>
 
-      <div class="message-alert">
-                <h1 class="heading-medium">Competition eligibility</h1>
-
-
-
-            <p>
-To being a new application for the competition 'Technology Inspired' you must meet the following criteria:
-            </p>
-
-<ul class="list-bullet">
-            <li>
-                <h2>Create this application as the <strong>lead partner</strong> of the consortium</h2>
-                <p>If you are not the lead, please contact your lead partner to create the application</p>
-            </li>
-            <li>
-                <h2>Lead this application as a <strong>Business</strong></h2>
-                <p>Applications into this competition must be lead by a business</p>
-            </li>
-            <li>
-                <h2>Be based in the <strong>UK</strong></h2>
-                <p>Non UK organisations are not eligible to recieve funding from Innovate UK</p>
-            </li>
-        </ul>
-         </div>
-
-        <div class="grid-row">
-            <section class="column-half">
-                <h1 class="heading-large">Create Account</h1>
-
-                <p>If you haven’t used this service before you must <a href="/application/create/find-business">create an account</a>,
+            <p>If you haven’t used this service before you must <a href="/application/create/find-business">create an account</a>,
                 even if you already have an existing account with "Innovate UK".</p>
 
-                <p>Creating an account allows you to:</p>
-                <ul class="list-bullet">
-                    <li>Apply for a competition</li>
-                    <li>Track your competition applications</li>
-                    <li>View application feedback</li>
-                    <li>Setup successful project</li>
-                </ul>
+            <p>When you create an account you can:</p>
+            <ul class="list-bullet">
+                <li>apply for a competition</li>
+                <li>track your competition applications</li>
+                <li>view application feedback</li>
+                <li>set up successful projects</li>
+            </ul>
 
-                <a href="/organisation/create/find-business" class="button" value="create-account" type="submit">Create</a>            </section>
-            <section class="column-half">
-            </section>
+            <a href="/organisation/create/find-business" class="button" value="create-account" type="submit">Create</a></section>
+        <!-- TODO INFUND-963 do we need a link
+        <section class="column-half">
+            <h1 class="heading-large">Sign in</h1>
+
+            <form action="/login?redirect_url=/application/create/your-details" th:object="${loginForm}" method="POST">
+                <fieldset>
+                    <legend class="visuallyhidden">Sign in</legend>
+                    <div th:class="${#fields.hasErrors('email')}? 'form-group error':'form-group'">
+                        <label class="form-label" for="id_email">E-mail address</label>
+                        <input class="form-control form-control-3-4" type="text" th:field="*{email}" id="id_email"/>
+                            <span class="error-message" th:if="${#fields.hasErrors('email')}"
+                                  th:errors="*{email}"></span>
+                    </div>
+
+
+                    <div th:class="${#fields.hasErrors('password')}? 'form-group error':'form-group'">
+                        <label class="form-label" for="id_password">Password</label>
+                        <input class="form-control form-control-3-4" type="password" th:field="*{password}"
+                               id="id_password"/>
+                        <span class="error-message" th:if="${#fields.hasErrors('password')}"
+                              th:errors="*{password}"></span>
+                    </div>
+
+                </fieldset>
+                <input class="button" value="Sign in" type="submit"></input>
+            </form>
+        </section> -->
     </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>

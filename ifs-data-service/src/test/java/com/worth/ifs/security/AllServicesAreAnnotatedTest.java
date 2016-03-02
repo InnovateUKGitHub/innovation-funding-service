@@ -4,7 +4,7 @@ import com.worth.ifs.BaseIntegrationTest;
 import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.transactional.FileServiceImpl;
-import com.worth.ifs.organisation.controller.CompanyHouseApiServiceImpl;
+import com.worth.ifs.organisation.transactional.CompanyHouseApiServiceImpl;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;

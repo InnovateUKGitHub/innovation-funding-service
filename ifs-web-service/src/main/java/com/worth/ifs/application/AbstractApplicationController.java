@@ -306,7 +306,6 @@ public abstract class AbstractApplicationController {
         model.addAttribute("currentSection", currentSection.orElse(null));
         if(currentSection.isPresent()) {
             List<Question> questions = simpleMap(currentSection.get().getQuestions(), questionService::getById);
-
             Map<Long, List<Question>> sectionQuestions = new HashMap<>();
             sectionQuestions.put(currentSection.get().getId(), questions);
 

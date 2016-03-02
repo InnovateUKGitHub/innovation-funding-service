@@ -90,7 +90,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public int getAssignedQuestionsCount(Long applicationId, Long processRoleId){
-        return applicationRestService.getAssignedQuestionsCount(applicationId, processRoleId).getSuccessObjectOrThrowException().intValue();
+        return applicationRestService.getAssignedQuestionsCount(applicationId, processRoleId).getSuccessObject().intValue();
     }
 
     @Override
