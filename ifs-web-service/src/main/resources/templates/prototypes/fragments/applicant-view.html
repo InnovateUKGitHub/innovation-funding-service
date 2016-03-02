@@ -426,6 +426,17 @@
 <!-- ========Applicant view - readonly application view======= -->
 <div th:fragment="prototype-readonly-application">
     <div th:include="prototypes/fragments/applicant-view :: prototype-application-details-panel" th:remove="tag" />
+    
+
+    <div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'} or ${param.status != null} and ${param.status[0] == 'assessorFeedback'}" th:remove="tag">
+
+        <div class="upload-section">
+            <h3 class="heading-small no-margin">Assessor feedback</h3>
+            <p>Upload the assessor feedback page</p>
+            <label for="file" class="button-secondary extra-margin">+ Upload</label>
+        </div>
+
+    </div>
 
     <h2 class="heading-medium">Details</h2>
 

@@ -32,6 +32,10 @@
                     <span> - feedback to applicants</span>
                 </div>
 
+                <div th:if="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
+                    <span> - assessor feedback</span>
+                </div>
+
             </div>
 
         </h2>
@@ -53,11 +57,42 @@
     </div>
 
     <div th:if="${status == 'closed'}" th:remove="tag">
-        <ul class="inline-nav cf">
-            <li th:class="${(page == 'dashboard' ? 'selected' : '')}"><a href="/prototypes/1570-dashboard?closed">Overview</a></li>
-            <li th:class="${(page == 'applications' ? 'selected' : '')}"><a href="/prototypes/1348-submitted-applications">Applications submitted</a></li>
-            <li th:class="${(page == 'not-submitted' ? 'selected' : '')}"><a href="/prototypes/1348-not-submitted-applications">Applications not submitted</a></li>
-        </ul>
+        
+        <div th:unless="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
+
+            <ul class="inline-nav cf">
+                <li th:class="${(page == 'dashboard' ? 'selected' : '')}">
+                    <a th:href="${(param.status != null ? '/prototypes/1570-dashboard?closed&#38;status=' + {param.status} : '/prototypes/1570-dashboard?closed')}">Overview</a>
+                </li>
+                <li th:class="${(page == 'applications' ? 'selected' : '')}">
+                    <a th:href="${(param.status != null ? '/prototypes/1348-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-submitted-applications')}">Applications submitted</a>
+                </li>
+                <li th:class="${(page == 'not-submitted' ? 'selected' : '')}">
+                    <a th:href="${(param.status != null ? '/prototypes/1348-not-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-not-submitted-applications')}">Applications not submitted</a>
+                </li>
+            </ul>
+
+        </div>
+
+        <div th:unless="${param.status[0] != 'assessorFeedback'}" th:remove="tag">
+            
+            <ul class="inline-nav cf">
+                <li th:class="${(page == 'dashboard' ? 'selected' : '')}">
+                    <a href="/prototypes/1968-dashboard?closed&#38;status=assessorFeedback">Overview</a>
+                </li>
+                <li th:class="${(page == 'applications' ? 'selected' : '')}">
+                    <a href="1998-application-feedback?closed&#38;status=assessorFeedback">Applications submitted</a>
+                </li>
+                <li th:class="${(page == 'not-submitted' ? 'selected' : '')}">
+                    <a th:href="${(param.status != null ? '/prototypes/1348-not-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-not-submitted-applications')}">Applications not submitted</a>
+                </li>
+                <li th:class="${(page == 'project-setup' ? 'selected' : '')}">Project setup</li>
+            </ul>
+
+        </div>
+
+
+
     </div>
 
 </div>

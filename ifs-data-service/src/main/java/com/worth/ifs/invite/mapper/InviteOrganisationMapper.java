@@ -20,12 +20,13 @@ import org.mapstruct.Mappings;
 public abstract class InviteOrganisationMapper extends BaseMapper<InviteOrganisation, InviteOrganisationResource, Long> {
 
     @Mappings({
-            @Mapping(source = "invites", target = "inviteResources")
+        @Mapping(source = "invites", target = "inviteResources"),
+        @Mapping(source = "organisation.name", target = "organisationNameConfirmed"),
     })
     public abstract InviteOrganisationResource mapToResource(InviteOrganisation domain);
 
     @Mappings({
-            @Mapping(source = "inviteResources", target = "invites")
+        @Mapping(source = "inviteResources", target = "invites")
     })
     public abstract InviteOrganisation mapToDomain(InviteOrganisationResource resource);
 

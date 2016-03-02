@@ -31,7 +31,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${''}, ${''})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/1345-comp-dashboard-MVP'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
@@ -58,7 +58,7 @@
 				<dt>Lead tech:</dt>
 				<dd>Mike Baddle</dd>
 
-				<dt>Comp exex:</dt>
+				<dt>Comp exec:</dt>
 				<dd>Jess Smith</dd>
 			</dl>
 
@@ -166,12 +166,12 @@
 		<div class="grid-row extra-margin constrain-width">
 			
 			<div class="column-third">
-				<a class="button-dashboard highlight" href="/prototypes/1348-submitted-applications">
+				<a class="button-dashboard highlight" th:href="${(param.status != null ? '/prototypes/1348-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-submitted-applications?closed')}">
 					<span class="heading-large">4</span><br />Applications submitted
 				</a>
 			</div>
 			<div class="column-third">
-				<a href="/prototypes/1348-not-submitted-applications" class="button-dashboard">
+				<a class="button-dashboard" th:href="${(param.status != null ? '/prototypes/1348-not-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-not-submitted-applications?closed')}">
 					<p><span class="heading-large">18</span><br />Applications not submitted</p>
 				</a>
 			</div>
