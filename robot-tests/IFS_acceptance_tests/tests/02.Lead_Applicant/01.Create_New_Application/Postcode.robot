@@ -29,6 +29,7 @@ Empty Postcode field
     [Documentation]    INFUND-890
     [Tags]    Failing
     # TODO EC Note that the test expects an error message which no longer exists - check whether it should or not!
+    # INFUND-2045
     Given the user navigates to the page    ${POSTCODE_LOOKUP_URL}
     When the user enters text to a text field    css=#postcode-check    ${EMPTY}
     And the user clicks the button/link    id=postcode-lookup
@@ -36,7 +37,7 @@ Empty Postcode field
 
 Same Operating address
     [Documentation]    INFUND-890
-    [Tags]    HappyPath    Failing
+    [Tags]    HappyPath
     Given the user navigates to the page    ${POSTCODE_LOOKUP_URL}
     When the user selects the checkbox "The registered test is the same as the operating address"
     Then the user should not see the element    css=#postcode-check
