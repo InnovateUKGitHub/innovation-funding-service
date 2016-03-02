@@ -66,7 +66,14 @@ public class ApplicationCreationController extends AbstractApplicationController
             log.error("Application not created with userId: " + userId);
         } else {
             CookieUtil.saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
+
+            // TODO INFUND-936 temporary measure to redirect to login screen until email verification is in place below
+            if (userAuthenticationService.getAuthentication(request) == null) {
+                return "redirect:/";
+            }
+            // TODO INFUND-936 temporary measure to redirect to login screen until email verification is in place above
             return String.format("redirect:/application/%s/contributors/invite?newApplication", String.valueOf(application.getId()));
+
         }
         return null;
     }

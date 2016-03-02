@@ -87,6 +87,8 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
                         .cookie(new Cookie(ApplicationCreationController.USER_ID, "1"))
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/application/" + applicationResource.getId()+"/contributors/invite?newApplication"));
+//                .andExpect(view().name("redirect:/application/" + applicationResource.getId()+"/contributors/invite?newApplication"));
+                // TODO INFUND-936 temporary measure to redirect to login screen until email verification is in place
+                .andExpect(view().name("redirect:/"));
     }
 }
