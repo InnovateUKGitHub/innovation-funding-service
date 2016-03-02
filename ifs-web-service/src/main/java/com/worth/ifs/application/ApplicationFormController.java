@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.util.AjaxResult;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
@@ -19,6 +18,7 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.util.AjaxResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StringMultipartFileEditor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -66,6 +67,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
         dataBinder.registerCustomEditor(LocalDate.class, "application.startDate", new LocalDatePropertyEditor(webRequest));
+        dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
     }
 
     @ProfileExecution
