@@ -1,0 +1,16 @@
+Dear ${notificationTarget.name},
+
+Please verify you email with this link :
+${verificationLink}
+
+Many thanks,
+
+The Innovate UK team
+
+Innovate UK
+North Star House
+North Star Avenue
+Swindon
+Wiltshire
+SN2 1JF
+© Crown copyright

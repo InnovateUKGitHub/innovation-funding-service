@@ -2,6 +2,8 @@ package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.notifications.resource.*;
+import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.repository.OrganisationRepository;
@@ -15,15 +17,15 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -33,6 +35,9 @@ import static java.util.stream.Collectors.toSet;
 public class UserServiceImpl extends BaseTransactionalService implements UserService {
 
     private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
+    enum Notifications {
+        VERIFY_EMAIL_ADDRESS
+    }
 
     @Autowired
     private UserRepository repository;
@@ -42,6 +47,10 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Autowired
     private OrganisationRepository organisationRepository;
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -106,8 +115,8 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<UserResource> createUser(final Long organisationId, UserResource userResource) {
-
+    public ServiceResult<UserResource> createApplicantUser(final Long organisationId, UserResource userResource) {
+        LOG.debug(String.format("createApplicantUser %s for organisation: %s ", userResource.getEmail(), organisationId));
         User newUser = assembleUserFromResource(userResource);
         addOrganisationToUser(newUser, organisationId);
         addRoleToUser(newUser, UserRoleType.APPLICANT.getName());
@@ -126,19 +135,32 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
             LOG.error("User with email " + userResource.getEmail() + " doesn't exist!");
             return serviceFailure(notFoundError(User.class, userResource.getEmail()));
         }
-        User newUser = createUser(existingUser.get(0), userResource);
-        UserResource updatedUser = createUser(newUser);
+        User newUser = updateExistingUserFromResource(existingUser.get(0), userResource);
+        UserResource updatedUser = new UserResource(saveUser(newUser));
         return serviceSuccess(updatedUser);
     }
 
     private UserResource createUserWithToken(User user) {
-        User createdUser = repository.save(user);
-        User createdUserWithToken = addTokenBasedOnIdToUser(createdUser);
-        User finalUser = repository.save(createdUserWithToken);
-        return new UserResource(finalUser);
+        user = repository.save(user);
+        addTokenBasedOnIdToUser(user);
+        user = saveUser(user);
+        sendUserVerificationEmail(user);
+        return new UserResource(user);
     }
 
-    private User createUser(User existingUser, UserResource updatedUserResource) {
+    private ServiceResult<Notification> sendUserVerificationEmail(User user) {
+        NotificationSource from = systemNotificationSource;
+        NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
+
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("verificationLink", "VerificationLink");
+
+        Notification notification = new Notification(from, singletonList(to), Notifications.VERIFY_EMAIL_ADDRESS, notificationArguments);
+        ServiceResult<Notification> result = notificationService.sendNotification(notification, EMAIL);
+        return result;
+    }
+
+    private User updateExistingUserFromResource(User existingUser, UserResource updatedUserResource) {
         existingUser.setPhoneNumber(updatedUserResource.getPhoneNumber());
         existingUser.setTitle(updatedUserResource.getTitle());
         existingUser.setLastName(updatedUserResource.getLastName());
@@ -146,9 +168,8 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         return existingUser;
     }
 
-    private UserResource createUser(User user) {
-        User savedUser = repository.save(user);
-        return new UserResource(savedUser);
+    private User saveUser(User user) {
+        return repository.save(user);
     }
 
     private void addRoleToUser(User user, String roleName) {
@@ -182,9 +203,8 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         return firstName + " " + lastName;
     }
 
-    private User addTokenBasedOnIdToUser(User user) {
+    private void addTokenBasedOnIdToUser(User user) {
         String userToken = user.getId() + "abc123";
         user.setToken(userToken);
-        return user;
     }
 }

@@ -38,7 +38,7 @@ public interface UserService {
     ServiceResult<Set<User>> findRelatedUsers(final Long applicationId);
 
     @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<UserResource> createUser(final Long organisationId, UserResource userResource);
+    ServiceResult<UserResource> createApplicantUser(final Long organisationId, UserResource userResource);
 
     @NotSecured("TODO - implement when permissions matrix in place")
     ServiceResult<UserResource> updateUser(UserResource userResource);

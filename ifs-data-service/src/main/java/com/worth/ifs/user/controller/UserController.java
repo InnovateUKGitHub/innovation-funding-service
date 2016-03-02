@@ -67,7 +67,7 @@ public class UserController {
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return userService.createUser(organisationId, userResource).toPostCreateResponse();
+        return userService.createApplicantUser(organisationId, userResource).toPostCreateResponse();
     }
 
     @RequestMapping("/updateDetails")
