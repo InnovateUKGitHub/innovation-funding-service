@@ -26,6 +26,16 @@
 				display: block;
 			}
 		</style>
+		<style th:if="${param.filterStatus[0] == 'Assessor feedback'}">
+			li.status.comp-status-feedback{
+				display: block;
+			}
+		</style>
+		<style th:if="${param.filterStatus[0] == 'Funders panel'}">
+			li.status.comp-status-panel{
+				display: block;
+			}
+		</style>
 	</div>
 
 </head>
@@ -47,7 +57,7 @@
 	
 	<div class="search-filters">
 		
-		<form formaction="/prototypes/1345-comp-dashboard" method="GET">
+		<form action="/prototypes/1345-comp-dashboard-MVP" method="GET">
 
 			<h2 class="heading-medium no-margin">Filter competitions</h2>
 
@@ -68,8 +78,10 @@
 						<option value="Open">Open</option>
 						<option value="Closed">Closed</option>
 						<option value="In assessment">In assessment</option>
-						<!-- <option value="funders-panel">Funders panel</option>
-						<option value="project-set-up">Project set-up</option>
+						<option value="Funders panel">Funders panel</option>
+						<option value="Assessor feedback">Assessor feedback</option> 
+						
+						<!-- <option value="project-set-up">Project set-up</option>
 						<option value="complete">Complete</option> -->
 					</select>
 				</div>
@@ -169,7 +181,7 @@
 				Closed
 			</p>
 		</li>
-		<li class="status  comp-status-panel">
+		<li class="status comp-status-assess">
 			<div class="comp-details">
 				<h3 class="heading-small"><a href="/prototypes/1968-dashboard?closed&#38;status=assessment">Managing energy on marine vessels</a></h3>
 				<p>Ref number: 14060002</p>
@@ -205,7 +217,7 @@
 				Open
 			</p>
 		</li>
-		<li class="status comp-status-closed">
+		<li class="status comp-status-feedback">
 			<div class="comp-details">
 				<h3 class="heading-small"><a href="/prototypes/1968-dashboard?closed&#38;status=assessorFeedback">Finding value in complex biological data</a></h3>
 				<p>Ref number: 14060006</p>
