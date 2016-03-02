@@ -63,6 +63,11 @@ public class RegistrationController {
     public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
     public final static String EMAIL_FIELD_NAME = "email";
 
+    @RequestMapping(value = "/successful", method = RequestMethod.GET)
+    public String registrationSuccessful(Model model, HttpServletRequest request) {
+        return "registration/successful";
+    }
+
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerForm(Model model, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
@@ -149,8 +154,7 @@ public class RegistrationController {
             RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request));
 
             if (createUserResult.isSuccess()) {
-                loginUser(createUserResult.getSuccessObject(), response);
-                destination = getPostRegisterRedirect(request, response, createUserResult);
+                destination = "redirect:/registration/successful";
             } else {
                 addEnvelopeErrorsToBindingResultErrors(createUserResult.getFailure().getErrors(), bindingResult);
             }
