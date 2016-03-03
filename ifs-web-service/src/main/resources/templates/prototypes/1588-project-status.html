@@ -67,10 +67,23 @@
 			</span>
 		</li>
 
-		<li class="require-action">
+		<li th:class="${(param.user[0] == 'nonLead' ? 'waiting' : 'require-action')}">
 			<span>
-				<h2 class="heading-medium"><a href="#">Other documents</a></h2>
-				<p>As the lead partner in the consortium, you will need to upload documents including:</p>
+				
+				<div th:unless="${param.user[0] == 'nonLead'}" th:remove="tag">
+
+					<h2 class="heading-medium"><a href="#">Other documents</a></h2>
+					<p>As the lead partner in the consortium, you will need to upload documents including:</p>
+
+				</div>
+				
+				<div th:if="${param.user[0] == 'nonLead'}" th:remove="tag">
+					
+					<h2 class="heading-medium">Other documents</h2>
+					<p>The lead partner of the consortium will need to upload documents including:</p>
+
+				</div>
+
 				<ul class="list-bullet">
 					<li>A collaboration agreement</li>
 					<li>Exploitation plan</li>
