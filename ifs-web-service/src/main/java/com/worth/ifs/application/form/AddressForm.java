@@ -16,6 +16,7 @@ public class AddressForm  implements Serializable {
     private boolean triedToSave = false;
 
     //@Postcode(message = "Please enter a valid postcode")
+    @NotEmpty(message="Please enter a UK postcode")
     private String postcodeInput = "";
     private String selectedPostcodeIndex;
     @Valid
@@ -25,7 +26,7 @@ public class AddressForm  implements Serializable {
     private boolean manualAddress = false;
 
     public AddressForm(String postcodeInput) {
-        this.postcodeOptions = new ArrayList<>();
+        this();
         this.postcodeInput = postcodeInput;
     }
 

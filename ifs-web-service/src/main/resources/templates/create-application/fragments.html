@@ -10,6 +10,8 @@
                 </label>
                 <input class="form-control" id="postcode-check" th:field="*{addressForm.postcodeInput}" type="text" />
                 <button type="submit" id="postcode-lookup" class="button" name="search-address">Find UK address</button>
+                <div th:if='${form.addressForm.postcodeInput != ""} and ${form.addressForm.postcodeOptions.size()}==0'>No results were found</div>
+
             </div>
 
             <div class="form-group" id="select-address-block" th:if="${form.addressForm.postcodeOptions != null and form.addressForm.postcodeOptions.size() != 0}">
