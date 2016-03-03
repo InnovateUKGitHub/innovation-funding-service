@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-.mac-set-env.sh
+eval $(docker-machine env)
 cp /etc/hosts /tmp/hostsbackup
 ip_address=$(docker-machine ip)
 cat /etc/hosts | grep -v 'ifs-local-dev' > /tmp/temphosts
