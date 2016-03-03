@@ -10,6 +10,10 @@ public class AcademicCost implements CostItem {
     private BigDecimal cost;
     private String description;
 
+    public AcademicCost() {
+
+    }
+
     public AcademicCost(Long id, BigDecimal cost, String description) {
         this.id = id;
         this.cost = cost;
