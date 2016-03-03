@@ -15,7 +15,7 @@ public class TokenServiceImpl implements TokenService{
 
     @Autowired
     TokenRepository repository;
-//    @Autowired
+    @Autowired
     ApplicationService applicationService;
 
 
