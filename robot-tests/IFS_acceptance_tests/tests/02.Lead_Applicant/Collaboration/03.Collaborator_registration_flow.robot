@@ -88,7 +88,7 @@ The type of the sub organisation navigates to the correct page
     When the user goes back to the previous page
     When user selects the radio button    organisationType    6
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Research & technology organisation (RTO
+    Then the user should see the text in the page    Non profit distributing Research & Technology Organisation (RTO)
     When the user should see the text in the page    Postcode
     When the user goes back to the previous page
     When user selects the radio button    organisationType    7
@@ -125,7 +125,7 @@ Academic organisations search (empty, invalid & valid inputs)
     Then the user should see the text in the page    University of Liverpool
     When the user clicks the button/link    link= University of Liverpool
     Then the user should see the text in the page    Enter address manually
-    And the user should see the text in the page    Academic
+    And the user should see the text in the page    University (HEI)
 
 Business organisation (accept invitation flow)
     [Documentation]    INFUND-1005
