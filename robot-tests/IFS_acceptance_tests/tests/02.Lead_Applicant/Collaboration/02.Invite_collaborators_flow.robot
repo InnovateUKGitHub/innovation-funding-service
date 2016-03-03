@@ -89,7 +89,7 @@ Pending collaborators should not be available in the assign list
 the applicant enters valid inputs
     click element    jquery=button:contains('Add person')
     Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    tester
-    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    test@example.com
+    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    ewan+12@hiveit.co.uk
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[2].organisationName    Fannie May
     Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
@@ -112,7 +112,7 @@ Lead Applicant should have the correct status
 the user adds new collaborator
     Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(1)
     Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(1) input    Roger Axe
-    Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(2) input    roger.axe@gmail.com
+    Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(2) input    ewan+13@hiveit.co.uk
     focus    jquery=li:nth-child(1) button:contains('Add person')
     sleep    1s
 
@@ -120,7 +120,7 @@ the applicant can enter Organisation name, Name and E-mail
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[3].organisationName    Z Ltd
     Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(1) input    Elvis Furcic
-    Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(2) input    elvis.furcic@gmail.com
+    Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+14@hiveit.co.uk
     focus    jquery=li:nth-child(2) button:contains('Add person')
     Sleep    2s
 

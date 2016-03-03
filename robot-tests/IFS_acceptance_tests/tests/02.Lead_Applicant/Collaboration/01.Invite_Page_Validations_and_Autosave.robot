@@ -95,7 +95,7 @@ Invalid email address is not allowed
     Then The user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
 
 Already invite email should not be allowed
-    When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ewan@hiveit.co.uk
+    When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ewan+5@hiveit.co.uk
     And The user clicks the button/link    jquery=button:contains('Begin application')
     #user should get validation error
     Then The user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
