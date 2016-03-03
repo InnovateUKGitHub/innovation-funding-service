@@ -24,8 +24,7 @@ Applicant can see the Not in Companies House company link
 
 Applicant can manually add the address and this persists on refresh
     [Documentation]    INFUND-888
-    [Tags]    Applicant    Company    Companies House   Pending
-    # Pending due to INFUND-2019
+    [Tags]    Applicant    Company    Companies House
     When the user clicks the button/link    name=manual-address
     Then the user should see the text in the page    Street
     And the user should see the text in the page    Town
@@ -36,8 +35,8 @@ Applicant can manually add the address and this persists on refresh
 
 Applicant can manually can enter and see details pass to the confirmation page
     [Documentation]    INFUND-888
-    [Tags]    Applicant    Company    Companies House    Pending
-    # Pending because of the INFUND-1816
+    [Tags]    Applicant    Company    Companies House
+    # Pending because of the INFUND-1816 (This ticket is assigned for sprint 7 but the test passes, so removed the pending tag)
     When the user enters text to a text field    id=street    The East Wing
     And the user enters text to a text field    id=street-2    Popple Manor
     And the user enters text to a text field    id=street-3    1, Popple Boulevard

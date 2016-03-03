@@ -524,8 +524,9 @@ public class OrganisationCreationController {
 
     public List<AddressResource> searchPostcode(String postcodeInput) {
         RestResult<List<AddressResource>>  addressLookupRestResult = addressRestService.doLookup(postcodeInput);
-        // TODO change way of handling
-        List<AddressResource> addressResourceList = addressLookupRestResult.getSuccessObject();
+        List<AddressResource> addressResourceList = addressLookupRestResult.handleSuccessOrFailure(
+                failure -> new ArrayList<>(),
+                addresses -> addresses);
         return addressResourceList;
     }
 }

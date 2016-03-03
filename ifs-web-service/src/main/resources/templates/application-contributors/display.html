@@ -27,7 +27,7 @@
       </h2>
       <ul class="list-bullet">
         <li>
-          <a th:href="${leadApplicant.email}" th:text="${leadApplicant.name}" />
+          <a th:href="${'mailto:'+leadApplicant.email}" th:text="${leadApplicant.name}" />
           <small>(Lead Applicant)</small>
         </li>
       </ul>
@@ -43,7 +43,7 @@
         </h2>
         <ul class="list-bullet">
             <li th:if="${organisationStats.index == 0}">
-              <a th:href="${leadApplicant.email}" th:text="${leadApplicant.name}" />
+              <a th:href="${'mailto:'+leadApplicant.email}" th:text="${leadApplicant.name}" />
               <small>(Lead Applicant)</small>
             </li>
 

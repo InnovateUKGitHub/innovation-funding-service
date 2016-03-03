@@ -177,3 +177,22 @@ p.subtitle {
 		text-align: center;
 	}
 }
+
+
+.questions-dl {
+	 padding-left: 20px;
+	 margin: 15px 0 20px;
+
+		dt div{
+			margin-left: -20px;
+			padding: 12px 0;
+		}
+		dd {
+			display: list-item;
+	    list-style-type: disc;
+			margin-left:20px;
+		}
+		dd,dt {
+			margin-bottom:5px;
+		}
+}
