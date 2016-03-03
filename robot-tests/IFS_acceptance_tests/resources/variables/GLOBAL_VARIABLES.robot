@@ -3,6 +3,7 @@ ${BROWSER}        Firefox
 ${SERVER_BASE}    localhost:8085
 ${PROTOCOL}       http://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
+${RUNNING_ON_DEV}       ${EMPTY}
 ${LOGIN_URL}      ${SERVER}/login
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/1/summary

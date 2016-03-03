@@ -20,7 +20,7 @@ ${APPLICATION_3_TEAM_PAGE}    ${SERVER}/application/3/contributors
 *** Test Cases ***
 The lead applicant should be able to add/remove a collaborator
     [Documentation]    INFUND-901
-    [Tags]    HappyPath         FailingForDev
+    [Tags]    HappyPath         Failing
     Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     And The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
     When The user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)

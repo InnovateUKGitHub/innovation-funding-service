@@ -28,7 +28,8 @@ ${YOUR_FINANCES_URL}    ${SERVER}/application/1/form/section/7
 *** Test Cases ***
 Valid invitation submit
     [Documentation]    INFUND-901
-    [Tags]    HappyPath
+    [Tags]    HappyPath     FailingForDev
+    # note - this is failing due to email failing on the dev server because of a firewall issue - this will be fixed soon!
     Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     When the applicant enters valid inputs
     Then The user should see the text in the page    Application overview
