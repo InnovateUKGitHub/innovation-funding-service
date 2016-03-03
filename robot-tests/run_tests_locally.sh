@@ -212,7 +212,7 @@ then
     runHappyPathTests
 elif [ "$remoteRun" ]
 then 
-    echo "pointing the tests at the ifs dev server - note that some tests may fail due to the database not being scrubbed" >&2
+    echo "Pointing the tests at the ifs dev server - note that some tests may fail if you haven't scrubbed the dev server's db" >&2
     runTestsRemotely
 else
     echo "using quickTest:   FALSE" >&2

@@ -60,7 +60,7 @@ Status of the invited people(Manage contributors page)
 
 The Lead Applicant can add new collaborators
     [Documentation]    INFUND-928
-    [Tags]    HappyPath
+    [Tags]    HappyPath     FailingForDev
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     When The user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then The user should see the text in the page    Manage Contributors
@@ -72,7 +72,7 @@ The Lead Applicant can add new collaborators
 
 Verify the invited collaborators are not editable
     [Documentation]    INFUND-929
-    [Tags]
+    [Tags]  FailingForDev
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     When The user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then The user should see the text in the page    Manage Contributors
