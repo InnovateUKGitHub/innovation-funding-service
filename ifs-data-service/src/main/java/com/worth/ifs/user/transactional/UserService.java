@@ -48,5 +48,5 @@ public interface UserService {
     ServiceResult<UserResource> updateUser(UserResource userResource);
 
     @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<Void> verifyEmail(String hash);
+    ServiceResult<Void> activateUser(Long userId);
 }

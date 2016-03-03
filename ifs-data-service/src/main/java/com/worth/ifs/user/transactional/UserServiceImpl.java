@@ -1,10 +1,7 @@
 package com.worth.ifs.user.transactional;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.application.transactional.ApplicationService;
-import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.*;
@@ -57,11 +54,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     @Autowired
     private UserRepository repository;
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
     private ProcessRoleRepository processRoleRepository;
-
     @Autowired
     private OrganisationRepository organisationRepository;
     @Autowired
@@ -70,7 +63,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     private NotificationService notificationService;
     @Autowired
     private SystemNotificationSource systemNotificationSource;
-
     @Autowired
     private RoleRepository roleRepository;
 
@@ -210,35 +202,28 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<Void> verifyEmail(String hash){
-        Optional<Token> optionalToken = tokenRepository.findByHash(hash);
-        if(optionalToken.isPresent()){
-            Token token = optionalToken.get();
-            if(TokenType.VERIFY_EMAIL_ADDRESS.equals(token.getType()) && token.getClassName().equals(User.class.getName())){
-                Long userId = token.getClassPk();
-                User user = userRepository.findOne(userId);
-                user.setStatus(UserStatus.ACTIVE);
-                userRepository.save(user);
+    public ServiceResult<Void> activateUser(Long userId){
+        return getUser(userId).andOnSuccessReturnVoid(u -> {
+            u.setStatus(UserStatus.ACTIVE);
+            userRepository.save(u);
+        });
 
-                checkTokenExtraAttributes(token, userId);
-                tokenRepository.delete(token);
-                return serviceSuccess();
-            }
-        }
-        return serviceFailure(CommonErrors.notFoundError(Token.class, hash));
-    }
 
-    /**
-     *  if there are extra attributes in the token, then maybe we need to create a new application, or add the user to a application.
-     */
-    private void checkTokenExtraAttributes(Token token, Long userId) {
-        JsonNode extraInfo = token.getExtraInfo();
-        if(extraInfo.has("competitionId") && extraInfo.get("competitionId").isLong()){
-            Long competitionId = extraInfo.get("competitionId").asLong();
-            if(competitionId != null){
-                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, "");
-            }
-        }
+//        Optional<Token> optionalToken = tokenRepository.findByHash(hash);
+//        if(optionalToken.isPresent()){
+//            Token token = optionalToken.get();
+//            if(TokenType.VERIFY_EMAIL_ADDRESS.equals(token.getType()) && token.getClassName().equals(User.class.getName())){
+//                Long userId = token.getClassPk();
+//                User user = userRepository.findOne(userId);
+//                user.setStatus(UserStatus.ACTIVE);
+//                userRepository.save(user);
+//
+////                checkTokenExtraAttributes(token, userId);
+////                tokenRepository.delete(token);
+//                return serviceSuccess(token);
+//            }
+//        }
+//        return serviceFailure(CommonErrors.notFoundError(Token.class, hash));
     }
 
     private User updateExistingUserFromResource(User existingUser, UserResource updatedUserResource) {

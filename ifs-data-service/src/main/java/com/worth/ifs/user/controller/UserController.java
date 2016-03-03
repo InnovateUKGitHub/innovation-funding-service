@@ -1,6 +1,10 @@
 package com.worth.ifs.user.controller;
 
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.token.domain.Token;
+import com.worth.ifs.token.domain.TokenType;
+import com.worth.ifs.token.service.TokenService;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.UserService;
@@ -27,6 +31,10 @@ public class UserController {
     private static final Log LOG = LogFactory.getLog(UserController.class);
     @Autowired
     private UserService userService;
+    @Autowired
+    private TokenService tokenService;
+//    @Autowired
+//    private ApplicationService applicationService;
 
     @RequestMapping("/token/{token}")
     public RestResult<User> getUserByToken(@PathVariable("token") final String token) {
@@ -70,9 +78,28 @@ public class UserController {
 
     @RequestMapping("/verifyEmail/{hash}")
     public RestResult<Void> verifyEmail(@PathVariable("hash") final String hash) {
+        Optional<Token> optionalToken = tokenService.getTokenByHash(hash);
+
+        if(optionalToken.isPresent()){
+            Token token = optionalToken.get();
+            if(TokenType.VERIFY_EMAIL_ADDRESS.equals(token.getType()) &&
+                    User.class.getName().equals(token.getClassName())
+            ){
+                userService.activateUser(token.getClassPk()).andOnSuccessReturnVoid(v -> {
+                    tokenService.handleExtraAttributes(token);
+                    tokenService.removeToken(token);
+                });
+            }
+        }else{
+            return RestResult.restFailure(CommonErrors.notFoundError(Token.class, hash));
+        }
+
         LOG.warn(String.format("UserController verifyHash: %s", hash));
-        return userService.verifyEmail(hash).toPutResponse();
+        return RestResult.restSuccess();
     }
+
+
+
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
