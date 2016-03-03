@@ -1,8 +1,6 @@
 package com.worth.ifs.application.finance.view.item;
 
-import com.worth.ifs.application.finance.model.CostFormField;
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostValue;
+import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CapitalUsage;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import org.apache.commons.logging.Log;
@@ -18,7 +16,7 @@ public class CapitalUsageHandler extends CostHandler {
     private final Log log = LogFactory.getLog(getClass());
 
     @Override
-    public CostItem toCostItem(Long id, List<CostFormField> costFormFields) {
+    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
         Integer deprecation = null;
         String description = null;
         String existing = null;
@@ -26,9 +24,9 @@ public class CapitalUsageHandler extends CostHandler {
         BigDecimal residualValue = null;
         Integer utilisation = null;
 
-        for(CostFormField costFormField : costFormFields) {
-            final String costFormValue = costFormField.getValue();
-            switch (costFormField.getCostName()) {
+        for(FinanceFormField financeFormField : financeFormFields) {
+            final String costFormValue = financeFormField.getValue();
+            switch (financeFormField.getCostName()) {
                 case "item":
                     description = costFormValue;
                     break;
@@ -48,7 +46,7 @@ public class CapitalUsageHandler extends CostHandler {
                     utilisation = Integer.valueOf(costFormValue);
                     break;
                 default:
-                    log.info("Unused costField: " + costFormField.getCostName());
+                    log.info("Unused costField: " + financeFormField.getCostName());
                     break;
             }
         }

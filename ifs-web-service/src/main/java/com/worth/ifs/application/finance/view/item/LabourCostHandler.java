@@ -1,11 +1,8 @@
 package com.worth.ifs.application.finance.view.item;
 
-import com.worth.ifs.application.finance.model.CostFormField;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.LabourCost;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,16 +13,16 @@ import java.util.List;
 public class LabourCostHandler extends CostHandler {
 
     @Override
-    public CostItem toCostItem(Long id, List<CostFormField> costFormFields) {
+    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
         BigDecimal grossAnnualSalary = null;
         String role = null;
         Integer labourDays = null;
         String description = null;
 
-        for(CostFormField costFormField : costFormFields) {
-            String fieldValue = costFormField.getValue();
+        for(FinanceFormField financeFormField : financeFormFields) {
+            String fieldValue = financeFormField.getValue();
             if(fieldValue != null) {
-                switch (costFormField.getCostName()) {
+                switch (financeFormField.getCostName()) {
                     case "grossAnnualSalary":
                         grossAnnualSalary = getBigDecimalValue(fieldValue, 0D);
                         break;
@@ -40,7 +37,7 @@ public class LabourCostHandler extends CostHandler {
                         description = "Working days per year";
                         break;
                     default:
-                        log.info("Unused costField: " + costFormField.getCostName());
+                        log.info("Unused costField: " + financeFormField.getCostName());
                         break;
                 }
             }

@@ -1,13 +1,10 @@
 package com.worth.ifs.application.finance.view.item;
 
-import com.worth.ifs.application.finance.model.CostFormField;
+import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.Overhead;
 import com.worth.ifs.finance.resource.cost.OverheadRateType;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -16,23 +13,23 @@ import java.util.List;
 public class OverheadsHandler extends CostHandler {
 
     @Override
-    public CostItem toCostItem(Long id, List<CostFormField> costFormFields) {
+    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
         Integer customRate = null;
         Integer agreedRate = null;
         String rateType = null;
 
-        for(CostFormField costFormField : costFormFields) {
-            switch (costFormField.getCostName()) {
+        for(FinanceFormField financeFormField : financeFormFields) {
+            switch (financeFormField.getCostName()) {
                 case "rateType":
-                    rateType = costFormField.getValue();
+                    rateType = financeFormField.getValue();
                     break;
                 case "customRate":
-                    customRate = Integer.valueOf(costFormField.getValue());
+                    customRate = Integer.valueOf(financeFormField.getValue());
                 case "agreedRate":
-                    agreedRate = Integer.valueOf(costFormField.getValue());
+                    agreedRate = Integer.valueOf(financeFormField.getValue());
                     break;
                 default:
-                    log.info("Unused costField: " + costFormField.getCostName());
+                    log.info("Unused costField: " + financeFormField.getCostName());
                     break;
             }
         }

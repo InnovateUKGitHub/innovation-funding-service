@@ -1,6 +1,6 @@
 package com.worth.ifs.application.finance.view;
 
-import com.worth.ifs.application.finance.model.CostFormField;
+import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.item.*;
@@ -129,7 +129,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
         for (CostType costType : CostType.values()) {
             List<String> costTypeKeys = request.getParameterMap().keySet().stream().
                     filter(k -> k.startsWith(costType.getType() + "-")).collect(Collectors.toList());
-            Map<Long, List<CostFormField>> costFieldMap = getCostDataRows(request, costTypeKeys);
+            Map<Long, List<FinanceFormField>> costFieldMap = getCostDataRows(request, costTypeKeys);
             List<CostItem> costItemsForType = getCostItems(costFieldMap, costType, costTypeKeys);
             costItems.addAll(costItemsForType);
         }
@@ -140,22 +140,22 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
     /**
      * Retrieve the complete cost item data row, so everything is together
      */
-    private Map<Long, List<CostFormField>> getCostDataRows(HttpServletRequest request, List<String> costTypeKeys) {
+    private Map<Long, List<FinanceFormField>> getCostDataRows(HttpServletRequest request, List<String> costTypeKeys) {
         // make sure that we have the fields together acting on one cost
-        Map<Long, List<CostFormField>> costKeyMap = new HashMap<>();
+        Map<Long, List<FinanceFormField>> costKeyMap = new HashMap<>();
         for (String costTypeKey : costTypeKeys) {
             String value = request.getParameter(costTypeKey);
-            CostFormField costFormField = getCostFormField(costTypeKey, value);
-            if (costFormField == null)
+            FinanceFormField financeFormField = getCostFormField(costTypeKey, value);
+            if (financeFormField == null)
                 continue;
 
-            if (costFormField.getId() != null && !costFormField.getId().equals("null")) {
-                Long id = Long.valueOf(costFormField.getId());
+            if (financeFormField.getId() != null && !financeFormField.getId().equals("null")) {
+                Long id = Long.valueOf(financeFormField.getId());
                 if (costKeyMap.containsKey(id)) {
-                    costKeyMap.get(id).add(costFormField);
+                    costKeyMap.get(id).add(financeFormField);
                 } else {
-                    List<CostFormField> costKeyValues = new ArrayList<>();
-                    costKeyValues.add(costFormField);
+                    List<FinanceFormField> costKeyValues = new ArrayList<>();
+                    costKeyValues.add(financeFormField);
                     costKeyMap.put(id, costKeyValues);
                 }
             }
@@ -166,12 +166,12 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
     /**
      * Retrieve the cost items from the request based on their type
      */
-    private List<CostItem> getCostItems(Map<Long, List<CostFormField>> costFieldMap, CostType costType, List<String> costTypeKeys) {
+    private List<CostItem> getCostItems(Map<Long, List<FinanceFormField>> costFieldMap, CostType costType, List<String> costTypeKeys) {
         List<CostItem> costItems = new ArrayList<>();
         CostHandler costHandler = getCostItemHandler(costType);
 
         // create new cost items
-        for (Map.Entry<Long, List<CostFormField>> entry : costFieldMap.entrySet()) {
+        for (Map.Entry<Long, List<FinanceFormField>> entry : costFieldMap.entrySet()) {
             CostItem costItem = costHandler.toCostItem(entry.getKey(), entry.getValue());
             if (costItem != null) {
                 costItems.add(costItem);
@@ -181,23 +181,23 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
     }
 
     private void storeField(String fieldName, String value, Long userId, Long applicationId) {
-        CostFormField costFormField = getCostFormField(fieldName, value);
-        CostType costType = CostType.fromString(costFormField.getKeyType());
+        FinanceFormField financeFormField = getCostFormField(fieldName, value);
+        CostType costType = CostType.fromString(financeFormField.getKeyType());
         CostHandler costHandler = getCostItemHandler(costType);
         Long costFormFieldId = 0L;
-        if (costFormField.getId() != null && !costFormField.getId().equals("null")) {
-            costFormFieldId = Long.parseLong(costFormField.getId());
+        if (financeFormField.getId() != null && !financeFormField.getId().equals("null")) {
+            costFormFieldId = Long.parseLong(financeFormField.getId());
         }
-        CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(costFormField));
-        storeCostItem(costItem, userId, applicationId, costFormField.getQuestionId());
+        CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(financeFormField));
+        storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
     }
 
-    private CostFormField getCostFormField(String costTypeKey, String value) {
+    private FinanceFormField getCostFormField(String costTypeKey, String value) {
         String[] keyParts = costTypeKey.split("-");
         if (keyParts.length > 3) {
-            return new CostFormField(costTypeKey, value, keyParts[3], keyParts[2], keyParts[1], keyParts[0]);
+            return new FinanceFormField(costTypeKey, value, keyParts[3], keyParts[2], keyParts[1], keyParts[0]);
         } else if (keyParts.length == 3) {
-            return new CostFormField(costTypeKey, value, null, keyParts[2], keyParts[1], keyParts[0]);
+            return new FinanceFormField(costTypeKey, value, null, keyParts[2], keyParts[1], keyParts[0]);
         }
         return null;
     }

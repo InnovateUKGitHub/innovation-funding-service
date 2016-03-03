@@ -44,11 +44,16 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="staff">
+                <label class="form-label" for="incurred-staff">
                     <span>Staff
                     </span>
                 </label>
-                <input class="form-control" id="staff" type="text" />
+                <input type="number"
+                       class="form-control"
+                       id="incurred-staff"
+                       name="incurred-staff"
+                       th:value="${academicFinance.incurredStaff}"
+                       th:readonly="${false}"  />
             </div>
 
             <div class="form-group">
