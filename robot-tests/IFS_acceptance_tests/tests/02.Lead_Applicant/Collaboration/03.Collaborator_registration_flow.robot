@@ -19,6 +19,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/4e09372b85241cb03137ffbeb2110a1552daa1086b0bce0ff7d8ff5d2063c8ffc10e943acf4a3c7a
 ${SELECT_ORGANISATION}    ${SERVER}/organisation/create/type/new-account-organisation-type
+${INVITE_LINK_2}    ${SERVER}/accept-invite/1d92a6ace9030f2d992f47ea60529028fd49542dffd6b179f68fae072b4f1cc61f12a419b79a5267
 
 *** Test Cases ***
 Lead applicant details should show in the invite page
@@ -126,7 +127,7 @@ Academic organisations search (empty, invalid & valid inputs)
     Then the user should see the text in the page    Enter address manually
     And the user should see the text in the page    Academic
 
-Accept Invitation flow (Business organisation)
+Business organisation (accept invitation flow)
     [Documentation]    INFUND-1005
     ...
     ...    INFUND-1779
@@ -143,7 +144,7 @@ Accept Invitation flow (Business organisation)
     And the user clicks the button/link    css=#select-address-block > button
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and")
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user fills the create account form
+    And the user fills the create account form    Rogier    De Regt
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
 
 User who accepted the invite should be able to log-in
@@ -163,14 +164,39 @@ The collaborator who accepted the invite should be visible in the assign list
     When the user clicks the button/link    css=.assign-button
     Then the user should see the element    jQuery=button:contains("Rogier De Regt")
 
+Acadamic organisation (accept invitation flow)
+    [Documentation]    INFUND-1166
+    [Tags]    Pending
+    Given the user navigates to the page    ${INVITE_LINK_2}
+    When the user clicks the button/link    jQuery=.button:contains("Create")
+    And user selects the radio button    organisationType    2
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    When user selects the radio button    organisationType    5
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    And the user clicks the button/link    jQuery=.button:contains("Search")
+    Then the user should see an error    may not be empty
+    When the user enters text to a text field    id=org-name    Liverpool
+    And the user clicks the button/link    jQuery=.button:contains("Search")
+    Then the user should see the text in the page    University of Liverpool
+    When the user clicks the button/link    link= University of Liverpool
+    and the user enters text to a text field    css=#postcode-check    postcode
+    And the user clicks the button/link    id=postcode-lookup
+    And the user clicks the button/link    css=#select-address-block > button
+    And the user clicks the button/link    jQuery=.button:contains("Save organisation and")
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user fills the create account form    Steven    Gerrard
+    Then the user should be redirected to the correct page    ${DASHBOARD_URL}
+    #here we need to add the finance check
+
 *** Keywords ***
 user selects the radio button
     [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
     Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
 
 the user fills the create account form
-    Input Text    id=firstName    Rogier
-    Input Text    id=lastName    De Regt
+    [Arguments]    ${NAME}    ${LAST_NAME}
+    Input Text    id=firstName    ${NAME}
+    Input Text    id=lastName    ${LAST_NAME}
     Input Text    id=phoneNumber    0612121212
     Input Password    id=password    testtest
     Input Password    id=retypedPassword    testtest
