@@ -122,7 +122,7 @@ applicant marks one finance sub-section as incomplete
 
 the green check should not be visible
     go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
-    Page Should Not Contain Image    css=.finance-summary tr:nth-of-type(2) img
+    Run Keyword If      '${REMOTE_URL}' == ''       Page Should Not Contain Image    css=.finance-summary tr:nth-of-type(2) img
 
 the applicant marks the finance question as complete
     Click Element    css=[aria-controls="collapsible-1"]
