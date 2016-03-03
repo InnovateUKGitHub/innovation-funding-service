@@ -120,5 +120,5 @@ The applicant should get a validation error message
     [Arguments]    ${validation error}
     focus    jQuery=button:contains("Save and")
     sleep   5s
-    Wait Until Page Contains    ${validation_error}
+    Run Keyword and ignore error        Wait Until Page Contains    ${validation_error}
     #Element Should Be Visible    css=.error-message
