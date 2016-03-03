@@ -15,7 +15,7 @@ ${correct_password}    password
 ${incorrect_password}    wrongpassword
 ${long_password}    passwordpasswordpasswordpasswordpasswordpasswordpassword
 ${short_password}    pass
-${valid_email}    ___ewan_@worth.systems
+${valid_email}    ewan+1@hiveit.co.uk
 
 *** Test Cases ***
 First name left blank
