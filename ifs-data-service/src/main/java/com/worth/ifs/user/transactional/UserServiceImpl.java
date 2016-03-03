@@ -115,7 +115,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<Set<User>> findRelatedUsers(final Long applicationId) {
-
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
 
         Set<User> related = roles.stream()
@@ -207,23 +206,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
             u.setStatus(UserStatus.ACTIVE);
             userRepository.save(u);
         });
-
-
-//        Optional<Token> optionalToken = tokenRepository.findByHash(hash);
-//        if(optionalToken.isPresent()){
-//            Token token = optionalToken.get();
-//            if(TokenType.VERIFY_EMAIL_ADDRESS.equals(token.getType()) && token.getClassName().equals(User.class.getName())){
-//                Long userId = token.getClassPk();
-//                User user = userRepository.findOne(userId);
-//                user.setStatus(UserStatus.ACTIVE);
-//                userRepository.save(user);
-//
-////                checkTokenExtraAttributes(token, userId);
-////                tokenRepository.delete(token);
-//                return serviceSuccess(token);
-//            }
-//        }
-//        return serviceFailure(CommonErrors.notFoundError(Token.class, hash));
     }
 
     private User updateExistingUserFromResource(User existingUser, UserResource updatedUserResource) {

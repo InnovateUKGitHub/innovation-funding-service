@@ -1,6 +1,5 @@
 package com.worth.ifs.token.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.token.JpaConverterJson;
@@ -84,10 +83,4 @@ public class Token {
     public void setExtraInfo(JsonNode extraInfo) {
         this.extraInfo = extraInfo;
     }
-
-    @JsonIgnore
-    public Class getClazz() throws ClassNotFoundException {
-        return Class.forName(this.className);
-    }
-
 }

@@ -1,6 +1,5 @@
 package com.worth.ifs.token.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.token.domain.TokenType;
 
@@ -59,10 +58,4 @@ public class TokenResource {
     public void setType(TokenType type) {
         this.type = type;
     }
-
-    @JsonIgnore
-    public Class getClazz() throws ClassNotFoundException {
-        return Class.forName(this.className);
-    }
-
 }
