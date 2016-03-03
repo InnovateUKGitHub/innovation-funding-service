@@ -11,7 +11,6 @@ import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.exception.AutosaveElementException;
@@ -22,6 +21,7 @@ import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.AjaxResult;
+import com.worth.ifs.util.MessageUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -451,8 +451,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .forEach(question -> question.getFormInputs()
                                 .stream()
                                 .forEach(formInput -> {
-                                            if(formInput.getFormInputType().getTitle().equals("fileupload") && request instanceof StandardMultipartHttpServletRequest) {
-                                                if(params.containsKey(REMOVE_UPLOADED_FILE)){
+                                            if (formInput.getFormInputType().getTitle().equals("fileupload") && request instanceof StandardMultipartHttpServletRequest) {
+                                                if (params.containsKey(REMOVE_UPLOADED_FILE)) {
                                                     formInputResponseService.removeFile(formInput.getId(), applicationId, processRoleId).getSuccessObjectOrThrowException();
                                                 } else {
                                                     final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
@@ -465,8 +465,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                                     file.getSize(),
                                                                     file.getOriginalFilename(),
                                                                     file.getBytes());
-                                                            if(result.isFailure()){
-                                                                errorMap.put(question.getId(), result.getFailure().getErrors().stream().map(Error::getErrorMessage).collect(Collectors.toList()));
+                                                            if (result.isFailure()) {
+                                                                errorMap.put(question.getId(), result.getFailure().getErrors().stream().map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
                                                             }
                                                         } catch (IOException e) {
                                                             throw new UnableToReadUploadedFile();

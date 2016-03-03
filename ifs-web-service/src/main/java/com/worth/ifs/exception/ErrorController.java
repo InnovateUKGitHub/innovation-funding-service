@@ -2,15 +2,18 @@ package com.worth.ifs.exception;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.commons.error.exception.*;
+import com.worth.ifs.util.MessageUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.NoSuchMessageException;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -155,15 +158,7 @@ public class ErrorController {
             mav.addObject("stacktrace", ExceptionUtils.getStackTrace(e));
         }
 
-        String msg;
-        try {
-            msg = messageSource.getMessage(e.getClass().getName(), arguments.toArray(), req.getLocale());
-            if(msg == null){
-                msg = e.getMessage();
-            }
-        } catch(NoSuchMessageException nsme){
-            msg = e.getMessage();
-        }
+        String msg = MessageUtil.getFromMessageBundle(messageSource, e.getClass().getName(), e.getMessage(), arguments.toArray(), req.getLocale());
 
         mav.addObject("message", msg);
         mav.addObject("url", req.getRequestURL().toString());
