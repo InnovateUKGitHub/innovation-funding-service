@@ -1,7 +1,7 @@
 package com.worth.ifs.security;
 
 import com.worth.ifs.commons.security.StatelessAuthenticationFilter;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -22,10 +22,8 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 @Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    public StatelessAuthenticationFilter getStatelessAuthenticationFilter() {
-        return new StatelessAuthenticationFilter();
-    }
+    @Autowired
+    private StatelessAuthenticationFilter statelessAuthenticationFilter;
 
 
     public SecurityConfig() {
@@ -43,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 // allow anonymous resource requests
-                .requestMatchers(getStatelessAuthenticationFilter().getIgnoredRequestMatchers()).permitAll()
+                .requestMatchers(statelessAuthenticationFilter.getIgnoredRequestMatchers()).permitAll()
                 .antMatchers("/user/email/*/password/*").permitAll()
                 .antMatchers("/user/verifyEmail/*").permitAll()
                 .antMatchers("/user/createLeadApplicantForOrganisation/*").permitAll()
@@ -56,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling()
                 .and()
-                .addFilterBefore(getStatelessAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers().cacheControl();
     }
 
