@@ -93,10 +93,10 @@ the applicant enters valid inputs
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[2].organisationName    Fannie May
     Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
-    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(2) input    collaborator2@fanniemay.com
+    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+10@hiveit.co.uk
     Click Element    jquery=li:nth-child(3) button:contains('Add person')
     Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
-    Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(2) input    collaborator3@fanniemay.com
+    Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
     focus    jquery=li:nth-child(3) button:contains('Add person')
     Sleep    1s
     Click Element    jquery=button:contains("Begin application")

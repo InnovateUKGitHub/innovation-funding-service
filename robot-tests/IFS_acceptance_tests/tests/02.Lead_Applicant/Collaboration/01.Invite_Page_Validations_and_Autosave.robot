@@ -36,7 +36,7 @@ Validations for the Email field user remains in the invite page
     [Documentation]    INFUND-901
     [Tags]
     When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
-    And the applicant fills the lead organisation fields    Collaborator01    ewan+4@hiveit.co.uk
+    And the applicant fills the lead organisation fields    Collaborator01    @hiveit.co.uk
     Then The user should see the text in the page    Inviting Contributors
 
 Validation for the name field user remains in the invite page
@@ -94,8 +94,8 @@ Invalid email address is not allowed
     #user should get validation error
     Then The user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
 
-Already invite email should not allowed
-    When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ewan+4@hiveit.co.uk
+Already invite email should not be allowed
+    When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ewan@hiveit.co.uk
     And The user clicks the button/link    jquery=button:contains('Begin application')
     #user should get validation error
     Then The user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
@@ -138,7 +138,7 @@ the user's inputs should still be visible
     [Arguments]    ${group_number}
     Textfield Value Should Be    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator01
     ${input_value} =    Get Value    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input
-    Should Be Equal As Strings    ${input_value}    tester@test.com
+    Should Be Equal As Strings    ${input_value}    ewan+8@hiveit.co.uk
     Textfield Value Should Be    name=organisations[${group_number}].organisationName    Test name
     Textfield Value Should Be    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator test
     ${input_value} =    Get Value    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input
