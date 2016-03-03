@@ -1,31 +1,23 @@
 package com.worth.ifs.application;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.worth.ifs.application.form.ContributorsForm;
 import com.worth.ifs.application.form.InviteeForm;
 import com.worth.ifs.application.form.OrganisationInviteForm;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.CookieUtil;
-
 import com.worth.ifs.util.JsonUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,22 +27,36 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 // TODO DW - INFUND-1555 - handle rest results
 @Controller
 @RequestMapping("/application/{applicationId}/contributors")
-public class ApplicationContributorController extends AbstractApplicationController {
+public class ApplicationContributorController{
     public static final String APPLICATION_CONTRIBUTORS_DISPLAY = "application-contributors/display";
     public static final String APPLICATION_CONTRIBUTORS_INVITE = "application-contributors/invite";
     private static final String CONTRIBUTORS_COOKIE = "contributor_invite_state";
     private final Log log = LogFactory.getLog(getClass());
     @Autowired
     private InviteRestService inviteRestService;
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+    @Autowired
+    private ApplicationService applicationService;
+    @Autowired
+    private CompetitionService competitionService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private OrganisationService organisationService;
+    @Autowired
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
     private Validator validator;

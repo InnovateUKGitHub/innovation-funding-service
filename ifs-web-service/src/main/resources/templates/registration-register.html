@@ -74,7 +74,7 @@
                      </label>
                     <input th:class="${#fields.hasErrors('phoneNumber') ? 'form-control field-error' : 'form-control'}"  type="text" th:field="*{phoneNumber}" required="required" data-required-errormessage="Please enter a phone number"/>
                 </div>
-                <div th:class="${#fields.hasErrors('email')}? 'form-group error':'form-group'">
+                <div th:class="${#fields.hasErrors('email') and invitee == null}? 'form-group error':'form-group'">
                     <label class="form-label" for="email">
                         <span class="form-label-bold">Email</span>
 
@@ -99,7 +99,7 @@
                 <div th:class="${#fields.hasErrors('password')}? 'form-group error':'form-group'">
                     <label class="form-label" for="password">
                         <span class="form-label-bold">Create password</span>
-                        <span class="form-hint">Passwords must be between 6 and 30 characters</span>
+                        <span class="form-hint">Your password should have been 6 and 30 characters.</span>
                         <span th:if="${#fields.hasErrors('password')}" th:remove="tag">
                               <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
                         </span>

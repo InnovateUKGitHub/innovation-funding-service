@@ -23,7 +23,7 @@ Labour
     ...    INFUND-736
     ...    INFUND-1256
     [Tags]    Labour    Autosave    Calculations    Finance
-    Given the user navigates to the page      ${YOUR_FINANCES_URL}
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And the Applicant fills in the Labour costs
     And the calculations of the labour should be correct
     When the applicant fills a second row in the labour costs
@@ -40,7 +40,7 @@ Overheads
     ...    Acceptance tests for the Overheads section calculations
     ...    INFUND-736
     [Tags]    Overheads    Autosave    Calculations    Finance
-    Given the user navigates to the page      ${YOUR_FINANCES_URL}
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And the Applicant fills in the Overheads costs
     And the calculations of the overheads should be correct
     When the applicant changes the data in the overheads section
@@ -54,7 +54,7 @@ Materials
     [Documentation]    INFUND-192
     ...    INFUND-736
     [Tags]    Materials    Autosave    Calculations    Finance
-    Given the user navigates to the page      ${YOUR_FINANCES_URL}
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And the Applicant fills the Materials fields
     And the calculations of the Materials should be correct
     When the applicant fills a second row in the materials section
@@ -67,7 +67,7 @@ Materials
 Capital usage
     [Documentation]    INFUND-736
     [Tags]    Capital Usage    Autosave    Calculations    Finance
-    Given the user navigates to the page      ${YOUR_FINANCES_URL}
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And the applicant fills the 'capital usage' field
     And the calculations of the 'capital usage' should be correct
     When the applicant fills a new subcontractor
@@ -80,8 +80,8 @@ Capital usage
 Subcontracting costs
     [Documentation]    INFUND-192
     ...    INFUND-736
-    [Tags]    Subcontracting Costs    Autosave    Calculations    Finance    Pending
-    Given the user navigates to the page      ${YOUR_FINANCES_URL}
+    [Tags]    Subcontracting Costs    Autosave    Calculations    Finance
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And the applicant edits the Subcontracting costs section
     When the applicant adds a new row in the subcontracting costs
     And the total subcontracting costs should be correct
@@ -93,7 +93,7 @@ Subcontracting costs
 Travel and subsistence
     [Documentation]    INFUND-736
     [Tags]    Travel and subsistence    Autosave    Calculations    Finance
-    Given the user navigates to the page      ${YOUR_FINANCES_URL}
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And the Applicant fills the Travel fields
     And the calculations of the Travel and subsistence should be correct
     When the applicant fills a second row in the travel and subsistence section
@@ -106,7 +106,7 @@ Travel and subsistence
 Other costs
     [Documentation]    INFUND-736
     [Tags]    Other costs    Autosave    Calculations    Finance
-    Given the user navigates to the page      ${YOUR_FINANCES_URL}
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And the applicant adds one row for the other costs
     When the applicant adds a second row for the other costs fields
     And the other costs total should be correct
@@ -116,7 +116,7 @@ Other costs
 Other Funding
     [Documentation]    INFUND-438
     [Tags]    Applicant    Application    Finances    Other funding
-    Given the user navigates to the page      ${YOUR_FINANCES_URL}
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And Applicant selects 'Yes' for other funding
     And Applicant chooses to add another source of funding
     When Applicant can see a new row

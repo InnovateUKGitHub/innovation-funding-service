@@ -17,9 +17,9 @@ Verify the applicant can assign a question
     [Tags]    Collaboration    HappyPath
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    When Applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Jessica Doe
-    Then The user should see the notification    Question assigned successfully
-    And The user should see the element    css=#form-input-12 .readonly
+    When the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Jessica Doe
+    Then the user should see the notification    Question assigned successfully
+    And the user should see the element    css=#form-input-12 .readonly
     And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    Jessica Doe
     [Teardown]    User closes the browser
 
@@ -28,9 +28,7 @@ Verify the field is disabled for other collaborators
     [Tags]    Collaboration    HappyPath
     [Setup]    Guest user log-in    &{collaborator2_credentials}
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    Capture Page Screenshot
     Then The user should see the element    css=#form-input-12 .readonly
-    Capture Page Screenshot
     [Teardown]    User closes the browser
 
 Verify the field is enabled for the collaborator/assignee
@@ -38,12 +36,11 @@ Verify the field is enabled for the collaborator/assignee
     [Tags]    Collaboration    Overview    HappyPath
     [Setup]    Guest user log-in    &{collaborator1_credentials}
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    Then The user should see the notification    Steve Smith has assigned a question to you
-    And The user should see the element    css=#form-input-12 .editor
-    And The user should not see the element    css=#form-input-12 .readonly
+    Then the user should see the browser notification    Steve Smith has assigned a question to you
+    And the user should see the element    css=#form-input-12 .editor
+    And the user should not see the element    css=#form-input-12 .readonly
     And the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
     And the question should contain the correct status/name    css=#form-input-12 .assign-container    You
-    Capture Page Screenshot
 
 Verify the ' Last update message'
     [Documentation]    INFUND-280
@@ -51,22 +48,20 @@ Verify the ' Last update message'
     Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     When the collaborator edits public description question
     Then the question should contain the correct status/name    css=#form-input-12 .textarea-footer    Last updated: Today by you
-    Capture Page Screenshot
 
 Verify collaborator can mark as ready for review
     [Documentation]    INFUND-877
     [Tags]    Collaboration    HappyPath
     Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    When The user clicks the button/link    jQuery=button:contains("Ready for review")
-    Then The user should see the notification    Question assigned successfully
-    And The user should see the text in the page    You have reassigned this question to
-    Capture Page Screenshot
+    When the user clicks the button/link    jQuery=button:contains("Ready for review")
+    Then the user should see the notification    Question assigned successfully
+    And the user should see the text in the page    You have reassigned this question to
 
 Verify the field is disabled for the collaborator
     [Documentation]    INFUND-275
     [Tags]    Collaboration
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    Then The user should see the element    css=#form-input-12 .readonly
+    Then the user should see the element    css=#form-input-12 .readonly
     [Teardown]    User closes the browser
 
 Verify that the field has been reassigned to the lead applicant
@@ -74,9 +69,9 @@ Verify that the field has been reassigned to the lead applicant
     [Tags]    Collaboration
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    Then The user should see the notification    Jessica Doe has assigned a question to you
-    And The user should see the element    css=#form-input-12 .editor
-    And The user should not see the element    css=#form-input-12 .readonly
+    Then the user should see the browser notification    Jessica Doe has assigned a question to you
+    And the user should see the element    css=#form-input-12 .editor
+    And the user should not see the element    css=#form-input-12 .readonly
     And the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
     And the question should contain the correct status/name    css=#form-input-12 .assign-container    You
     [Teardown]    User closes the browser

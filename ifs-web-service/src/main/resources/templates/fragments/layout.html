@@ -13,9 +13,10 @@
       (function(){if(navigator.userAgent.match(/IEMobile\/10\.0/)){var d=document,c="appendChild",a=d.createElement("style");a[c](d.createTextNode("@-ms-viewport{width:auto!important}"));d.getElementsByTagName("head")[0][c](a);}})();
     </script>
 
-    <!--[if gt IE 8]><!--><link href="/css/screen.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/screen.css')}" media="screen,print" rel="stylesheet" type="text/css" /><!--<![endif]-->
+    <!--[if gt IE 9]><!--><link href="/css/screen.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/screen.css')}" media="screen,print" rel="stylesheet" type="text/css" /><!--<![endif]-->
     <!--[if IE 7]><link href="/css/ie7.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/ie7.css')}" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
     <!--[if IE 8]><link href="/css/ie8.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/ie8.css')}" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
+    <!--[if IE 9]><link href="/css/ie9.css" th:href="${@mvcResourceUrlProvider.getForLookupPath('/css/ie9.css')}" media="screen,print" rel="stylesheet" type="text/css" /><![endif]-->
 
     <!--[if IE 8]>
     <script type="text/javascript">
@@ -141,10 +142,18 @@
         </div>
       </div>
     </header>
+
 </div>
 <!-- ===========================Place: <main> content-start =========================== -->
 
-<div th:fragment="main-content-start"></div>
+<div th:fragment="main-content-start">
+  <div class="phase-banner">
+  <p>
+    <strong class="phase-tag">BETA</strong>
+    <span>This is a new service – your <a href="#">feedback</a> will help us to improve it.</span>
+  </p>
+</div>
+</div>
 
 <!-- ===========================Place: <main> content-end =========================== -->
 
@@ -210,11 +219,11 @@
           th:href="${linkUrl}"
           th:text="${linkTitle}" />
 
-        <div class="deadline" th:if="${currentCompetition != null}">Days left to submit&nbsp;&nbsp;
-          <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" th:remove="tag" />
-        </div>
         <div th:remove="tag" th:if='${url}'>
             <a th:href="@{${url}}" th:text="${urlText}"></a>
+        </div>
+        <div class="deadline" th:if="${currentCompetition != null}">Days left to submit&nbsp;&nbsp;
+          <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" th:remove="tag" />
         </div>
     </div>
 </div>

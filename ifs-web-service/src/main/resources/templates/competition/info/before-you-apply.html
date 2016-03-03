@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor Dashboard'" th:remove="tag" />
+</head>
+<body class="assessment-review">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div class="page-title">
+        <h1 class="heading-xlarge">Before you apply</h1>
+    </div>
+    <p>
+    The innovation funding service is an online service run by Innovate UK.
+    Its aim is to help fund your business research and development innovation. 
+    As the lead organisation you will be seeking funding for your project.
+    This may involve collaborating with other partner organisations.
+    </p>
+    <h2 class="heading-large">Creating an account</h2>
+    <p>
+    You must create an online account to be able to apply for a competition with Innovate UK.
+    When you create an account you will be able to apply for competitions; track competition applications;
+    view application feedback and set up successful projects.
+    </p>
+    <h2 class="heading-large">Lead organisation</h2>
+    <p>You are the Lead Organisation if:</p>
+    <ul class="list list-bullet">
+      <li>You are responsible for collecting the information for the application.</li>
+      <li>You are able to invite other contributors or collaborators</li>
+      <li>You will lead the project if your application is successful</li>
+    </ul>
+    <h2 class="heading-large">Contributors and collaborators</h2>
+    <p>
+    You may invite contributors from your organisation to help you complete your application
+    You may collaborate with partner organisations to deliver the project.  You will need to invite collaborators as representatives of your partners to complete the application.  Collaborators are responsible for entering their own project costs and contributions into the application.   As the lead organisation you will be able to see a summary of your partners’ costs but will not see the detailed breakdown.
+   </p>
+    <p>
+    Some Innovate UK competitions require you to collaborate with partner organisations on a project to be eligible to apply into that competition.
+    Partner organisations may be other businesses, research organisations, a public sector organisation or charity.
+    When you start your application you will be asked to invite contributors and collaborators.
+   </p>
+   <h2 class="heading-large">Research partner participation</h2>
+   <p>Innovate UK supports UK businesses to fund research innovation.
+     We recognise the value of businesses collaborating with academic and other research partners.
+     In order for your research project to be eligible to claim a grant there are participation rules.
+     These rules limit the amount of involvement a research partner may have in your project.
+     The participation rules will be set out in the eligibility criteria for each competition.
+    </p>
+    <p>
+    You will not be able to submit your application if your research participation is over the stated percentage for the competition.
+  </p>
+  <h2 class="heading-large">Business eligibility</h2>
+    <p>
+    To be eligible to claim public funding for your project, your business must be registered in the UK at the project start.
+    You must also deliver the project in the UK.
+  </p>
+  <p>
+    As a business, Innovate UK will fund a percentage of your eligible project costs.
+    You must be able to fund the remainder of the project costs yourselves.
+    The amount of grant funding you can claim will depend upon the size of your organisation and the type of research activity you are undertaking in the project.
+    For further information please see our funding rules.
+  </p>
+  <h2 class="heading-large">Project costs</h2>
+
+<p>As a business, if your application is successful, Innovate UK will fund a percentage of your eligible project costs.
+  To be eligible, your costs must be directly incurred as a result of you delivering your research and development project.
+  There are some types of cost which are not eligible.  For full details on what costs you can claim please see our project costs guidance.</p>
+  <p>
+  Innovate UK pays costs quarterly in arrears. You need to submit a claim for those costs and  provide evidence of you incurring them.
+  </p>
+  <h2 class="heading-large">Your application</h2>
+<p>Before you apply into the competition, we recommend you take a look at the questions you will need to answer.
+   It is likely that you will need to take some time to prepare the answers to these questions.
+   By creating an account you and your contributors can log back into the service to work on your application as you collate the information.
+  </p>
+<p>The competition has an application deadline.
+  Please note that this is absolute and will not be extended.
+  We receive a high volume of applications into the competition and the service is typically very busy on the last couple of days prior to a deadline.
+  We recommend that you do not leave your application to the last minute.
+  Service volumes during this period are high and may cause the service to be slower than usual.
+  </p>
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

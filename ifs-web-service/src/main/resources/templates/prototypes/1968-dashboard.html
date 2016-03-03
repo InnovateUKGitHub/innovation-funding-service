@@ -31,16 +31,13 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${''}, ${''})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/1345-comp-dashboard-MVP'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Innovate UK, 4891061'}, ${'Technology inspired'}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" th:remove="tag" />
 
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='dashboard', status=${(param.closed != null ? 'closed' : 'open')}" th:remove="tag" />
-
-
-
 	
 	<div class="grid-row constrain-width">
 		<div class="column-two-thirds">
@@ -58,7 +55,7 @@
 				<dt>Lead tech:</dt>
 				<dd>Mike Baddle</dd>
 
-				<dt>Comp exex:</dt>
+				<dt>Comp exec:</dt>
 				<dd>Jess Smith</dd>
 			</dl>
 
@@ -109,6 +106,10 @@
 
 								<div th:if="${param.status[0] == 'feedback'}" th:remove="tag">
 									Feedback to applicants
+								</div>
+
+								<div th:if="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
+									Project setup
 								</div>
 							</h2>
 							<div class="grid-row">
@@ -173,17 +174,43 @@
 	<div th:if="${param.closed != null}" th:remove="tag">
 		
 		<div class="grid-row extra-margin constrain-width">
+
+			<div th:unless="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
 			
-			<div class="column-third">
-				<a class="button-dashboard highlight" href="/prototypes/1348-submitted-applications">
-					<span class="heading-large">4</span><br />Applications submitted
-				</a>
+				<div class="column-third">
+					<a class="button-dashboard highlight" th:href="${'/prototypes/1348-submitted-applications?status=' + {param.status}}">
+						<span class="heading-large">4</span><br />Applications submitted
+					</a>
+				</div>
+				<div class="column-third">
+					<a th:href="${'/prototypes/1348-not-submitted-applications?status=' + {param.status}}" class="button-dashboard">
+						<p><span class="heading-large">18</span><br />Applications not submitted</p>
+					</a>
+				</div>
+
 			</div>
-			<div class="column-third">
-				<a href="/prototypes/1348-not-submitted-applications" class="button-dashboard">
-					<p><span class="heading-large">18</span><br />Applications not submitted</p>
-				</a>
+
+
+			<div th:if="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
+				<div class="column-third">
+					<a class="button-dashboard highlight" th:href="${'/prototypes/1998-application-feedback?status=' + {param.status}}">
+						<span class="heading-large">4</span><br />Applications requiring feedback
+					</a>
+				</div>
+				<div class="column-third">
+					<a class="button-dashboard highlight" th:href="${'/prototypes/2000-project-setup?status=' + {param.status}}">
+						<span class="heading-large">3</span><br />Projects being setup
+					</a>
+				</div>
+				<div class="column-third">
+					<a th:href="${'/prototypes/1348-not-submitted-applications?status=' + {param.status}}" class="button-dashboard">
+						<p><span class="heading-large">18</span><br />Applications not submitted</p>
+					</a>
+				</div>
 			</div>
+
+
+
 
 		</div>
 

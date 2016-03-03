@@ -27,8 +27,7 @@ Applicant can access the Overview page
 Verify the "Review and submit" button (overview page)
     [Documentation]    -INFUND-195
     ...    -INFUND-214
-    [Tags]    Applicant    Submit    Review and Submit    Overview    HappyPath    Pending
-    # Pending because of INFUND-2018
+    [Tags]    Applicant    Submit    Review and Submit    Overview    HappyPath
     Given the user navigates to the page    ${application_overview_url}
     And the overview page should have the "Review & Submit" button
     When the applicant clicks the submit button

@@ -23,7 +23,7 @@ Status changes when we assign a question to the collaborator
 The applicant can assign re-assign a question from the overview page
     [Documentation]    INFUND-39
     [Tags]    Applicant    Overview    Pending
-    #Pending INFUND-2018
+    #Pending INFUND-2017
     Given the user navigates to the page    ${application_overview_url}
     When the applicant assigns the "Project summary" question to "Steve Smith"    Steve Smith
     Then the applicant should see a blue flag in the Public description (overview page)

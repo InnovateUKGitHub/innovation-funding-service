@@ -1,11 +1,25 @@
 package com.worth.ifs.application;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.AjaxResult;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.view.DefaultFinanceFormHandler;
@@ -19,6 +33,8 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.util.AjaxResult;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +44,14 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.util.*;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -159,14 +174,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
         /* End save action */
-
-        if(bindingResult.hasErrors()){
-            this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
-                    Optional.ofNullable(question), userApplicationRoles);
-            return "application-form";
-        } else {
-            return getRedirectUrl(request, applicationId);
-        }
+        return getRedirectUrl(request, applicationId);
     }
 
     private String getRedirectUrl(HttpServletRequest request, Long applicationId) {

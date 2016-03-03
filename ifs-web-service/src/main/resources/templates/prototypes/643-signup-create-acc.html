@@ -13,15 +13,15 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/650-comp-details'})" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition eligibility'}, ${'/prototypes/920-comp-eligibility'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div class="message-alert">
+	<!--<div class="message-alert">
         <h2 class="heading-medium no-margin-bottom" style="padding-top: 10px;">Competition eligibility</h2>
         <p class="">To begin a new application for the competition 'Technology Inspired' you must meet the following criteria</p>
 
-        <ul class="list-bullet extra-margin">
+         <ul class="list-bullet extra-margin">
         	<li>
         		<h3 class="heading-small>">Create this application as the <strong>lead partner</strong> of the consortium</h3>
         		<p>If you are not the lead, please contact your lead partner to create the application</p>
@@ -34,21 +34,21 @@
         		<h3 class="heading-small>">Be based in the <strong>UK</strong></h3>
         		<p>Non UK organisations are not eligible to recieve funding from Innovate UK</p>
         	</li>
-        </ul>
+        </ul> 
         
-    </div>
+    </div>-->
 
 	<div class="grid-row">
 		<section class="column-half">
 		    <h1 class="heading-large">New to this service?</h1>
 		    <p>If you haven’t used this service before you must <a href="/prototypes/643-create-acc-business-lead">create an account</a>, even if you already have an existing account with "Innovate UK".</p>
 
-		    <p>Creating an account allows you to:</p>
+		    <p>When you create an account you can:</p>
 		    <ul class="list-bullet">
-		        <li>Apply for a competition</li>
-		        <li>Track your competition applications</li>
-		        <li>View application feedback</li>
-		        <li>Setup successful project</li>
+		        <li>apply for a competition</li>
+		        <li>track your competition applications</li>
+		        <li>view application feedback</li>
+		        <li>set up successful projects</li>
 		    </ul>
 
 		    <a href="/prototypes/643-create-acc-business-lead" class="button button-large">Create account</a>
