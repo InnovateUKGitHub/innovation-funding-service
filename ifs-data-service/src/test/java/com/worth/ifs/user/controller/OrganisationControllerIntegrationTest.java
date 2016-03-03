@@ -49,7 +49,7 @@ public class OrganisationControllerIntegrationTest  extends BaseControllerIntegr
         assertEquals("Business", org.getOrganisationType().getName());
 
         org = controller.findById(5L).getSuccessObject();
-        assertEquals("Academic", org.getOrganisationType().getName());
+        assertEquals("University (HEI)", org.getOrganisationType().getName());
         assertEquals("Research", org.getOrganisationType().getParentOrganisationType().getName());
     }
 
@@ -85,7 +85,7 @@ public class OrganisationControllerIntegrationTest  extends BaseControllerIntegr
         assertEquals(companyHouseId, org.getCompanyHouseNumber());
         assertEquals(companyName, org.getName());
     }
-    
+
     @Rollback
     @Test
     public void testCreateSecondConstructor() throws Exception {

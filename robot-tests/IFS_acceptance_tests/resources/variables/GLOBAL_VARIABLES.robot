@@ -3,6 +3,7 @@ ${BROWSER}        Firefox
 ${SERVER_BASE}    localhost:8085
 ${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
+${RUNNING_ON_DEV}       ${EMPTY}
 ${LOGIN_URL}      ${SERVER}/
 ${TEMPORARY_LOGOUT_URL}   ${LOGIN_URL}Logout/
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard

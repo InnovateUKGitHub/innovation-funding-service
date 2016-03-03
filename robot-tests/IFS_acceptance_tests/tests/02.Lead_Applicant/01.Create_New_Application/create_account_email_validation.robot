@@ -10,7 +10,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
-${valid_email}    _ewan__@worth.systems
+${valid_email}    ewan@hiveit.co.uk
 ${invalid_email_plain}    notavalidemail
 ${invalid_email_symbols}    @%^%#$@#$@#.com
 ${invalid_email_no_username}    @example.com

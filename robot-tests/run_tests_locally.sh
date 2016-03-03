@@ -113,7 +113,7 @@ function runHappyPathTests {
 function runTestsRemotely {
     echo "***********RUNNING AGAINST THE IFS DEV SERVER...**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:ifs.dev.innovateuk.org  -v PROTOCOL:https:// --exclude Failing --exclude Pending --exclude FailingForDev --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:ifs.dev.innovateuk.org  -v PROTOCOL:https:// -v RUNNING_ON_DEV:yes --exclude Failing --exclude Pending --exclude FailingForDev --name IFS $testDirectory
 }
 
 

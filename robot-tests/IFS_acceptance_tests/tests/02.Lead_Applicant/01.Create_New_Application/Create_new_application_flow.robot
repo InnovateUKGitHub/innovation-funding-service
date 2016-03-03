@@ -57,7 +57,7 @@ Verify the name of the new application
     ...    INFUND-1163
     [Tags]    Applicant    New application    HappyPath     Failing
     # failing because of user not created as part of another test which is failing due to auto login not being functional
-    When the guest user enters the log in credentials    robot@test.com    testtest
+    When the guest user enters the log in credentials    ewan+2@hiveit.co.uk    testtest
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     and the user edits the competition title
     Then user should see the text in the page    test title - Application number 0000
@@ -80,7 +80,7 @@ the user enters the details and clicks the create account
     Input Text    id=firstName    John
     Input Text    id=lastName    Smith
     Input Text    id=phoneNumber    23232323
-    Input Text    id=email    robot@test.com
+    Input Text    id=email    ewan+2@hiveit.co.uk
     Input Password    id=password    testtest
     Input Password    id=retypedPassword    testtest
     Select Checkbox    termsAndConditions
@@ -104,7 +104,7 @@ the user enters the details for the non CH
     Input Text    id=firstName    tester
     Input Text    id=lastName    tester
     Input Text    id=phoneNumber    23232323
-    Input Text    id=email    robot2@test.com
+    Input Text    id=email    ewan+3@hiveit.co.uk
     Input Password    id=password    testtest
     Input Password    id=retypedPassword    testtest
     Select Checkbox    termsAndConditions

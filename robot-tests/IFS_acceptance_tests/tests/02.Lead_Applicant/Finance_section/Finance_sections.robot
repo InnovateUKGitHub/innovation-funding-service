@@ -10,9 +10,6 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
-*** variables ***
-${APPLICANT_USERNAME}    applicant@innovateuk.gov.uk
-${APPLICANT_PSW}    test
 
 *** Test Cases ***
 Finance sub-sections
