@@ -114,22 +114,22 @@ The user's inputs should be autosaved
     And the user navigates to the page    ${INVITE_COLLABORATORS2_PAGE}
     And the user should not see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
     And the user should not see the text in the page    Collaborator01
-    And the user should not see the text in the page    tester@test.com
+    And the user should not see the text in the page    ewan+8@hiveit.co.uk
     When the user navigates to the page    ${APPLICATION_3_TEAM_PAGE}
     And the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should not see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
     And the user should not see the text in the page    Collaborator01
-    And the user should not see the text in the page    tester@test.com
+    And the user should not see the text in the page    ewan+8@hiveit.co.uk
 
 *** Keywords ***
 the user fills the name and email field and reloads the page
     [Arguments]    ${group_number}
     Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator01
-    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    tester@test.com
+    Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+8@hiveit.co.uk
     Input Text    name=organisations[${group_number}].organisationName    Test name
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator test
-    Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    collaboratortest@fanniemay.com
+    Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+9@hiveit.co.uk
     sleep    1s
     focus    jquery=li:nth-child(1) button:contains('Add person')
     reload page
@@ -159,10 +159,10 @@ the applicant fills the lead organisation fields
 the applicant can enter Organisation name, Name and E-mail
     Input Text    name=organisations[1].organisationName    Fannie May
     Input Text    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
-    Input Text    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    collaborator2@fanniemay.com
+    Input Text    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+10@hiveit.co.uk
     Click Element    jquery=li:nth-child(2) button:contains('Add person')
     Input Text    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
-    Input Text    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(2) input    collaborator3@fanniemay.com
+    Input Text    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
     focus    jquery=li:nth-child(2) button:contains('Add person')
     Sleep    1s
     reload page
@@ -182,7 +182,7 @@ the applicant inputs details
     [Arguments]    ${group_number}
     Input Text    name=organisations[${group_number}].organisationName    Fannie May
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
-    Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    collaborator2@fanniemay.com
+    Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+10@hiveit.co.uk
 
 the applicant fills the Partner organisation fields
     [Arguments]    ${group_number}    ${PARTNER_ORG_NAME}    ${ORG_NAME}    ${EMAIL_NAME}
