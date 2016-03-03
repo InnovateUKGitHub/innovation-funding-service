@@ -54,9 +54,9 @@ the user unselects the checkbox "The registered test is the same as the operatin
 
 
 the address fields should be filled
-    # postocde lookup implemented on dev but not on our local machines, so check which is running:
-   Run Keyword If      '${REMOTE_URL}' != ''       the address fields should be filled with valid data
-   Run Keyword If      '${REMOTE_URL}' == ''       the address fields should be filled with dummy data
+    # postcode lookup implemented on dev but not on our local machines, so check which is running:
+   Run Keyword If      '${RUNNING_ON_DEV}' != ''       the address fields should be filled with valid data
+   Run Keyword If      '${RUNNING_ON_DEV}' == ''       the address fields should be filled with dummy data
 
 the address fields should be filled with valid data
     Textfield Should Contain    id=street    Am Reprographics
