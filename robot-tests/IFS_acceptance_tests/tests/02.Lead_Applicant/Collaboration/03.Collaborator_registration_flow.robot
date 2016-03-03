@@ -163,10 +163,15 @@ The collaborator who accepted the invite should be visible in the assign list
     And the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the user clicks the button/link    css=.assign-button
     Then the user should see the element    jQuery=button:contains("Rogier De Regt")
+    [Teardown]    TestTeardown User closes the browser
 
-Acadamic organisation (accept invitation flow)
+Academic organisation (accept invitation flow)
     [Documentation]    INFUND-1166
-    [Tags]    Pending
+    ...
+    ...    This test case checks if the academic's finance form is visible for the academic organisations
+    [Tags]    Pending    HappyPath
+    [Setup]    The guest user opens the browser
+    # Pending the academics finances
     Given the user navigates to the page    ${INVITE_LINK_2}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    organisationType    2
@@ -186,7 +191,10 @@ Acadamic organisation (accept invitation flow)
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Steven    Gerrard
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
-    #here we need to add the finance check
+    When the user clicks the button/link    link=A novel solution to an old problem
+    and the user clicks the button/link    link=Your finances
+    Then the user should see the text in the page    TSB Contribution
+    and the user should not see the text in the page    Labour
 
 *** Keywords ***
 user selects the radio button
