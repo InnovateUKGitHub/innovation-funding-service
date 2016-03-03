@@ -71,14 +71,14 @@
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="upload-section">
         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
-        <input type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'" class="inputfile"/>
-        <label th:for="${formInput.getId()}" class="button-secondary extra-margin">+ Upload</label>
+        <input th:if="${#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())}" type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'" class="inputfile"/>
+        <label th:if="${#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())}" th:for="${formInput.getId()}" class="button-secondary extra-margin">+ Upload</label>
         <div th:if="${!#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())}">
             <div>
                 <a th:href="@{${question.getId()} + '/forminput/' + ${formInput.getId()} + '/download'}" class="uploaded-file" th:text="${responses?.get(formInput.getId())?.getFileEntry()?.getName()}">The-uploaded-file-example.pdf</a>
             </div>
-            <div>
-                <button class="buttonlink" type="submit" name="remove_uploaded_file">Remove</button>
+            <div class="alignright">
+                <button class="button-secondary" type="submit" name="remove_uploaded_file">Remove</button>
             </div>
         </div>
     </div>
