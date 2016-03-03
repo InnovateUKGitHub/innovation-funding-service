@@ -1,7 +1,11 @@
 Dear ${notificationTarget.name},
 
-Please verify you email with this link :
+You have recently set up an account with the Innovation Funding Service. Please click on the verification link to confirm your email address:
 ${verificationLink}
+
+Once verified you can log into your account and start your application. From your online dashboard you can also create your profile and manage your applications.
+
+If you did not request an account with us, please ignore this email.
 
 Many thanks,
 
