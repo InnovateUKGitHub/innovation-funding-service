@@ -15,7 +15,7 @@ The user presses the back button while on the create account page
     [Tags]    Create account    Back button
     Given the user navigates to the page    ${LOGIN_URL}
     When the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
-    And the user presses the back button
+    And the user goes back to the previous page
     Then the user should be redirected to the correct page    ${LOGIN_URL}
 
 The user logs in and visits the create account page
@@ -26,5 +26,3 @@ The user logs in and visits the create account page
     Then the user should see the text in the page    Your Profile
 
 *** Keywords ***
-the user presses the back button
-    Go Back
