@@ -10,18 +10,21 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition eligibility',linkClass='link-back',linkUrl=@{eligibility},currentApplication=${currentApplication}" th:remove="tag" />
 
     <div class="page-title">
-        <h1 class="heading-xlarge">What we ask you....</h1>
+        <h1 class="heading-xlarge no-margin">Technology inspired</h1>
+        <h2 class="heading-large">What we ask you....</h2>
     </div>
-
     <p>The application is split into 3 sections.  Each section has questions which you can individually mark as complete to track your progress in the application.</p>
+  <hr/>
 <h2 class="heading-large">Project Details</h2>
 <p>In this section you will provide the details of your project.  This section is not scored, but the scope of your project is important. </p>
-<p><em>Application details</em> : the title of your project, the start date and project length.  This section will also list you as the lead organisation and any partner organisations you have named as collaborators.  The lead applicant must complete this section.</p>
-<p><em>Project summary</em> : here you must describe your project.  We use this section to assign experts to assess your application so please provide a summary of the innovation in your project.   You may complete this section or assign to another contributor or partner to complete it.</p>
-<p><em>Public description</em> : describe your project in a way that you are happy to see published.  Please do not include any commercially sensitive information.  If your project is successful and awarded funding, Innovate UK will publish this description.  </p>
-<p><em>Project scope</em> : describe how your project fits the scope of the competition as described in the competition brief.  If your project is not in scope it will not be eligible to be funded in this competition and so will not be sent for assessment.  Innovate UK own the scope of the competition and will provide feedback if we decide that your project is not in scope.</p>
+<p><strong>Application details</strong> : the title of your project, the start date and project length.  This section will also list you as the lead organisation and any partner organisations you have named as collaborators.  The lead applicant must complete this section.</p>
+<p><strong>Project summary</strong> : here you must describe your project.  We use this section to assign experts to assess your application so please provide a summary of the innovation in your project.   You may complete this section or assign to another contributor or partner to complete it.</p>
+<p><strong>Public description</strong> : describe your project in a way that you are happy to see published.  Please do not include any commercially sensitive information.  If your project is successful and awarded funding, Innovate UK will publish this description.  </p>
+<p><strong>Project scope</strong> : describe how your project fits the scope of the competition as described in the competition brief.  If your project is not in scope it will not be eligible to be funded in this competition and so will not be sent for assessment.  Innovate UK own the scope of the competition and will provide feedback if we decide that your project is not in scope.</p>
+<hr/>
 
 <h2 class="heading-large">Application questions</h2>
 <p>This section has questions which will be scored by the assessors.  Following assessment, you will receive feedback from the assessors for each question, which you may find useful.  </p>
@@ -123,10 +126,10 @@
 <dd>what difference the funding will make to the project</dd>
 <dd>how the project will benefit the UK</dd>
 </dl>
-
+<hr />
 <h2 class="heading-large">Finances</h2>
-<h3 class="heading-small">Your finances</h3>
-<p><em>Provide your organisation’s finances.</em> All partner organisations participating in your project are required to enter their project costs into this section.  We require a detailed breakdown. This is to make sure  that they are eligible project costs  you can claim funding against. To be eligible, all costs must be incurred directly as a result of the project and must be in the following categories:
+<h3 class="heading-medium">Your finances</h3>
+<p><strong>Provide your organisation’s finances.</strong> All partner organisations participating in your project are required to enter their project costs into this section.  We require a detailed breakdown. This is to make sure  that they are eligible project costs  you can claim funding against. To be eligible, all costs must be incurred directly as a result of the project and must be in the following categories:
 </p>
 <ul class="list list-bullet">
 <li>labour: staff costs paid through PAYE or equivalent records</li>
@@ -138,21 +141,21 @@
 <li>other</li>
 </ul>
 
-<p><em>Business Size:</em>  If you are a business applicant, you must select the size of your business as being either small, medium or large.  If you are unsure, please <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">use the EU definition available here</a>.  The size of your business determines the amount of grant that you are eligible to receive.
+<p><strong>Business Size:</strong>  If you are a business applicant, you must select the size of your business as being either small, medium or large.  If you are unsure, please <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">use the EU definition available here</a>.  The size of your business determines the amount of grant that you are eligible to receive.
 </p>
 
-<p><em>Funding level:</em> You must enter the percentage of grant funding you wish to receive as an individual partner in the project.  This figure must not be greater than the funding level permitted for your business size. For more information read the funding rules here : <span style="color:red;font-weight:bold;">&lt;link to funding rules&gt;</span> </p>
+<p><strong>Funding level:</strong> You must enter the percentage of grant funding you wish to receive as an individual partner in the project.  This figure must not be greater than the funding level permitted for your business size. For more information read the funding rules here : <span style="color:red;font-weight:bold;">&lt;link to funding rules&gt;</span> </p>
 
-<p><em>Other funding:</em>  You must complete this section if you have applied for or received any other public sector funding for this project.
+<p><strong>Other funding:</strong>  You must complete this section if you have applied for or received any other public sector funding for this project.
 </p>
 
-<h3 class="heading-small">Finances Overview - this covers 3 areas:</h3>
+<h3 class="heading-medium">Finances Overview - this covers 3 areas:</h3>
 
-<p><em>Funding rules for this competition:</em> The participation rule for research organisations is shown here.  Your project must fall within the eligibility rules before you can submit your application.
+<p><strong>Funding rules for this competition:</strong> The participation rule for research organisations is shown here.  Your project must fall within the eligibility rules before you can submit your application.
   </p>
-<p><em>Finances Summary:</em> This section provides an overview of the eligible costs for each partner and the amount of funding they are claiming.</p>
+<p><strong>Finances Summary:</strong> This section provides an overview of the eligible costs for each partner and the amount of funding they are claiming.</p>
 
-<p><em>Project cost breakdown:</em> Each category is summarised and available to view by all project partner organisations in the Finances Overview section.  Detailed finances are confidential and only accessible to the partner organisation and Innovate UK.</p>
+<p><strong>Project cost breakdown:</strong> Each category is summarised and available to view by all project partner organisations in the Finances Overview section.  Detailed finances are confidential and only accessible to the partner organisation and Innovate UK.</p>
 
 
 <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
