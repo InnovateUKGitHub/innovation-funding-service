@@ -2,6 +2,7 @@ package com.worth.ifs.token.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.worth.ifs.token.domain.TokenType;
 
 public class TokenResource {
     Long id;
@@ -9,6 +10,7 @@ public class TokenResource {
     Long classPk;
     String hash;
     JsonNode extraInfo;
+    TokenType type;
 
     public Long getId() {
         return id;
@@ -48,6 +50,14 @@ public class TokenResource {
 
     public void setExtraInfo(JsonNode extraInfo) {
         this.extraInfo = extraInfo;
+    }
+
+    public TokenType getType() {
+        return type;
+    }
+
+    public void setType(TokenType type) {
+        this.type = type;
     }
 
     @JsonIgnore

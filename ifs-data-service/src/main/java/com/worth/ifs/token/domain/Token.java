@@ -10,16 +10,12 @@ import javax.persistence.*;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Token {
-    public enum Type {
-        VERIFY_EMAIL_ADDRESS,
-        APPLICATION_INVITE
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     @Enumerated(EnumType.STRING)
-    Type type;
+    TokenType type;
     String className;
     Long classPk;
     @Column(unique=true)
@@ -29,7 +25,7 @@ public class Token {
     @Column( length = 5000 )
     JsonNode extraInfo;
 
-    public Token(Type type, String className, Long classPk, String hash, JsonNode extraInfo) {
+    public Token(TokenType type, String className, Long classPk, String hash, JsonNode extraInfo) {
         this.type = type;
         this.className = className;
         this.classPk = classPk;
@@ -39,6 +35,14 @@ public class Token {
 
     public Token() {
 
+    }
+
+    public TokenType getType() {
+        return type;
+    }
+
+    public void setType(TokenType type) {
+        this.type = type;
     }
 
     public Long getId() {

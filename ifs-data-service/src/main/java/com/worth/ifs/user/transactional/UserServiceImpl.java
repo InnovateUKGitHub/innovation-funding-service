@@ -1,12 +1,16 @@
 package com.worth.ifs.user.transactional;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.token.domain.Token;
+import com.worth.ifs.token.domain.TokenType;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.*;
@@ -52,6 +56,8 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private ApplicationService applicationService;
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
@@ -198,7 +204,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         if(competitionId.isPresent()){
             extraInfo.put("competitionId", competitionId.get());
         }
-        Token token = new Token(Token.Type.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), hash, extraInfo);
+        Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), hash, extraInfo);
         tokenRepository.save(token);
         return hash;
     }
