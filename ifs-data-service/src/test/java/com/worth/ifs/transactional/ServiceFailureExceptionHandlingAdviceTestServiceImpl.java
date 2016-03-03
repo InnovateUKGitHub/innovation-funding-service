@@ -4,7 +4,6 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -14,7 +13,8 @@ import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 /**
  * A test Service for tests in {@link ServiceFailureExceptionHandlingAdviceTest}
  */
-@Service
+// TODO RP DW - why is this causing cyclical refs
+//@Service
 public class ServiceFailureExceptionHandlingAdviceTestServiceImpl extends BaseTransactionalService implements ServiceFailureExceptionHandlingAdviceTestService {
 
     @Autowired
