@@ -2,9 +2,11 @@ package com.worth.ifs.form.service;
 
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.service.ResponseRestService;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,7 +45,17 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
     }
 
     @Override
-    public FileEntryResource createFile(Long formInputId, Long applicationId, Long processRoleId, String contentType, Long contentLength, String originalFileName, byte[] file) {
-        return responseRestService.createFileEntry(formInputId, applicationId, processRoleId, contentType, contentLength, originalFileName, file).getSuccessObjectOrThrowException();
+    public RestResult<FileEntryResource> createFile(Long formInputId, Long applicationId, Long processRoleId, String contentType, Long contentLength, String originalFileName, byte[] file) {
+        return responseRestService.createFileEntry(formInputId, applicationId, processRoleId, contentType, contentLength, originalFileName, file);
+    }
+
+    @Override
+    public RestResult<Void> removeFile(Long formInputId, Long applicationId, Long processRoleId) {
+        return responseRestService.removeFileEntry(formInputId, applicationId, processRoleId);
+    }
+
+    @Override
+    public RestResult<ByteArrayResource> getFile(Long formInputId, Long applicationId, Long processRoleId) {
+        return responseRestService.getFile(formInputId, applicationId, processRoleId);
     }
 }

@@ -11,9 +11,12 @@ import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -22,7 +25,11 @@ import com.worth.ifs.util.AjaxResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -41,6 +48,7 @@ import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -105,6 +113,22 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @ProfileExecution
+    @RequestMapping(value = "/question/{questionId}/forminput/{formInputId}/download", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<?> downloadQuestionFile(
+                                @PathVariable("applicationId") final Long applicationId,
+                                @PathVariable("questionId") final Long questionId,
+                                @PathVariable("formInputId") final Long formInputId,
+                                HttpServletRequest request) throws Exception {
+        final User user = userAuthenticationService.getAuthenticatedUser(request);
+        ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentLength(resource.contentLength());
+        httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
+        return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
+    }
+
+    @ProfileExecution
     @RequestMapping(value = "/section/{sectionId}", method = RequestMethod.GET)
     public String applicationFormWithOpenSection(@Valid @ModelAttribute("form") ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
@@ -146,9 +170,12 @@ public class ApplicationFormController extends AbstractApplicationController {
                                      @PathVariable("questionId") final Long questionId,
                                      HttpServletRequest request,
                                      HttpServletResponse response) throws Exception {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
+        SectionResource section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
+        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
         /* Start save action */
         bindingResult = saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
@@ -162,7 +189,14 @@ public class ApplicationFormController extends AbstractApplicationController {
         form.bindingResult = bindingResult;
         form.objectErrors = bindingResult.getAllErrors();
         /* End save action */
-        return getRedirectUrl(request, applicationId);
+
+        if(bindingResult.hasErrors()){
+            this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
+                    Optional.ofNullable(question), userApplicationRoles);
+            return "application-form";
+        } else {
+            return getRedirectUrl(request, applicationId);
+        }
     }
 
     private String getRedirectUrl(HttpServletRequest request, Long applicationId) {
@@ -418,13 +452,25 @@ public class ApplicationFormController extends AbstractApplicationController {
                                 .stream()
                                 .forEach(formInput -> {
                                             if(formInput.getFormInputType().getTitle().equals("fileupload") && request instanceof StandardMultipartHttpServletRequest) {
-                                                final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest)request).getFileMap();
-                                                final MultipartFile file = fileMap.get("formInput[" + formInput.getId() + "]");
-                                                if(!file.isEmpty()){
-                                                    try {
-                                                        formInputResponseService.createFile(formInput.getId(), applicationId, processRoleId, file.getContentType(), file.getSize(), file.getOriginalFilename(), file.getBytes());
-                                                    } catch (IOException e) {
-                                                        throw new UnableToReadUploadedFile();
+                                                if(params.containsKey(REMOVE_UPLOADED_FILE)){
+                                                    formInputResponseService.removeFile(formInput.getId(), applicationId, processRoleId).getSuccessObjectOrThrowException();
+                                                } else {
+                                                    final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
+                                                    final MultipartFile file = fileMap.get("formInput[" + formInput.getId() + "]");
+                                                    if (!file.isEmpty()) {
+                                                        try {
+                                                            RestResult<FileEntryResource> result = formInputResponseService.createFile(formInput.getId(),
+                                                                    applicationId, processRoleId,
+                                                                    file.getContentType(),
+                                                                    file.getSize(),
+                                                                    file.getOriginalFilename(),
+                                                                    file.getBytes());
+                                                            if(result.isFailure()){
+                                                                errorMap.put(question.getId(), result.getFailure().getErrors().stream().map(Error::getErrorMessage).collect(Collectors.toList()));
+                                                            }
+                                                        } catch (IOException e) {
+                                                            throw new UnableToReadUploadedFile();
+                                                        }
                                                     }
                                                 }
                                             } else {

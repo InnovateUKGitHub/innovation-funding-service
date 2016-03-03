@@ -69,22 +69,17 @@
     </div>
 
     <!-- ===========================Form: Fileupload =========================== -->
-    <!--<div th:fragment="fileupload" class="form-group">
-        <label th:if="${formInputIndex == 0}" class="form-label form-label-bold" th:for="${formInput.getId()}">
-            <span th:if="${question.getName() != null}" th:text="${question.name}" />
-            <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
-        </label>
-        <div th:if="${formInputIndex == 0}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-        <input type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'"/>
-    </div>-->
-
     <div th:fragment="fileupload" class="upload-section">
         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
         <input type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'" class="inputfile"/>
         <label th:for="${formInput.getId()}" class="button-secondary extra-margin">+ Upload</label>
-        <div>
-            <a href="#" class="uploaded-file" th:if="${!#strings.isEmpty(responses?.get(formInput.getId())?.getValue())}" th:text="${responses?.get(formInput.getId())?.getValue()}">The-uploaded-file-example.pdf</a>
+        <div th:if="${!#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())}">
+            <div>
+                <a th:href="@{${question.getId()} + '/forminput/' + ${formInput.getId()} + '/download'}" class="uploaded-file" th:text="${responses?.get(formInput.getId())?.getFileEntry()?.getName()}">The-uploaded-file-example.pdf</a>
+            </div>
+            <div>
+                <button class="buttonlink" type="submit" name="remove_uploaded_file">Remove</button>
+            </div>
         </div>
     </div>
 
