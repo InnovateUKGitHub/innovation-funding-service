@@ -26,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -67,6 +68,23 @@ public class RegistrationController {
     @RequestMapping(value = "/success", method = RequestMethod.GET)
     public String registrationSuccessful(Model model, HttpServletRequest request) {
         return "registration/successful";
+    }
+
+    @RequestMapping(value = "/verified", method = RequestMethod.GET)
+    public String verificationSuccessful(Model model, HttpServletRequest request) {
+        return "registration/verified";
+    }
+
+    @RequestMapping(value = "/verify-email/{hash}", method = RequestMethod.GET)
+    public String verifyEmailAddress(
+        @PathVariable("hash") final String hash,
+        HttpServletResponse response,
+        Model model
+    ){
+        return userService.verifyEmail(hash).handleSuccessOrFailure(
+                f -> "registration/unable-to-verify",
+                s -> "redirect:/registration/verified"
+        );
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
@@ -154,7 +172,10 @@ public class RegistrationController {
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
 
         if(!bindingResult.hasErrors()) {
-            Long competitionId = Long.valueOf(CookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID));
+            Long competitionId = null;
+            if(StringUtils.hasText(CookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID))){
+                competitionId = Long.valueOf(CookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID));
+            }
             RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request), competitionId);
 
             if (createUserResult.isSuccess()) {

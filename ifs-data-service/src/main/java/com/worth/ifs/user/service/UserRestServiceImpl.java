@@ -5,6 +5,8 @@ import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -25,7 +27,7 @@ import static java.util.Collections.emptyList;
  */
 @Service
 public class UserRestServiceImpl extends BaseRestService implements UserRestService {
-
+    private static final Log LOG = LogFactory.getLog(UserRestServiceImpl.class);
     private String userRestURL;
     private String processRoleRestURL;
 
@@ -106,6 +108,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public RestResult<List<User>> findRelatedUsers(Long applicationId){
         return getWithRestResult(userRestURL + "/findRelatedUsers/"+applicationId, userListType());
+    }
+
+    @Override
+    public RestResult<Void> verifyEmail(String hash){
+        return getWithRestResult(userRestURL + "/verifyEmail/"+hash, Void.class);
     }
 
     @Override

@@ -41,9 +41,12 @@ public interface UserService {
     @NotSecured("TODO - implement when permissions matrix in place")
     ServiceResult<UserResource> createApplicantUser(final Long organisationId, UserResource userResource);
 
-
+    @NotSecured("TODO - implement when permissions matrix in place")
     ServiceResult<UserResource> createApplicantUser(Long organisationId, UserResource userResource, Optional<Long> competitionId);
 
     @NotSecured("TODO - implement when permissions matrix in place")
     ServiceResult<UserResource> updateUser(UserResource userResource);
+
+    @NotSecured("TODO - implement when permissions matrix in place")
+    ServiceResult<Void> verifyEmail(String hash);
 }

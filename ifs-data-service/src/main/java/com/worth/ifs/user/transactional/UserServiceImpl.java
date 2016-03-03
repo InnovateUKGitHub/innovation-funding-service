@@ -190,7 +190,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     private String getVerificationLink(User user, Optional<Long> competitionId) {
         String hash = generateAndSaveVerificationHash(user, competitionId);
-        return String.format("%s/verify-email/%s", webBaseUrl, hash);
+        return String.format("%s/registration/verify-email/%s", webBaseUrl, hash);
     }
 
     private String generateAndSaveVerificationHash(User user, Optional<Long> competitionId) {
@@ -207,6 +207,38 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), hash, extraInfo);
         tokenRepository.save(token);
         return hash;
+    }
+
+    @Override
+    public ServiceResult<Void> verifyEmail(String hash){
+        Optional<Token> optionalToken = tokenRepository.findByHash(hash);
+        if(optionalToken.isPresent()){
+            Token token = optionalToken.get();
+            if(TokenType.VERIFY_EMAIL_ADDRESS.equals(token.getType()) && token.getClassName().equals(User.class.getName())){
+                Long userId = token.getClassPk();
+                User user = userRepository.findOne(userId);
+                user.setStatus(UserStatus.ACTIVE);
+                userRepository.save(user);
+
+                checkTokenExtraAttributes(token, userId);
+                tokenRepository.delete(token);
+                return serviceSuccess();
+            }
+        }
+        return serviceFailure(CommonErrors.notFoundError(Token.class, hash));
+    }
+
+    /**
+     *  if there are extra attributes in the token, then maybe we need to create a new application, or add the user to a application.
+     */
+    private void checkTokenExtraAttributes(Token token, Long userId) {
+        JsonNode extraInfo = token.getExtraInfo();
+        if(extraInfo.has("competitionId") && extraInfo.get("competitionId").isLong()){
+            Long competitionId = extraInfo.get("competitionId").asLong();
+            if(competitionId != null){
+                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, "");
+            }
+        }
     }
 
     private User updateExistingUserFromResource(User existingUser, UserResource updatedUserResource) {

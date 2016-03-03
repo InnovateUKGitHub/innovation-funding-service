@@ -4,6 +4,8 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.UserService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +24,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
+    private static final Log LOG = LogFactory.getLog(UserController.class);
     @Autowired
     private UserService userService;
 
@@ -64,6 +66,12 @@ public class UserController {
     @RequestMapping("/findRelatedUsers/{applicationId}")
     public RestResult<Set<User>> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
         return userService.findRelatedUsers(applicationId).toGetResponse();
+    }
+
+    @RequestMapping("/verifyEmail/{hash}")
+    public RestResult<Void> verifyEmail(@PathVariable("hash") final String hash) {
+        LOG.warn(String.format("UserController verifyHash: %s", hash));
+        return userService.verifyEmail(hash).toPutResponse();
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")

@@ -25,6 +25,8 @@ public interface UserRestService {
     RestResult<List<User>> findRelatedUsers(Long applicationId);
     Future<RestResult<ProcessRole>> findProcessRoleById(Long processRoleId);
 
+    RestResult<Void> verifyEmail(String hash);
+
     RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId);
 
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);

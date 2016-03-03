@@ -16,6 +16,7 @@ public interface UserService {
     List<User> getAssignable(Long applicationId);
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
     ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application);
+    RestResult<Void> verifyEmail(String hash);
     RestResult<List<UserResource>> findUserByEmail(String email);
     Set<User> getAssignableUsers(ApplicationResource application);
     Set<User> getApplicationUsers(ApplicationResource application);
