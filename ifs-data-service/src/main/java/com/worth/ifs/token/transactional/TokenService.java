@@ -1,4 +1,4 @@
-package com.worth.ifs.token.service;
+package com.worth.ifs.token.transactional;
 
 import com.worth.ifs.token.domain.Token;
 

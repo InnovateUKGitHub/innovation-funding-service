@@ -1,4 +1,4 @@
-package com.worth.ifs.token.service;
+package com.worth.ifs.token.transactional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.application.transactional.ApplicationService;
@@ -7,10 +7,12 @@ import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class TokenServiceImpl implements TokenService{
 
     @Autowired
@@ -42,6 +44,4 @@ public class TokenServiceImpl implements TokenService{
             }
         }
     }
-
-
 }

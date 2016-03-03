@@ -4,7 +4,7 @@ import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.domain.TokenType;
-import com.worth.ifs.token.service.TokenService;
+import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.UserService;
@@ -33,8 +33,6 @@ public class UserController {
     private UserService userService;
     @Autowired
     private TokenService tokenService;
-//    @Autowired
-//    private ApplicationService applicationService;
 
     @RequestMapping("/token/{token}")
     public RestResult<User> getUserByToken(@PathVariable("token") final String token) {

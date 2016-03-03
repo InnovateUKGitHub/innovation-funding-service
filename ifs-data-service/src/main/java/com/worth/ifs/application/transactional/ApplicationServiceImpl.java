@@ -18,6 +18,7 @@ import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.file.transactional.FileService;
+import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputRepository;
@@ -83,8 +84,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private ApplicationMapper applicationMapper;
 
-    //@Autowired
-    //private ApplicationFinanceHandler applicationFinanceHandler;
+    @Autowired
+    private ApplicationFinanceHandler applicationFinanceHandler;
 
     @Autowired
     private SectionService sectionService;
@@ -374,7 +375,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
 
                 Competition competition = application.getCompetition();
-                BigDecimal researchParticipation = BigDecimal.ZERO; //applicationFinanceHandler.getResearchParticipationPercentage(id);
+                BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
 
                 boolean readyForSubmit = false;
                 if (allSectionsComplete &&
