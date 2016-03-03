@@ -36,13 +36,13 @@ Validations for the Email field user remains in the invite page
     [Documentation]    INFUND-901
     [Tags]
     When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
-    And the applicant fills the lead organisation fields    Collaborator01    @example.com
+    And the applicant fills the lead organisation fields    Collaborator01    ewan+4@hiveit.co.uk
     Then The user should see the text in the page    Inviting Contributors
 
 Validation for the name field user remains in the invite page
     [Documentation]    INFUND-901
     [Tags]
-    When the applicant fills the lead organisation fields    ${EMPTY}    test@example.com
+    When the applicant fills the lead organisation fields    ${EMPTY}    ewan+5@hiveit.co.uk
     Then The user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) .field-error
     And The user should see the text in the page    Inviting Contributors
 
@@ -66,14 +66,14 @@ Applicant inputs Organisation and other details should be autosaved (in cookie)
 Blank organisation name is not allowed
     [Documentation]    INFUND-896
     [Tags]    Collaboration
-    When the applicant fills the Partner organisation fields    1    ${EMPTY}    Collaborator 7    collaborator7@fanniemay.com
+    When the applicant fills the Partner organisation fields    1    ${EMPTY}    Collaborator 7    ewan+6@hiveit.co.uk
     And The user clicks the button/link    jquery=button:contains('Begin application')
     Then a validation error is shown on organisation name    1
 
 Blank person name is not allowed
     [Documentation]    INFUND-896
     [Tags]    Collaboration
-    When the applicant fills the Partner organisation fields    1    Fannie May    ${EMPTY}    collaborator8@fanniemay.com
+    When the applicant fills the Partner organisation fields    1    Fannie May    ${EMPTY}    ewan+7@hiveit.co.uk
     And The user clicks the button/link    jquery=button:contains('Begin application')
     #user should get validation error
     Then The user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input.field-error
@@ -95,7 +95,7 @@ Invalid email address is not allowed
     Then The user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
 
 Already invite email should not allowed
-    When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    test@example.com
+    When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ewan+4@hiveit.co.uk
     And The user clicks the button/link    jquery=button:contains('Begin application')
     #user should get validation error
     Then The user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
