@@ -457,7 +457,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                 } else {
                                                     final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
                                                     final MultipartFile file = fileMap.get("formInput[" + formInput.getId() + "]");
-                                                    if (!file.isEmpty()) {
+                                                    if (file != null && !file.isEmpty()) {
                                                         try {
                                                             RestResult<FileEntryResource> result = formInputResponseService.createFile(formInput.getId(),
                                                                     applicationId, processRoleId,
@@ -466,7 +466,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                                     file.getOriginalFilename(),
                                                                     file.getBytes());
                                                             if (result.isFailure()) {
-                                                                errorMap.put(question.getId(), result.getFailure().getErrors().stream().map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
+                                                                errorMap.put(formInput.getId(), result.getFailure().getErrors().stream().map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
                                                             }
                                                         } catch (IOException e) {
                                                             throw new UnableToReadUploadedFile();
