@@ -282,6 +282,7 @@ public class ApplicationController extends AbstractApplicationController {
         addUserDetails(model, application, user.getId());
         addApplicationInputs(application, model);
         addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, userApplicationRoles);
+        financeModelManager.addFinanceDetails(model, application);
 
         return "/application/print";
     }
