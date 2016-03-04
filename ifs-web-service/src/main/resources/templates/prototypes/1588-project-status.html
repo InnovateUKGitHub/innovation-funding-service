@@ -67,17 +67,17 @@
 			</span>
 		</li>
 
-		<li th:class="${(param.user[0] == 'nonLead' ? 'waiting' : 'require-action')}">
+		<li th:class="${(param.user != null and param.user[0] == 'nonLead' ? 'waiting' : 'require-action')}">
 			<span>
 				
-				<div th:unless="${param.user[0] == 'nonLead'}" th:remove="tag">
+				<div th:unless="${param.user != null}" th:remove="tag">
 
 					<h2 class="heading-medium"><a href="#">Other documents</a></h2>
 					<p>As the lead partner in the consortium, you will need to upload documents including:</p>
 
 				</div>
 				
-				<div th:if="${param.user[0] == 'nonLead'}" th:remove="tag">
+				<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 					
 					<h2 class="heading-medium">Other documents</h2>
 					<p>The lead partner of the consortium will need to upload documents including:</p>
