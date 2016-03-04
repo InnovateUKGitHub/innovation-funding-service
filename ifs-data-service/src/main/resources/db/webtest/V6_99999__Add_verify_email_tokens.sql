@@ -23,7 +23,7 @@ INSERT  IGNORE INTO `user_role` (`user_id`, `role_id`) VALUES (11,4);
 -- New application , unverified user.  ewan+12@hiveit.co.uk
 INSERT  IGNORE INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (10,'HIVE 1 LTD','09771561',NULL,1);
 INSERT  IGNORE INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (3,'Ground Floor','Elizabeth House, 54/58 High Street','','Edgware','HA8 7EJ','Middlesex');
-INSERT  IGNORE INTO `organisation_address` (`id`, `address_type`, `address_id`, `organisation_id`) VALUES (4,'REGISTERED',4,10);
+INSERT  IGNORE INTO `organisation_address` (`id`, `address_type`, `address_id`, `organisation_id`) VALUES (3,'REGISTERED',3,10);
 INSERT  IGNORE INTO `token` (`id`, `class_name`, `class_pk`, `extra_info`, `hash`, `type`) VALUES (3,'com.worth.ifs.user.domain.User',12,'{\"competitionId\":1}','4a5bc71c9f3a2bd50fada434d888579aec0bd53fe7b3ca3fc650a739d1ad5b1a110614708d1fa083','VERIFY_EMAIL_ADDRESS');
 INSERT  IGNORE INTO `user` (`id`, `email`, `image_url`, `name`, `password`, `token`, `first_name`, `invite_name`, `last_name`, `phone_number`, `title`, `status`) VALUES (12,'ewan+12@hiveit.co.uk',NULL,'Ewan Cormack','3760e73828b6cc58bcd2e0852ebffca78ceb600d1119ab35f8a17ee60d9edc6ce159e6ee773feba7','12abc123','Ewan',NULL,'Cormack','567890','Mr','INACTIVE');
 INSERT  IGNORE INTO `user_organisation` (`user_id`, `organisation_id`) VALUES (12,10);
