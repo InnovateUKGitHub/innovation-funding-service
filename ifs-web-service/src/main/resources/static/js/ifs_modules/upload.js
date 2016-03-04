@@ -7,7 +7,9 @@ IFS.upload = (function(){
         },
         init : function(){
             s = this.settings;
-            jQuery('body').on('change',s.uploadEl,function(){IFS.upload.updateLabelName(this);});
+            jQuery('body').on('change',s.uploadEl,function(){
+                jQuery('#upload_file_hidden').click();
+            });
         },
         updateLabelName : function(el){
             var inst = jQuery(el);

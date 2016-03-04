@@ -60,6 +60,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public class ApplicationFormController extends AbstractApplicationController {
     public static final String MARK_AS_COMPLETE = "mark_as_complete";
     public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
+    public static final String UPLOAD_FILE = "upload_file";
     public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
     public static final String ADD_COST = "add_cost";
     public static final String REMOVE_COST = "remove_cost";
@@ -205,7 +206,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                 request.getParameter(ADD_COST) != null ||
                 request.getParameter(REMOVE_COST) != null ||
                 request.getParameter(MARK_AS_COMPLETE) != null ||
-                request.getParameter(REMOVE_UPLOADED_FILE) != null) {
+                request.getParameter(REMOVE_UPLOADED_FILE) != null ||
+                request.getParameter(UPLOAD_FILE) != null) {
             // user did a action, just display the same page.
             log.info("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
@@ -324,18 +326,19 @@ public class ApplicationFormController extends AbstractApplicationController {
                                               CompetitionResource competition,
                                               ApplicationForm form,
                                               Long applicationId, Long sectionId, Question question,
-                                              HttpServletRequest request, HttpServletResponse response,
+                                              HttpServletRequest request,
+                                              HttpServletResponse response,
                                               BindingResult bindingResult) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
 
         Map<Long, List<String>> errors;
         if(question != null) {
-            errors = saveQuestionResponses(application, Collections.singletonList(question), request, user.getId(), processRole.getId(), bindingResult);
+            errors = saveQuestionResponses(application, Collections.singletonList(question), user.getId(), processRole.getId(), bindingResult, request, response);
         } else {
             SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
             List<Question> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
-            errors = saveQuestionResponses(application, questions, request, user.getId(), processRole.getId(), bindingResult);
+            errors = saveQuestionResponses(application, questions, user.getId(), processRole.getId(), bindingResult, request, response);
         }
 
         Map<String, String[]> params = request.getParameterMap();
@@ -361,8 +364,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .get();
     }
 
-    private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<Question> questions, HttpServletRequest request, Long userId, Long processRoleId, BindingResult bindingResult) {
-        Map<Long, List<String>> errors = saveQuestionResponses(request, questions, userId, processRoleId, application.getId());
+    private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<Question> questions, Long userId, Long processRoleId, BindingResult bindingResult,  HttpServletRequest request, HttpServletResponse response) {
+        Map<Long, List<String>> errors = saveQuestionResponses(request, response, questions, userId, processRoleId, application.getId());
         errors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue("formInput[" + k + "]", e, e)));
         return errors;
     }
@@ -443,7 +446,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return success;
     }
 
-    private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long processRoleId, Long applicationId) {
+    private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request, HttpServletResponse response, List<Question> questions, Long userId, Long processRoleId, Long applicationId) {
         final Map<String, String[]> params = request.getParameterMap();
 
         Map<Long, List<String>> errorMap = new HashMap<>();
@@ -454,6 +457,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                             if (formInput.getFormInputType().getTitle().equals("fileupload") && request instanceof StandardMultipartHttpServletRequest) {
                                                 if (params.containsKey(REMOVE_UPLOADED_FILE)) {
                                                     formInputResponseService.removeFile(formInput.getId(), applicationId, processRoleId).getSuccessObjectOrThrowException();
+                                                    cookieFlashMessageFilter.setFlashMessage(response, "fileRemoved");
                                                 } else {
                                                     final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
                                                     final MultipartFile file = fileMap.get("formInput[" + formInput.getId() + "]");
@@ -467,6 +471,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                                     file.getBytes());
                                                             if (result.isFailure()) {
                                                                 errorMap.put(formInput.getId(), result.getFailure().getErrors().stream().map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
+                                                            } else {
+                                                                cookieFlashMessageFilter.setFlashMessage(response, "fileUploaded");
                                                             }
                                                         } catch (IOException e) {
                                                             throw new UnableToReadUploadedFile();

@@ -74,6 +74,10 @@
         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
         <input th:if="${(#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}" type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'" class="inputfile"/>
         <label th:if="${(#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}" th:for="${formInput.getId()}" class="button-secondary extra-margin">+ Upload</label>
+        <button id="upload_file_hidden" name="upload_file" class="hidden" type="submit">Save</button>
+        <noscript>
+            <button id="upload_file" name="upload_file" class="button-secondary" type="submit">Save</button>
+        </noscript>
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
         <div th:if="${!#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())}">
             <div>
