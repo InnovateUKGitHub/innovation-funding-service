@@ -11,11 +11,12 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
-${correct_password}    password
+${correct_password}    testtest
 ${incorrect_password}    wrongpassword
 ${long_password}    passwordpasswordpasswordpasswordpasswordpasswordpassword
 ${short_password}    pass
-${valid_email}    ewan+1@hiveit.co.uk
+${valid_email}    ewan+14@hiveit.co.uk
+${email_already_in_db}      ewan+12@hiveit.co.uk
 
 *** Test Cases ***
 First name left blank
@@ -173,10 +174,11 @@ Valid account creation
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=email    ${email_already_in_db}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
+    And the user verifies their email       ${verify_link_1}
     #Then user should be redirected to the correct page    ${LOGIN_URL}
     And the user can login with their new details
     And the user should see the element    link=Logout
@@ -189,7 +191,7 @@ Email duplication check
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=email    ${email_already_in_db}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
@@ -228,7 +230,7 @@ the user cannot login with either password
 
 the user can login with their new details
     go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${valid_email}
+    Input Text    id=id_email    ${email_already_in_db}
     Input Password    id=id_password    ${correct_password}
     Submit Form
     Page Should Not Contain    something has gone wrong
