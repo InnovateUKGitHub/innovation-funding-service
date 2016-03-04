@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard?status=projectSetup'})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -34,14 +34,14 @@
 
 		<li class="complete">
 			<span>
-				<h2 class="heading-medium"><a href="#">Project details</a></h2>
+				<h2 class="heading-medium"><a href="/prototypes/1575-project-details">Project details</a></h2>  
 				<p>Confirm the contact details, proposed start date and location of the project.</p>
 			</span>
 		</li>
 
 		<li class="complete">
 			<span>
-				<h2 class="heading-medium">Monitoring officer assigned</h2>
+				<h2 class="heading-medium">Monitoring officer assigned</h2> 
 				<p>Your monitoring officer for this project is <a href="#">Tom Evans</a>.</p>
 			</span>
 		</li>
