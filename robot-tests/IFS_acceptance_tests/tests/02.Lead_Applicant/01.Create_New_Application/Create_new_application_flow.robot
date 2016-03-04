@@ -52,6 +52,20 @@ Create application flow for non registered users non CH route
     Then the user should see the text in the page    Application overview
     And the user should see the text in the page    Technology Inspired
 
+
+Verify that the options will load properly with spaces in the name
+    [Documentation]     INFUND-1757
+    [Tags]  Create application
+    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user enters text to a text field    id=org-name    Hive IT
+    And the user clicks the button/link    id=org-search
+    Then The user should see the text in the page       Hive IT
+
+
+
 Verify the name of the new application
     [Documentation]    INFUND-669
     ...
