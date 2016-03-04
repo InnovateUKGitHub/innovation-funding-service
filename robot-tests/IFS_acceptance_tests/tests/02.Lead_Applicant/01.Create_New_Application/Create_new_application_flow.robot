@@ -31,9 +31,12 @@ Create application flow for non registered users CH route
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details and clicks the create account
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
-    Then the user should see the text in the page    Application overview
-    And the user should see the text in the page    Technology Inspired
+    And the user verifies their email       ${verify_link_2}
+    # And the user logs back in
+    # And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    # Then the user should see the text in the page    Application overview
+    # And the user should see the text in the page    Technology Inspired
+
 
 Create application flow for non registered users non CH route
     [Documentation]    INNFUND-669
@@ -116,3 +119,6 @@ the user edits the competition title
 
 the progress indicator should show 0
     Element Should Contain    css=.progress-indicator    0
+
+the user logs back in
+    guest user log-in   ewan+2@hiveit.co.uk     testtest
