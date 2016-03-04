@@ -156,11 +156,10 @@ public class ErrorController {
 
         if(env.acceptsProfiles("uat", "dev", "test")) {
             mav.addObject("stacktrace", ExceptionUtils.getStackTrace(e));
+            String msg = MessageUtil.getFromMessageBundle(messageSource, e.getClass().getName(), e.getMessage(), arguments.toArray(), req.getLocale());
+            mav.addObject("message", msg);
         }
 
-        String msg = MessageUtil.getFromMessageBundle(messageSource, e.getClass().getName(), e.getMessage(), arguments.toArray(), req.getLocale());
-
-        mav.addObject("message", msg);
         mav.addObject("url", req.getRequestURL().toString());
         mav.setViewName(message);
         return mav;
