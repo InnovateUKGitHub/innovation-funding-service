@@ -12,10 +12,10 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
 
     <div class="grid-row">
-        <section class="column-half">
+        <section class="column-half" th:with="createUrl= '/organisation/create/find-business'">
             <h1 class="heading-large">Create Account</h1>
 
-            <p>If you haven’t used this service before you must <a href="/application/create/find-business">create an account</a>,
+            <p>If you haven’t used this service before you must <a th:href="${createUrl}">create an account</a>,
                 even if you already have an existing account with "Innovate UK".</p>
 
             <p>When you create an account you can:</p>
@@ -26,7 +26,7 @@
                 <li>set up successful projects</li>
             </ul>
 
-            <a href="/organisation/create/find-business" class="button" value="create-account" type="submit">Create</a></section>
+            <a th:href="${createUrl}" class="button" value="create-account" type="submit">Create</a></section>
         <section class="column-half">
             <h1 class="heading-large">Sign in</h1>
 

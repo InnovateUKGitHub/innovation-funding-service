@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class PostcoderWeb implements AddressLookupService {
 
     private ServiceResult<List<AddressResource>> doAPILookup(String lookup) {
         try {
-            String lookupURL = getLookupURL(lookup);
+            URI lookupURL = getLookupURL(lookup);
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<PostcodeWebAddress[]>  responseEntity = restTemplate.getForEntity(lookupURL, PostcodeWebAddress[].class);
             if(responseEntity!=null && responseEntity.getStatusCode().is2xxSuccessful()) {
@@ -102,7 +103,7 @@ public class PostcoderWeb implements AddressLookupService {
 
     private ServiceResult<Boolean> doAPIPostcodeVerification(String postcode) {
         try {
-            String verificationURL = getPostcodeVerificationURL(postcode);
+            URI verificationURL = getPostcodeVerificationURL(postcode);
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<Boolean>  responseEntity = restTemplate.getForEntity(verificationURL, Boolean.class);
 
@@ -125,17 +126,17 @@ public class PostcoderWeb implements AddressLookupService {
         return null;
     }
 
-    private String getLookupURL(String lookup) throws URISyntaxException {
+    private URI getLookupURL(String lookup) throws URISyntaxException {
         URIBuilder uriBuilder = new URIBuilder(POSTCODE_LOOKUP_URL);
         uriBuilder.setPath(uriBuilder.getPath() + "/" + POSTCODE_LOOKUP_KEY + "/" + POSTCODE_LOOKUP_LEVEL + "/" + POSTCODE_LOOKUP_COUNTRY + "/" + lookup);
         uriBuilder.addParameter("format", POSTCODE_LOOKUP_FORMAT);
         uriBuilder.addParameter("lines", POSTCODE_LOOKUP_LINES);
-        return uriBuilder.build().toString();
+        return uriBuilder.build();
     }
 
-    private String getPostcodeVerificationURL(String postcode) throws URISyntaxException {
+    private URI getPostcodeVerificationURL(String postcode) throws URISyntaxException {
         URIBuilder uriBuilder = new URIBuilder(POSTCODE_LOOKUP_URL + POSTCODE_LOOKUP_VALIDATION + "/" + postcode);
-        return uriBuilder.build().toString();
+        return uriBuilder.build();
     }
 
     private List<AddressResource> exampleAddresses() {

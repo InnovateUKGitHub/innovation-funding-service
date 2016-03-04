@@ -25,21 +25,17 @@
     <!--/* ${ex} is set by ourSimpleMappingExceptionResolver,
            ${exception} or ${message} are set internally by Spring Boot. */-->
 
-    <div>
-        <pre style="padding:10px; white-space: pre-wrap;font-size:15px">
+    <div class="boxed">
 		<span>
             You can return to <a th:href="@{/}">IFS application </a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
         </span>
-        </pre>
     </div>
 
-    <div th:if="(${message} and ${message.length() != 0})">
-        <pre style="padding:10px; white-space: pre-wrap;font-size:15px">
-		<span th:if="${message} and ${message.length() != 0}"
-              th:utext="${'&lt;!--' + message + ' --&gt;'}">
-        </span>
-        </pre>
-    </div>
+
+    <span th:if="${message} and ${message.length() != 0}" th:utext="${'&lt;!--' + message + ' --&gt;'}" th:remove="tag">
+        Error message will be displayed here for developers on dev/UAT environment
+    </span>
+
 
     <p th:unless="${exception} or (${message} and ${message.length() != 0})">
         Cause unknown (no exception details available)</p>

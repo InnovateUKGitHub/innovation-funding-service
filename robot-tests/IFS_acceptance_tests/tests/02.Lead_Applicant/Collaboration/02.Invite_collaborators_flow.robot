@@ -32,6 +32,8 @@ Valid invitation submit
     # note - this is failing due to email failing on the dev server because of a firewall issue - this will be fixed soon!
     Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     When the applicant enters valid inputs
+    And the user verifies their email   ${verify_link_3}
+    And the user logs back in
     Then The user should see the text in the page    Application overview
     And The user should see the notification    Invites send
 
@@ -89,7 +91,7 @@ Pending collaborators should not be available in the assign list
 the applicant enters valid inputs
     click element    jquery=button:contains('Add person')
     Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    tester
-    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    ewan+12@hiveit.co.uk
+    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    ewan+1@hiveit.co.uk
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[2].organisationName    Fannie May
     Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
@@ -148,3 +150,7 @@ the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    That's you!
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-child(3)    (pending)
     Element Should Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
+
+the user logs back in
+    and guest user log-in       ewan+1@hiveit.co.uk     testtest
+
