@@ -81,9 +81,11 @@
                     <a href="/prototypes/1968-dashboard?closed&#38;status=assessorFeedback">Overview</a>
                 </li>
                 <li th:class="${(page == 'applications' ? 'selected' : '')}">
-                    <a href="/prototypes/1998-application-feedback?closed&#38;status=assessorFeedback">Applications submitted</a>
+                    <a href="1998-application-feedback?closed&#38;status=assessorFeedback">Applications submitted</a>
                 </li>
-                <li th:class="${(page == 'not-submitted' ? 'selected' : '')}">Applications not submitted</li>
+                <li th:class="${(page == 'not-submitted' ? 'selected' : '')}">
+                    <a th:href="${(param.status != null ? '/prototypes/1348-not-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-not-submitted-applications')}">Applications not submitted</a>
+                </li>
                 <li th:class="${(page == 'project-setup' ? 'selected' : '')}">Project setup</li>
             </ul>
 
@@ -172,7 +174,7 @@
 <div th:fragment="prototype-comp-search-filters">
     <div class="search-filters extra-margin">
 
-        <form formaction="#" method="GET">
+        <form action="#" method="GET">
             <fieldset>
                 <h3 class="heading-medium no-margin">Filter <span th:text="${filterTitle}">TITLE</span></h3>
 

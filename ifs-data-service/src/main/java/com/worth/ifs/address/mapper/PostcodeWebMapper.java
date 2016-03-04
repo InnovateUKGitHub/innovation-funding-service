@@ -2,6 +2,7 @@ package com.worth.ifs.address.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.resource.PostcodeWebAddress;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,13 +12,35 @@ import java.util.List;
  */
 public class PostcodeWebMapper {
 
-    public List<AddressResource> mapToResources(JsonNode addresses) {
+    public List<AddressResource> mapJsonToResources(JsonNode addresses) {
         List<AddressResource> addressResources = new ArrayList<>();
-        addresses.forEach(a -> addressResources.add(mapToResource(a)));
+        addresses.forEach(a -> addressResources.add(mapJsonToResource(a)));
         return addressResources;
     }
 
-    public AddressResource mapToResource(JsonNode address) {
+    public List<AddressResource> toResources(PostcodeWebAddress[] postcodeWebAddresses) {
+        List<AddressResource> addressResources = new ArrayList<>();
+
+        if(postcodeWebAddresses.length > 0) {
+            for(PostcodeWebAddress postcodeWebAddress : postcodeWebAddresses) {
+                addressResources.add(toResource(postcodeWebAddress));
+            }
+        }
+        return addressResources;
+    }
+
+    public AddressResource toResource(PostcodeWebAddress postcodeWebAddress) {
+            return new AddressResource(
+                    postcodeWebAddress.getAddressline1(),
+                    postcodeWebAddress.getAddressline2(),
+                    postcodeWebAddress.getAddressline3(),
+                    postcodeWebAddress.getPosttown(),
+                    postcodeWebAddress.getCounty(),
+                    postcodeWebAddress.getPostcode()
+            );
+    }
+
+    public AddressResource mapJsonToResource(JsonNode address) {
         return new AddressResource(
                 getValue(address, "addressline1"),
                 getValue(address, "addressline2"),

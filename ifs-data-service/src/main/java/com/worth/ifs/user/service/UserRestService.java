@@ -15,7 +15,6 @@ public interface UserRestService {
     RestResult<User> retrieveUserByToken(String token);
     RestResult<User> retrieveUserByEmailAndPassword(String email, String password);
     RestResult<User> retrieveUserById(Long id);
-
     RestResult<List<User>> findAll();
     RestResult<ProcessRole> findProcessRole(Long userId, Long applicationId);
     RestResult<List<ProcessRole>> findProcessRole(Long applicationId);
@@ -24,6 +23,8 @@ public interface UserRestService {
     Future<RestResult<ProcessRole[]>> findAssignableProcessRoles(Long applicationId);
     RestResult<List<User>> findRelatedUsers(Long applicationId);
     Future<RestResult<ProcessRole>> findProcessRoleById(Long processRoleId);
+    RestResult<Void> verifyEmail(String hash);
+    RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId);
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
     RestResult<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber);
 }

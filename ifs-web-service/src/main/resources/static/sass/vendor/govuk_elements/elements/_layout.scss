@@ -13,7 +13,7 @@
   @extend %site-width-container;
   @extend %contain-floats;
   padding-bottom: $gutter;
-  
+
   @include media(desktop) {
     padding-bottom: $gutter*3;
   }
@@ -24,7 +24,7 @@
 // ==========================================================================
 
 .phase-banner {
-  @include phase-banner(alpha);
+  @include phase-banner(beta);
 }
 
 

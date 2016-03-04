@@ -69,14 +69,27 @@
     </div>
 
     <!-- ===========================Form: Fileupload =========================== -->
-    <div th:fragment="fileupload" class="form-group">
-        <label th:if="${formInputIndex == 0}" class="form-label form-label-bold" th:for="${formInput.getId()}">
-            <span th:if="${question.getName() != null}" th:text="${question.name}" />
-            <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-            <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
-        </label>
-        <div th:if="${formInputIndex == 0}" th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
-        <input type="file" th:id="${formInput.getId()}" />
+    <div th:fragment="fileupload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''"
+         th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
+        <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
+        <input th:if="${(#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}" type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'" class="inputfile"/>
+        <label th:if="${(#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}" th:for="${formInput.getId()}" class="button-secondary extra-margin">+ Upload</label>
+        <button id="upload_file_hidden" name="upload_file" class="hidden" type="submit">Save</button>
+        <noscript>
+            <button id="upload_file" name="upload_file" class="button-secondary" type="submit">Save</button>
+        </noscript>
+        <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+        <div th:if="${!#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())}">
+            <div>
+                <a th:href="@{${question.getId()} + '/forminput/' + ${formInput.getId()} + '/download'}" class="uploaded-file" th:text="${responses?.get(formInput.getId())?.getFileEntry()?.getName()}">The-uploaded-file-example.pdf</a>
+            </div>
+            <div class="alignright" th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}">
+                <button class="button-secondary" type="submit" name="remove_uploaded_file">Remove</button>
+            </div>
+        </div>
+        <div th:unless="${!#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())}">
+            <p class="uploaded-file">No file currently uploaded</p>
+        </div>
     </div>
 
     <!-- ===========================Form: Percentage =========================== -->
@@ -1167,8 +1180,9 @@
 
     <!-- ===========================Form: funding breakdown =========================== -->
     <div th:fragment="application_finances_summary" th:if="${financeTotalPerType}">
-      <div class="form-group finance-summary" style="overflow:auto;">
+      <div th:include="question-type/types :: application_finances_incomplete_warning" th:remove="tag" />
 
+      <div class="form-group finance-summary" style="overflow:auto;">
             <table>
               <thead>
                 <tr>
@@ -1193,6 +1207,9 @@
                         </div>
                         <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/tick-icon.png')}"
                              th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" alt="has marked the Finances as complete"/>
+                         <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/warning-icon.png')}"
+                             th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" alt="has not yet marked the Finances as complete" />
+
                     </div>
                   </th>
                   <div th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation}" th:remove="tag">
@@ -1219,4 +1236,17 @@
             </table>
         </div>
     </div>
+    <!-- ===========================Form: finances incomplete =========================== -->
+
+    <div th:fragment="application_finances_incomplete_warning">
+        <div th:unless="${sectionsMarkedAsComplete.contains(7L)}" class="warning-alert">
+          <h2 class="heading-small no-margin">The following organisations have not maked their finances as complete:</h2>
+          <ul class="list-bullet">
+              <div th:remove="tag" th:each="applicationOrganisation : ${applicationOrganisations}">
+              <li th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" th:text="${applicationOrganisation.name}" />
+            </div>
+          </ul>
+          <p>This application cannot be submitted unless finances have been marked as complete by all partners.</p>
+        </div>
+  </div>
 </html>

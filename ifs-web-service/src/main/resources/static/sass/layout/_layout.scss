@@ -9,27 +9,40 @@
 	margin-right:0;
 }
 
-.sub-header {
-	background: $grey-4;
+#content {
 	border-top: 10px solid $link-colour;
+}
+
+.sub-header {
+	// background: $grey-4;
 	clear: both;
-	padding: 10px 15px 10px 20px;
-	margin: 0 -15px;
+	padding: 5px 0px;
+	// margin: 0 -15px;
 	position: relative;
 	line-height:40px;
 	overflow: hidden;
-	
+	font-size: 16px;
+
+  a{
+
+		border-bottom: 1px solid $black;
+	  @include inline-block;
+	  line-height: 1.25;
+	    position: relative;
+	    text-decoration: none;
+	    vertical-align: middle;
+		 color: $black;
+		margin-top: $gutter-half;
+	  margin-bottom: $gutter-half;
+	}
 	.deadline {
 		float:right;
 		line-height:1;
 		font-weight:300;
 		color: $red;
-		font-size:15px;
+		margin: 7px 0;
 	}
 
-	.pie-overlay {
-		background: $grey-4;	
-	}
 }
 
 @include ie(8){

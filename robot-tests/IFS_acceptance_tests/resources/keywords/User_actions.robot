@@ -115,12 +115,19 @@ The user should get an error page
     Page should contain element    css=.error
     Page should contain    ${ERROR_TEXT}
 
+The user should see the browser notification
+    # Note - this keyword has been implemented to prevent failures on sauce labs
+    # from different browsers not showing the notifications correctly
+    [Arguments]  ${MESSAGE}
+    Run keyword if  '${REMOTE_URL}' == ''       the user should see the notification    ${MESSAGE}
+
+
 The user should see the notification
     [Arguments]    ${MESSAGE}
     Wait Until Element Is Visible    css=div.event-alert
     Wait Until Page Contains    ${MESSAGE}
 
-Applicant assigns the question to the collaborator
+The applicant assigns the question to the collaborator
     [Arguments]    ${TEXT_AREA}    ${TEXT}    ${NAME}
     focus    ${TEXT_AREA}
     The user enters text to a text field    ${TEXT_AREA}    ${TEXT}
@@ -132,3 +139,8 @@ The user goes back to the previous page
 
 browser validations have been disabled
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+
+The user verifies their email
+    [Arguments]         ${verify_link}
+    Go To   ${verify_link}
+    Page Should Contain     Account verified

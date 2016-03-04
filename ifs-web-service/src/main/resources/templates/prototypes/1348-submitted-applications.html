@@ -55,7 +55,7 @@
 					</div>
 				</div>
 
-				<a href="#" class="button-secondary">Export application data</a>
+				<a href="/prototypes/1969-export-example" class="button-secondary">Export application data (.csv)</a>
 
 				<div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'}" th:remove="tag">
 
@@ -115,11 +115,12 @@
 							<th scope="col" class="alignright">Grant requested (&#163;)</th>
 							<th scope="col" class="alignright">Total project cost (&#163;)</th>
 							<th scope="col" class="alignright">Duration (months)</th>
+							<th scope="col" class="alignright" id="fund-project-label" th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" >Fund project?</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194731</a></th>
+							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194731</a></td>
 							<td>Machine learning in robots</td>
 							<td>PWC</td>
 							<td>HVM</td>
@@ -127,9 +128,16 @@
 							<td class="alignright">203,000</td>
 							<td class="alignright">324,000</td>
 							<td class="alignright">12</td>
+							<td th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" class="alignright">
+								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
+									<option value="-">-</option>
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</td>
 						</tr>
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194732</a></th>
+							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194732</a></td>
 							<td>Robots that learn</td>
 							<td>Max Digital</td>
 							<td>HVM</td>
@@ -137,9 +145,16 @@
 							<td class="alignright">203,000</td>
 							<td class="alignright">300,000</td>
 							<td class="alignright">12</td>
+							<td th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" class="alignright">
+								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
+									<option value="-">-</option>
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</td>
 						</tr>
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194733</a></th>
+							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194733</a></td>
 							<td>AI in learning</td>
 							<td>BBC</td>
 							<td>HVM</td>
@@ -147,16 +162,30 @@
 							<td class="alignright">67,000</td>
 							<td class="alignright">97,500</td>
 							<td class="alignright">13</td>
+							<td th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" class="alignright">
+								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
+									<option value="-">-</option>
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</td>
 						</tr>
 						<tr class="filtered-result">
-							<th scope="col"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194734</a></th>
+							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194734</a></td>
 							<td>Progressive machines</td>
 							<td>Kingfisher</td>
 							<td>HVM</td>
 							<td class="alignright">7</td>
 							<td class="alignright">100,000</td>
 							<td class="alignright">125,000</td>
-							<td class="alignright">14</td> 
+							<td class="alignright">14</td>
+							<td th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" class="alignright">
+								<select name="fund-project" id="fund-project" aria-labelledby="fund-project-label" class="form-control">
+									<option value="-">-</option>
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</td>
 						</tr>
 
 

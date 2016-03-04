@@ -213,7 +213,7 @@ public class ApplicationController extends AbstractApplicationController {
 
         Map<Long, List<Question>> sectionQuestions = new HashMap<>();
         if(questionId != null && question.isPresent()){
-            sectionQuestions.put(question.get().getSection().getId(), Arrays.asList(questionService.getById(questionId)));
+            sectionQuestions.put(currentSection.get().getId(), Arrays.asList(questionService.getById(questionId)));
         }else{
             sectionQuestions.put(currentSection.get().getId(), currentSection.get().getQuestions().stream().map(questionService::getById).collect(Collectors.toList()));
         }
