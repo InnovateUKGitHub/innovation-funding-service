@@ -1,10 +1,10 @@
 package com.worth.ifs.organisation.transactional;
 
-import com.worth.ifs.commons.error.CommonErrors;
-import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.commons.error.CommonErrors;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.Academic;
 import com.worth.ifs.organisation.repository.AcademicRepository;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
@@ -42,13 +42,10 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     private OrganisationRepository organisationRepository;
     @Autowired
     private AcademicRepository academicRepository;
-
     @Autowired
     private OrganisationTypeRepository organisationTypeRepository;
-
     @Autowired
     private OrganisationMapper organisationMapper;
-
     @Autowired
     private AddressMapper addressMapper;
 
@@ -89,11 +86,10 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressType addressType, AddressResource addressResource) {
-
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
-	    Address address = addressMapper.mapToDomain(addressResource);
+            Address address = addressMapper.mapToDomain(addressResource);
             organisation.addAddress(address, addressType);
-            Organisation updatedOrganisation = organisationRepository.save(organisation);
+            Organisation updatedOrganisation = organisationRepository.findOne(organisationId);
             return serviceSuccess(organisationMapper.mapToResource(updatedOrganisation));
         });
     }

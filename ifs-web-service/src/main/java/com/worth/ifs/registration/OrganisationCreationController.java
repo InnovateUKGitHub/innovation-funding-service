@@ -114,6 +114,7 @@ public class OrganisationCreationController {
                                      Model model,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
+        CookieUtil.removeCookie(response, ORGANISATION_ID);
         organisationForm.setOrganisationSearching(false);
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         addAddressOptions(organisationForm);
