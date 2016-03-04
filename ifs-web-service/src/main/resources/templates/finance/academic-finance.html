@@ -6,6 +6,9 @@
         <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}" />
         <p th:text="${question.description}" />
         <div class="academic">
+            <input type="hidden" name="questionId" value="${question.id}"/>
+            <input type="hidden" name="applicationFinanceId" value="${applicationFinance.id}"/>
+
         <fieldset>
             <h2 class="heading-medium">Innovate UK funding</h2>
             <legend class="visuallyhidden">Innovate UK (TSB) contribution</legend>
@@ -50,7 +53,7 @@
                       <input type="number"
                              class="form-control width-full"
                              id="incurred-staff"
-                             name="incurred-staff"
+                             name="cost-incurred-staff"
                              th:value="${academicFinance.incurredStaff}"
                              th:readonly="${false}"  />
                     </div>
@@ -62,7 +65,7 @@
                         <span>Travel &amp; subsistence </span>
                     </label>
                     <div class="column-two-thirds">
-                      <input class="form-control width-full" id="travel" type="text" />
+                      <input class="form-control width-full" id="travel" name="cost-incurred-travel" type="number" />
                     </div>
                 </div>
             </div>
@@ -72,7 +75,7 @@
                       <span>Other costs</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="other" type="text" />
+                    <input class="form-control width-full" id="other" name="cost-incurred-other-costs" type="number" />
                   </div>
               </div>
             </div>
@@ -102,7 +105,7 @@
                       <span>Investigators</span>
                     </label>
                     <div class="column-two-thirds">
-                      <input class="form-control width-full" id="investigators" type="text" />
+                      <input class="form-control width-full" id="investigators" name="cost-allocated-investigators" type="number" />
                     </div>
                 </div>
             </div>
@@ -112,7 +115,7 @@
                       <span>Estates Costs</span>
                   </label>
                   <div class="column-two-thirds">
-                      <input class="form-control width-full" id="estates" type="text" />
+                      <input class="form-control width-full" id="estates" name="cost-allocated-estates" type="number" />
                   </div>
               </div>
             </div>
@@ -122,7 +125,7 @@
                       <span>Other costs</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="other-direct" type="text" />
+                    <input class="form-control width-full" id="other-direct" name="cost-allocated-other-costs" type="number" />
                   </div>
               </div>
             </div>
@@ -147,7 +150,7 @@
                       <span class="form-label-bold">Indirect costs </span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="indirect" type="text" />
+                    <input class="form-control width-full" id="indirect" name="cost-indirect-costs" type="number" />
                   </div>
               </div>
             </div>
@@ -165,7 +168,7 @@
                       <span>Staff</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="exceptions-staff" type="text" />
+                    <input class="form-control width-full" id="exceptions-staff" name="cost-exceptions-staff" type="number" />
                   </div>
               </div>
             </div>
@@ -175,7 +178,7 @@
                       <span>Other costs</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="exceptions-other-direct" type="text" />
+                    <input class="form-control width-full" id="exceptions-other-direct" name="cost-exceptions-other-costs" type="number" />
                   </div>
               </div>
             </div>

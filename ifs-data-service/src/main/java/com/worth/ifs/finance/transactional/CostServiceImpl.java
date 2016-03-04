@@ -8,9 +8,7 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.domain.CostValue;
-import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
-import com.worth.ifs.finance.handler.OrganisationFinanceDefaultHandler;
-import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
+import com.worth.ifs.finance.handler.*;
 import com.worth.ifs.finance.mapper.CostFieldMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostFieldRepository;
@@ -63,7 +61,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
 
-    private OrganisationFinanceHandler organisationFinanceHandler = new OrganisationFinanceDefaultHandler();
+    @Autowired
+    OrganisationFinanceDelegate organisationFinanceDelegate;
 
     @Override
     public ServiceResult<CostField> getCostFieldById(Long id) {
@@ -81,7 +80,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     public ServiceResult<CostItem> addCost(final Long applicationFinanceId, final Long questionId, final CostItem newCostItem) {
 
         return find(question(questionId), applicationFinance(applicationFinanceId)).andOnSuccess((question, applicationFinance) -> {
-
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
             if (newCostItem != null) {
                 Cost newCost = addCostItem(applicationFinance, question, newCostItem);
                 return serviceSuccess(organisationFinanceHandler.costToCostItem(newCost));
@@ -100,7 +99,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     private ServiceResult<Cost> doUpdate(Long id, CostItem newCostItem) {
         return find(costRepository.findOne(id), notFoundError(Cost.class, id)).andOnSuccessReturn(existingCost -> {
-
+            ApplicationFinance applicationFinance = existingCost.getApplicationFinance();
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
             Cost newCost = organisationFinanceHandler.costItemToCost(newCostItem);
             Cost updatedCost = mapCost(existingCost, newCost);
             Cost savedCost = costRepository.save(updatedCost);
@@ -214,6 +214,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     private Cost addCostItem(ApplicationFinance applicationFinance, Question question, CostItem newCostItem) {
         Cost existingCost = costRepository.findOneByApplicationFinanceIdAndQuestionId(applicationFinance.getId(), question.getId());
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
+
         if (existingCost == null) {
             Cost cost = organisationFinanceHandler.costItemToCost(newCostItem);
             cost.setQuestion(question);
@@ -275,8 +277,11 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
      * so there are some objects that need to be created before loading the form.
      */
     private void initialize(ApplicationFinance applicationFinance) {
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
+
         for (CostType costType : CostType.values()) {
             organisationFinanceHandler.initialiseCostType(applicationFinance, costType);
         }
     }
+
 }

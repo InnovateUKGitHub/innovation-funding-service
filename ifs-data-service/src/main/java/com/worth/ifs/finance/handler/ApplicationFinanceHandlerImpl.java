@@ -33,10 +33,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
     OrganisationRepository organisationRepository;
 
     @Autowired
-    OrganisationFinanceDefaultHandler organisationFinanceDefaultHandler;
-
-    @Autowired
-    OrganisationJESFinance organisationJESFinance;
+    OrganisationFinanceDelegate organiastionFinanceDelegate;
 
     @Override
     public ApplicationFinanceResource getApplicationOrganisationFinances(ApplicationFinanceResourceId applicationFinanceResourceId) {
@@ -58,7 +55,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
         for(ApplicationFinance applicationFinance : applicationFinances) {
             ApplicationFinanceResource applicationFinanceResource = new ApplicationFinanceResource(applicationFinance);
-            OrganisationFinanceHandler organisationFinanceHandler = getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
+            OrganisationFinanceHandler organisationFinanceHandler = organiastionFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
             EnumMap<CostType, CostCategory> costs = new EnumMap<>(organisationFinanceHandler.getOrganisationFinanceTotals(applicationFinanceResource.getId()));
             applicationFinanceResource.setFinanceOrganisationDetails(costs);
             applicationFinanceResources.add(applicationFinanceResource);
@@ -94,17 +91,8 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
     protected void setFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
         Organisation organisation = organisationRepository.findOne(applicationFinanceResource.getOrganisation());
-        OrganisationFinanceHandler organisationFinanceHandler = getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
+        OrganisationFinanceHandler organisationFinanceHandler = organiastionFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
         EnumMap<CostType, CostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
         applicationFinanceResource.setFinanceOrganisationDetails(costs);
-    }
-
-    protected OrganisationFinanceHandler getOrganisationFinanceHandler(String organisationType) {
-        switch(organisationType) {
-            case "Academic":
-                return organisationJESFinance;
-            default:
-                return organisationFinanceDefaultHandler;
-        }
     }
 }

@@ -1,7 +1,8 @@
-package com.worth.ifs.application.finance.view;
+package com.worth.ifs.application.finance.view.jes;
 
 import com.worth.ifs.application.finance.form.AcademicFinance;
 import com.worth.ifs.application.finance.service.FinanceService;
+import com.worth.ifs.application.finance.view.FinanceModelManager;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.service.ProcessRoleService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;

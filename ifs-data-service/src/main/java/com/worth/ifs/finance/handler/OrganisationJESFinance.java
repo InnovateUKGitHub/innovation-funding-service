@@ -78,7 +78,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
 
     @Override
     public Cost costItemToCost(CostItem costItem) {
-        return null;
+            return null;
     }
 
     @Override
