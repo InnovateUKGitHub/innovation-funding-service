@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class LabourCostCategory implements CostCategory {
     public static final String WORKING_DAYS_PER_YEAR = "Working days per year";
+    public static final String WORKING_DAYS_KEY = "working-days-per-year";
     List<CostItem> costs = new ArrayList<>();
     BigDecimal total = BigDecimal.ZERO;
     private LabourCost workingDaysPerYearCostItem;

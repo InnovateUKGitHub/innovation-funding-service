@@ -21,6 +21,7 @@ public class Cost {
     String description;
     Integer quantity;
     BigDecimal cost;
+    String key;
 
     @OneToMany(mappedBy="cost")
     private List<CostValue> costValues = new ArrayList<>();
@@ -37,8 +38,9 @@ public class Cost {
     public Cost() {
     }
 
-    public Cost(String item, String description, Integer quantity, BigDecimal cost,
+    public Cost(String key, String item, String description, Integer quantity, BigDecimal cost,
                 ApplicationFinance applicationFinance, Question question) {
+        this.key = key;
         this.item = item;
         this.description = description;
         this.quantity = quantity;
@@ -47,14 +49,18 @@ public class Cost {
         this.question = question;
     }
 
-    public Cost(Long id, String item, String description, Integer quantity, BigDecimal cost,
+    public Cost(Long id, String key, String item, String description, Integer quantity, BigDecimal cost,
                 ApplicationFinance applicationFinance, Question question) {
-        this(item, description, quantity, cost, applicationFinance, question);
+        this(item, key ,description, quantity, cost, applicationFinance, question);
         this.id = id;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public String getItem() {
@@ -83,6 +89,10 @@ public class Cost {
 
     public Question getQuestion() {
         return question;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public void setItem(String item) {
