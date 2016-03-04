@@ -1,11 +1,12 @@
 package com.worth.ifs.security;
 
+import java.util.Collection;
+
 import com.worth.ifs.commons.service.ServiceResult;
+
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
-
-import java.util.Collection;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -40,5 +41,17 @@ public class ServiceResultAwareMethodSecurityExpressionHandler extends DefaultMe
         }
 
         return super.filter(filterTarget, filterExpression, ctx);
+    }
+
+    @Override
+    public void setReturnObject(Object returnObject, EvaluationContext ctx) {
+        if (returnObject != null && ServiceResult.class.isAssignableFrom(returnObject.getClass())) {
+
+            ServiceResult serviceResult = (ServiceResult) returnObject;
+            Object successObject = serviceResult.getSuccessObject();
+            super.setReturnObject(successObject, ctx);
+        } else {
+            super.setReturnObject(returnObject, ctx);
+        }
     }
 }
