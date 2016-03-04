@@ -35,7 +35,6 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.CREATED;
-import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -142,7 +141,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadButFileAlreadyExistsForFormInputResponse() {
+    public void testCreateFormInputResponseFileUploadButReplaceIfFileAlreadyExistsForFormInputResponse() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(987L)).build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -150,6 +149,12 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         FileEntry alreadyExistingFileEntry = newFileEntry().with(id(987L)).build();
         FormInputResponse existingFormInputResponseWithLinkedFileEntry = newFormInputResponse().withFileEntry(alreadyExistingFileEntry).build();
+
+        File fileFound = mock(File.class);
+
+        when(fileServiceMock.deleteFile(alreadyExistingFileEntry.getId())).thenReturn(serviceSuccess(alreadyExistingFileEntry));
+
+        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(fileFound, alreadyExistingFileEntry)));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponseWithLinkedFileEntry);
         when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
@@ -159,8 +164,11 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, "987"));
+        Pair<File, FormInputResponseFileEntryResource> resultParts = result.getSuccessObject();
+        assertEquals(fileFound, resultParts.getKey());
+        assertEquals(Long.valueOf(987), resultParts.getValue().getFileEntryResource().getId());
+
+        verify(formInputResponseRepositoryMock).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
     }
 
     @Test

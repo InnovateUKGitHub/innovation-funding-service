@@ -28,6 +28,8 @@ var IFSLoader = {
     finalize : function(){
       IFS.pieChart.init();
       IFS.modal.init();
+      IFS.upload.init();
+
     }
   },
   'app-form' : {

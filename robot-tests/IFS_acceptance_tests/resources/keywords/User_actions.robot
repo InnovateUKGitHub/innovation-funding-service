@@ -139,3 +139,8 @@ The user goes back to the previous page
 
 browser validations have been disabled
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+
+The user verifies their email
+    [Arguments]         ${verify_link}
+    Go To   ${verify_link}
+    Page Should Contain     Account verified

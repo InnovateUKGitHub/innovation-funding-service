@@ -31,9 +31,12 @@ Create application flow for non registered users CH route
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details and clicks the create account
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
-    Then the user should see the text in the page    Application overview
-    And the user should see the text in the page    Technology Inspired
+    And the user verifies their email       ${verify_link_2}
+    # And the user logs back in
+    # And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    # Then the user should see the text in the page    Application overview
+    # And the user should see the text in the page    Technology Inspired
+
 
 Create application flow for non registered users non CH route
     [Documentation]    INNFUND-669
@@ -45,16 +48,17 @@ Create application flow for non registered users non CH route
     And the user clicks the Not on company house link
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details for the non CH
-    And the user clicks the button/link    JQuery=.button:contains("Begin application")
-    Then the user should see the text in the page    Application overview
-    And the user should see the text in the page    Technology Inspired
+    # And the user clicks the button/link    JQuery=.button:contains("Begin application")
+    # Then the user should see the text in the page    Application overview
+    # And the user should see the text in the page    Technology Inspired
+
 
 Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
     [Tags]    Applicant    New application    HappyPath     FailingForDev
-    When the guest user enters the log in credentials    robot@test.com    testtest
+    When the guest user enters the log in credentials    ewan+2@hiveit.co.uk    testtest
     And the user clicks the button/link    css=input.button
     And the user edits the competition title
     Then the user should see the text in the page    test title
@@ -65,6 +69,19 @@ Verify the name of the new application
     And the new application should be visible in the dashboard page
     And the user clicks the button/link    link=test title
     And the user should see the text in the page    test title
+
+
+Verify that the options will load properly with spaces in the name
+    [Documentation]     INFUND-1757
+    [Tags]  Create application
+    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user enters text to a text field    id=org-name    Hive IT
+    And the user clicks the button/link    id=org-search
+    Then The user should see the text in the page       Hive IT
+
 
 *** Keywords ***
 the new application should be visible in the dashboard page
@@ -77,7 +94,7 @@ the user enters the details and clicks the create account
     Input Text    id=firstName    John
     Input Text    id=lastName    Smith
     Input Text    id=phoneNumber    23232323
-    Input Text    id=email    robot@test.com
+    Input Text    id=email    ewan+2@hiveit.co.uk
     Input Password    id=password    testtest
     Input Password    id=retypedPassword    testtest
     Select Checkbox    termsAndConditions
@@ -101,7 +118,7 @@ the user enters the details for the non CH
     Input Text    id=firstName    tester
     Input Text    id=lastName    tester
     Input Text    id=phoneNumber    23232323
-    Input Text    id=email    robot2@test.com
+    Input Text    id=email    ewan+3@hiveit.co.uk
     Input Password    id=password    testtest
     Input Password    id=retypedPassword    testtest
     Select Checkbox    termsAndConditions
@@ -116,3 +133,6 @@ the user edits the competition title
 
 the progress indicator should show 0
     Element Should Contain    css=.progress-indicator    0
+
+the user logs back in
+    guest user log-in   ewan+2@hiveit.co.uk     testtest

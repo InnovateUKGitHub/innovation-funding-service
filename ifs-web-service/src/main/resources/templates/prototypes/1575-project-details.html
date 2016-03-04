@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Project details'})" th:remove="tag" />
+	
+	<form action="#">
+
+		<fieldset>
+			
+			<h2 class="heading-large no-margin-top">Partner finance contacts</h2>
+
+			<legend class="visuallyhidden">Partner finance contacts</legend>
+
+			<table>
+				<thead>
+					<tr>
+						<th scope="col">Partner</th>
+						<th scope="col">Finance contact</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							Worth systems
+						</td>
+						<td>
+							<span id="finance-contact">John Smith</span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Nomensa
+						</td>
+						<td>
+							&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td>
+							C@C
+						</td>
+						<td>
+							David Evans (Pending)
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<h3 class="heading-medium">Your finance contact</h3>
+				
+			<fieldset>
+				
+				<legend class="visuallyhidden">Your finances contact</legend>
+
+				<label for="finances-name-1" class="block-label">
+					<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
+					John Smith
+				</label>
+
+				<label for="finances-name-2" class="block-label">
+					<input id="finances-name-2" type="radio" name="finances-name-group" value="John Smith" />
+					Ann Jones
+				</label>
+
+			</fieldset>
+
+			<div class="extra-margin">
+				<button class="buttonlink" id="add-user">Add new team member</button>	
+			</div>
+
+			<table class="extra-margin" id="add-user-details" style="display: none">
+				<thead>
+					<tr>
+						<th scope="col" id="user-name">Name</th>
+						<th scope="col" id="user-email">E-mail</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<input type="text" name="name-item-1" id="name-item-1" class="form-control width-full" aria-labelledby="user-name" value=""  />
+						</td>
+						<td>
+							<input type="email" name="mail-item-1" id="mail-item-1" class="form-control width-full" aria-labelledby="user-email" value=""  />
+						</td>
+						<td class="alignright">
+							<button class="buttonlink no-margin-bottom" id="invite-user">Invite to project</button>	
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</fieldset>
+		
+		<fieldset>
+			
+			<h3 class="heading-medium">Target project date</h3>
+
+			<legend class="visuallyhidden">Target project date</legend>
+			<p class="form-hint">When will the project start</p>
+
+			<div class="date-group">
+				<div class="day">
+					<label class="form-label" for="workshop-day">
+							<div>Day</div>
+						</label>
+						<input class="form-control width-extra-small" type="number" placeholder="DD" id="workshop-day" name="workshop-day" value="" />
+				</div>
+
+				<div class="month">
+					<label class="form-label" for="workshop-month">
+							<div>Month</div>
+						</label>
+						<input class="form-control width-extra-small" type="number" placeholder="MM" id="workshop-month" name="workshop-month" value="" />
+				</div>
+
+				<div class="year">
+					<label class="form-label" for="workshop-year">
+							<div>Year</div>
+						</label>
+						<input class="form-control width-extra-small" type="number" placeholder="YYYY" id="workshop-year" name="workshop-year" value="" />
+				</div>
+			</div>
+
+			<h3 class="heading-medium">Project duration</h3>
+
+			<p>Project duration stated in application: <br /><strong>9 months</strong></p>
+
+		</fieldset>
+
+		<fieldset>
+
+			<h3 class="heading-medium">Project manager</h3>
+
+			<legend class="visuallyhidden">Project manager</legend>
+
+			<p class="form-hint">Who will be the project manager for this project?</p>
+
+			<label for="pm-name-1" class="block-label">
+				<input id="pm-name-1" type="radio" name="pm-name-group" value="John Smith" />
+				John Smith
+			</label>
+
+			<label for="pm-name-2" class="block-label">
+				<input id="pm-name-2" type="radio" name="pm-name-group" value="John Smith" />
+				Ann Jones
+			</label>
+
+
+		</fieldset>
+
+		<div class="extra-margin">
+			<button class="buttonlink" id="add-pm">Add new team member</button>	
+		</div>
+
+		<table class="extra-margin" id="add-pm-details" style="display: none">
+			<thead>
+				<tr>
+					<th scope="col" id="pm-name">Name</th>
+					<th scope="col" id="pm-email">E-mail</th>
+					<th>&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<input type="text" name="pm-name-item-1" id="pm-name-item-1" class="form-control width-full" aria-labelledby="pm-name" value=""  />
+					</td>
+					<td>
+						<input type="email" name="pm-mail-item-1" id="pm-mail-item-1" class="form-control width-full" aria-labelledby="pm-email" value=""  />
+					</td>
+					<td class="alignright">
+						<button class="buttonlink no-margin-bottom" id="invite-pm">Invite to project</button>	
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+		<fieldset>
+			
+			<h3 class="heading-medium">Address</h3>
+
+			<legend class="visuallyhidden">Address</legend>
+
+			<p>What is the main location of the project?</p>
+
+			<div class="form-group" th:unless="${param.edit != null}">
+				<label class="form-label" for="postcode-check">
+					<span class="form-label-bold">Postcode</span>
+				</label>
+				<input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
+				<button type="submit" id="postcode-lookup" class="button">Find UK address</button>
+				<div>
+					<a href="#" id="enter-address-manually">Enter address manually</a>
+				</div>
+			</div>
+
+
+			<div class="form-group" id="select-address-block" style="display: none">
+				<label class="form-label" for="select-address">
+					<span class="form-label-bold">Select your address</span>
+				</label>
+				<select class="form-control" id="select-address" name="select-address">
+					<option value="">SN1 2BD, 1, Station Road, Swindon </option>
+					<option value="">SN1 2BD, 1A, Station Road, Swindon  </option>
+					<option value="">SN1 2BD, 2, Station Road, Swindon </option>
+					<option value="">SN1 2BD, 3, Station Road, Swindon </option>
+					<option value="">SN1 2BD, 4, Station Road, Swindon </option>
+					<option value="">SN1 2BD, 5, Station Road, Swindon </option>
+				</select>
+			</div>
+			
+
+			<fieldset id="address-details" class="extra-margin" th:style="${param.edit == null ? 'display: none' : 'display: block'}">
+				<legend class="visuallyhidden">Address details</legend>
+				<div class="form-group">
+					<label class="form-label" for="street">
+						<span class="form-label-bold">Street</span>
+					</label>
+					<input class="form-control" id="street" name="street" type="text" th:value="${(param.edit == null ? '':'4 Station Road')}"/>
+				</div>
+				<div class="form-group">
+					<label class="form-label visuallyhidden" for="street-2">
+						<span class="form-label-bold">Street line 2</span>
+					</label>
+					<input class="form-control" id="street-2" name="street-2" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="street-2">
+						<span class="form-label-bold visuallyhidden">Street line 3</span>
+					</label>
+					<input class="form-control" id="street-3" name="street-2" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="town">
+						<span class="form-label-bold">Town</span>
+					</label>
+					<input class="form-control" id="town" name="town" type="text" th:value="${(param.edit == null ? '':'Swindon')}" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="county">
+						<span class="form-label-bold">County</span>
+					</label>
+					<input class="form-control" id="county" name="county" type="text" th:value="${(param.edit == null ? '':'Wiltshire')}" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="postcode">
+						<span class="form-label-bold">Postcode</span>
+					</label>
+					<input class="form-control" id="postcode" name="postcode" type="text" th:value="${(param.edit == null ? '':'SN1 2BD')}" />
+				</div>
+			</fieldset>
+
+		</fieldset>
+
+
+		<div class="extra-margin">
+			
+			<a href="#" class="button-secondary">Save and return to project setup</a>
+
+		</div>
+
+		<div class="extra-margin">
+			
+			<a href="#" class="button">Mark as complete</a>
+
+		</div>
+
+
+
+
+	</form>
+
+	
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+		jQuery('#add-user').on('click',function(e){ 
+			e.preventDefault();
+
+			jQuery('#add-user-details').show();
+
+		});
+
+		jQuery('#invite-user').on('click',function(e){ 
+			e.preventDefault();
+
+			jQuery('#add-user-details').hide();
+
+		});
+
+
+
+
+		jQuery('#add-pm').on('click',function(e){ 
+			e.preventDefault();
+
+			jQuery('#add-pm-details').show();
+
+		});
+
+		jQuery('#invite-pm').on('click',function(e){ 
+			e.preventDefault();
+
+			jQuery('#add-pm-details').hide();
+
+		});
+
+
+		jQuery('#postcode-lookup').on('click',function(e){ 
+			e.preventDefault();
+			jQuery("#select-address-block").show();
+
+		});
+
+		jQuery('#select-address').on('change',function(e){ 
+			e.preventDefault();
+			jQuery("#address-details").show();
+			jQuery("#street").val("4 Station Road");
+			jQuery("#county").val("Wiltshire");
+			jQuery("#town").val("Swindon");
+			jQuery("#postcode").val("SN1 2BD");
+
+		});
+
+		jQuery('#enter-address-manually').on('click',function(e){ 
+			e.preventDefault();
+			jQuery("#address-details").show();
+			jQuery("#select-address-block").hide();
+		});
+
+	});
+	// ]]>
+</script>
+</body>
+</html>

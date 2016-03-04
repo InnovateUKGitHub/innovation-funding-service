@@ -4,6 +4,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.CredentialsValidator;
 import com.worth.ifs.user.controller.UserController;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,15 +13,15 @@ import org.springframework.stereotype.Component;
 public class DataCredentialsValidator implements CredentialsValidator {
 
     @Autowired
-    UserController userController;
+    UserService userService;
 
     @Override
     public RestResult<User> retrieveUserByEmailAndPassword(String emailAddress, String password) {
-        return userController.getUserByEmailandPassword(emailAddress, password);
+        return userService.getUserByEmailandPassword(emailAddress, password).toGetResponse();
     }
 
     @Override
     public RestResult<User> retrieveUserByToken(String token) {
-        return userController.getUserByToken(token);
+        return userService.getUserByToken(token).toGetResponse();
   }
 }

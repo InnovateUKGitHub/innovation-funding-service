@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -20,7 +19,6 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +30,6 @@ import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Collections.emptyList;
 import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -248,13 +245,14 @@ public class RegistrationControllerTest extends BaseUnitTest {
 
 
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
-        when(userService.createLeadApplicantForOrganisation(userResource.getFirstName(),
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
-                1L)).thenReturn(restSuccess(userResource));
+                1L,
+                null)).thenReturn(restSuccess(userResource));
         when(userService.findUserByEmail("test@test.test")).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -269,10 +267,8 @@ public class RegistrationControllerTest extends BaseUnitTest {
                         .param("termsAndConditions", "1")
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().value("userId", "1"))
-                .andExpect(view().name("redirect:/application/create/initialize-application/"))
-        ;
-        verify(tokenAuthenticationService).addAuthentication(Matchers.isA(HttpServletResponse.class), Matchers.isA(UserResource.class));
+                .andExpect(view().name("redirect:/registration/success"));
+
     }
 
     @Test
@@ -337,6 +333,15 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
                 1L)).thenReturn(restFailure(error));
+
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
+                userResource.getLastName(),
+                userResource.getPassword(),
+                userResource.getEmail(),
+                userResource.getTitle(),
+                userResource.getPhoneNumber(),
+                1L,
+                null)).thenReturn(restFailure(error));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
