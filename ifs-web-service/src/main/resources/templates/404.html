@@ -26,14 +26,16 @@
            ${exception} or ${message} are set internally by Spring Boot. */-->
     <div>
         <pre style="padding:10px; white-space: pre-wrap;font-size:15px">
-		<span th:if="${message} and ${message.length() != 0}"
-              th:text="${message}">
-            Please check the web address or search term you entered for any errors.
-            You can search the <a href="http://www.gov.uk/search">gov.uk website</a> or go back to the <a href="/">Innovate UK homepage</a>.
-        </span>
-        </pre>
+            <span>
+                Please check the web address or search term you entered for any errors.
+                You can return to <a th:href="@{/}">IFS application </a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
+            </span>
 
-        <span th:if="${message == null}"></span>
+            <span th:if="${message} and ${message.length() != 0}"
+              th:utext="${'&lt;!--' + message + ' --&gt;'}">
+                Please check the web address or search term you entered for any errors.
+                You can return to <a th:href="@{/}">IFS application </a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
+            </span>
         </pre>
     </div>
 
