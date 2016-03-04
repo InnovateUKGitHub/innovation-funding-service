@@ -119,5 +119,6 @@ the applicant clears the application title field
 The applicant should get a validation error message
     [Arguments]    ${validation error}
     focus    jQuery=button:contains("Save and")
-    Wait Until Page Contains    ${validation_error}
+    sleep   5s
+    Run Keyword and ignore error        Wait Until Page Contains    ${validation_error}
     #Element Should Be Visible    css=.error-message

@@ -10,8 +10,8 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
 Enter Valid Postcode and the results should be displayed in the dropdown
-    [Documentation]    INFUND-890    # note that I have used the word "postcode" as a postcode - any actual postcode will fail as the postcode lookup    # functionality does not yet exist
-    [Tags]    HappyPath
+    [Documentation]    INFUND-890    # note that this will only work for the dev server for now, since postcode lookup isn't implemented on our local machines
+    [Tags]    HappyPath     FailingForLocal
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -19,7 +19,7 @@ Enter Valid Postcode and the results should be displayed in the dropdown
     And the user enters text to a text field    id=org-name    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    LINK=INNOVATE LTD
-    When the user enters text to a text field    css=#postcode-check    postcode
+    When the user enters text to a text field    css=#postcode-check    BS14NT
     And the user clicks the button/link    id=postcode-lookup
     Then the user should see the element    css=#select-address-block
     And the user clicks the button/link    css=#select-address-block > button
@@ -52,9 +52,24 @@ the user selects the checkbox "The registered test is the same as the operating 
 the user unselects the checkbox "The registered test is the same as the operating address"
     Unselect Checkbox    id=address-same
 
+
 the address fields should be filled
-    Textfield Should Contain    id=street    Montrose House
-    Textfield Should Contain    id=street-2    Clayhill Park
-    Textfield Should Contain    id=town    Neston
-    Textfield Should Contain    id=county    Cheshire
+    # postcode lookup implemented on dev but not on our local machines, so check which is running:
+   Run Keyword If      '${RUNNING_ON_DEV}' != ''       the address fields should be filled with valid data
+   Run Keyword If      '${RUNNING_ON_DEV}' == ''       the address fields should be filled with dummy data
+
+the address fields should be filled with valid data
+    Textfield Should Contain    id=street    Am Reprographics
+    Textfield Should Contain    id=street-2    King William House
+    Textfield Should Contain    id=street-3     13 Queen Square
+    Textfield Should Contain    id=town         Bristol
+    Textfield Should Contain    id=county       City of Bristol
+    Textfield Should Contain    id=postcode    BS1 4NT
+
+the address fields should be filled with dummy data
+    Textfield Should Contain    id=street    Montrose House 1
+    Textfield Should Contain    id=street-2     Clayhill Park
+    Textfield Should Contain    id=street-3     Cheshire West and Chester
+    Textfield Should Contain    id=town         Neston
+    Textfield Should Contain    id=county       Cheshire
     Textfield Should Contain    id=postcode    CH64 3RU

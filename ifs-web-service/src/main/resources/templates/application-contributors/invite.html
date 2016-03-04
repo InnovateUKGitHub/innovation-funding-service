@@ -14,10 +14,10 @@
     <!--/* manage application text */-->
     <div th:if="${param.newApplication == null}" th:remove="tag">
       <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/application/{id}/contributors(id=${currentApplication.getId()})},currentApplication=${currentApplication}" th:remove="tag" />
-      <h1 class="heading-large">Manage Contributors</h1>
-        <h2 th:unless="${currentApplication.getName()}" class="heading-medium no-margin" th:text="${currentCompetition.getName() + ' -  New application '}" />
-        <h2 th:if="${currentApplication.getName()}" class="heading-medium no-margin" th:text="${currentCompetition.getName() + ' -  '+currentApplication.getName()}" />
-
+      <div class="page-title">
+          <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+          <h1 class="heading-xlarge">Manage Contributors</h1>
+      </div>
       <p>From this page you are able to invite contributors to your application.</p>
     </div>
     <!--/* new application text */-->

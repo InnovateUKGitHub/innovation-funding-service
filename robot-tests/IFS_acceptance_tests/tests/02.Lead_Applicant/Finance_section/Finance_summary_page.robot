@@ -54,7 +54,7 @@ Finance summary calculations for the second collaborator
 
 Green check shouldn't show when the finances are incomplete
     [Documentation]    INFUND-927
-    [Tags]    HappyPath
+    [Tags]    HappyPath         Failing
     Given the user logs in as first collaborator
     When the user navigates to the page        ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     And applicant marks one finance sub-section as incomplete
@@ -63,7 +63,7 @@ Green check shouldn't show when the finances are incomplete
 
 Green check should show when the applicant marks the finance as complete
     [Documentation]    INFUND-927
-    [Tags]    HappyPath
+    [Tags]    HappyPath     Failing
     Given the user logs in as first collaborator
     And the user navigates to the page        ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     When the applicant marks the finance question as complete

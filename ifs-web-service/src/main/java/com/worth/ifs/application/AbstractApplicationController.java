@@ -1,5 +1,6 @@
 package com.worth.ifs.application;
 
+import com.worth.ifs.BaseController;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.finance.view.DefaultFinanceModelManager;
@@ -24,6 +25,7 @@ import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,11 +41,14 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 /**
  * This object contains shared methods for all the Controllers related to the {@link ApplicationResource} data.
  */
-public abstract class AbstractApplicationController {
+public abstract class AbstractApplicationController extends BaseController {
 
     public static final String ASSIGN_QUESTION_PARAM = "assign_question";
     public static final String FORM_MODEL_ATTRIBUTE = "form";
     private final Log log = LogFactory.getLog(getClass());
+
+    @Autowired
+    protected MessageSource messageSource;
 
     @Autowired
     protected ResponseService responseService;
