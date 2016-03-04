@@ -251,7 +251,7 @@ li.type-company{
             margin-bottom: 10px;
 
             .heading-medium{
-                margin-top: 0;
+                margin: 0; 
             }
 
             &:before{
@@ -275,11 +275,36 @@ li.type-company{
             }
         }
 
+        &.waiting{
+            background: url(../images/charts/offer-status-wait.png) no-repeat;
+
+             &:last-child{
+                background: url(../images/charts/offer-status-wait-last.png) no-repeat;
+             }
+        }
+
         &.processing{
             background: url(../images/charts/offer-status-processing.png) no-repeat;
 
              &:last-child{
                 background: url(../images/charts/offer-status-processing-last.png) no-repeat;
+             }
+
+            span{
+                background: $link-colour;
+                color: $white;
+
+                a{
+                    color: $white;
+                }
+            }
+        }
+
+        &.require-action{
+            background: url(../images/charts/offer-status-flag.png) no-repeat;
+
+             &:last-child{
+                background: url(../images/charts/offer-status-flag-last.png) no-repeat;
              }
 
             span{

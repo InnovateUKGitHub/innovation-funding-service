@@ -1167,8 +1167,9 @@
 
     <!-- ===========================Form: funding breakdown =========================== -->
     <div th:fragment="application_finances_summary" th:if="${financeTotalPerType}">
-      <div class="form-group finance-summary" style="overflow:auto;">
+      <div th:include="question-type/types :: application_finances_incomplete_warning" th:remove="tag" />
 
+      <div class="form-group finance-summary" style="overflow:auto;">
             <table>
               <thead>
                 <tr>
@@ -1193,6 +1194,9 @@
                         </div>
                         <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/tick-icon.png')}"
                              th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" alt="has marked the Finances as complete"/>
+                         <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/warning-icon.png')}"
+                             th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" alt="has not yet marked the Finances as complete" />
+
                     </div>
                   </th>
                   <div th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation}" th:remove="tag">
@@ -1219,4 +1223,17 @@
             </table>
         </div>
     </div>
+    <!-- ===========================Form: finances incomplete =========================== -->
+
+    <div th:fragment="application_finances_incomplete_warning">
+        <div th:unless="${sectionsMarkedAsComplete.contains(7L)}" class="warning-alert">
+          <h2 class="heading-small no-margin">The following organisations have not maked their finances as complete:</h2>
+          <ul class="list-bullet">
+              <div th:remove="tag" th:each="applicationOrganisation : ${applicationOrganisations}">
+              <li th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" th:text="${applicationOrganisation.name}" />
+            </div>
+          </ul>
+          <p>This application cannot be submitted unless finances have been marked as complete by all partners.</p>
+        </div>
+  </div>
 </html>

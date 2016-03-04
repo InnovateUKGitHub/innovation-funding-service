@@ -11,8 +11,10 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
 
-    <h1 class="heading-xlarge">Application status</h1>
-
+    <div class="page-title">
+              <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+              <h1 class="heading-xlarge">Application status</h1>
+    </div>
 
     <ul class="application-progress-list">
     	<li class="complete">

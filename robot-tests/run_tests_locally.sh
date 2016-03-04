@@ -98,6 +98,14 @@ function runHappyPathTests {
     pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:http:// --include HappyPath --name IFS $testDirectory
 }
 
+
+function runTestsRemotely {
+    echo "***********RUNNING AGAINST THE IFS DEV SERVER...**********"
+    cd ${scriptDir}
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:ifs.dev.innovateuk.org  -v PROTOCOL:https:// -v RUNNING_ON_DEV:yes --exclude Failing --exclude Pending --exclude FailingForDev --name IFS $testDirectory
+}
+
+
 cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
@@ -144,10 +152,10 @@ unset opt
 unset quickTest
 unset testScrub
 unset happyPath
-
+unset remoteRun
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :d:" opt ; do
+while getopts ":q :t :h :r :d:" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -158,6 +166,9 @@ while getopts ":q :t :h :d:" opt ; do
 	h)
 	 happyPath=1
 	;;
+        r)
+         remoteRun=1
+        ;;
         d)
          testDirectory="$OPTARG"
         ;;
@@ -199,6 +210,10 @@ then
     buildAndDeploy
     startServers
     runHappyPathTests
+elif [ "$remoteRun" ]
+then 
+    echo "Pointing the tests at the ifs dev server - note that some tests may fail if you haven't scrubbed the dev server's db" >&2
+    runTestsRemotely
 else
     echo "using quickTest:   FALSE" >&2
     stopServers

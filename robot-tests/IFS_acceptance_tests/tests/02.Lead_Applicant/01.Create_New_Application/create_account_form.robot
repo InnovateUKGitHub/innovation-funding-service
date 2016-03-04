@@ -15,7 +15,7 @@ ${correct_password}    password
 ${incorrect_password}    wrongpassword
 ${long_password}    passwordpasswordpasswordpasswordpasswordpasswordpassword
 ${short_password}    pass
-${valid_email}    ___ewan_@worth.systems
+${valid_email}    ewan+1@hiveit.co.uk
 
 *** Test Cases ***
 First name left blank
@@ -123,7 +123,7 @@ Re-type password left blank
 
 Password and re-typed password do not match
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]    Account    Validations    FailingForDev
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
@@ -132,7 +132,7 @@ Password and re-typed password do not match
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${incorrect_password}
     And the user submits their information
-    Then the user should see an error    Passwords must match
+    Then the user should see the text in the page    Passwords must match
     And the user cannot login with either password
     And the user logs out if they are logged in
 
@@ -147,7 +147,7 @@ Password is too short
     And the user enters text to a text field    id=password    ${short_password}
     And the user enters text to a text field    id=retypedPassword    ${short_password}
     And the user submits their information
-    Then the user should see an error    Password size should be between 6 and 30 characters
+    Then the user should see an error    Your password should have been 6 and 30 characters.
     And the user cannot login with their new details    ${valid_email}    ${short_password}
     And the user logs out if they are logged in
 

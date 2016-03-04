@@ -17,9 +17,10 @@ ${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9
 *** Test Cases ***
 Create application flow for non registered users CH route
     [Documentation]    INNFUND-669
-    [Tags]    Create application    HappyPath
+    [Tags]    Create application    HappyPath   FailingForDev
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    When the user clicks the button/link    jQuery=.column-third .button:contains("Sign in to apply")
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=org-name    Innovate
     And the user clicks the button/link    id=org-search
@@ -36,10 +37,10 @@ Create application flow for non registered users CH route
 
 Create application flow for non registered users non CH route
     [Documentation]    INNFUND-669
-    [Tags]    Create application    HappyPath       Pending
-    # Pending due to INFUND-2019
+    [Tags]    Create application    HappyPath
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    When the user clicks the button/link    jQuery=.column-third .button:contains("Sign in to apply")
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
     And the user clicks the button/link    jQuery=.button:contains("Save")
@@ -52,8 +53,8 @@ Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
-    [Tags]    Applicant    New application    HappyPath
-    When the guest user enters the log in credentials    robot@test.com    testtest
+    [Tags]    Applicant    New application    HappyPath     FailingForDev
+    When the guest user enters the log in credentials    ewan+2@hiveit.co.uk    testtest
     And the user clicks the button/link    css=input.button
     And the user edits the competition title
     Then the user should see the text in the page    test title
@@ -76,7 +77,7 @@ the user enters the details and clicks the create account
     Input Text    id=firstName    John
     Input Text    id=lastName    Smith
     Input Text    id=phoneNumber    23232323
-    Input Text    id=email    robot@test.com
+    Input Text    id=email    ewan+2@hiveit.co.uk
     Input Password    id=password    testtest
     Input Password    id=retypedPassword    testtest
     Select Checkbox    termsAndConditions
@@ -100,7 +101,7 @@ the user enters the details for the non CH
     Input Text    id=firstName    tester
     Input Text    id=lastName    tester
     Input Text    id=phoneNumber    23232323
-    Input Text    id=email    robot2@test.com
+    Input Text    id=email    ewan+3@hiveit.co.uk
     Input Password    id=password    testtest
     Input Password    id=retypedPassword    testtest
     Select Checkbox    termsAndConditions

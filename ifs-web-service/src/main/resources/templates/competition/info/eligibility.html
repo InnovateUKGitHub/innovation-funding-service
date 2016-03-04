@@ -10,20 +10,57 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Return to competition details',linkClass='link-back',linkUrl=@{../details},currentApplication=${currentApplication}" th:remove="tag" />
 
-    <header class="page-header group no-pad">
-        <h1 class="heading-xlarge">Technology Inspired</h1>
-    </header>
+    <div class="page-title">
+        <h1 class="heading-xlarge no-margin">Technology Inspired</h1>
+        <h2 class="heading-large ">Competition eligibility</h2>
+    </div>
+  	<p>To create a new application for this competition, you must meet the following criteria:</p>
 
-    <h2>Eligibility</h2>
-    <a th:href="@{before-you-apply}">Before you apply</a>
-    <a th:href="@{what-we-ask-you}">What we ask you</a>
+  	<div class="grid-row">
+  		<div class="column-two-thirds">
 
+  			<ul class="list-bullet">
+  				<li>
+  					<h3 class="heading-medium no-margin">Apply as the lead partner</h3><p>Lead applicants are responsible for managing and submitting the overall application.
+  					If you are not the lead partner in this project, please contact your lead to create the initial application.
+  					They can then invite the full project team. </p>
+  				</li>
+  				<li>
+  					<h3 class="heading-medium no-margin">Lead as a UK based business</h3><p>Academic or research partners are not eligible to lead applications in this competition
+  					Non-UK businesses are not eligible to receive funding in this competition.</p>
+  				</li>
+  			</ul>
 
-    <a th:if="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${competitionId})}">Create application</a>
-    <a th:unless="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${competitionId})}">Sign in to apply</a>
+  		</div>
+  		<div class="column-third">
+  			<div class="boxed extra-margin">
+  				<p>Different competitions have different criteria, so if you are ineligible for this competition, take a look at our <a href="#">competitions page</a> for upcoming opportunities.</p>
+  			</div>
+  		</div>
+  	</div>
 
+  	<hr />
 
+  	<h2 class="heading-large no-margin-top">Before you apply</h2>
+  	<p>Understand our application process and our new online system here:</p>
+
+  	<div class="grid-row">
+  		<div class="column-half">
+  			<h3 class="heading-small"><a th:href="@{before-you-apply}">Using the new online Innovation Funding Service</a></h3>
+  			<p>We've designed a new process to make the process of applying for funding much simpler to manage. You can invite your team, share the workload, track progress and submit online.</p>
+  		</div>
+  		<div class="column-half">
+  			<h3 class="heading-small"><a th:href="@{what-we-ask-you}">What we ask you</a></h3>
+  			<p>Details of the questions in our application process and what's expected of you - so you can understand the process without beginning an application</p>
+  		</div>
+  	</div>
+
+  	<div class="extra-margin">
+      <a th:if="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${competitionId})}">Begin application</a>
+      <a th:unless="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${competitionId})}">Sign in to apply</a>
+  	</div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
