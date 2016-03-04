@@ -86,6 +86,16 @@ public class RestTemplateAdaptor {
     }
 
     @RestCacheInvalidateResult
+    public <R> RestResult<R> postWithRestResult(String path, Object objectToSend, HttpHeaders headers, Class<R> returnType) {
+        return exchangeObjectWithRestResult(path, POST, objectToSend, headers, returnType, OK, CREATED);
+    }
+
+    @RestCacheInvalidateResult
+    public <R> RestResult<R> postWithRestResult(String path, Object objectToSend, HttpHeaders headers, ParameterizedTypeReference<R> returnType) {
+        return exchangeObjectWithRestResult(path, POST, objectToSend, headers, returnType, OK, CREATED);
+    }
+
+    @RestCacheInvalidateResult
     public <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType, HttpStatus expectedStatusCode, HttpStatus... otherExpectedStatusCodes) {
         return exchangeObjectWithRestResult(path, POST, objectToSend, returnType, expectedStatusCode, otherExpectedStatusCodes);
     }
@@ -201,6 +211,14 @@ public class RestTemplateAdaptor {
         return exchangeWithRestResult(() -> getRestTemplate().exchange(path, method, jsonEntity(objectToSend), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
 
+    private <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, HttpHeaders headers, ParameterizedTypeReference<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        return exchangeWithRestResult(() -> getRestTemplate().exchange(path, method, jsonEntity(objectToSend, headers), returnType), expectedSuccessCode, otherExpectedStatusCodes);
+    }
+
+    private <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, HttpHeaders headers, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        return exchangeWithRestResult(() -> getRestTemplate().exchange(path, method, jsonEntity(objectToSend, headers), returnType), expectedSuccessCode, otherExpectedStatusCodes);
+    }
+
     private <T> RestResult<T> exchangeWithRestResult(String path, HttpMethod method, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         return exchangeWithRestResult(() -> getRestTemplate().exchange(path, method, jsonEntity(null), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
@@ -264,6 +282,17 @@ public class RestTemplateAdaptor {
 
     protected <T> HttpEntity<T> jsonEntity(T entity) {
         HttpHeaders headers = getHeaders();
+        if (SecurityContextHolder.getContext() != null &&
+                SecurityContextHolder.getContext().getAuthentication() != null &&
+                SecurityContextHolder.getContext().getAuthentication().getCredentials() != null) {
+            headers.set(AUTH_TOKEN, SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
+        }
+        return new HttpEntity<>(entity, headers);
+    }
+
+    protected <T> HttpEntity<T> jsonEntity(T entity, HttpHeaders customHeaders) {
+        HttpHeaders headers = getHeaders();
+        headers.putAll(customHeaders);
         if (SecurityContextHolder.getContext() != null &&
                 SecurityContextHolder.getContext().getAuthentication() != null &&
                 SecurityContextHolder.getContext().getAuthentication().getCredentials() != null) {

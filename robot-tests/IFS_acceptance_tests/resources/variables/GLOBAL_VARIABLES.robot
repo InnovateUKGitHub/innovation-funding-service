@@ -49,5 +49,5 @@ ${APPLICATION_TEAM_URL}    ${SERVER}/application/1/contributors
 ${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/1/contributors/invite
 
 
-${404_error_message}    Page or resource not found
-${403_error_message}    You are not authorised to perform the requested action
+${404_error_message}    Page Not Found
+${403_error_message}    You do not have the necessary permissions for your request

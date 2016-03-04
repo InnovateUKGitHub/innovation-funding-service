@@ -11,7 +11,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
 
-    <h1 class="heading-large">Page or resource not found... </h1>
+    <h1 class="heading-large">Page Not Found</h1>
 
     <p th:if="${url}">
         <b>Page:</b> <span th:text="${url}">Page URL</span>
@@ -24,10 +24,18 @@
 
     <!--/* ${ex} is set by ourSimpleMappingExceptionResolver,
            ${exception} or ${message} are set internally by Spring Boot. */-->
-    <div th:if="(${message} and ${message.length() != 0})">
+    <div>
         <pre style="padding:10px; white-space: pre-wrap;font-size:15px">
-		<span th:if="${message} and ${message.length() != 0}"
-              th:text="${message}">message ...</span>
+            <span>
+                Please check the web address or search term you entered for any errors.
+                You can return to <a th:href="@{/}">IFS application </a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
+            </span>
+
+            <span th:if="${message} and ${message.length() != 0}"
+              th:utext="${'&lt;!--' + message + ' --&gt;'}">
+                Please check the web address or search term you entered for any errors.
+                You can return to <a th:href="@{/}">IFS application </a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
+            </span>
         </pre>
     </div>
 

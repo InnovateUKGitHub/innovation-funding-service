@@ -124,12 +124,18 @@
     <div th:if="${inviteNotValid}" class="event-alert">
         <p><span>Invite not valid or expired</span></p>
     </div>
+
     <div th:if="${inviteAlreadyAccepted}" class="event-alert">
         <p><span>Invite already accepted</span></p>
     </div>
 
+    <div th:if="${fileUploaded}" class="event-alert" >
+        <p><span>You have uploaded file successfully</span></p>
+    </div>
 
-
+    <div th:if="${fileRemoved}" class="event-alert" >
+        <p><span>File has been removed successfully</span></p>
+    </div>
 
 </div>
 

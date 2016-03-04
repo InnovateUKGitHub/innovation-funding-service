@@ -232,3 +232,55 @@ select{
         border: 1px solid $border-colour;
 
 }
+
+
+// ------- file upload -------- //
+
+.upload-section{
+	border: 1px solid $border-colour;
+	background: $grey-4;
+	padding: 16px 16px 8px 16px;
+	margin: 16px 0;
+}
+.upload-section.error{
+  @extend .warning-alert;
+  background: none;
+  padding-left: 16px;
+}
+.no-js .upload-section .inputfile + label{
+    visibility: hidden;
+    display: none;
+}
+.no-js .upload-section .inputfile {
+    margin:16px 0;
+    font-size:17px;
+}
+.js-enabled .upload-section .inputfile{
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.upload-section .inputfile + label{
+  margin-top: 20px;
+}
+
+.upload-section	.uploaded-file{
+	display: block;
+	background: $panel-colour;
+	padding: 20px;
+	font-weight: bold;
+	margin: 10px 0;
+}
+
+
+
+.form-group{
+	&.download{
+		padding: 5px 0 0 50px;
+		background: url(../images/icons/icon-download.png) no-repeat;
+	}
+}
+
