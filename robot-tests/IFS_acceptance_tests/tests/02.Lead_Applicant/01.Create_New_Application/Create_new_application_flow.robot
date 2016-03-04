@@ -48,22 +48,9 @@ Create application flow for non registered users non CH route
     And the user clicks the Not on company house link
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details for the non CH
-    And the user clicks the button/link    JQuery=.button:contains("Begin application")
-    Then the user should see the text in the page    Application overview
-    And the user should see the text in the page    Technology Inspired
-
-
-Verify that the options will load properly with spaces in the name
-    [Documentation]     INFUND-1757
-    [Tags]  Create application
-    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
-    And the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user enters text to a text field    id=org-name    Hive IT
-    And the user clicks the button/link    id=org-search
-    Then The user should see the text in the page       Hive IT
-
+    # And the user clicks the button/link    JQuery=.button:contains("Begin application")
+    # Then the user should see the text in the page    Application overview
+    # And the user should see the text in the page    Technology Inspired
 
 
 Verify the name of the new application
@@ -82,6 +69,19 @@ Verify the name of the new application
     And the new application should be visible in the dashboard page
     And the user clicks the button/link    link=test title
     And the user should see the text in the page    test title
+
+
+Verify that the options will load properly with spaces in the name
+    [Documentation]     INFUND-1757
+    [Tags]  Create application
+    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user enters text to a text field    id=org-name    Hive IT
+    And the user clicks the button/link    id=org-search
+    Then The user should see the text in the page       Hive IT
+
 
 *** Keywords ***
 the new application should be visible in the dashboard page
