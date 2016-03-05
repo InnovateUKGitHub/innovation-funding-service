@@ -76,6 +76,23 @@ Verify that the field has been reassigned to the lead applicant
     And the question should contain the correct status/name    css=#form-input-12 .assign-container    You
     [Teardown]    User closes the browser
 
+
+Verify that the appendices are assigned along with the question
+    [Documentation]     INFUND-409
+    [Tags]      Collaboration       Pending
+    [Setup]     Guest user log-in   &{lead_applicant_credentials}
+    Given the user navigates to the page     ${PROJECT_TEAM_URL}
+    And the user can see the option to upload a file
+    When the user assigns the question to Jessica Doe
+    And the user can log out
+    And the user can log in as Jessica Doe
+    Then the user navigates to the page     ${PROJECT_TEAM_URL}
+    And the user can see the option to upload a file
+    And the user assigns the question to Steve Smith
+    And the user can't see the option to upload a file
+
+
+
 *** Keywords ***
 the collaborator edits public description question
     Clear Element Text    css=#form-input-12 .editor
@@ -88,3 +105,23 @@ the collaborator edits public description question
 the question should contain the correct status/name
     [Arguments]    ${ELEMENT}    ${STATUS}
     Element Should Contain    ${ELEMENT}    ${STATUS}
+
+the user can see the option to upload a file
+    the user should see the text in the page       Upload
+
+the user assigns the question to Jessica Doe
+    the applicant assigns the question to the collaborator      css=#form-input-8 .editor   testtest    Jessica Doe
+    reload page
+
+the user can log out
+    Logout as user
+
+the user assigns the question to Steve Smith
+    And The user clicks the button/link         link=Ready for review
+    reload page
+
+the user can log in as Jessica Doe
+    guest user log-in   &{collaborator1_credentials}
+
+the user can't see the option to upload a file
+    the user should not see the text in the page        Upload

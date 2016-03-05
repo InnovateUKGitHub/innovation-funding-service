@@ -36,6 +36,8 @@ public class User {
     private String inviteName;
     private String phoneNumber;
     private String imageUrl;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     @Column(unique=true)
     private String token;
@@ -229,4 +231,13 @@ public class User {
                 .append(id)
                 .toHashCode();
     }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
 }

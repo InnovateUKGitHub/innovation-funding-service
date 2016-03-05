@@ -110,7 +110,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         Long organisationId = 1L;
 
-        when(userServiceMock.createUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
+        when(userServiceMock.createApplicantUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/" + organisationId, "json")
                 .contentType(APPLICATION_JSON)
@@ -176,7 +176,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         Long organisationId = 1L;
 
-        when(userServiceMock.createUser(organisationId, userResource)).thenReturn(serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS)));
+        when(userServiceMock.createApplicantUser(organisationId, userResource)).thenReturn(serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS)));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/" + organisationId, "json")
                 .contentType(APPLICATION_JSON)

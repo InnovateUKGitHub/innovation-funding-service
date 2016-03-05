@@ -1,4 +1,4 @@
-jQuery(document).ready(function(){
+addRow(document).ready(function(){
 
 	jQuery('body').on('click','.js-add-partner',function(e){
 		e.preventDefault();

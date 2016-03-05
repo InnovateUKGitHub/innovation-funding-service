@@ -145,6 +145,7 @@ Business organisation (accept invitation flow)
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Rogier    De Regt
+    And the user verifies their email       ${verify_link_4}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
 
 User who accepted the invite should be able to log-in
@@ -190,6 +191,7 @@ Academic organisation (accept invitation flow)
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Steven    Gerrard
+    And the user verifies their email       ${verify_link_5}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=A novel solution to an old problem
     and the user clicks the button/link    link=Your finances

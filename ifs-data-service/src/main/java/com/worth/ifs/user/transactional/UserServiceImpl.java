@@ -1,7 +1,14 @@
 package com.worth.ifs.user.transactional;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.notifications.resource.*;
+import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.token.domain.Token;
+import com.worth.ifs.token.domain.TokenType;
+import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.repository.OrganisationRepository;
@@ -13,17 +20,20 @@ import com.worth.ifs.util.EntityLookupCallbacks;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -31,18 +41,28 @@ import static java.util.stream.Collectors.toSet;
  */
 @Service
 public class UserServiceImpl extends BaseTransactionalService implements UserService {
-
+    final JsonNodeFactory factory = JsonNodeFactory.instance;
+    private static final CharSequence HASH_SALT = "klj12nm6nsdgfnlk12ctw476kl";
     private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
+    enum Notifications {
+        VERIFY_EMAIL_ADDRESS
+    }
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     @Autowired
     private UserRepository repository;
-
     @Autowired
     private ProcessRoleRepository processRoleRepository;
-
     @Autowired
     private OrganisationRepository organisationRepository;
-
+    @Autowired
+    private TokenRepository tokenRepository;
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
     @Autowired
     private RoleRepository roleRepository;
 
@@ -95,7 +115,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<Set<User>> findRelatedUsers(final Long applicationId) {
-
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
 
         Set<User> related = roles.stream()
@@ -106,14 +125,20 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<UserResource> createUser(final Long organisationId, UserResource userResource) {
+    public ServiceResult<UserResource> createApplicantUser(final Long organisationId, UserResource userResource) {
+        return this.createApplicantUser(organisationId, userResource, Optional.empty());
+    }
 
+    @Override
+    public ServiceResult<UserResource> createApplicantUser(final Long organisationId, UserResource userResource, Optional<Long> competitionId) {
+        LOG.debug(String.format("createApplicantUser %s for organisation: %s ", userResource.getEmail(), organisationId));
         User newUser = assembleUserFromResource(userResource);
         addOrganisationToUser(newUser, organisationId);
         addRoleToUser(newUser, UserRoleType.APPLICANT.getName());
+        newUser.setStatus(UserStatus.INACTIVE);
 
         if (repository.findByEmail(userResource.getEmail()).isEmpty()) {
-            UserResource createdUserResource = createUserWithToken(newUser);
+            UserResource createdUserResource = createUserWithToken(newUser, competitionId);
             return serviceSuccess(createdUserResource);
         } else {
             return serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, userResource.getEmail()));
@@ -126,19 +151,64 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
             LOG.error("User with email " + userResource.getEmail() + " doesn't exist!");
             return serviceFailure(notFoundError(User.class, userResource.getEmail()));
         }
-        User newUser = createUser(existingUser.get(0), userResource);
-        UserResource updatedUser = createUser(newUser);
+        User newUser = updateExistingUserFromResource(existingUser.get(0), userResource);
+        UserResource updatedUser = new UserResource(saveUser(newUser));
         return serviceSuccess(updatedUser);
     }
 
-    private UserResource createUserWithToken(User user) {
-        User createdUser = repository.save(user);
-        User createdUserWithToken = addTokenBasedOnIdToUser(createdUser);
-        User finalUser = repository.save(createdUserWithToken);
-        return new UserResource(finalUser);
+    private UserResource createUserWithToken(User user, Optional<Long> competitionId) {
+        user = repository.save(user);
+        addTokenBasedOnIdToUser(user);
+        user = saveUser(user);
+        sendUserVerificationEmail(user, competitionId);
+        return new UserResource(user);
     }
 
-    private User createUser(User existingUser, UserResource updatedUserResource) {
+    private ServiceResult<Notification> sendUserVerificationEmail(User user, Optional<Long> competitionId) {
+        String verificationLink = getVerificationLink(user, competitionId);
+
+
+        NotificationSource from = systemNotificationSource;
+        NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
+
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("verificationLink", verificationLink);
+
+        Notification notification = new Notification(from, singletonList(to), Notifications.VERIFY_EMAIL_ADDRESS, notificationArguments);
+        ServiceResult<Notification> result = notificationService.sendNotification(notification, EMAIL);
+        return result;
+    }
+
+    private String getVerificationLink(User user, Optional<Long> competitionId) {
+        String hash = generateAndSaveVerificationHash(user, competitionId);
+        return String.format("%s/registration/verify-email/%s", webBaseUrl, hash);
+    }
+
+    private String generateAndSaveVerificationHash(User user, Optional<Long> competitionId) {
+        StandardPasswordEncoder encoder = new StandardPasswordEncoder(HASH_SALT);
+        int random = (int) Math.ceil(Math.random() * 1000); // random number from 1 to 1000
+        String hash = String.format("%s==%s==%s", user.getId(), user.getEmail(), random);
+        hash = encoder.encode(hash);
+
+
+        ObjectNode extraInfo = factory.objectNode();
+        if(competitionId.isPresent()){
+            extraInfo.put("competitionId", competitionId.get());
+        }
+        Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), hash, extraInfo);
+        tokenRepository.save(token);
+        return hash;
+    }
+
+    @Override
+    public ServiceResult<Void> activateUser(Long userId){
+        return getUser(userId).andOnSuccessReturnVoid(u -> {
+            u.setStatus(UserStatus.ACTIVE);
+            userRepository.save(u);
+        });
+    }
+
+    private User updateExistingUserFromResource(User existingUser, UserResource updatedUserResource) {
         existingUser.setPhoneNumber(updatedUserResource.getPhoneNumber());
         existingUser.setTitle(updatedUserResource.getTitle());
         existingUser.setLastName(updatedUserResource.getLastName());
@@ -146,9 +216,8 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         return existingUser;
     }
 
-    private UserResource createUser(User user) {
-        User savedUser = repository.save(user);
-        return new UserResource(savedUser);
+    private User saveUser(User user) {
+        return repository.save(user);
     }
 
     private void addRoleToUser(User user, String roleName) {
@@ -182,9 +251,8 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         return firstName + " " + lastName;
     }
 
-    private User addTokenBasedOnIdToUser(User user) {
+    private void addTokenBasedOnIdToUser(User user) {
         String userToken = user.getId() + "abc123";
         user.setToken(userToken);
-        return user;
     }
 }
