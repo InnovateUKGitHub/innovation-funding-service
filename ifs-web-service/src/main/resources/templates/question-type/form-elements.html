@@ -340,10 +340,15 @@
 <!-- ========================= edit link =========================== -->
 
 <div th:fragment="form-edit-question-button">
-    <a tabindex="0"
-       class="button-secondary"
-       th:href="'/application/'+${currentApplication.getId()}+'/form/question/edit/'+${question.getId()}"
-       th:text="Edit"/>
+    <button tabindex="0"
+            class="button-secondary"
+            type="submit"
+            name="edit_question"
+            th:value="${question.getId()}"
+            th:class="${readonly} or ${costCategory!=null} ? 'button' : 'buttonlink'"
+            th:attrappend="formaction='/application/'+${currentApplication.getId()}+'/form/question/edit/'+${question.getId()}+'&#35;question-'+${question.getId()}"
+            th:text="Edit">Edit
+    </button>
 </div>
 
 <!-- ========================= word count =========================== -->
