@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Offer status'}, ${'/prototypes/1588-project-status'})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -274,7 +274,7 @@
 
 		<div class="extra-margin">
 			
-			<a href="#" class="button-secondary">Save and return to project setup</a>
+			<a href="/prototypes/1588-project-status" class="button-secondary">Save and return to project setup</a>
 
 		</div>
 
@@ -297,7 +297,6 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
-<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 	// <![CDATA[
