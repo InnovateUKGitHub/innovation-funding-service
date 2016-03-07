@@ -13,11 +13,11 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard?status=projectSetup'})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Offer status'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Project setup status'})" th:remove="tag" />
 
 	<p class="form-hint">You need to complete the following steps before this project can begin.</p>
 
@@ -26,22 +26,22 @@
 			<span>
 				<h2 class="heading-medium">Successful application</h2>
 				<p>The application <strong>Machine learning in robots</strong> has been successful within the <strong>Technology inspired</strong> competition</p>
-				<a href="#" class="buttonlink">View application</a> 
-				<a href="#" class="buttonlink">View feedback</a> 
+				<a href="/prototypes/1196-readonly-application-view" class="buttonlink">View application</a> 
+				<a href="/prototypes/545-application-feedback" class="buttonlink">View feedback</a> 
 				<a href="#" class="buttonlink">View terms &#38; conditions of grant offer</a>
 			</span>
 		</li>
 
-		<li class="complete">
+		<li th:class="${(param.user != null and param.user[0] == 'nonLead' ? 'complete' : 'require-action')}">
 			<span>
-				<h2 class="heading-medium"><a href="#">Project details</a></h2>
+				<h2 class="heading-medium"><a href="/prototypes/1575-project-details">Project details</a></h2>  
 				<p>Confirm the contact details, proposed start date and location of the project.</p>
 			</span>
 		</li>
 
-		<li class="complete">
+		<li th:class="${(param.user != null and param.user[0] == 'nonLead' ? 'complete' : 'waiting')}">
 			<span>
-				<h2 class="heading-medium">Monitoring officer assigned</h2>
+				<h2 class="heading-medium">Monitoring officer assigned</h2> 
 				<p>Your monitoring officer for this project is <a href="#">Tom Evans</a>.</p>
 			</span>
 		</li>

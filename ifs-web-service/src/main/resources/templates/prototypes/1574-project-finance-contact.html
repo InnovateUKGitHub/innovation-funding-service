@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${'/prototypes/1588-project-status'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Project details'})" th:remove="tag" />
+	
+	<form action="#">
+
+		<fieldset>
+			
+			<h2 class="heading-large no-margin-top">Finance contact</h2>
+
+			<legend class="visuallyhidden">Finance contact</legend>
+
+			<label for="finances-name-1" class="block-label">
+				<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
+				John Smith
+			</label>
+
+			<label for="finances-name-2" class="block-label">
+				<input id="finances-name-2" type="radio" name="finances-name-group" value="John Smith" />
+				Ann Jones
+			</label>
+
+		</fieldset>
+
+		<div class="extra-margin">
+			<button class="buttonlink" id="add-user">Add new team member</button>	
+		</div>
+
+		<table class="extra-margin" id="add-user-details" style="display: none">
+			<thead>
+				<tr>
+					<th scope="col" id="user-name">Name</th>
+					<th scope="col" id="user-email">E-mail</th>
+					<th>&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<input type="text" name="name-item-1" id="name-item-1" class="form-control width-full" aria-labelledby="user-name" value=""  />
+					</td>
+					<td>
+						<input type="email" name="mail-item-1" id="mail-item-1" class="form-control width-full" aria-labelledby="user-email" value=""  />
+					</td>
+					<td class="alignright">
+						<button class="buttonlink no-margin-bottom" id="invite-user">Invite to project</button>	
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+		<h3 class="heading-medium">Target project start date</h3>
+		<p>23rd March 2016</p>
+
+		<h3 class="heading-medium">Project duration</h3>
+		<p>9 months</p>
+
+		<h3 class="heading-medium">Project manager</h3>
+		<p>Bill Bryson (Dyson)</p>
+
+		<h3 class="heading-medium">Main project address</h3>
+		<p>Algate Solutions <br />
+			21 Ballygowan Roads<br />
+			Bristol<br />
+			BS2 1RF</p>
+
+		<div class="extra-margin">
+			
+			<a href="#" class="button-secondary">Save and return to project setup</a>
+
+		</div>
+
+		<div class="extra-margin">
+			
+			<a href="#" class="button">Mark as complete</a>
+
+		</div>
+
+	</form>
+
+	
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+		jQuery('#add-user').on('click',function(e){ 
+			e.preventDefault();
+
+			jQuery('#add-user-details').show();
+
+		});
+
+		jQuery('#invite-user').on('click',function(e){ 
+			e.preventDefault();
+
+			jQuery('#add-user-details').hide();
+
+		});
+
+
+
+
+		jQuery('#add-pm').on('click',function(e){ 
+			e.preventDefault();
+
+			jQuery('#add-pm-details').show();
+
+		});
+
+		jQuery('#invite-pm').on('click',function(e){ 
+			e.preventDefault();
+
+			jQuery('#add-pm-details').hide();
+
+		});
+
+
+		jQuery('#postcode-lookup').on('click',function(e){ 
+			e.preventDefault();
+			jQuery("#select-address-block").show();
+
+		});
+
+		jQuery('#select-address').on('change',function(e){ 
+			e.preventDefault();
+			jQuery("#address-details").show();
+			jQuery("#street").val("4 Station Road");
+			jQuery("#county").val("Wiltshire");
+			jQuery("#town").val("Swindon");
+			jQuery("#postcode").val("SN1 2BD");
+
+		});
+
+		jQuery('#enter-address-manually').on('click',function(e){ 
+			e.preventDefault();
+			jQuery("#address-details").show();
+			jQuery("#select-address-block").hide();
+		});
+
+	});
+	// ]]>
+</script>
+</body>
+</html>

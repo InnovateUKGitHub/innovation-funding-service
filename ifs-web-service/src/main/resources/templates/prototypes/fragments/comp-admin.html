@@ -12,33 +12,49 @@
 <!-- ===================Comp admin Page title============================== -->
 <div th:fragment="prototype-comp-admin-page-title-subheading(subtitle, heading, subheading)">
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>
-        <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
-
-        <h2 class="heading-small no-margin-top">
-            <span th:text="${subheading}" th:remove="tag"></span>
-
-            <div th:if="${param.status != null}" th:remove="tag">
-
-                <div th:if="${param.status[0] == 'assessment'}" th:remove="tag">
-                    <span> - in assessment</span>
-                </div>
-
-                <div th:if="${param.status[0] == 'fundingPanel'}" th:remove="tag">
-                    <span> - funders panel</span>
-                </div>
-
-                <div th:if="${param.status[0] == 'feedback'}" th:remove="tag">
-                    <span> - feedback to applicants</span>
-                </div>
-
-                <div th:if="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
-                    <span> - assessor feedback</span>
-                </div>
-
+        <div class="column-two-thirds">
+            <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>    
+            <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>  
+        </div> 
+        <div class="grid-row constrain-width">
+            <div class="column-two-thirds">
+                &nbsp;
             </div>
+            <div class="column-third">
+                <h2 class="heading-small comp-status-label">
 
-        </h2>
+                    <div th:if="${param.status == null}" th:remove="tag">
+                        <span th:text="${subheading}" th:remove="tag"></span>
+                    </div>
+
+                    <div th:if="${param.status != null}" th:remove="tag">
+
+                        <div th:if="${param.status[0] == 'closed'}" th:remove="tag">
+                            <span>Closed</span>
+                        </div>
+
+                        <div th:if="${param.status[0] == 'assessment'}" th:remove="tag">
+                            <span>In assessment</span>
+                        </div>
+
+                        <div th:if="${param.status[0] == 'fundingPanel'}" th:remove="tag">
+                            <span>Funders panel</span>
+                        </div>
+
+                        <div th:if="${param.status[0] == 'feedback'}" th:remove="tag">
+                            <span>Feedback to applicants</span>
+                        </div>
+
+                        <div th:if="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
+                            <span>Assessor feedback</span>
+                        </div>
+
+                    </div>
+
+                </h2>  
+            </div>
+        </div>
+
 
     </div>
 </div>
