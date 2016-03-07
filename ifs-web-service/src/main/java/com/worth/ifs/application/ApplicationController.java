@@ -8,6 +8,8 @@ import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.profiling.ProfileExecution;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -255,5 +257,33 @@ public class ApplicationController extends AbstractApplicationController {
     private void doAssignQuestion(@PathVariable("applicationId") Long applicationId, HttpServletRequest request, HttpServletResponse response) {
         assignQuestion(request, applicationId);
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
+    }
+
+    /**
+     * Printable version of the application
+     */
+    @RequestMapping(value="/{applicationId}/print")
+    public String print(@PathVariable("applicationId") final Long applicationId,
+            Model model, HttpServletRequest request) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+
+        List<FormInputResponse> responses = formInputResponseService.getByApplication(applicationId);
+        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
+        model.addAttribute("currentApplication", application);
+        model.addAttribute("currentCompetition", competition);
+
+        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        Optional<Organisation> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
+
+        addOrganisationDetails(model, userOrganisation, userApplicationRoles);
+        addQuestionsDetails(model, application, null);
+        addUserDetails(model, application, user.getId());
+        addApplicationInputs(application, model);
+        addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, userApplicationRoles);
+        financeModelManager.addFinanceDetails(model, application);
+
+        return "/application/print";
     }
 }

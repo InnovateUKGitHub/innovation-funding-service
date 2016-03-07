@@ -16,7 +16,32 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<h1 class="heading-large">Your dashboard</h1>
+	<h1 class="heading-xlarge">Your dashboard</h1>
+
+	<div th:if="${param.status != null} and ${param.status[0] == 'projectSetup'}" th:remove="tag">
+		
+		<h2 class="heading-large">Projects in setup</h2>
+
+		<ul class="boxed-list">
+			<li>
+		        <div class="grid-row">
+		            <div class="column-two-thirds">
+		                <h2 class="heading-medium">
+		                <a href="/prototypes/1588-project-status">Machine learning in robots</a>
+		                </h2>
+		                <p class="form-hint">Application number: <span>194741</span></p>
+		                <strong class="greentext">Application in project set-up pahse</strong>
+		            </div>
+		            <div class="column-third">
+		                <div class="awaiting-assessment">
+		                    Project <br /> in set-up
+		                </div>
+		            </div>
+		        </div>
+		    </li>
+		</ul>
+
+	</div>
 
 	<h2 class="heading-large">In progess</h2>
 	<ul class="boxed-list">

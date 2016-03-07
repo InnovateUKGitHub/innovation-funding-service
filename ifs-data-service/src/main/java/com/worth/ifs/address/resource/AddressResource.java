@@ -1,6 +1,8 @@
 package com.worth.ifs.address.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +10,15 @@ import java.util.List;
 public class AddressResource {
     private Long id;
 
+    @NotBlank
     private String addressLine1;
     private String addressLine2;
     private String addressLine3;
+    @NotBlank
     private String town;
     private String county;
+    @NotBlank
+    @Length(max = 9)
     private String postcode;
     private List<Long> organisations = new ArrayList<>();
 

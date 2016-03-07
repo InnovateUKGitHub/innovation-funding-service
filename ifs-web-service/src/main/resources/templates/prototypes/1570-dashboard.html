@@ -35,11 +35,9 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Innovate UK, 4891061'}, ${'Technology inspired'}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" th:remove="tag" />
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'4891061: Innovate UK'}, ${'Technology inspired'}, ${(param.status != null ? 'Competition closed' : 'Competition open')})" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='dashboard', status=${(param.closed != null ? 'closed' : 'open')}" th:remove="tag" />
-
-
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='dashboard', status=${(param.status != null ? 'closed' : 'open')}" th:remove="tag" />
 
 	
 	<div class="grid-row constrain-width">
@@ -67,7 +65,7 @@
 		<div class="column-third">
 			<div class="boxed">
 
-					<div th:if="${param.closed == null}" th:remove="tag">
+					<div th:if="${param.status == null}" th:remove="tag">
 
 						<h2 class="heading-medium no-margin">Competition close</h2>
 
@@ -131,7 +129,7 @@
 
 	<hr />
 
-	<div th:if="${param.closed == null}" th:remove="tag">
+	<div th:if="${param.status == null}" th:remove="tag">
 
 		<div class="grid-row constrain-width extra-margin ">
 			<div class="column-third">
@@ -161,7 +159,7 @@
 
 	</div>
 
-	<div th:if="${param.closed != null}" th:remove="tag">
+	<div th:if="${param.status != null}" th:remove="tag">
 		
 		<div class="grid-row extra-margin constrain-width">
 			
