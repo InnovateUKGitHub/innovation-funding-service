@@ -1,6 +1,7 @@
 package com.worth.ifs.application.finance.view.jes;
 
 import com.worth.ifs.application.finance.form.AcademicFinance;
+import com.worth.ifs.application.finance.model.AcademicFinanceFormField;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.FinanceModelManager;
 import com.worth.ifs.application.form.Form;
@@ -59,40 +60,52 @@ public class JESFinanceModelManager implements FinanceModelManager {
         organisationFinanceDetails.values()
                 .stream()
                 .flatMap(cc -> cc.getCosts().stream())
-                .forEach(c -> mapFinanceToField((AcademicCost)c, academicFinance));
+                .filter(c -> c != null)
+                .forEach(c -> mapFinanceToField((AcademicCost) c, academicFinance));
         return academicFinance;
     }
 
     private void mapFinanceToField(AcademicCost cost, AcademicFinance academicFinance) {
-        String description = cost.getDescription();
+        String key = cost.getName();
+        if(key==null) {
+            return;
+        }
         BigDecimal total = cost.getTotal();
-        switch (description) {
+        String totalValue = "";
+        if(total!=null) {
+            totalValue = total.toPlainString();
+        }
+
+        switch (key) {
+            case "tsb_reference":
+                academicFinance.setTsbReference(new AcademicFinanceFormField(cost.getId(), cost.getItem(), BigDecimal.ZERO));
+                break;
             case "incurred_staff":
-                academicFinance.setIncurredStaff(total);
+                academicFinance.setIncurredStaff(new AcademicFinanceFormField(cost.getId(), totalValue, total));
                 break;
             case "incurred_travel_subsistence":
-                academicFinance.setIncurredTravelAndSubsistence(total);
+                academicFinance.setIncurredTravelAndSubsistence(new AcademicFinanceFormField(cost.getId(), totalValue, total));
                 break;
             case "incurred_other_costs":
-                academicFinance.setIncurredOtherCosts(total);
+                academicFinance.setIncurredOtherCosts(new AcademicFinanceFormField(cost.getId(), totalValue, total));
                 break;
             case "allocated_investigators":
-                academicFinance.setAllocatedInvestigators(total);
+                academicFinance.setAllocatedInvestigators(new AcademicFinanceFormField(cost.getId(), totalValue, total));
                 break;
             case "allocated_estates_costs":
-                academicFinance.setAllocatedEstatesCosts(total);
+                academicFinance.setAllocatedEstatesCosts(new AcademicFinanceFormField(cost.getId(), totalValue, total));
                 break;
             case "allocated_other_costs":
-                academicFinance.setAllocatedOtherCosts(total);
+                academicFinance.setAllocatedOtherCosts(new AcademicFinanceFormField(cost.getId(), totalValue, total));
                 break;
             case "indirect_costs":
-                academicFinance.setIndirectCosts(total);
+                academicFinance.setIndirectCosts(new AcademicFinanceFormField(cost.getId(), totalValue, total));
                 break;
             case "exceptions_staff":
-                academicFinance.setExceptionsStaff(total);
+                academicFinance.setExceptionsStaff(new AcademicFinanceFormField(cost.getId(), totalValue, total));
                 break;
             case "exceptions_other_costs":
-                academicFinance.setExceptionsStaff(total);
+                academicFinance.setExceptionsOtherCosts(new AcademicFinanceFormField(cost.getId(), totalValue, total));
                 break;
         }
     }

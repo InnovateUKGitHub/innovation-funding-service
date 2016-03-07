@@ -1,114 +1,139 @@
 package com.worth.ifs.application.finance.form;
 
+
+import com.worth.ifs.application.finance.model.AcademicFinanceFormField;
+
 import java.math.BigDecimal;
 
 public class AcademicFinance {
 
-    String tsbReference;
-    BigDecimal incurredStaff;
-    BigDecimal incurredTravelAndSubsistence;
-    BigDecimal incurredOtherCosts;
-    BigDecimal allocatedInvestigators;
-    BigDecimal allocatedEstatesCosts;
-    BigDecimal allocatedOtherCosts;
-    BigDecimal indirectCosts;
-    BigDecimal exceptionsStaff;
-    BigDecimal exceptionsOtherCosts;
+    AcademicFinanceFormField tsbReference;
+    AcademicFinanceFormField incurredStaff;
+    AcademicFinanceFormField incurredTravelAndSubsistence;
+    AcademicFinanceFormField incurredOtherCosts;
+    AcademicFinanceFormField allocatedInvestigators;
+    AcademicFinanceFormField allocatedEstatesCosts;
+    AcademicFinanceFormField allocatedOtherCosts;
+    AcademicFinanceFormField indirectCosts;
+    AcademicFinanceFormField exceptionsStaff;
+    AcademicFinanceFormField exceptionsOtherCosts;
 
-    public String getTsbReference() {
+    public AcademicFinanceFormField getTsbReference() {
         return tsbReference;
     }
 
-    public void setTsbReference(String tsbReference) {
+    public void setTsbReference(AcademicFinanceFormField tsbReference) {
         this.tsbReference = tsbReference;
     }
 
-    public BigDecimal getIncurredStaff() {
+    public AcademicFinanceFormField getIncurredStaff() {
         return incurredStaff;
     }
 
-    public void setIncurredStaff(BigDecimal incurredStaff) {
+    public void setIncurredStaff(AcademicFinanceFormField incurredStaff) {
         this.incurredStaff = incurredStaff;
     }
 
-    public BigDecimal getIncurredTravelAndSubsistence() {
+    public AcademicFinanceFormField getIncurredTravelAndSubsistence() {
         return incurredTravelAndSubsistence;
     }
 
-    public void setIncurredTravelAndSubsistence(BigDecimal incurredTravelAndSubsistence) {
+    public void setIncurredTravelAndSubsistence(AcademicFinanceFormField incurredTravelAndSubsistence) {
         this.incurredTravelAndSubsistence = incurredTravelAndSubsistence;
     }
 
-    public BigDecimal getIncurredOtherCosts() {
+    public AcademicFinanceFormField getIncurredOtherCosts() {
         return incurredOtherCosts;
     }
 
-    public void setIncurredOtherCosts(BigDecimal incurredOtherCosts) {
+    public void setIncurredOtherCosts(AcademicFinanceFormField incurredOtherCosts) {
         this.incurredOtherCosts = incurredOtherCosts;
     }
 
-    public BigDecimal getAllocatedInvestigators() {
+    public AcademicFinanceFormField getAllocatedInvestigators() {
         return allocatedInvestigators;
     }
 
-    public void setAllocatedInvestigators(BigDecimal allocatedInvestigators) {
+    public void setAllocatedInvestigators(AcademicFinanceFormField allocatedInvestigators) {
         this.allocatedInvestigators = allocatedInvestigators;
     }
 
-    public BigDecimal getAllocatedEstatesCosts() {
+    public AcademicFinanceFormField getAllocatedEstatesCosts() {
         return allocatedEstatesCosts;
     }
 
-    public void setAllocatedEstatesCosts(BigDecimal allocatedEstatesCosts) {
+    public void setAllocatedEstatesCosts(AcademicFinanceFormField allocatedEstatesCosts) {
         this.allocatedEstatesCosts = allocatedEstatesCosts;
     }
 
-    public BigDecimal getAllocatedOtherCosts() {
+    public AcademicFinanceFormField getAllocatedOtherCosts() {
         return allocatedOtherCosts;
     }
 
-    public void setAllocatedOtherCosts(BigDecimal allocatedOtherCosts) {
+    public void setAllocatedOtherCosts(AcademicFinanceFormField allocatedOtherCosts) {
         this.allocatedOtherCosts = allocatedOtherCosts;
     }
 
-    public BigDecimal getIndirectCosts() {
+    public AcademicFinanceFormField getIndirectCosts() {
         return indirectCosts;
     }
 
-    public void setIndirectCosts(BigDecimal indirectCosts) {
+    public void setIndirectCosts(AcademicFinanceFormField indirectCosts) {
         this.indirectCosts = indirectCosts;
     }
 
-    public BigDecimal getExceptionsStaff() {
+    public AcademicFinanceFormField getExceptionsStaff() {
         return exceptionsStaff;
     }
 
-    public void setExceptionsStaff(BigDecimal exceptionsStaff) {
+    public void setExceptionsStaff(AcademicFinanceFormField exceptionsStaff) {
         this.exceptionsStaff = exceptionsStaff;
     }
 
-    public BigDecimal getExceptionsOtherCosts() {
+    public AcademicFinanceFormField getExceptionsOtherCosts() {
         return exceptionsOtherCosts;
     }
 
-    public void setExceptionsOtherCosts(BigDecimal exceptionsOtherCosts) {
+    public void setExceptionsOtherCosts(AcademicFinanceFormField exceptionsOtherCosts) {
         this.exceptionsOtherCosts = exceptionsOtherCosts;
     }
 
     public BigDecimal getTotalIncurred() {
-        return incurredStaff.add(incurredTravelAndSubsistence).add(incurredOtherCosts);
+        BigDecimal totalIncurred = BigDecimal.ZERO;
+        if(incurredStaff!=null && incurredStaff.getCalculatedValue()!=null)
+            totalIncurred = totalIncurred.add(incurredStaff.getCalculatedValue());
+        if(incurredTravelAndSubsistence!=null && incurredTravelAndSubsistence.getCalculatedValue()!=null)
+            totalIncurred = totalIncurred.add(incurredTravelAndSubsistence.getCalculatedValue());
+        if(incurredOtherCosts!=null && incurredOtherCosts.getCalculatedValue()!=null)
+            totalIncurred = totalIncurred.add(incurredOtherCosts.getCalculatedValue());
+        return totalIncurred;
     }
 
     public BigDecimal getTotalAllocated() {
-        return allocatedInvestigators.add(allocatedEstatesCosts).add(allocatedOtherCosts);
+        BigDecimal totalAllocated = BigDecimal.ZERO;
+        if(allocatedInvestigators!=null && allocatedInvestigators.getCalculatedValue()!=null)
+            totalAllocated = totalAllocated.add(allocatedInvestigators.getCalculatedValue());
+        if(allocatedEstatesCosts!=null && allocatedEstatesCosts.getCalculatedValue()!=null)
+            totalAllocated = totalAllocated.add(allocatedEstatesCosts.getCalculatedValue());
+        if(allocatedOtherCosts!=null && allocatedOtherCosts.getCalculatedValue()!=null)
+            totalAllocated = totalAllocated.add(allocatedOtherCosts.getCalculatedValue());
+        return totalAllocated;
     }
 
     public BigDecimal getTotalExceptions() {
-        return exceptionsStaff.add(exceptionsOtherCosts);
+        BigDecimal totalExceptions = BigDecimal.ZERO;
+        if(exceptionsStaff!=null && exceptionsStaff.getCalculatedValue()!=null)
+            totalExceptions = totalExceptions.add(exceptionsStaff.getCalculatedValue());
+        if(exceptionsOtherCosts!=null && exceptionsOtherCosts.getCalculatedValue()!=null)
+            totalExceptions = totalExceptions.add(exceptionsOtherCosts.getCalculatedValue());
+        return totalExceptions;
     }
 
-    public BigDecimal getTota() {
-        return getTotalIncurred().add(getTotalAllocated()).add(getTotalExceptions()).add(getIndirectCosts());
-    }
+    public BigDecimal getTotal() {
+        BigDecimal total = getTotalAllocated().add(getTotalExceptions()).add(getTotalIncurred());
 
+        if(getIndirectCosts()!=null)
+            total = total.add(getIndirectCosts().getCalculatedValue());
+        return total;
+    }
 }

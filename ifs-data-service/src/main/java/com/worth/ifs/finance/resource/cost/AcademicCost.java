@@ -6,18 +6,20 @@ import java.math.BigDecimal;
 
 public class AcademicCost implements CostItem {
     private Long id;
+    private String name;
     private CostType costType;
     private BigDecimal cost;
-    private String description;
+    private String item;
 
     public AcademicCost() {
 
     }
 
-    public AcademicCost(Long id, BigDecimal cost, String description) {
+    public AcademicCost(Long id, String name, BigDecimal cost, String item) {
         this.id = id;
+        this.name = name;
         this.cost = cost;
-        this.description = description;
+        this.item = item;
     }
 
     @Override
@@ -35,8 +37,15 @@ public class AcademicCost implements CostItem {
         return costType;
     }
 
-    public String getDescription() {
-        return description;
+    public String getItem() {
+        return item;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public BigDecimal getCost() {
+        return cost;
+    }
 }

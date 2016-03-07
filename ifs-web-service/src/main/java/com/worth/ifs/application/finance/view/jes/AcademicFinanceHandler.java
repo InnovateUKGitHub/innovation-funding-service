@@ -12,7 +12,25 @@ public class AcademicFinanceHandler extends CostHandler {
 
     @Override
     public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
+        if(financeFormFields!=null && financeFormFields.size() > 0) {
+            FinanceFormField academicField = financeFormFields.get(0);
+            return toCostItem(id, academicField);
+        }
+        return null;
+    }
 
-        return new AcademicCost(id, BigDecimal.ZERO, "");
+    public CostItem toCostItem(Long id, FinanceFormField academicFormField) {
+        String key = academicFormField.getCostName();
+        BigDecimal value = null;
+        String item = null;
+        switch(key) {
+            case "tsb_reference":
+                item = academicFormField.getValue();
+                break;
+            default:
+                value = getBigDecimalValue(academicFormField.getValue(), 0.0);
+        }
+
+        return new AcademicCost(id, key, value, item);
     }
 }

@@ -9,7 +9,7 @@ import java.math.RoundingMode;
  */
 public class LabourCost implements CostItem {
     private Long id;
-    private String key;
+    private String name;
     private String role;
     private BigDecimal grossAnnualSalary;
     private Integer labourDays;
@@ -22,10 +22,10 @@ public class LabourCost implements CostItem {
         this.costType = CostType.LABOUR;
     }
 
-    public LabourCost(Long id, String key, String role, BigDecimal grossAnnualSalary, Integer labourDays, String description) {
+    public LabourCost(Long id, String name, String role, BigDecimal grossAnnualSalary, Integer labourDays, String description) {
         this();
         this.id = id;
-        this.key = key;
+        this.name = name;
         this.role = role;
         this.grossAnnualSalary = grossAnnualSalary;
         this.labourDays = labourDays;
@@ -36,8 +36,8 @@ public class LabourCost implements CostItem {
         return id;
     }
 
-    public String getKey() {
-        return key;
+    public String getName() {
+        return name;
     }
 
     public String getRole() {
@@ -99,8 +99,8 @@ public class LabourCost implements CostItem {
         this.grossAnnualSalary = grossAnnualSalary;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setRole(String role) {

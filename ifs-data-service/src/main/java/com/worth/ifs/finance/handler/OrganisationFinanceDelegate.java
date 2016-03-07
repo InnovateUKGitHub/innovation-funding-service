@@ -13,7 +13,7 @@ public class OrganisationFinanceDelegate {
 
     public OrganisationFinanceHandler getOrganisationFinanceHandler(String organisationType) {
         switch(organisationType) {
-            case "Academic":
+            case "University (HEI)":
                 return organisationJESFinance;
             default:
                 return organisationFinanceDefaultHandler;

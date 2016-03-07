@@ -2,6 +2,10 @@ package com.worth.ifs.finance.handler;
 
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.handler.item.CostHandler;
+import com.worth.ifs.finance.handler.item.JESCostHandler;
+import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.category.DefaultCostCategory;
@@ -21,6 +25,9 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
 
     @Autowired
     CostRepository costRepository;
+
+    @Autowired
+    CostFieldRepository costFieldRepository;
 
     @Override
     public Iterable<Cost> initialiseCostType(ApplicationFinance applicationFinance, CostType costType) {
@@ -72,17 +79,20 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     }
 
     private CostItem toCostItem(Cost cost) {
-        return new AcademicCost(cost.getId(), cost.getCost(), cost.getDescription());
+        return new AcademicCost(cost.getId(), cost.getName(), cost.getCost(), cost.getItem());
     }
-
 
     @Override
     public Cost costItemToCost(CostItem costItem) {
-            return null;
+        CostHandler costHandler = new JESCostHandler();
+        List<CostField> costFields = costFieldRepository.findAll();
+        costHandler.setCostFields(costFields);
+        return costHandler.toCost(costItem);
     }
 
     @Override
     public CostItem costToCostItem(Cost cost) {
-        return null;
+        CostHandler costHandler = new JESCostHandler();
+        return costHandler.toCostItem(cost);
     }
 }

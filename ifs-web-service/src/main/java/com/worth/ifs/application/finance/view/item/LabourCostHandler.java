@@ -1,6 +1,7 @@
 package com.worth.ifs.application.finance.view.item;
 
 import com.worth.ifs.application.finance.model.FinanceFormField;
+import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.LabourCost;
 
@@ -18,6 +19,7 @@ public class LabourCostHandler extends CostHandler {
         String role = null;
         Integer labourDays = null;
         String description = null;
+        String key = null;
 
         for(FinanceFormField financeFormField : financeFormFields) {
             String fieldValue = financeFormField.getValue();
@@ -34,7 +36,8 @@ public class LabourCostHandler extends CostHandler {
                         break;
                     case "workingDays":
                         labourDays = getIntegerValue(fieldValue, 0);
-                        description = "Working days per year";
+                        description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
+                        key = LabourCostCategory.WORKING_DAYS_PER_YEAR;
                         break;
                     default:
                         log.info("Unused costField: " + financeFormField.getCostName());
@@ -42,6 +45,6 @@ public class LabourCostHandler extends CostHandler {
                 }
             }
         }
-        return new LabourCost(id, role, grossAnnualSalary, labourDays, description);
+        return new LabourCost(id, key, role, grossAnnualSalary, labourDays, description);
     }
 }

@@ -20,14 +20,14 @@ public class LabourCostHandler extends CostHandler {
         Cost cost = null;
         if (costItem instanceof LabourCost) {
             LabourCost labourCostItem = (LabourCost) costItem;
-            cost = new Cost(labourCostItem.getId(), labourCostItem.getKey(), labourCostItem.getRole(), labourCostItem.getDescription(), labourCostItem.getLabourDays(), labourCostItem.getGrossAnnualSalary(), null, null);
+            cost = new Cost(labourCostItem.getId(), labourCostItem.getName(), labourCostItem.getRole(), labourCostItem.getDescription(), labourCostItem.getLabourDays(), labourCostItem.getGrossAnnualSalary(), null, null);
         }
         return cost;
     }
 
     @Override
     public CostItem toCostItem(Cost cost) {
-        return new LabourCost(cost.getId(), cost.getKey(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription());
+        return new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription());
     }
 
     @Override

@@ -12,13 +12,12 @@ import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.organisation.service.CompanyHouseRestService;
-import com.worth.ifs.user.domain.AddressType;
+import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 
-import org.apache.tomcat.jni.Proc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

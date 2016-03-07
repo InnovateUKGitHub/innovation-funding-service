@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CostResource {
     private Long id;
-    private String key;
+    private String name;
     private String item;
     private String description;
     private Integer quantity;
@@ -25,12 +25,12 @@ public class CostResource {
         this.id = id;
     }
 
-    public String getKey() {
-        return key;
+    public String getName() {
+        return name;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getItem() {

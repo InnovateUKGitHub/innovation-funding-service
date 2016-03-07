@@ -10,6 +10,8 @@ import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.DefaultFinanceFormHandler;
 import com.worth.ifs.application.finance.view.DefaultFinanceModelManager;
+import com.worth.ifs.application.finance.view.FinanceHandler;
+import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.model.UserRole;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -150,6 +152,10 @@ public class BaseUnitTest {
     public DefaultFinanceModelManager defaultFinanceModelManager;
     @Mock
     public DefaultFinanceFormHandler defaultFinanceFormHandler;
+    @Mock
+    public FinanceHandler financeHandler;
+    @Mock
+    public FinanceOverviewModelManager financeOverviewModelManager;
 
     @Mock
     public Environment env;
@@ -244,7 +250,7 @@ public class BaseUnitTest {
         organisationTypes.add(research);
         organisationTypes.add(new OrganisationTypeResource(3L, "Public Sector", null));
         organisationTypes.add(new OrganisationTypeResource(4L, "Charity", null));
-        organisationTypes.add(new OrganisationTypeResource(5L, "Academic", 2L));
+        organisationTypes.add(new OrganisationTypeResource(5L, "University (HEI)", 2L));
         organisationTypes.add(new OrganisationTypeResource(6L, "Research & technology organisation (RTO)", 2L));
         organisationTypes.add(new OrganisationTypeResource(7L, "Catapult", 2L));
         organisationTypes.add(new OrganisationTypeResource(8L, "Public sector research establishment", 2L));
@@ -543,7 +549,8 @@ public class BaseUnitTest {
         when(organisationService.getApplicationOrganisations(applications.get(1))).thenReturn(organisationSet);
         when(organisationService.getApplicationOrganisations(applications.get(2))).thenReturn(organisationSet);
         when(organisationService.getApplicationOrganisations(applications.get(3))).thenReturn(organisationSet);
-        when(userService.isLeadApplicant(loggedInUser.getId(),applications.get(0))).thenReturn(true);
+        when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn("Business");
+        when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0))).thenReturn(processRole1);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1))).thenReturn(processRole2);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(2))).thenReturn(processRole3);
@@ -597,6 +604,8 @@ public class BaseUnitTest {
         when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
+        when(financeHandler.getFinanceFormHandler("Business")).thenReturn(defaultFinanceFormHandler);
+        when(financeHandler.getFinanceModelManager("Business")).thenReturn(defaultFinanceModelManager);
     }
 
     public void setupAssessment(){

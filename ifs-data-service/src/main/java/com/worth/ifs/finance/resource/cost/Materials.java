@@ -7,6 +7,7 @@ import java.math.BigDecimal;
  */
 public class Materials implements CostItem {
     private Long id;
+    private String name;
     private String item;
     private BigDecimal cost;
     private Integer quantity;
@@ -15,6 +16,7 @@ public class Materials implements CostItem {
 
     public Materials() {
         this.costType = CostType.MATERIALS;
+        this.name = this.costType.getType();
     }
 
     public Materials(Long id, String item, BigDecimal cost, Integer quantity) {
@@ -65,5 +67,10 @@ public class Materials implements CostItem {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 }

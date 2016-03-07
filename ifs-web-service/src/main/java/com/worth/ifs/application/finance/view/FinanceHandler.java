@@ -12,7 +12,7 @@ public class FinanceHandler {
 
     public FinanceFormHandler getFinanceFormHandler(String organisationType) {
         switch(organisationType) {
-            case "Academic":
+            case "University (HEI)":
                 return getJESFinanceFormHandler();
             default:
                 return getDefaultFinanceFormHandler();
@@ -21,7 +21,7 @@ public class FinanceHandler {
 
     public FinanceModelManager getFinanceModelManager(String organisationType) {
         switch(organisationType) {
-            case "Academic":
+            case "University (HEI)":
                 return getJESFinanceModelManager();
             default:
                 return getDefaultFinanceModelManager();

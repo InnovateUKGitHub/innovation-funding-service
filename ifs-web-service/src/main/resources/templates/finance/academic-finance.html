@@ -22,7 +22,6 @@
 
             <p>Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate UK</p>
             <p>Enter the figures from the following fields on the Je-S form:</p>
-
             <div class="form-group">
                 <label class="form-label" for="tsb-ref">
 		    		<span class="form-label-bold">TSB reference
@@ -30,7 +29,7 @@
 		    		</span>
 
                 </label>
-                <input class="form-control" id="tsb-ref" type="text" />
+                <input class="form-control" id="tsb-ref" type="text" th:name="cost- + ${academicFinance.tsbReference?.id} + -tsb_reference" th:value="${academicFinance.tsbReference?.value}" />
             </div>
         </fieldset>
         <fieldset>
@@ -53,8 +52,8 @@
                       <input type="number"
                              class="form-control width-full"
                              id="incurred-staff"
-                             name="cost-incurred-staff"
-                             th:value="${academicFinance.incurredStaff}"
+                             th:name="cost- + ${academicFinance.incurredStaff?.id} + -incurred_staff"
+                             th:value="${academicFinance.incurredStaff?.value}"
                              th:readonly="${false}"  />
                     </div>
                 </div>
@@ -65,7 +64,7 @@
                         <span>Travel &amp; subsistence </span>
                     </label>
                     <div class="column-two-thirds">
-                      <input class="form-control width-full" id="travel" name="cost-incurred-travel" type="number" />
+                      <input class="form-control width-full" id="travel" th:name="cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -incurred_travel_subsistence" type="number" th:value="${academicFinance.incurredTravelAndSubsistence?.value}" />
                     </div>
                 </div>
             </div>
@@ -75,7 +74,7 @@
                       <span>Other costs</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="other" name="cost-incurred-other-costs" type="number" />
+                    <input class="form-control width-full" id="other" th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -incurred_other_costs" type="number" th:value="${academicFinance.incurredOtherCosts?.value}" />
                   </div>
               </div>
             </div>
@@ -85,7 +84,8 @@
                       <span class="form-label-bold">Subtotal</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="subtotal-resources"  data-calculation-fields="#incurred-staff,#travel,#other"  data-calculation-operations="+" type="text" readonly="readonly" />
+                    <input class="form-control width-full" id="subtotal-resources"  data-calculation-fields="#incurred-staff,#travel,#other"  data-calculation-operations="+" type="text" readonly="readonly"
+                           th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalIncurred(),0, 'COMMA', 0, 'POINT')}" />
                   </div>
               </div>
             </div>
@@ -95,7 +95,7 @@
         <fieldset>
 
             <legend class="visuallyhidden">Directly allocated</legend>
-            <strong >Financial resources</strong>
+            <strong >Directly allocated</strong>
             <hr class="underline"/>
 
 
@@ -105,7 +105,7 @@
                       <span>Investigators</span>
                     </label>
                     <div class="column-two-thirds">
-                      <input class="form-control width-full" id="investigators" name="cost-allocated-investigators" type="number" />
+                      <input class="form-control width-full" id="investigators" th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -allocated_investigators" type="number" th:value="${academicFinance.allocatedInvestigators?.value}"/>
                     </div>
                 </div>
             </div>
@@ -115,7 +115,7 @@
                       <span>Estates Costs</span>
                   </label>
                   <div class="column-two-thirds">
-                      <input class="form-control width-full" id="estates" name="cost-allocated-estates" type="number" />
+                      <input class="form-control width-full" id="estates" th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="number" th:value="${academicFinance.allocatedEstatesCosts?.value}" />
                   </div>
               </div>
             </div>
@@ -125,7 +125,7 @@
                       <span>Other costs</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="other-direct" name="cost-allocated-other-costs" type="number" />
+                    <input class="form-control width-full" id="other-direct" th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="number" th:value="${academicFinance.allocatedOtherCosts?.value}"/>
                   </div>
               </div>
             </div>
@@ -135,7 +135,8 @@
                         <span class="form-label-bold">Subtotal</span>
                     </label>
                     <div class="column-two-thirds">
-                      <input class="form-control width-full" data-calculation-fields="#investigators,#estates,#other-direct"  data-calculation-operations="+"  readonly="readonly" id="subtotal-directly-allocated" />
+                      <input class="form-control width-full" data-calculation-fields="#investigators,#estates,#other-direct"  data-calculation-operations="+"  readonly="readonly" id="subtotal-directly-allocated"
+                             th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalAllocated(),0, 'COMMA', 0, 'POINT')}" />
                     </div>
                 </div>
             </div>
@@ -150,7 +151,7 @@
                       <span class="form-label-bold">Indirect costs </span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="indirect" name="cost-indirect-costs" type="number" />
+                    <input class="form-control width-full" id="indirect" th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs" type="number" th:value="${academicFinance.indirectCosts?.value}" />
                   </div>
               </div>
             </div>
@@ -168,7 +169,7 @@
                       <span>Staff</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="exceptions-staff" name="cost-exceptions-staff" type="number" />
+                    <input class="form-control width-full" id="exceptions-staff" th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="number" th:value="${academicFinance.exceptionsStaff?.value}" />
                   </div>
               </div>
             </div>
@@ -178,7 +179,7 @@
                       <span>Other costs</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="exceptions-other-direct" name="cost-exceptions-other-costs" type="number" />
+                    <input class="form-control width-full" id="exceptions-other-direct" th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs" type="number" th:value="${academicFinance.exceptionsOtherCosts?.value}" />
                   </div>
               </div>
             </div>
@@ -188,7 +189,8 @@
                       <span class="form-label-bold">Subtotal</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input id="subtotal-exceptions" class="form-control width-full" data-calculation-fields="#exceptions-staff,#exceptions-other-direct" data-calculation-operations="+"  readonly="readonly"  />
+                    <input id="subtotal-exceptions" class="form-control width-full" data-calculation-fields="#exceptions-staff,#exceptions-other-direct" data-calculation-operations="+"  readonly="readonly"
+                           th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalExceptions(),0, 'COMMA', 0, 'POINT')}" />
                   </div>
               </div>
             </div>
@@ -198,7 +200,8 @@
                       <span class="form-label-bold">Total</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full"  data-calculation-fields="#subtotal-resources,#indirect,#subtotal-directly-allocated,#subtotal-exceptions" data-calculation-operations="+" id="total" readonly="readonly"/>
+                    <input class="form-control width-full"  data-calculation-fields="#subtotal-resources,#indirect,#subtotal-directly-allocated,#subtotal-exceptions" data-calculation-operations="+" id="total" readonly="readonly"
+                           th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotal(),0, 'COMMA', 0, 'POINT')}" />
                   </div>
               </div>
             </div>

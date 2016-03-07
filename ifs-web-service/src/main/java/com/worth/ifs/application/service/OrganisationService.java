@@ -3,7 +3,7 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
-import com.worth.ifs.user.domain.AddressType;
+import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
 

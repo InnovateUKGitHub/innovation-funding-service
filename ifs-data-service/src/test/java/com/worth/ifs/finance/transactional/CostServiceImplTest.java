@@ -4,9 +4,12 @@ import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.handler.OrganisationFinanceDefaultHandler;
+import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.OrganisationType;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -31,6 +34,12 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
 
     @Mock
     private OrganisationFinanceHandler organisationFinanceHandlerMock;
+
+    @Mock
+    private OrganisationFinanceDelegate organisationFinanceDelegateMock;
+
+    @Mock
+    private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandlerMock;
 
     @Override
     protected CostServiceImpl supplyServiceUnderTest() {
@@ -82,11 +91,12 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
     @Test
     public void testAddCost() {
 
-        Organisation organisation = newOrganisation().build();
+        Organisation organisation = newOrganisation().withTypes(new OrganisationType("Business", null)).build();
         Application application = newApplication().build();
 
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
         when(organisationRepositoryMock.findOne(456L)).thenReturn(organisation);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler("Business")).thenReturn(organisationFinanceDefaultHandlerMock);
 
         ApplicationFinance newFinance = newApplicationFinance().withOrganisation(organisation).withApplication(application).build();
 
