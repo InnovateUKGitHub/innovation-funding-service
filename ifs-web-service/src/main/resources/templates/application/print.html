@@ -2,129 +2,44 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Print Application'"  th:remove="tag" />
-    <style>
-        body.print-doc {
-        background: #dee0e2;
-        margin: 0mm;
-        line-height: 1.5;
-        }
-        .print-bar  {
-        position: fixed;
-        bottom:0;
-        width:100%;
-        text-align: center;
-        z-index: 999;
-        background-color: rgba(255,255,255,0.5);
-        border-top:1px solid #BFC1C3;
-        padding:15px 0;
-        }
-        .print-bar button {
-        margin:0;
-        }
 
-        .print-doc section {
-        background: #fff;
-        width: 21cm;
-        min-height: 29.7cm;
-        display: block;
-        margin: 0.5cm auto;
-        box-sizing:border-box;
-        padding:2cm;
-        /*  box-shadow: 0 0 1cm rgba(0, 0, 0, 0.2);*/
-        position: relative;
-        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.1),0 3px 1px -2px rgba(0,0,0,0.1),0 1px 5px 0 rgba(0,0,0,0.1);
-        overflow: hidden;
-        }
-        .print-doc   .textarea-wrapped .readonly {
-        margin-top:10px;
-        min-height: 1em;
-        resize:none;
-        background-color: #fff;
-        }
-
-        section + section {
-        page-break-before: always;
-        }
-
-
-        .page-indication  {
-        top: 29.7cm;
-        border-top:3px dashed rgba(0,0,0,0.5);
-        width: 100%;
-        height: 0px;
-        position: absolute;
-        left:0;
-        }
-
-        .page-indication + .page-indication{
-        top: 59.4cm;
-        }
-        .page-indication + .page-indication + .page-indication {
-        top: 89.1cm;
-        }
-
-        .question .form-group .form-label-bold {
-        display: block;
-        font-weight: bold;
-        }
-
-        .question .form-group {
-        padding:5px 0;
-        }
-
-
-        @media print {
-        body, .print-doc section {
-        margin: 0;
-        padding: 0;
-        }
-        .print-doc section {
-        width: auto;
-        min-height: auto;
-        box-shadow: none;
-        }
-
-        }
-        @page {
-        size: A4;   /* auto is the current printer page size */
-        /*margin: 2cm;*/
-        }
-    </style>
     <script type="text/javascript">
             window.print()
       </script>
 </head>
 <body class="print-doc">
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
 
 <div class="print-bar">
     <button class="button" onclick="window.print()">Print your application</button>
 </div>
 
     <div>
-        <section th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
+        <section class="portrait" th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
             <h1 th:text="${section.getName()}" class="heading-large" />
-            <div th:each="question : ${sectionQuestions.get(section.id)}">
-                <label class="form-label form-label-bold" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}"></label>
-                <div th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}'
+            <div th:each="question : ${sectionQuestions.get(section.id)}" th:remove="tag">
+                <div class="form-group"  th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}'
                      th:with="formInputIndex=(${status.index}), readonly=true, response=(${responses.get(formInput.getId())})">
-                    <div th:replace="application/print-elements :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' />
+                    <div th:replace="application/print-elements :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' th:remove="tag" />
                 </div>
             </div>
         </section>
 
-        <section>
-            <h1 class="heading-large">Finances</h1>
+        <section class="landscape">
             <div>
-                <div class="question">
+              <h1 class="heading-large">Finances</h1>
                     <p>This is the overview of the finances provided by all partners in this project.</p>
                     <div th:replace="application/print-elements :: application_finances_summary"></div>
-
+              </div>
+          </section>
+          <section class="landscape">
+              <div>
                     <h2 class="heading-medium">Funding breakdown</h2>
                     <div th:include="application/print-elements :: financial_summary_table" th:remove="tag"/>
-                </div>
             </div>
         </section>
     </div>
+  <div th:include="fragments/layout :: body-end" th:remove="tag" />
 
 </body>
 </html>

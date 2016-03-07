@@ -4,40 +4,23 @@
 <!-- ===========================Application Details =========================== -->
 
     <div th:fragment="application_details" th:remove="tag">
-        <div class="form-group">
-            <label class="form-label form-label-bold" for="application_details-title">Project title</label>
-            <input class="form-control width-full" readonly="readonly" id="application_details-title" name="formInput[application_details-title]" th:value="${application_title}" type="text" />
-        </div>
-        <div class="form-group">
-            <label class="form-label form-label-bold" for="details-application-timescale">Estimated timescales</label>
-            Project start date
-            <br/>
-            <div class="date-group">
-                <div class="day">
-                    <label class="form-label" for="application_details-startdate_day">Day</label>
-                    <input class="form-control width-extra-small" placeholder="DD" readonly="readonly" id="application_details-startdate_day" name="formInput[application_details-startdate_day]" th:value="${application_startdate_day}" type="number" />
-                </div>
-                <div class="month">
-                    <label class="form-label" for="application_details-startdate_month">Month</label>
-                    <input class="form-control width-extra-small" placeholder="MM" readonly="readonly" id="application_details-startdate_month" name="formInput[application_details-startdate_month]" th:value="${application_startdate_month}" type="number" />
-                </div>
-                <div class="year">
-                    <label class="form-label" for="application_details-startdate_year">Year</label>
-                    <input class="form-control width-extra-small" placeholder="YYYY" readonly="readonly" id="application_details-startdate_year" name="formInput[application_details-startdate_year]" th:value="${application_startdate_year}" type="number" />
-                </div>
-            </div>
-            <br/>
-            <div class="form-group">
-                <label class="form-label" for="application_details-duration">Duration months</label>
-                <div class="validation-messages">
-                </div>
-                <input class="form-control width-extra-small" readonly="readonly" id="application_details-duration" name="formInput[application_details-duration]" th:value="${application_duration}" type="number" />
-            </div>
-        </div>
-        <h2 class="heading-medium">Lead organisation</h2>
+
+            <h2 class="heading-small">Project title</h2>
+              <div class="textarea-wrapped">
+                  <div class="readonly" th:text="${application_title}" />
+              </div>
+            <h2 class="heading-small">Estimated timescales</h2>
+            <p>Project start date :<br/>
+                <span th:text="${application_startdate_day}" th:remove="tag" />-<span th:remove="tag" th:text="${application_startdate_month}" />-<span th:remove="tag" th:text="${application_startdate_year}" />
+            </p>
+           <p>Duration months :<br/>
+
+              <span th:text="${application_duration}" th:remove="tag" />
+           </p>
+        <h2 class="heading-small">Lead organisation</h2>
         <div th:text="${leadOrganisation.getName()}"></div>
 
-        <h2 class="heading-medium">Partners</h2>
+        <h2 class="heading-small">Partners</h2>
         <ul class="list-bullet">
             <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                 <span th:text="${organisation.getName()}"></span>
@@ -46,21 +29,19 @@
     </div>
 
 <!-- ===================== Textarea ======================!-->
-<div th:fragment="textarea"  class="form-group" th:id="${formInputIndex}" >
+<div th:fragment="textarea" th:remove="tag">
 
-    <label class="form-label form-label-bold" th:for="${formInput.getId()}">
-        <span th:unless="${readonly}" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
-    </label>
-    <div class="textarea-wrapped ">
+    <h2 class="heading-small" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
+    <div class="textarea-wrapped">
         <div class="readonly">
-            <p th:text="${response?.value}"></p>
+            <p th:text="${response?.value}" class="js-md-to-html"></p>
         </div>
     </div>
 </div>
 
 <!-- ===========================Form: funding breakdown =========================== -->
 <div th:fragment="application_finances_summary" th:if="${financeTotalPerType}">
-    <div class="form-group" style="overflow:auto;">
+    <div>
         <table>
             <thead>
             <tr>
@@ -112,9 +93,7 @@
 
 <!-- ===========================Form: financial summary/breakdown table =========================== -->
 <div th:fragment="financial_summary_table" th:if="${financeTotalPerType}">
-    <div class="form-group">
-        <div style="overflow: auto;">
-
+    <div>
             <table>
                 <thead>
                 <tr>
@@ -159,8 +138,6 @@
                 </tr>
                 </tbody>
             </table>
-
-        </div>
     </div>
 </div>
 </html>
