@@ -42,6 +42,7 @@
                          th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
                         <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
                         <div th:replace="'finance/'+${financeView} :: ${formInput.getFormInputType().getTitle()}" />
+                        <div th:replace="finance/finance-summary :: ${formInput.getFormInputType().getTitle()}" />
                     </div>
                 </div>
             </div>

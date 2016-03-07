@@ -12,14 +12,17 @@ import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInputType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class JESFinanceFormHandler implements FinanceFormHandler {
@@ -32,12 +35,24 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     @Autowired
     private QuestionService questionService;
 
-    @Autowired
-    private ApplicationService applicationService;
 
     @Override
     public void update(HttpServletRequest request, Long userId, Long applicationId) {
+        storeCostItems(request, userId, applicationId);
+    }
 
+    private void storeCostItems(HttpServletRequest request, Long userId, Long applicationId) {
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while(parameterNames.hasMoreElements()) {
+            String parameter = parameterNames.nextElement();
+            String[] parameterValues = request.getParameterValues(parameter);
+            String value = "";
+
+            if(parameterValues.length > 0) {
+                value = parameterValues[0];
+                storeCost(userId, applicationId, parameter, value);
+            }
+        }
     }
 
     @Override
@@ -46,14 +61,19 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
             String cleanedFieldName = fieldName;
             if (fieldName.startsWith("cost-")) {
                 cleanedFieldName = fieldName.replace("cost-", "");
+            } else {
+                // only accept cost fields for storage
+                return;
             }
             storeField(cleanedFieldName, value, userId, applicationId);
         }
     }
 
     private void storeField(String fieldName, String value, Long userId, Long applicationId) {
-        ApplicationResource application = applicationService.getById(applicationId);
         FinanceFormField financeFormField = getCostFormField(fieldName, value);
+        if(financeFormField==null)
+            return;
+
         CostHandler costHandler = new AcademicFinanceHandler();
         Long costFormFieldId = 0L;
         if (financeFormField.getId() != null && !financeFormField.getId().equals("null")) {
@@ -133,11 +153,13 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
     @Override
     public void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value) {
-
+        // not to be implemented, there are not any finance positions for the JES form
+        throw new NotImplementedException();
     }
 
     @Override
     public CostItem addCost(Long applicationId, Long userId, Long questionId) {
-        return null;
+        // not to be implemented, can't add extra rows of finance to the JES form
+        throw new NotImplementedException();
     }
 }

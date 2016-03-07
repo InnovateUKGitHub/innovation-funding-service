@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
+    <div th:include="finance/finance-summary" th:remove="tag" />
 
     <div th:fragment="your_finance" th:remove="tag">
 
@@ -105,7 +106,7 @@
                       <span>Investigators</span>
                     </label>
                     <div class="column-two-thirds">
-                      <input class="form-control width-full" id="investigators" th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -allocated_investigators" type="number" th:value="${academicFinance.allocatedInvestigators?.value}"/>
+                      <input class="form-control width-full" id="investigators" th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="number" th:value="${academicFinance.allocatedInvestigators?.value}"/>
                     </div>
                 </div>
             </div>
@@ -208,4 +209,6 @@
         </fieldset>
       </div>
     </div>
+
+
 </html>
