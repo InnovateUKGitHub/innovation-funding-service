@@ -21,6 +21,11 @@ IFS.editor = (function(){
              jQuery.each(textareas,function(){
                 IFS.editor.prepareEditor(this);
             });
+            jQuery(".js-md-to-html").each(function(){
+              var content = jQuery(this).html();
+              var html =  IFS.editor.markdownToHtml(content);
+              jQuery(this).html(html);
+            });
 
             IFS.editor.initEditors();
             IFS.editor.bindEditors();
@@ -72,7 +77,7 @@ IFS.editor = (function(){
         htmlToMarkdown : function(content){
             var html = jQuery.trim(content.replace(/(\r\n|\n|\r)/gm,""));
             html = jQuery.htmlClean(html, s.htmlOptions);
-            
+
             return md(html);
         },
         markdownToHtml : function(content){

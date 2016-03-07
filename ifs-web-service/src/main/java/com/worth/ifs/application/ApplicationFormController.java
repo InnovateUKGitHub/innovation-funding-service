@@ -64,6 +64,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
     public static final String ADD_COST = "add_cost";
     public static final String REMOVE_COST = "remove_cost";
+    public static final String EDIT_QUESTION = "edit_question";
 
     private static final Log log = LogFactory.getLog(ApplicationFormController.class);
 
@@ -93,7 +94,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.GET)
+    @RequestMapping(value = {"/question/{questionId}", "/question/edit/{questionId}"}, method = RequestMethod.GET)
     public String showQuestion(@ModelAttribute("form") ApplicationForm form,
                                BindingResult bindingResult, Model model,
                                @PathVariable("applicationId") final Long applicationId,
@@ -172,31 +173,44 @@ public class ApplicationFormController extends AbstractApplicationController {
                                      HttpServletRequest request,
                                      HttpServletResponse response) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Question question = questionService.getById(questionId);
-        SectionResource section = sectionService.getSectionByQuestionId(questionId);
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-
-        /* Start save action */
-        bindingResult = saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
 
         Map<String, String[]> params = request.getParameterMap();
-        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
-            assignQuestion(applicationId, request);
-            cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
-        }
 
-        form.bindingResult = bindingResult;
-        form.objectErrors = bindingResult.getAllErrors();
-        /* End save action */
-
-        if(bindingResult.hasErrors()){
-            this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
-                    Optional.ofNullable(question), userApplicationRoles);
-            return "application-form";
+        // Check if the request is to just open edit view or to save
+        if(params.containsKey(EDIT_QUESTION)){
+            ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+            if (processRole != null) {
+                questionService.markAsInComplete(questionId, applicationId, processRole.getId());
+            } else {
+                log.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
+            }
+            return showQuestion(form, bindingResult, model, applicationId, questionId, request);
         } else {
-            return getRedirectUrl(request, applicationId);
+            Question question = questionService.getById(questionId);
+            SectionResource section = sectionService.getSectionByQuestionId(questionId);
+            ApplicationResource application = applicationService.getById(applicationId);
+            CompetitionResource competition = competitionService.getById(application.getCompetition());
+            List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+
+            /* Start save action */
+            bindingResult = saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
+
+            if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
+                assignQuestion(applicationId, request);
+                cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
+            }
+
+            form.bindingResult = bindingResult;
+            form.objectErrors = bindingResult.getAllErrors();
+            /* End save action */
+
+            if (bindingResult.hasErrors()) {
+                this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
+                        Optional.ofNullable(question), userApplicationRoles);
+                return "application-form";
+            } else {
+                return getRedirectUrl(request, applicationId);
+            }
         }
     }
 
@@ -207,7 +221,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                 request.getParameter(REMOVE_COST) != null ||
                 request.getParameter(MARK_AS_COMPLETE) != null ||
                 request.getParameter(REMOVE_UPLOADED_FILE) != null ||
-                request.getParameter(UPLOAD_FILE) != null) {
+                request.getParameter(UPLOAD_FILE) != null ||
+                request.getParameter(EDIT_QUESTION) != null) {
             // user did a action, just display the same page.
             log.info("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
@@ -216,23 +231,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             log.info("default redirect: ");
             return "redirect:/application/" + applicationId;
         }
-    }
-
-    @ProfileExecution
-    @RequestMapping(value = "/question/edit/{questionId}", method = RequestMethod.GET)
-    public String showQuestionInEditMode(@ModelAttribute("form") ApplicationForm form,
-                                         BindingResult bindingResult, Model model,
-                                         @PathVariable("applicationId") final Long applicationId,
-                                         @PathVariable("questionId") final Long questionId,
-                                         HttpServletRequest request) throws Exception {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
-        if (processRole != null) {
-            questionService.markAsInComplete(questionId, applicationId, processRole.getId());
-        } else {
-            log.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
-        }
-        return showQuestion(form, bindingResult, model, applicationId, questionId, request);
     }
 
     private void addNavigation(SectionResource section, Long applicationId, Model model) {

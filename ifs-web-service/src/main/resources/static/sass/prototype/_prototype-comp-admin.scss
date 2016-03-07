@@ -1,3 +1,20 @@
+/*----- Comp admin - comp status label ----*/
+
+.comp-status-label{
+	background: #6F72AF; 
+	padding: 20px; 
+	text-align: center; 
+	color: white;
+	margin-top: -75px;
+
+	@include media-down(mobile){
+		margin-top: 10px;
+	}
+}
+
+
+/*----- Comp admin tables styles----*/
+
 table{
 
 	.full-view{

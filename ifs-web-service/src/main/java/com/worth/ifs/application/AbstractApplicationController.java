@@ -147,6 +147,8 @@ public abstract class AbstractApplicationController extends BaseController {
             addAssigneableDetails(model, application, org, userId, section, currentQuestionId)
         );
         addMappedSectionsDetails(model, application, competition, section, userOrganisation, userApplicationRoles);
+        addCompletedDetails(model, application, userOrganisation, userApplicationRoles);
+
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         return application;
     }
@@ -161,6 +163,16 @@ public abstract class AbstractApplicationController extends BaseController {
             formInputs.put("application_details-startdate_year", String.valueOf(application.getStartDate().getYear()));
         }
         form.setFormInput(formInputs);
+    }
+
+    protected  void addApplicationInputs(ApplicationResource application, Model model) {
+        model.addAttribute("application_title", application.getName());
+        model.addAttribute("application_duration", String.valueOf(application.getDurationInMonths()));
+        if(application.getStartDate() != null){
+            model.addAttribute("application_startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
+            model.addAttribute("application_startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
+            model.addAttribute("application_startdate_year", String.valueOf(application.getStartDate().getYear()));
+        }
     }
 
     protected void addOrganisationDetails(Model model, Optional<Organisation> userOrganisation,
@@ -288,6 +300,9 @@ public abstract class AbstractApplicationController extends BaseController {
             model.addAttribute("subsectionQuestions", subsectionQuestions);
         }
 
+    }
+
+    private void addCompletedDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation, List<ProcessRole> userApplicationRoles) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
 
