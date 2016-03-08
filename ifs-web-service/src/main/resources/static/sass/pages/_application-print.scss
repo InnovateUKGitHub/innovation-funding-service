@@ -82,7 +82,8 @@
     font-size:19pt;
   }
 
-  .print-doc section {
+  .print-doc section,
+  .print-doc .landscape {
     width: auto;
     min-height: auto;
     height: auto;
@@ -92,13 +93,8 @@
     page-break-before: always;
   }
   .print-doc  .landscape {
-    // position: relative;
-    width: 19cm;
-    height: 25cm;
-    // background:black;
-    margin: 0;
-    padding: 0;
-
+    min-height: 25cm;
+    overflow: visible;
   }
   .print-doc .landscape > div {
 
@@ -106,9 +102,15 @@
       position: absolute;
       top:50%;
       left:50%;
-      -webkit-transform: translate(-50%,-50%) rotate(-90deg);
-      -ms-transform: translate(-50%,-50%) rotate(-90deg);
-      -moz-transform : translate(-50%,80%) rotate(-90deg);
+      @include transform(translate(-50%,-50%) rotate(-90deg));
+
+      table th,
+      table small{
+        font-size: 9pt;
+      }
+      table td {
+        font-size:10pt;
+      }
       @include ie-lte(8) {
           left:auto;
           top:auto;
