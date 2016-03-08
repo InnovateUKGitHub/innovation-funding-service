@@ -255,6 +255,9 @@ select{
     margin:16px 0;
     font-size:17px;
 }
+.js-enabled [name="upload_file"] {
+    display:none;
+}
 .js-enabled .upload-section .inputfile{
 	width: 0.1px;
 	height: 0.1px;
@@ -283,4 +286,3 @@ select{
 		background: url(../images/icons/icon-download.png) no-repeat;
 	}
 }
-

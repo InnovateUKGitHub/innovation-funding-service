@@ -8,15 +8,8 @@ IFS.upload = (function(){
         init : function(){
             s = this.settings;
             jQuery('body').on('change',s.uploadEl,function(){
-                jQuery('#upload_file_hidden').click();
+                jQuery('[name="upload_file"]').click();
             });
-        },
-        updateLabelName : function(el){
-            var inst = jQuery(el);
-            var label = inst.val().split('\\').pop();
-            if(label.length){
-              inst.next().html(label);
-            }
         }
     };
 })();

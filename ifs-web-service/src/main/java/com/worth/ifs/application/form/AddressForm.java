@@ -2,18 +2,16 @@ package com.worth.ifs.application.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.validator.constraints.Postcode;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddressForm  implements Serializable {
     private boolean triedToSave = false;
+    private boolean triedToSearch = false;
 
     //@Postcode(message = "Please enter a valid postcode")
     @NotEmpty(message="Please enter a UK postcode")
@@ -81,5 +79,13 @@ public class AddressForm  implements Serializable {
 
     public void setTriedToSave(boolean triedToSave) {
         this.triedToSave = triedToSave;
+    }
+
+    public boolean isTriedToSearch() {
+        return triedToSearch;
+    }
+
+    public void setTriedToSearch(boolean triedToSearch) {
+        this.triedToSearch = triedToSearch;
     }
 }
