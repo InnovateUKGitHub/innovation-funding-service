@@ -218,10 +218,6 @@
           th:class="${linkClass != null ? linkClass : ''}"
           th:href="${linkUrl}"
           th:text="${linkTitle}" />
-
-        <div th:remove="tag" th:if='${url}'>
-            <a th:href="@{${url}}" th:text="${urlText}"></a>
-        </div>
         <div class="deadline" th:if="${currentCompetition != null}">Days left to submit&nbsp;&nbsp;
           <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" th:remove="tag" />
         </div>
