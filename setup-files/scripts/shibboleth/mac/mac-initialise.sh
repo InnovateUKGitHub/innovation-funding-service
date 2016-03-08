@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 docker-machine start default
-eval $(docker-machine env)
-sh _mac-edit-hosts.sh
-sh _mac-purge-and-start.sh
+source _mac-set-docker-vars.sh
+bash _mac-edit-hosts.sh
+bash _mac-purge-and-start.sh
 
 
 
