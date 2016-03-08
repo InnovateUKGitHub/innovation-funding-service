@@ -13,6 +13,17 @@
     margin:0;
   }
 }
+.no-js .print-bar button {
+  display:none;
+}
+.no-js .print-bar .hidden {
+  display:block;
+  visibility: visible;
+  text-align:center;
+}
+.no-js .print-bar {
+  background-color: #fff;
+}
 .print-doc {
   background: #dee0e2;
   margin: 0;
@@ -38,7 +49,15 @@
   resize:none;
   background-color: #fff;
 }
-
+.print-doc {
+  table th,
+  table small{
+    font-size: 14px;
+  }
+  table td {
+    font-size:16px;
+  }
+}
 
 
 // .page-indication  {
