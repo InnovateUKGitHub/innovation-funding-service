@@ -9,7 +9,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" th:remove="tag" />
 
     <div class="page-title">
               <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
@@ -22,7 +22,7 @@
     		<div class="progress-info">
     			<h2 class="heading-medium">Submitted application</h2>
     			<p>Your application '<strong th:text="${currentApplication.name}" />' was submitted into the competition '<strong th:text="${currentCompetition.name}"/>' on 12 March at 10.17am.</p>
-    			<p><a href="#">View application</a></p>
+    			<p><a href="#">View application</a>  </p>
     		</div>
     	</li>
     	<li class="current">
