@@ -27,7 +27,7 @@
 		        <div class="grid-row">
 		            <div class="column-two-thirds">
 		                <h2 class="heading-medium">
-		                <a href="/prototypes/1588-project-status">Machine learning in robots</a>
+		                <a th:href="${(param.user == null ? '/prototypes/1588-project-status' : '/prototypes/1588-project-status?user=nonLead')}">Machine learning in robots</a>
 		                </h2>
 		                <p class="form-hint">Application number: <span>194741</span></p>
 		                <strong class="greentext">Application in project set-up pahse</strong>
