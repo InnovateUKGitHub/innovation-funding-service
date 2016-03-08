@@ -3,9 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Print Application'"  th:remove="tag" />
 
-    <script type="text/javascript">
-            window.print()
-      </script>
+
 </head>
 <body class="print-doc">
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
@@ -41,6 +39,11 @@
         </section>
     </div>
   <div th:include="fragments/layout :: body-end" th:remove="tag" />
-
+  <script type="text/javascript">
+      jQuery(document).ready(function(){
+          //setTimeout to load late, because of safari font loading bug
+          setTimeout(function(){window.print()},0);
+      });
+    </script>
 </body>
 </html>
