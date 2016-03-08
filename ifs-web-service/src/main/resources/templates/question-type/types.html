@@ -1146,15 +1146,16 @@
                   <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Lead organisation</small></div>
                   <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Partner</small></div>
                 </th>
-                <td class="numeric" th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation}">
+                <td class="numeric" th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                   <strong th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />
                 </td>
                 <div th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInputType=${question.getFormInputs().get(0).getFormInputType()}" th:remove="tag">
-                      <td class="numeric" th:each="organisationFinance : ${organisationFinances}"
-                          th:if="${applicationOrganisation.id == organisationFinance.organisation}"
+                    <div th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                      <td class="numeric"
                           th:with="formInputType=${question.formInputs.get(0).formInputType},category = ${organisationFinance.getFinanceOrganisationDetails(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))}"
                           th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
                       </td>
+                    </div>
                 </div>
               </tr>
               <tr>
@@ -1209,7 +1210,7 @@
 
                     </div>
                   </th>
-                  <div th:each="organisationFinance : ${organisationFinances}" th:if="${applicationOrganisation.id == organisationFinance.organisation}" th:remove="tag">
+                  <div th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
                     <td class="numeric">
                       <strong th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />
                     </td>
