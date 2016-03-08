@@ -13,23 +13,15 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${''}, ${''})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div class="hgroup no-margin-top" style="padding-top: 20px;">
-        <h1 class="heading-xlarge no-margin-bottom">Join an application</h1>
-        <p>You have been invited to join a new application into the competition 'Technology Inspired'.<br />
-		Sign up to a new account, or sign in to an existing account to continue.</p>
-    </div>
+	<h1 class="heading-large">Verification email sent</h1>
 
-	<div class="grid-row">
-		<section class="column-half">
-		    <div th:include="prototypes/fragments/applicant-view :: prototype-signin-create-acc(${'/prototypes/642-confirmed-org'})" th:remove="tag" />
-		</section>
-		<section class="column-half">
-			<div th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/642-confirm-org'})" th:remove="tag" /> 
-		</section>
-	</div>
+	<p>To help us protect the security of your application and account, we need you to confirm your email address</p>
+
+	<p>Please visit your <a href="/prototypes/1972-project-verification-email">inbox</a> and follow the link provided to verify your email address</p>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -37,6 +29,6 @@
 </main>
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" /> 
 </body>
 </html>
