@@ -1,8 +1,6 @@
 package com.worth.ifs.application.finance.view;
 
 import com.worth.ifs.application.finance.service.FinanceService;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.CostType;
 import org.apache.commons.logging.Log;
@@ -14,6 +12,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Configurable
 public class OrganisationFinanceOverview {
@@ -42,6 +42,12 @@ public class OrganisationFinanceOverview {
     public List<ApplicationFinanceResource> getApplicationFinances() {
         return applicationFinances;
     }
+    public Map<Long, ApplicationFinanceResource> getApplicationFinancesByOrganisation(){
+        return applicationFinances
+                .stream()
+                .collect(Collectors.toMap(ApplicationFinanceResource::getOrganisation, f -> f));
+    }
+
 
     public EnumMap<CostType, BigDecimal> getTotalPerType() {
         EnumMap<CostType, BigDecimal> totalPerType = new EnumMap<>(CostType.class);

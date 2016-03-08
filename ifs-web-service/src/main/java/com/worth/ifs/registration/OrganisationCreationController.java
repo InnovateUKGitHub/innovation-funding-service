@@ -358,7 +358,7 @@ public class OrganisationCreationController {
         OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
         addSelectedOrganisation(organisationForm, model);
         organisationForm.getAddressForm().setSelectedPostcodeIndex(null);
-        organisationForm.getAddressForm().setTriedToSave(true);
+        organisationForm.getAddressForm().setTriedToSearch(true);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         return getRedirectUrlInvalidSave(organisationForm, referer);
     }
