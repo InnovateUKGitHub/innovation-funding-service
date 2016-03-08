@@ -310,7 +310,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         organisationService.getUserOrganisation(applicationResource, user.getId());
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, user.getId(), questionId, type);
-        return String.format("question-type/types :: %s_row", type);
+        return String.format("finance/finance :: %s_row", type);
     }
 
     @RequestMapping(value = "/remove_cost/{costId}")

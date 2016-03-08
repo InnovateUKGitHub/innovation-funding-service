@@ -150,7 +150,7 @@ public abstract class AbstractApplicationController extends BaseController {
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
         userOrganisation.ifPresent(org ->
-            addAssigneableDetails(model, application, org, userId, section, currentQuestionId)
+            addAssignableDetails(model, application, org, userId, section, currentQuestionId)
         );
         addMappedSectionsDetails(model, application, competition, section, userOrganisation, userApplicationRoles);
         addCompletedDetails(model, application, userOrganisation, userApplicationRoles);
@@ -234,7 +234,7 @@ public abstract class AbstractApplicationController extends BaseController {
         return questionService.getMarkedAsComplete(application.getId(), organisationId);
     }
 
-    protected void addAssigneableDetails(Model model, ApplicationResource application, Organisation userOrganisation,
+    protected void addAssignableDetails(Model model, ApplicationResource application, Organisation userOrganisation,
                                          Long userId, Optional<SectionResource> currentSection, Optional<Long> currentQuestionId) {
         Map<Long, QuestionStatusResource> questionAssignees;
         if(currentQuestionId.isPresent()){
