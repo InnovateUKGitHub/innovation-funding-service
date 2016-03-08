@@ -84,6 +84,8 @@
 .print-doc .landscape {
   width: 29.7cm;
   min-height: 21cm;
+  h1,h2 {margin-top:0;}
+
  }
  .print-doc .textarea-wrapped .readonly {
      width:99%;
@@ -95,7 +97,7 @@
   body, .print-doc section {
     margin: 0;
     padding: 0;
-    font-size:13pt;
+    font-size:12pt;
   }
   .heading-large {
     font-size:19pt;
@@ -112,16 +114,18 @@
     page-break-before: always;
   }
   .print-doc  .landscape {
-    min-height: 25cm;
+    min-height: 24cm;
     overflow: visible;
+    margin:0;
+    padding:0;
   }
   .print-doc .landscape > div {
-
-      width:25cm;
+      page-break-inside:avoid;
+      width:23cm;
       position: absolute;
       top:50%;
-      left:50%;
-      @include transform(translate(-50%,-50%) rotate(-90deg));
+      right:5%;
+      @include transform(translateY(-50%) rotate(-90deg));
 
       table th,
       table small{
@@ -148,7 +152,9 @@
           }
       }
   }
-
+  .print-doc .form-group {
+    page-break-inside : avoid;
+  }
 
   .print-bar,
   #global-header,
