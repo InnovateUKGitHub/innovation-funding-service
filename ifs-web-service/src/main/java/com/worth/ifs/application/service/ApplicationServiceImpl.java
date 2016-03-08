@@ -1,5 +1,6 @@
 package com.worth.ifs.application.service;
 
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.commons.rest.RestResult;
@@ -43,7 +44,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     public List<ApplicationResource> getInProgress(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrThrowException();
         return applications.stream()
-                .filter(a -> (fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("created") || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("submitted")))
+                .filter(a -> (fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.CREATED.getName())
+                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.SUBMITTED.getName())
+                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.OPEN.getName())
+                ))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -51,7 +55,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     public List<ApplicationResource> getFinished(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrThrowException();
         return applications.stream()
-                .filter(a -> (fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("approved") || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("rejected")))
+                .filter(a -> (fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.APPROVED.getName())
+                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.REJECTED.getName())))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -59,7 +64,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     public Map<Long, Integer> getProgress(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrThrowException();
         return call(applications.stream()
-                .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals("created"))
+                .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.CREATED.getName())
+                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.OPEN.getName()))
                 .map(ApplicationResource::getId)
                 .collect(toMap(id -> id, id -> applicationRestService.getCompleteQuestionsPercentage(id))))
                 .entrySet().stream()
@@ -69,7 +75,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public ApplicationResource createApplication(Long competitionId, Long userId, String applicationName) {
         ApplicationResource application = applicationRestService.createApplication(competitionId, userId, applicationName).getSuccessObjectOrThrowException();
-
         return application;
     }
 

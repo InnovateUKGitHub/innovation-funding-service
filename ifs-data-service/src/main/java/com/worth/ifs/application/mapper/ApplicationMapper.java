@@ -32,7 +32,8 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
     }
 
     @Mappings({
-            @Mapping(source = "competition.name", target = "competitionName")
+            @Mapping(source = "competition.name", target = "competitionName"),
+            @Mapping(source = "applicationStatus.name", target = "applicationStatusName")
     })
     public abstract ApplicationResource mapToResource(Application domain);
     public abstract Iterable<ApplicationResource> mapToResource(Iterable<Application> domain);

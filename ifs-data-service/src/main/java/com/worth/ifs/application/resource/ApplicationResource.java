@@ -1,14 +1,13 @@
 package com.worth.ifs.application.resource;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ApplicationResource {
 
@@ -19,6 +18,7 @@ public class ApplicationResource {
     private List<Long> processRoles = new ArrayList<>();
     private List<Long> applicationFinances = new ArrayList<>();
     private Long applicationStatus;
+    private String applicationStatusName;
     private Long competition;
     private String competitionName;
     private List<Long> invites;
@@ -147,5 +147,13 @@ public class ApplicationResource {
 
     public void setCompetitionName(String competitionName) {
         this.competitionName = competitionName;
+    }
+
+    public String getApplicationStatusName() {
+        return applicationStatusName;
+    }
+
+    public void setApplicationStatusName(String applicationStatusName) {
+        this.applicationStatusName = applicationStatusName;
     }
 }

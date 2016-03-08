@@ -27,7 +27,10 @@
                     <div class="grid-row" th:unless="${applicationStatuses.get(application.getId()).getName() == 'submitted'}" >
                         <div class="column-half">
                             <h3 class="heading-medium">
-                                <a th:href="@{/application/{id}(id=${application.getId()})}" th:text="((${application.name} == '') ? ${competitions.get(application.getId()).getName()}: ${application.name})"/>
+                                <a th:unless="${T(com.worth.ifs.application.constant.ApplicationStatusConstants).CREATED.name == application.applicationStatusName}"
+                                        th:href="@{/application/{id}(id=${application.getId()})}" th:text="((${application.name} == '') ? ${competitions.get(application.getId()).getName()}: ${application.name})"/>
+                                <a th:if="${T(com.worth.ifs.application.constant.ApplicationStatusConstants).CREATED.name == application.applicationStatusName}"
+                                        th:href="@{/application/{id}/contributors/invite?newApplication(id=${application.getId()})}" th:text="((${application.name} == '') ? ${competitions.get(application.getId()).getName()}: ${application.name})"/>
                             </h3>
                             <p class="form-hint">Application number: <span th:text="${#numbers.formatInteger(application.id,8)}"></span></p>
                             <p class="form-hint">Current progress: </p>
