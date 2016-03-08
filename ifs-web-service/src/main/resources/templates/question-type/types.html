@@ -1149,12 +1149,18 @@
                 <td class="numeric" th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                   <strong th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />
                 </td>
+                <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                  <td class="numeric"><strong class="numeric">&pound;0</strong></td>
+                </div>
                 <div th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInputType=${question.getFormInputs().get(0).getFormInputType()}" th:remove="tag">
                     <div th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
                       <td class="numeric"
                           th:with="formInputType=${question.formInputs.get(0).formInputType},category = ${organisationFinance.getFinanceOrganisationDetails(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))}"
                           th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
                       </td>
+                    </div>
+                    <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                      <td class="numeric">&pound;0</td>
                     </div>
                 </div>
               </tr>
@@ -1218,6 +1224,15 @@
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}"/>
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/>
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}"/>
+                  </div>
+                  <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                    <td class="numeric">
+                      <strong>&pound;0</strong>
+                    </td>
+                    <td class="numeric">0%</td>
+                    <td class="numeric">&pound;0</td>
+                    <td class="numeric">&pound;0</td>
+                    <td class="numeric">&pound;0</td>
                   </div>
                 </tr>
                 <tr>
