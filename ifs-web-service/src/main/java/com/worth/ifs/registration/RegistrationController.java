@@ -174,6 +174,7 @@ public class RegistrationController {
             RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request), getCompetitionId(request));
 
             if (createUserResult.isSuccess()) {
+                removeCompetitionIdCookie(response);
                 acceptInvite(request, response, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
                 destination = "redirect:/registration/success";
             } else {
@@ -186,6 +187,10 @@ public class RegistrationController {
         }
 
         return destination;
+    }
+
+    private void removeCompetitionIdCookie(HttpServletResponse response) {
+        CookieUtil.removeCookie(response, ApplicationCreationController.COMPETITION_ID);
     }
 
     private Long getCompetitionId(HttpServletRequest request) {
