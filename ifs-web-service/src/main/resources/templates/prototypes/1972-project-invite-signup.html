@@ -41,12 +41,14 @@
 	<div class="grid-row">
 		<section class="column-half">
 
-		    <div th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/1972-join-project'})" th:remove="tag" /> 
+		    <div th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/1972-join-project'})" th:remove="tag" th:unless="${param.status != null and param.status[0] == 'accVerified'}"/> 
+
+            <div th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/675-dashboard?status=projectSetup&#38;user=nonLead&#38;action=accVerified'})" th:remove="tag" th:unless="${param.status == null or param.status[0] != 'accVerified'}"/> 
 			
 		</section>
 		<section class="column-half">
 			
-			<div th:include="prototypes/fragments/applicant-view :: prototype-signin-create-acc(${'#'})" th:remove="tag" /> 
+			<div th:include="prototypes/fragments/applicant-view :: prototype-signin-create-acc(${'/prototypes/1972-join-project?action=signUp'})" th:remove="tag" /> 
 
 
 		</section>

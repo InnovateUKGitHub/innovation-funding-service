@@ -30,7 +30,7 @@
 		                <a th:href="${(param.user == null ? '/prototypes/1588-project-status' : '/prototypes/1588-project-status?user=nonLead')}">Machine learning in robots</a>
 		                </h2>
 		                <p class="form-hint">Application number: <span>194741</span></p>
-		                <strong class="greentext">Application in project set-up pahse</strong>
+		                <strong class="greentext">Application in project set-up phase</strong>
 		            </div>
 		            <div class="column-third">
 		                <div class="awaiting-assessment">
@@ -43,113 +43,122 @@
 
 	</div>
 
-	<h2 class="heading-large">In progess</h2>
-	<ul class="boxed-list">
-	    <li>
-	        <div class="grid-row">
-	            <div class="column-two-thirds">
-	                <h2 class="heading-medium">
-	                <a href="#">Providing sustainable childcare</a>
-	                </h2>
-	                <p class="form-hint">Application number: <span>0000002</span></p>
-	                <strong class="greentext">Application submitted</strong>
-	            </div>
-	            <div class="column-third">
-	                <div class="awaiting-assessment">
-	                    Awaiting <br /> assessment
-	                </div>
-	            </div>
-	        </div>
-	    </li>
-	    <li>
-	        
-	        <div class="grid-row">
-	            <div class="column-two-thirds">
-	                <h2 class="heading-medium">
-	                <a href="#">A new innovative solution</a>
-	                </h2>
-	                <p class="form-hint">Application number: <span>0000005</span></p>
-	                <strong class="greentext">Application submitted</strong>
-	            </div>
-	            <div class="column-third">
-	                <div class="awaiting-assessment">
-	                    Awaiting <br /> assessment
-	                </div>
-	            </div>
-	        </div>
-	    </li>
-	</ul>
 
-	<h2 class="heading-large">Previous applications</h2>
+	<div th:unless="${param.action != null and param.action[0] == 'accVerified'}" th:remove="tag">
 
-	<ul class="boxed-list">
-		<li>
-	        <div class="grid-row">
-	            <div class="column-assessment-details">
-	                <h2 class="heading-medium">Using natural gas to heat homes</h2>
-	                <p class="form-hint">Application number: <span>0000004</span><br />
-	                Unsuccessful application submitted: <strong>14/06/16</strong></p> 
-	            </div>
-	            <div class="column-assessment-status navigation-right">
-	                <div class="no application-status assessed">
-	                    <h3 class="results-status">Unsuccessful</h3>
-	                </div>
-	                <p class="feedback">Feedback due: <br />14/06/16</p>
-	            </div>
-	        </div>
-	    </li>
-	    <li>
-	        <div class="grid-row">
-	            <div class="column-assessment-details">
-	                <h2 class="heading-medium">Mobile Phone Data for Logistics Analytics</h2>
-	                <p class="form-hint">Application number: <span>0000003</span> <br />
-	                Unsuccessful application submitted: <strong>14/06/16</strong></p> 
-	            </div>
-	            <div class="column-assessment-status navigation-right">
-	                <div class="yes application-status assessed">
-	                    
-	                    <h3 class="results-status">Successful</h3>
-	            
-	                </div>
-					<p class="feedback">Feedback due: <br />14/06/16</p>
+		<h2 class="heading-large">In progess</h2>
+		<ul class="boxed-list">
+		    <li>
+		        <div class="grid-row">
+		            <div class="column-two-thirds">
+		                <h2 class="heading-medium">
+		                <a href="#">Providing sustainable childcare</a>
+		                </h2>
+		                <p class="form-hint">Application number: <span>0000002</span></p>
+		                <strong class="greentext">Application submitted</strong>
+		            </div>
+		            <div class="column-third">
+		                <div class="awaiting-assessment">
+		                    Awaiting <br /> assessment
+		                </div>
+		            </div>
+		        </div>
+		    </li>
+		    <li>
+		        
+		        <div class="grid-row">
+		            <div class="column-two-thirds">
+		                <h2 class="heading-medium">
+		                <a href="#">A new innovative solution</a>
+		                </h2>
+		                <p class="form-hint">Application number: <span>0000005</span></p>
+		                <strong class="greentext">Application submitted</strong>
+		            </div>
+		            <div class="column-third">
+		                <div class="awaiting-assessment">
+		                    Awaiting <br /> assessment
+		                </div>
+		            </div>
+		        </div>
+		    </li>
+		</ul>
+	</div>
 
-	            </div>
-	        </div>
-	    </li>
-	    <li>
-	        <div class="grid-row">
-	            <div class="column-assessment-details">
-	                <h2 class="heading-medium">Mobile Phone Data for Logistics Analytics</h2>
-	                <p class="form-hint">Application number: <span>0000003</span> <br />
-	                Successful application submitted: <strong>14/06/16</strong></p> 
-	            </div>
-	            <div class="column-assessment-status navigation-right">
-	                <div class="yes application-status assessed">
-	                    
-	                    <h3 class="results-status">Successful</h3>
-	                    
-	                </div>
+	<div th:unless="${param.action != null and param.action[0] == 'accVerified'}" th:remove="tag">
 
-	                <a href="/prototypes/545-application-feedback" class="feedback"><strong>View feedback</strong></a>
-	            </div>
-	        </div>
-	    </li>
-	    <li>
-	        <div class="grid-row">
-	            <div class="column-assessment-details">
-	                <h2 class="heading-medium">Using natural gas to heat homes</h2>
-	                <p class="form-hint">Application number: <span>0000004</span><br />
-	                Successful application submitted: <strong>14/06/16</strong></p> 
-	            </div>
-	            <div class="column-assessment-status navigation-right">
-	                <div class="no application-status assessed">
-	                    <h3 class="results-status">Unsuccessful</h3>
-	                </div>
-	                <a href="/prototypes/545-application-feedback?unsuccessful" class="feedback"><strong>View feedback</strong></a>
-	            </div>
-	        </div>
-	    </li>
-	</ul>
+		<h2 class="heading-large">Previous applications</h2>
+
+		<ul class="boxed-list">
+			<li>
+		        <div class="grid-row">
+		            <div class="column-assessment-details">
+		                <h2 class="heading-medium">Using natural gas to heat homes</h2>
+		                <p class="form-hint">Application number: <span>0000004</span><br />
+		                Unsuccessful application submitted: <strong>14/06/16</strong></p> 
+		            </div>
+		            <div class="column-assessment-status navigation-right">
+		                <div class="no application-status assessed">
+		                    <h3 class="results-status">Unsuccessful</h3>
+		                </div>
+		                <p class="feedback">Feedback due: <br />14/06/16</p>
+		            </div>
+		        </div>
+		    </li>
+		    <li>
+		        <div class="grid-row">
+		            <div class="column-assessment-details">
+		                <h2 class="heading-medium">Mobile Phone Data for Logistics Analytics</h2>
+		                <p class="form-hint">Application number: <span>0000003</span> <br />
+		                Unsuccessful application submitted: <strong>14/06/16</strong></p> 
+		            </div>
+		            <div class="column-assessment-status navigation-right">
+		                <div class="yes application-status assessed">
+		                    
+		                    <h3 class="results-status">Successful</h3>
+		            
+		                </div>
+						<p class="feedback">Feedback due: <br />14/06/16</p>
+
+		            </div>
+		        </div>
+		    </li>
+		    <li>
+		        <div class="grid-row">
+		            <div class="column-assessment-details">
+		                <h2 class="heading-medium">Mobile Phone Data for Logistics Analytics</h2>
+		                <p class="form-hint">Application number: <span>0000003</span> <br />
+		                Successful application submitted: <strong>14/06/16</strong></p> 
+		            </div>
+		            <div class="column-assessment-status navigation-right">
+		                <div class="yes application-status assessed">
+		                    
+		                    <h3 class="results-status">Successful</h3>
+		                    
+		                </div>
+
+		                <a href="/prototypes/545-application-feedback" class="feedback"><strong>View feedback</strong></a>
+		            </div>
+		        </div>
+		    </li>
+		    <li>
+		        <div class="grid-row">
+		            <div class="column-assessment-details">
+		                <h2 class="heading-medium">Using natural gas to heat homes</h2>
+		                <p class="form-hint">Application number: <span>0000004</span><br />
+		                Successful application submitted: <strong>14/06/16</strong></p> 
+		            </div>
+		            <div class="column-assessment-status navigation-right">
+		                <div class="no application-status assessed">
+		                    <h3 class="results-status">Unsuccessful</h3>
+		                </div>
+		                <a href="/prototypes/545-application-feedback?unsuccessful" class="feedback"><strong>View feedback</strong></a>
+		            </div>
+		        </div>
+		    </li>
+		</ul>
+	</div>
+
+
 
 	<h2 class="heading-large">Your profile</h2> 
 	

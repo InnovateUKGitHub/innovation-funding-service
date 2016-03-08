@@ -56,8 +56,9 @@
 		</div>
 	</fieldset>
 
+	<a href="/prototypes/675-dashboard?status=projectSetup&#38;user=nonLead" class="button button-large extra-margin" name="select-org-size" th:unless="${param.action != null and param.action[0] == 'signUp'}">Continue to project</a>
 
-	<a href="/prototypes/675-dashboard?status=projectSetup&#38;user=nonLead" class="button button-large extra-margin" name="select-org-size">Continue to project</a>
+	<a href="/prototypes/1972-project-create-acc" class="button button-large extra-margin" name="select-org-size" th:unless="${param.action == null or param.action[0] != 'signUp'}">Create account</a>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -65,6 +66,6 @@
 </main>
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" /> 
 </body>
 </html>

@@ -13,23 +13,17 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${''}, ${''})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<h1 class="heading-large">Create your account</h1>
-	
-	<div class="panel-indent">
-		<p>The profile that you are creating will be linked to the following organisation <br />
-		<strong>Nomensa</strong></p>
+	<h1 class="heading-large">Email address verified</h1>
 
-		<h3 class="heading-small">Type</h3>
-		<p>Business</p>
+	<p>Thanks for verifying your email address</p>
 
-		<p>If this is not the correct organisation <a href="mailto:lead@competition.com">email the application lead</a></p>
-
+	<div class="extra-margin">
+		<a href="/prototypes/1972-project-invite-signup?status=accVerified" class="button button-large">Sign in to continue</a>
 	</div>
-
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-create-acc(${'/prototypes/635-application-overview-collaborator'})" th:remove="tag" /> 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -37,6 +31,6 @@
 </main>
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" /> 
 </body>
 </html>
