@@ -6,7 +6,9 @@ ${REMOTE_URL}     ${EMPTY}
 ${DESIRED_CAPABILITIES}    ${EMPTY}
 ${SERVER_AUTH}    ${EMPTY}
 ${TEST_TAGS}      ${EMPTY}
-${FF_PROFILE}     ${CURDIR}/../firefox_config
+# ${FF_PROFILE}     ${CURDIR}/../firefox_config
+${FF_PROFILE}   ${EMPTY}
+
 
 *** Keywords ***
 Guest user log-in
