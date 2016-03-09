@@ -1,6 +1,7 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.application.AcceptInviteController;
+import com.worth.ifs.application.ApplicationCreationController;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
 import com.worth.ifs.commons.error.Error;
@@ -24,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -63,6 +65,28 @@ public class RegistrationController {
 
     public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
     public final static String EMAIL_FIELD_NAME = "email";
+
+    @RequestMapping(value = "/success", method = RequestMethod.GET)
+    public String registrationSuccessful(Model model, HttpServletRequest request) {
+        return "registration/successful";
+    }
+
+    @RequestMapping(value = "/verified", method = RequestMethod.GET)
+    public String verificationSuccessful(Model model, HttpServletRequest request) {
+        return "registration/verified";
+    }
+
+    @RequestMapping(value = "/verify-email/{hash}", method = RequestMethod.GET)
+    public String verifyEmailAddress(
+        @PathVariable("hash") final String hash,
+        HttpServletResponse response,
+        Model model
+    ){
+        return userService.verifyEmail(hash).handleSuccessOrFailure(
+                f -> "registration/unable-to-verify",
+                s -> "redirect:/registration/verified"
+        );
+    }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerForm(Model model, HttpServletRequest request) {
@@ -131,7 +155,9 @@ public class RegistrationController {
                                      HttpServletRequest request,
                                      Model model) {
 
+        log.warn("registerFormSubmit");
         if(setInviteeEmailAddress(registrationForm, request, model)){
+            log.warn("setInviteeEmailAddress"+ registrationForm.getEmail());
             // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
             bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
             validator.validate(registrationForm, bindingResult);
@@ -147,11 +173,15 @@ public class RegistrationController {
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
 
         if(!bindingResult.hasErrors()) {
-            RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request));
+            Long competitionId = null;
+            if(StringUtils.hasText(CookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID))){
+                competitionId = Long.valueOf(CookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID));
+            }
+            RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request), competitionId);
 
             if (createUserResult.isSuccess()) {
-                loginUser(createUserResult.getSuccessObject(), response);
-                destination = getPostRegisterRedirect(request, response, createUserResult);
+                acceptInvite(request, response, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
+                destination = "redirect:/registration/success";
             } else {
                 addEnvelopeErrorsToBindingResultErrors(createUserResult.getFailure().getErrors(), bindingResult);
             }
@@ -162,15 +192,6 @@ public class RegistrationController {
         }
 
         return destination;
-    }
-
-    private String getPostRegisterRedirect(HttpServletRequest request, HttpServletResponse response, RestResult<UserResource> createUserResult) {
-        if(acceptInvite(request, response, createUserResult.getSuccessObject())){
-            // user is invitee, no need to initialize application.
-            return "redirect:/applicant/dashboard/";
-        }else{
-            return "redirect:/application/create/initialize-application/";
-        }
     }
 
     private boolean acceptInvite(HttpServletRequest request, HttpServletResponse response, UserResource userResource) {
@@ -206,23 +227,16 @@ public class RegistrationController {
         );
     }
 
-    private void loginUser(UserResource userResource, HttpServletResponse response) {
-        log.debug("loginUser");
-        CookieUtil.saveToCookie(response, "userId", String.valueOf(userResource.getId()));
-
-        // TODO DW - INFUND-936 - autologin?
-//        uidAuthenticationService.addAuthentication(response, userResource);
-    }
-
-    private RestResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {
-        return userService.createLeadApplicantForOrganisation(
+    private RestResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {
+        return userService.createLeadApplicantForOrganisationWithCompetitionId(
                 registrationForm.getFirstName(),
                 registrationForm.getLastName(),
                 registrationForm.getPassword(),
                 registrationForm.getEmail(),
                 registrationForm.getTitle(),
                 registrationForm.getPhoneNumber(),
-                organisationId);
+                organisationId,
+                competitionId);
     }
 
     private void addOrganisationNameToModel(Model model, Organisation organisation) {

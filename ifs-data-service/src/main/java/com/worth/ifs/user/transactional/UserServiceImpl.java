@@ -39,14 +39,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<User> getUserByEmailandPassword(final String email, final String password) {
-
-        return find(repository.findByEmail(email), notFoundError(User.class, email)).
-                andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail).
-                andOnSuccess(user -> user.passwordEquals(password) ? serviceSuccess(user) : serviceFailure(notFoundError(User.class)));
-    }
-
-    @Override
     public ServiceResult<User> getUserById(final Long id) {
         return super.getUser(id);
     }

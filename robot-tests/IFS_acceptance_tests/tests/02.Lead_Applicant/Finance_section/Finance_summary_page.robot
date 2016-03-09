@@ -6,7 +6,11 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...
 ...               INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
-Test Teardown     User closes the browser
+...
+...
+...               INFUND-894 As a lead partner I want to easily see whether or not my partner's finances are marked as complete, so that i can have the right level of confidence in the figures
+Suite Teardown    User closes the browser
+Test Teardown     Log out as user
 Force Tags        Finance    Applicant    # these tests have been tagged as failing since the numbers no longer match up to the database - find out why!
 Default Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -26,66 +30,58 @@ ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}    ${SERVER}/application/7/form/sectio
 Finance summary page calculations for Lead applicant
     [Documentation]    INFUND-524
     [Tags]    Collaboration
-    Given the user logs in as lead applicant
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
-    And the user logs out
 
 Finance summary calculations for the first collaborator
     [Documentation]    INFUND-524
     [Tags]    Collaboration
-    Given the user logs in as first collaborator
-    And the user goes to the finance summary of the Providing sustainable childcare application
+    [Setup]    Guest user log-in    &{collaborator1_credentials}
+    When the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
-    And the user logs out
 
 Finance summary calculations for the second collaborator
     [Documentation]    INFUND-524
     [Tags]    HappyPath
-    Given the user logs in as second collaborator
+    [Setup]    Guest user log-in    &{collaborator2_credentials}
     And the user goes to the finance summary of the Providing sustainable childcare application
     When the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
     And the applicant enters a bigger funding amount
     Then the contribution to project and funding sought should be 0 and not a negative number
-    And the user logs out
 
-Green check shouldn't show when the finances are incomplete
+Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927
-    [Tags]    HappyPath         Failing
-    Given the user logs in as first collaborator
-    When the user navigates to the page        ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
-    And applicant marks one finance sub-section as incomplete
-    Then the green check should not be visible
-    And the user logs out
+    ...
+    ...    INFUND-894
+    [Tags]    HappyPath    Failing
+    [Setup]    Guest user log-in    &{collaborator1_credentials}
+    When the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
+    And the user clicks the button/link    css=[aria-controls="collapsible-1"]
+    And the user clicks the button/link    jQuery=#collapsible-1 button:contains("Edit")
+    Then the red warnng should be visible
+    And the user should see the element     css=.warning-alert
+    And the user should see the text in the page    The following organisations have not maked their finances as complete:
+    [Teardown]
 
 Green check should show when the applicant marks the finance as complete
     [Documentation]    INFUND-927
-    [Tags]    HappyPath     Failing
-    Given the user logs in as first collaborator
-    And the user navigates to the page        ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
-    When the applicant marks the finance question as complete
+    ...
+    ...    INFUND-894
+    [Tags]    HappyPath    Failing
+    [Setup]    Guest user log-in    &{collaborator1_credentials}
+    When the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
+    And the user clicks the button/link    css=[aria-controls="collapsible-1"]
+    And the user clicks the button/link    jQuery=#collapsible-1 button:contains("Mark as complete")
     Then both green checks should be visible
-    And the user logs out
 
 *** Keywords ***
-The user logs in as lead applicant
-    Guest user log-in    &{lead_applicant_credentials}
-
 the user goes to the finance summary of the Providing sustainable childcare application
-    the user navigates to the page      ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}
+    the user navigates to the page    ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}
     click element    link=Finances overview
-
-The user logs out
-    Logout as user
-
-The user logs in as first collaborator
-    Guest user log-in    &{collaborator1_credentials}
-
-The user logs in as second collaborator
-    Guest user log-in    &{collaborator2_credentials}
 
 the finance Project cost breakdown calculations should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £0
@@ -116,19 +112,11 @@ the contribution to project and funding sought should be 0 and not a negative nu
     Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(3)    £0
     Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(5)    £0
 
-applicant marks one finance sub-section as incomplete
-    Click Element    css=[aria-controls="collapsible-1"]
-    click element    jQuery=#collapsible-1 button:contains("Edit")
-
-the green check should not be visible
-    go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
-    Page Should Not Contain Image    css=.finance-summary tr:nth-of-type(2) img
-
-the applicant marks the finance question as complete
-    Click Element    css=[aria-controls="collapsible-1"]
-    click element    jQuery=#collapsible-1 button:contains("Mark as complete")
-
 both green checks should be visible
-    the user navigates to the page     ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
+    the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
+    Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src="/images/field/tick-icon.png"]
+    Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img[src="/images/field/tick-icon.png"]
+
+the red warnng should be visible
+    go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img
-    Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img

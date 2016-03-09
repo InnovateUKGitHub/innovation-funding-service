@@ -41,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // allow anonymous resource requests
                 .requestMatchers(statelessAuthenticationFilter.getIgnoredRequestMatchers()).permitAll()
                 .antMatchers("/user/uid/*").permitAll()
+                .antMatchers("/user/verifyEmail/*").permitAll()
                 .antMatchers("/user/createLeadApplicantForOrganisation/*").permitAll()
                 .antMatchers("/user/findByEmail/*/").permitAll()
                 .antMatchers("/organisation/findById/*").permitAll()

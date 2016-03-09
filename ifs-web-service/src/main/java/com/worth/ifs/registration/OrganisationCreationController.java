@@ -54,6 +54,7 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 @Controller
 @RequestMapping("/organisation/create")
 public class OrganisationCreationController {
+    public static final String ORGANISATION_ID = "organisationId";
     private final Log log = LogFactory.getLog(this.getClass());
     public static final String ORGANISATION_FORM = "organisationForm";
     public static final String TEMPLATE_PATH = "registration/organisation";
@@ -113,6 +114,7 @@ public class OrganisationCreationController {
                                      Model model,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
+        CookieUtil.removeCookie(response, ORGANISATION_ID);
         organisationForm.setOrganisationSearching(false);
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         addAddressOptions(organisationForm);
@@ -445,6 +447,9 @@ public class OrganisationCreationController {
     public String confirmCompany(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                  Model model,
                                  HttpServletRequest request) throws IOException {
+        if(StringUtils.hasText(CookieUtil.getCookieValue(request, ORGANISATION_ID))){
+            return "redirect:" + RegistrationController.BASE_URL + "?organisationId=" + CookieUtil.getCookieValue(request, ORGANISATION_ID);
+        }
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
         addSelectedOrganisation(organisationForm, model);
@@ -464,6 +469,10 @@ public class OrganisationCreationController {
 
     @RequestMapping("/save-organisation")
     public String saveOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if(StringUtils.hasText(CookieUtil.getCookieValue(request, ORGANISATION_ID))){
+            return "redirect:" + RegistrationController.BASE_URL + "?organisationId=" + CookieUtil.getCookieValue(request, ORGANISATION_ID);
+        }
+
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);
         AddressResource address = organisationForm.getAddressForm().getSelectedPostcode();
@@ -483,7 +492,7 @@ public class OrganisationCreationController {
         if (selectedOrganisation != null && selectedOrganisation.getOrganisationAddress() != null) {
             organisationService.addAddress(organisationResource, selectedOrganisation.getOrganisationAddress(), AddressType.REGISTERED);
         }
-
+        CookieUtil.saveToCookie(response, ORGANISATION_ID, String.valueOf(organisationResource.getId()));
         CookieUtil.removeCookie(response, ORGANISATION_FORM);
         CookieUtil.removeCookie(response, AcceptInviteController.ORGANISATION_TYPE);
         return "redirect:" + RegistrationController.BASE_URL + "?organisationId=" + organisationResource.getId();

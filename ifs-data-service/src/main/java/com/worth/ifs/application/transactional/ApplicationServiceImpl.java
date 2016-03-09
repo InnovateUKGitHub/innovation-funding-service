@@ -1,16 +1,5 @@
 package com.worth.ifs.application.transactional;
 
-import java.io.File;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -39,15 +28,25 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.UserRoleType;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
@@ -138,32 +137,35 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
 
+        // TODO: Remove and replace if file already exists here : Rav
         if (existingResponse != null && existingResponse.getFileEntry() != null) {
-            return serviceFailure(new Error(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE, existingResponse.getFileEntry().getId()));
-        } else {
-
-            return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).andOnSuccess(successfulFile -> {
-
-                FileEntry fileEntry = successfulFile.getValue();
-
-                if (existingResponse != null) {
-
-                    existingResponse.setFileEntry(fileEntry);
-                    formInputResponseRepository.save(existingResponse);
-                    FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputResponseFile.getCompoundId());
-                    return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
-
-                }
-
-                return find(processRole(processRoleId), () -> getFormInput(formInputId), application(applicationId)).andOnSuccess((processRole, formInput, application) -> {
-
-                    FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
-                    formInputResponseRepository.save(newFormInputResponse);
-                    FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
-                    return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
-                });
-            });
+            final ServiceResult<FileEntry> deleteResult = fileService.deleteFile(existingResponse.getFileEntry().getId());
+            if(deleteResult.isFailure()) {
+                return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, existingResponse.getFileEntry().getId()));
+            }
         }
+
+        return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).andOnSuccess(successfulFile -> {
+
+            FileEntry fileEntry = successfulFile.getValue();
+
+            if (existingResponse != null) {
+
+                existingResponse.setFileEntry(fileEntry);
+                formInputResponseRepository.save(existingResponse);
+                FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputResponseFile.getCompoundId());
+                return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
+
+            }
+
+            return find(processRole(processRoleId), () -> getFormInput(formInputId), application(applicationId)).andOnSuccess((processRole, formInput, application) -> {
+
+                FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
+                formInputResponseRepository.save(newFormInputResponse);
+                FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
+                return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
+            });
+        });
     }
 
     @Override

@@ -244,13 +244,14 @@ public class RegistrationControllerTest extends BaseUnitTest {
 
 
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
-        when(userService.createLeadApplicantForOrganisation(userResource.getFirstName(),
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
-                1L)).thenReturn(restSuccess(userResource));
+                1L,
+                null)).thenReturn(restSuccess(userResource));
         when(userService.findUserByEmail("test@test.test")).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -265,11 +266,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
                         .param("termsAndConditions", "1")
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().value("userId", "1"))
-                .andExpect(view().name("redirect:/application/create/initialize-application/"))
-        ;
-        // TODO DW - INFUND-1267 - can  we do the below behaviour with Shib SP / IdP?
-//        verify(tokenAuthenticationService).addAuthentication(Matchers.isA(HttpServletResponse.class), Matchers.isA(UserResource.class));
+                .andExpect(view().name("redirect:/registration/success"));
     }
 
     @Test
@@ -328,13 +325,13 @@ public class RegistrationControllerTest extends BaseUnitTest {
         Error error = new Error("errorname", "errordescription", BAD_REQUEST);
 
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
-        when(userService.createLeadApplicantForOrganisation(userResource.getFirstName(),
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
-                1L)).thenReturn(restFailure(error));
+                1L, null)).thenReturn(restFailure(error));
         
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
