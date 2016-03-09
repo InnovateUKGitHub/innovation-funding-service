@@ -88,7 +88,7 @@ function startServers {
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// --exclude Failing --exclude Pending --name IFS $testDirectory
+    pabot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// --exclude Failing --exclude Pending --name IFS $testDirectory
 }
 
 
@@ -153,9 +153,11 @@ unset quickTest
 unset testScrub
 unset happyPath
 unset remoteRun
+unset specialMode
+
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :r :d:" opt ; do
+while getopts ":q :t :h :r :d: :s:" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -172,6 +174,10 @@ while getopts ":q :t :h :r :d:" opt ; do
         d)
          testDirectory="$OPTARG"
         ;;
+	s)
+	 specialMode=1
+	 testDirectory="$OPTARG"
+	;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2
          exit 1
@@ -214,6 +220,10 @@ elif [ "$remoteRun" ]
 then 
     echo "Pointing the tests at the ifs dev server - note that some tests may fail if you haven't scrubbed the dev server's db" >&2
     runTestsRemotely
+elif [ "$specialMode" ]
+then
+    resetDB
+    runTests
 else
     echo "using quickTest:   FALSE" >&2
     stopServers
