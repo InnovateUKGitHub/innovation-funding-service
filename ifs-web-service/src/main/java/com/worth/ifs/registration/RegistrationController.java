@@ -153,8 +153,8 @@ public class RegistrationController {
                                      HttpServletResponse response,
                                      HttpServletRequest request,
                                      Model model) {
+        String destination = "registration-register";
 
-        log.warn("registerFormSubmit");
         if(setInviteeEmailAddress(registrationForm, request, model)){
             log.warn("setInviteeEmailAddress"+ registrationForm.getEmail());
             // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
@@ -164,21 +164,17 @@ public class RegistrationController {
 
         User user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
+            // user is already logged in, so redirect away from registration..
             return LoginController.getRedirectUrlForUser(user);
         }
-
-        String destination = "registration-register";
 
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
 
         if(!bindingResult.hasErrors()) {
-            Long competitionId = null;
-            if(StringUtils.hasText(CookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID))){
-                competitionId = Long.valueOf(CookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID));
-            }
-            RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request), competitionId);
+            RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request), getCompetitionId(request));
 
             if (createUserResult.isSuccess()) {
+                removeCompetitionIdCookie(response);
                 acceptInvite(request, response, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
                 destination = "redirect:/registration/success";
             } else {
@@ -191,6 +187,18 @@ public class RegistrationController {
         }
 
         return destination;
+    }
+
+    private void removeCompetitionIdCookie(HttpServletResponse response) {
+        CookieUtil.removeCookie(response, ApplicationCreationController.COMPETITION_ID);
+    }
+
+    private Long getCompetitionId(HttpServletRequest request) {
+        Long competitionId = null;
+        if(StringUtils.hasText(CookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID))){
+            competitionId = Long.valueOf(CookieUtil.getCookieValue(request, ApplicationCreationController.COMPETITION_ID));
+        }
+        return competitionId;
     }
 
     private boolean acceptInvite(HttpServletRequest request, HttpServletResponse response, UserResource userResource) {

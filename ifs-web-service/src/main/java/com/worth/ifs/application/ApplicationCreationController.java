@@ -1,6 +1,7 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.util.CookieUtil;
 import org.apache.commons.logging.Log;
@@ -25,13 +26,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping("/application/create")
-public class ApplicationCreationController extends AbstractApplicationController {
+public class ApplicationCreationController {
     public static final String COMPETITION_ID = "competitionId";
     public static final String USER_ID = "userId";
     private static final String APPLICATION_ID = "applicationId";
     private static final Log log = LogFactory.getLog(ApplicationCreationController.class);
     Validator validator;
 
+    @Autowired
+    private ApplicationService applicationService;
     @Autowired
     public void setValidator(Validator validator) {
         this.validator = validator;

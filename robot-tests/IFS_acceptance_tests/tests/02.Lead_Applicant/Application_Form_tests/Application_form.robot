@@ -22,8 +22,26 @@ ${CREATE_APPLICATION_PAGE}    ${SERVER}/application/create/1?accept=accepted
 ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}    ${SERVER}/application/1/form/question/11
 ${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}    ${SERVER}/application/1/form/question/12
 ${NEW_TEST_APPLICATION_OVERVIEW}    ${SERVER}/application/1
+${BUTTON}    css=.extra-margin
 
 *** Test Cases ***
+#Verify uploaded file can be opened only by Lead Applicant
+#    [Documentation]     INFUND-832
+#    [Tags]
+#    Given the user navigates to the page     ${PROJECT_TEAM_URL}
+#    And the user can see the option to upload a file
+#    When user click on the file upload link
+#    Then the user can open the file
+
+Verify that Applicant can upload less than 1mb pdf files
+    [Documentation]     INFUND-409
+    [Tags]      Collaboration   Pending
+    [Setup]     Guest user log-in   &{lead_applicant_credentials}
+    Given the user navigates to the page    ${SERVER}/application/1/form/question/5
+    And the user can see the option to upload a file
+    # When The user clicks the button/link    ${BUTTON}
+    Then the user can choose pdf file to upload
+
 Verify the Autosave for the form text areas
     [Documentation]    INFUND-189
     [Tags]    Applicant    Autosave    Form    HappyPath
@@ -250,6 +268,12 @@ the question should not be marked as complete on the application overview page
     Page Should Contain Element    css=#form-input-12    Question element found on application overview
     Page Should Not Contain Element    css=#form-input-12 div.marked-as-complete img.marked-as-complete    Mark as complete class is not found, that's correct
 
+the user can see the option to upload a file
+    the user should see the text in the page       Upload
 
-
-
+the user can choose pdf file to upload
+    Sleep   2s
+    Choose File    name=formInput[18]    testing.pdf
+    Sleep   5s
+    Reload Page
+    Sleep   5s

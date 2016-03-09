@@ -1,7 +1,5 @@
 package com.worth.ifs.application.controller;
 
-import java.util.List;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerMockMVCTest;
@@ -9,8 +7,9 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.User;
-
 import org.junit.Test;
+
+import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -27,9 +26,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
 
@@ -57,6 +54,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                                 fieldWithPath("id").description("Id of the application"),
                                 fieldWithPath("name").description("Name of the application"),
                                 fieldWithPath("startDate").description("Estimated timescales: project start date"),
+                                fieldWithPath("submittedDate").description("The date the applicant has submitted this application."),
                                 fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
                                 fieldWithPath("processRoles").description("list of ProcessRole Id's"),
                                 fieldWithPath("applicationStatus").description("ApplicationStatus Id"),

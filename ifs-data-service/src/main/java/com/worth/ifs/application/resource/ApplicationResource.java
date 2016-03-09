@@ -1,20 +1,21 @@
 package com.worth.ifs.application.resource;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ApplicationResource {
 
     private Long id;
     private String name;
     private LocalDate startDate;
+    private LocalDateTime submittedDate;
     private Long durationInMonths;
     private List<Long> processRoles = new ArrayList<>();
     private List<Long> applicationFinances = new ArrayList<>();
@@ -147,5 +148,13 @@ public class ApplicationResource {
 
     public void setCompetitionName(String competitionName) {
         this.competitionName = competitionName;
+    }
+
+    public LocalDateTime getSubmittedDate() {
+        return submittedDate;
+    }
+
+    public void setSubmittedDate(LocalDateTime submittedDate) {
+        this.submittedDate = submittedDate;
     }
 }
