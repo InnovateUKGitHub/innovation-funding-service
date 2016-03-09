@@ -29,7 +29,7 @@
             <a th:href="${createUrl}" class="button" value="create-account" type="submit">Create</a></section>
         <section class="column-half">
             <h1 class="heading-large">Sign in</h1>
-
+<!-- TODO INFUND-936 can not login here any more
             <form action="/login?redirect_url=/application/create/your-details" th:object="${loginForm}" method="POST">
                 <fieldset>
                     <legend class="visuallyhidden">Sign in</legend>
@@ -39,7 +39,6 @@
                             <span class="error-message" th:if="${#fields.hasErrors('email')}"
                                   th:errors="*{email}"></span>
                     </div>
-                    <!-- .form-group -->
 
                     <div th:class="${#fields.hasErrors('password')}? 'form-group error':'form-group'">
                         <label class="form-label" for="id_password">Password</label>
@@ -48,10 +47,11 @@
                         <span class="error-message" th:if="${#fields.hasErrors('password')}"
                               th:errors="*{password}"></span>
                     </div>
-                    <!-- .form-group -->
+
                 </fieldset>
                 <input class="button" value="Sign in" type="submit"></input>
             </form>
+            -->
         </section>
     </div>
 
