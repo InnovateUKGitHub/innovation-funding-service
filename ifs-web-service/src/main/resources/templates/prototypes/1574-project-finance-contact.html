@@ -27,44 +27,39 @@
 
 			<legend class="visuallyhidden">Finance contact</legend>
 
-			<label for="finances-name-1" class="block-label">
-				<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
-				John Smith
-			</label>
+			<p class="form-hint">Who will be responsible for the project finances in your organisation?</p>
 
-			<label for="finances-name-2" class="block-label">
-				<input id="finances-name-2" type="radio" name="finances-name-group" value="John Smith" />
-				Ann Jones
-			</label>
+			<details>
+			    <summary><span class="summary">What should I include in the finance contact section?</span></summary>
+			    <div class="panel-indent">
+			        <p>This is the person in your organisation responsible for the project’s finances. They will also claim funding once your project is live. We will ask them to provide bank details for your organisation before the project can begin.</p>
+			    </div>
+			</details>
+
+			<div class="form-group extra-margin">
+				<label for="finances-name-1" class="block-label">
+					<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
+					John Smith
+				</label>
+				
+				<label for="finances-name-2" class="block-label">
+					<input id="finances-name-2" type="radio" name="finances-name-group" value="John Smith" />
+					Ann Jones
+				</label>
+
+				<label for="finances-name-invite" class="block-label" id="invited-finance-contact" style="display: none">
+					<input id="finances-name-invite" type="radio" name="finances-name-group" value="" />
+					<span id="finance-name">Ann Jones (pending)</span>
+				</label>
+			</div>
 
 		</fieldset>
 
 		<div class="extra-margin">
-			<button class="buttonlink" id="add-user">Add new team member</button>	
+			<button class="buttonlink" id="add-finance-contact">Add new team member</button>	
 		</div>
 
-		<table class="extra-margin" id="add-user-details" style="display: none">
-			<thead>
-				<tr>
-					<th scope="col" id="user-name">Name</th>
-					<th scope="col" id="user-email">E-mail</th>
-					<th>&nbsp;</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>
-						<input type="text" name="name-item-1" id="name-item-1" class="form-control width-full" aria-labelledby="user-name" value=""  />
-					</td>
-					<td>
-						<input type="email" name="mail-item-1" id="mail-item-1" class="form-control width-full" aria-labelledby="user-email" value=""  />
-					</td>
-					<td class="alignright">
-						<button class="buttonlink no-margin-bottom" id="invite-user">Invite to project</button>	
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<div th:include="prototypes/fragments/project-setup :: prototype-add-users('finance-contact')" th:remove="tag" />
 
 
 		<h3 class="heading-medium">Target project start date</h3>
@@ -109,58 +104,21 @@
 	// <![CDATA[
 	jQuery(document).ready(function(){
 
-		jQuery('#add-user').on('click',function(e){ 
+		jQuery('#add-finance-contact').on('click',function(e){ 
 			e.preventDefault();
-
-			jQuery('#add-user-details').show();
-
+			jQuery('#finance-contact-table').show();
 		});
 
-		jQuery('#invite-user').on('click',function(e){ 
+		jQuery('#invite-finance-contact').on('click',function(e){ 
 			e.preventDefault();
 
-			jQuery('#add-user-details').hide();
+			var financeContact = jQuery('#name-finance-contact1').val();
 
-		});
+			jQuery('#finance-name').text(financeContact + ' (Pending)')
+			jQuery("#finances-name-invite").attr('checked', 'checked');
+			jQuery('#finance-contact-table').hide();
+			jQuery('#invited-finance-contact').show();
 
-
-
-
-		jQuery('#add-pm').on('click',function(e){ 
-			e.preventDefault();
-
-			jQuery('#add-pm-details').show();
-
-		});
-
-		jQuery('#invite-pm').on('click',function(e){ 
-			e.preventDefault();
-
-			jQuery('#add-pm-details').hide();
-
-		});
-
-
-		jQuery('#postcode-lookup').on('click',function(e){ 
-			e.preventDefault();
-			jQuery("#select-address-block").show();
-
-		});
-
-		jQuery('#select-address').on('change',function(e){ 
-			e.preventDefault();
-			jQuery("#address-details").show();
-			jQuery("#street").val("4 Station Road");
-			jQuery("#county").val("Wiltshire");
-			jQuery("#town").val("Swindon");
-			jQuery("#postcode").val("SN1 2BD");
-
-		});
-
-		jQuery('#enter-address-manually').on('click',function(e){ 
-			e.preventDefault();
-			jQuery("#address-details").show();
-			jQuery("#select-address-block").hide();
 		});
 
 	});
