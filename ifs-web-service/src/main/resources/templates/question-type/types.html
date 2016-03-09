@@ -70,11 +70,12 @@
 
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''"
-         th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
+         th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']',
+         noFileUploaded=${(#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}">
         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
-        <input th:if="${(#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}" type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'" class="inputfile"/>
-        <label th:if="${(#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}" th:for="${formInput.getId()}" class="button-secondary extra-margin">+ Upload</label>
-        <button th:if="${(#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}" name="upload_file" class="button-secondary" type="submit">Save</button>
+        <input th:if="${noFileUploaded}" type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'" class="inputfile"/>
+        <label th:if="${noFileUploaded}" th:for="${formInput.getId()}" class="button-secondary extra-margin">+ Upload</label>
+        <button th:if="${noFileUploaded}" name="upload_file" class="button-secondary" type="submit">Save</button>
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
         <div th:if="${!#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())}">
             <div>
@@ -1149,12 +1150,18 @@
                 <td class="numeric" th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                   <strong th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />
                 </td>
+                <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                  <td class="numeric"><strong class="numeric">&pound;0</strong></td>
+                </div>
                 <div th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInputType=${question.getFormInputs().get(0).getFormInputType()}" th:remove="tag">
                     <div th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
                       <td class="numeric"
                           th:with="formInputType=${question.formInputs.get(0).formInputType},category = ${organisationFinance.getFinanceOrganisationDetails(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))}"
                           th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
                       </td>
+                    </div>
+                    <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                      <td class="numeric">&pound;0</td>
                     </div>
                 </div>
               </tr>
@@ -1218,6 +1225,15 @@
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}"/>
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/>
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}"/>
+                  </div>
+                  <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                    <td class="numeric">
+                      <strong>&pound;0</strong>
+                    </td>
+                    <td class="numeric">0%</td>
+                    <td class="numeric">&pound;0</td>
+                    <td class="numeric">&pound;0</td>
+                    <td class="numeric">&pound;0</td>
                   </div>
                 </tr>
                 <tr>

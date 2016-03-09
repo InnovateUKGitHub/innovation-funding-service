@@ -2,6 +2,42 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
 
+<!-- ========Applicant view - sign in - create account content====== -->
+<div th:fragment="prototype-signin(url)">
+    <h1 class="heading-large">Sign in</h1>
+    <form action="#" method="POST">
+        <fieldset>
+            <legend class="visuallyhidden">Sign in</legend>
+            <div class="form-group">
+                <label class="form-label" for="id_email">E-mail address</label>
+                <input class="form-control form-control-3-4" type="text" id="id_email" name="email" value="" />
+            </div><!-- .form-group -->
+
+            <div class="form-group">
+                <label class="form-label" for="id_password">Password</label>
+                <input class="form-control form-control-3-4" type="password" id="id_password" name="password" value="" />
+            </div><!-- .form-group -->
+        </fieldset>
+        <input class="button" th:formaction="${url}" value="Sign in" type="submit" />
+    </form>
+</div>
+
+<!-- ========Applicant view - sign in - create account content====== -->
+<div th:fragment="prototype-signin-create-acc(url)">
+    <h1 class="heading-large">New to this service?</h1>
+    <p>If you haven’t used this service before you must <a href="/prototypes/643-create-acc-business-lead">create an account</a>, even if you already have an existing account with "Innovate UK".</p>
+
+    <p>When you create an account you can:</p>
+    <ul class="list-bullet">
+        <li>apply for a competition</li>
+        <li>track your competition applications</li>
+        <li>view application feedback</li>
+        <li>set up successful projects</li>
+    </ul>
+
+    <a th:href="${url}" class="button button-large">Create account</a>
+</div>
+
 <!-- ========Applicant view - sub header back to comp dashboard======= -->
 <div th:fragment="prototype-applicant-subheader(link, url)">
     <div class="sub-header">
@@ -43,6 +79,72 @@
         <p class="subtitle no-margin" th:text="${subtitle}">Subtitle here</p>
         <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
     </div>
+</div>
+
+
+
+<!-- ===================Create account form details============================== -->
+<div th:fragment="prototype-applicant-create-acc(url)">
+    <h2 class="heading-medium">Your details</h2>
+    <form>
+        <fieldset>
+            <legend class="visuallyhidden">Your details</legend>
+            <div class="form-group">
+                <label class="form-label" for="title">
+                    <span class="form-label-bold">Title</span>
+                </label>
+                <select class="form-control width-medium" id="title" name="title">
+                    <option value="">Mr</option>
+                    <option value="">Miss</option>
+                    <option value="">Mrs</option>
+                    <option value="">Ms</option>
+                    <option value="">Dr</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="first-name">
+                    <span class="form-label-bold">First name</span>
+                </label>
+                <input class="form-control" id="first-name" name="first-name" type="text" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="last-name">
+                    <span class="form-label-bold">Last name</span>
+                </label>
+                <input class="form-control" id="last-name" name="last-name" type="text" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="phone-number">
+                    <span class="form-label-bold">Phone number</span>
+                    <span class="form-hint">We may use this to contact you about the application</span>
+                </label>
+                <input class="form-control" id="phone-number" name="phone-number" type="text" />
+            </div>
+            <div class="form-group">
+                <h3 class="heading-small">Email</h3>
+                <p class="form-hint">You will need this to sign into your account, the provided email is:<br /><strong>andy.jones@nomensa.com</strong></p>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="password">
+                    <span class="form-label-bold">Password</span>
+                </label>
+                <input class="form-control" id="password" name="password" type="password" />
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="retype-password">
+                    <span class="form-label-bold">Re-type password</span>
+                </label>
+                <input class="form-control" id="retype-password" name="retype-password" type="password" />
+            </div>
+            <div class="form-block">
+                <label class="block-label" for="terms-conditions">
+                    <input id="terms-conditions" type="checkbox" value="terms-conditions"/>
+                    I agree to the <a href="#">terms and conditions</a>
+                </label>
+            </div>
+        </fieldset>
+        <button class="button button-large extra-margin" name="create-account" th:formaction="${url}" type="submit">Create account</button>
+    </form>
 </div>
 
 

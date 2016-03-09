@@ -363,7 +363,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<Question> questions, Long userId, Long processRoleId, BindingResult bindingResult,  HttpServletRequest request, HttpServletResponse response) {
-        Map<Long, List<String>> errors = saveQuestionResponses(request, response, questions, userId, processRoleId, application.getId());
+        Map<Long, List<String>> errors = saveQuestionResponses(request, questions, userId, processRoleId, application.getId());
         errors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue("formInput[" + k + "]", e, e)));
         return errors;
     }
@@ -444,53 +444,83 @@ public class ApplicationFormController extends AbstractApplicationController {
         return success;
     }
 
-    private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request, HttpServletResponse response, List<Question> questions, Long userId, Long processRoleId, Long applicationId) {
+    private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request,
+                                                          List<Question> questions,
+                                                          Long userId,
+                                                          Long processRoleId,
+                                                          Long applicationId) {
         final Map<String, String[]> params = request.getParameterMap();
 
+        Map<Long, List<String>> errorMap = new HashMap<>();
+
+        errorMap.putAll(saveNonFileUploadQuestions(questions, params, request, userId, applicationId));
+
+        errorMap.putAll(saveFileUploadQuestionsIfAny(questions, params, request, applicationId, processRoleId));
+
+        return errorMap;
+    }
+
+    private Map<Long, List<String>> saveNonFileUploadQuestions(List<Question> questions,
+                                                               Map<String, String[]> params,
+                                                               HttpServletRequest request,
+                                                               Long userId,
+                                                               Long applicationId){
         Map<Long, List<String>> errorMap = new HashMap<>();
         questions.stream()
                 .forEach(question -> question.getFormInputs()
                                 .stream()
+                                .filter(formInput1 -> (!formInput1.getFormInputType().getTitle().equals("fileupload")))
                                 .forEach(formInput -> {
-                                            if (formInput.getFormInputType().getTitle().equals("fileupload") && request instanceof StandardMultipartHttpServletRequest) {
-                                                if (params.containsKey(REMOVE_UPLOADED_FILE)) {
-                                                    formInputResponseService.removeFile(formInput.getId(), applicationId, processRoleId).getSuccessObjectOrThrowException();
-                                                    cookieFlashMessageFilter.setFlashMessage(response, "fileRemoved");
-                                                } else {
-                                                    final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
-                                                    final MultipartFile file = fileMap.get("formInput[" + formInput.getId() + "]");
-                                                    if (file != null && !file.isEmpty()) {
-                                                        try {
-                                                            RestResult<FileEntryResource> result = formInputResponseService.createFile(formInput.getId(),
-                                                                    applicationId, processRoleId,
-                                                                    file.getContentType(),
-                                                                    file.getSize(),
-                                                                    file.getOriginalFilename(),
-                                                                    file.getBytes());
-                                                            if (result.isFailure()) {
-                                                                errorMap.put(formInput.getId(), result.getFailure().getErrors().stream().map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
-                                                            } else {
-                                                                cookieFlashMessageFilter.setFlashMessage(response, "fileUploaded");
-                                                            }
-                                                        } catch (IOException e) {
-                                                            throw new UnableToReadUploadedFile();
-                                                        }
-                                                    }
-                                                }
-                                            } else {
-                                                if (request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
-                                                    String value = request.getParameter("formInput[" + formInput.getId() + "]");
-                                                    List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
-                                                    if (errors.size() != 0) {
-                                                        log.error("save failed. " + question.getId());
-                                                        errorMap.put(question.getId(), new ArrayList<>(errors));
-                                                    }
+                                            if (params.containsKey("formInput[" + formInput.getId() + "]")) {
+                                                String value = request.getParameter("formInput[" + formInput.getId() + "]");
+                                                List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
+                                                if (errors.size() != 0) {
+                                                    log.error("save failed. " + question.getId());
+                                                    errorMap.put(question.getId(), new ArrayList<>(errors));
                                                 }
                                             }
                                         }
                                 )
                 );
+        return errorMap;
+    }
 
+    private Map<Long, List<String>> saveFileUploadQuestionsIfAny(List<Question> questions,
+                                                                 final Map<String, String[]> params,
+                                                                 HttpServletRequest request,
+                                                                 Long applicationId,
+                                                                 Long processRoleId){
+        Map<Long, List<String>> errorMap = new HashMap<>();
+        questions.stream()
+                .forEach(question -> question.getFormInputs()
+                        .stream()
+                        .filter(formInput1 -> (formInput1.getFormInputType().getTitle().equals("fileupload") && request instanceof StandardMultipartHttpServletRequest))
+                        .forEach(formInput -> {
+                            if (params.containsKey(REMOVE_UPLOADED_FILE)) {
+                                formInputResponseService.removeFile(formInput.getId(), applicationId, processRoleId).getSuccessObjectOrThrowException();
+                            } else {
+                                final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
+                                final MultipartFile file = fileMap.get("formInput[" + formInput.getId() + "]");
+                                if (file != null && !file.isEmpty()) {
+                                    try {
+                                        RestResult<FileEntryResource> result = formInputResponseService.createFile(formInput.getId(),
+                                                applicationId,
+                                                processRoleId,
+                                                file.getContentType(),
+                                                file.getSize(),
+                                                file.getOriginalFilename(),
+                                                file.getBytes());
+                                        if (result.isFailure()) {
+                                            errorMap.put(formInput.getId(),
+                                                    result.getFailure().getErrors().stream()
+                                                            .map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
+                                        }
+                                    } catch (IOException e) {
+                                        throw new UnableToReadUploadedFile();
+                                    }
+                                }
+                            }
+                        }));
         return errorMap;
     }
 
