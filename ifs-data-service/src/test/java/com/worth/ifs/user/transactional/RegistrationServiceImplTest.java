@@ -5,12 +5,15 @@ import com.worth.ifs.LambdaMatcher;
 import com.worth.ifs.authentication.service.RestIdentityProviderService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.token.domain.Token;
+import com.worth.ifs.token.domain.TokenType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
+import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -24,6 +27,8 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -77,13 +82,25 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         User expectedCreatedUser = argThat(expectedUserMatcher);
 
-        User savedUser = newUser().build();
+        User savedUser = newUser().with(id(999L)).build();
 
         when(userRepositoryMock.save(expectedCreatedUser)).thenReturn(savedUser);
 
-        ServiceResult<UserResource> result = service.createUserLeadApplicantForOrganisation(123L, userToCreate);
+        Token expectedToken = argThat(lambdaMatches(token -> {
+            assertEquals(TokenType.VERIFY_EMAIL_ADDRESS, token.getType());
+            assertEquals(User.class.getName(), token.getClassName());
+            assertEquals(savedUser.getId(), token.getClassPk());
+            assertFalse(token.getHash().isEmpty());
+            return true;
+        }));
+
+        when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
+
+        ServiceResult<UserResource> result = service.createApplicantUser(123L, userToCreate);
         assertTrue(result.isSuccess());
         assertEquals(new UserResource(savedUser), result.getSuccessObject());
+
+        verify(tokenRepositoryMock).save(isA(Token.class));
     }
 
     @Test
@@ -100,7 +117,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(null);
 
-        ServiceResult<UserResource> result = service.createUserLeadApplicantForOrganisation(123L, userToCreate);
+        ServiceResult<UserResource> result = service.createApplicantUser(123L, userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(Organisation.class, 123L)));
     }
@@ -122,7 +139,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(roleRepositoryMock.findByName(APPLICANT.getName())).thenReturn(emptyList());
 
-        ServiceResult<UserResource> result = service.createUserLeadApplicantForOrganisation(123L, userToCreate);
+        ServiceResult<UserResource> result = service.createApplicantUser(123L, userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(Role.class, APPLICANT.getName())));
     }
@@ -146,7 +163,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(roleRepositoryMock.findByName(APPLICANT.getName())).thenReturn(singletonList(applicantRole));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
 
-        ServiceResult<UserResource> result = service.createUserLeadApplicantForOrganisation(123L, userToCreate);
+        ServiceResult<UserResource> result = service.createApplicantUser(123L, userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
     }

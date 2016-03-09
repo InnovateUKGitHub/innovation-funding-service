@@ -16,9 +16,6 @@ public interface UserService {
     @NotSecured("Need to keep open to all to allow login")
     ServiceResult<User> getUserByUid(final String uid);
 
-    @NotSecured("Need to keep open to all to allow login")
-    ServiceResult<User> getUserByEmailandPassword(final String email, final String password);
-
     @NotSecured("TODO - implement when permissions matrix in place")
     ServiceResult<User> getUserById(final Long id);
 
@@ -36,13 +33,4 @@ public interface UserService {
 
     @NotSecured("TODO - implement when permissions matrix in place")
     ServiceResult<Set<User>> findRelatedUsers(final Long applicationId);
-
-    @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<UserResource> createUser(final Long organisationId, UserResource userResource);
-
-    @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<UserResource> updateUser(UserResource userResource);
-
-    @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<Void> activateUser(Long userId);
 }

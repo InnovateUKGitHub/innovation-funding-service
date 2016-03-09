@@ -174,4 +174,10 @@ public abstract class AbstractRestTemplateAdaptor {
         return new HttpEntity<>(entity, getHeaders());
     }
 
+    public <T> HttpEntity<T> jsonEntity(T entity, HttpHeaders additionalHeaders){
+        HttpHeaders standardHeaders = getHeaders();
+        standardHeaders.putAll(additionalHeaders);
+        return new HttpEntity<>(entity, standardHeaders);
+    }
+
 }

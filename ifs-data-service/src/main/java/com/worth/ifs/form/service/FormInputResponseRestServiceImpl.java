@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.commons.service.RestTemplateAdaptor;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +32,8 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
     @Value("${ifs.data.service.rest.forminputresponse}")
     String formInputResponseRestURL;
 
+    @Autowired
+    private RestTemplateAdaptor adaptor;
 
     @Override
     public RestResult<List<FormInputResponse>> getResponsesByApplicationId(Long applicationId) {
@@ -58,7 +62,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
 
         final HttpHeaders headers = createHeader(contentType,  contentLength);
 
-        return postWithRestResult(url, file, headers, FileEntryResource.class);
+        return adaptor.postWithRestResult(url, file, headers, FileEntryResource.class);
     }
 
     @Override

@@ -227,14 +227,6 @@ public class RegistrationController {
         );
     }
 
-    private void loginUser(UserResource userResource, HttpServletResponse response) {
-        log.debug("loginUser");
-        CookieUtil.saveToCookie(response, "userId", String.valueOf(userResource.getId()));
-
-        // TODO DW - INFUND-936 - autologin?
-//        uidAuthenticationService.addAuthentication(response, userResource);
-    }
-
     private RestResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {
         return userService.createLeadApplicantForOrganisationWithCompetitionId(
                 registrationForm.getFirstName(),

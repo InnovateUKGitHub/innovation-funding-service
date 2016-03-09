@@ -1,11 +1,17 @@
 package com.worth.ifs.user.controller;
 
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.token.domain.Token;
+import com.worth.ifs.token.domain.TokenType;
+import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserProfileService;
 import com.worth.ifs.user.transactional.UserService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -23,6 +30,8 @@ import java.util.Set;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    private static final Log LOG = LogFactory.getLog(UserController.class);
 
     @Autowired
     private UserService userService;
@@ -80,7 +89,7 @@ public class UserController {
             if(TokenType.VERIFY_EMAIL_ADDRESS.equals(token.getType()) &&
                     User.class.getName().equals(token.getClassName())
             ){
-                userService.activateUser(token.getClassPk()).andOnSuccessReturnVoid(v -> {
+                registrationService.activateUser(token.getClassPk()).andOnSuccessReturnVoid(v -> {
                     tokenService.handleExtraAttributes(token);
                     tokenService.removeToken(token);
                 });
@@ -95,7 +104,7 @@ public class UserController {
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return registrationService.createUserLeadApplicantForOrganisation(organisationId, userResource).toPostCreateResponse();
+        return registrationService.createApplicantUser(organisationId, userResource).toPostCreateResponse();
     }
 
     @RequestMapping("/updateDetails")
