@@ -16,9 +16,8 @@ import java.util.concurrent.Future;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
-import static java.util.Collections.emptyList;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.processRoleListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
 
 /**
  * UserRestServiceImpl is a utility for CRUD operations on {@link User}.
@@ -50,12 +49,20 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<List<UserResource>> findUserByEmail(String email) {
+    public RestResult<Void> sendPasswordResetNotification(String email) {
+        if(StringUtils.isEmpty(email))
+            return restFailure(notFoundError(User.class, email));
+
+        return getWithRestResult(userRestURL + "/sendPasswordResetNotification/" + email, Void.class);
+    }
+
+    @Override
+    public RestResult<UserResource> findUserByEmail(String email) {
         if(StringUtils.isEmpty(email)) {
-            return restSuccess(emptyList());
+            return restFailure(notFoundError(User.class, email));
         }
 
-        return getWithRestResult(userRestURL + "/findByEmail/" + email + "/", userResourceListType());
+        return getWithRestResult(userRestURL + "/findByEmail/" + email + "/", UserResource.class);
     }
 
     @Override

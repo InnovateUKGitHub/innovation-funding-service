@@ -60,8 +60,8 @@ public class UserController {
     }
 
     @RequestMapping("/findByEmail/{email}/")
-    public RestResult<List<UserResource>> findByEmail(@PathVariable("email") final String email) {
-        return userService.findByEmail(email).toGetResponse();
+    public RestResult<UserResource> findByEmail(@PathVariable("email") final String email) {
+        return userService.findByEmail(email).andOnSuccessReturn(UserResource::new).toGetResponse();
     }
 
     @RequestMapping("/findAssignableUsers/{applicationId}")
@@ -72,6 +72,13 @@ public class UserController {
     @RequestMapping("/findRelatedUsers/{applicationId}")
     public RestResult<Set<User>> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
         return userService.findRelatedUsers(applicationId).toGetResponse();
+    }
+
+    @RequestMapping("/sendPasswordResetNotification/{emailaddress}")
+    public RestResult<Void> sendPasswordResetNotification(@PathVariable("emailaddress") final String emailAddress) {
+        return userService.findByEmail(emailAddress)
+                .andOnSuccessReturn(userService::sendPasswordResetNotification)
+                .toPutResponse();
     }
 
     @RequestMapping("/verifyEmail/{hash}")

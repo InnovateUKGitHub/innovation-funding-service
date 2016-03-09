@@ -17,6 +17,7 @@ import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.EntityLookupCallbacks;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
@@ -74,9 +74,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<User> getUserByEmailandPassword(final String email, final String password) {
-
         return find(repository.findByEmail(email), notFoundError(User.class, email)).
-                andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail).
                 andOnSuccess(user -> user.passwordEquals(password) ? serviceSuccess(user) : serviceFailure(notFoundError(User.class)));
     }
 
@@ -96,9 +94,12 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<List<UserResource>> findByEmail(final String email) {
-        List<User> users = repository.findByEmail(email);
-        return serviceSuccess(users.stream().map(UserResource::new).collect(Collectors.toList()));
+    public ServiceResult<User> findByEmail(final String email) {
+        Optional<User> user = repository.findByEmail(email);
+        if(user.isPresent()){
+            return serviceSuccess(user.get());
+        }
+        return serviceFailure(notFoundError(User.class, email));
     }
 
     @Override
@@ -137,7 +138,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         addRoleToUser(newUser, UserRoleType.APPLICANT.getName());
         newUser.setStatus(UserStatus.INACTIVE);
 
-        if (repository.findByEmail(userResource.getEmail()).isEmpty()) {
+        if (!repository.findByEmail(userResource.getEmail()).isPresent()) {
             UserResource createdUserResource = createUserWithToken(newUser, competitionId);
             return serviceSuccess(createdUserResource);
         } else {
@@ -146,12 +147,12 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     }
 
     public ServiceResult<UserResource> updateUser(UserResource userResource) {
-        List<User> existingUser = repository.findByEmail(userResource.getEmail());
-        if (existingUser == null || existingUser.size() <= 0) {
+        Optional<User> existingUser = repository.findByEmail(userResource.getEmail());
+        if (!existingUser.isPresent()) {
             LOG.error("User with email " + userResource.getEmail() + " doesn't exist!");
             return serviceFailure(notFoundError(User.class, userResource.getEmail()));
         }
-        User newUser = updateExistingUserFromResource(existingUser.get(0), userResource);
+        User newUser = updateExistingUserFromResource(existingUser.get(), userResource);
         UserResource updatedUser = new UserResource(saveUser(newUser));
         return serviceSuccess(updatedUser);
     }
@@ -206,6 +207,25 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
             u.setStatus(UserStatus.ACTIVE);
             userRepository.save(u);
         });
+    }
+
+    @Override
+    public ServiceResult<Void> sendPasswordResetNotification(User user) {
+        if(UserStatus.ACTIVE.equals(user.getStatus())){
+            LOG.warn("Creating token");
+
+            String hash = RandomStringUtils.random(36, true, true);
+            Token token = new Token(TokenType.RESET_PASSWORD, User.class.getName(), user.getId(), hash, factory.objectNode());
+            tokenRepository.save(token);
+
+
+            LOG.warn("Created token");
+
+
+            return serviceSuccess();
+        }else{
+            return serviceFailure(notFoundError(User.class, user.getEmail(), UserStatus.ACTIVE));
+        }
     }
 
     private User updateExistingUserFromResource(User existingUser, UserResource updatedUserResource) {

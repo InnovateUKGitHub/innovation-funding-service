@@ -17,7 +17,7 @@ public interface UserService {
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
     ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application);
     RestResult<Void> verifyEmail(String hash);
-    RestResult<List<UserResource>> findUserByEmail(String email);
+    RestResult<UserResource> findUserByEmail(String email);
     Set<User> getAssignableUsers(ApplicationResource application);
     Set<User> getApplicationUsers(ApplicationResource application);
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
