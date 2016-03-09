@@ -98,8 +98,13 @@ public class UserServiceImpl implements UserService {
         return userRestService.verifyEmail(hash);
     }
 
+//    @Override
+//    public RestResult<Void> verifyEmail(String hash) {
+//        return userRestService.s(hash);
+//    }
+
     @Override
-    public RestResult<List<UserResource>> findUserByEmail(String email) {
+    public RestResult<UserResource> findUserByEmail(String email) {
         return userRestService.findUserByEmail(email);
     }
 }
