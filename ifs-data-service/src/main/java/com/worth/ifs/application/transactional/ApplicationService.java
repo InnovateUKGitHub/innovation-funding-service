@@ -68,7 +68,7 @@ public interface ApplicationService {
                                                                final Long statusId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'UPDATE')")
-    ServiceResult<Notification> sendNotificationApplicationSubmitted(Long application);
+    ServiceResult<Notification> sendNotificationApplicationSubmitted(@P("applicationId") Long application);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
