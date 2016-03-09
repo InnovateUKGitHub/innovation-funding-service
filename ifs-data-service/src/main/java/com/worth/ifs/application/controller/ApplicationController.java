@@ -1,24 +1,20 @@
 package com.worth.ifs.application.controller;
 
-import java.util.List;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * ApplicationController exposes Application data and operations through a REST API.
@@ -63,7 +59,11 @@ public class ApplicationController {
     public RestResult<Void> updateApplicationStatus(@RequestParam("applicationId") final Long id,
                                                           @RequestParam("statusId") final Long statusId) {
 
-        return applicationService.updateApplicationStatus(id, statusId).toPutResponse();
+        ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationStatus(id, statusId);
+        if(updateStatusResult.isSuccess() && ApplicationStatusConstants.SUBMITTED.getId().equals(statusId)){
+            applicationService.saveApplicationSubmitDateTime(id, LocalDateTime.now());
+        }
+        return updateStatusResult.toPutResponse();
     }
 
 

@@ -272,6 +272,17 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         });
     }
 
+    @Override
+    public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long id, LocalDateTime date) {
+        return getApplication(id).andOnSuccessReturn(existingApplication -> {
+            existingApplication.setSubmittedDate(date);
+            Application savedApplication = applicationRepository.save(existingApplication);
+            return applicationMapper.mapToResource(savedApplication);
+        });
+    }
+
+
+
     // TODO DW - INFUND-1555 - try to remove ObjectNode usage
     @Override
     public ServiceResult<ObjectNode> getProgressPercentageNodeByApplicationId(final Long applicationId) {

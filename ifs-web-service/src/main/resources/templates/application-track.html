@@ -21,8 +21,8 @@
         <div class="progress-status" />
     		<div class="progress-info">
     			<h2 class="heading-medium">Submitted application</h2>
-    			<p>Your application '<strong th:text="${currentApplication.name}" />' was submitted into the competition '<strong th:text="${currentCompetition.name}"/>' on 12 March at 10.17am.</p>
-    			<p><a href="#">View application</a></p>
+    			<p>Your application '<strong th:text="${currentApplication.name}" />' was submitted into the competition '<strong th:text="${currentCompetition.name}"/>' on 12 March at 10.17am -- <strong th:text="${currentApplication.submittedDate}" />.</p>
+    			<p><a th:href="@{/application/{id}(id=${currentApplication.getId()})}">View application</a></p>
     		</div>
     	</li>
     	<li class="current">

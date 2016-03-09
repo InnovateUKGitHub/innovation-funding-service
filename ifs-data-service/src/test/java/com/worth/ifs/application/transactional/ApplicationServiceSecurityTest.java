@@ -19,6 +19,7 @@ import org.springframework.security.access.method.P;
 
 import java.io.File;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -311,6 +312,11 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         @Override
         public ServiceResult<ApplicationResource> saveApplicationDetails(Long id, ApplicationResource application) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(@P("applicationId") Long id, LocalDateTime date) {
             return null;
         }
 
