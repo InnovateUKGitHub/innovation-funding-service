@@ -88,14 +88,16 @@ function startServers {
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
+
     pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// --exclude Failing --exclude Pending --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// --exclude Failing --exclude Pending --exclude FailingForLocal --name IFS $testDirectory
 }
 
 
 function runHappyPathTests {
     echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:http:// --include HappyPath --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:http:// --include HappyPath --exclude Pending --exclude Failing --exclude FailingForLocal --name IFS $testDirectory
 }
 
 
@@ -153,9 +155,11 @@ unset quickTest
 unset testScrub
 unset happyPath
 unset remoteRun
+unset specialMode
+
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :r :d:" opt ; do
+while getopts ":q :t :h :r :d: :s:" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -172,6 +176,10 @@ while getopts ":q :t :h :r :d:" opt ; do
         d)
          testDirectory="$OPTARG"
         ;;
+	s)
+	 specialMode=1
+	 testDirectory="$OPTARG"
+	;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2
          exit 1
@@ -181,6 +189,9 @@ while getopts ":q :t :h :r :d:" opt ; do
             d)
              coloredEcho "Option -$OPTARG requires the location of the robottest files relative to $scriptDir." red >&2
             ;;
+	    s)
+	     coloredEcho "Option -$OPTARG requires the location of the robot test files relative to $scriptDir." red >&2
+	    ;;
             *)
              coloredEcho "Option -$OPTARG requires an argument." red >&2
             ;;
@@ -214,6 +225,10 @@ elif [ "$remoteRun" ]
 then 
     echo "Pointing the tests at the ifs dev server - note that some tests may fail if you haven't scrubbed the dev server's db" >&2
     runTestsRemotely
+elif [ "$specialMode" ]
+then
+    resetDB
+    runTests
 else
     echo "using quickTest:   FALSE" >&2
     stopServers

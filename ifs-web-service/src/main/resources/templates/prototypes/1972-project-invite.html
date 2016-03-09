@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<h1 style="text-align: center"><strong>EXAMPLE EMAIL CLIENT</strong></h1>
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div class="extra-margin" style="padding-top: 30px">
+		
+		<p>From: <a href="#">john.smith@worth.systems</a><br />
+			To: Me</p>
+
+		<h2 class="heading-medium"><strong>Invitation to join a project</strong></h2>
+
+		<p>You have been invited to join the collaborative project 'Developing machines' as the project manager.</p>
+		
+		<p>The lead applicant has invited you to join this project on behalf of the following organisation: Worth Systems</p>
+
+		<p>Lead organisation: <strong>Worth Systems</strong><br/>
+		Lead applicant: <strong>John Smith</strong></p>
+		 
+		<h3 class="heading-small">Partners</h3>
+
+		<ul class="list-bullet">
+			<li>Dysil</li>
+			<li>Working Solutions</li>
+			<li>BTC</li>
+		</ul>
+
+		<p>Sign in or create an account to accept this invitation</p>
+
+		<a href="/prototypes/1972-project-invite-signup" class="button">Accept invitation</a>
+		
+	</div>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    
+</main>
+
+
+
+</body>
+</html>
