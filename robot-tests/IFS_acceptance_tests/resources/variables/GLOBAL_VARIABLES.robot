@@ -5,7 +5,7 @@ ${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${RUNNING_ON_DEV}       ${EMPTY}
 ${LOGIN_URL}      ${SERVER}/
-${TEMPORARY_LOGOUT_URL}   ${LOGIN_URL}Logout/
+${TEMPORARY_LOGOUT_URL}   ${LOGIN_URL}idp/profile/SAML2/Redirect/SSO
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/1/summary
 ${QUESTION11_URL}    ${SERVER}/application-form/1/section/1/#question-11
@@ -19,7 +19,7 @@ ${ECONOMIC_BENEFIT_URL_APPLICATION_3}    ${SERVER}/application/3/form/question/4
 ${applicant_dashboard_url}    ${SERVER}/applicant/dashboard
 ${assessor_dashboard_url}    ${SERVER}/assessor/dashboard
 ${COMPETITION_DETAILS_URL}    ${SERVER}/competition/1/details/
-${LOG_OUT}        ${TEMPORARY_LOGOUT_URL}
+${LOG_OUT}        ${LOGIN_URL}/Logout
 ${APPLICATION_QUESTIONS_SECTION_URL}    ${SERVER}/application-form/1/section/2/
 ${SEARCH_COMPANYHOUSE_URL}    ${SERVER}/organisation/create/find-business
 ${APPLICATION_DETAILS_URL}    ${SERVER}/application/1/form/question/9

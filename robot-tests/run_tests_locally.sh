@@ -42,9 +42,6 @@ function resetDB {
     `mysql -u${mysqlUser} -p${mysqlPassword} -e"CREATE DATABASE ifs CHARACTER SET utf8"`
     cd ../ifs-data-service
     ./gradlew flywayClean flywayMigrate
-    
-    cd ${shibbolethCommonScriptsPath}
-    ./reset-users-from-database.sh
 }
 
 function buildAndDeploy {
@@ -66,10 +63,17 @@ function buildAndDeploy {
 
 }
 
+function resetLDAP {
+    cd ${shibbolethCommonScriptsPath}
+    ./reset-users-from-database.sh
+}
+
 function startServers {
     echo "********START SHIBBOLETH***********"
     cd ${shibbolethOsScriptsPath}
     ./startup.sh
+
+    resetLDAP
 
     echo "********START THE DATA SERVER********"
     cd ${dataTomcatBinPath}
@@ -212,6 +216,7 @@ if [ "$quickTest" ]
 then
     echo "using quickTest:   TRUE" >&2
     resetDB
+    resetLDAP
     runTests
 elif [ "$testScrub" ]
 then

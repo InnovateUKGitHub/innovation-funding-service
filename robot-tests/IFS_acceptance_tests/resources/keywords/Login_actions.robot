@@ -54,8 +54,7 @@ User closes the browser
 Logout as user
     Click Element    link=Logout
     # TODO DW - INFUND-936 - remove temp login step
-    Location Should Be    ${TEMPORARY_LOGOUT_URL}
-    Go to    ${LOGIN_URL}
+    Location Should contain    ${TEMPORARY_LOGOUT_URL}
 
     
 

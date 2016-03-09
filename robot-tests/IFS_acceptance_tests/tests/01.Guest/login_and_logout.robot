@@ -23,14 +23,14 @@ Log-out
 Invalid Login
     [Tags]    Guest
     Given the user is not logged-in
-    When the guest user enters the log in credentials    steve.smith@empire.com    testtest
+    When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd2
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
 
 Valid login as Applicant
     [Tags]    Guest    HappyPath
     Given the user is not logged-in
-    When the guest user enters the log in credentials    steve.smith@empire.com    test
+    When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the Applicant is logged-in
     And the user should be redirected to the correct page    ${applicant_dashboard_url}

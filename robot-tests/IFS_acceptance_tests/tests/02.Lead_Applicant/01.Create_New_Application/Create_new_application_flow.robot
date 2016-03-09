@@ -61,7 +61,7 @@ Verify the name of the new application
     ...    INFUND-1163
     [Tags]    Applicant    New application    HappyPath     Failing
     # failing because of user not created as part of another test which is failing due to auto login not being functional
-    When the guest user enters the log in credentials    ewan+2@hiveit.co.uk    testtest
+    When the guest user enters the log in credentials    ewan+2@hiveit.co.uk    Passw0rd2
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     and the user edits the competition title
     Then user should see the text in the page    test title - Application number 0000
@@ -98,8 +98,8 @@ the user enters the details and clicks the create account
     Input Text    id=lastName    Smith
     Input Text    id=phoneNumber    23232323
     Input Text    id=email    ewan+2@hiveit.co.uk
-    Input Password    id=password    testtest
-    Input Password    id=retypedPassword    testtest
+    Input Password    id=password    Passw0rd2
+    Input Password    id=retypedPassword    Passw0rd2
     Select Checkbox    termsAndConditions
     Submit Form
 
@@ -122,8 +122,8 @@ the user enters the details for the non CH
     Input Text    id=lastName    tester
     Input Text    id=phoneNumber    23232323
     Input Text    id=email    ewan+3@hiveit.co.uk
-    Input Password    id=password    testtest
-    Input Password    id=retypedPassword    testtest
+    Input Password    id=password    Passw0rd2
+    Input Password    id=retypedPassword    Passw0rd2
     Select Checkbox    termsAndConditions
     Submit Form
 
@@ -138,4 +138,4 @@ the progress indicator should show 0
     Element Should Contain    css=.progress-indicator    0
 
 the user logs back in
-    guest user log-in   ewan+2@hiveit.co.uk     testtest
+    guest user log-in   ewan+2@hiveit.co.uk     Passw0rd2

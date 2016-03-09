@@ -114,7 +114,7 @@ the guest user inserts correct username
     Input Text    id=username    applicant@applicant.org
 
 the guest user inserts wrong password
-    Input Password    id=password    testtest
+    Input Password    id=password    Passw0rd2
 
 the guest user should get an error message
     Element Should Be Visible    id=error-summary-heading-example-1
