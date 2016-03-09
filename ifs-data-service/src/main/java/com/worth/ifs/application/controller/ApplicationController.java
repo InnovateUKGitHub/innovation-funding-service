@@ -58,11 +58,13 @@ public class ApplicationController {
     @RequestMapping(value = "/updateApplicationStatus", method = RequestMethod.PUT)
     public RestResult<Void> updateApplicationStatus(@RequestParam("applicationId") final Long id,
                                                           @RequestParam("statusId") final Long statusId) {
-
         ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationStatus(id, statusId);
+
         if(updateStatusResult.isSuccess() && ApplicationStatusConstants.SUBMITTED.getId().equals(statusId)){
             applicationService.saveApplicationSubmitDateTime(id, LocalDateTime.now());
+            applicationService.sendNotificationApplicationSubmitted(id);
         }
+
         return updateStatusResult.toPutResponse();
     }
 

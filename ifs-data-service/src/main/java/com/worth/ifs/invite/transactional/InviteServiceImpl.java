@@ -154,7 +154,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
         Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_COLLABORATOR, notificationArguments);
         return notificationService.sendNotification(notification, EMAIL);
-
     }
 
     @Override
