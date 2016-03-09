@@ -33,10 +33,6 @@ function stopServers {
     rm -rf ROOT ROOT.war
     cd ${webWebappsPath}
     rm -rf ROOT ROOT.war
-
-    echo "********STOPPING SHIBBOLETH*********"
-    cd ${shibbolethScriptsPath}
-    ./stop-shibboleth.sh
 }
 
 function resetDB {
@@ -47,8 +43,8 @@ function resetDB {
     cd ../ifs-data-service
     ./gradlew flywayClean flywayMigrate
     
-    cd ${shibbolethScriptsPath}
-    ./reset-users.sh
+    cd ${shibbolethCommonScriptsPath}
+    ./reset-users-from-database.sh
 }
 
 function buildAndDeploy {
@@ -72,8 +68,8 @@ function buildAndDeploy {
 
 function startServers {
     echo "********START SHIBBOLETH***********"
-    cd ${shibbolethScriptsPath}
-    ./start-shibboleth-with-customisations.sh
+    cd ${shibbolethOsScriptsPath}
+    ./startup.sh
 
     echo "********START THE DATA SERVER********"
     cd ${dataTomcatBinPath}
@@ -121,12 +117,14 @@ cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
 echo "scriptDir:        ${scriptDir}"
-cd ../setup-files/scripts/shibboleth
-shibbolethScriptsPath=$(pwd)
-echo "shibbolethScriptsPath:        ${shibbolethScriptsPath}"
-cd -
+cd ../setup-files/scripts/shibboleth/common
+shibbolethCommonScriptsPath=$(pwd)
+echo "shibbolethCommonScriptsPath:        ${shibbolethCommonScriptsPath}"
+cd ../linux
+shibbolethOsScriptsPath=$(pwd)
+echo "shibbolethOsScriptsPath:        ${shibbolethOsScriptsPath}"
+cd ../../../../ifs-data-service
 dateFormat=`date +%Y-%m-%d`
-cd ../ifs-data-service
 dataServiceCodeDir=`pwd`
 echo "dataServiceCodeDir:${dataServiceCodeDir}"
 dataWebappsPath=`sed '/^\#/d' dev-build.gradle | grep 'ext.tomcatWebAppsDir'  | cut -d "=" -f2 | sed 's/"//g'`
