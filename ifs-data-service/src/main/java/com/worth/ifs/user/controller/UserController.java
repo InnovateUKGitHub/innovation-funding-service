@@ -74,7 +74,7 @@ public class UserController {
         return userService.findRelatedUsers(applicationId).toGetResponse();
     }
 
-    @RequestMapping("/sendPasswordResetNotification/{emailaddress}")
+    @RequestMapping("/sendPasswordResetNotification/{emailaddress}/")
     public RestResult<Void> sendPasswordResetNotification(@PathVariable("emailaddress") final String emailAddress) {
         return userService.findByEmail(emailAddress)
                 .andOnSuccessReturn(userService::sendPasswordResetNotification)
