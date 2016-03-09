@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.util.Optional.of;
+
 /**
  * This RestController exposes CRUD operations to both the
  * {@link com.worth.ifs.user.service.UserRestServiceImpl} and other REST-API users
@@ -105,6 +107,11 @@ public class UserController {
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
         return registrationService.createApplicantUser(organisationId, userResource).toPostCreateResponse();
+    }
+
+    @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
+    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
+        return registrationService.createApplicantUser(organisationId, of(competitionId), userResource).toPostCreateResponse();
     }
 
     @RequestMapping("/updateDetails")
