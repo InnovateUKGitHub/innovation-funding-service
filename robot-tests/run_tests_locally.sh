@@ -88,11 +88,9 @@ function startServers {
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-<<<<<<< HEAD
+
     pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// --exclude Failing --exclude Pending --name IFS $testDirectory
-=======
     pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// --exclude Failing --exclude Pending --exclude FailingForLocal --name IFS $testDirectory
->>>>>>> 49e1200d8ca2514b37c8f358c0692626d61cd822
 }
 
 
@@ -191,6 +189,9 @@ while getopts ":q :t :h :r :d: :s:" opt ; do
             d)
              coloredEcho "Option -$OPTARG requires the location of the robottest files relative to $scriptDir." red >&2
             ;;
+	    s)
+	     coloredEcho "Option -$OPTARG requires the location of the robot test files relative to $scriptDir." red >&2
+	    ;;
             *)
              coloredEcho "Option -$OPTARG requires an argument." red >&2
             ;;
