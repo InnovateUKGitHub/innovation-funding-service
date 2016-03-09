@@ -32,6 +32,8 @@ Valid invitation submit
     # note - this is failing due to email failing on the dev server because of a firewall issue - this will be fixed soon!
     Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     When the applicant enters valid inputs
+    And the user verifies their email   ${verify_link_3}
+    And the user logs back in
     Then The user should see the text in the page    Application overview
     And The user should see the notification    Invites send
 
@@ -89,14 +91,14 @@ Pending collaborators should not be available in the assign list
 the applicant enters valid inputs
     click element    jquery=button:contains('Add person')
     Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    tester
-    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    test@example.com
+    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    ewan+1@hiveit.co.uk
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[2].organisationName    Fannie May
     Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
-    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(2) input    collaborator2@fanniemay.com
+    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+10@hiveit.co.uk
     Click Element    jquery=li:nth-child(3) button:contains('Add person')
     Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
-    Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(2) input    collaborator3@fanniemay.com
+    Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
     focus    jquery=li:nth-child(3) button:contains('Add person')
     Sleep    1s
     Click Element    jquery=button:contains("Begin application")
@@ -112,7 +114,7 @@ Lead Applicant should have the correct status
 the user adds new collaborator
     Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(1)
     Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(1) input    Roger Axe
-    Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(2) input    roger.axe@gmail.com
+    Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(2) input    ewan+13@hiveit.co.uk
     focus    jquery=li:nth-child(1) button:contains('Add person')
     sleep    1s
 
@@ -120,7 +122,7 @@ the applicant can enter Organisation name, Name and E-mail
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[3].organisationName    Z Ltd
     Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(1) input    Elvis Furcic
-    Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(2) input    elvis.furcic@gmail.com
+    Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+14@hiveit.co.uk
     focus    jquery=li:nth-child(2) button:contains('Add person')
     Sleep    2s
 
@@ -148,3 +150,7 @@ the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    That's you!
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-child(3)    (pending)
     Element Should Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
+
+the user logs back in
+    and guest user log-in       ewan+1@hiveit.co.uk     testtest
+

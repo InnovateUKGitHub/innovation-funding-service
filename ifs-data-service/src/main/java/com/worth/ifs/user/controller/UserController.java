@@ -31,6 +31,9 @@ public class UserController {
     private RegistrationService registrationService;
 
     @Autowired
+    private TokenService tokenService;
+
+    @Autowired
     private UserProfileService userProfileService;
 
     @RequestMapping("/uid/{uid}")
@@ -66,6 +69,28 @@ public class UserController {
     @RequestMapping("/findRelatedUsers/{applicationId}")
     public RestResult<Set<User>> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
         return userService.findRelatedUsers(applicationId).toGetResponse();
+    }
+
+    @RequestMapping("/verifyEmail/{hash}")
+    public RestResult<Void> verifyEmail(@PathVariable("hash") final String hash) {
+        Optional<Token> optionalToken = tokenService.getTokenByHash(hash);
+
+        if(optionalToken.isPresent()){
+            Token token = optionalToken.get();
+            if(TokenType.VERIFY_EMAIL_ADDRESS.equals(token.getType()) &&
+                    User.class.getName().equals(token.getClassName())
+            ){
+                userService.activateUser(token.getClassPk()).andOnSuccessReturnVoid(v -> {
+                    tokenService.handleExtraAttributes(token);
+                    tokenService.removeToken(token);
+                });
+            }
+        }else{
+            return RestResult.restFailure(CommonErrors.notFoundError(Token.class, hash));
+        }
+
+        LOG.warn(String.format("UserController verifyHash: %s", hash));
+        return RestResult.restSuccess();
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")

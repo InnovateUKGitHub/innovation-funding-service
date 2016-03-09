@@ -14,10 +14,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -127,7 +128,7 @@ public class FormInputResponseFileUploadController {
                     success -> {
                         FormInputResponseFileEntryResource fileEntry = success.getKey();
                         InputStream inputStream = success.getValue().get();
-                        InputStreamResource inputStreamResource = new InputStreamResource(inputStream);
+                        ByteArrayResource inputStreamResource = new ByteArrayResource(StreamUtils.copyToByteArray(inputStream));
                         HttpHeaders httpHeaders = new HttpHeaders();
                         httpHeaders.setContentLength(fileEntry.getFileEntryResource().getFilesizeBytes());
                         httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getFileEntryResource().getMediaType()));

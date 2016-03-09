@@ -5,6 +5,8 @@ import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -25,7 +27,7 @@ import static java.util.Collections.emptyList;
  */
 @Service
 public class UserRestServiceImpl extends BaseRestService implements UserRestService {
-
+    private static final Log LOG = LogFactory.getLog(UserRestServiceImpl.class);
     private String userRestURL;
     private String processRoleRestURL;
 
@@ -101,7 +103,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
+    public RestResult<Void> verifyEmail(String hash){
+        return getWithRestResult(userRestURL + "/verifyEmail/"+hash, Void.class);
+    }
+
+    @Override
+    public RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId) {
         UserResource user = new UserResource();
 
         user.setFirstName(firstName);
@@ -111,9 +118,18 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setTitle(title);
         user.setPhoneNumber(phoneNumber);
 
-        String url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId;
+        String url;
+        if(competitionId != null){
+            url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId +"/"+competitionId;
+        }else{
+            url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId;
+        }
 
         return postWithRestResult(url, user, UserResource.class);
+    }
+    @Override
+    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
+        return this.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, null);
     }
 
     @Override

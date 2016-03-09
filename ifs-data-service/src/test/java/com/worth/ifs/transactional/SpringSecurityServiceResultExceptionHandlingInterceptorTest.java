@@ -22,7 +22,6 @@ public class SpringSecurityServiceResultExceptionHandlingInterceptorTest extends
     @Test
     @Rollback
     public void testTryingToAccessSecuredMethodHandlesAccessDeniedExceptionSuccessfully() {
-
         SecurityContextHolder.clearContext();
 
         ServiceResult<String> result = testService.accessDeniedMethod();
