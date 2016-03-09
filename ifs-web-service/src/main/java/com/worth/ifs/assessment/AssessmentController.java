@@ -13,7 +13,8 @@ import javax.validation.Valid;
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.finance.view.FinanceModelManager;
+import com.worth.ifs.application.finance.view.DefaultFinanceModelManager;
+import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -76,7 +77,7 @@ public class AssessmentController extends AbstractApplicationController {
     AssessmentRestService assessmentRestService;
 
     @Autowired
-    FinanceModelManager financeModelManager;
+    FinanceOverviewModelManager financeOverviewModelManager;
 
     private String competitionAssessmentsURL(Long competitionID) {
         return "/assessor/competitions/" + competitionID + "/applications";
@@ -211,7 +212,7 @@ public class AssessmentController extends AbstractApplicationController {
         Map<Long, Response> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
         model.addAttribute("processRole", assessorProcessRole);
         model.addAttribute("questionResponses", questionResponsesMap);
-        financeModelManager.addFinanceDetails(model, application);
+        financeOverviewModelManager.addFinanceDetails(model, application.getId());
         return assessmentDetails;
     }
 

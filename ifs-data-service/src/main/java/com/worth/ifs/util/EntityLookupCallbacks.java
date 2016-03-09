@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -31,8 +32,22 @@ public class EntityLookupCallbacks {
         if (result instanceof Collection && ((Collection) result).isEmpty()) {
             return serviceFailure(failureResponse);
         }
+        if (result instanceof Optional) {
+            return ((Optional<SuccessType>) result).map(ServiceResult::serviceSuccess).orElse(serviceFailure(failureResponse));
+        }
 
         return ofNullable(result).map(ServiceResult::serviceSuccess).orElse(serviceFailure(failureResponse));
+    }
+
+    public static <T> ServiceResult<T> find(
+            Optional<T> result,
+            Error failureResponse) {
+
+        if(result.isPresent()){
+            return serviceSuccess(result.get());
+        }else{
+            return serviceFailure(failureResponse);
+        }
     }
 
     /**
@@ -140,6 +155,12 @@ public class EntityLookupCallbacks {
             return serviceFailure(internalServerErrorError("Found multiple entries in list but expected only 1 - " + list));
         }
         return serviceSuccess(list.iterator().next());
+    }
+    public static <T> ServiceResult<T> getOptionalElementOrFail(Optional<T> item) {
+        if (!item.isPresent()) {
+            return serviceFailure(internalServerErrorError("Optional element not present - " + item));
+        }
+        return serviceSuccess(item.get());
     }
 
     /**

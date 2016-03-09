@@ -1,8 +1,6 @@
 package com.worth.ifs.application.finance.view.item;
 
-import com.worth.ifs.application.finance.model.CostFormField;
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostValue;
+import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.SubContractingCost;
 
@@ -15,16 +13,16 @@ import java.util.List;
 public class SubContractingCostHandler extends CostHandler {
 
     @Override
-    public CostItem toCostItem(Long id, List<CostFormField> costFormFields) {
+    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
         BigDecimal cost = null;
         String country = null;
         String name = null;
         String role = null;
 
-        for(CostFormField costFormField : costFormFields) {
-            String fieldValue = costFormField.getValue();
+        for(FinanceFormField financeFormField : financeFormFields) {
+            String fieldValue = financeFormField.getValue();
             if (fieldValue != null) {
-                switch (costFormField.getCostName()) {
+                switch (financeFormField.getCostName()) {
                     case "country":
                         country = fieldValue;
                         break;
@@ -38,7 +36,7 @@ public class SubContractingCostHandler extends CostHandler {
                         role = fieldValue;
                         break;
                     default:
-                        log.info("Unused costField: " + costFormField.getCostName());
+                        log.info("Unused costField: " + financeFormField.getCostName());
                         break;
                 }
             }

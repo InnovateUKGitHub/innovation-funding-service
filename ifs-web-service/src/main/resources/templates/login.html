@@ -51,9 +51,13 @@
                           </span>
                         </label>
                         <input class="form-control form-control-3-4" th:classappend="${#fields.hasErrors('password') ? 'field-error': ''}" type="password" th:field="*{password}" required="required" data-required-errormessage="Please enter your password"  id="id_password"/>
-
                     </div>
                     <!-- .form-group -->
+                    <div class="form-group">
+                        <a th:href="@{'/login/recover-password'}">Forgot your password?</a>
+                    </div>
+
+
                 </fieldset>
                 <input class="button" value="Sign in" type="submit"/>
 

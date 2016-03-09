@@ -9,13 +9,14 @@ import com.worth.ifs.finance.resource.cost.Materials;
  * or for sending it over.
  */
 public class MaterialsHandler extends CostHandler {
+    public static final String COST_KEY = "materials";
 
     @Override
     public Cost toCost(CostItem costItem) {
         Cost cost = null;
         if (costItem instanceof Materials) {
             Materials materials = (Materials) costItem;
-            cost = new Cost(costItem.getId(), materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
+            cost = new Cost(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
         }
         return cost;
     }

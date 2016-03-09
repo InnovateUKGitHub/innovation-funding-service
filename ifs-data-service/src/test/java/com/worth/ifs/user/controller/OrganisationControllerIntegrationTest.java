@@ -2,7 +2,7 @@ package com.worth.ifs.user.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.user.domain.AddressType;
+import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationResource;

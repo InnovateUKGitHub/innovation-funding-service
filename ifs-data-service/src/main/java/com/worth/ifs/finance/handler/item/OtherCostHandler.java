@@ -9,12 +9,14 @@ import com.worth.ifs.finance.resource.cost.OtherCost;
  * or for sending it over.
  */
 public class OtherCostHandler extends CostHandler {
+    public static final String COST_KEY = "other-cost";
+
     @Override
     public Cost toCost(CostItem costItem) {
         Cost cost = null;
         if (costItem instanceof OtherCost) {
             OtherCost otherCost = (OtherCost) costItem;
-            cost = new Cost(otherCost.getId(), "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
+            cost = new Cost(otherCost.getId(), COST_KEY , "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
         }
         return cost;
     }
