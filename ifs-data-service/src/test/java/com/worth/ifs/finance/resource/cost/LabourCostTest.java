@@ -13,6 +13,7 @@ public class LabourCostTest {
 
     LabourCost labourCost;
     private Long id;
+    private String key;
     private String role;
     private BigDecimal grossAnnualSalary;
     private Integer labourDays;
@@ -21,12 +22,13 @@ public class LabourCostTest {
     @Before
     public void setUp() throws Exception {
         id = 0L;
+        key = "Labour";
         role = "Manager";
         grossAnnualSalary = new BigDecimal(50000);
         labourDays = new Integer(168);
         description = "";
 
-        labourCost = new LabourCost(id, role, grossAnnualSalary, labourDays,  description);
+        labourCost = new LabourCost(id, key, role, grossAnnualSalary, labourDays,  description);
     }
 
     @Test

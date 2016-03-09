@@ -1,7 +1,6 @@
 package com.worth.ifs.application.finance.view.item;
 
-import com.worth.ifs.application.finance.model.CostFormField;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import org.apache.commons.logging.Log;
@@ -11,8 +10,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * CostHandlers are used to convert form fields to costItems
@@ -22,7 +19,7 @@ public abstract class CostHandler {
 
     Map<String, CostField> costFields = new HashMap<>();
 
-    public abstract CostItem toCostItem(Long id, List<CostFormField> costFormFields);
+    public abstract CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields);
 
     public CostHandler() {
     }

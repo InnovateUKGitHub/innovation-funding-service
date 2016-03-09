@@ -13,10 +13,12 @@ public class Overhead implements CostItem {
     private OverheadRateType rateType;
     private Integer rate;
     private CostType costType;
+    private String name;
 
     public Overhead() {
         this.costType = CostType.OVERHEADS;
         this.rateType = OverheadRateType.NONE;
+        this.name = this.costType.getType();
     }
 
     public Overhead(Long id, OverheadRateType rateType, Integer rate) {
@@ -52,6 +54,11 @@ public class Overhead implements CostItem {
 
     public void setRateType(OverheadRateType rateType) {
         this.rateType = rateType;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }
 

@@ -7,6 +7,8 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.domain.CostValue;
+import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
+import com.worth.ifs.finance.handler.OrganisationFinanceDefaultHandler;
 import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.category.CostCategory;
@@ -32,7 +34,7 @@ import static org.mockito.Mockito.when;
 
 public class OrganisationFinanceHandlerTest {
     @InjectMocks
-    OrganisationFinanceHandler handler = new OrganisationFinanceHandlerImpl();
+    OrganisationFinanceHandler handler = new OrganisationFinanceDefaultHandler();
     private ApplicationFinance applicationFinance;
 
     @Mock

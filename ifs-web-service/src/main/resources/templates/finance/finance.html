@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <!-- ===========================Form: finance =========================== -->
+    <div th:fragment="finance">
+        <div th:class="form-group" th:classappend="${organisationFinanceSize?.getMaxGrantClaimPercentage() != null and organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}? 'error'">
+            <label class="form-label form-label-bold" for="cost-financegrantclaim">
+                <div th:text="${question.name}" />
+                <span class="form-hint" th:text="${question.description}" />
+                <span th:if="${organisationFinanceSize?.getMaxGrantClaimPercentage() != null and organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}" class="error-message">This field should be <span th:remove="tag" th:text="${organisationFinanceSize?.getMaxGrantClaimPercentage()}" />% or lower</span>
+            </label>
+            <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"/>
+            <input type="number"
+                   min="0"
+                   th:max="${organisationFinanceSize?.getMaxGrantClaimPercentage()}"
+                   th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                   th:class="${organisationFinanceSize?.getMaxGrantClaimPercentage() != null and organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
+                   id="cost-financegrantclaim"
+                   th:name="${'finance-grantclaim-' + question.id + '-' + organisationgrantClaimPercentageId}"
+                   th:value="${organisationGrantClaimPercentage}"
+                    />
+            <span>%</span>
+        </div>
+    </div>
+
+    <!-- ===========================Form: organisation_size =========================== -->
+    <div th:fragment="organisation_size" th:if="${organisationType?.name == 'Business'}" th:remove="tag">
+        <div class="form-group">
+            <fieldset>
+                <legend>
+                    <span class="form-label form-label-bold" th:text="${question.name}"/>
+                    <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+                    <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+                </legend>
+                <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+
+                <label class="block-label" th:each="size : ${T(com.worth.ifs.user.domain.OrganisationSize).values()}">
+                    <input type="radio"  th:disabled="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" th:id="'financePosition-organisationSize-'+${size}" th:name="'financePosition-organisationSize'" th:value="${size}" th:checked="${size == organisationFinanceSize}"/>
+                    <span th:text="${size.name}" />
+                </label>
+            </fieldset>
+        </div>
+
+    </div>
+
+    <!-- ===========================Form: your_finance =========================== -->
+    <div th:fragment="your_finance" th:remove="tag">
+        <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}" />
+        <p th:text="${question.description}" />
+        <section class="collapsible" th:each="subSection : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
+            <h2>
+                <span th:text="${subSection.getName()}" th:remove="tag" />
+                <span th:attr="data-mirror='#section-total-'+${subSection.id}" />
+            </h2>
+            <div th:remove="tag" th:each="question : ${subsectionQuestions.get(subSection.id)}">
+                <div th:remove="tag" th:each="formInput, status : ${question.getFormInputs()}">
+                    <div th:replace="finance/finance :: ${formInput.getFormInputType().getTitle()} (complete=${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
+                </div>
+            </div>
+        </section>
+        <div class="grid-row total-cost">
+            <div class="column-half">
+                <label for="total-cost" class="heading-medium">'<span th:text="${userOrganisation.name}" th:remove="tag"></span>' Total project costs</label>
+            </div>
+            <div class="column-half alignright">
+                <input type="text"
+                       id="total-cost"
+                       readonly="readonly"
+                       class="heading-medium width-full alignright"
+                       data-calculation-fields="[id*=section-total]"
+                       data-calculation-operations="+"
+                       th:value="'£ ' + ${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================Form: labour =========================== -->
+    <div th:fragment="labour (complete)" th:remove="tag">
+        <div th:remove="tag" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))},type=${formInputType.title}">
+            <div class="form-group" th:attr="data-repeatable-container=${question.getId()}" th:if="${costCategory!=null}">
+                <div class="form-group inline">
+                    <label th:for="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays'}">
+                        <span>Working Days per Year</span>
+                    </label>
+                    <input type="number"
+                           class="form-control"
+                           th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays'}"
+                           th:name="${type + '-workingDays-' + question.id + '-' + costCategory.workingDaysPerYearCostItem?.id}"
+                           th:value="${costCategory.workingDaysPerYear}"
+                           th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"  />
+                </div>
+
+                <div class="form-group">
+                    <table class="labour-costs-table">
+                        <thead>
+                        <tr>
+                            <th id="labour-role" scope="col" class="width-medium">Role within project</th>
+                            <th id="labour-salary" scope="col" class="numeric">Gross Annual Salary</th>
+                            <th id="labour-rate" scope="col" class="numeric">Rate (£/day)</th>
+                            <th id="labour-days" scope="col" class="numeric width-medium">Days to be spent by all staff at this grade</th>
+                            <th scope="col"  th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                                <span class="visuallyhidden">Actions</span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <div th:each="cost, iteration : ${costCategory.costs}" th:remove="tag">
+                            <div th:include="finance/finance :: labour_row" th:with="iterationIndex=${iteration.count}" th:remove="tag"/>
+                        </div>
+                        </tbody>
+                    </table>
+                    <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                    <div th:include="question-type/types :: add_row(text='Add another role', question=${question},rowcontainer='.labour-costs-table tbody')" th:remove="tag"/>
+                    </p>
+                </div>
+                <div class="form-group alignright inline">
+                    <label th:for="${'section-total-'+subSection.id}">Total labour costs</label>
+                    <input class="form-control form-control-1-4"
+                           data-calculation-fields="[id*=labourTotalCost]"
+                           data-calculation-operations="+"
+                           th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                           readonly="readonly"
+                           type="text"
+                           th:id="${'section-total-'+subSection.id}"
+                           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
+                </div>
+                <div class="alignright-button">
+                    <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div th:fragment="labour_row" th:remove="tag">
+
+        <tr th:attr="data-repeatable-row=${cost.id}">
+            <td>
+                <input type="text"
+                       class="form-control width-full"
+                       aria-labelledby="labour-role"
+                       th:name="${type +'-role-' + question.id + '-' + cost.id}"
+                       th:id="${'cost-labour-'+cost.id+'-labourRole'}"
+                       th:value="${cost.getRole()}"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                        />
+            </td>
+            <td class="numeric">
+                <input type="number"
+                       aria-labelledby="labour-salary"
+                       class="form-control width-full"
+                       th:name="${type +'-grossAnnualSalary-' + question.id + '-' + cost.id}"
+                       th:id="${'cost-labour-'+cost.id+'-labourGrossSalary'}"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                       th:value="${#numbers.formatDecimal(cost.grossAnnualSalary,0,0)}"
+                        />
+            </td>
+            <td class="numeric">
+                <input type="text"
+                       class="form-control width-full"
+                       aria-labelledby="labour-rate"
+                       th:attr="data-calculation-fields=${'#cost-labour-'+cost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays'},data-calculation-rawValue=${costCategory?.workingDaysPerYear != null ? cost.getRate(costCategory.workingDaysPerYear) : 0}"
+                       data-calculation-operations="/"
+                       readonly="readonly"
+                       th:id="${'cost-labour-'+cost.id+'-labourRate'}"
+                       th:name="${type + '-labourRate-' + question.id + '-' + cost.id}"
+                       th:value="${costCategory?.workingDaysPerYear != null ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}" />
+            </td>
+            <td class="numeric">
+                <input type="number"
+                       aria-labelledby="labour-days"
+                       class="form-control width-full"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                       th:id="${'cost-labour-'+cost.id+'-labourDays'}"
+                       th:name="${type + '-labourDays-' + question.id + '-' + cost.id}"
+                       th:value="${cost.labourDays}"
+                        />
+            </td>
+            <td rowspan="2" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <button type="submit"
+                        name="remove_cost"
+                        class="buttonlink js-remove-row"
+                        th:value="${cost.id}"
+                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+                </button>
+            </td>
+        </tr>
+        <tr th:attr="data-repeatable-row=${cost.id}">
+            <td colspan="4" class="numeric">
+                <label th:for="${'cost-labour-'+cost.id+'-labourTotalCost'}">Total costs</label>
+                <input type="text"
+                       class="form-control width-medium"
+                       data-calculation-operations="/,*"
+                       th:name="${type +'-total-' + question.id + '-' + cost.id}"
+                       readonly="readonly"
+                       th:id="${'cost-labour-'+cost.id+'-labourTotalCost'}"
+                       th:attr="data-calculation-fields=${'#cost-labour-'+cost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays,#cost-labour-'+cost.id+'-labourDays'},data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}"
+                       th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}" />
+            </td>
+
+        </tr>
+    </div>
+
+    <!-- ===========================Form: overheads =========================== -->
+    <div th:fragment="overheads" th:remove="tag">
+        <p th:text="${question.getDescription()}" />
+        <div th:remove="tag" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))},type=${formInputType.title}">
+            <div th:remove="tag" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(com.worth.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" >
+                <fieldset>
+                    <legend class="visuallyhidden">Overhead costs</legend>
+                    <div class="form-group">
+
+                        <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}" data-target="overhead-none">
+                            <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}"
+                                   type="radio"
+                                   th:name="${'overheads-rateType-' + question.id + '-'+ overheadCosts?.id}"
+                                   th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE}"
+                                   th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).NONE)}"
+                                   th:disabled="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"/>
+                            No administration support funding
+                        </label>
+                        <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_1'}"  data-target="overhead-default-percentage">
+                            <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_1'}"
+                                   type="radio"
+                                   th:name="${'overheads-rateType-' + question.id + '-'+ overheadCosts?.id}"
+                                   th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE}"
+                                   th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)}"
+                                   th:disabled="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" />
+                            20% of labour costs
+                        </label>
+                        <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"  data-target="overhead-custom-percentage">
+                            <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_2'}"
+                                   type="radio"
+                                   th:name="${'overheads-rateType-' + question.id + '-'+ overheadCosts?.id}"
+                                   th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE}"
+                                   th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)}"
+                                   th:disabled="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"/>
+                            Custom administration support cost
+                        </label>
+                        <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_3'}" data-target="overhead-special-rate">
+                            <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_3'}"
+                                   type="radio"
+                                   th:name="${'overheads-rateType-' + question.id + '-'+overheadCosts?.id}"
+                                   th:value="${T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE}"
+                                   th:checked="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)}"
+                                   th:disabled="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"/>
+                            Special rate agreed with Innovate UK
+                        </label>
+                    </div>
+                </fieldset>
+
+
+                <div id="overhead-none">
+                    <h3 class="heading-medium">No Administration support cost funding</h3>
+                    <p>You are not currently applying for administration support cost funding</p>
+                    <input type="hidden" value="£ 0" data-calculation-rawvalue="0" id="section-total-10-labour-cost-none"/>
+
+                </div>
+                <div id="overhead-default-percentage">
+                    <h3 class="heading-medium">20% of labour costs</h3>
+                    <div class="form-group alignright inline">
+                        <label th:for="${'section-total-'+subSection.id+'-default'}">
+                            Total administration support cost
+                        </label>
+                        <input type="text"
+                               th:name="${'overheads-totalCosts-' + question.id + '-'+overheadCosts?.id}"
+                               class="form-control form-control-1-4 alignright"
+                               readonly="readonly"
+                               th:id="${'section-total-'+subSection.id+'-default'}"
+                               th:attr="data-calculation-fields='#section-total-9,0.2',data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                               data-calculation-operations="*"
+                               th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"
+                                />
+                    </div>
+                </div>
+
+                <div id="overhead-custom-percentage">
+                    <h3 class="heading-medium">Custom administration support costs</h3>
+                    <p>For this Beta service only -  For details on how to calculate your custom administration support costs, please contact Innovate UK via email at <a href="mailto:support@innovateuk.gov.uk"><strong>support@innovateuk.gov.uk</strong></a> or phone <strong>0300 321 4357</strong>.
+                        We will assist you in calculating a unique rate based upon your organisation details.
+                    </p>
+                    <div class="form-group alignright inline">
+                        <label th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'}">Rate calculated (%)</label>
+                        <input type="text"
+                               th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                               th:name="${'overheads-customRate-' + question.id + '-'+overheadCosts?.id}"
+                               th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'}"
+                               data-calculation-input="overhead-rate"
+                               class="form-control form-control-1-4 alignright"
+                               th:value="${overheadCosts?.getRate()!=null and overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? ${overheadCosts?.getRate()} : 0" />
+                    </div>
+                    <div class="form-group alignright inline">
+                        <label th:for="${'section-total-'+subSection.id+'-custom'}">Total administration support cost</label>
+                        <input type="text"
+                               th:name="${'overheads-totalCosts-' + question.id + '-'+overheadCosts?.id}"
+                               class="form-control form-control-1-4 alignright"
+                               readonly="readonly"
+                               th:id="${'section-total-'+subSection.id+'-custom'}"
+                               th:attr="data-calculation-fields='#section-total-9,100,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                               data-calculation-operations="/,*"
+                               th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"/>
+                    </div>
+                </div>
+
+                <div id="overhead-special-rate">
+                    <h3 class="heading-medium">Special rate agreed with Innovate UK</h3>
+                    <p>You should only use this section if you have previously agreed a rate of admin support cost funding with Innovate UK's project finance team. If this project is granted funding then you will need to justify this rate before the project can begin.</p>
+                    <div class="form-group alignright inline">
+                        <label th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-agreedRate'}">Rate agreed with Innovate UK (%)</label>
+                        <input type="text"
+                               th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                               th:name="${'overheads-agreedRate-' + question.id + '-' + overheadCosts?.id}"
+                               th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-agreedRate'}"
+                               data-calculation-input="overhead-agreedRate"
+                               class="form-control form-control-1-4 alignright"
+                               th:value="${overheadCosts?.getRate()!=null and overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)} ? ${overheadCosts?.getRate()} : 0" />
+                    </div>
+                    <div class="form-group alignright inline">
+                        <label th:for="${'section-total-'+subSection.id+'-special'}">Total overhead costs</label>
+                        <input type="text"
+                               th:name="${'overheads-totalCosts-' + question.id + '-' + overheadCosts?.id}"
+                               class="form-control form-control-1-4"
+                               readonly="readonly"
+                               th:id="${'section-total-'+subSection.id+'-special'}"
+                               th:attr="data-calculation-fields='#section-total-9,100,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-agreedRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                               data-calculation-operations="/,*"
+                               th:value="${overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.total,0, 'COMMA', 0, 'POINT')} : '£ 0'"
+                                />
+
+                    </div>
+                </div>
+
+
+                <div class="alignright-button">
+                    <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================Form: materials =========================== -->
+    <div th:fragment="materials" th:remove="tag">
+        <p th:text="${question.getDescription()}"></p>
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))}">
+            <div class="form-group">
+                <table id="material-costs-table">
+                    <thead>
+                    <tr>
+                        <th id="materials-item" scope="col">Item</th>
+                        <th id="materials-quantity" scope="col" class="numeric">Quantity</th>
+                        <th id="materials-cost" scope="col" class="numeric">Cost Per Item</th>
+                        <th id="materials-total" scope="col" class="numeric">Total</th>
+                        <th scope="col" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                            <span class="visuallyhidden">Actions</span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <div th:each="cost, iteration : ${costCategory.costs}" th:with="formInputType=${question.formInputs.get(0).formInputType},type=${formInputType.title}" th:remove="tag">
+                        <div th:include="finance/finance :: materials_row" th:with="iterationIndex=${iteration.count}" th:remove="tag"/>
+                    </div>
+                    </tbody>
+                </table>
+
+                <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <div th:include="question-type/types :: add_row(text='Add another materials cost', question=${question},rowcontainer='#material-costs-table tbody')" th:remove="tag"/>
+                </p>
+            </div>
+            <div class="form-group alignright inline">
+                <label th:for="${'section-total-'+subSection.id}">Total materials costs</label>
+                <input class="form-control alignright form-control-1-4"
+                       readonly="readonly" type="text"
+                       data-calculation-fields="[id*=materialTotal]"
+                       data-calculation-operations="+"
+                       th:id="${'section-total-'+subSection.id}"
+                       th:attr="data-calculation-rawvalue=${costCategory.total}"
+                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+
+            </div>
+            <div class="alignright-button">
+                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+            </div>
+        </div>
+    </div>
+    <!-- =========================== repeating rows - Materials  =========================== -->
+
+    <div th:fragment="materials_row" th:remove="tag">
+        <tr th:attr="data-repeatable-row=${cost.id}">
+            <td>
+                <input type="text"
+                       aria-labelledby="materials-item"
+                       class="form-control width-full"
+                       th:name="${type +'-item-' + question.id + '-' + cost.id}"
+                       th:id="${'cost-materials-'+cost.id+'-item'}"
+                       th:value="${cost.getItem()}"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+            </td>
+            <td>
+                <input type="number"
+                       aria-labelledby="materials-quantity"
+                       class="form-control width-full"
+                       th:name="${type +'-quantity-' + question.id + '-' + cost.id}"
+                       th:id="${'cost-materials-'+cost.id+'-quantity'}"
+                       th:value="${cost.getQuantity()}"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+            </td>
+            <td>
+                <input type="number"
+                       aria-labelledby="materials-cost"
+                       class="form-control width-full"
+                       th:name="${type +'-cost-' + question.id + '-' + cost.id}"
+                       th:id="${'cost-materials-'+cost.id+'-cost'}"
+                       th:value="${#numbers.formatDecimal(cost.getCost(),0,0)}"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+            </td>
+            <td>
+                <input type="text"
+                       aria-labelledby="materials-total"
+                       class="alignright form-control width-full"
+                       th:name="${type +'-total-' + question.id + '-' + cost.id}"
+                       th:attr="data-calculation-fields='#'+${'cost-materials-'+cost.id+'-quantity'}+',#'+${'cost-materials-'+cost.id+'-cost'},data-calculation-rawvalue=${cost.total}"
+                       th:id="${'cost-materials-'+cost.id+'-materialTotal'}"
+                       data-calculation-operations="*"
+                       readonly="readonly"
+                       th:value="'£ ' + ${#numbers.formatDecimal(cost.total, 0, 0)}"
+                        />
+            </td>
+            <td class="alignright remove" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <button type="submit"
+                        name="remove_cost"
+                        th:value="${cost.id}"
+                        th:class="'buttonlink js-remove-row'"
+                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+                </button>
+            </td>
+        </tr>
+
+    </div>
+
+    <!-- ===========================Form: capital usage =========================== -->
+    <div th:fragment="capital_usage" th:remove="tag">
+        <p th:text="${question.getDescription()}"></p>
+        <div th:remove="tag" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))},type=${formInputType.title}">
+            <div id="capital_usage">
+                <div th:each="cost : ${costCategory.costs}" th:remove="tag">
+                    <div th:include="finance/finance :: capital_usage_row" th:remove="tag"/>
+                </div>
+            </div>
+            <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+            <div th:include="question-type/types :: add_row(text='Add another asset', question=${question},rowcontainer='#capital_usage')" th:remove="tag"/>
+            </p>
+            <div class="form-group alignright inline">
+                <label th:for="${'section-total-'+subSection.id}">Total capital usage costs</label>
+                <input class="form-control form-control-1-4" readonly="readonly" type="text"
+                       th:id="${'section-total-'+subSection.id}"
+                       data-calculation-fields="[id*=netCost]"
+                       data-calculation-operations="+"
+                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+            </div>
+            <div class="alignright-button">
+                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag" />
+            </div>
+        </div>
+    </div>
+
+    <!-- ===========================Form: capital usage repeating row =========================== -->
+
+    <div th:fragment="capital_usage_row" th:remove="tag">
+        <div th:attr="data-repeatable-row=${cost.id}" class="form-row">
+            <div class="form-group">
+                <label th:for="${'cost-capital_usage-'+cost.id+'-item'}">Item description</label>
+                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='item', value=${cost.getDescription()},readonly=${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)})" th:remove="tag" />
+            </div>
+            <div class="form-group">
+
+                <fieldset class="inline">
+                    <legend>New or existing item</legend>
+                    <label class="block-label">
+                        <input th:id="${'cost-capital_usage-'+cost.id+'-existing_0'}"
+                               type="radio"
+                               th:name="${type +'-existing-' + question.id + '-' + cost.id}"
+                               value="New"
+                               th:checked="${cost.existing == 'New'}"
+                               th:disabled="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
+                        New
+                        </input>
+                    </label>
+                    <label class="block-label">
+                        <input th:id="${'cost-capital_usage-'+cost.id+'-existing_1'}"
+                               type="radio"
+                               th:name="${type +'-existing-' + question.id + '-' + cost.id}"
+                               value="Existing"
+                               th:checked="${cost.existing == 'Existing'}"
+                               th:disabled="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
+                        Existing
+                        </input>
+                    </label>
+                </fieldset>
+            </div>
+
+            <div class="form-group">
+                <label th:for="${'cost-capital_usage-'+cost.id+'-deprecation_period'}" class="form-label">Deprecation period (months)</label>
+                <input
+                        type="number"
+                        th:id="${'cost-capital_usage-'+cost.id+'-deprecation_period'}"
+                        class="form-control form-finances-capital-usage-depreciation"
+                        th:name="${type +'-deprecation_period-' + cost.id}"
+                        th:value="${cost.deprecation}"
+                        th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+            </div>
+
+            <div class="form-group">
+                <label th:for="${'cost-capital_usage-'+cost.id+'-npv'}" class="form-label">Net Present Value at the start of your project start or the price you bought it for (£)</label>
+                <input
+                        type="number"
+                        value="10000"
+                        th:id="${'cost-capital_usage-'+cost.id+'-npv'}"
+                        class="form-control form-finances-capital-usage-npv"
+                        th:name="${type +'-npv-' + question.id + '-' + cost.id}"
+                        th:value="${#numbers.formatDecimal(cost.npv,0,0)}"
+                        th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+            </div>
+
+            <div class="form-group">
+                <label th:for="${'cost-capital_usage-'+cost.id+'-residual_value'}" class="form-label">Residual value at end of project (£)</label>
+                <input
+                        type="number"
+                        th:id="${'cost-capital_usage-'+cost.id+'-residual_value'}"
+                        class="form-control form-finances-capital-usage-residual-value"
+                        th:name="${type +'-residual_value-' + question.id + '-' + cost.id}"
+                        th:value="${#numbers.formatDecimal(cost.residualValue,0,0)}"
+                        th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+            </div>
+
+            <div class="form-group">
+                <label th:for="${'cost-capital_usage-'+cost.id+'-utilisation'}" class="form-label">Utilisation (%)</label>
+                <input type="number"
+                       value="20"
+                       th:id="${'cost-capital_usage-'+cost.id+'-utilisation'}"
+                       class="form-control form-finances-capital-usage-utilisation"
+                       th:name="${type +'-utilisation-' + question.id + '-' + cost.id}"
+                       th:value="${cost.utilisation}"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+            </div>
+
+            <div class="form-group">
+                <label th:for="${'cost-capital_usage-'+cost.id+'-netCost'}" class="form-label">Net Cost</label>
+                <input type="text"
+                       class="form-control"
+                       th:attr="data-calculation-fields=${'#cost-capital_usage-'+cost.id+'-npv,#cost-capital_usage-'+cost.id+'-residual_value,#cost-capital_usage-'+cost.id+'-utilisation,100'}"
+                       data-calculation-operations="-,*,/"
+                       readonly="readonly"
+                       th:id="${'cost-capital_usage-'+cost.id+'-netCost'}"
+                       th:name="${type + '-netCost-' + question.id + '-' + cost.id}"
+                       th:value="'£ ' + ${#numbers.formatDecimal(cost.total, 0, 0)}"/>
+            </div>
+
+            <button type="submit"
+                    name="remove_cost"
+                    class="buttonlink js-remove-row"
+                    th:value="${cost.id}"
+                    th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+            </button>
+        </div>
+    </div>
+
+    <!-- ===========================Form: subcontracting cost =========================== -->
+    <div th:fragment="subcontracting_costs">
+        <p th:text="${question.getDescription()}"></p>
+        <div th:remove="tag" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))}">
+
+            <div id="subcontracting_costs">
+                <div th:each="cost : ${costCategory.costs}" th:remove="tag">
+                    <div th:include="finance/finance :: subcontracting_costs_row" th:remove="tag"/>
+                </div>
+            </div>
+
+
+            <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+            <div th:include="question-type/types :: add_row(text='Add another subcontractor', question=${question},rowcontainer='#subcontracting_costs')" th:remove="tag"/>
+            </p>
+            <div class="form-group alignright">
+                <label th:for="${'section-total-'+subSection.id}">Total subcontracting costs</label>
+                <input class="form-control form-control-1-4"
+                       readonly="readonly"
+                       type="text"
+                       th:id="${'section-total-'+subSection.id}"
+                       data-calculation-fields="[id*=subcontractingCost]"
+                       data-calculation-operations="+"
+                       th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+            </div>
+            <div class="alignright-button">
+                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+            </div>
+        </div>
+    </div>
+
+    <div th:fragment="subcontracting_costs_row" th:remove="tag">
+        <div class="form-row" th:attr="data-repeatable-row=${cost.id}">
+            <div class="form-group">
+                <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-companyName'}">Subcontractor name</label>
+                <input type="text" th:name="${type +'-name-' + cost.id}" class="form-control form-finances-subcontracting-company" th:id="${'cost-subcontracting-'+cost.id+'-companyName'}" th:value="${cost.name}" th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"   />
+            </div>
+            <div class="form-group">
+                <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-country'}">Country where the subcontractor will work</label>
+                <input type="text"
+                       th:name="${type +'-country-' + question.id + '-' + cost.id}"
+                       class="form-control"
+                       th:id="${'cost-subcontracting-'+cost.id+'-country'}"
+                       th:value="${cost.country}"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"   />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" th:for="${'cost-'+ type + '-'+cost.id+'-role'}">Role of the subcontractor in the project and description of the work they’ll do</label>
+
+                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='role', value=${cost.role},readonly=${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)})" th:remove="tag" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" th:for="${'cost-subcontracting_costs-'+cost.id+'-subcontractingCost'}">Cost</label>
+                <input type="number"
+                       class="form-control"
+                       data-calculation-input="subcontracting-cost-row"
+                       th:name="${type +'-subcontractingCost-' + question.id + '-' + cost.id}"
+                       th:id="${'cost-subcontracting_costs-'+cost.id+'-subcontractingCost'}"
+                       th:value="${#numbers.formatDecimal(cost.cost,0,0)}"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+            </div>
+            <button th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" type="submit"
+                    name="remove_cost"
+                    class="buttonlink js-remove-row"
+                    th:value="${cost.id}"
+                    th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+            </button>
+        </div>
+
+    </div>
+
+
+
+
+    <!-- ===========================Form: travel cost =========================== -->
+    <div th:fragment="travel">
+        <p th:text="${question.description}"></p>
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))},type=${formInputType.title}">
+            <div class="form-group">
+                <table id="travel-costs-table">
+                    <thead>
+                    <tr>
+                        <th id="travel-purpose">Purpose of journey or description of subsistence cost</th>
+                        <th id="travel-times" class="numeric">Number of times</th>
+                        <th id="travel-cost" class="numeric">Cost each (£)</th>
+                        <th id="travel-total" class="numeric">Total (£)</th>
+                        <th th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"><span class="visuallyhidden">Actions</span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <div th:each="cost, iteration : ${costCategory.costs}">
+                        <div th:include="finance/finance :: travel_row" th:with="iterationIndex=${iteration.count}" th:remove="tag"/>
+                    </div>
+                    </tbody>
+                </table>
+
+                <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <div th:include="question-type/types :: add_row(text='Add another travel cost', question=${question},rowcontainer='#travel-costs-table tbody')" th:remove="tag"/>
+                </p>
+            </div>
+            <div class="form-group alignright inline">
+                <label th:for="${'section-total-'+subSection.id}">Total travel &amp; subsistence costs</label>
+                <input class="form-control form-control-1-4"
+                       readonly="readonly"
+                       type="text"
+                       data-calculation-fields="[id*=travelCostTotal]"
+                       data-calculation-operations="+"
+                       th:id="${'section-total-'+subSection.id}"
+                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"
+                       title="Total travel and subsistence costs" />
+            </div>
+            <div class="alignright-button">
+                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+            </div>
+        </div>
+    </div>
+    <!-- ===========================repeating rows : travel cost =========================== -->
+
+    <div th:fragment="travel_row" th:remove="tag">
+        <tr th:attr="data-repeatable-row=${cost.id}">
+            <td>
+                <input type="text"
+                       aria-labelledby="travel-purpose"
+                       th:name="${type +'-travelPurpose-' + question.id + '-' + cost.id}"
+                       class="form-control width-full"
+                       th:id="${'cost-'+type+'-'+cost.id+'-travelPurpose'}"
+                       th:value="${cost.getItem()}"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+            </td>
+            <td class="numeric">
+                <input type="number"
+                       aria-labelledby="travel-times"
+                       th:name="${type +'-travelNumTimes-' + question.id + '-' + cost.id}"
+                       class="form-control width-full"
+                       th:id="${'cost-'+type+'-'+cost.id+'-travelNumTimes'}"
+                       th:value="${cost.getQuantity()}"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"  />
+            </td>
+            <td class="numeric">
+                <input type="number"
+                       aria-labelledby="travel-cost"
+                       th:name="${type +'-travelCostEach-' + question.id + '-' + cost.id}"
+                       class="form-control width-full"
+                       th:id="${'cost-'+type+'-'+cost.id+'-travelCostEach'}"
+                       th:value="${#numbers.formatDecimal(cost.cost,0,0)}"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"  />
+            </td>
+            <td class="numeric">
+                <input type="text"
+                       aria-labelledby="travel-total"
+                       th:name="${type +'-travelCostTotal-' + question.id + '-' + cost.id}"
+                       class="form-control width-full"
+                       readonly="readonly"
+                       th:id="${'cost-'+type+'-'+cost.id+'-travelCostTotal'}"
+                       th:attr="data-calculation-fields='#'+${'cost-'+type+'-'+cost.id+'-travelCostEach'}+',#'+${'cost-'+type+'-'+cost.id+'-travelNumTimes'},data-calculation-rawValue=${cost.getTotal()}"
+                       data-calculation-operations="*"
+                       th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
+            </td>
+            <td th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" >
+                <button type="submit"
+                        name="remove_cost"
+                        class="buttonlink js-remove-row"
+                        th:value="${cost.id}"
+                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+                </button>
+            </td>
+        </tr>
+    </div>
+
+    <!-- ===========================Form: other cost =========================== -->
+    <div th:fragment="other_costs">
+        <p th:text="${question.description}" />
+        <div th:attr="data-repeatable-container=${question.getId()}" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))},type=${formInputType.title}">
+            <div class="form-group">
+                <table id="other-costs-table">
+                    <thead>
+                    <tr>
+                        <th id="other_costs-description" scope="col" >Description and justification of the cost</th>
+                        <th id="other_costs-cost" scope="col" class="numeric">Estimated cost (£)</th>
+                        <th scope="col" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"><span class="visuallyhidden">Actions</span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <div th:each="cost : ${costCategory.costs}"  th:remove="tag">
+                        <div th:include="finance/finance :: other_costs_row" th:remove="tag"/>
+                    </div>
+                    </tbody>
+                </table>
+
+                <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <div th:include="question-type/types :: add_row(text='Add another cost', question=${question},rowcontainer='#other-costs-table tbody')" th:remove="tag"/>
+                </p>
+            </div>
+            <div class="form-group alignright inline">
+                <label th:for="${'section-total-'+subSection.id}"> Total other costs</label>
+                <input class="form-control form-control-1-4 alignright"
+                       readonly="readonly" type="text"
+                       th:id="${'section-total-'+subSection.id}"
+                       data-calculation-fields="[id*=otherCost]"
+                       data-calculation-operations="+"
+                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
+            </div>
+            <div class="alignright-button">
+                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+            </div>
+        </div>
+    </div>
+
+
+    <div th:fragment="other_costs_row" th:remove="tag">
+        <tr th:attr="data-repeatable-row=${cost.id}">
+            <td>
+                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='description', value=${cost.description},readonly=${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)})" th:remove="tag" />
+            </td>
+            <td class="numeric">
+                <input aria-labelledby="other_costs-cost"
+                       type="number"
+                       th:name="${type +'-otherCost-' + question.id + '-' + cost.id}"
+                       class="form-control"
+                       th:id="${'cost-'+type+'-'+cost.id+'-otherCost'}"
+                       th:value="${#numbers.formatDecimal(cost.getCost(),0,0)}"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+            </td>
+            <td th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <button type="submit"
+                        class="buttonlink js-remove-row"
+                        name="remove_cost"
+                        th:value="${cost.id}"
+                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+                </button>
+            </td>
+        </tr>
+    </div>
+
+
+    <!-- ===========================Form: Other funding=========================== -->
+    <div th:fragment="other_funding" th:remove="tag">
+        <h2 th:text="${question.getName()}" class="heading-medium" />
+        <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+
+        <div th:remove="tag"
+             th:with="formInputType=${question.formInputs.get(0).formInputType},
+                                       costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))}
+                             ,type=${formInputType.title}">
+            <fieldset class="inline" id="otherFundingShowHideToggle">
+                <legend class="visuallyhidden" th:text="${question.getName()}" />
+                <div class="form-block inline">
+
+                    <label th:class="${'block-label'  + (costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
+                           th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
+                           data-target="other-funding-table">
+                        <input type="radio"
+                               th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
+                               th:name="${type + '-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
+                               th:value="Yes"
+                               th:checked="${costCategory.otherPublicFunding?.equals('Yes')}"
+                               th:disabled="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                                />
+                        Yes
+                    </label>
+                    <label th:class="${'block-label'  + (costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
+                           th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
+                        <input type="radio"
+                               th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
+                               th:name="${type + '-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
+                               th:value="No"
+                               th:checked="${costCategory.otherPublicFunding?.equals('No')}"
+                               th:disabled="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"/>
+                        No
+                    </label>
+                </div>
+                <div class="form-group" th:attr="data-repeatable-container=${question.getId()}">
+                    <table id="other-funding-table">
+                        <thead>
+                        <tr>
+                            <th id="other-funding-source">Source of funding</th>
+                            <th id="other-funding-date" class="width-medium">Date secured</th>
+                            <th id="other-funding-amount" class="width-medium">Funding amount (£)</th>
+                            <th th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"><span class="visuallyhidden">Actions</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <div th:each="cost : ${costCategory.costs}"  th:remove="tag">
+                            <div th:include="finance/finance :: other_funding_row" th:remove="tag"/>
+                        </div>
+                        </tbody>
+                    </table>
+                    <p class="alignright" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                    <div th:include="question-type/types :: add_row(text='Add another source of funding', question=${question},rowcontainer='#other-funding-table tbody')" th:remove="tag"/>
+                    </p>
+                </div>
+                <div class="form-group alignright inline">
+                    <label for="other-funding-total">Total other funding</label>
+                    <input class="form-control form-control-1-4 alignright"
+                           data-calculation-fields="[id*=fundingAmount]"
+                           data-calculation-operations="+"
+                           id="other-funding-total"
+                           th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                           readonly="readonly"
+                           type="text"
+                           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
+
+                </div>
+
+                <!--/* Please re-add when help text is available *-->
+                <!--/*
+                 <details>
+                    <summary><span class="summary">Why has this changed?</span></summary>
+                    <div class="panel-indent">
+                        Help text required
+                    </div>
+                </details> */-->
+
+            </fieldset>
+            <div class="alignright-button extra-margin">
+                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+            </div>
+        </div>
+    </div>
+
+
+    <div th:fragment="other_funding_row" th:remove="tag">
+
+        <tr th:attr="data-repeatable-row=${cost.id}">
+            <td>
+                <input type="text"
+                       aria-labelledby="other-funding-source"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                       th:name="${type +'-fundingSource-' + question.id + '-' + cost.id}"
+                       class="form-control width-full"
+                       th:id="${'cost-'+type+'-'+cost.id+'-source'}"
+                       th:value="${cost.fundingSource}" />
+            </td>
+            <td>
+                <label th:for="${'cost-'+type+'-'+cost.id+'-date'}" class="visuallyhidden">Date secured</label>
+                <input type="text"
+                       aria-labelledby="other-funding-date"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                       th:name="${type +'-dateSecured-' + question.id + '-' + cost.id}"
+                       class="form-control width-medium"
+                       th:id="${'cost-'+type+'-'+cost.id+'-date'}"
+                       placeholder="MM-YYYY"
+                       th:value="${cost.securedDate}" />
+            </td>
+            <td>
+                <input class="form-control width-medium"
+                       type="number"
+                       aria-labelledby="other-funding-amount"
+                       th:readonly="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                       th:name="${type +'-fundingAmount-' + question.id + '-' + cost.id}"
+                       th:id="${'cost-'+type+'-'+cost.id+'-fundingAmount'}"
+                       th:value="${#numbers.formatDecimal(cost.fundingAmount,0,0)}"
+                        />
+            </td>
+            <td th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <button type="submit"
+                        name="remove_cost"
+                        class="buttonlink js-remove-row"
+                        th:value="${cost.id}"
+                        th:attrappend="formaction='&#35;question-'+${question.getId()}">Remove
+                </button>
+            </td>
+        </tr>
+    </div>
+</html>

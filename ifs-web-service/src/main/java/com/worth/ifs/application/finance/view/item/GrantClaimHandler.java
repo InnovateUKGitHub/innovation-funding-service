@@ -1,11 +1,9 @@
 package com.worth.ifs.application.finance.view.item;
 
-import com.worth.ifs.application.finance.model.CostFormField;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,8 +12,8 @@ import java.util.Optional;
  */
 public class GrantClaimHandler extends CostHandler {
     @Override
-    public CostItem toCostItem(Long id, List<CostFormField> costFormFields) {
-        Optional<CostFormField> grantClaimPercentageField = costFormFields.stream().findFirst();
+    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
+        Optional<FinanceFormField> grantClaimPercentageField = financeFormFields.stream().findFirst();
         Integer grantClaimPercentage = 0;
         if (grantClaimPercentageField.isPresent()) {
             grantClaimPercentage = getIntegerValue(grantClaimPercentageField.get().getValue(), 0);

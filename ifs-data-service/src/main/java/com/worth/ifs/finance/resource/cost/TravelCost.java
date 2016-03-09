@@ -13,9 +13,11 @@ public class TravelCost implements CostItem {
     private BigDecimal cost;
     private Integer quantity;
     private CostType costType;
+    private String name;
 
     public TravelCost() {
         this.costType = CostType.TRAVEL;
+        this.name = this.costType.getType();
     }
 
     public TravelCost(Long id, String item, BigDecimal cost, Integer quantity) {
@@ -53,5 +55,10 @@ public class TravelCost implements CostItem {
     @Override
     public CostType getCostType() {
         return costType;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

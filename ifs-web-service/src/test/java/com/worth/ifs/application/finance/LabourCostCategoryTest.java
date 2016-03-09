@@ -33,9 +33,9 @@ public class LabourCostCategoryTest {
         ApplicationFinance f = new ApplicationFinance();
         Question q = new Question();
 
-        cost1 = new Cost("a","b", 1, new BigDecimal(20), f, q);
-        cost2 = new Cost("a","b", 1, new BigDecimal(20), f, q);
-        negativeCost = new Cost("a","b", 1, new BigDecimal(-20), f, q);
+        cost1 = new Cost("k", "a","b", 1, new BigDecimal(20), f, q);
+        cost2 = new Cost("k", "a","b", 1, new BigDecimal(20), f, q);
+        negativeCost = new Cost("k", "a","b", 1, new BigDecimal(-20), f, q);
         //cost3 = costItemFactory.createCostItem(CostType.LABOUR, new Cost("a",LabourCostCategory.WORKING_DAYS_PER_YEAR, 1, new BigDecimal(20), f, q));
 
         costs = new ArrayList<>();

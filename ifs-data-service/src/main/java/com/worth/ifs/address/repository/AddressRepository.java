@@ -1,4 +1,4 @@
-package com.worth.ifs.organisation.repository;
+package com.worth.ifs.address.repository;
 
 import com.worth.ifs.address.domain.Address;
 import org.springframework.data.repository.PagingAndSortingRepository;

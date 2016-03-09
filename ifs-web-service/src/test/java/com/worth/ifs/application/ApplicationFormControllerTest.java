@@ -147,7 +147,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         Question question = newQuestion().build();
         ApplicationResource application = applications.get(0);
 
-        when(applicationService.getById(application.getId(), false)).thenReturn(application);
+        when(applicationService.getById(application.getId())).thenReturn(application);
         mockMvc.perform(post("/application/1/form/question/1"))
                 .andExpect(status().is3xxRedirection());
     }
@@ -165,7 +165,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     @Test
     public void testAjaxAddCost() throws Exception {
         CostItem costItem = new Materials();
-        when(financeFormHandler.addCost(anyLong(), anyLong(), anyLong())).thenReturn(costItem);
+        when(defaultFinanceFormHandler.addCost(anyLong(), anyLong(), anyLong())).thenReturn(costItem);
         MvcResult result = mockMvc.perform(
                 get("/application/{applicationId}/form/add_cost/{questionId}", application.getId(), questionId)
         ).andReturn();
