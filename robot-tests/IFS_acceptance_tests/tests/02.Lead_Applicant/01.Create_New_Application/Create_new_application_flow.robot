@@ -1,8 +1,11 @@
 *** Settings ***
-Documentation     INNFUND-669 As an applicant I want to create a new application so that I can submit an entry into a relevant competition
+Documentation     INFUND-669 As an applicant I want to create a new application so that I can submit an entry into a relevant competition
 ...
 ...
 ...               INFUND-1163 As an applicant I want to create a new application so that I can submit an entry into a relevant competition
+...
+...
+...               INFUND-1904 As a user registering an account and submitting the data I expect to receive a verification email so I can be sure that the provided email address is correct
 Test Setup        The guest user opens the browser
 Test Teardown     User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -16,8 +19,10 @@ ${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9
 
 *** Test Cases ***
 Create application flow for non registered users CH route
-    [Documentation]    INNFUND-669
-    [Tags]    Create application    HappyPath   FailingForDev
+    [Documentation]    INFUND-669
+    ...
+    ...    INFUND-1904
+    [Tags]    Create application    HappyPath    FailingForLocal
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -30,35 +35,43 @@ Create application flow for non registered users CH route
     And the user clicks the button/link    css=#select-address-block > button
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters the details and clicks the create account
-    And the user verifies their email       ${verify_link_2}
-    # And the user logs back in
-    # And the user clicks the button/link    jQuery=.button:contains("Begin application")
-    # Then the user should see the text in the page    Application overview
-    # And the user should see the text in the page    Technology Inspired
-
+    And the user enters the details and clicks the create account    worth.email.test+15@gmail.com
+    And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    And the user opens the mailbox and verifies the email
+    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    And the user clicks the button/link    jQuery=.button:contains("Sign")
+    And guest user log-in    worth.email.test+44@gmail.com    testtest1
+    Then the user should see the text in the page    Your dashboard
+    And the user clicks the button/link    link=Technology Inspired
+    #And the user clicks the button/link    jQuery=.button:contains("Begin application")
 
 Create application flow for non registered users non CH route
-    [Documentation]    INNFUND-669
-    [Tags]    Create application    HappyPath
+    [Documentation]    INFUND-669
+    ...
+    ...    INFUND-1904
+    [Tags]    Create application    HappyPath    FailingForLocal
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters the details for the non CH
-    # And the user clicks the button/link    JQuery=.button:contains("Begin application")
-    # Then the user should see the text in the page    Application overview
-    # And the user should see the text in the page    Technology Inspired
-
+    And the user enters the details and clicks the create account    worth.email.test+16@gmail.com
+    And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    And the user opens the mailbox and verifies the email
+    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    And the user clicks the button/link    jQuery=.button:contains("Sign")
+    And guest user log-in    worth.email.test+16@gmail.com    testtest1
+    Then the user should see the text in the page    Your dashboard
+    And the user clicks the button/link    link=Technology Inspired
+    #And the user clicks the button/link    jQuery=.button:contains("Begin application")
 
 Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
-    [Tags]    Applicant    New application    HappyPath     FailingForDev
-    When the guest user enters the log in credentials    ewan+2@hiveit.co.uk    testtest
+    [Tags]    Applicant    New application    HappyPath    FailingForLocal
+    When the guest user enters the log in credentials    worth.email.test@gmail.com    testtest1
     And the user clicks the button/link    css=input.button
     And the user edits the competition title
     Then the user should see the text in the page    test title
@@ -70,18 +83,16 @@ Verify the name of the new application
     And the user clicks the button/link    link=test title
     And the user should see the text in the page    test title
 
-
 Verify that the options will load properly with spaces in the name
-    [Documentation]     INFUND-1757
-    [Tags]  Create application
+    [Documentation]    INFUND-1757
+    [Tags]    Create application
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=org-name    Hive IT
     And the user clicks the button/link    id=org-search
-    Then The user should see the text in the page       Hive IT
-
+    Then The user should see the text in the page    Hive IT
 
 *** Keywords ***
 the new application should be visible in the dashboard page
@@ -91,12 +102,13 @@ the new application should be visible in the dashboard page
     Page Should Contain    Application number: 0000
 
 the user enters the details and clicks the create account
-    Input Text    id=firstName    John
-    Input Text    id=lastName    Smith
+    [Arguments]    ${REG_EMAIL}
+    Input Text    id=firstName    Stuart
+    Input Text    id=lastName    ANDERSON
     Input Text    id=phoneNumber    23232323
-    Input Text    id=email    ewan+2@hiveit.co.uk
-    Input Password    id=password    testtest
-    Input Password    id=retypedPassword    testtest
+    Input Text    id=email    ${REG_EMAIL}
+    Input Password    id=password    testtest1
+    Input Password    id=retypedPassword    testtest1
     Select Checkbox    termsAndConditions
     Submit Form
 
@@ -114,16 +126,6 @@ the user clicks the Not on company house link
     Input Text    id=postcode-check    2323
     Click Element    jQuery=.button:contains("Continue")
 
-the user enters the details for the non CH
-    Input Text    id=firstName    tester
-    Input Text    id=lastName    tester
-    Input Text    id=phoneNumber    23232323
-    Input Text    id=email    ewan+3@hiveit.co.uk
-    Input Password    id=password    testtest
-    Input Password    id=retypedPassword    testtest
-    Select Checkbox    termsAndConditions
-    Submit Form
-
 the user edits the competition title
     click link    Technology Inspired
     sleep    2s
@@ -134,5 +136,16 @@ the user edits the competition title
 the progress indicator should show 0
     Element Should Contain    css=.progress-indicator    0
 
-the user logs back in
-    guest user log-in   ewan+2@hiveit.co.uk     testtest
+the user opens the mailbox and verifies the email
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    ${LATEST} =    wait for email    fromEmail=noresponse@innovateuk.gov.uk
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
