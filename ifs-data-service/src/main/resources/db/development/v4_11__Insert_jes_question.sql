@@ -1,0 +1,4 @@
+INSERT INTO `question` (`id`, `assign_enabled`, `description`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES (42, 1, 'Only your organisation can see this level of detail. All members of your organisation can acesss and edit your finances We recommend assigning completion of your finances to one member of your team', '', '', 0, 0, 'Provide your organisation\'s finances', 0, 0, '15', '1', '7');
+INSERT INTO `form_input_type` (`id`, `title`) VALUES (20, 'academic_finance');
+INSERT INTO `form_input` (`id`, `word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`) VALUES (42, '0', '20', '1', '1');
+INSERT INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('42', '42', '0');

@@ -62,6 +62,17 @@
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
             />
 </div>
+
+<div th:fragment="form-textinput-half-width (id, field)">
+    <input class="form-control width-half"
+           th:readonly="${readonly}"
+           type="text"
+           th:id="${id}"
+           th:field="*{__${field}__}"
+           th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
+            />
+</div>
+
 <!-- ========================= input field type number =========================== -->
 
 <div th:fragment="form-number (id, response)">
@@ -340,10 +351,15 @@
 <!-- ========================= edit link =========================== -->
 
 <div th:fragment="form-edit-question-button">
-    <a tabindex="0"
-       class="button-secondary"
-       th:href="'/application/'+${currentApplication.getId()}+'/form/question/edit/'+${question.getId()}"
-       th:text="Edit"/>
+    <button tabindex="0"
+            class="button-secondary"
+            type="submit"
+            name="edit_question"
+            th:value="${question.getId()}"
+            th:class="${readonly} or ${costCategory!=null} ? 'button' : 'buttonlink'"
+            th:attrappend="formaction='/application/'+${currentApplication.getId()}+'/form/question/edit/'+${question.getId()}+'&#35;question-'+${question.getId()}"
+            th:text="Edit">Edit
+    </button>
 </div>
 
 <!-- ========================= word count =========================== -->

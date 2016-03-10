@@ -99,14 +99,14 @@ function startServers {
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --name IFS $testDirectory
 }
 
 
 function runHappyPathTests {
     echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v VIRTUAL_DISPLAY:$useXvfb --include HappyPath --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v VIRTUAL_DISPLAY:$useXvfb --include HappyPath --exclude Pending --exclude Failing --exclude FailingForLocal --name IFS $testDirectory
 }
 
 
@@ -161,7 +161,7 @@ webLogFilePath=${webLogPath}"/catalina."${dateFormat}".log"
 echo "webLogFilePath:    ${webLogFilePath}"
 webPort=`sed '/^\#/d' dev-build.gradle | grep 'ext.serverPort'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "webPort:           ${webPort}"
-webBase="ifs-local-dev"
+webBase="localhost:"${webPort}
 echo "webBase:           ${webBase}"
 
 
@@ -169,12 +169,10 @@ unset opt
 unset quickTest
 unset testScrub
 unset happyPath
-unset useXvfb
 unset remoteRun
 
-
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :r :d: :x" opt ; do
+while getopts ":q :t :h :r :d:" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -184,9 +182,6 @@ while getopts ":q :t :h :r :d: :x" opt ; do
 	;;
 	h)
 	 happyPath=1
-	;;
-	x)
-	 useXvfb=true
 	;;
         r)
          remoteRun=1

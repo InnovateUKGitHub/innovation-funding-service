@@ -29,9 +29,8 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Test
     public void test_findByEmailAddress() {
-        List<UserResource> users = controller.findByEmail("steve.smith@empire.com").getSuccessObject();
-        assertEquals(1, users.size());
-        assertEquals("steve.smith@empire.com", users.get(0).getEmail());
+        UserResource user= controller.findByEmail("steve.smith@empire.com").getSuccessObject();
+        assertEquals("steve.smith@empire.com", user.getEmail());
     }
 
     @Test

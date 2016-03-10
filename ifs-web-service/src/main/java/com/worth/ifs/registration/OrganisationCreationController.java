@@ -12,7 +12,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
-import com.worth.ifs.user.domain.AddressType;
+import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
@@ -139,9 +139,9 @@ public class OrganisationCreationController {
     private String getMessageByOrganisationType(OrganisationTypeEnum orgTypeEnum, String textKey, Locale locale) {
         String searchLabel;
         try{
-            searchLabel = messageSource.getMessage(String.format("com.worth.ifs.registration.%s.%s", orgTypeEnum.toString(), textKey), null, locale);
+            searchLabel = messageSource.getMessage(String.format("registration.%s.%s", orgTypeEnum.toString(), textKey), null, locale);
         }catch(NoSuchMessageException e){
-            searchLabel = messageSource.getMessage(String.format("com.worth.ifs.registration.DEFAULT.%s", textKey), null, locale);
+            searchLabel = messageSource.getMessage(String.format("registration.DEFAULT.%s", textKey), null, locale);
         }
         return searchLabel;
     }
@@ -358,7 +358,7 @@ public class OrganisationCreationController {
         OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
         addSelectedOrganisation(organisationForm, model);
         organisationForm.getAddressForm().setSelectedPostcodeIndex(null);
-        organisationForm.getAddressForm().setTriedToSave(true);
+        organisationForm.getAddressForm().setTriedToSearch(true);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         return getRedirectUrlInvalidSave(organisationForm, referer);
     }

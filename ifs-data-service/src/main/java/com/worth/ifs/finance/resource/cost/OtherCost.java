@@ -9,10 +9,11 @@ public class OtherCost implements CostItem {
     private String description;
     private BigDecimal cost;
     private CostType costType;
-
+    private String name;
 
     public OtherCost() {
         this.costType = CostType.OTHER_COSTS;
+        this.name = this.costType.getType();
     }
 
     public OtherCost(Long id, String description, BigDecimal cost) {
@@ -41,5 +42,10 @@ public class OtherCost implements CostItem {
     @Override
     public CostType getCostType() {
         return costType;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 }

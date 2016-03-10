@@ -1,11 +1,8 @@
 package com.worth.ifs.application.finance.view.item;
 
-import com.worth.ifs.application.finance.model.CostFormField;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.TravelCost;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,15 +10,15 @@ import java.util.List;
 public class TravelCostHandler extends CostHandler {
 
     @Override
-    public CostItem toCostItem(Long id, List<CostFormField> costFormFields) {
+    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
         BigDecimal costPerItem = null;
         String item = null;
         Integer quantity = null;
 
-        for(CostFormField costFormField : costFormFields) {
-            String fieldValue = costFormField.getValue();
+        for(FinanceFormField financeFormField : financeFormFields) {
+            String fieldValue = financeFormField.getValue();
             if(fieldValue != null) {
-                switch (costFormField.getCostName()) {
+                switch (financeFormField.getCostName()) {
                     case "travelPurpose":
                         item = fieldValue;
                         break;
@@ -32,7 +29,7 @@ public class TravelCostHandler extends CostHandler {
                         costPerItem = getBigDecimalValue(fieldValue, 0d);
                         break;
                     default:
-                        log.info("Unused costField: " + costFormField.getCostName());
+                        log.info("Unused costField: " + financeFormField.getCostName());
                         break;
                 }
             }

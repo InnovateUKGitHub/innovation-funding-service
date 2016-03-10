@@ -3,6 +3,7 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -100,6 +101,11 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Question getNextQuestionBySection(Long sectionId) {
         return questionRestService.getNextQuestionBySection(sectionId).getSuccessObjectOrNull();
+    }
+
+    @Override
+    public RestResult<Question> getQuestionByFormInputType(String formInputType) {
+        return questionRestService.getQuestionByFormInputType(formInputType);
     }
 
     @Override

@@ -26,7 +26,7 @@ public interface UserService {
     ServiceResult<List<User>> findAll();
 
     @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<List<UserResource>> findByEmail(final String email);
+    ServiceResult<User> findByEmail(final String email);
 
     @NotSecured("TODO - implement when permissions matrix in place")
     ServiceResult<Set<User>> findAssignableUsers(final Long applicationId);

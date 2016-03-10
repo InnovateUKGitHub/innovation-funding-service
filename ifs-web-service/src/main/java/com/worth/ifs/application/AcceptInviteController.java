@@ -7,7 +7,6 @@ import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.OrganisationCreationController;
 import com.worth.ifs.security.CookieFlashMessageFilter;
-import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
 import com.worth.ifs.util.CookieUtil;
 import org.apache.commons.logging.Log;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * This class is use as an entry point to accept a invite, to a application.
@@ -60,8 +58,8 @@ public class AcceptInviteController {
 
 
                 // check if there already is a user with this emailaddress
-                List<UserResource> existingUsers = userService.findUserByEmail(inviteResource.getEmail()).getSuccessObjectOrThrowException();
-                if (existingUsers != null && !existingUsers.isEmpty()) {
+                RestResult existingUserSearch = userService.findUserByEmail(inviteResource.getEmail());
+                if (existingUserSearch.isSuccess()){
                     model.addAttribute("emailAddressRegistered", "true");
                 }
 

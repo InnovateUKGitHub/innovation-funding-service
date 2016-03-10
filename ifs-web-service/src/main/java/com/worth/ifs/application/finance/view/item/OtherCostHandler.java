@@ -1,7 +1,6 @@
 package com.worth.ifs.application.finance.view.item;
 
-import com.worth.ifs.application.finance.model.CostFormField;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.OtherCost;
 
@@ -13,14 +12,14 @@ import java.util.List;
  */
 public class OtherCostHandler extends CostHandler {
     @Override
-    public CostItem toCostItem(Long id, List<CostFormField> costFormFields) {
+    public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
         String description = null;
         BigDecimal cost = null;
 
-        for (CostFormField costFormField : costFormFields) {
-            String fieldValue = costFormField.getValue();
+        for (FinanceFormField financeFormField : financeFormFields) {
+            String fieldValue = financeFormField.getValue();
             if (fieldValue != null) {
-                switch (costFormField.getCostName()) {
+                switch (financeFormField.getCostName()) {
                     case "description":
                         description = fieldValue;
                         break;
@@ -28,7 +27,7 @@ public class OtherCostHandler extends CostHandler {
                         cost = getBigDecimalValue(fieldValue, 0d);
                         break;
                     default:
-                        log.info("Unused costField: " + costFormField.getCostName());
+                        log.info("Unused costField: " + financeFormField.getCostName());
                         break;
                 }
             }

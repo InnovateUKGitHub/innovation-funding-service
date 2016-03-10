@@ -1,6 +1,6 @@
 package com.worth.ifs.application.finance.model;
 
-public class CostFormField {
+public class FinanceFormField {
     String fieldName;
     String costName;
     String keyType;
@@ -8,7 +8,7 @@ public class CostFormField {
     String questionId;
     String id;
 
-    public CostFormField(String fieldName, String value, String id, String questionId, String costName, String keyType) {
+    public FinanceFormField(String fieldName, String value, String id, String questionId, String costName, String keyType) {
         this.fieldName = fieldName;
         this.value = value;
         this.id = id;
@@ -43,7 +43,7 @@ public class CostFormField {
 
     @Override
     public String toString() {
-        return "CostFormField : " + this.fieldName + " " + this.costName +
+        return "FinanceFormField : " + this.fieldName + " " + this.costName +
                 " " + this.value + " " + this.id + " " + this.questionId + " " + this.keyType;
     }
 }

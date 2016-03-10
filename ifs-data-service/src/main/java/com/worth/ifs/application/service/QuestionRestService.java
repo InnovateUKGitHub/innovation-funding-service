@@ -22,4 +22,5 @@ public interface QuestionRestService {
     RestResult<Question> getPreviousQuestion(Long questionId);
     RestResult<Question> getPreviousQuestionBySection(Long sectionId);
     RestResult<Question> getNextQuestionBySection(Long sectionId);
+    RestResult<Question> getQuestionByFormInputType(String formInputType);
 }

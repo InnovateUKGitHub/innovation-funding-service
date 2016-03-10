@@ -86,4 +86,9 @@ public class QuestionController {
     public RestResult<Question> getPreviousQuestion(@PathVariable("questionId") final Long questionId) {
         return questionService.getPreviousQuestion(questionId).toGetResponse();
     }
+
+    @RequestMapping("/getQuestionByFormInputType/{formInputType}")
+    public RestResult<Question> getQuestionByFormInputType(@PathVariable("formInputType") final String formInputType) {
+        return questionService.getQuestionByFormInputType(formInputType).toGetResponse();
+    }
 }

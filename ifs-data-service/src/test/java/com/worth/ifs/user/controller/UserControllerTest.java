@@ -97,14 +97,11 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         user.setName("testFirstName testLastName");
         user.setTitle("Mr");
 
-        when(userServiceMock.findByEmail(user.getEmail())).thenReturn(serviceSuccess(singletonList(new UserResource(user))));
+        when(userServiceMock.findByEmail(user.getEmail())).thenReturn(serviceFailure(notFoundError(User.class, email)));
 
         mockMvc.perform(get("/user/findByEmail/" + user.getEmail() + "/", "json")
                 .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("[0].email", is(user.getEmail())))
-                .andExpect(jsonPath("[1].email").doesNotExist()
-                );
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -112,11 +109,10 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         String email = "testemail@email.com";
 
-        when(userServiceMock.findByEmail(email)).thenReturn(serviceSuccess(emptyList()));
+        when(userServiceMock.findByEmail(email)).thenReturn(serviceFailure(notFoundError(User.class, email)));
 
         mockMvc.perform(get("/user/findByEmail/" + email + "/", "json")
                 .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isEmpty());
+                .andExpect(status().isNotFound());
     }
 }

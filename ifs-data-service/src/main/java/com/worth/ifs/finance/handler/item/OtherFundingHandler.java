@@ -14,6 +14,8 @@ import java.util.List;
  * or for sending it over.
  */
 public class OtherFundingHandler extends CostHandler {
+    public static final String COST_KEY = "other-funding";
+
     @Override
     public Cost toCost(CostItem costItem) {
         Cost cost = null;
@@ -36,7 +38,7 @@ public class OtherFundingHandler extends CostHandler {
         } else {
             item = otherFunding.getSecuredDate();
         }
-        return new Cost(otherFunding.getId(), item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
+        return new Cost(otherFunding.getId(), COST_KEY, item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
     }
 
     @Override

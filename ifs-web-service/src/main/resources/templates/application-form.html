@@ -10,11 +10,11 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},url='/application/'+${currentApplication.id},urlText='Application Overview'" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}" th:remove="tag" />
+
 	<div class="page-title">
             <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
-            <h1 class="heading-xlarge" th:if="${currentQuestion?.shortName}" th:text="${currentQuestion?.shortName}" />
-            <h1 class="heading-xlarge" th:if="${currentSection}" th:text="${currentSection.getName()}" />
+            <h1 class="heading-xlarge"  th:text="${title}" />
         </div>
         <form action="#"  method="post" th:object="${form}" class="form-serialize-js" enctype="multipart/form-data">
             <button class="hidden-save" type="submit" name="submit-section">Save the form</button>
@@ -42,6 +42,8 @@
                     <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
                          th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
                         <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
+                        <div th:replace="'finance/'+${financeView} :: ${formInput.getFormInputType().getTitle()}" />
+                        <div th:replace="finance/finance-summary :: ${formInput.getFormInputType().getTitle()}" />
                     </div>
                 </div>
             </div>
