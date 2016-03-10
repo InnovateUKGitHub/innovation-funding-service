@@ -3,7 +3,6 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.Set;

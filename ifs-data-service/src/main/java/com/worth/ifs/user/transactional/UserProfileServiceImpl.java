@@ -5,7 +5,6 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.util.EntityLookupCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +43,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
 
     private ServiceResult<User> getUserByEmailAddress(UserResource userResource) {
-        return find(userRepository.findByEmail(userResource.getEmail()), notFoundError(User.class, userResource.getEmail())).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
+        return find(userRepository.findByEmail(userResource.getEmail()), notFoundError(User.class, userResource.getEmail()));
     }
 
     private String concatenateFullName(String firstName, String lastName) {

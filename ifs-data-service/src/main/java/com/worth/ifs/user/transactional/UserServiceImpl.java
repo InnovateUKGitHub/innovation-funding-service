@@ -6,14 +6,12 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.util.EntityLookupCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
