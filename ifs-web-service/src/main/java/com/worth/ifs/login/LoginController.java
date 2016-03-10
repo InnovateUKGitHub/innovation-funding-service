@@ -37,15 +37,20 @@ public class LoginController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(value="/login/recover-password", method=RequestMethod.GET)
+    @RequestMapping(value="/login/reset-password", method=RequestMethod.GET)
     public String recoverPassword(RecoverPasswordForm recoverPasswordForm, Model model, HttpServletRequest request) {
         model.addAttribute("recoverPasswordForm", recoverPasswordForm);
-        return "login/recover-password";
+        return "login/reset-password";
     }
-    @RequestMapping(value="/login/recover-password", method=RequestMethod.POST)
+    @RequestMapping(value="/login/reset-password", method=RequestMethod.POST)
     public String recoverPasswordPost(@ModelAttribute @Valid RecoverPasswordForm recoverPasswordForm, Model model, HttpServletRequest request) {
+        log.warn("Reset password for: "+ recoverPasswordForm.getEmail());
+
+        userService.sendPasswordResetNotification(recoverPasswordForm.getEmail());
+
+
         model.addAttribute("recoverPasswordForm", recoverPasswordForm);
-        return "login/recover-password";
+        return "login/reset-password";
     }
 
     @RequestMapping(value="/login", method=RequestMethod.GET)

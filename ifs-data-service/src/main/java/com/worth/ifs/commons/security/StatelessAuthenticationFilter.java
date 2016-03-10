@@ -84,6 +84,7 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
         antPathRequestMatchers.add(new AntPathRequestMatcher("/accept-invite/**"));
         /****** For Registration *******/
         antPathRequestMatchers.add(new AntPathRequestMatcher("/login/**"));
+        antPathRequestMatchers.add(new AntPathRequestMatcher("/user/sendPasswordResetNotification/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/registration/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/user/createLeadApplicantForOrganisation/**"));
         return new OrRequestMatcher(antPathRequestMatchers);
