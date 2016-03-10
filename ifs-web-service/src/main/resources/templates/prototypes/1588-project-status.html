@@ -34,7 +34,8 @@
 
 		<li th:class="${(param.user != null and param.user[0] == 'nonLead' ? 'complete' : 'require-action')}">
 			<span>
-				<h2 class="heading-medium"><a href="/prototypes/1575-project-details">Project details</a></h2>  
+				<h2 class="heading-medium">
+					<a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1574-project-finance-contact' : '/prototypes/1575-project-details')}">Project details</a></h2>  
 				<p>Confirm the contact details, proposed start date and location of the project.</p>
 			</span>
 		</li>
@@ -79,7 +80,7 @@
 				
 				<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 					
-					<h2 class="heading-medium">Other documents</h2>
+					<h2 class="heading-medium"><a href="/prototypes/1590-document-upload?user=nonLead">Other documents</a></h2>
 					<p>The lead partner of the consortium will need to upload documents including:</p>
 
 				</div>
