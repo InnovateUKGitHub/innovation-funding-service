@@ -37,7 +37,7 @@ Verify that Applicant can upload less than 1mb pdf files
     [Documentation]     INFUND-409
     [Tags]      Collaboration   Pending
     [Setup]     Guest user log-in   &{lead_applicant_credentials}
-    Given the user navigates to the page    ${SERVER}/application/1/form/question/5
+    Given the user navigates to the page    ${SERVER}/application/1/form/question/8
     And the user can see the option to upload a file
     # When The user clicks the button/link    ${BUTTON}
     Then the user can choose pdf file to upload
