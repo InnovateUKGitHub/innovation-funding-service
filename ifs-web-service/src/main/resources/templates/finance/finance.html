@@ -55,6 +55,7 @@
             <div th:remove="tag" th:each="question : ${subsectionQuestions.get(subSection.id)}">
                 <div th:remove="tag" th:each="formInput, status : ${question.getFormInputs()}">
                     <div th:replace="finance/finance :: ${formInput.getFormInputType().getTitle()} (complete=${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
+                    <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()} (complete=${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))} ? 'complete' : '')" th:with="formInputIndex=(${status.index})" />
                 </div>
             </div>
         </section>
