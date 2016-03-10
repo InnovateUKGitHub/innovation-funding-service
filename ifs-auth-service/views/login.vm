@@ -89,10 +89,6 @@
                        required="required"
                        data-required-errormessage="Please enter your password">
               </div>
-
-              <label class="block-label" for="donotcache">
-                 <input type="checkbox" name="donotcache" id="donotcache" value="1"> #springMessageText("idp.login.donotcache", "Don't remember my sign in details")
-              </label>
             #end
 
               <!-- <div class="form-element-wrapper">

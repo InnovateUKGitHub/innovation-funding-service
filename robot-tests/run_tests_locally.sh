@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo echo "Thanks for entering sudo!"
+
 function coloredEcho(){
     local exp=$1;
     local color=$2;
@@ -64,7 +66,6 @@ function buildAndDeploy {
 }
 
 function resetLDAP {
-    sleep 10
     cd ${shibbolethCommonScriptsPath}
     ./reset-users-from-database.sh
 }
@@ -73,8 +74,6 @@ function startServers {
     echo "********START SHIBBOLETH***********"
     cd ${shibbolethOsScriptsPath}
     ./startup.sh
-
-    resetLDAP
 
     echo "********START THE DATA SERVER********"
     cd ${dataTomcatBinPath}
@@ -240,6 +239,7 @@ then
     runTestsRemotely
 else
     echo "using quickTest:   FALSE" >&2
+    resetLDAP
     stopServers
     resetDB
     buildAndDeploy
