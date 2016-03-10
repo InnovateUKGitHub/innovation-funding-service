@@ -64,6 +64,7 @@ function buildAndDeploy {
 }
 
 function resetLDAP {
+    sleep 10
     cd ${shibbolethCommonScriptsPath}
     ./reset-users-from-database.sh
 }
@@ -161,7 +162,7 @@ webLogFilePath=${webLogPath}"/catalina."${dateFormat}".log"
 echo "webLogFilePath:    ${webLogFilePath}"
 webPort=`sed '/^\#/d' dev-build.gradle | grep 'ext.serverPort'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "webPort:           ${webPort}"
-webBase="localhost:"${webPort}
+webBase="ifs-local-dev"
 echo "webBase:           ${webBase}"
 
 
@@ -169,10 +170,12 @@ unset opt
 unset quickTest
 unset testScrub
 unset happyPath
+unset useXvfb
 unset remoteRun
 
+
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :r :d:" opt ; do
+while getopts ":q :t :h :r :d: :x" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -182,6 +185,9 @@ while getopts ":q :t :h :r :d:" opt ; do
 	;;
 	h)
 	 happyPath=1
+	;;
+	x)
+	 useXvfb=true
 	;;
         r)
          remoteRun=1

@@ -123,10 +123,10 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     }
 
     private User leadApplicantUser(){
-        return userRepository.findByEmail("steve.smith@empire.com").get(0);
+        return userRepository.findByEmail("steve.smith@empire.com").get();
     }
 
     private User assessorUser(){
-        return userRepository.findByEmail("paul.plum@gmail.com").get(0);
+        return userRepository.findByEmail("paul.plum@gmail.com").get();
     }
 }

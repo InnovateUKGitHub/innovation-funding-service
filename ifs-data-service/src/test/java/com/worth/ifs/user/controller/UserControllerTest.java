@@ -2,15 +2,14 @@ package com.worth.ifs.user.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -97,7 +96,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         user.setName("testFirstName testLastName");
         user.setTitle("Mr");
 
-        when(userServiceMock.findByEmail(user.getEmail())).thenReturn(serviceFailure(notFoundError(User.class, email)));
+        when(userServiceMock.findByEmail(user.getEmail())).thenReturn(serviceFailure(notFoundError(User.class, user.getEmail())));
 
         mockMvc.perform(get("/user/findByEmail/" + user.getEmail() + "/", "json")
                 .contentType(APPLICATION_JSON))

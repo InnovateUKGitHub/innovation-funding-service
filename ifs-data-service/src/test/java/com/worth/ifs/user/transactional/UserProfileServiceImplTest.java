@@ -7,12 +7,12 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
@@ -43,7 +43,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         User existingUser = newUser().build();
         User updatedUser = newUser().build();
 
-        when(userRepositoryMock.findByEmail("email@example.com")).thenReturn(singletonList(existingUser));
+        when(userRepositoryMock.findByEmail("email@example.com")).thenReturn(Optional.of(existingUser));
 
         LambdaMatcher<User> expectedUserMatcher = lambdaMatches(user -> {
 
@@ -75,7 +75,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 withTitle("Mr").
                 build();
 
-        when(userRepositoryMock.findByEmail("email@example.com")).thenReturn(emptyList());
+        when(userRepositoryMock.findByEmail("email@example.com")).thenReturn(Optional.empty());
 
         ServiceResult<UserResource> result = service.updateProfile(userToUpdate);
         assertTrue(result.isFailure());

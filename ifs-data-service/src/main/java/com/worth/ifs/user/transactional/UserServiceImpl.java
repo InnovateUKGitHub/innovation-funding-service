@@ -1,11 +1,19 @@
 package com.worth.ifs.user.transactional;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.token.domain.Token;
+import com.worth.ifs.token.domain.TokenType;
+import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.UserStatus;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +32,18 @@ import static java.util.stream.Collectors.toSet;
  */
 @Service
 public class UserServiceImpl extends BaseTransactionalService implements UserService {
+    final JsonNodeFactory factory = JsonNodeFactory.instance;
+
+    private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
 
     @Autowired
     private UserRepository repository;
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
+
+    @Autowired
+    private TokenRepository tokenRepository;
 
     @Override
     public ServiceResult<User> getUserByUid(final String uid) {
@@ -82,5 +96,24 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
                 .collect(toSet());
 
         return serviceSuccess(related);
+    }
+
+    @Override
+    public ServiceResult<Void> sendPasswordResetNotification(User user) {
+        if(UserStatus.ACTIVE.equals(user.getStatus())){
+            LOG.warn("Creating token");
+
+            String hash = RandomStringUtils.random(36, true, true);
+            Token token = new Token(TokenType.RESET_PASSWORD, User.class.getName(), user.getId(), hash, factory.objectNode());
+            tokenRepository.save(token);
+
+
+            LOG.warn("Created token");
+
+
+            return serviceSuccess();
+        }else{
+            return serviceFailure(notFoundError(User.class, user.getEmail(), UserStatus.ACTIVE));
+        }
     }
 }
