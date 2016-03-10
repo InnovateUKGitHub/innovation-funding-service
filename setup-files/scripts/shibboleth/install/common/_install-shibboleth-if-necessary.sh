@@ -9,6 +9,6 @@ if [ -n "$installed" ]; then
 
 fi
 
-./_install-latest-shibboleth-image.sh
+bash _install-latest-shibboleth-image.sh
 
 echo "Shibboleth installed successfully"

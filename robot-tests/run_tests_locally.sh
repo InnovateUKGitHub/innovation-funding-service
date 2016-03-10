@@ -239,7 +239,6 @@ then
     runTestsRemotely
 else
     echo "using quickTest:   FALSE" >&2
-    resetLDAP
     stopServers
     resetDB
     buildAndDeploy
