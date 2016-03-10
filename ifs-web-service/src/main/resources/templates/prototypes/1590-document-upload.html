@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${'/prototypes/1588-project-status'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${(param.user != null and param.user[0] == 'nonLead' ?  '/prototypes/1588-project-status?user=nonLead':'/prototypes/1588-project-status')})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -43,7 +43,9 @@
 		</div>
 	</div>
 
+	<h2 class="heading-medium" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Documents uploaded or to be uploaded by the lead partner</h2>
 
+	<h2 class="heading-medium" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Document uploads</h2>
 	
 	<form action="#">
 
@@ -51,7 +53,7 @@
 
 			<legend class="visuallyhidden">Upload your collaboration agreement</legend>
 			
-			<div class="upload-section">
+			<div class="upload-section" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
 				
 				<h2 class="heading-medium no-margin-top">Upload your collaboration agreement</h2>
 
@@ -71,6 +73,13 @@
 				<input type="file" name="file-collaboration-agreement" id="file-collaboration-agreement" class="inputfile" />
 				<label for="file-collaboration-agreement" class="button-secondary extra-margin">+ Upload</label>
 			</div>
+			
+			<div class="upload-section" th:unless="${param.user == null or param.user[0] != 'nonLead'}">
+				
+				<h2 class="heading-medium no-margin-top">Collaboration agreement</h2>
+				<a href="#" class="uploaded-file">Collab-agreement-file.pdf</a>
+
+			</div>
 
 		</fieldset>
 
@@ -78,7 +87,7 @@
 
 			<legend class="visuallyhidden">Upload your exploitation plan</legend>
 			
-			<div class="upload-section">
+			<div class="upload-section" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
 				
 				<h2 class="heading-medium no-margin-top">Upload your exploitation plan</h2>
 				
@@ -97,7 +106,22 @@
 
 				<input type="file" name="file-exploitation-plan" id="file-exploitation-plan" class="inputfile" />
 				<label for="file-exploitation-plan" class="button-secondary extra-margin">+ Upload</label>
+
+
 			</div>
+
+
+			<div class="upload-section" th:unless="${param.user == null or param.user[0] != 'nonLead'}">
+				
+				<h2 class="heading-medium no-margin-top">Exploitation plan</h2>
+				<p class="uploaded-file">No file currently uploaded by the lead partner</p>
+
+			</div>
+
+			
+
+
+
 
 		</fieldset>
 
@@ -105,7 +129,7 @@
 
 			<legend class="visuallyhidden">Upload your project plan</legend>
 			
-			<div class="upload-section">
+			<div class="upload-section" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
 				
 				<h2 class="heading-medium no-margin-top">Upload your project plan</h2>
 
@@ -124,6 +148,13 @@
 				
 				<input type="file" name="file-project-plan" id="file-project-plan" class="inputfile" />
 				<label for="file-project-plan" class="button-secondary extra-margin">+ Upload</label>
+			</div>
+
+			<div class="upload-section" th:unless="${param.user == null or param.user[0] != 'nonLead'}">
+				
+				<h2 class="heading-medium no-margin-top">Project plan</h2>
+				<a href="#" class="uploaded-file">project-plan-file.pdf</a>
+
 			</div>
 
 		</fieldset>

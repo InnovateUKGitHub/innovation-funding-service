@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${'/prototypes/1588-project-status'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${'/prototypes/1588-project-status?user=nonLead'})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
