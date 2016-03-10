@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  * read all the request attributes to get to the form data. It is also use when
  * you want to prefill a form.
  */
-public class RecoverPasswordForm {
+public class ResetPasswordRequestForm {
 
     @NotEmpty(message = "Please enter your e-mail address")
     @Email(message = "Please enter a valid e-mail address")

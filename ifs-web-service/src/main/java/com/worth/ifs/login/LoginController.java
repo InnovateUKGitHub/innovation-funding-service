@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -38,20 +39,46 @@ public class LoginController {
     UserService userService;
 
     @RequestMapping(value="/login/reset-password", method=RequestMethod.GET)
-    public String recoverPassword(RecoverPasswordForm recoverPasswordForm, Model model, HttpServletRequest request) {
-        model.addAttribute("recoverPasswordForm", recoverPasswordForm);
+    public String requestPasswordReset(ResetPasswordRequestForm resetPasswordRequestForm, Model model, HttpServletRequest request) {
+        model.addAttribute("resetPasswordRequestForm", resetPasswordRequestForm);
         return "login/reset-password";
     }
+
     @RequestMapping(value="/login/reset-password", method=RequestMethod.POST)
-    public String recoverPasswordPost(@ModelAttribute @Valid RecoverPasswordForm recoverPasswordForm, Model model, HttpServletRequest request) {
-        log.warn("Reset password for: "+ recoverPasswordForm.getEmail());
+    public String requestPasswordResetPost(@ModelAttribute @Valid ResetPasswordRequestForm resetPasswordRequestForm, BindingResult bindingResult, Model model, HttpServletRequest request) {
+        if(bindingResult.hasErrors()){
+            model.addAttribute("resetPasswordRequestForm", resetPasswordRequestForm);
+            return "login/reset-password";
+        }else{
+            log.warn("Reset password for: "+ resetPasswordRequestForm.getEmail());
+            userService.sendPasswordResetNotification(resetPasswordRequestForm.getEmail());
+            return "login/reset-password-notification-send";
+        }
 
-        userService.sendPasswordResetNotification(recoverPasswordForm.getEmail());
-
-
-        model.addAttribute("recoverPasswordForm", recoverPasswordForm);
-        return "login/reset-password";
     }
+
+    @RequestMapping(value="/login/reset-password/hash/{hash}", method=RequestMethod.GET)
+    public String resetPassword(@PathVariable("hash") String hash, @ModelAttribute ResetPasswordForm resetPasswordForm, Model model, HttpServletRequest request) {
+
+        return userService.checkPasswordResetHash(hash).handleSuccessOrFailure(
+                f -> "login/reset-hash-invalid",
+                s -> "login/reset-password-form"
+        );
+    }
+
+    @RequestMapping(value="/login/reset-password/hash/{hash}", method=RequestMethod.POST)
+    public String resetPasswordPost(@PathVariable("hash") String hash, @Valid @ModelAttribute ResetPasswordForm resetPasswordForm, BindingResult bindingResult, Model model, HttpServletRequest request) {
+        userService.checkPasswordResetHash(hash).getSuccessObjectOrThrowException();
+
+        if(bindingResult.hasErrors()){
+            return "login/reset-password-form";
+        }else{
+            userService.resetPassword(hash, resetPasswordForm.getPassword())
+                    .getSuccessObjectOrThrowException();
+            return "login/password-changed";
+        }
+    }
+
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
     public String login( Model model, HttpServletRequest request) {
