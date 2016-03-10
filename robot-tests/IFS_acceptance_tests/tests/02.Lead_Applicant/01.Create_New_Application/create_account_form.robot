@@ -11,7 +11,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
-${correct_password}    Passw0rd2
+${correct_password}    Passw0rd
 ${incorrect_password}    wrongpassword
 ${long_password}    passwordpasswordpasswordpasswordpasswordpasswordpassword
 ${short_password}    pass

@@ -83,7 +83,7 @@ Verify that the options will load properly with spaces in the name
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=org-name    Hive IT
     And the user clicks the button/link    id=org-search
-    Then The user should see the text in the page       Hive IT
+    Then The user should see the text in the page       HIVE IT
 
 
 *** Keywords ***
