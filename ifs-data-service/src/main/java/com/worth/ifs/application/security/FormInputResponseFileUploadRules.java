@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
 
 /**
@@ -50,7 +51,7 @@ public class FormInputResponseFileUploadRules {
     }
 
     private boolean userIsApplicantOnThisApplication(long applicationId, User user) {
-        List<Role> allApplicantRoles = roleRepository.findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName()));
+        List<Role> allApplicantRoles = roleRepository.findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()));
         List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, applicationId);
         return !applicantProcessRoles.isEmpty();
     }

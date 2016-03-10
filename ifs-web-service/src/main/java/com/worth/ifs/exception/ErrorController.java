@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -87,10 +89,12 @@ public class ErrorController {
     }
 
     @ResponseStatus(value= HttpStatus.PAYLOAD_TOO_LARGE)  // 413
-    @ExceptionHandler(value = PayloadTooLargeException.class)
-    public ModelAndView payloadTooLargeErrorHandler(HttpServletRequest req, PayloadTooLargeException e){
+    @ExceptionHandler(value = {MaxUploadSizeExceededException.class, MultipartException.class, PayloadTooLargeException.class})
+    public ModelAndView payloadTooLargeErrorHandler(HttpServletRequest req, MultipartException e){
         log.debug("ErrorController payloadTooLarge", e );
-        return createExceptionModelAndView(e, "error", req, e.getArguments(), HttpStatus.PAYLOAD_TOO_LARGE);
+        // TODO: Check if we can include more information by checking root cause as follows:
+        // if(e.getRootCause() != null && e.getRootCause() instanceof FileUploadBase.FileSizeLimitExceededException)
+        return createExceptionModelAndView(e, "413", req, Collections.emptyList(), HttpStatus.PAYLOAD_TOO_LARGE);
     }
 
     @ResponseStatus(value= HttpStatus.UNSUPPORTED_MEDIA_TYPE)  // 415

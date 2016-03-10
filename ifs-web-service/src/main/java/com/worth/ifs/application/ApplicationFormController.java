@@ -342,9 +342,11 @@ public class ApplicationFormController extends AbstractApplicationController {
         Map<String, String[]> params = request.getParameterMap();
         params.forEach((key, value) -> log.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
 
-
         setApplicationDetails(application, form.getApplication());
-        applicationService.save(application);
+        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
+        if(userIsLeadApplicant) {
+            applicationService.save(application);
+        }
         markApplicationQuestions(application, processRole.getId(), request, response, errors);
 
         if (financeFormHandler.handle(request, user.getId(), applicationId)) {
