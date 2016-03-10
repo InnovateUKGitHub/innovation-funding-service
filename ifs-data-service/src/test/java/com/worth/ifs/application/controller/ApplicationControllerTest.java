@@ -58,6 +58,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                                 fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
                                 fieldWithPath("processRoles").description("list of ProcessRole Id's"),
                                 fieldWithPath("applicationStatus").description("ApplicationStatus Id"),
+                                fieldWithPath("applicationStatusName").description("ApplicationStatus name"),
                                 fieldWithPath("competition").description("Competition Id"),
                                 fieldWithPath("competitionName").description("Competition Name"),
                                 fieldWithPath("applicationFinances").description("list of ApplicationFinance Id's"))));
