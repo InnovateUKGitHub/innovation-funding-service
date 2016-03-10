@@ -9,7 +9,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
-Search using valid company name
+Valid company name
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house    HappyPath
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
@@ -17,7 +17,7 @@ Search using valid company name
     And the user clicks the button/link    id=org-search
     Then the valid company names matching the search criteria should be displayed
 
-Search using invalid company name
+Invalid company name
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
@@ -25,7 +25,7 @@ Search using invalid company name
     And the user clicks the button/link    id=org-search
     Then the user should see the text in the page    Sorry we couldn't find any results
 
-Search using valid registration number
+Valid registration number
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house    HappyPath
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
@@ -33,7 +33,7 @@ Search using valid registration number
     And the user clicks the button/link    id=org-search
     Then the valid company names matching the search criteria should be displayed
 
-search using invalid registration number
+Invalid registration number
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
@@ -41,7 +41,7 @@ search using invalid registration number
     And The user clicks the button/link    id=org-search
     Then The user should see the text in the page    Sorry we couldn't find any results
 
-Search for invalid characters
+Invalid characters
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house    Pending
     # Pending INFUND-1493
@@ -49,6 +49,17 @@ Search for invalid characters
     When the user enters text to a text field    id=org-name    {}{}
     And the user clicks the button/link    id=org-search
     Then the applicant should get a validation error for the company house
+
+Company with spaces in the name
+    [Documentation]    INFUND-1757
+    [Tags]    Create application
+    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user enters text to a text field    id=org-name    Hive IT
+    And the user clicks the button/link    id=org-search
+    Then The user should see the text in the page    Hive IT
 
 *** Keywords ***
 the valid company names matching the search criteria should be displayed

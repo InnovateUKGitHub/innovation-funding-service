@@ -117,7 +117,7 @@
     <fieldset>
         <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? Organisation</legend>
         <div class="form-block">
-            <h3 class="heading-small">Organisation name</h3>
+            <h3 class="heading-small" th:text="${organisationForm.organisationType.name}+' name'" />
             <p th:text="${organisationForm.organisationName}"></p>
 
             <span th:if="${T(com.worth.ifs.user.domain.OrganisationTypeEnum).BUSINESS.organisationTypeId == organisationForm.organisationType.id}">
