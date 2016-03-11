@@ -1,22 +1,19 @@
 === Retrieve address by id
-include::{snippets}/address/findOne/path-parameters.adoc[]
-
 ==== Request
 include::{snippets}/address/findOne/http-request.adoc[]
+include::{snippets}/address/findOne/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/address/findOne/http-response.adoc[]
-
 include::{snippets}/address/findOne/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/address/findOne/curl-request.adoc[]
 
 === Lookup address by postcode
-include::{snippets}/address/lookup/path-parameters.adoc[]
-
 ==== Request
 include::{snippets}/address/lookup/http-request.adoc[]
+include::{snippets}/address/lookup/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/address/lookup/http-response.adoc[]
@@ -25,10 +22,9 @@ include::{snippets}/address/lookup/http-response.adoc[]
 include::{snippets}/address/lookup/curl-request.adoc[]
 
 === Validate postcode
-include::{snippets}/address/validate/path-parameters.adoc[]
-
 ==== Request
 include::{snippets}/address/validate/http-request.adoc[]
+include::{snippets}/address/validate/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/address/validate/http-response.adoc[]

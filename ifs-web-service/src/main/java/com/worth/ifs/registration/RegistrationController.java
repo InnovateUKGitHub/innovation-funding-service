@@ -5,6 +5,7 @@ import com.worth.ifs.application.ApplicationCreationController;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.UserService;
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -81,10 +82,11 @@ public class RegistrationController {
         HttpServletResponse response,
         Model model
     ){
-        return userService.verifyEmail(hash).handleSuccessOrFailure(
-                f -> "registration/unable-to-verify",
-                s -> "redirect:/registration/verified"
-        );
+        if(userService.verifyEmail(hash).isSuccess()){
+            return "redirect:/registration/verified";
+        }else{
+            throw new InvalidURLException();
+        }
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
