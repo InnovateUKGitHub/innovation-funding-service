@@ -35,6 +35,10 @@ public class UserController {
 
     private static final Log LOG = LogFactory.getLog(UserController.class);
 
+    public static final String URL_CHECK_PASSWORD_RESET_HASH = "checkPasswordResetHash";
+    public static final String URL_PASSWORD_RESET = "passwordReset";
+    public static final String URL_SEND_PASSWORD_RESET_NOTIFICATION = "sendPasswordResetNotification";
+
     @Autowired
     private UserService userService;
 
@@ -82,10 +86,23 @@ public class UserController {
         return userService.findRelatedUsers(applicationId).toGetResponse();
     }
 
-    @RequestMapping("/sendPasswordResetNotification/{emailaddress}/")
+    @RequestMapping("/" + URL_SEND_PASSWORD_RESET_NOTIFICATION + "/{emailaddress}/")
     public RestResult<Void> sendPasswordResetNotification(@PathVariable("emailaddress") final String emailAddress) {
         return userService.findByEmail(emailAddress)
                 .andOnSuccessReturn(userService::sendPasswordResetNotification)
+                .toPutResponse();
+    }
+
+    @RequestMapping("/" + URL_CHECK_PASSWORD_RESET_HASH + "/{hash}")
+    public RestResult<Void> checkPasswordReset(@PathVariable("hash") final String hash) {
+        LOG.warn("checkPasswordReset "+hash);
+        return userService.checkPasswordResetHashValidity(hash)
+                .toPutResponse();
+    }
+
+    @RequestMapping("/" + URL_PASSWORD_RESET + "/{hash}/{password}")
+    public RestResult<Void> resetPassword(@PathVariable("hash") final String hash, @PathVariable("password") final String password) {
+        return userService.changePassword(hash, password)
                 .toPutResponse();
     }
 

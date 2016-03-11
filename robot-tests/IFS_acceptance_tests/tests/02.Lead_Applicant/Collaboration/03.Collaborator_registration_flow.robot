@@ -61,7 +61,7 @@ The type of organisation navigates to the correct page
     [Tags]    HappyPath
     When user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Find your organisation on Companies House
+    Then the user should see the text in the page    Find your business on Companies House
     When the user goes back to the previous page
     Given user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -131,7 +131,7 @@ Business organisation (accept invitation flow)
     [Documentation]    INFUND-1005
     ...
     ...    INFUND-1779
-    [Tags]    HappyPath    Pending   FailingForDev
+    [Tags]    HappyPath    Pending   FailingForLocal
     Given the user navigates to the page    ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    organisationType    1
@@ -145,11 +145,15 @@ Business organisation (accept invitation flow)
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Rogier    De Regt
-    And the user verifies their email       ${verify_link_4}
+    And the user verifies the email
+    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    And the user clicks the button/link    jQuery=.button:contains("Sign")
+    And guest user log-in    worth.email.test+invite1@gmail.com    testtest
+    #And the user verifies their email    ${verify_link_4}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
 
 User who accepted the invite should be able to log-in
-    [Tags]    FailingForDev
+    [Tags]    FailingForLocal
     Given the user navigates to the page    ${INVITE_LINK}
     When the guest user enters the login credentials    rogier@worth.systems    Passw0rd2
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -159,7 +163,7 @@ User who accepted the invite should be able to log-in
 
 The collaborator who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
-    [Tags]    HappyPath    FailingForDev
+    [Tags]    HappyPath    FailingForLocal
     Guest user log-in    steve.smith@empire.com    test
     And the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the user clicks the button/link    css=.assign-button
@@ -170,7 +174,7 @@ Academic organisation (accept invitation flow)
     [Documentation]    INFUND-1166
     ...
     ...    This test case checks if the academic's finance form is visible for the academic organisations
-    [Tags]    Pending    HappyPath
+    [Tags]    Pending    HappyPath    FailingForLocal
     [Setup]    The guest user opens the browser
     # Pending the academics finances
     Given the user navigates to the page    ${INVITE_LINK_2}
@@ -191,7 +195,11 @@ Academic organisation (accept invitation flow)
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Steven    Gerrard
-    And the user verifies their email       ${verify_link_5}
+    And the user verifies the email
+    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    And the user clicks the button/link    jQuery=.button:contains("Sign")
+    And guest user log-in    worth.email.test+invite2@gmail.com    testtest
+    #And the user verifies their email    ${verify_link_5}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=A novel solution to an old problem
     and the user clicks the button/link    link=Your finances
@@ -216,3 +224,17 @@ the user fills the create account form
 the radio button should have the new selection
     [Arguments]    ${ORG_TYPE}
     Radio Button Should Be Set To    organisationType    ${ORG_TYPE}
+
+the user verifies the email
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    ${LATEST} =    wait for email    fromEmail=noresponse@innovateuk.gov.uk
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox

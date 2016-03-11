@@ -2,6 +2,8 @@ package com.worth.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.notifications.resource.*;
+import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.domain.TokenType;
 import com.worth.ifs.token.repository.TokenRepository;
@@ -11,20 +13,18 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserStatus;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -36,6 +36,10 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
 
+    enum Notifications {
+        VERIFY_EMAIL_ADDRESS
+    }
+
     @Autowired
     private UserRepository repository;
 
@@ -44,6 +48,12 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Autowired
     private TokenRepository tokenRepository;
+
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public ServiceResult<User> getUserByUid(final String uid) {
@@ -101,19 +111,54 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     @Override
     public ServiceResult<Void> sendPasswordResetNotification(User user) {
         if(UserStatus.ACTIVE.equals(user.getStatus())){
-            LOG.warn("Creating token");
+            String hash = getAndSavePasswordResetToken(user);
 
-            String hash = RandomStringUtils.random(36, true, true);
-            Token token = new Token(TokenType.RESET_PASSWORD, User.class.getName(), user.getId(), hash, factory.objectNode());
-            tokenRepository.save(token);
+            NotificationSource from = systemNotificationSource;
+            NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
 
+            Map<String, Object> notificationArguments = new HashMap<>();
+            notificationArguments.put("passwordResetLink", getPasswordResetLink(hash));
 
-            LOG.warn("Created token");
-
-
-            return serviceSuccess();
+            Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
+            ServiceResult<Notification> result = notificationService.sendNotification(notification, EMAIL);
+            return result.andOnSuccessReturnVoid();
         }else{
             return serviceFailure(notFoundError(User.class, user.getEmail(), UserStatus.ACTIVE));
         }
     }
+
+    @Override
+    public ServiceResult<Void> checkPasswordResetHashValidity(String hash) {
+        Optional<Token> token = tokenRepository.findByHash(hash);
+        if(token.isPresent() && TokenType.RESET_PASSWORD.equals(token.get().getType())) {
+            return serviceSuccess();
+        }
+        return serviceFailure(notFoundError(Token.class, hash));
+    }
+
+    private String getAndSavePasswordResetToken(User user) {
+        String hash = getRandomHash();
+        Token token = new Token(TokenType.RESET_PASSWORD, User.class.getName(), user.getId(), hash, factory.objectNode());
+        tokenRepository.save(token);
+        return hash;
+    }
+
+    @Override
+    public ServiceResult<Void> changePassword(String hash, String password){
+        Optional<Token> token = tokenRepository.findByHash(hash);
+        if(token.isPresent() && TokenType.RESET_PASSWORD.equals(token.get().getType())) {
+            User user = userRepository.findOne(token.get().getClassPk());
+            user.setPassword(password);
+            userRepository.save(user);
+            tokenRepository.delete(token.get());
+            return serviceSuccess();
+        }
+        return serviceFailure(notFoundError(Token.class, hash));
+    }
+
+
+    private String getRandomHash() {
+        return UUID.randomUUID().toString();
+    }
+
 }

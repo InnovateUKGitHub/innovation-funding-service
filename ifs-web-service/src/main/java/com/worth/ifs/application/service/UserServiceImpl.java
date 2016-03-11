@@ -104,6 +104,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public RestResult<Void> checkPasswordResetHash(String hash) {
+        return userRestService.checkPasswordResetHash(hash);
+    }
+
+    @Override
+    public RestResult<Void> resetPassword(String hash, String password) {
+        return userRestService.resetPassword(hash,password);
+    }
+
+    @Override
     public RestResult<UserResource> findUserByEmail(String email) {
         return userRestService.findUserByEmail(email);
     }

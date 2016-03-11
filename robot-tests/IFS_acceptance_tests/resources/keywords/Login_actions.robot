@@ -27,14 +27,6 @@ The guest user inserts user email & password
 
 The guest user clicks the log-in button
     Click Button    css=button[name="_eventId_proceed"]
-    # The guest user opens the browser
-    #    Start Virtual Display    1920    1080
-    #    Open browser    http://google.com    ${BROWSER}
-    #    ...    ff_profile_dir=${FF_PROFILE}
-    #    ...    remote_url=${REMOTE_URL}
-    #    ...    desired_capabilities=${DESIRED_CAPABILITIES}
-    #    Run keyword if    '${SERVER_AUTH}' != ''    Go to    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}
-    #    Run keyword if    '${SERVER_AUTH}' == ''    Go to    ${PROTOCOL}${SERVER_BASE}
 
 The guest user opens the browser
     Run keyword if    '${VIRTUAL_DISPLAY}' == 'true'   Start Virtual Display    1920    1080

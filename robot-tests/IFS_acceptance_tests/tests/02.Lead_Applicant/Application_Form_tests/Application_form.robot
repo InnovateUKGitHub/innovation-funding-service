@@ -22,25 +22,12 @@ ${CREATE_APPLICATION_PAGE}    ${SERVER}/application/create/1?accept=accepted
 ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}    ${SERVER}/application/1/form/question/11
 ${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}    ${SERVER}/application/1/form/question/12
 ${NEW_TEST_APPLICATION_OVERVIEW}    ${SERVER}/application/1
-${BUTTON}    css=.extra-margin
+${JSFUNCTION}   window.document.getElementById("18").onChange();
+
 
 *** Test Cases ***
-#Verify uploaded file can be opened only by Lead Applicant
-#    [Documentation]     INFUND-832
-#    [Tags]
-#    Given the user navigates to the page     ${PROJECT_TEAM_URL}
-#    And the user can see the option to upload a file
-#    When user click on the file upload link
-#    Then the user can open the file
 
-Verify that Applicant can upload less than 1mb pdf files
-    [Documentation]     INFUND-409
-    [Tags]      Collaboration   Pending
-    [Setup]     Guest user log-in   &{lead_applicant_credentials}
-    Given the user navigates to the page    ${SERVER}/application/1/form/question/8
-    And the user can see the option to upload a file
-    # When The user clicks the button/link    ${BUTTON}
-    Then the user can choose pdf file to upload
+
 
 Verify the Autosave for the form text areas
     [Documentation]    INFUND-189
@@ -272,8 +259,22 @@ the user can see the option to upload a file
     the user should see the text in the page       Upload
 
 the user can choose pdf file to upload
-    Sleep   2s
-    Choose File    name=formInput[18]    testing.pdf
-    Sleep   5s
-    Reload Page
-    Sleep   5s
+    Wait Until Element Is Visible       name=formInput[18]
+    Choose File    name=formInput[18]    /home/ewan/testing.pdf
+    # Execute JavaScript   ${JSFUNCTION}
+    Sleep   20s
+    click button    name=mark_as_complete
+
+the user can see the option to upload a file on the page
+    [Arguments]     ${url}
+    The user navigates to the page      ${url}
+    Wait Until Element Is Visible       name=mark_as_complete
+    Page Should Contain                 Upload
+
+the user cannot see the option to upload a file on the page
+    [Arguments]     ${url}
+    The user navigates to the page      ${url}
+    Wait Until Element Is Visible       name=mark_as_complete
+    Page Should Not Contain             Upload
+
+

@@ -18,6 +18,8 @@ public interface UserService {
     ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application);
     RestResult<Void> verifyEmail(String hash);
     RestResult<Void> sendPasswordResetNotification(String email);
+    RestResult<Void> checkPasswordResetHash(String hash);
+    RestResult<Void> resetPassword(String hash, String password);
     RestResult<UserResource> findUserByEmail(String email);
     Set<User> getAssignableUsers(ApplicationResource application);
     Set<User> getApplicationUsers(ApplicationResource application);

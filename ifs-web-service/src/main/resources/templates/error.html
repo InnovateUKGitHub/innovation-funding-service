@@ -11,7 +11,8 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <h1 class="heading-large" th:text="${title}">Internal Server Error</h1>
+    <h1 class="heading-large" th:if="${title != null}" th:text="${title}">Internal Server Error</h1>
+    <h1 class="heading-large" th:unless="${title != null}">Internal Server Error</h1>
 
     <p th:if="${url}">
         <b>Page:</b> <span th:text="${url}">Page URL</span>
@@ -31,7 +32,7 @@
 
     <div>
 		<span>
-            We are unable to complete your request. This could be because something went wrong at our end. Or you are trying to perform an action that does not exist.  You can either go <a href="javascript:history.back();">back</a> to the page you were previously on or click <a th:href="@{/}">here</a> to get back to the IFS application.
+            We are unable to complete your request. This could be because something went wrong at our end, or you are trying to perform an action that does not exist.  You can either go back to the page you were previously on or click <a th:href="@{/}">here</a> to get back to the IFS application.
         </span>
     </div>
 

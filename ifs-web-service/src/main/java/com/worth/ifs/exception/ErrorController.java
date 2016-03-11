@@ -2,11 +2,8 @@ package com.worth.ifs.exception;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.commons.error.exception.*;
-import com.worth.ifs.util.MessageUtil;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -14,25 +11,20 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * This controller can handle all Exceptions, so the user should always gets a
  * nice looking error page, or a json error message is returned.
  */
 @ControllerAdvice
-public class ErrorController {
+public class ErrorController extends BaseErrorController{
     private final Log log = LogFactory.getLog(getClass());
-
-    @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
-    Environment env;
 
     public ErrorController() {
         super();
@@ -42,6 +34,13 @@ public class ErrorController {
         super();
         this.env = env;
         this.messageSource = messageSource;
+    }
+
+    @ResponseStatus(HttpStatus.ALREADY_REPORTED)     // 400
+    @ExceptionHandler(value = InvalidURLException.class)
+    public ModelAndView invalidUrlErrorHandler(HttpServletRequest req, InvalidURLException e) {
+        log.debug("ErrorController invalidUrlErrorHandler", e);
+        return new ModelAndView("url-hash-invalid");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)     // 400
@@ -87,10 +86,12 @@ public class ErrorController {
     }
 
     @ResponseStatus(value= HttpStatus.PAYLOAD_TOO_LARGE)  // 413
-    @ExceptionHandler(value = PayloadTooLargeException.class)
-    public ModelAndView payloadTooLargeErrorHandler(HttpServletRequest req, PayloadTooLargeException e){
+    @ExceptionHandler(value = {MaxUploadSizeExceededException.class, MultipartException.class, PayloadTooLargeException.class})
+    public ModelAndView payloadTooLargeErrorHandler(HttpServletRequest req, MultipartException e){
         log.debug("ErrorController payloadTooLarge", e );
-        return createExceptionModelAndView(e, "error", req, e.getArguments(), HttpStatus.PAYLOAD_TOO_LARGE);
+        // TODO: Check if we can include more information by checking root cause as follows:
+        // if(e.getRootCause() != null && e.getRootCause() instanceof FileUploadBase.FileSizeLimitExceededException)
+        return createExceptionModelAndView(e, "413", req, Collections.emptyList(), HttpStatus.PAYLOAD_TOO_LARGE);
     }
 
     @ResponseStatus(value= HttpStatus.UNSUPPORTED_MEDIA_TYPE)  // 415
@@ -150,19 +151,5 @@ public class ErrorController {
         return createExceptionModelAndView(e, "error", req, Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ModelAndView createExceptionModelAndView(Exception e, String message, HttpServletRequest req, List<Object> arguments, HttpStatus status){
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("exception", e);
-        final String errorPageTitle = MessageUtil.getFromMessageBundle(messageSource, "error.title.status." + status.value(), "Unknown Error...", arguments.toArray(), req.getLocale());
-        mav.addObject("title", errorPageTitle);
-        if(env.acceptsProfiles("uat", "dev", "test")) {
-            mav.addObject("stacktrace", ExceptionUtils.getStackTrace(e));
-            String msg = MessageUtil.getFromMessageBundle(messageSource, e.getClass().getName(), e.getMessage(), arguments.toArray(), req.getLocale());
-            mav.addObject("message", msg);
-        }
 
-        mav.addObject("url", req.getRequestURL().toString());
-        mav.setViewName(message);
-        return mav;
-    }
 }
