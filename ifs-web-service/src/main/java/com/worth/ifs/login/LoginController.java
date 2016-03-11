@@ -1,6 +1,7 @@
 package com.worth.ifs.login;
 
 import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
@@ -28,7 +29,7 @@ import javax.validation.Valid;
 
 @Controller
 @Configuration
-public class LoginController {
+public class LoginController{
     private final Log log = LogFactory.getLog(getClass());
 
     private final static String REDIRECT_URL_PARAMETER = "redirect_url";
@@ -37,6 +38,7 @@ public class LoginController {
     UserAuthenticationService userAuthenticationService;
     @Autowired
     UserService userService;
+
 
     @RequestMapping(value="/login/reset-password", method=RequestMethod.GET)
     public String requestPasswordReset(ResetPasswordRequestForm resetPasswordRequestForm, Model model, HttpServletRequest request) {
@@ -58,16 +60,17 @@ public class LoginController {
 
     @RequestMapping(value="/login/reset-password/hash/{hash}", method=RequestMethod.GET)
     public String resetPassword(@PathVariable("hash") String hash, @ModelAttribute ResetPasswordForm resetPasswordForm, Model model, HttpServletRequest request) {
-
-        return userService.checkPasswordResetHash(hash).handleSuccessOrFailure(
-                f -> "login/reset-hash-invalid",
-                s -> "login/reset-password-form"
-        );
+        if(userService.checkPasswordResetHash(hash).isFailure()){
+            throw new InvalidURLException();
+        }
+        return "login/reset-password-form";
     }
 
     @RequestMapping(value="/login/reset-password/hash/{hash}", method=RequestMethod.POST)
     public String resetPasswordPost(@PathVariable("hash") String hash, @Valid @ModelAttribute ResetPasswordForm resetPasswordForm, BindingResult bindingResult, Model model, HttpServletRequest request) {
-        userService.checkPasswordResetHash(hash).getSuccessObjectOrThrowException();
+        if(userService.checkPasswordResetHash(hash).isFailure()){
+            throw new InvalidURLException();
+        }
 
         if(bindingResult.hasErrors()){
             return "login/reset-password-form";

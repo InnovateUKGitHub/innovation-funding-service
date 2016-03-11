@@ -1,6 +1,7 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteResource;
@@ -73,12 +74,10 @@ public class AcceptInviteController {
                 cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
                 return "redirect:/login";
             }
+        }else{
+            CookieUtil.removeCookie(response, INVITE_HASH);
+            throw new InvalidURLException();
         }
-
-        CookieUtil.removeCookie(response, INVITE_HASH);
-        cookieFlashMessageFilter.setFlashMessage(response, "inviteNotValid");
-        return "redirect:/login";
-
     }
 
 }
