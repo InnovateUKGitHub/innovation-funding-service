@@ -229,14 +229,10 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<Void> checkPasswordResetHashValidity(String hash) {
-        LOG.warn("checkPasswordResetHashValidity ");
         Optional<Token> token = tokenRepository.findByHash(hash);
         if(token.isPresent() && TokenType.RESET_PASSWORD.equals(token.get().getType())) {
-            LOG.warn("checkPasswordResetHashValidity 2");
             return serviceSuccess();
         }
-
-        LOG.warn("checkPasswordResetHashValidity 3");
         return serviceFailure(notFoundError(Token.class, hash));
     }
 
