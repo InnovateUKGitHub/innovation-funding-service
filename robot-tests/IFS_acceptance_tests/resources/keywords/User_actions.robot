@@ -116,11 +116,10 @@ The user should get an error page
     Page should contain    ${ERROR_TEXT}
 
 The user should see the browser notification
+    [Arguments]    ${MESSAGE}
     # Note - this keyword has been implemented to prevent failures on sauce labs
     # from different browsers not showing the notifications correctly
-    [Arguments]  ${MESSAGE}
-    Run keyword if  '${REMOTE_URL}' == ''       the user should see the notification    ${MESSAGE}
-
+    Run keyword if    '${REMOTE_URL}' == ''    the user should see the notification    ${MESSAGE}
 
 The user should see the notification
     [Arguments]    ${MESSAGE}
@@ -141,6 +140,6 @@ browser validations have been disabled
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
 
 The user verifies their email
-    [Arguments]         ${verify_link}
-    Go To   ${verify_link}
-    Page Should Contain     Account verified
+    [Arguments]    ${verify_link}
+    Go To    ${verify_link}
+    Page Should Contain    Account verified

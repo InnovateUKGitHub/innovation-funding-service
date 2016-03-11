@@ -16,7 +16,7 @@ ${incorrect_password}    wrongpassword
 ${long_password}    passwordpasswordpasswordpasswordpasswordpasswordpassword
 ${short_password}    pass
 ${valid_email}    ewan+14@hiveit.co.uk
-${email_already_in_db}      ewan+12@hiveit.co.uk
+${email_already_in_db}    ewan+12@hiveit.co.uk
 
 *** Test Cases ***
 First name left blank
@@ -148,7 +148,7 @@ Password is too short
     And the user enters text to a text field    id=password    ${short_password}
     And the user enters text to a text field    id=retypedPassword    ${short_password}
     And the user submits their information
-    Then the user should see an error    Your password should have been 6 and 30 characters.
+    Then the user should see an error    Password size should be between 6 and 30 characters
     And the user cannot login with their new details    ${valid_email}    ${short_password}
     And the user logs out if they are logged in
 
@@ -178,8 +178,10 @@ Valid account creation
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
-    And the user verifies their email       ${verify_link_1}
-    #Then user should be redirected to the correct page    ${LOGIN_URL}
+    And the user verifies their email    ${verify_link_1}
+    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    And the user clicks the button/link    jQuery=.button:contains("Sign")
+    Then the user should be redirected to the correct page    ${LOGIN_URL}
     And the user can login with their new details
     And the user should see the element    link=Logout
     And the user clicks the button/link    link=Logout
