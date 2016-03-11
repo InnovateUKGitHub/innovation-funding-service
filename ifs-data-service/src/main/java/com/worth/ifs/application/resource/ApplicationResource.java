@@ -1,6 +1,7 @@
 package com.worth.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ApplicationResource {
 
@@ -109,7 +111,7 @@ public class ApplicationResource {
 
     @JsonIgnore
     public boolean isOpen(){
-        return applicationStatus == 5;
+        return Objects.equals(applicationStatus, ApplicationStatusConstants.OPEN.getId());
     }
 
     @Override

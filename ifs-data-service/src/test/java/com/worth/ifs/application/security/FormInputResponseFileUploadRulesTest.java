@@ -1,7 +1,10 @@
 package com.worth.ifs.application.security;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.application.builder.ApplicationStatusBuilder;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -18,9 +21,7 @@ import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newF
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
-import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.user.domain.UserRoleType.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertFalse;
@@ -43,11 +44,15 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
     //TODO: Implement tests for lead applicant type users.
     private Role leadApplicant = newRole().withType(LEADAPPLICANT).build();
     private Role collaborator = newRole().withType(COLLABORATOR).build();
+    private Application application;
 
     @Test
     public void testApplicantCanUploadFilesInResponsesForOwnApplication() {
 
         Application application = newApplication().build();
+
+        ApplicationStatus applicationStatusOpen = ApplicationStatusBuilder.newApplicationStatus().withName(ApplicationStatusConstants.OPEN).build();
+        application.setApplicationStatus(applicationStatusOpen);
 
         User user = newUser().build();
         ProcessRole applicantProcessRole =
@@ -55,12 +60,12 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
-
         List<Role> roles = Arrays.asList(applicantRole);
 
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(roleRepositoryMock.findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()))).thenReturn(asList(applicantRole));
         when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user.getId(), roles, applicationId)).thenReturn(asList(applicantProcessRole));
-
+        
         assertTrue(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user));
 
         verify(roleRepositoryMock).findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()));

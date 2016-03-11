@@ -1,13 +1,15 @@
 package com.worth.ifs.application.security;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.application.builder.ApplicationStatusResourceBuilder;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -30,6 +32,7 @@ public class ApplicationRulesTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private ApplicationRules applicationRules;
 
+    private ApplicationStatusResource applicationStatusOpen;
     private ApplicationResource applicationResource1;
     private ApplicationResource applicationResource2;
     private Application application1;
@@ -50,7 +53,8 @@ public class ApplicationRulesTest extends BaseUnitTestMocksTest {
         user2 = newUser().build();
         processRole1 = newProcessRole().withRole(leadApplicantRole).build();
         processRole2 = newProcessRole().withRole(applicantRole).build();
-        applicationResource1 = newApplicationResource().withProcessRoles(processRole1).build();
+        applicationStatusOpen = ApplicationStatusResourceBuilder.newApplicationStatusResource().withName(ApplicationStatusConstants.OPEN).build();
+        applicationResource1 = newApplicationResource().withProcessRoles(processRole1).withApplicationStatus(applicationStatusOpen).build();
         applicationResource2 = newApplicationResource().withProcessRoles(processRole2).build();
         application1 = newApplication().withId(applicationResource1.getId()).withProcessRoles(processRole1).build();
         application2 = newApplication().withId(applicationResource2.getId()).withProcessRoles(processRole2).build();

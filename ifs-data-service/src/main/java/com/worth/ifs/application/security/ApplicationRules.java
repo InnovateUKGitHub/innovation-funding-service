@@ -1,7 +1,5 @@
 package com.worth.ifs.application.security;
 
-import java.util.List;
-
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.security.PermissionRule;
@@ -12,9 +10,10 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 import static com.worth.ifs.util.BooleanFunctions.and;
 import static com.worth.ifs.util.CollectionFunctions.onlyElement;
@@ -39,7 +38,7 @@ public class ApplicationRules {
 
     @PermissionRule(value="UPDATE", description="A user can only update an application is they are the lead applicant")
     public boolean onlyLeadApplicantCanChangeApplicationResource(ApplicationResource application, User user){
-        return and(userIsConnectedToApplicationResource(application, user), userIsLeadApplicantOnApplicationResource(application, user));
+        return and(userIsConnectedToApplicationResource(application, user), userIsLeadApplicantOnApplicationResource(application, user), application.isOpen());
     }
 
     boolean userIsConnectedToApplicationResource(ApplicationResource application, User user){
