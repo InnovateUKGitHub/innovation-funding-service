@@ -88,7 +88,7 @@ function startServers {
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// --exclude Failing --exclude Pending --exclude FailingForLocal --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// -v UPLOAD_FOLDER:$uploadFileDir --exclude Failing --exclude Pending --exclude FailingForLocal --name IFS $testDirectory
 }
 
 
@@ -110,6 +110,7 @@ cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
 echo "scriptDir:        ${scriptDir}"
+uploadFileDir=${scriptDir}"/upload_files"
 dateFormat=`date +%Y-%m-%d`
 cd ../ifs-data-service
 dataServiceCodeDir=`pwd`

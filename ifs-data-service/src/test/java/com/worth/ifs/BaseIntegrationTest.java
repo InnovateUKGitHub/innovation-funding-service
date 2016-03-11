@@ -13,7 +13,6 @@ import static com.worth.ifs.BuilderAmendFunctions.clearUniqueIds;
  * of the form of either integration tests with a running server ({@link BaseWebIntegrationTest}) or without
  * (e.g. {@link BaseRepositoryIntegrationTest}).
  *
- * Created by dwatson on 02/10/15.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)

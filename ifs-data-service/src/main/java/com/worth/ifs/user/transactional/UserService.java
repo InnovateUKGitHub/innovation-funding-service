@@ -50,6 +50,12 @@ public interface UserService {
     @NotSecured("TODO - implement when permissions matrix in place")
     ServiceResult<Void> activateUser(Long userId);
 
-    @NotSecured("TODO - implement when permissions matrix in place")
+    @NotSecured("Need to keep open to allow password reset")
     ServiceResult<Void> sendPasswordResetNotification(User user);
+
+    @NotSecured("Need to keep open to allow password reset")
+    ServiceResult<Void> checkPasswordResetHashValidity(String hash);
+
+    @NotSecured("Need to keep open to allow password reset")
+    ServiceResult<Void> changePassword(String hash, String password);
 }

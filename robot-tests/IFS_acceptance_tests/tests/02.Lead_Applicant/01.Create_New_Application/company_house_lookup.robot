@@ -41,15 +41,6 @@ Invalid registration number
     And The user clicks the button/link    id=org-search
     Then The user should see the text in the page    Sorry we couldn't find any results
 
-Invalid characters
-    [Documentation]    INFUND-887
-    [Tags]    Applicant    Company house    Pending
-    # Pending INFUND-1493
-    Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When the user enters text to a text field    id=org-name    {}{}
-    And the user clicks the button/link    id=org-search
-    Then the applicant should get a validation error for the company house
-
 Company with spaces in the name
     [Documentation]    INFUND-1757
     [Tags]    Create application
@@ -59,14 +50,23 @@ Company with spaces in the name
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=org-name    Hive IT
     And the user clicks the button/link    id=org-search
-    Then The user should see the text in the page    Hive IT
+    Then The user should see the element    Link=HIVE IT LIMITED
+
+Invalid characters
+    [Documentation]    INFUND-887
+    [Tags]    Applicant    Company house    Pending
+    # Pending INFUND-1493
+    Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
+    When the user enters text to a text field    id=org-name    {}{}
+    And the user clicks the button/link    id=org-search
+    Then the applicant should get a validation error for the company house
 
 *** Keywords ***
 the valid company names matching the search criteria should be displayed
     Page Should Contain    05493105 - Incorporated on 28 June 2005
     Click Link    INNOVATE LTD
     Page Should Contain    Business
-    Page Should Contain    Organisation name
+    Page Should Contain    Business name
     Element Should Contain    css=.form-block p:nth-child(2)    INNOVATE LTD
     Page Should Contain    Registration number
     Page should contain    05493105

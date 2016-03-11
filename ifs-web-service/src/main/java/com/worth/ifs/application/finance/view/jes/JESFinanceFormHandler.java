@@ -16,9 +16,9 @@ import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInputType;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -154,12 +154,12 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     @Override
     public void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value) {
         // not to be implemented, there are not any finance positions for the JES form
-        throw new NotImplementedException();
+        throw new NotImplementedException("There are not any finance positions for the JES form");
     }
 
     @Override
     public CostItem addCost(Long applicationId, Long userId, Long questionId) {
         // not to be implemented, can't add extra rows of finance to the JES form
-        throw new NotImplementedException();
+        throw new NotImplementedException("Can't add extra rows of finance to the JES form");
     }
 }
