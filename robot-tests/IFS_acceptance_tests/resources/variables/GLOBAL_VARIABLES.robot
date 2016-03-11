@@ -1,9 +1,9 @@
 *** Variables ***
 ${BROWSER}        Firefox
-${SERVER_BASE}    localhost:8085
+${SERVER_BASE}    localhost:8085/
 ${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
-${RUNNING_ON_DEV}       ${EMPTY}
+${RUNNING_ON_DEV}    ${EMPTY}
 ${LOGIN_URL}      ${SERVER}/
 ${TEMPORARY_LOGOUT_URL}   ${LOGIN_URL}idp/profile/SAML2/Redirect/SSO
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
@@ -48,11 +48,10 @@ ${POSTCODE_LOOKUP_URL}    ${SERVER}/organisation/create/selected-organisation/05
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
 ${APPLICATION_TEAM_URL}    ${SERVER}/application/1/contributors
 ${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/1/contributors/invite
-
-
 ${404_error_message}    Page Not Found
 ${403_error_message}    You do not have the necessary permissions for your request
-
-${verify_link_1}           ${SERVER}/registration/verify-email/4a5bc71c9f3a2bd50fada434d888579aec0bd53fe7b3ca3fc650a739d1ad5b1a110614708d1fa083
-${verify_link_2}           ${SERVER}/registration/verify-email/5f415b7ec9e9cc497996e251294b1d6bccfebba8dfc708d87b52f1420c19507ab24683bd7e8f49a0
-${verify_link_3}           ${SERVER}/registration/verify-email/8223991f065abb7ed909c8c7c772fbdd24c966d246abd63c2ff7eeba9add3bafe42b067b602f761b
+${REGISTRATION_SUCCESS}    ${SERVER}/registration/success
+${verify_link_1}    ${SERVER}/registration/verify-email/4a5bc71c9f3a2bd50fada434d888579aec0bd53fe7b3ca3fc650a739d1ad5b1a110614708d1fa083
+${verify_link_2}    ${SERVER}/registration/verify-email/5f415b7ec9e9cc497996e251294b1d6bccfebba8dfc708d87b52f1420c19507ab24683bd7e8f49a0
+${verify_link_3}    ${SERVER}/registration/verify-email/8223991f065abb7ed909c8c7c772fbdd24c966d246abd63c2ff7eeba9add3bafe42b067b602f761b
+${REGISTRATION_VERIFIED}    ${SERVER}/registration/verified

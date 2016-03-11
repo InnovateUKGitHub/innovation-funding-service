@@ -20,6 +20,7 @@ public class ApplicationResource {
     private List<Long> processRoles = new ArrayList<>();
     private List<Long> applicationFinances = new ArrayList<>();
     private Long applicationStatus;
+    private String applicationStatusName;
     private Long competition;
     private String competitionName;
     private List<Long> invites;
@@ -152,6 +153,14 @@ public class ApplicationResource {
 
     public LocalDateTime getSubmittedDate() {
         return submittedDate;
+    }
+
+    public String getApplicationStatusName() {
+        return applicationStatusName;
+    }
+
+    public void setApplicationStatusName(String applicationStatusName) {
+        this.applicationStatusName = applicationStatusName;
     }
 
     public void setSubmittedDate(LocalDateTime submittedDate) {

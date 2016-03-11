@@ -14,7 +14,7 @@ public class RecoverPasswordForm {
     @NotEmpty(message = "Please enter your e-mail address")
     @Email(message = "Please enter a valid e-mail address")
     private String email;
-    private String actionUrl = "/login/recover-password";
+    private String actionUrl = "/login/reset-password";
 
     public String getEmail() {
         return email;
