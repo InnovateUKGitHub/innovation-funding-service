@@ -15,6 +15,7 @@ function addUserToShibboleth {
     emailAddress=$1
     response=$(curl -k -d "{\"email\": \"${emailAddress}\",\"password\": \"Passw0rd\"}" -H 'Content-type: application/json' -H "api-key: 1234567890" https://ifs-local-dev/regapi/identities/)
     uuid=$(echo ${response} | sed 's/.*"uuid":"\([^"]*\)".*/\1/g')
+    curl -X PUT -H 'Content-type: application/json' -H "api-key: 1234567890" https://ifs-local-dev/regapi/identities/${uuid}/activateUser --insecure
     executeMySQLCommand "update user set uid='${uuid}' where email='${emailAddress}';"
 }
 
