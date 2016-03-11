@@ -107,6 +107,11 @@ public class ApplicationResource {
         this.invites = invites;
     }
 
+    @JsonIgnore
+    public boolean isOpen(){
+        return applicationStatus == 5;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -332,6 +332,7 @@
 <!-- ========================= Mark as complete buttons =========================== -->
 
 <div th:fragment="form-mark-as-complete-buttons">
+    <div th:remove="tag" th:unless="${appIsClosed}">
     <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}"
             type="submit"
             name="mark_as_complete"
@@ -347,6 +348,7 @@
             th:class="${costCategory!=null} ? 'button' : 'buttonlink'"
             th:attrappend="formaction='&#35;question-'+${question.getId()}">Edit
     </button>
+    </div>
 </div>
 <!-- ========================= edit link =========================== -->
 
@@ -355,6 +357,7 @@
             class="button-secondary"
             type="submit"
             name="edit_question"
+            th:unless="${appIsClosed}"
             th:value="${question.getId()}"
             th:class="${readonly} or ${costCategory!=null} ? 'button' : 'buttonlink'"
             th:attrappend="formaction='/application/'+${currentApplication.getId()}+'/form/question/edit/'+${question.getId()}+'&#35;question-'+${question.getId()}"
