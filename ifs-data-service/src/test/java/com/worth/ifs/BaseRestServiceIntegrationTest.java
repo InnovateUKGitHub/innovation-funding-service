@@ -3,11 +3,14 @@ package com.worth.ifs;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.flywaydb.core.Flyway;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 /**
  * This is the base class for testing REST services with full integration with a running "data" layer server on
@@ -17,6 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
+@Transactional
 public abstract class BaseRestServiceIntegrationTest<RestServiceType> extends BaseWebIntegrationTest {
     private static final Log LOG = LogFactory.getLog(BaseRestServiceIntegrationTest.class);
     protected RestServiceType service;
@@ -33,9 +37,7 @@ public abstract class BaseRestServiceIntegrationTest<RestServiceType> extends Ba
     @Value("${flyway.password}")
     public String databasePassword;
 
-    @Value("${flyway.locations}")
-    public String locations;
-
+    public String locations = "db/migration,db/integration";
 
     private void cleanAndMigrateDatabaseWithPatches(String[] patchLocations){
         LOG.info("cleanAndMigrateDatabaseWithPatches");
@@ -50,7 +52,7 @@ public abstract class BaseRestServiceIntegrationTest<RestServiceType> extends Ba
     /**
      * Need to do a db reset, because spring can't do a @rollback on rest calls...
      */
-    @Before
+    @PostConstruct @PreDestroy
     public void recreateDatabase(){
         cleanAndMigrateDatabaseWithPatches(locations.split("\\s*,\\s*"));
     }
