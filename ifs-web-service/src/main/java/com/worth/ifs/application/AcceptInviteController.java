@@ -76,7 +76,7 @@ public class AcceptInviteController {
             }
         }else{
             CookieUtil.removeCookie(response, INVITE_HASH);
-            throw new InvalidURLException();
+            throw new InvalidURLException("Invite url is not valid", null);
         }
     }
 
