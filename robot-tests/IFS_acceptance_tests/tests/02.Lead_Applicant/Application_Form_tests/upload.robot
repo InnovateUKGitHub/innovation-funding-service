@@ -25,7 +25,7 @@ ${text_file}            ${UPLOAD_FOLDER}/testing.txt
 
 Verify that the applicant can upload pdf files
     [Documentation]        INFUND-832
-    [Tags]      Collaboration       Upload  Pending
+    [Tags]      Collaboration       Upload      Pending
     [Setup]     Guest user log-in   &{lead_applicant_credentials}
     Given the user can see the option to upload a file on the page      ${project_team_url}
     And the user can upload the file to the project team page        ${valid_pdf}
@@ -36,13 +36,13 @@ Questions can be assigned with appendices to the collaborator
     [Tags]      Collaboration       Upload      Pending
     [Setup]     Guest user log-in   &{lead_applicant_credentials}
     Given the user navigates to the page     ${project_team_url}
-    And the user can see the uploaded file  ${valid_pdf}
+    And the user can see the uploaded file
     When the user assigns the question to Jessica Doe
     And the user cannot remove the file     ${valid_pdf}
     And the user logs out
     And the collaborator logs in
     And the user navigates to the page      ${project_team_url}
-    Then the user can see the uploaded file     ${valid_pdf}
+    Then the user can see the uploaded file
     And the user can remove the uploaded file       ${valid_pdf}
 
 
@@ -85,8 +85,7 @@ Non pdf uploads not allowed
 
 
 the user can see the uploaded file
-    [Arguments]      ${file_name}
-    Page Should Contain         ${file_name}
+    Page Should Contain        testing.pdf
 
 
 the user can remove the uploaded file
@@ -111,11 +110,12 @@ the collaborator logs in
 
 the user can upload the file to the project team page
     [Arguments]     ${file_name}
-    Sleep   30s
+    Sleep   5s
     #Wait Until Element Is Visible       name=formInput[18]
     Choose File    name=formInput[18]    ${file_name}
     # Execute JavaScript   ${JSFUNCTION}
-    Sleep   30s
+    # Simulate        event=change
+    Sleep   10s
     click button    name=mark_as_complete
     Wait Until Page Contains        ${file_name}
 
