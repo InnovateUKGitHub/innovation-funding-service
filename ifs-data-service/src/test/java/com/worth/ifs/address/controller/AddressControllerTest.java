@@ -14,6 +14,8 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -35,9 +37,21 @@ public class AddressControllerTest extends BaseControllerMockMVCTest<AddressCont
         mockMvc.perform(get("/address/{id}", addressId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.addressLine1", is("Address line 1")))
-                .andDo(document("address/findOne", pathParameters(
+                .andDo(document(
+                    "address/findOne",
+                    pathParameters(
                         parameterWithName("id").description("Id of the address that needs to be found")
-                )));
+                    ),
+                    responseFields(
+                        fieldWithPath("id").description("id of the address"),
+                        fieldWithPath("addressLine1").description("first addressLine"),
+                        fieldWithPath("addressLine2").description("second addressLine"),
+                        fieldWithPath("addressLine3").description("third addressLine"),
+                        fieldWithPath("town").description("fourth addressLine"),
+                        fieldWithPath("county").description("county where requested address is located"),
+                        fieldWithPath("postcode").description("postcode of the requested address")
+                    )
+                ));
     }
 
     @Test
@@ -51,9 +65,15 @@ public class AddressControllerTest extends BaseControllerMockMVCTest<AddressCont
         mockMvc.perform(get("/address/doLookup/{postcode}", postCode))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(numberOfAddresses)))
-                .andDo(document("address/lookup", pathParameters(
+                .andDo(document(
+                    "address/lookup",
+                    pathParameters(
                         parameterWithName("postcode").description("Postcode to look up")
-                )));
+                    ),
+                    responseFields(
+                        fieldWithPath("[]").description("list with the addresses the requesting user has access to. ")
+                    )
+                ));
     }
 
     @Test
@@ -64,8 +84,11 @@ public class AddressControllerTest extends BaseControllerMockMVCTest<AddressCont
 
         mockMvc.perform(get("/address/validatePostcode/{postcode}", postCode))
                 .andExpect(status().isOk())
-                .andDo(document("address/validate", pathParameters(
+                .andDo(document(
+                    "address/validate",
+                    pathParameters(
                         parameterWithName("postcode").description("Postcode to validate")
-                )));
+                    )
+                ));
     }
 }
