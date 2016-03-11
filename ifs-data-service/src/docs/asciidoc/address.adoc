@@ -17,6 +17,7 @@ include::{snippets}/address/lookup/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/address/lookup/http-response.adoc[]
+include::{snippets}/address/lookup/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/address/lookup/curl-request.adoc[]
@@ -28,6 +29,7 @@ include::{snippets}/address/validate/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/address/validate/http-response.adoc[]
+include::{snippets}/address/validate/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/address/validate/curl-request.adoc[]
