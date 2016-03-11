@@ -11,7 +11,8 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <h1 class="heading-large" th:text="${title}">Internal Server Error</h1>
+    <h1 class="heading-large" th:if="${title != null}" th:text="${title}">Internal Server Error</h1>
+    <h1 class="heading-large" th:unless="${title != null}">Internal Server Error</h1>
 
     <p th:if="${url}">
         <b>Page:</b> <span th:text="${url}">Page URL</span>
