@@ -255,26 +255,6 @@ the question should not be marked as complete on the application overview page
     Page Should Contain Element    css=#form-input-12    Question element found on application overview
     Page Should Not Contain Element    css=#form-input-12 div.marked-as-complete img.marked-as-complete    Mark as complete class is not found, that's correct
 
-the user can see the option to upload a file
-    the user should see the text in the page       Upload
 
-the user can choose pdf file to upload
-    Wait Until Element Is Visible       name=formInput[18]
-    Choose File    name=formInput[18]    /home/ewan/testing.pdf
-    # Execute JavaScript   ${JSFUNCTION}
-    Sleep   20s
-    click button    name=mark_as_complete
-
-the user can see the option to upload a file on the page
-    [Arguments]     ${url}
-    The user navigates to the page      ${url}
-    Wait Until Element Is Visible       name=mark_as_complete
-    Page Should Contain                 Upload
-
-the user cannot see the option to upload a file on the page
-    [Arguments]     ${url}
-    The user navigates to the page      ${url}
-    Wait Until Element Is Visible       name=mark_as_complete
-    Page Should Not Contain             Upload
 
 

@@ -20,6 +20,11 @@ Guest user log-in
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You are not authorised to perform the requested action
 
+
+Log in as user
+    [Arguments]     ${email}    ${password}
+    Guest user log-in       ${email}    ${password}
+
 The guest user inserts user email & password
     [Arguments]    ${USERNAME}    ${PSW}
     Input Text    id=id_email    ${USERNAME}
@@ -29,7 +34,7 @@ The guest user clicks the log-in button
     Click Button    css=input.button
 
 The guest user opens the browser
-    # Start Virtual Display    1920    1080
+    Start Virtual Display    1920    1080
     Run keyword if    '${SERVER_AUTH}' != ''    Open browser    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}    ff_profile_dir=${FF_PROFILE}    remote_url=${REMOTE_URL}
     ...    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    ff_profile_dir=${FF_PROFILE}    remote_url=${REMOTE_URL}
