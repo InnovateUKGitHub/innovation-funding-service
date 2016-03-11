@@ -316,8 +316,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             NotificationTarget to = new ExternalUserNotificationTarget(application.getLeadApplicant().getName(), application.getLeadApplicant().getEmail());
 
             Map<String, Object> notificationArguments = new HashMap<>();
+            Competition competition = application.getCompetition();
+
             notificationArguments.put("applicationName", application.getName());
             notificationArguments.put("applicationId", application.getId());
+            notificationArguments.put("competitionName", competition.getName());
+            notificationArguments.put("assesmentEndDate", competition.getAssessmentEndDate());
 
             Notification notification = new Notification(from, singletonList(to), Notifications.APPLICATION_SUBMITTED, notificationArguments);
             return notificationService.sendNotification(notification, EMAIL);
