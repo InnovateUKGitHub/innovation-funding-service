@@ -9,7 +9,6 @@ import org.springframework.test.annotation.Rollback;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
 
@@ -25,11 +24,11 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     public void test_findAll() {
         // Fetch the list of users
         List<User> users = repository.findAll();
-        assertEquals(10, users.size());
+        assertEquals(USER_COUNT, users.size());
 
         // Assert that we've got the users we were expecting
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
-        List<String> expectedUsers = asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com", "felix.wilson@gmail.com", "ewan+1@hiveit.co.uk", "ewan+2@hiveit.co.uk", "ewan+12@hiveit.co.uk");
+        List<String> expectedUsers = ALL_USERS_EMAIL;
         assertTrue(emailAddresses.containsAll(expectedUsers));
     }
 
@@ -42,9 +41,10 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
         // Fetch the list of users and assert that the count has increased and the new user is present in the list of expected users
         List<User> users = repository.findAll();
-        assertEquals(11, users.size());
+        assertEquals((USER_COUNT+1), users.size());
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
-        List<String> expectedUsers = asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com", "felix.wilson@gmail.com", "ewan+1@hiveit.co.uk", "ewan+2@hiveit.co.uk", "ewan+12@hiveit.co.uk", "new@example.com");
+        List<String> expectedUsers = new ArrayList<>(ALL_USERS_EMAIL);
+        expectedUsers.add("new@example.com");
         assertTrue(emailAddresses.containsAll(expectedUsers));
     }
 
@@ -59,7 +59,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
         // Fetch the list of users and assert that the user doesn't exist in this list
         List<User> users = repository.findAll();
-        assertEquals(10, users.size());
+        assertEquals(USER_COUNT, users.size());
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
         assertFalse(emailAddresses.contains("new@example.com"));
     }

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
 
@@ -40,13 +39,13 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     public void test_findAll() {
 
         List<User> users = controller.findAll().getSuccessObject();
-        assertEquals(10, users.size());
+        assertEquals(USER_COUNT, users.size());
 
         //
         // Assert that we've got the users we were expecting
         //
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
-        List<String> expectedUsers = asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com", "felix.wilson@gmail.com", "ewan+1@hiveit.co.uk", "ewan+2@hiveit.co.uk", "ewan+12@hiveit.co.uk");
+        List<String> expectedUsers = ALL_USERS_EMAIL;
         assertTrue(emailAddresses.containsAll(expectedUsers));
     }
 
