@@ -19,7 +19,7 @@ ${applicant_dashboard_url}    ${SERVER}/applicant/dashboard
 ${assessor_dashboard_url}    ${SERVER}/assessor/dashboard
 ${COMPETITION_DETAILS_URL}    ${SERVER}/competition/1/details/
 ${LOG_OUT}        ${SERVER}/logout
-${APPLICATION_QUESTIONS_SECTION_URL}    ${SERVER}/application-form/1/section/2/
+${APPLICATION_QUESTIONS_SECTION_URL}    ${SERVER}/application-form/1/se
 ${SEARCH_COMPANYHOUSE_URL}    ${SERVER}/organisation/create/find-business
 ${APPLICATION_DETAILS_URL}    ${SERVER}/application/1/form/question/9
 ${PROJECT_SUMMARY_URL}    ${SERVER}/application/1/form/question/11
@@ -54,3 +54,4 @@ ${verify_link_1}    ${SERVER}/registration/verify-email/4a5bc71c9f3a2bd50fada434
 ${verify_link_2}    ${SERVER}/registration/verify-email/5f415b7ec9e9cc497996e251294b1d6bccfebba8dfc708d87b52f1420c19507ab24683bd7e8f49a0
 ${verify_link_3}    ${SERVER}/registration/verify-email/8223991f065abb7ed909c8c7c772fbdd24c966d246abd63c2ff7eeba9add3bafe42b067b602f761b
 ${REGISTRATION_VERIFIED}    ${SERVER}/registration/verified
+${git_root}         ${empty}
