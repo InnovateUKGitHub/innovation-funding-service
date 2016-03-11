@@ -17,16 +17,15 @@ import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.EntityLookupCallbacks;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -41,11 +40,13 @@ import static java.util.stream.Collectors.toSet;
  */
 @Service
 public class UserServiceImpl extends BaseTransactionalService implements UserService {
+    private static final int TOKEN_HASH_LENGTH = 48;
     final JsonNodeFactory factory = JsonNodeFactory.instance;
     private static final CharSequence HASH_SALT = "klj12nm6nsdgfnlk12ctw476kl";
     private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
     enum Notifications {
-        VERIFY_EMAIL_ADDRESS
+        VERIFY_EMAIL_ADDRESS,
+        RESET_PASSWORD
     }
 
     @Value("${ifs.web.baseURL}")
@@ -74,8 +75,9 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<User> getUserByEmailandPassword(final String email, final String password) {
-        return find(repository.findByEmail(email), notFoundError(User.class, email)).
-                andOnSuccess(user -> user.passwordEquals(password) ? serviceSuccess(user) : serviceFailure(notFoundError(User.class)));
+        return find(repository.findByEmail(email), notFoundError(User.class, email))
+                .andOnSuccess(user -> UserStatus.ACTIVE.equals(user.getStatus()) ?  serviceSuccess(user) : serviceFailure(forbiddenError("User not active")))
+                .andOnSuccess(user -> user.passwordEquals(password) ? serviceSuccess(user) : serviceFailure(notFoundError(User.class)));
     }
 
     @Override
@@ -167,8 +169,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     private ServiceResult<Notification> sendUserVerificationEmail(User user, Optional<Long> competitionId) {
         String verificationLink = getVerificationLink(user, competitionId);
-
-
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
 
@@ -184,14 +184,12 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         String hash = generateAndSaveVerificationHash(user, competitionId);
         return String.format("%s/registration/verify-email/%s", webBaseUrl, hash);
     }
+    private String getPasswordResetLink(String hash) {
+        return String.format("%s/login/reset-password/hash/%s", webBaseUrl, hash);
+    }
 
     private String generateAndSaveVerificationHash(User user, Optional<Long> competitionId) {
-        StandardPasswordEncoder encoder = new StandardPasswordEncoder(HASH_SALT);
-        int random = (int) Math.ceil(Math.random() * 1000); // random number from 1 to 1000
-        String hash = String.format("%s==%s==%s", user.getId(), user.getEmail(), random);
-        hash = encoder.encode(hash);
-
-
+        String hash = getRandomHash();
         ObjectNode extraInfo = factory.objectNode();
         if(competitionId.isPresent()){
             extraInfo.put("competitionId", competitionId.get());
@@ -212,20 +210,59 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     @Override
     public ServiceResult<Void> sendPasswordResetNotification(User user) {
         if(UserStatus.ACTIVE.equals(user.getStatus())){
-            LOG.warn("Creating token");
+            String hash = getAndSavePasswordResetToken(user);
 
-            String hash = RandomStringUtils.random(36, true, true);
-            Token token = new Token(TokenType.RESET_PASSWORD, User.class.getName(), user.getId(), hash, factory.objectNode());
-            tokenRepository.save(token);
+            NotificationSource from = systemNotificationSource;
+            NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
 
+            Map<String, Object> notificationArguments = new HashMap<>();
+            notificationArguments.put("passwordResetLink", getPasswordResetLink(hash));
 
-            LOG.warn("Created token");
+            Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
+            ServiceResult<Notification> result = notificationService.sendNotification(notification, EMAIL);
+            return result.andOnSuccessReturnVoid();
 
-
-            return serviceSuccess();
         }else{
             return serviceFailure(notFoundError(User.class, user.getEmail(), UserStatus.ACTIVE));
         }
+    }
+
+    @Override
+    public ServiceResult<Void> checkPasswordResetHashValidity(String hash) {
+        LOG.warn("checkPasswordResetHashValidity ");
+        Optional<Token> token = tokenRepository.findByHash(hash);
+        if(token.isPresent() && TokenType.RESET_PASSWORD.equals(token.get().getType())) {
+            LOG.warn("checkPasswordResetHashValidity 2");
+            return serviceSuccess();
+        }
+
+        LOG.warn("checkPasswordResetHashValidity 3");
+        return serviceFailure(notFoundError(Token.class, hash));
+    }
+
+    private String getAndSavePasswordResetToken(User user) {
+        String hash = getRandomHash();
+        Token token = new Token(TokenType.RESET_PASSWORD, User.class.getName(), user.getId(), hash, factory.objectNode());
+        tokenRepository.save(token);
+        return hash;
+    }
+
+    @Override
+    public ServiceResult<Void> changePassword(String hash, String password){
+        Optional<Token> token = tokenRepository.findByHash(hash);
+        if(token.isPresent() && TokenType.RESET_PASSWORD.equals(token.get().getType())) {
+            User user = userRepository.findOne(token.get().getClassPk());
+            user.setPassword(password);
+            userRepository.save(user);
+            tokenRepository.delete(token.get());
+            return serviceSuccess();
+        }
+        return serviceFailure(notFoundError(Token.class, hash));
+    }
+
+
+    private String getRandomHash() {
+        return UUID.randomUUID().toString();
     }
 
     private User updateExistingUserFromResource(User existingUser, UserResource updatedUserResource) {

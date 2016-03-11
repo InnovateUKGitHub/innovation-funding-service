@@ -2,6 +2,7 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.user.controller.UserController;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -10,12 +11,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.util.UriUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.processRoleListType;
@@ -55,13 +55,29 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(StringUtils.isEmpty(email))
             return restFailure(notFoundError(User.class, email));
 
-        try {
-            email = UriUtils.encodePathSegment(email, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        return getWithRestResult(userRestURL + "/"+UserController.URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
+    }
 
-        return getWithRestResult(userRestURL + "/sendPasswordResetNotification/"+ email+"/", Void.class);
+    @Override
+    public RestResult<Void> checkPasswordResetHash(String hash) {
+        LOG.warn("checkPasswordResetHash");
+
+        if(StringUtils.isEmpty(hash))
+            return restFailure(badRequestError("Missing the hash to reset the password with"));
+
+        LOG.warn("checkPasswordResetHash 2 " + userRestURL + "/"+ UserController.URL_CHECK_PASSWORD_RESET_HASH+"/"+hash);
+        return getWithRestResult(userRestURL + "/"+ UserController.URL_CHECK_PASSWORD_RESET_HASH+"/"+hash, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> resetPassword(String hash, String password) {
+        LOG.warn("resetPassword");
+
+        if(StringUtils.isEmpty(hash))
+            return restFailure(badRequestError("Missing the hash to reset the password with"));
+
+        LOG.warn("resetPassword 2 " + userRestURL + "/"+ UserController.URL_PASSWORD_RESET+"/"+hash+"/"+password);
+        return getWithRestResult(String.format("%s/%s/%s/%s", userRestURL, UserController.URL_PASSWORD_RESET, hash, password), Void.class);
     }
 
     @Override
