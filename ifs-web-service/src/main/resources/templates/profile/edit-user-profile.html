@@ -30,7 +30,9 @@
             <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
                 <label class="form-label" for="title">
                     <span class="form-label-bold">Title</span>
-                    <span class="error-message" th:if="${#fields.hasErrors('title')}" th:errors="*{title}" />
+                    <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}" />
+                    </span>
                 </label>
                 <select class="form-control width-medium" th:field="*{title}">
                     <option value="Mr">Mr</option>
@@ -43,24 +45,56 @@
             <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
                 <label class="form-label" for="firstName">
                     <span class="form-label-bold">First name</span>
-                    <span class="error-message" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" />
+                    <span th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
+                    </span>
                 </label>
-                <input class="form-control" type="text" th:field="*{firstName}"/>
+                <input th:class="${#fields.hasErrors('firstName') ? 'form-control field-error' : 'form-control'}"
+                       class="form-control"
+                       type="text"
+                       th:field="*{firstName}"
+                       required="required"
+                       minlength="2"
+                       maxlength="70"
+                       data-minlength-errormessage="Your first name should have at least 2 characters"
+                       data-maxlength-errormessage="Your first name cannot have more than 70 characters"
+                       data-required-errormessage="Please enter a first name"/>
             </div>
             <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
                 <label class="form-label" for="lastName">
                     <span class="form-label-bold">Last name</span>
-                    <span class="error-message" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" />
+                    <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
+                    </span>
                 </label>
-                <input class="form-control" type="text" th:field="*{lastName}"/>
-            </div>
+                <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-error' : 'form-control'}"
+                       type="text"
+                       th:field="*{lastName}"
+                       required="required"
+                       minlength="2"
+                       maxlength="70"
+                       data-minlength-errormessage="Your last name should have at least 2 characters"
+                       data-maxlength-errormessage="Your last name cannot have more than 70 characters"
+                       data-required-errormessage="Please enter a last name"/>
+             </div>
             <div th:class="${#fields.hasErrors('phoneNumber')}? 'form-group error':'form-group'">
                 <label class="form-label" for="phoneNumber">
                     <span class="form-label-bold">Phone number</span>
                     <span class="form-hint">We may use this to contact you about the application</span>
-                    <span class="error-message" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" />
+                    <span th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
+                    </span>
                 </label>
-                <input class="form-control" type="text" th:field="*{phoneNumber}"/>
+                <input class="form-control"
+                       type="tel"
+                        th:errorclass="fieldError"
+                       th:field="*{phoneNumber}"
+                       minlength="8"
+                       maxlength="20"
+                       required="required"
+                       data-minlength-errormessage="Input for your phone number has a minimum length of 8 characters"
+                       data-maxlength-errormessage="Input for your phone number has a maximum length of 20 characters"
+                       data-required-errormessage="Please enter a phone number"/>
             </div>
             <div class="form-group">
                 <h3 class="heading-small">Email</h3>
