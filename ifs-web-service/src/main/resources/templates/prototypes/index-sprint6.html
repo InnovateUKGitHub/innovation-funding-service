@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint6'"  th:remove="tag" />
+
+	
+	<section class="grid-row">
+		<div class="row">
+			<h1 class="heading-large">Sprint 6</h1>
+
+			<section>
+				<h2 class="heading-medium">Applicant journey - project setup notifications of success or failure of application</h2>
+
+				<ul class="list-bullet">
+
+
+					<li><strong>INFUND-1564</strong> As an applicant I need to be notified of my success (or not) within a competition
+						
+						<h3 class="heading-small">Successful application</h3>
+
+						<ul class="list-bullet">
+							<li><a href="/prototypes/2061-email-applicant-successful">INFUND-2061</a> (sub task of INFUND-1563) Create an email template that allows the comps team to inform applicants of a successful application</li>
+							<li><a href="/prototypes/2113-dashboard?status=successful">INFUND-2113</a> (sub task of INFUND-1564) Dashboard showing successful application</li>
+							<li><a href="/prototypes/2111-submitted-application-overview?status=successful">INFUND-2111</a> (sub task of INFUND-1564) Application overview showing successful application</li>
+						</ul>
+
+						<h3 class="heading-small">Unsuccessful application</h3>
+
+						<ul class="list-bullet">
+							<li><a href="/prototypes/2062-email-applicant-unsuccessful">INFUND-2062</a> (sub task of INFUND-1563) Create an email template that allows the comps team to inform applicants of a unsuccessful application</li>
+							<li><a href="/prototypes/2113-dashboard?status=unsuccessful">INFUND-2113</a> (sub task of INFUND-1564) Dashboard showing unsuccessful application</li>
+							<li><a href="/prototypes/2111-submitted-application-overview?status=unsuccessful">INFUND-2111</a> (sub task of INFUND-1564) Application overview showing unsuccessful application</li>
+						</ul>
+
+						<h3 class="heading-small">Feedback on successful application</h3>
+						
+						<ul class="list-bullet">
+							<li><a href="/prototypes/2063-email-feedback">INFUND-2063</a> (sub task of INFUND-1563) Create an email template that allows the comps team to inform applicants that their application feedback is available</li>
+							<li><a href="/prototypes/2113-dashboard?status=successfulFeedback">INFUND-2113</a> (sub task of INFUND-1564) Dashboard showing successful application</li>
+							<li><a href="/prototypes/545-application-feedback">INFUND-2111</a> (sub task of INFUND-1564) Feedback overview showing successful application</li>
+						</ul>
+
+						<h3 class="heading-small">Feedback on unsuccessful application</h3>
+						
+						<ul class="list-bullet">
+							<li><a href="/prototypes/2063-email-feedback?status=unsuccessfulFeedback">INFUND-2063</a> (sub task of INFUND-1563) Create an email template that allows the comps team to inform applicants that their application feedback is available</li>
+							<li><a href="/prototypes/2113-dashboard?status=unsuccessfulFeedback">INFUND-2113</a> (sub task of INFUND-1564) Dashboard showing unsuccessful application</li>
+							<li><a href="/prototypes/545-application-feedback?unsuccessful">INFUND-2111</a> (sub task of INFUND-1564) Feedback overview showing successful application</li>
+						</ul>
+
+
+					</li>
+					
+				</ul>
+
+			</section>
+
+		</div>
+	</section>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>
