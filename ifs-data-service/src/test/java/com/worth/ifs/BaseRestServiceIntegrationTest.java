@@ -6,8 +6,8 @@ import org.flywaydb.core.Flyway;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -20,7 +20,7 @@ import javax.annotation.PreDestroy;
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@Transactional
+@Component
 public abstract class BaseRestServiceIntegrationTest<RestServiceType> extends BaseWebIntegrationTest {
     private static final Log LOG = LogFactory.getLog(BaseRestServiceIntegrationTest.class);
     protected RestServiceType service;
@@ -40,7 +40,9 @@ public abstract class BaseRestServiceIntegrationTest<RestServiceType> extends Ba
     public String locations = "db/migration,db/integration";
 
     private void cleanAndMigrateDatabaseWithPatches(String[] patchLocations){
-        LOG.info("cleanAndMigrateDatabaseWithPatches");
+        LOG.error(String.format("cleanAndMigrateDatabaseWithPatches %s", databaseUrl));
+        LOG.error(String.format("cleanAndMigrateDatabaseWithPatches %s", databaseUser));
+        LOG.error(String.format("cleanAndMigrateDatabaseWithPatches %s", databasePassword));
 
         Flyway f = new Flyway();
         f.setDataSource(databaseUrl, databaseUser, databasePassword);

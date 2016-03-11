@@ -18,9 +18,6 @@ public class UserRestServiceIntegrationTest extends BaseRestServiceIntegrationTe
 
     public static final String EMAIL = "steve.smith@empire.com";
 
-//    @Autowired
-//    TokenRepository tokenRepository;
-
     @Override
     @Autowired
     protected void setRestService(UserRestService service) {
