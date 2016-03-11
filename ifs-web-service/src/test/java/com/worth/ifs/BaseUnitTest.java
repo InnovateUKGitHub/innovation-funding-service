@@ -8,8 +8,10 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
-import com.worth.ifs.application.finance.view.FinanceFormHandler;
-import com.worth.ifs.application.finance.view.FinanceModelManager;
+import com.worth.ifs.application.finance.view.DefaultFinanceFormHandler;
+import com.worth.ifs.application.finance.view.DefaultFinanceModelManager;
+import com.worth.ifs.application.finance.view.FinanceHandler;
+import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.model.UserRole;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -74,6 +76,7 @@ import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -147,9 +150,13 @@ public class BaseUnitTest {
     @Mock
     public TokenAuthenticationService tokenAuthenticationService;
     @Mock
-    public FinanceModelManager financeModelManager;
+    public DefaultFinanceModelManager defaultFinanceModelManager;
     @Mock
-    public FinanceFormHandler financeFormHandler;
+    public DefaultFinanceFormHandler defaultFinanceFormHandler;
+    @Mock
+    public FinanceHandler financeHandler;
+    @Mock
+    public FinanceOverviewModelManager financeOverviewModelManager;
 
     @Mock
     public Environment env;
@@ -244,7 +251,7 @@ public class BaseUnitTest {
         organisationTypes.add(research);
         organisationTypes.add(new OrganisationTypeResource(3L, "Public Sector", null));
         organisationTypes.add(new OrganisationTypeResource(4L, "Charity", null));
-        organisationTypes.add(new OrganisationTypeResource(5L, "Academic", 2L));
+        organisationTypes.add(new OrganisationTypeResource(5L, "University (HEI)", 2L));
         organisationTypes.add(new OrganisationTypeResource(6L, "Research & technology organisation (RTO)", 2L));
         organisationTypes.add(new OrganisationTypeResource(7L, "Catapult", 2L));
         organisationTypes.add(new OrganisationTypeResource(8L, "Public sector research establishment", 2L));
@@ -543,7 +550,8 @@ public class BaseUnitTest {
         when(organisationService.getApplicationOrganisations(applications.get(1))).thenReturn(organisationSet);
         when(organisationService.getApplicationOrganisations(applications.get(2))).thenReturn(organisationSet);
         when(organisationService.getApplicationOrganisations(applications.get(3))).thenReturn(organisationSet);
-        when(userService.isLeadApplicant(loggedInUser.getId(),applications.get(0))).thenReturn(true);
+        when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn("Business");
+        when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0))).thenReturn(processRole1);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1))).thenReturn(processRole2);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(2))).thenReturn(processRole3);
@@ -597,6 +605,8 @@ public class BaseUnitTest {
         when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
+        when(financeHandler.getFinanceFormHandler("Business")).thenReturn(defaultFinanceFormHandler);
+        when(financeHandler.getFinanceModelManager("Business")).thenReturn(defaultFinanceModelManager);
     }
 
     public void setupAssessment(){
@@ -646,7 +656,7 @@ public class BaseUnitTest {
         String email = "invited@email.com";
         invite.setEmail(email);
         when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(restSuccess(invite));
-        when(userService.findUserByEmail(eq(email))).thenReturn(restSuccess(emptyList()));
+        when(userService.findUserByEmail(eq(email))).thenReturn(restFailure(notFoundError(User.class, email)));
         when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(emptyList()));
 
         acceptedInvite = new InviteResource();
@@ -663,7 +673,7 @@ public class BaseUnitTest {
         existingUserInvite.setName("Some Invitee");
         existingUserInvite.setHash(INVITE_HASH_EXISTING_USER);
         existingUserInvite.setEmail("existing@email.com");
-        when(userService.findUserByEmail(eq("existing@email.com"))).thenReturn(restSuccess(asList(new UserResource())));
+        when(userService.findUserByEmail(eq("existing@email.com"))).thenReturn(restSuccess(new UserResource()));
         when(inviteRestService.getInviteByHash(eq(INVITE_HASH_EXISTING_USER))).thenReturn(restSuccess(existingUserInvite));
 
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));

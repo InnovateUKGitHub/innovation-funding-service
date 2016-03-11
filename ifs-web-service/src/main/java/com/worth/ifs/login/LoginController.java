@@ -1,5 +1,6 @@
 package com.worth.ifs.login;
 
+import com.worth.ifs.application.service.UserService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
@@ -33,6 +34,24 @@ public class LoginController {
 
     @Autowired
     UserAuthenticationService userAuthenticationService;
+    @Autowired
+    UserService userService;
+
+    @RequestMapping(value="/login/reset-password", method=RequestMethod.GET)
+    public String recoverPassword(RecoverPasswordForm recoverPasswordForm, Model model, HttpServletRequest request) {
+        model.addAttribute("recoverPasswordForm", recoverPasswordForm);
+        return "login/reset-password";
+    }
+    @RequestMapping(value="/login/reset-password", method=RequestMethod.POST)
+    public String recoverPasswordPost(@ModelAttribute @Valid RecoverPasswordForm recoverPasswordForm, Model model, HttpServletRequest request) {
+        log.warn("Reset password for: "+ recoverPasswordForm.getEmail());
+
+        userService.sendPasswordResetNotification(recoverPasswordForm.getEmail());
+
+
+        model.addAttribute("recoverPasswordForm", recoverPasswordForm);
+        return "login/reset-password";
+    }
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
     public String login( Model model, HttpServletRequest request) {

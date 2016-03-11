@@ -12,7 +12,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
-import com.worth.ifs.user.domain.AddressType;
+import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeResource;

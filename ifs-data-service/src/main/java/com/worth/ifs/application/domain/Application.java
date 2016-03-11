@@ -12,6 +12,7 @@ import com.worth.ifs.user.domain.UserRoleType;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +29,7 @@ public class Application {
 
     private String name;
     private LocalDate startDate;
+    private LocalDateTime submittedDate;
     @Min(0)
     private Long durationInMonths; // in months
 
@@ -167,5 +169,13 @@ public class Application {
 
     public void setInvites(List<Invite> invites) {
         this.invites = invites;
+    }
+
+    public LocalDateTime getSubmittedDate() {
+        return submittedDate;
+    }
+
+    public void setSubmittedDate(LocalDateTime submittedDate) {
+        this.submittedDate = submittedDate;
     }
 }

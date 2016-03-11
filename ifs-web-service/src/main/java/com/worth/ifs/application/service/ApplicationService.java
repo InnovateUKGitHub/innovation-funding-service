@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
  * Interface for CRUD operations on {@link ApplicationResource} related data.
  */
 public interface ApplicationService {
-    ApplicationResource getById(Long applicationId, Boolean... hateoas);
+    ApplicationResource getById(Long applicationId);
     List<ApplicationResource> getInProgress(Long userId);
     List<ApplicationResource> getFinished(Long userId);
     Boolean isApplicationReadyForSubmit(Long applicationId);

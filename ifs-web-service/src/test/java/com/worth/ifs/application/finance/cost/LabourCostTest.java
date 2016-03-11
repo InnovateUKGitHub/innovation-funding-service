@@ -14,6 +14,7 @@ import java.math.RoundingMode;
 
 public class LabourCostTest {
     private Long id;
+    private String key;
     private String role;
     private BigDecimal grossAnnualSalary;
     private Integer labourDays;
@@ -25,13 +26,14 @@ public class LabourCostTest {
     @Before
     public void setup() {
         id = 1L;
+        key = "working_days_per_year";
         role = "role";
         grossAnnualSalary = new BigDecimal(100000);
         labourDays = 100;
         rate = new BigDecimal(1000);
         description = "description";
         total = BigDecimal.ZERO;
-        labourCost = new LabourCost(id, role, grossAnnualSalary, labourDays, description);
+        labourCost = new LabourCost(id, key, role, grossAnnualSalary, labourDays, description);
         rate = labourCost.getRate(labourDays);
         total = labourCost.getTotal(labourDays);
     }
@@ -39,14 +41,14 @@ public class LabourCostTest {
     @Test
     public void constructorShouldReturnNewInstance(){
         new LabourCost();
-        new LabourCost(id, role, grossAnnualSalary, labourDays, description);
+        new LabourCost(id, key, role, grossAnnualSalary, labourDays, description);
     }
 
     @Test
     public void getRatePerDayShouldNotFailOnInfiniteDivisions(){
         grossAnnualSalary = new BigDecimal(10);
         labourDays = 3;
-        LabourCost labour = new LabourCost(id, role, grossAnnualSalary, labourDays, description);
+        LabourCost labour = new LabourCost(id, key, role, grossAnnualSalary, labourDays, description);
         BigDecimal result = grossAnnualSalary.divide(new BigDecimal(labourDays), 5, RoundingMode.HALF_EVEN);
 
         Assert.assertEquals(result, labour.getRate(labourDays));
@@ -55,6 +57,7 @@ public class LabourCostTest {
     @Test
     public void gettersShouldReturnCorrectValues(){
         Assert.assertEquals(id, labourCost.getId());
+        Assert.assertEquals(key, labourCost.getName());
         Assert.assertEquals(role, labourCost.getRole());
         Assert.assertEquals(grossAnnualSalary, labourCost.getGrossAnnualSalary());
         Assert.assertEquals(rate, labourCost.getRate());
@@ -82,7 +85,7 @@ public class LabourCostTest {
 
     @Test
     public void getTotalShouldReturnZeroWhenRateIsNull(){
-        labourCost = new LabourCost(id, role, grossAnnualSalary, labourDays, description);
+        labourCost = new LabourCost(id, key, role, grossAnnualSalary, labourDays, description);
 
         Assert.assertNull(labourCost.getRate());
         Assert.assertEquals(BigDecimal.ZERO, labourCost.getTotal(0));

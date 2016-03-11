@@ -27,19 +27,19 @@ ${BUTTON}    css=.extra-margin
 *** Test Cases ***
 #Verify uploaded file can be opened only by Lead Applicant
 #    [Documentation]     INFUND-832
- #   [Tags]
-  #  Given the user navigates to the page     ${PROJECT_TEAM_URL}
- #   and the file is already uploaded
-  #  When user click on the file upload link
-   # Then the user can open the file
+#    [Tags]
+#    Given the user navigates to the page     ${PROJECT_TEAM_URL}
+#    And the user can see the option to upload a file
+#    When user click on the file upload link
+#    Then the user can open the file
 
 Verify that Applicant can upload less than 1mb pdf files
     [Documentation]     INFUND-409
-    [Tags]      Collaboration    Pending
+    [Tags]      Collaboration   Pending
     [Setup]     Guest user log-in   &{lead_applicant_credentials}
-    Given the user navigates to the page    ${PROJECT_TEAM_URL}
+    Given the user navigates to the page    ${SERVER}/application/1/form/question/8
     And the user can see the option to upload a file
-    When The user clicks the button/link    ${BUTTON}
+    # When The user clicks the button/link    ${BUTTON}
     Then the user can choose pdf file to upload
 
 Verify the Autosave for the form text areas
@@ -272,5 +272,8 @@ the user can see the option to upload a file
     the user should see the text in the page       Upload
 
 the user can choose pdf file to upload
-#${TEMPDIR}${/}file_pa.csv
-    Choose File    css=.extra-margin    sample.pdf
+    Sleep   2s
+    Choose File    name=formInput[18]    testing.pdf
+    Sleep   5s
+    Reload Page
+    Sleep   5s

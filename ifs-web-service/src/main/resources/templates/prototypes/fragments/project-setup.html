@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<!-- ===========================Prototype index page  =========================== --> 
+
+<div th:fragment="prototype-add-users(addUserType)">
+    <table class="extra-margin" th:id="${addUserType+'-table'}" style="display: none">
+        <thead>
+            <tr>
+                <th scope="col" th:id="${addUserType + '-name'}">Name</th>
+                <th scope="col" th:id="${addUserType + '-email'}">E-mail</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input type="text" th:name="${'name-'+ addUserType +'1'}" th:id="${'name-'+ addUserType +'1'}" class="form-control width-full" aria-labelledby="user-name" value=""  />
+                </td>
+                <td>
+                    <input type="email" th:name="${'email-'+ addUserType +'1'}" th:id="${'email-'+ addUserType +'1'}" class="form-control width-full" aria-labelledby="user-email" value=""  />
+                </td>
+                <td class="alignright">
+                    <button class="buttonlink no-margin-bottom" th:id="${'invite-' +addUserType}">Invite to project</button> 
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+</html>

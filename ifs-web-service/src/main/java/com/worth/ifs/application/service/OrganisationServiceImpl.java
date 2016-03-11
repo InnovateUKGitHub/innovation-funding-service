@@ -12,7 +12,7 @@ import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.organisation.service.CompanyHouseRestService;
-import com.worth.ifs.user.domain.AddressType;
+import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -34,6 +34,7 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     @Autowired
     CompanyHouseRestService companyHouseRestService;
+
     @Autowired
     private ProcessRoleService processRoleService;
 
@@ -107,4 +108,12 @@ public class OrganisationServiceImpl implements OrganisationService {
         return organisationRestService.addAddress(organisation, address, addressType).getSuccessObjectOrThrowException();
     }
 
+    @Override
+    public String getOrganisationType(Long userId, Long applicationId) {
+        ProcessRole processRole = processRoleService.findProcessRole(userId, applicationId);
+        if(processRole!=null && processRole.getOrganisation()!=null) {
+            return processRole.getOrganisation().getOrganisationType().getName();
+        }
+        return "";
+    }
 }

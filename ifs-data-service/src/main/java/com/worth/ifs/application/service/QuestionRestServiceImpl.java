@@ -79,4 +79,9 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
     public RestResult<Question> getNextQuestionBySection(Long sectionId) {
         return getWithRestResult(questionRestURL + "/getNextQuestionBySection/" + sectionId, Question.class);
     }
+
+    @Override
+    public RestResult<Question> getQuestionByFormInputType(String formInputType) {
+        return getWithRestResult(questionRestURL + "/getQuestionByFormInputType/" + formInputType, Question.class);
+    }
 }

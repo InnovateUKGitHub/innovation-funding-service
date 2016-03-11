@@ -62,6 +62,17 @@
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
             />
 </div>
+
+<div th:fragment="form-textinput-half-width (id, field)">
+    <input class="form-control width-half"
+           th:readonly="${readonly}"
+           type="text"
+           th:id="${id}"
+           th:field="*{__${field}__}"
+           th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
+            />
+</div>
+
 <!-- ========================= input field type number =========================== -->
 
 <div th:fragment="form-number (id, response)">

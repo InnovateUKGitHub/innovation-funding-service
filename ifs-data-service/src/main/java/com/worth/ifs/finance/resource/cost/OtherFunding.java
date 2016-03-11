@@ -11,9 +11,11 @@ public class OtherFunding implements CostItem {
     private String securedDate;
     private BigDecimal fundingAmount;
     private CostType costType;
+    private String name;
 
     public OtherFunding() {
         this.costType = CostType.OTHER_FUNDING;
+        this.name = this.costType.getType();
     }
 
     public OtherFunding(Long id, String otherPublicFunding, String fundingSource, String securedDate, BigDecimal fundingAmount) {
@@ -23,6 +25,7 @@ public class OtherFunding implements CostItem {
         this.fundingSource = fundingSource;
         this.securedDate = securedDate;
         this.fundingAmount = fundingAmount;
+
     }
 
     @Override
@@ -54,5 +57,10 @@ public class OtherFunding implements CostItem {
     @Override
     public CostType getCostType() {
         return costType;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

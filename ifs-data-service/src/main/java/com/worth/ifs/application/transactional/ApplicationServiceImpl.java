@@ -23,6 +23,8 @@ import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
+import com.worth.ifs.notifications.resource.*;
+import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -40,9 +42,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -50,9 +50,11 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -60,6 +62,9 @@ import static java.util.stream.Collectors.toList;
  */
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
+    enum Notifications {
+        APPLICATION_SUBMITTED
+    }
 
     private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
 
@@ -72,24 +77,22 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private FileService fileService;
-
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
-
     @Autowired
     private FormInputRepository formInputRepository;
-
     @Autowired
     private QuestionService questionService;
-
     @Autowired
     private ApplicationMapper applicationMapper;
-
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
-
     @Autowired
     private SectionService sectionService;
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -316,6 +319,17 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         });
     }
 
+    @Override
+    public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long id, LocalDateTime date) {
+        return getApplication(id).andOnSuccessReturn(existingApplication -> {
+            existingApplication.setSubmittedDate(date);
+            Application savedApplication = applicationRepository.save(existingApplication);
+            return applicationMapper.mapToResource(savedApplication);
+        });
+    }
+
+
+
     // TODO DW - INFUND-1555 - try to remove ObjectNode usage
     @Override
     public ServiceResult<ObjectNode> getProgressPercentageNodeByApplicationId(final Long applicationId) {
@@ -333,19 +347,31 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ApplicationResource> updateApplicationStatus(final Long id,
                                                          final Long statusId) {
         return find(application(id), applicationStatus(statusId)).andOnSuccess((application, applicationStatus) -> {
-
             application.setApplicationStatus(applicationStatus);
             applicationRepository.save(application);
             return serviceSuccess(applicationMapper.mapToResource(application));
         });
     }
 
+    @Override
+    public ServiceResult<Notification> sendNotificationApplicationSubmitted(Long id){
+        return getApplication(id).andOnSuccess(application -> {
+            NotificationSource from = systemNotificationSource;
+            NotificationTarget to = new ExternalUserNotificationTarget(application.getLeadApplicant().getName(), application.getLeadApplicant().getEmail());
+
+            Map<String, Object> notificationArguments = new HashMap<>();
+            notificationArguments.put("applicationName", application.getName());
+            notificationArguments.put("applicationId", application.getId());
+
+            Notification notification = new Notification(from, singletonList(to), Notifications.APPLICATION_SUBMITTED, notificationArguments);
+            return notificationService.sendNotification(notification, EMAIL);
+        });
+    }
 
     @Override
     public ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                              final Long userId,
                                                                              final UserRoleType role) {
-
         List<Application> allApps = applicationRepository.findAll();
         List<Application> filtered = simpleFilter(allApps, app -> app.getCompetition().getId().equals(competitionId) &&
                 applicationContainsUserRole(app.getProcessRoles(), userId, role));
@@ -369,9 +395,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             final Long competitionId,
             final Long userId,
             final String applicationName) {
-
         return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
-
            Application application = new Application();
            application.setName(applicationName);
            LocalDate currentDate = LocalDate.now();
@@ -407,7 +431,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationResource> findByProcessRole(final Long id){
-
         return getProcessRole(id).andOnSuccessReturn(processRole ->
             applicationMapper.mapToResource(processRole.getApplication())
         );
@@ -416,11 +439,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     // TODO DW - INFUND-1555 - try to remove the usage of ObjectNode
     @Override
     public ServiceResult<ObjectNode> applicationReadyForSubmit(Long id) {
-
         return find(application(id), () -> getProgressPercentageByApplicationId(id)).andOnSuccess((application, progressPercentage) ->
-
             sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
-
                 Competition competition = application.getCompetition();
                 BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
 
@@ -446,7 +466,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     // TODO DW - INFUND-1555 - deal with rest results
     private ServiceResult<BigDecimal> getProgressPercentageByApplicationId(final Long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(application -> {
-
             List<Section> sections = application.getCompetition().getSections();
 
             List<Question> questions = sections.stream()

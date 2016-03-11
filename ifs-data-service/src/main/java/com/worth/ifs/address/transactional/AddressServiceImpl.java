@@ -3,7 +3,7 @@ package com.worth.ifs.address.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.mapper.AddressMapper;
-import com.worth.ifs.organisation.repository.AddressRepository;
+import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;

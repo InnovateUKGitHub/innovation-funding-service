@@ -6,7 +6,7 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import java.util.List;
 
 /**
- * Interface for CRUD operations on {@link Cost} related data.
+ * Interface for CRUD operations on {@link CostItem} related data.
  */
 public interface CostRestService{
     RestResult<CostItem> add(Long applicationFinanceId, Long questionId, CostItem costItem);

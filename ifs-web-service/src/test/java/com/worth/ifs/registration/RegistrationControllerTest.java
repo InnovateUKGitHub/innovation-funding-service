@@ -3,6 +3,7 @@ package com.worth.ifs.registration;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -22,13 +22,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static java.util.Collections.emptyList;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -59,7 +59,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
 
         registrationController.setValidator(new LocalValidatorFactoryBean());
 
-        when(userService.findUserByEmail(anyString())).thenReturn(restSuccess(new ArrayList<>(), HttpStatus.OK));
+        when(userService.findUserByEmail(anyString())).thenReturn(restSuccess(new UserResource()));
         when(userService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(restSuccess(new UserResource()));
     }
 
@@ -125,7 +125,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
         String email = "alreadyexistingemail@test.test";
 
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
-        when(userService.findUserByEmail(email)).thenReturn(restSuccess(userResourceList));
+        when(userService.findUserByEmail(email)).thenReturn(restSuccess(new UserResource()));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -253,7 +253,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 userResource.getPhoneNumber(),
                 1L,
                 null)).thenReturn(restSuccess(userResource));
-        when(userService.findUserByEmail("test@test.test")).thenReturn(restSuccess(emptyList()));
+        when(userService.findUserByEmail("test@test.test")).thenReturn(restFailure(notFoundError(User.class, "test@test.test")));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)

@@ -99,7 +99,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RestResult<List<UserResource>> findUserByEmail(String email) {
+    public RestResult<Void> sendPasswordResetNotification(String email) {
+        return userRestService.sendPasswordResetNotification(email);
+    }
+
+    @Override
+    public RestResult<UserResource> findUserByEmail(String email) {
         return userRestService.findUserByEmail(email);
     }
 }

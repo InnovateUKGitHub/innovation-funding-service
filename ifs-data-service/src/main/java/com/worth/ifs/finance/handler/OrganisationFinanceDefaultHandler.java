@@ -1,10 +1,11 @@
-package com.worth.ifs.finance.handler.item;
+package com.worth.ifs.finance.handler;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.handler.item.*;
 import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.category.*;
@@ -20,11 +21,11 @@ import java.util.EnumMap;
 import java.util.List;
 
 /**
- * OrganisationFinanceHandlerImpl maintains the finances from
+ * OrganisationFinanceDefaultHandler maintains the finances from
  * an organisation's perspective and calculates the totals
  */
 @Component
-public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandler {
+public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHandler {
     private final Log log = LogFactory.getLog(getClass());
     EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
 
@@ -182,4 +183,5 @@ public class OrganisationFinanceHandlerImpl implements OrganisationFinanceHandle
                 return new DefaultCostCategory();
         }
     }
+
 }

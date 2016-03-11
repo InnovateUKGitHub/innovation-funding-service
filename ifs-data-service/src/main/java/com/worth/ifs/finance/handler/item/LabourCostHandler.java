@@ -13,20 +13,21 @@ import java.util.List;
  * or for sending it over.
  */
 public class LabourCostHandler extends CostHandler {
+    public static final String COST_KEY = "labour";
 
     @Override
     public Cost toCost(CostItem costItem) {
         Cost cost = null;
         if (costItem instanceof LabourCost) {
             LabourCost labourCostItem = (LabourCost) costItem;
-            cost = new Cost(labourCostItem.getId(), labourCostItem.getRole(), labourCostItem.getDescription(), labourCostItem.getLabourDays(), labourCostItem.getGrossAnnualSalary(), null, null);
+            cost = new Cost(labourCostItem.getId(), labourCostItem.getName(), labourCostItem.getRole(), labourCostItem.getDescription(), labourCostItem.getLabourDays(), labourCostItem.getGrossAnnualSalary(), null, null);
         }
         return cost;
     }
 
     @Override
     public CostItem toCostItem(Cost cost) {
-        return new LabourCost(cost.getId(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription());
+        return new LabourCost(cost.getId(), cost.getName(), cost.getItem(), cost.getCost(), cost.getQuantity(), cost.getDescription());
     }
 
     @Override
@@ -39,7 +40,7 @@ public class LabourCostHandler extends CostHandler {
     private Cost initializeWorkingDays() {
         String description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
         Integer labourDays = null;
-        LabourCost costItem = new LabourCost(null, null, null, labourDays, description);
+        LabourCost costItem = new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description);
         return toCost(costItem);
     }
 }

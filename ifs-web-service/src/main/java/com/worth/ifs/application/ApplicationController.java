@@ -62,7 +62,7 @@ public class ApplicationController extends AbstractApplicationController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
         addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-        addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
+        addOrganisationAndUserFinanceDetails(applicationId, user.getId(), model, form);
         return "application-details";
     }
 
@@ -78,7 +78,7 @@ public class ApplicationController extends AbstractApplicationController {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
-        addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
+        addOrganisationAndUserFinanceDetails(applicationId, user.getId(), model, form);
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
         return "application-summary";
@@ -202,13 +202,13 @@ public class ApplicationController extends AbstractApplicationController {
         Optional<SectionResource> currentSection = getSectionByIds(competition.getSections(), sectionId, false);
 
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
-        addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
+        addOrganisationAndUserFinanceDetails(applicationId, user.getId(), model, form);
 
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
         Optional<Question> question = getQuestion(currentSection, questionId);
 
         super.addApplicationAndSections(application, competition, user.getId(), currentSection, question.map(Question::getId), model, form);
-        super.addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
+        super.addOrganisationAndUserFinanceDetails(applicationId, user.getId(), model, form);
 
         model.addAttribute("currentUser", user);
         model.addAttribute("section", currentSection.get());
@@ -282,7 +282,7 @@ public class ApplicationController extends AbstractApplicationController {
         addUserDetails(model, application, user.getId());
         addApplicationInputs(application, model);
         addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, userApplicationRoles);
-        financeModelManager.addFinanceDetails(model, application);
+        financeOverviewModelManager.addFinanceDetails(model, applicationId);
 
         return "/application/print";
     }

@@ -7,8 +7,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
-
 /**
  *
  */
@@ -55,6 +53,6 @@ public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTe
     }
 
     private User getUser() {
-        return getOnlyElement(userRepository.findByEmail("steve.smith@empire.com"));
+        return userRepository.findByEmail("steve.smith@empire.com").get();
     }
 }

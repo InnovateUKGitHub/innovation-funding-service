@@ -1,5 +1,6 @@
 package com.worth.ifs.application;
 
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.form.ContributorsForm;
 import com.worth.ifs.application.form.InviteeForm;
 import com.worth.ifs.application.form.OrganisationInviteForm;
@@ -210,6 +211,7 @@ public class ApplicationContributorController{
                 CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
 
                 if (newApplication != null) {
+                    applicationService.updateStatus(application.getId(), ApplicationStatusConstants.OPEN.getId());
                     return ApplicationController.redirectToApplication(application);
                 }
                 return String.format("redirect:/application/%d/contributors", applicationId);

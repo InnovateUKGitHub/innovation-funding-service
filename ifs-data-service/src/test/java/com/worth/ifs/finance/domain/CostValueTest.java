@@ -21,7 +21,7 @@ public class CostValueTest {
         price  = new BigDecimal(1000);
         applicationFinance = new ApplicationFinance();
         question = new Question();
-        cost = new Cost(1L, "cost item", "cost description", 10, price, applicationFinance, question);
+        cost = new Cost(1L, "cost key", "cost item", "cost description", 10, price, applicationFinance, question);
         costField = new CostField(1L, "NVP", "String");
         value = "19000";
         costValue = new CostValue(cost, costField, value);
@@ -43,7 +43,7 @@ public class CostValueTest {
 
     @Test
     public void costValueShouldReturnCorrectAttributeValuesAfterSetters() throws Exception {
-        Cost newCost = new Cost(2L, "cost item", "cost description", 10, price, applicationFinance, question);
+        Cost newCost = new Cost(2L, "cost key", "cost item", "cost description", 10, price, applicationFinance, question);
         CostField newCostField = new CostField(2L,"title","type");
 
         costValue.setCost(newCost);

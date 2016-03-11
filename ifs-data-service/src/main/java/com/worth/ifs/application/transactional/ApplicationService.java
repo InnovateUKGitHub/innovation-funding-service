@@ -6,6 +6,7 @@ import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
@@ -16,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.io.File;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -55,12 +57,18 @@ public interface ApplicationService {
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'UPDATE')")
     ServiceResult<ApplicationResource> saveApplicationDetails(@P("applicationId") final Long id, ApplicationResource application);
 
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'UPDATE')")
+    ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(@P("applicationId") final Long id, LocalDateTime date);
+
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<ObjectNode> getProgressPercentageNodeByApplicationId(@P("applicationId") final Long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'UPDATE')")
     ServiceResult<ApplicationResource> updateApplicationStatus(@P("applicationId") final Long id,
                                                                final Long statusId);
+
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'UPDATE')")
+    ServiceResult<Notification> sendNotificationApplicationSubmitted(@P("applicationId") Long application);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,

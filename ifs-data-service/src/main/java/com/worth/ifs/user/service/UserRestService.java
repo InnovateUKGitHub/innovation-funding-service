@@ -19,7 +19,10 @@ public interface UserRestService {
     RestResult<ProcessRole> findProcessRole(Long userId, Long applicationId);
     RestResult<List<ProcessRole>> findProcessRole(Long applicationId);
     RestResult<List<User>> findAssignableUsers(Long applicationId);
-    RestResult<List<UserResource>> findUserByEmail(String email);
+
+    RestResult<Void> sendPasswordResetNotification(String email);
+
+    RestResult<UserResource> findUserByEmail(String email);
     Future<RestResult<ProcessRole[]>> findAssignableProcessRoles(Long applicationId);
     RestResult<List<User>> findRelatedUsers(Long applicationId);
     Future<RestResult<ProcessRole>> findProcessRoleById(Long processRoleId);

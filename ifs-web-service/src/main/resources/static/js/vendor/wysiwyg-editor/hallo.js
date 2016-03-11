@@ -466,16 +466,15 @@
           lastContent = editor.html();
           editor.html('');
           return setTimeout(function() {
-            var cleanPasted, error, pasted, range;
+            var cleanPasted, pasted, range;
             pasted = editor.html();
             cleanPasted = jQuery.htmlClean(pasted, _this.options);
             editor.html(lastContent);
             rangy.restoreSelection(lastRange);
             if (cleanPasted !== '') {
-              try {
+              if (document.queryCommandSupported('insertHTML')) {
                 return document.execCommand('insertHTML', false, cleanPasted);
-              } catch (_error) {
-                error = _error;
+              } else {
                 range = widget.options.editable.getSelection();
                 return range.insertNode(range.createContextualFragment(cleanPasted));
               }

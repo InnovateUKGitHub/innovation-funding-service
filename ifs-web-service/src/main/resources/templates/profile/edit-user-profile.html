@@ -12,7 +12,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Your profile'}, ${'/profile/view'})" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Your Profile',linkClass='link-back',linkUrl=@{/profile/view}" th:remove="tag" />
 
     <h1 class="heading-large">Your details</h1>
 
