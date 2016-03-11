@@ -16,6 +16,7 @@ import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -23,6 +24,7 @@ import java.util.*;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
@@ -37,8 +39,12 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
 
     enum Notifications {
-        VERIFY_EMAIL_ADDRESS
+        VERIFY_EMAIL_ADDRESS,
+        RESET_PASSWORD
     }
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     @Autowired
     private UserRepository repository;
@@ -159,6 +165,10 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     private String getRandomHash() {
         return UUID.randomUUID().toString();
+    }
+
+    private String getPasswordResetLink(String hash) {
+        return String.format("%s/login/reset-password/hash/%s", webBaseUrl, hash);
     }
 
 }
