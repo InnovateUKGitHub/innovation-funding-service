@@ -1,8 +1,10 @@
 package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.application.builder.QuestionBuilder;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
@@ -13,19 +15,23 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResourceAssembler;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
@@ -65,6 +71,36 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
     @Mock
     private SystemNotificationSource systemNotificationSourceMock;
+
+    private FormInput formInput;
+    private FormInputType formInputType;
+    private Question question;
+    private FileEntryResource fileEntryResource;
+    private FormInputResponseFileEntryResource formInputResponseFileEntryResource;
+    private FileEntry existingFileEntry;
+    private FormInputResponse existingFormInputResponse;
+    private List<FormInputResponse> existingFormInputResponses;
+    private FormInputResponse unlinkedFormInputFileEntry;
+
+    @Before
+    public void setUp() throws Exception {
+        question = QuestionBuilder.newQuestion().build();
+
+        formInputType = new FormInputType(4L, "fileupload");
+
+        formInput = newFormInput().withFormInputType(formInputType).build();
+        formInput.setId(123L);
+        formInput.setQuestion(question);
+        question.setFormInputs(Arrays.asList(formInput));
+
+        fileEntryResource = newFileEntryResource().with(id(999L)).build();
+        formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+
+        existingFileEntry = newFileEntry().with(id(999L)).build();
+        existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
+        existingFormInputResponses = Arrays.asList(existingFormInputResponse);
+        unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();
+    }
 
     @Test
     public void testCreateApplicationByApplicationNameForUserIdAndCompetitionId() {
@@ -152,14 +188,23 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         File fileFound = mock(File.class);
 
+        Question question = QuestionBuilder.newQuestion().build();
+        question.setMultipleStatuses(true);
+        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        formInputLocal.setId(123L);
+        formInputLocal.setQuestion(question);
+        question.setFormInputs(Arrays.asList(formInputLocal));
+
         when(fileServiceMock.deleteFile(alreadyExistingFileEntry.getId())).thenReturn(serviceSuccess(alreadyExistingFileEntry));
 
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(fileFound, alreadyExistingFileEntry)));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponseWithLinkedFileEntry);
         when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
-        when(formInputRepositoryMock.findOne(123L)).thenReturn(newFormInput().build());
+        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
         when(applicationRepositoryMock.findOne(456L)).thenReturn(newApplication().build());
+
+        when(fileServiceMock.getFileByFileEntryId(987L)).thenReturn(serviceSuccess(inputStreamSupplier));
 
         ServiceResult<Pair<File, FormInputResponseFileEntryResource>> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
@@ -168,7 +213,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         assertEquals(fileFound, resultParts.getKey());
         assertEquals(Long.valueOf(987), resultParts.getValue().getFileEntryResource().getId());
 
-        verify(formInputResponseRepositoryMock).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
+        verify(formInputResponseRepositoryMock, times(3)).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
     }
 
     @Test
@@ -300,6 +345,14 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         File fileFound = mock(File.class);
 
+        Question question = QuestionBuilder.newQuestion().build();
+        question.setMultipleStatuses(true);
+        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        formInputLocal.setId(123L);
+        formInputLocal.setQuestion(question);
+        question.setFormInputs(Arrays.asList(formInputLocal));
+        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
+
         when(fileServiceMock.updateFile(fileEntryResource, inputStreamSupplier)).
                 thenReturn(serviceSuccess(Pair.of(fileFound, existingFileEntry)));
 
@@ -328,6 +381,14 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FormInputResponse existingFormInputResponse =
                 newFormInputResponse().withFileEntry(fileEntry).build();
 
+        Question question = QuestionBuilder.newQuestion().build();
+        question.setMultipleStatuses(true);
+        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        formInputLocal.setId(123L);
+        formInputLocal.setQuestion(question);
+        question.setFormInputs(Arrays.asList(formInputLocal));
+
+        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
 
@@ -344,46 +405,36 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     @Test
     public void testDeleteFormInputResponseFileUpload() {
 
-        FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
-        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
-        FileEntry existingFileEntry = newFileEntry().with(id(999L)).build();
-        FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
-        FormInputResponse unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();
-
-        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
+        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(456L, 123L)).thenReturn(existingFormInputResponses);
         when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
-
         when(formInputResponseRepositoryMock.save(existingFormInputResponse)).thenReturn(unlinkedFormInputFileEntry);
         when(fileServiceMock.deleteFile(999L)).thenReturn(serviceSuccess(existingFileEntry));
+        when(formInputRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn(formInput);
 
         ServiceResult<FormInputResponse> result =
-                service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
+                service.deleteFormInputResponseFileUpload(formInputResponseFileEntryResource.getCompoundId());
 
         assertTrue(result.isSuccess());
         assertEquals(unlinkedFormInputFileEntry, result.getSuccessObject());
         assertNull(existingFormInputResponse.getFileEntry());
-        verify(formInputResponseRepositoryMock, times(2)).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
+        verify(formInputResponseRepositoryMock, times(2)).findByApplicationIdAndFormInputId(456L, 123L);
         verify(formInputResponseRepositoryMock).save(existingFormInputResponse);
     }
 
     @Test
     public void testDeleteFormInputResponseFileUploadButFileServiceCallFails() {
-
-        FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
-        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
-        FileEntry existingFileEntry = newFileEntry().with(id(999L)).build();
-        FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
-
-        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
+        //when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
+        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(456L, 123L)).thenReturn(existingFormInputResponses);
         when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
         when(fileServiceMock.deleteFile(999L)).thenReturn(serviceFailure(internalServerErrorError("no deleting for you...")));
+        when(formInputRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn(formInput);
 
         ServiceResult<FormInputResponse> result =
-                service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
+                service.deleteFormInputResponseFileUpload(formInputResponseFileEntryResource.getCompoundId());
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(internalServerErrorError("no deleting for you...")));
@@ -391,17 +442,13 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
     @Test
     public void testDeleteFormInputResponseFileUploadButUnableToFindFormInputResponse() {
-
-        FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
-        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
-
-        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
-
+        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(456L, 123L)).thenReturn(existingFormInputResponses);
+        when(formInputRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn(null);
         ServiceResult<FormInputResponse> result =
-                service.deleteFormInputResponseFileUpload(fileEntry.getCompoundId());
+                service.deleteFormInputResponseFileUpload(formInputResponseFileEntryResource.getCompoundId());
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(FormInputResponse.class, 456L, 789L, 123L)));
+        assertTrue(result.getFailure().is(notFoundError(FormInput.class, 123L)));
     }
 
     @Test
@@ -413,6 +460,14 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FileEntry existingFileEntry = newFileEntry().with(id(999L)).build();
         FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
 
+        Question question = QuestionBuilder.newQuestion().build();
+        question.setMultipleStatuses(true);
+        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        formInputLocal.setId(123L);
+        formInputLocal.setQuestion(question);
+        question.setFormInputs(Arrays.asList(formInputLocal));
+
+        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
         when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceFailure(notFoundError(File.class, 999L)));
 
@@ -428,6 +483,14 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FileEntry fileEntry = newFileEntry().with(id(321L)).build();
         FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(fileEntry).build();
         Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        Question question = QuestionBuilder.newQuestion().build();
+        question.setMultipleStatuses(true);
+        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        formInputLocal.setId(123L);
+        formInputLocal.setQuestion(question);
+        question.setFormInputs(Arrays.asList(formInputLocal));
+        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(formInputResponse);
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
@@ -453,6 +516,14 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         FileEntry fileEntry = newFileEntry().build();
         FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(fileEntry).build();
 
+        Question question = QuestionBuilder.newQuestion().build();
+        question.setMultipleStatuses(true);
+        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        formInputLocal.setId(123L);
+        formInputLocal.setQuestion(question);
+        question.setFormInputs(Arrays.asList(formInputLocal));
+        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
+
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(formInputResponse);
         when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(serviceFailure(internalServerErrorError("no files for you...")));
 
@@ -465,6 +536,13 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
     @Test
     public void testGetFormInputResponseFileUploadButUnableToFindFormInputResponse() {
+        Question question = QuestionBuilder.newQuestion().build();
+        question.setMultipleStatuses(true);
+        FormInput formInputLocal = newFormInput().withFormInputType(formInputType).build();
+        formInputLocal.setId(123L);
+        formInputLocal.setQuestion(question);
+        question.setFormInputs(Arrays.asList(formInputLocal));
+        when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(null);
 

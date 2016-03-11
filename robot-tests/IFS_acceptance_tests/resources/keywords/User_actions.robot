@@ -137,7 +137,7 @@ The user goes back to the previous page
     Go Back
 
 browser validations have been disabled
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');jQuery('[maxlength]').removeAttr('maxlength');
 
 The user verifies their email
     [Arguments]    ${verify_link}

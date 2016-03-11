@@ -45,32 +45,41 @@ Verify that the applicant's name has been changed on other parts of the site
 Display errors for invalid inputs of the First name
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     Given the user navigates to the page    ${EDIT_PROFILE_URL}
+    Given browser validations have been disabled
     When the Applicant fills the First name    ${EMPTY}
     Then the user should see an error    Please enter a first name
+    Given browser validations have been disabled
     And the Applicant fills the First name    testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
-    Then the user should see an error    length must be between 2 and 70
+    Then the user should see an error    Your first name cannot have more than 70 characters
+    Given browser validations have been disabled
     And the Applicant fills the First name    A
-    Then the user should see an error    length must be between 2 and 70
+    Then the user should see an error    Your first name should have at least 2 characters
 
 Display errors for invalid inputs of the Last name
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     Given the user navigates to the page    ${EDIT_PROFILE_URL}
+    Given browser validations have been disabled
     When the Applicant fills the last name    ${EMPTY}
     Then the user should see an error    Please enter a last name
+    Given browser validations have been disabled
     And the Applicant fills the last name    testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
-    Then the user should see an error    length must be between 2 and 70
+    Then the user should see an error    Your last name cannot have more than 70 characters
+    Given browser validations have been disabled
     And the Applicant fills the last name    B
-    Then the user should see an error    length must be between 2 and 70
+    Then the user should see an error    Your last name should have at least 2 characters
 
 Display errors for invalid inputs of the Phone field
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     Given the user navigates to the page    ${EDIT_PROFILE_URL}
+    Given browser validations have been disabled
     When the Applicant fills the Phone field    ${EMPTY}
     Then the user should see an error    Please enter a phone number
+    Given browser validations have been disabled
     When the Applicant fills the Phone field    121212121212121212121
     Then the user should see an error    Input for your phone number has a maximum length of 20 characters
+    Given browser validations have been disabled
     When the Applicant fills the Phone field    12
-    Then the user should see an error    Input for your phone number has a maximum length of 20 characters
+    Then the user should see an error    Input for your phone number has a minimum length of 8 characters
 
 *** Keywords ***
 the Applicant enters the profile details
@@ -78,28 +87,28 @@ the Applicant enters the profile details
     Input Text    id=firstName    Chris
     Input Text    id=lastName    Brown
     Input Text    id=phoneNumber    +-0123456789
-    Click Element    css=.extra-margin
+    Click Element    css=[name="create-account"]
 
 the Applicant fills the First name
     [Arguments]    ${First name}
     Input Text    id=firstName    ${First_name}
     Input Text    id=lastName    Brown
     Input Text    id=phoneNumber    0123456789
-    Click Element    css=.extra-margin
+    Click Element    css=[name="create-account"]
 
 the Applicant fills the last name
     [Arguments]    ${Last_name}
     Input Text    id=firstName    Chris
     Input Text    id=lastName    ${Last_name}
     Input Text    id=phoneNumber    0123456789
-    Click Element    css=.extra-margin
+    Click Element    css=[name="create-account"]
 
 the Applicant fills the Phone field
     [Arguments]    ${Phone_field}
     Input Text    id=firstName    Chris
     Input Text    id=lastName    Brown
     Input Text    id=phoneNumber    ${Phone_field}
-    Click Element    css=.extra-margin
+    Click Element    css=[name="create-account"]
 
 the Applicant can change their details back again
     Guest user log-in    &{lead_applicant_credentials}
@@ -113,7 +122,7 @@ the Applicant enters their old profile details
     Input Text    id=firstName    Steve
     Input Text    id=lastName    Smith
     Input Text    id=phoneNumber    +-0123456789
-    Click Element    css=.extra-margin
+    Click Element    css=[name="create-account"]
 
 other contributors should see the Applicant's updated name for the assignation options
     Logout as user
