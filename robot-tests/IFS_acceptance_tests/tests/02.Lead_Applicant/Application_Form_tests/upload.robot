@@ -64,7 +64,7 @@ Appendices are only available for the correct questions
 
 Large pdf uploads not allowed
     [Documentation]        INFUND-832
-    [Tags]      Collaboration       Upload      Pending
+    [Tags]      Collaboration       Upload
     Given the user can see the option to upload a file on the page      ${project_team_url}
     When the user uploads the file to the project team page       ${too_large_pdf}
     Then the user should get an error page      ${too_large_pdf_validation_error}
@@ -72,7 +72,7 @@ Large pdf uploads not allowed
 
 Non pdf uploads not allowed
     [Documentation]     INFUND-832
-    [Tags]      Collaboration       Upload  Pending
+    [Tags]      Collaboration       Upload
     Given the user can see the option to upload a file on the page      ${PROJECT_TEAM_URL}
     When the user uploads the file to the project team page     ${text_file}
     Then the user should get an error page      ${wrong_filetype_validation_error}
@@ -114,7 +114,8 @@ the user uploads the file to the project team page
     [Arguments]     ${file_name}
     Choose File    name=formInput[18]    ${UPLOAD_FOLDER}/${file_name}
     Sleep   500ms
-    Wait Until Page Contains        ${file_name}
+
+
 
 
 the user can see the option to upload a file on the page
