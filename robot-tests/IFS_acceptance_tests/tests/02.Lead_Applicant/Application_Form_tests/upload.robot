@@ -25,7 +25,7 @@ ${text_file}            ${UPLOAD_FOLDER}/testing.txt
 
 Verify that the applicant can upload pdf files
     [Documentation]        INFUND-832
-    [Tags]      Collaboration       Upload  Pending
+    [Tags]      Collaboration       Upload
     [Setup]     Guest user log-in   &{lead_applicant_credentials}
     Given the user can see the option to upload a file on the page      ${project_team_url}
     And the user can upload the file to the project team page        ${valid_pdf}
@@ -111,11 +111,12 @@ the collaborator logs in
 
 the user can upload the file to the project team page
     [Arguments]     ${file_name}
-    Sleep   30s
+    Sleep   5s
     #Wait Until Element Is Visible       name=formInput[18]
     Choose File    name=formInput[18]    ${file_name}
     # Execute JavaScript   ${JSFUNCTION}
-    Sleep   30s
+    # Simulate        event=change
+    Sleep   10s
     click button    name=mark_as_complete
     Wait Until Page Contains        ${file_name}
 
