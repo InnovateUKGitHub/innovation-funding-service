@@ -25,7 +25,7 @@ ${text_file}            ${UPLOAD_FOLDER}/testing.txt
 
 Verify that the applicant can upload pdf files
     [Documentation]        INFUND-832
-    [Tags]      Collaboration       Upload
+    [Tags]      Collaboration       Upload      Pending
     [Setup]     Guest user log-in   &{lead_applicant_credentials}
     Given the user can see the option to upload a file on the page      ${project_team_url}
     And the user can upload the file to the project team page        ${valid_pdf}
