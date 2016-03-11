@@ -54,7 +54,6 @@ public class LoginController {
             userService.sendPasswordResetNotification(resetPasswordRequestForm.getEmail());
             return "login/reset-password-notification-send";
         }
-
     }
 
     @RequestMapping(value="/login/reset-password/hash/{hash}", method=RequestMethod.GET)

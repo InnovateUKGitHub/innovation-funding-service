@@ -22,7 +22,7 @@ IFS.formValidation = (function(){
             },
             email : {
                 fields : '[type="email"]',
-                messageInvalid : "Please enter a valid emailaddress"
+                messageInvalid : "Please enter a valid email address"
             },
             required : {
                 fields: '[required]',
@@ -31,6 +31,14 @@ IFS.formValidation = (function(){
             minlength : {
                 fields : '[minlength]',
                 messageInvalid : "This field should contain at least %minlength% characters"
+            },
+            maxlength : {
+                fields : '[maxlength]',
+                messageInvalid : "This field should contain at least %maxlength% characters"
+            },
+            tel : {
+                fields : '[type="tel"]',
+                messageInvalid : "Please enter a valid phone number"
             },
             typeTimeout : 1500
         },
@@ -53,6 +61,8 @@ IFS.formValidation = (function(){
             jQuery('body').on('change', s.max.fields , function(){IFS.formValidation.checkMax(jQuery(this));});
             jQuery('body').on('blur change',s.required.fields,function(){ IFS.formValidation.checkRequired(jQuery(this)); });
             jQuery('body').on('change',s.minlength.fields,function(){ IFS.formValidation.checkMinLength(jQuery(this)); });
+            jQuery('body').on('change',s.maxlength.fields,function(){ IFS.formValidation.checkMaxLength(jQuery(this)); });
+            jQuery('body').on('change',s.tel.fields,function(){ IFS.formValidation.checkTel(jQuery(this)); });
 
         },
         checkPasswords : function(){
@@ -166,6 +176,33 @@ IFS.formValidation = (function(){
               return true;
             }
         },
+        checkMaxLength : function(field){
+          var errorMessage = IFS.formValidation.getErrorMessage(field,'maxlength');
+          var maxlength = parseInt(field.attr('maxlength'),10);
+          if(field.val().length > maxlength){
+            IFS.formValidation.setInvalid(field,errorMessage);
+            return false;
+          }
+          else {
+            IFS.formValidation.setValid(field,errorMessage);
+            return true;
+          }
+        },
+        checkTel : function(field){
+            var tel = field.val();
+            var errorMessage = IFS.formValidation.getErrorMessage(field,'tel');
+            var re = /^(?=.*[0-9])[- +()0-9]+$/;
+            var validPhone = re.test(tel);
+
+            if(!validPhone){
+              IFS.formValidation.setInvalid(field,errorMessage);
+              return false;
+            }
+            else {
+              IFS.formValidation.setValid(field,errorMessage);
+              return true;
+            }
+        },
         getErrorMessage : function(field,type){
             var errorMessage = field.attr('data-'+type+'-errormessage');
             //if there is no data-errormessage we use the default messagging
@@ -174,6 +211,7 @@ IFS.formValidation = (function(){
                       case 'min':
                       case 'max':
                       case 'minlength':
+                      case 'maxlength':
                         errorMessage = s[type].messageInvalid.replace('%'+type+'%',field.attr(type));
                         break;
                       default:
@@ -205,7 +243,7 @@ IFS.formValidation = (function(){
             if(formGroup){
               formGroup.find('.error-message:contains("'+message+'")').remove();
 
-               //if this was the last error we remove this one
+               //if this was the last error we remove the error styling
                if(formGroup.find('.error-message').length === 0){
                    formGroup.removeClass('error');
                    field.removeClass('field-error');

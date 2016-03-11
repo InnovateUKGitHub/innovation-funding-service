@@ -148,7 +148,7 @@ Password is too short
     And the user enters text to a text field    id=password    ${short_password}
     And the user enters text to a text field    id=retypedPassword    ${short_password}
     And the user submits their information
-    Then the user should see an error    Password size should be between 6 and 30 characters
+    Then the user should see an error    Your password should have at least 6 characters
     And the user cannot login with their new details    ${valid_email}    ${short_password}
     And the user logs out if they are logged in
 
@@ -156,6 +156,7 @@ Password is too long
     [Documentation]    -INFUND-885
     [Tags]    Account    Validations
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    Given browser validations have been disabled
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
@@ -163,7 +164,7 @@ Password is too long
     And the user enters text to a text field    id=password    ${long_password}
     And the user enters text to a text field    id=retypedPassword    ${long_password}
     And the user submits their information
-    Then the user should see an error    Password size should be between 6 and 30 characters
+    Then the user should see an error    Your password cannot have more than 30 characters
     And the user cannot login with their new details    ${valid_email}    ${long_password}
     And the user logs out if they are logged in
 

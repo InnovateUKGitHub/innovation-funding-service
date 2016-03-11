@@ -6,6 +6,9 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static com.worth.ifs.BuilderAmendFunctions.clearUniqueIds;
 
 /**
@@ -18,6 +21,8 @@ import static com.worth.ifs.BuilderAmendFunctions.clearUniqueIds;
 @SpringApplicationConfiguration(classes = Application.class)
 @TestPropertySource(locations="classpath:application-web-integration-test.properties")
 public abstract class BaseIntegrationTest {
+    public static final int USER_COUNT  = 11;
+    public static final List<String> ALL_USERS_EMAIL = Arrays.asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com", "felix.wilson@gmail.com", "ewan+1@hiveit.co.uk", "ewan+2@hiveit.co.uk", "ewan+12@hiveit.co.uk");
 
     @Before
     public void resetBuilderIds() {
