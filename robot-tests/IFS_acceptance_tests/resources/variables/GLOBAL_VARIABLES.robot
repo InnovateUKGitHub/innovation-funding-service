@@ -1,7 +1,7 @@
 *** Variables ***
 ${BROWSER}        Firefox
-${SERVER_BASE}    ifs.dev.innovateuk.org
-${PROTOCOL}       https://
+${SERVER_BASE}    localhost:8085/
+${PROTOCOL}       http://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${RUNNING_ON_DEV}    ${EMPTY}
 ${LOGIN_URL}      ${SERVER}/login
