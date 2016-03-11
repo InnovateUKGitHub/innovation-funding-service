@@ -10,10 +10,10 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for {@link UserRestServiceImpl}.
- *
- * Created by dwatson on 02/10/15.
  */
 public class UserRestServiceIntegrationTest extends BaseRestServiceIntegrationTest<UserRestService> {
+
+    public static final String EMAIL = "steve.smith@empire.com";
 
     @Override
     @Autowired
@@ -22,9 +22,16 @@ public class UserRestServiceIntegrationTest extends BaseRestServiceIntegrationTe
     }
 
     @Test
-    public void test_retrieveUserByEmailAndPassword() {
-        User user = service.retrieveUserByEmailAndPassword("steve.smith@empire.com", "test").getSuccessObject();
+    public void test_retrieveUserByToken() {
+        User user = service.retrieveUserByToken("123abc").getSuccessObject();
         assertNotNull(user);
-        assertEquals("steve.smith@empire.com", user.getEmail());
+        assertEquals(EMAIL, user.getEmail());
+    }
+
+    @Test
+    public void test_retrieveUserByEmailAndPassword() {
+        User user = service.retrieveUserByEmailAndPassword(EMAIL, "test").getSuccessObject();
+        assertNotNull(user);
+        assertEquals(EMAIL, user.getEmail());
     }
 }

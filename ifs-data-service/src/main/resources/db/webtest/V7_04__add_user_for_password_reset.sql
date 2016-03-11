@@ -1,0 +1,2 @@
+INSERT INTO `user` (`id`, `email`, `name`, `password`, `token`, `first_name`, `last_name`, `phone_number`, `title`, `status`) VALUES ('13', 'worth.email.test+changepsw@gmail.com', 'Elmo Chenault', '67bf8182199a451fbae14c67711f2f05eef8e2f464e4bd51f3b810111a0033dc64ef696e02cf8f27', '13abc123', 'Elmo', 'Chenault', '(775) 148-0514', 'Mr', 'ACTIVE');
+INSERT INTO `user_role` (`user_id`, `role_id`) VALUES ('13', '4');

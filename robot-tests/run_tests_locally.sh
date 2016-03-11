@@ -44,6 +44,12 @@ function resetDB {
     ./gradlew flywayClean flywayMigrate
 }
 
+function clearDownFileRepository {
+    echo "***********Deleting any uploaded files***************"
+    rm -rf /tmp/ifs/
+}
+
+
 function buildAndDeploy {
     echo "********BUILD AND DEPLOY THE APPLICATION********"
     cd ${dataServiceCodeDir}
@@ -88,7 +94,7 @@ function startServers {
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// --exclude Failing --exclude Pending --exclude FailingForLocal --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// -v UPLOAD_FOLDER:$uploadFileDir --exclude Failing --exclude Pending --exclude FailingForLocal --name IFS $testDirectory
 }
 
 
@@ -110,6 +116,7 @@ cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
 echo "scriptDir:        ${scriptDir}"
+uploadFileDir=${scriptDir}"/upload_files"
 dateFormat=`date +%Y-%m-%d`
 cd ../ifs-data-service
 dataServiceCodeDir=`pwd`
@@ -194,12 +201,14 @@ if [ "$quickTest" ]
 then
     echo "using quickTest:   TRUE" >&2
     resetDB
+    clearDownFileRepository
     runTests
 elif [ "$testScrub" ]
 then
     echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
     stopServers
     resetDB
+    clearDownFileRepository
     buildAndDeploy
     startServers
 elif [ "$happyPath" ]
@@ -207,6 +216,7 @@ then
     echo "using happyPath mode: this will run a pared down set of tests as a sanity check for developers pre-commit" >&2
     stopServers
     resetDB
+    clearDownFileRepository
     buildAndDeploy
     startServers
     runHappyPathTests
@@ -218,6 +228,7 @@ else
     echo "using quickTest:   FALSE" >&2
     stopServers
     resetDB
+    clearDownFileRepository
     buildAndDeploy
     startServers
     runTests

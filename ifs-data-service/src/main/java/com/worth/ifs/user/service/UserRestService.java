@@ -22,6 +22,10 @@ public interface UserRestService {
 
     RestResult<Void> sendPasswordResetNotification(String email);
 
+    RestResult<Void> checkPasswordResetHash(String hash);
+
+    RestResult<Void> resetPassword(String hash, String password);
+
     RestResult<UserResource> findUserByEmail(String email);
     Future<RestResult<ProcessRole[]>> findAssignableProcessRoles(Long applicationId);
     RestResult<List<User>> findRelatedUsers(Long applicationId);

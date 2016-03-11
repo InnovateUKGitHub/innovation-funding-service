@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.service.CostService;
-import com.worth.ifs.application.finance.view.DefaultFinanceFormHandler;
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -351,7 +350,10 @@ public class ApplicationFormController extends AbstractApplicationController {
         params.forEach((key, value) -> log.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
 
         setApplicationDetails(application, form.getApplication());
-        applicationService.save(application);
+        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
+        if(userIsLeadApplicant) {
+            applicationService.save(application);
+        }
         markApplicationQuestions(application, processRole.getId(), request, response, errors);
 
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
