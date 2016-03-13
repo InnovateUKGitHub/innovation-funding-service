@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
 
 /**
@@ -49,12 +50,28 @@ public class FormInputResponseFileUploadRules {
 
     private boolean userIsApplicantOnThisApplication(long applicationId, User user) {
         List<Role> leadApplicantRoles = roleRepository.findByName(LEADAPPLICANT.getName());
+
         if (leadApplicantRoles.isEmpty()) {
             LOG.error("Could not find a Lead Applicant role");
             return false;
         }
         Role leadApplicantRole = leadApplicantRoles.get(0);
         List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(), leadApplicantRole, applicationId);
-        return !applicantProcessRoles.isEmpty();
+
+        boolean userIsCollaborator = userIsCollaboratorOnThisApplication(applicationId, user);
+        return !applicantProcessRoles.isEmpty() || userIsCollaborator;
+    }
+
+    private boolean userIsCollaboratorOnThisApplication(long applicationId, User user) {
+        List<Role> collaboratorRoles = roleRepository.findByName(COLLABORATOR.getName());
+
+        boolean collaboratorProcessRolesExist = false;
+
+        if(!collaboratorRoles.isEmpty()) {
+            Role collaboratorRole = collaboratorRoles.get(0);
+            List<ProcessRole> collaboratorProcessRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(), collaboratorRole, applicationId);
+            collaboratorProcessRolesExist = !collaboratorProcessRole.isEmpty();
+        }
+        return collaboratorProcessRolesExist;
     }
 }

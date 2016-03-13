@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.util.BooleanFunctions.and;
+import static com.worth.ifs.util.BooleanFunctions.or;
 import static com.worth.ifs.util.CollectionFunctions.onlyElement;
 
 @PermissionRules
@@ -37,9 +38,9 @@ public class ApplicationRules {
         return !(applicationExists(application) && !userIsConnectedToApplicationResource(application, user));
     }
 
-    @PermissionRule(value="UPDATE", description="A user can only update an application is they are the lead applicant")
+    @PermissionRule(value="UPDATE", description="A user can only update an application if they are a lead applicant or collaborator of the application")
     public boolean onlyLeadApplicantCanChangeApplicationResource(ApplicationResource application, User user){
-        return and(userIsConnectedToApplicationResource(application, user), userIsLeadApplicantOnApplicationResource(application, user));
+        return and(userIsConnectedToApplicationResource(application, user), or(userIsLeadApplicantOnApplicationResource(application, user),userIsCollaboratorOnApplicationResource(application, user)));
     }
 
     boolean userIsConnectedToApplicationResource(ApplicationResource application, User user){
@@ -49,6 +50,11 @@ public class ApplicationRules {
 
     boolean userIsLeadApplicantOnApplicationResource(ApplicationResource application, User user){
         Role role = onlyElement(roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName()));
+        return !processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(), role, application.getId()).isEmpty();
+    }
+
+    boolean userIsCollaboratorOnApplicationResource(ApplicationResource application, User user){
+        Role role = onlyElement(roleRepository.findByName(UserRoleType.COLLABORATOR.getName()));
         return !processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(), role, application.getId()).isEmpty();
     }
 
