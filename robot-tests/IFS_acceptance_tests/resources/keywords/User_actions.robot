@@ -133,11 +133,17 @@ The applicant assigns the question to the collaborator
     When the user clicks the button/link    css=.assign-button
     Then the user clicks the button/link    jQuery=button:contains("${NAME}")
 
+the user assigns the question to the collaborator
+    [Arguments]     ${name}
+    The user clicks the button/link    css=.assign-button
+    The user clicks the button/link    jQuery=button:contains("${NAME}")
+    Reload Page
+
 The user goes back to the previous page
     Go Back
 
 browser validations have been disabled
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');jQuery('[maxlength]').removeAttr('maxlength');
 
 The user verifies their email
     [Arguments]    ${verify_link}

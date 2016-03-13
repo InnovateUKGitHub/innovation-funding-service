@@ -36,6 +36,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -140,9 +141,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
 
-        // TODO: Remove and replace if file already exists here : Rav
+        // Removing and replacing if file already exists here
         if (existingResponse != null && existingResponse.getFileEntry() != null) {
-            final ServiceResult<FileEntry> deleteResult = fileService.deleteFile(existingResponse.getFileEntry().getId());
+            FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
+            final ServiceResult<FormInputResponse> deleteResult = deleteFormInputResponseFileUpload(formInputResponseFileEntryId);;
             if(deleteResult.isFailure()) {
                 return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, existingResponse.getFileEntry().getId()));
             }
@@ -192,35 +194,63 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId formInputResponseFileId) {
+    public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
 
         ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> existingFileResult =
-                getFormInputResponseFileUpload(formInputResponseFileId);
+                getFormInputResponseFileUpload(fileEntry);
 
         return existingFileResult.andOnSuccess(existingFile -> {
 
             FormInputResponseFileEntryResource formInputFileEntryResource = existingFile.getKey();
             Long fileEntryId = formInputFileEntryResource.getFileEntryResource().getId();
 
-            return fileService.deleteFile(fileEntryId).
-                    andOnSuccess(deletedFile -> getFormInputResponse(formInputFileEntryResource.getCompoundId()).
-                    andOnSuccess(this::unlinkFileEntryFromFormInputResponse)
-            );
+            FormInput formInput = formInputRepository.findOne(formInputFileEntryResource.getCompoundId().getFormInputId());
+            if(formInput != null) {
+                boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
+                return fileService.deleteFile(fileEntryId).
+                        andOnSuccess(deletedFile -> {
+                            if (questionHasMultipleStatuses)
+                                return getFormInputResponse(formInputFileEntryResource.getCompoundId());
+                            else
+                                return getFormInputResponseForQuestionAssignee(formInputFileEntryResource.getCompoundId());
+                        }).
+                        andOnSuccess(this::unlinkFileEntryFromFormInputResponse);
+            } else {
+                return serviceFailure(notFoundError(FormInput.class, formInputFileEntryResource.getCompoundId().getFormInputId()));
+            }
         });
     }
 
-    @Override
-    public ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntryId) {
+    private boolean questionHasMultipleStatuses(@NotNull FormInput formInput){
+        Question question = formInput.getQuestion();
+        return question.hasMultipleStatuses();
+    }
 
-        return getFormInputResponse(fileEntryId).
-                andOnSuccess(formInputResponse -> fileService.getFileByFileEntryId(formInputResponse.getFileEntry().getId()).
-                andOnSuccessReturn(inputStreamSupplier -> Pair.of(formInputResponseFileEntryResource(formInputResponse.getFileEntry(), fileEntryId), inputStreamSupplier)
+    @Override
+    public ServiceResult<Pair<FormInputResponseFileEntryResource, Supplier<InputStream>>> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
+        final FormInput formInput = formInputRepository.findOne(fileEntry.getFormInputId());
+        if(formInput == null){
+            return serviceFailure(notFoundError(FormInput.class, fileEntry.getFormInputId()));
+        }
+
+        boolean hasMultipleStatuses = questionHasMultipleStatuses(formInput);
+
+        ServiceResult<FormInputResponse> formInputResponse;
+        if(hasMultipleStatuses){
+            formInputResponse = getFormInputResponse(fileEntry);
+        } else {
+            formInputResponse = getFormInputResponseForQuestionAssignee(fileEntry);
+        }
+        return formInputResponse.
+                andOnSuccess(fir -> fileService.getFileByFileEntryId(fir.getFileEntry().getId()).
+                andOnSuccessReturn(inputStreamSupplier -> Pair.of(formInputResponseFileEntryResource(fir.getFileEntry(), fileEntry), inputStreamSupplier)
         ));
     }
 
     private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
         formInputResponse.setFileEntry(null);
         FormInputResponse unlinkedResponse = formInputResponseRepository.save(formInputResponse);
+        formInputResponseRepository.delete(formInputResponse);
         return serviceSuccess(unlinkedResponse);
     }
 
@@ -240,6 +270,20 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 fileEntry.getProcessRoleId(),
                 fileEntry.getFormInputId()),
                 formInputResponseNotFoundError);
+    }
+
+    /**
+     * Use this method for finding a form input response when a question has single status (shared across application)
+     * @param fileEntry - in this case the FormInputResponseFileEntryId will contain the id of person to whom the question is assigned.
+     * @return
+     */
+    private ServiceResult<FormInputResponse> getFormInputResponseForQuestionAssignee(FormInputResponseFileEntryId fileEntry) {
+        Error formInputResponseNotFoundError = notFoundError(FormInputResponse.class, fileEntry.getApplicationId(), fileEntry.getProcessRoleId(), fileEntry.getFormInputId());
+        List<FormInputResponse> formInputResponses = formInputResponseRepository.findByApplicationIdAndFormInputId(fileEntry.getApplicationId(), fileEntry.getFormInputId());
+        if(formInputResponses != null && !formInputResponses.isEmpty()){
+            return serviceSuccess(formInputResponses.get(0));
+        }
+        return serviceFailure(formInputResponseNotFoundError);
     }
 
     @Override
@@ -316,8 +360,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             NotificationTarget to = new ExternalUserNotificationTarget(application.getLeadApplicant().getName(), application.getLeadApplicant().getEmail());
 
             Map<String, Object> notificationArguments = new HashMap<>();
+            Competition competition = application.getCompetition();
+
             notificationArguments.put("applicationName", application.getName());
             notificationArguments.put("applicationId", application.getId());
+            notificationArguments.put("competitionName", competition.getName());
+            notificationArguments.put("assesmentEndDate", competition.getAssessmentEndDate());
 
             Notification notification = new Notification(from, singletonList(to), Notifications.APPLICATION_SUBMITTED, notificationArguments);
             return notificationService.sendNotification(notification, EMAIL);

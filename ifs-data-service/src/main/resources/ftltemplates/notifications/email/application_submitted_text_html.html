@@ -69,14 +69,17 @@
 
         <tr>
             <td colspan="2" style="padding: 20px 0 40px 0">
-
                 <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
 
-                <p>Your application "${applicationName}" is submitted.</p>
+                <p>Congratulations, you have successfully submitted an application for funding to Innovate UK's '${competitionName}' competition.</p>
+
+                <#assign endDate = assesmentEndDate?date.xs>
+                <p>You will be notified via e-mail of the result by ${endDate?string["dd-MM-yyyy"]}, 5:30pm.</p>
+
+                <p>If you have any queries with your submission please contact our customer support services at <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a> or 0300 321 4357.</p>
 
                 <p style="margin: 0 0 1em 0;">Many thanks,</p>
                 <p style="margin: 0 0 1em 0;">The Innovate UK team</p>
-
             </td>
         </tr>
 
