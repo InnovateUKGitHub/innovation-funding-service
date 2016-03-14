@@ -84,10 +84,6 @@ dependencies {
     compile "org.apache.httpcomponents:httpasyncclient"
     compile "com.google.guava:guava:19.0"
 
-
-    // the below dependency can be removed when Shib REST API is available
-    compile 'org.springframework.ldap:spring-ldap-core:2.0.4.RELEASE'
-
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")
 

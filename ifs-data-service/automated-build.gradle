@@ -13,6 +13,7 @@ ext.ifsDataServiceRestBaseURL="http://localhost:8080"
 ext.ifsWebBaseURL="http://localhost:8080"
 ext.silRestBaseURL="http://localhost:8080/silstub"
 ext.idpRestBaseURL="http://localhost:8090/idpstub"
+ext.idpRestKey="1234567890"
 
 ext.testIfsDatasourceUrl="jdbc:mysql://127.0.0.1:3306/ifs_test"
 ext.testIfsDatasourceUsername="ifs"
@@ -32,14 +33,3 @@ ext.cookieSecure=true
 ext.cookieHTTPOnly=false
 
 ext.ifsFileStorageLocation="/tmp"
-
-//
-// The below LDAP credentials allow the application to talk directly to LDAP in lieu of the Shib REST API
-// being made available
-//
-ext.ifsIdpStubLdapUrl="ifs-local-dev"
-ext.ifsIdpStubLdapBase="dc=nodomain"
-ext.ifsIdpStubLdapUser="admin"
-ext.ifsIdpStubLdapPassword="foobar"
-
-ext.ifsIdpLogoutUrl="https://ifs-dev-local/logout"
