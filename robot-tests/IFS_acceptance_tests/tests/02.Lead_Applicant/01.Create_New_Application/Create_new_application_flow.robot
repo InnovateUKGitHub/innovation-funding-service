@@ -6,6 +6,9 @@ Documentation     INNFUND-669 As an applicant I want to create a new application
 ...
 ...
 ...               INFUND-1904 As a user registering an account and submitting the data I expect to receive a verification email so I can be sure that the provided email address is correct
+...
+...
+...               INFUND-1920 As an applicant once I am accessing my dashboard and clicking on the newly created application for the first time, it will allow me to invite contributors and partners
 Test Setup        The guest user opens the browser
 Test Teardown     User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -22,8 +25,10 @@ Create application flow for non registered users CH route
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1904
+    ...
+    ...    INFUND-1920
     [Tags]    Create application    HappyPath    FailingForLocal
-    # failing because of auto login not working shib
+    # TODO DW - INFUND-936 - failing because of auto login not working shib
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -36,45 +41,48 @@ Create application flow for non registered users CH route
     And the user clicks the button/link    css=#select-address-block > button
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters the details and clicks the create account    worth.email.test+15@gmail.com
+    And the user enters the details and clicks the create account    worth.email.test+1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     And the user opens the mailbox and verifies the email
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Sign")
-    And guest user log-in    worth.email.test+44@gmail.com    testtest1
+    And guest user log-in    worth.email.test+1@gmail.com    testtest1
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=Technology Inspired
-    #And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user should see the text in the page    Application overview
 
 Create application flow for non registered users non CH route
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1904
+    ...
+    ...    INFUND-1920
     [Tags]    Create application    HappyPath    FailingForLocal
-    # failing because of auto login not working shib
+    # TODO DW - INFUND-936 - failing because of auto login not working shib
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters the details and clicks the create account    worth.email.test+16@gmail.com
+    And the user enters the details and clicks the create account    worth.email.test+2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     And the user opens the mailbox and verifies the email
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Sign")
-    And guest user log-in    worth.email.test+16@gmail.com    Passw0rd2
+    And guest user log-in    worth.email.test+2@gmail.com    testtest1
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=Technology Inspired
-    #And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user should see the text in the page    Application overview
 
 Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
     [Tags]    Applicant    New application    HappyPath    FailingForLocal
-    # failing because of user not created as part of another test which is failing due to auto login not being functional
-    When the guest user enters the log in credentials    worth.email.test@gmail.com    Passw0rd2
+    # TODO DW - INFUND-936 - failing because of user not created as part of another test which is failing due to auto login not being functional
+    When the guest user enters the log in credentials    worth.email.test+1@gmail.com    testtest1
     And the user clicks the button/link    css=input.button
     And the user edits the competition title
     Then the user should see the text in the page    test title
