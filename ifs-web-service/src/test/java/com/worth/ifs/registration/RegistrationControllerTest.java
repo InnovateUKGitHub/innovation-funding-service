@@ -31,6 +31,7 @@ import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -179,6 +180,23 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 .andExpect(view().name("registration-register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
         ;
+    }
+    
+    @Test
+    public void invalidCharactersInEmailShouldReturnError() throws Exception {
+        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+
+        mockMvc.perform(post("/registration/register?organisationId=1")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("email", "{a|b}@test.test")
+        )
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("registration-register"))
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
+        ;
+        
+        verifyNoMoreInteractions(userService);
     }
 
     @Test

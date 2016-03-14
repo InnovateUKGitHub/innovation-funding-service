@@ -20,6 +20,11 @@ Guest user log-in
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You are not authorised to perform the requested action
 
+
+Log in as user
+    [Arguments]     ${email}    ${password}
+    Guest user log-in       ${email}    ${password}
+
 The guest user inserts user email & password
     [Arguments]    ${USERNAME}    ${PSW}
     Input Text    id=username    ${USERNAME}
