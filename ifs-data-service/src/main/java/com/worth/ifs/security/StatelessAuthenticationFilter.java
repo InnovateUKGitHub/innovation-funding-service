@@ -31,8 +31,8 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        if(!ignoreRequest(httpRequest)) {
-            Authentication authentication = userAuthenticationService.getAuthentication(httpRequest);
+        Authentication authentication = userAuthenticationService.getAuthentication(httpRequest);
+        if(authentication!=null){
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
