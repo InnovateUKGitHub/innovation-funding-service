@@ -6,7 +6,11 @@ function executeMySQLCommand {
     dbUsername=$(./_read-dev-build-properties.sh ext.ifsDatasourceUsername)
     dbPassword=$(./_read-dev-build-properties.sh ext.ifsDatasourcePassword)
 
-    mysql ${dbName} -u${dbUsername} -p${dbPassword} -N -s -e "$1"
+    if [[ -n "${dbPassword}" ]]; then
+        mysql ${dbName} -u${dbUsername} -p${dbPassword} -N -s -e "$1"
+    else
+        mysql ${dbName} -u${dbUsername} -N -s -e "$1"
+    fi
 }
 
 export -f executeMySQLCommand
