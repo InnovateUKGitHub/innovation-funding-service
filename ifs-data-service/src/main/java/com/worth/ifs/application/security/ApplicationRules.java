@@ -13,9 +13,10 @@ import com.worth.ifs.user.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static com.worth.ifs.util.BooleanFunctions.and;
+import static com.worth.ifs.user.domain.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.onlyElement;
 
 @PermissionRules
@@ -36,9 +37,11 @@ public class ApplicationRules {
         return !(applicationExists(application) && !userIsConnectedToApplicationResource(application, user));
     }
 
-    @PermissionRule(value="UPDATE", description="A user can only update an application is they are the lead applicant")
-    public boolean onlyLeadApplicantCanChangeApplicationResource(ApplicationResource application, User user){
-        return and(userIsConnectedToApplicationResource(application, user), userIsLeadApplicantOnApplicationResource(application, user), application.isOpen());
+    @PermissionRule(value="UPDATE", description="A user can update their own application if they are a lead applicant or collaborator of the application")
+    public boolean applicantCanUpdateApplicationResource(ApplicationResource application, User user){
+        List<Role> allApplicantRoles = roleRepository.findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()));
+        List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, application.getId());
+        return !applicantProcessRoles.isEmpty();
     }
 
     boolean userIsConnectedToApplicationResource(ApplicationResource application, User user){
