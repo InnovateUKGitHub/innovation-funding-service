@@ -20,6 +20,7 @@ Verify all sections present in the summary page
 
 Application overview button
     [Documentation]    INFUND-1075
+    ...      -INFUND-841
     [Tags]    Applicant    Summary
     Given the user navigates to the page    ${SUMMARY_URL}
     When the user clicks the button/link    link=Application Overview
