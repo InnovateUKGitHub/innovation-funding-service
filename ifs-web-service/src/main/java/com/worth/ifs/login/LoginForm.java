@@ -3,6 +3,8 @@ package com.worth.ifs.login;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.worth.ifs.util.FormUtil;
+
 /**
  * This object is used for the loginForm. When the form is submitted the data is
  * injected into a LoginForm instance, so it is easy to use and you don't need to
@@ -12,7 +14,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class LoginForm {
 
     @NotEmpty(message = "Please enter your e-mail address")
-    @Email(message = "Please enter a valid e-mail address")
+    @Email(regexp = FormUtil.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "Please enter a valid e-mail address")
     private String email;
     @NotEmpty(message = "Please enter your password")
     private String password;
