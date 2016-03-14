@@ -1,1 +1,0 @@
-UPDATE `cost` SET `item`='NONE' WHERE `description`='Accept Rate';

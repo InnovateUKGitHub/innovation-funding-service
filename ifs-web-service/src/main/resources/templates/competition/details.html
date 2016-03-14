@@ -8,6 +8,7 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
+
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
@@ -20,7 +21,7 @@
             <p>Investment of up to &pound;3 million in feasibility studies to stimulate innovation across four enabling technology areas that underpin future UK growth: advanced materials; biosciences; electronics, sensors and photonics; and information and communication technology (ICT).</p>
         </div>
         <div class="column-third">
-            <a role="button" tabindex="0" class="button" th:href="@{/competition/{competitionId}/info/eligibility(competitionId=${competitionId})}">Apply now</a>
+            <div th:include="competition/fragments :: apply-button" th:remove="tag" />
         </div>
     </div>
     <h2 class="heading-large">Summary</h2>
@@ -63,9 +64,7 @@
         <div class="column-two-thirds">
             <h2 class="heading-large">Before you apply</h2>
             <p>Before you apply for a competition you must first create an account. If you already have an account you'll need to sign in.</p>
-            <a role="button" tabindex="0" class="button" th:href="@{/competition/{competitionId}/info/eligibility(competitionId=${competitionId})}">Apply now</a>
-            <!--<a th:if="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${competitionId})}">Apply now</a>-->
-            <!--<a th:unless="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${competitionId})}">Apply now</a>-->
+            <div th:include="competition/fragments :: apply-button" th:remove="tag" />
             <span class="form-hint">Closing date: 09 Sep 2015</span>
         </div>
     </div>

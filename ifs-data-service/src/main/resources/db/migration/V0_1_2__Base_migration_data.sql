@@ -1,15 +1,26 @@
+-- MySQL dump 10.13  Distrib 5.6.24, for osx10.8 (x86_64)
 --
--- Table structure for table `academic`
+-- Host: 127.0.0.1    Database: ifs
+-- ------------------------------------------------------
+-- Server version	5.6.25
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Dumping data for table `academic`
 --
 
-DROP TABLE IF EXISTS `academic`;
-CREATE TABLE `academic` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=964 DEFAULT CHARSET=utf8;
-
+LOCK TABLES `academic` WRITE;
+/*!40000 ALTER TABLE `academic` DISABLE KEYS */;
 INSERT  IGNORE INTO `academic` (`id`, `name`) VALUES (1,'AB Agri Ltd');
 INSERT  IGNORE INTO `academic` (`id`, `name`) VALUES (3,'ACCA21');
 INSERT  IGNORE INTO `academic` (`id`, `name`) VALUES (11,'AFRISTAT');
@@ -973,3 +984,101 @@ INSERT  IGNORE INTO `academic` (`id`, `name`) VALUES (963,'Zoological Soc London
 INSERT  IGNORE INTO `academic` (`id`, `name`) VALUES (199,'easyasIT Ltd');
 INSERT  IGNORE INTO `academic` (`id`, `name`) VALUES (541,'now>press>play');
 INSERT  IGNORE INTO `academic` (`id`, `name`) VALUES (937,'wehearttech CIC');
+/*!40000 ALTER TABLE `academic` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `application_status`
+--
+
+LOCK TABLES `application_status` WRITE;
+/*!40000 ALTER TABLE `application_status` DISABLE KEYS */;
+INSERT  IGNORE INTO `application_status` (`id`, `name`) VALUES (1,'created');
+INSERT  IGNORE INTO `application_status` (`id`, `name`) VALUES (2,'submitted');
+INSERT  IGNORE INTO `application_status` (`id`, `name`) VALUES (3,'approved');
+INSERT  IGNORE INTO `application_status` (`id`, `name`) VALUES (4,'rejected');
+INSERT  IGNORE INTO `application_status` (`id`, `name`) VALUES (5,'open');
+/*!40000 ALTER TABLE `application_status` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `form_input_type`
+--
+
+LOCK TABLES `form_input_type` WRITE;
+/*!40000 ALTER TABLE `form_input_type` DISABLE KEYS */;
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (1,'textinput');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (2,'textarea');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (3,'date');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (4,'fileupload');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (5,'application_details');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (6,'empty');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (7,'finance');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (8,'labour');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (9,'overheads');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (10,'materials');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (11,'capital_usage');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (12,'subcontracting_costs');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (13,'travel');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (14,'other_costs');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (15,'your_finance');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (16,'financial_summary');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (17,'other_funding');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (18,'percentage');
+INSERT  IGNORE INTO `form_input_type` (`id`, `title`) VALUES (19,'organisation_size');
+/*!40000 ALTER TABLE `form_input_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `form_validator`
+--
+
+LOCK TABLES `form_validator` WRITE;
+/*!40000 ALTER TABLE `form_validator` DISABLE KEYS */;
+INSERT  IGNORE INTO `form_validator` (`id`, `clazz_name`, `title`) VALUES (1,'com.worth.ifs.validator.EmailValidator','EmailValidator');
+INSERT  IGNORE INTO `form_validator` (`id`, `clazz_name`, `title`) VALUES (2,'com.worth.ifs.validator.NotEmptyValidator','NotEmptyValidator');
+INSERT  IGNORE INTO `form_validator` (`id`, `clazz_name`, `title`) VALUES (3,'com.worth.ifs.validator.WordCountValidator','WordCountValidator');
+/*!40000 ALTER TABLE `form_validator` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `organisation_type`
+--
+
+LOCK TABLES `organisation_type` WRITE;
+/*!40000 ALTER TABLE `organisation_type` DISABLE KEYS */;
+INSERT  IGNORE INTO `organisation_type` (`id`, `name`, `parent_organisation_type_id`) VALUES (1,'Business',NULL);
+INSERT  IGNORE INTO `organisation_type` (`id`, `name`, `parent_organisation_type_id`) VALUES (2,'Research',NULL);
+INSERT  IGNORE INTO `organisation_type` (`id`, `name`, `parent_organisation_type_id`) VALUES (3,'Public Sector',NULL);
+INSERT  IGNORE INTO `organisation_type` (`id`, `name`, `parent_organisation_type_id`) VALUES (4,'Charity',NULL);
+INSERT  IGNORE INTO `organisation_type` (`id`, `name`, `parent_organisation_type_id`) VALUES (5,'University (HEI)',2);
+INSERT  IGNORE INTO `organisation_type` (`id`, `name`, `parent_organisation_type_id`) VALUES (6,'Non profit distributing Research & Technology Organisation (RTO)',2);
+INSERT  IGNORE INTO `organisation_type` (`id`, `name`, `parent_organisation_type_id`) VALUES (7,'Catapult',2);
+INSERT  IGNORE INTO `organisation_type` (`id`, `name`, `parent_organisation_type_id`) VALUES (8,'Public sector research establishment',2);
+INSERT  IGNORE INTO `organisation_type` (`id`, `name`, `parent_organisation_type_id`) VALUES (9,'Research council institute',2);
+/*!40000 ALTER TABLE `organisation_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `role`
+--
+
+LOCK TABLES `role` WRITE;
+/*!40000 ALTER TABLE `role` DISABLE KEYS */;
+INSERT  IGNORE INTO `role` (`id`, `name`) VALUES (1,'leadapplicant');
+INSERT  IGNORE INTO `role` (`id`, `name`) VALUES (2,'collaborator');
+INSERT  IGNORE INTO `role` (`id`, `name`) VALUES (3,'assessor');
+INSERT  IGNORE INTO `role` (`id`, `name`) VALUES (4,'applicant');
+/*!40000 ALTER TABLE `role` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2016-03-14 14:29:44

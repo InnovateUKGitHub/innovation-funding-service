@@ -60,8 +60,7 @@
   	</div>
 
   	<div class="extra-margin">
-      <a th:if="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${competitionId})}">Begin application</a>
-      <a th:unless="${userIsLoggedIn}" role="button" tabindex="0" class="button" th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${competitionId})}">Sign in to apply</a>
+		<div th:include="competition/fragments :: sign-in-to-apply-button" th:remove="tag" />
   	</div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

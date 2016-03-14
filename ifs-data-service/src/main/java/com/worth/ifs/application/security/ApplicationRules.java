@@ -1,8 +1,5 @@
 package com.worth.ifs.application.security;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.security.PermissionRule;
@@ -13,15 +10,13 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
-import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
-import static com.worth.ifs.util.BooleanFunctions.and;
-import static com.worth.ifs.util.BooleanFunctions.or;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.worth.ifs.user.domain.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.onlyElement;
 
 @PermissionRules
