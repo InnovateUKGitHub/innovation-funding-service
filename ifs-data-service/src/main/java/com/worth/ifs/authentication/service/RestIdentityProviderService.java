@@ -15,10 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -51,12 +55,16 @@ public class RestIdentityProviderService implements IdentityProviderService {
         return handlingErrors(() -> {
 
             CreateUserResource createUserRequest = new CreateUserResource(emailAddress, password);
-            Either<ResponseEntity<IdentityProviderError>, CreateUserResponse> response = restPost(idpBaseURL + idpUserPath, createUserRequest, CreateUserResponse.class, IdentityProviderError.class, CREATED);
+            Either<ResponseEntity<IdentityProviderError[]>, CreateUserResponse> response = restPost(idpBaseURL + idpUserPath, createUserRequest, CreateUserResponse.class, IdentityProviderError[].class, CREATED);
             return response.mapLeftOrRight(
-                    failure -> serviceFailure(new Error(failure.getBody().getKey(), failure.getStatusCode())),
+                    failure -> serviceFailure(errors(failure.getStatusCode(), failure.getBody())),
                     success -> serviceSuccess(success.getUuid())
             );
         });
+    }
+
+    private static final List<Error> errors(HttpStatus code, IdentityProviderError... errors){
+        return asList(errors).stream().map(e -> new Error(e.getKey(), code)).collect(toList());
     }
 
     protected <T, R> Either<ResponseEntity<R>, T> restPost(String path, Object postEntity, Class<T> successClass, Class<R> failureClass, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
