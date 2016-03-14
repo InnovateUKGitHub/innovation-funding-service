@@ -66,9 +66,12 @@ the user submits their information
 the user cannot login with the invalid email
     [Arguments]    ${invalid_email_addy}
     go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${invalid_email_addy}
-    Input Password    id=id_password    password
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Submit Form
-    Page Should Contain    Your login was unsuccessful
+    Input Text    id=username    ${invalid_email_addy}
+    Input Password    id=password    password
+    Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    Please enter a valid e-mail address
+
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+    Click Button    css=button[name="_eventId_proceed"]
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work

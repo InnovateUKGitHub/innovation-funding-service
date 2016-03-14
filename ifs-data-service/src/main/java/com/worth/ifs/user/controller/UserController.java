@@ -7,6 +7,8 @@ import com.worth.ifs.token.domain.TokenType;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.transactional.RegistrationService;
+import com.worth.ifs.user.transactional.UserProfileService;
 import com.worth.ifs.user.transactional.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.util.Optional.of;
+
 /**
  * This RestController exposes CRUD operations to both the
  * {@link com.worth.ifs.user.service.UserRestServiceImpl} and other REST-API users
@@ -28,23 +32,28 @@ import java.util.Set;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
     private static final Log LOG = LogFactory.getLog(UserController.class);
+
     public static final String URL_CHECK_PASSWORD_RESET_HASH = "checkPasswordResetHash";
     public static final String URL_PASSWORD_RESET = "passwordReset";
     public static final String URL_SEND_PASSWORD_RESET_NOTIFICATION = "sendPasswordResetNotification";
+
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RegistrationService registrationService;
+
     @Autowired
     private TokenService tokenService;
 
-    @RequestMapping("/token/{token}")
-    public RestResult<User> getUserByToken(@PathVariable("token") final String token) {
-        return userService.getUserByToken(token).toGetResponse();
-    }
+    @Autowired
+    private UserProfileService userProfileService;
 
-    @RequestMapping("/email/{email}/password/{password}")
-    public RestResult<User> getUserByEmailandPassword(@PathVariable("email") final String email, @PathVariable("password") final String password) {
-        return userService.getUserByEmailandPassword(email, password).toGetResponse();
+    @RequestMapping("/uid/{uid}")
+    public RestResult<User> getUserByUid(@PathVariable("uid") final String uid) {
+        return userService.getUserByUid(uid).toGetResponse();
     }
 
     @RequestMapping("/id/{id}")
@@ -106,7 +115,7 @@ public class UserController {
             if(TokenType.VERIFY_EMAIL_ADDRESS.equals(token.getType()) &&
                     User.class.getName().equals(token.getClassName())
             ){
-                userService.activateUser(token.getClassPk()).andOnSuccessReturnVoid(v -> {
+                registrationService.activateUser(token.getClassPk()).andOnSuccessReturnVoid(v -> {
                     tokenService.handleExtraAttributes(token);
                     tokenService.removeToken(token);
                 });
@@ -121,15 +130,16 @@ public class UserController {
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return userService.createApplicantUser(organisationId, userResource).toPostCreateResponse();
+        return registrationService.createApplicantUser(organisationId, userResource).toPostCreateResponse();
     }
+
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
-        return userService.createApplicantUser(organisationId, userResource, Optional.ofNullable(competitionId)).toPostCreateResponse();
+        return registrationService.createApplicantUser(organisationId, of(competitionId), userResource).toPostCreateResponse();
     }
 
     @RequestMapping("/updateDetails")
     public RestResult<UserResource> createUser(@RequestBody UserResource userResource) {
-        return userService.updateUser(userResource).toGetResponse();
+        return userProfileService.updateProfile(userResource).toPutWithBodyResponse();
     }
 }

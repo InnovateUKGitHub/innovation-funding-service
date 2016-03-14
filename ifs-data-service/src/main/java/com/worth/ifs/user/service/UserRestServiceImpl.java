@@ -43,11 +43,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<User> retrieveUserByToken(String token) {
-        if(StringUtils.isEmpty(token))
-            return restFailure(notFoundError(User.class, token));
+    public RestResult<User> retrieveUserByUid(String uid) {
+        if(StringUtils.isEmpty(uid))
+            return restFailure(notFoundError(User.class, uid));
 
-        return getWithRestResult(userRestURL + "/token/" + token, User.class);
+        return getWithRestResult(userRestURL + "/uid/" + uid, User.class);
     }
 
     @Override
@@ -87,14 +87,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         }
 
         return getWithRestResult(userRestURL + "/findByEmail/" + email + "/", UserResource.class);
-    }
-
-    @Override
-    public RestResult<User> retrieveUserByEmailAndPassword(String email, String password) {
-        if(StringUtils.isEmpty(email) || StringUtils.isEmpty(password))
-            return restFailure(notFoundError(User.class, email));
-
-        return getWithRestResult(userRestURL + "/email/" + email + "/password/" + password, User.class);
     }
 
     @Override

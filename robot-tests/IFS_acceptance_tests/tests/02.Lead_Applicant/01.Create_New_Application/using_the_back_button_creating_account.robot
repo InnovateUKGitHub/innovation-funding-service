@@ -21,7 +21,7 @@ The user presses the back button while on the create account page
 The user logs in and visits the create account page
     [Documentation]    INFUND-1423
     [Tags]    Create account    Back button
-    Given Guest user log-in    steve.smith@empire.com    test
+    Given Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     Then the user should see the text in the page    Your Profile
 

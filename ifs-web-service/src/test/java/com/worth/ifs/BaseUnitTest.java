@@ -8,10 +8,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
-import com.worth.ifs.application.finance.view.DefaultFinanceFormHandler;
-import com.worth.ifs.application.finance.view.DefaultFinanceModelManager;
-import com.worth.ifs.application.finance.view.FinanceHandler;
-import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
+import com.worth.ifs.application.finance.view.*;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.model.UserRole;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -22,7 +19,6 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.service.AssessmentRestService;
-import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
@@ -148,7 +144,7 @@ public class BaseUnitTest {
     @Mock
     public InviteRestService inviteRestService;
     @Mock
-    public TokenAuthenticationService tokenAuthenticationService;
+    public FinanceModelManager financeModelManager;
     @Mock
     public DefaultFinanceModelManager defaultFinanceModelManager;
     @Mock
@@ -157,6 +153,8 @@ public class BaseUnitTest {
     public FinanceHandler financeHandler;
     @Mock
     public FinanceOverviewModelManager financeOverviewModelManager;
+    @Mock
+    public FinanceFormHandler financeFormHandler;
 
     @Mock
     public Environment env;
@@ -227,10 +225,10 @@ public class BaseUnitTest {
     }
 
     public void setup(){
-        loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "test", "tokenABC", "image", new ArrayList());
+        loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "test", "image", new ArrayList(), "my-uid");
         applicant = loggedInUser;
-        User user2 = new User(2L, "Brent de Kok", "email@email.nl", "test", "tokenBCD", "image", new ArrayList());
-        assessor = new User(3L, "Assessor", "email@assessor.nl", "test", "tokenDEF", "image", new ArrayList<>());
+        User user2 = new User(2L, "Brent de Kok", "email@email.nl", "test", "image", new ArrayList(), "my-uid2");
+        assessor = new User(3L, "Assessor", "email@assessor.nl", "test", "image", new ArrayList<>(), "my-uid3");
         users = asList(loggedInUser, user2);
 
         loggedInUserAuthentication = new UserAuthentication(loggedInUser);

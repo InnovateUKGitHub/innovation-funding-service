@@ -1,20 +1,10 @@
 package com.worth.ifs.security;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
 import com.worth.ifs.BaseIntegrationTest;
-import com.worth.ifs.commons.security.StatelessAuthenticationFilter;
-import com.worth.ifs.commons.security.TokenAuthenticationService;
+import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.transactional.FileServiceImpl;
-
+import com.worth.ifs.organisation.transactional.CompanyHouseApiServiceImpl;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -27,11 +17,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.stereotype.Service;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
+
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
 
@@ -40,9 +32,10 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
 
     List<Class<?>> excludedClasses
             = Arrays.asList(
-                    TokenAuthenticationService.class,
+                    UidAuthenticationService.class,
                     StatelessAuthenticationFilter.class,
-                    FileServiceImpl.class
+                    FileServiceImpl.class,
+                    CompanyHouseApiServiceImpl.class
             );
 
     List<Class<? extends Annotation>> securityAnnotations
@@ -95,11 +88,20 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
         Collection<Object> services = context.getBeansWithAnnotation(Service.class).values();
         for (Iterator<Object> i = services.iterator(); i.hasNext(); ) {
             Object service = i.next();
-            excludedClasses.stream().filter(exclusion -> service.getClass().isAssignableFrom(exclusion)).forEach(exclusion -> {
+            excludedClasses.stream().filter(exclusion -> unwrapProxy(service).getClass().isAssignableFrom(exclusion)).forEach(exclusion -> {
                 i.remove();
             });
         }
         return services;
+    }
+
+    private Object unwrapProxy(Object services) {
+        try {
+            return unwrapProxies(Arrays.asList(services)).get(0);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     private List<Object> unwrapProxies(Collection<Object> services) throws Exception {

@@ -131,7 +131,7 @@ Business organisation (accept invitation flow)
     [Documentation]    INFUND-1005
     ...
     ...    INFUND-1779
-    [Tags]    HappyPath    FailingForLocal
+    [Tags]    HappyPath    Pending   FailingForLocal
     Given the user navigates to the page    ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    organisationType    1
@@ -155,8 +155,8 @@ Business organisation (accept invitation flow)
 User who accepted the invite should be able to log-in
     [Tags]    FailingForLocal
     Given the user navigates to the page    ${INVITE_LINK}
-    When the guest user enters the login credentials    rogier@worth.systems    testtest
-    And the user clicks the button/link    css=input.button
+    When the guest user enters the login credentials    rogier@worth.systems    Passw0rd2
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user should see the text in the page    A novel solution to an old problem
     [Teardown]    User closes the browser
@@ -216,8 +216,8 @@ the user fills the create account form
     Input Text    id=firstName    ${NAME}
     Input Text    id=lastName    ${LAST_NAME}
     Input Text    id=phoneNumber    0612121212
-    Input Password    id=password    testtest
-    Input Password    id=retypedPassword    testtest
+    Input Password    id=password    Passw0rd2
+    Input Password    id=retypedPassword    Passw0rd2
     Select Checkbox    termsAndConditions
     Submit Form
 

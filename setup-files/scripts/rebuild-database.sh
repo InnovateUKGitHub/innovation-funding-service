@@ -1,2 +1,2 @@
 cd ../../ifs-data-service
-./gradlew flywayClean flywayMigrate
+./gradlew flywayClean flywayMigrate -x test -x compileJava -x compileTestJava -x testClasses

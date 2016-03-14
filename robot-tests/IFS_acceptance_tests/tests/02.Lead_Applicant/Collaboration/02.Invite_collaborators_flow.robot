@@ -152,5 +152,5 @@ the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
 
 the user logs back in
-    and guest user log-in       ewan+1@hiveit.co.uk     testtest
+    and guest user log-in       ewan+1@hiveit.co.uk     Passw0rd2
 

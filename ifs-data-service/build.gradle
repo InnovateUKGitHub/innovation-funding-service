@@ -79,10 +79,10 @@ dependencies {
     compile "org.mapstruct:mapstruct:1.0.0.Final"
     mapstruct 'org.mapstruct:mapstruct-processor:1.0.0.Final'
     compile 'org.freemarker:freemarker:2.3.23'
+
     compile 'javax.mail:mail:1.4.7'
     compile "org.apache.httpcomponents:httpasyncclient"
     compile "com.google.guava:guava:19.0"
-
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")
@@ -147,7 +147,9 @@ task client(type: Jar) {
         include "com/worth/ifs/commons/rest/**"
         include "com/worth/ifs/commons/error/**"
         include "com/worth/ifs/mappers/**"
+        exclude "com/worth/ifs/**/transactional/**"
         exclude "com/worth/ifs/notifications/**"
+        exclude "com/worth/ifs/authentication/**"
         exclude "com/worth/ifs/sil/**"
         exclude "com/worth/ifs/email/**"
     }

@@ -31,6 +31,7 @@ import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -82,7 +83,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/login"))
+                .andExpect(view().name("redirect:/"))
         ;
     }
 
@@ -92,7 +93,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/login"))
+                .andExpect(view().name("redirect:/"))
         ;
     }
 
@@ -102,17 +103,17 @@ public class RegistrationControllerTest extends BaseUnitTest {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/login"))
+                .andExpect(view().name("redirect:/"))
         ;
     }
 
     @Test
     public void organisationGetParameterOfANonExistentOrganisationChangesViewWhenSubmittingForm() throws Exception {
-        mockMvc.perform(get("/registration/register?organisationId=1")
+        mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/login"))
+                .andExpect(view().name("redirect:/"))
         ;
     }
 
@@ -180,6 +181,23 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
         ;
     }
+    
+    @Test
+    public void invalidCharactersInEmailShouldReturnError() throws Exception {
+        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+
+        mockMvc.perform(post("/registration/register?organisationId=1")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("email", "{a|b}@test.test")
+        )
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("registration-register"))
+                .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
+        ;
+        
+        verifyNoMoreInteractions(userService);
+    }
 
     @Test
     public void incorrectPasswordSizeShouldReturnError() throws Exception {
@@ -239,7 +257,6 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 .withTitle("Mr")
                 .withPhoneNumber("0123456789")
                 .withEmail("test@test.test")
-                .withToken("testToken123abc")
                 .withId(1L)
                 .build();
 
@@ -268,7 +285,6 @@ public class RegistrationControllerTest extends BaseUnitTest {
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/registration/success"));
-
     }
 
     @Test
@@ -276,7 +292,9 @@ public class RegistrationControllerTest extends BaseUnitTest {
         Organisation organisation = newOrganisation().withId(4L).withName("uniqueOrganisationName").build();
 
         when(organisationService.getOrganisationById(4L)).thenReturn(organisation);
-        mockMvc.perform(get("/registration/register?organisationId=4")).andExpect(model().attribute("organisationName", "uniqueOrganisationName"));
+        mockMvc.perform(post("/registration/register?organisationId=4")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        ).andExpect(model().attribute("organisationName", "uniqueOrganisationName"));
     }
 
     @Test
@@ -319,30 +337,20 @@ public class RegistrationControllerTest extends BaseUnitTest {
                 .withTitle("Mr")
                 .withPhoneNumber("0123456789")
                 .withEmail("test@test.test")
-                .withToken("testToken123abc")
                 .withId(1L)
                 .build();
 
         Error error = new Error("errorname", "errordescription", BAD_REQUEST);
 
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
-        when(userService.createLeadApplicantForOrganisation(userResource.getFirstName(),
-                userResource.getLastName(),
-                userResource.getPassword(),
-                userResource.getEmail(),
-                userResource.getTitle(),
-                userResource.getPhoneNumber(),
-                1L)).thenReturn(restFailure(error));
-
         when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
-                1L,
-                null)).thenReturn(restFailure(error));
-
+                1L, null)).thenReturn(restFailure(error));
+        
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", userResource.getEmail())

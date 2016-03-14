@@ -14,12 +14,7 @@ public class WebCredentialsValidator implements CredentialsValidator {
     private UserRestService userRestService;
 
     @Override
-    public RestResult<User> retrieveUserByEmailAndPassword(String emailAddress, String password) {
-        return userRestService.retrieveUserByEmailAndPassword(emailAddress, password);
-    }
-
-    @Override
-    public RestResult<User> retrieveUserByToken(String token) {
-        return userRestService.retrieveUserByToken(token);
+    public RestResult<User> retrieveUserByUid(String uid) {
+        return userRestService.retrieveUserByUid(uid);
     }
 }

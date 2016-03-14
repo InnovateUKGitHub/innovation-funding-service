@@ -1,7 +1,10 @@
 package com.worth.ifs;
 
+import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.user.domain.User;
 import org.junit.Before;
 import org.mockito.InjectMocks;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -24,5 +27,21 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     public void setUp() {
         super.setUp();
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+    }
+
+    /**
+     * Set a user on the Spring Security ThreadLocals
+     *
+     * @param user
+     */
+    protected void setLoggedInUser(User user) {
+        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
+    }
+
+    /**
+     * Get the user on the Spring Security ThreadLocals
+     */
+    protected User getLoggedInUser() {
+        return ((UserAuthentication) SecurityContextHolder.getContext().getAuthentication()).getDetails();
     }
 }

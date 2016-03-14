@@ -12,8 +12,7 @@ import java.util.concurrent.Future;
  * Interface for CRUD operations on {@link User} related data.
  */
 public interface UserRestService {
-    RestResult<User> retrieveUserByToken(String token);
-    RestResult<User> retrieveUserByEmailAndPassword(String email, String password);
+    RestResult<User> retrieveUserByUid(String uid);
     RestResult<User> retrieveUserById(Long id);
     RestResult<List<User>> findAll();
     RestResult<ProcessRole> findProcessRole(Long userId, Long applicationId);

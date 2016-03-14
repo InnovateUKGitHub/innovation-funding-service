@@ -6,7 +6,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.registration.OrganisationCreationController;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
@@ -57,7 +56,7 @@ public class AcceptInviteController {
         if (invite.isSuccess()) {
             InviteResource inviteResource = invite.getSuccessObject();
             if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
-                LoginForm loginForm = new LoginForm();
+
 
                 // check if there already is a user with this emailaddress
                 RestResult existingUserSearch = userService.findUserByEmail(inviteResource.getEmail());
@@ -66,7 +65,6 @@ public class AcceptInviteController {
                 }
 
                 model.addAttribute("invite", inviteResource);
-                model.addAttribute("loginForm", loginForm);
                 CookieUtil.saveToCookie(response, INVITE_HASH, hash);
                 return "registration/accept-invite";
             } else {

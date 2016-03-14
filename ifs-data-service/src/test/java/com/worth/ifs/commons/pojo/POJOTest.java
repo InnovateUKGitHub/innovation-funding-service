@@ -14,6 +14,8 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.authentication.resource.CreateUserResource;
+import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -61,7 +63,9 @@ public class POJOTest {
         InviteOrganisation.class,
         Section.class,
         ApplicationFinance.class,
-        Competition.class
+        Competition.class,
+        CreateUserResource.class,
+        UpdateUserResource.class
     );
 
     @Before

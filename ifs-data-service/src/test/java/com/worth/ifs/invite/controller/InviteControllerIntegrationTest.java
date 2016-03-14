@@ -69,9 +69,9 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
                         null
                 )
         );
-        User user = new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "123abc", "", proccessRoles);
+        User user = new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "", proccessRoles, "123abc");
         proccessRoles.get(0).setUser(user);
-        swapOutForUser(new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "123abc", "", proccessRoles));
+        swapOutForUser(new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "", proccessRoles, "123abc"));
 
 
 

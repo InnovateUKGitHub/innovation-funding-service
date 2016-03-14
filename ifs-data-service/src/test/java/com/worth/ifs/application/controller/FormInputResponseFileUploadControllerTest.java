@@ -155,7 +155,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
         String content = response.getResponse().getContentAsString();
         RestErrorResponse restErrorResponse = new ObjectMapper().readValue(content, RestErrorResponse.class);
-        assertTrue(restErrorResponse.is(generalError));
+        assertEqualsUpNoIncludingStatusCode(restErrorResponse, generalError);
     }
 
     @Test
@@ -907,7 +907,14 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     private void assertErrorMessageEqual(String expectedMessage, Error expectedError, RestErrorResponse restErrorResponse) {
         assertEquals(expectedMessage, restErrorResponse.getErrors().get(0).getErrorMessage());
-        assertTrue(restErrorResponse.is(expectedError));
+        assertEqualsUpNoIncludingStatusCode(restErrorResponse, expectedError);
+    }
+
+    private void assertEqualsUpNoIncludingStatusCode(final RestErrorResponse restErrorResponse, final Error expectedError){
+        assertTrue(restErrorResponse.getErrors().size() == 1);
+        assertEquals(restErrorResponse.getErrors().get(0).getErrorMessage(), expectedError.getErrorMessage());
+        assertEquals(restErrorResponse.getErrors().get(0).getArguments() , expectedError.getArguments());
+        assertEquals(restErrorResponse.getErrors().get(0).getErrorKey() , expectedError.getErrorKey());
     }
 
     private FormInputResponseFileEntryId fileEntryExpectations() {

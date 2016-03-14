@@ -3,16 +3,14 @@ package com.worth.ifs.organisation.transactional;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.commons.service.RestTemplateAdaptor;
+import com.worth.ifs.commons.service.AbstractRestTemplateAdaptor;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
@@ -34,29 +32,25 @@ import static java.util.Optional.ofNullable;
  * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Company House API site</a>
  */
 @Service
-public class CompanyHouseApiServiceImpl extends BaseRestService implements CompanyHouseApiService {
+public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
 
     private static final Log LOG = LogFactory.getLog(CompanyHouseApiServiceImpl.class);
 
     @Value("${ifs.data.company-house.url}")
     private final String COMPANY_HOUSE_API = null;
 
-    @Value("${ifs.data.company-house.key}")
-    private final String COMPANY_HOUSE_KEY = null;
-
     private static final int SEARCH_ITEMS_MAX = 10;
 
-    @Override
-    protected String getDataRestServiceURL() {
-        return COMPANY_HOUSE_API;
-    }
+    @Autowired
+    @Qualifier("companyhouse_adaptor")
+    private AbstractRestTemplateAdaptor adaptor;
 
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
 
         return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
 
             // encoded in the web-services.
-            JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + decodedSearchText, JsonNode.class, getHeaders());
+            JsonNode companiesResources = restGet("search/companies?items_per_page=" + SEARCH_ITEMS_MAX + "&q=" + decodedSearchText, JsonNode.class);
             JsonNode companyItems = companiesResources.path("items");
             List<OrganisationSearchResult> results = new ArrayList<>();
             companyItems.forEach(i -> results.add(companySearchMapper(i)));
@@ -67,21 +61,13 @@ public class CompanyHouseApiServiceImpl extends BaseRestService implements Compa
     public ServiceResult<OrganisationSearchResult> getOrganisationById(String id) {
         LOG.debug("getOrganisationById " + id);
 
-        return ofNullable(restGet("company/" + id, JsonNode.class, getHeaders())).
+        return ofNullable(restGet("company/" + id, JsonNode.class)).
             map(jsonNode -> serviceSuccess(companyProfileMapper(jsonNode))).
             orElse(serviceFailure(internalServerErrorError("No response from Companies House")));
     }
 
-    private HttpHeaders getHeaders() {
-        LOG.debug("Adding authorization headers");
-        HttpHeaders headers = RestTemplateAdaptor.getHeaders();
-
-        String auth = COMPANY_HOUSE_KEY + ":";
-        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
-        String authHeader = "Basic " + new String(encodedAuth);
-
-        headers.add("Authorization", authHeader);
-        return headers;
+    protected <T> T restGet(String path, Class<T> c) {
+        return adaptor.restGetEntity(COMPANY_HOUSE_API + path, c).getBody();
     }
 
     private OrganisationSearchResult companyProfileMapper(JsonNode jsonNode) {

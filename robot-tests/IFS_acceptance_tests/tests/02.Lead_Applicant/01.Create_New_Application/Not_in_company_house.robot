@@ -9,7 +9,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
-${find_org_on_company_house_url}    ${SERVER_BASE}/organisation/create/find-business
+${find_org_on_company_house_url}    ${SERVER}/organisation/create/find-business
 ${organisation_name}    Top of the Popps
 
 *** Test Cases ***

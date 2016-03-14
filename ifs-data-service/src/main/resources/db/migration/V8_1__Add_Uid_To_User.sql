@@ -1,0 +1,1 @@
+ALTER TABLE `user` ADD COLUMN uid varchar(255) NOT NULL;
