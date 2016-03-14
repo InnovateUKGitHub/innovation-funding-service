@@ -15,7 +15,7 @@
 
         <h2 class="heading-medium">Finances Summary</h2>
         <div th:include="finance/finance-summary :: application_finances_summary" th:remove="tag" />
-        <div class="icon icon-information"></div><span>Please provide your financial breakdown in the <a th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Your finances</a> section.</span>
+        <!--/* <div class="icon icon-information"></div><span>Please provide your financial breakdown in the <a th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Your finances</a> section.</span> */-->
         <h2 class="heading-medium">Project cost breakdown</h2>
         <div th:include="finance/finance-summary :: financial_summary_table" th:remove="tag"/>
         <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
@@ -158,6 +158,12 @@
                     <li th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" th:text="${applicationOrganisation.name}" />
                 </div>
             </ul>
+            <div th:remove="tag" th:each="applicationOrganisation : ${applicationOrganisations}">
+                <a th:if="${applicationOrganisation.id == userOrganisation.id}"
+                   th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}"
+                   th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Return to finances section to complete your finances</a>
+            </div>
+
             <p>This application cannot be submitted unless finances have been marked as complete by all partners.</p>
         </div>
     </div>
