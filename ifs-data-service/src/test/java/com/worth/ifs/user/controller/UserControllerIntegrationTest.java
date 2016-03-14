@@ -5,6 +5,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserStatus;
 import com.worth.ifs.user.resource.UserResource;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -73,20 +74,16 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         assertTrue(restResult.isFailure());
     }
 
-    @Test
-    public void test_retrieveUserByEmailAndPasswordInvalid() {
-        assertTrue(controller.getUserByEmailandPassword("", "test").isFailure());
-    }
-
+    @Ignore("TODO DW - INFUND-936 - Not valid test after passwords moved out to Shib")
     @Test
     public void testVerifyEmail() {
-        RestResult<User> beforeVerify = controller.getUserByEmailandPassword("ewan+12@hiveit.co.uk", "testtest");
+        RestResult<User> beforeVerify = controller.getUserByUid("6198a6e1-495f-402e-9eff-28611efeadb8");
         assertTrue(beforeVerify.isFailure());
 
         RestResult<Void> restResult = controller.verifyEmail("4a5bc71c9f3a2bd50fada434d888579aec0bd53fe7b3ca3fc650a739d1ad5b1a110614708d1fa083");
         assertTrue(restResult.isSuccess());
 
-        RestResult<User> afterVerify = controller.getUserByEmailandPassword("ewan+12@hiveit.co.uk", "testtest");
+        RestResult<User> afterVerify = controller.getUserByUid("6198a6e1-495f-402e-9eff-28611efeadb8");
         assertTrue(afterVerify.isSuccess());
     }
 
@@ -98,21 +95,9 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Test
     public void testPasswordReset() {
-        RestResult<User> userInvalid = controller.getUserByEmailandPassword(EMAIL, "INVALID");
-        assertTrue(userInvalid.isFailure());
-        userInvalid = controller.getUserByEmailandPassword(EMAIL, "newPassword");
-        assertTrue(userInvalid.isFailure());
-
-        RestResult<User> userBefore = controller.getUserByEmailandPassword(EMAIL, "test");
-        assertTrue(userBefore.isSuccess());
-        assertNotNull(userBefore.getSuccessObject());
-        assertEquals(EMAIL, userBefore.getSuccessObject().getEmail());
 
         RestResult<Void> restResult = controller.resetPassword("a2e2928b-960f-469d-859f-f038b2bd9f42", "newPassword");
         assertTrue(restResult.isSuccess());
-
-        RestResult<User> userAfter = controller.getUserByEmailandPassword(EMAIL, "newPassword");
-        assertTrue(userAfter.isSuccess());
     }
 
     @Test
@@ -138,6 +123,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         assertTrue(restResult.isSuccess());
     }
 
+    @Ignore("TODO DW - INFUND-936 - this test will cause issues when not running Shib or on an environment like Bamboo where no Shib is available")
     @Test
     public void testCreateLeadApplicant() {
         UserResource userResource = new UserResource();
