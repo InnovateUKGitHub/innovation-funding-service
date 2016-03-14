@@ -1,6 +1,7 @@
 package com.worth.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
@@ -60,6 +61,8 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private IdentityProviderService identityProviderService;
 
     @Override
     public ServiceResult<User> getUserByUid(final String uid) {
@@ -155,6 +158,9 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         if(token.isPresent() && TokenType.RESET_PASSWORD.equals(token.get().getType())) {
             User user = userRepository.findOne(token.get().getClassPk());
             user.setPassword(password);
+
+            identityProviderService.updateUserPassword(user.getUid(), password);
+
             userRepository.save(user);
             tokenRepository.delete(token.get());
             return serviceSuccess();
