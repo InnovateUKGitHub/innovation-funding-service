@@ -1,16 +1,38 @@
 package com.worth.ifs.application;
 
-import com.worth.ifs.Application;
-import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
-import com.worth.ifs.user.domain.User;
+import static com.worth.ifs.application.service.Futures.settable;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -18,22 +40,22 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.application.service.Futures.settable;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.worth.ifs.Application;
+import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
+import com.worth.ifs.security.CookieFlashMessageFilter;
+import com.worth.ifs.user.domain.User;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class ApplicationControllerTest extends BaseUnitTest {
     @InjectMocks
     private ApplicationController applicationController;
+
+    @Mock
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Before
     public void setUp(){
@@ -99,7 +121,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
         when(applicationService.getById(1234l)).thenThrow(new ObjectNotFoundException(testMessageSource().getMessage
                 (ObjectNotFoundException.class.getName(), null, Locale.ENGLISH), Arrays.asList(1234l)));
 
-        List<Object> arguments = new ArrayList();
+        List<Object> arguments = new ArrayList<>();
         arguments.add(Application.class.getName());
         arguments.add(1234l);
 
@@ -156,13 +178,24 @@ public class ApplicationControllerTest extends BaseUnitTest {
     }
 
     @Test
-    public void testApplicationSubmit() throws Exception {
+    public void testApplicationSubmitWithoutAgreeingToTerms() throws Exception {
+
+        mockMvc.perform(post("/application/1/submit"))
+                .andExpect(redirectedUrl("/application/1/confirm-submit"));
+          
+        verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("agreeToTerms"));
+        verifyNoMoreInteractions(userAuthenticationService, applicationService, questionService);
+        
+    }
+    
+    @Test
+    public void testApplicationSubmitAgreeingToTerms() throws Exception {
         ApplicationResource app = applications.get(0);
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        MvcResult result = mockMvc.perform(get("/application/1/submit"))
+        MvcResult result = mockMvc.perform(post("/application/1/submit").param("agreeTerms", "yes"))
                 .andExpect(view().name("application-submitted"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andReturn();
@@ -175,9 +208,8 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
     @Test
     public void testApplicationCreateView() throws Exception {
-        MvcResult result = mockMvc.perform(get("/application/create/1"))
-                .andExpect(view().name("application-create"))
-                .andReturn();
+        mockMvc.perform(get("/application/create/1"))
+                .andExpect(view().name("application-create"));
     }
 
     @Test
@@ -205,10 +237,9 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
-        MvcResult result = mockMvc.perform(post("/application/create/1").param("application_name", "     "))
+        mockMvc.perform(post("/application/create/1").param("application_name", "     "))
                 .andExpect(view().name("application-create"))
-                .andExpect(model().attribute("applicationNameEmpty", true))
-                .andReturn();
+                .andExpect(model().attribute("applicationNameEmpty", true));
     }
 
     @Test
@@ -221,16 +252,14 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
-        MvcResult result = mockMvc.perform(post("/application/create/1").param("application_name", "testApplication"))
+        mockMvc.perform(post("/application/create/1").param("application_name", "testApplication"))
                 .andExpect(view().name("redirect:/application/"+application.getId()))
-                .andExpect(model().attributeDoesNotExist("applicationNameEmpty"))
-                .andReturn();
+                .andExpect(model().attributeDoesNotExist("applicationNameEmpty"));
     }
 
     @Test
     public void testApplicationCreateConfirmCompetitionView() throws Exception {
-        MvcResult result = mockMvc.perform(get("/application/create-confirm-competition"))
-                .andExpect(view().name("application-create-confirm-competition"))
-                .andReturn();
+        mockMvc.perform(get("/application/create-confirm-competition"))
+                .andExpect(view().name("application-create-confirm-competition"));
     }
 }
