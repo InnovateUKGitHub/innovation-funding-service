@@ -64,7 +64,7 @@ Appendices are only available for the correct questions
 
 Large pdf uploads not allowed
     [Documentation]        INFUND-832
-    [Tags]      Collaboration       Upload
+    [Tags]      Collaboration       Upload      Pending
     # "Too large pdf validation error is currently empty due to INFUND-2116: Can be changed to match for an error message once this is implemented
     Given the user can see the option to upload a file on the page      ${project_team_url}
     When the user uploads the file to the project team page       ${too_large_pdf}
