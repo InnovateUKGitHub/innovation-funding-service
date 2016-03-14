@@ -1,0 +1,9 @@
+dn: uid=$uid,dc=nodomain
+objectClass: top
+objectClass: person
+objectClass: inetOrgPerson
+uid: $uid
+mail: $emailAddress
+userPassword: test
+cn: unused
+sn: unused

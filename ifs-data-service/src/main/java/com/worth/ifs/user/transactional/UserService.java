@@ -3,10 +3,8 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -15,10 +13,7 @@ import java.util.Set;
 public interface UserService {
 
     @NotSecured("Need to keep open to all to allow login")
-    ServiceResult<User> getUserByToken(final String token);
-
-    @NotSecured("Need to keep open to all to allow login")
-    ServiceResult<User> getUserByEmailandPassword(final String email, final String password);
+    ServiceResult<User> getUserByUid(final String uid);
 
     @NotSecured("TODO - implement when permissions matrix in place")
     ServiceResult<User> getUserById(final Long id);
@@ -39,18 +34,6 @@ public interface UserService {
     ServiceResult<Set<User>> findRelatedUsers(final Long applicationId);
 
     @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<UserResource> createApplicantUser(final Long organisationId, UserResource userResource);
-
-    @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<UserResource> createApplicantUser(Long organisationId, UserResource userResource, Optional<Long> competitionId);
-
-    @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<UserResource> updateUser(UserResource userResource);
-
-    @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<Void> activateUser(Long userId);
-
-    @NotSecured("Need to keep open to allow password reset")
     ServiceResult<Void> sendPasswordResetNotification(User user);
 
     @NotSecured("Need to keep open to allow password reset")

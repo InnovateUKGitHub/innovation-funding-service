@@ -109,6 +109,7 @@ public class Error {
                 .append(errorKey, error.errorKey)
                 .append(arguments, error.arguments)
                 .append(errorMessage, error.errorMessage)
+                .append(statusCode, error.statusCode)
                 .isEquals();
     }
 
@@ -118,6 +119,7 @@ public class Error {
                 .append(errorKey)
                 .append(arguments)
                 .append(errorMessage)
+                .append(statusCode)
                 .toHashCode();
     }
 

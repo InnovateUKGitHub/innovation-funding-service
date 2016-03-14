@@ -1,8 +1,6 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.login.LoginForm;
 import com.worth.ifs.util.CookieUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,15 +24,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping("/application/create")
-public class ApplicationCreationController {
+public class ApplicationCreationController extends AbstractApplicationController {
     public static final String COMPETITION_ID = "competitionId";
     public static final String USER_ID = "userId";
     private static final String APPLICATION_ID = "applicationId";
     private static final Log log = LogFactory.getLog(ApplicationCreationController.class);
     Validator validator;
 
-    @Autowired
-    private ApplicationService applicationService;
     @Autowired
     public void setValidator(Validator validator) {
         this.validator = validator;
@@ -45,7 +41,6 @@ public class ApplicationCreationController {
                                    @PathVariable(COMPETITION_ID) Long competitionId,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
-        model.addAttribute("loginForm", new LoginForm());
         model.addAttribute(COMPETITION_ID, competitionId);
         CookieUtil.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
         return "create-application/check-eligibility";
@@ -71,7 +66,14 @@ public class ApplicationCreationController {
             log.error("Application not created with userId: " + userId);
         } else {
             CookieUtil.saveToCookie(response, APPLICATION_ID, String.valueOf(application.getId()));
+
+            // TODO INFUND-936 temporary measure to redirect to login screen until email verification is in place below
+            if (userAuthenticationService.getAuthentication(request) == null) {
+                return "redirect:/";
+            }
+            // TODO INFUND-936 temporary measure to redirect to login screen until email verification is in place above
             return String.format("redirect:/application/%s/contributors/invite?newApplication", String.valueOf(application.getId()));
+
         }
         return null;
     }

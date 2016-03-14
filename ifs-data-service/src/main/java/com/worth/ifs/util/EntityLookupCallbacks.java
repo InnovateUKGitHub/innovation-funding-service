@@ -1,6 +1,7 @@
 package com.worth.ifs.util;
 
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ExceptionThrowingFunction;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -184,6 +185,10 @@ public class EntityLookupCallbacks {
 
         public <T> ServiceResult<T> andOnSuccess(Supplier<T> supplier) {
             return getterFn1.get().andOnSuccess(result1 -> serviceSuccess(supplier.get()));
+        }
+
+        public <R> ServiceResult<R> andOnSuccessReturn(ExceptionThrowingFunction<T, R> successFn) {
+            return getterFn1.get().andOnSuccessReturn(result1 -> successFn.apply(result1));
         }
     }
 

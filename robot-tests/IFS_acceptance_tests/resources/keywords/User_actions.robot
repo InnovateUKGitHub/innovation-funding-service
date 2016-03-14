@@ -93,8 +93,8 @@ The user should see an error
 
 the guest user enters the log in credentials
     [Arguments]    ${USER_NAME}    ${PASSWORD}
-    Input Text    id=id_email    ${USER_NAME}
-    Input Password    id=id_password    ${PASSWORD}
+    Input Text    id=username    ${USER_NAME}
+    Input Password    id=password    ${PASSWORD}
 
 The user should see the element
     [Arguments]    ${ELEMENT}

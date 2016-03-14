@@ -23,7 +23,6 @@ public class UserResource {
     private String inviteName;
     private String phoneNumber;
     private String imageUrl;
-    private String token;
     private String email;
     private UserStatus status;
     private String password;
@@ -41,7 +40,6 @@ public class UserResource {
         inviteName = user.getInviteName();
         phoneNumber = user.getPhoneNumber();
         imageUrl = user.getImageUrl();
-        token = user.getToken();
         email = user.getEmail();
         password = user.getEmail();
         status = user.getStatus();
@@ -112,14 +110,6 @@ public class UserResource {
         this.imageUrl = imageUrl;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -161,7 +151,6 @@ public class UserResource {
                 .append(inviteName, that.inviteName)
                 .append(phoneNumber, that.phoneNumber)
                 .append(imageUrl, that.imageUrl)
-                .append(token, that.token)
                 .append(email, that.email)
                 .append(status, that.status)
                 .append(password, that.password)
@@ -180,7 +169,6 @@ public class UserResource {
                 .append(inviteName)
                 .append(phoneNumber)
                 .append(imageUrl)
-                .append(token)
                 .append(email)
                 .append(status)
                 .append(password)

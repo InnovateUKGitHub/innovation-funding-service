@@ -56,9 +56,9 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
                 null
             )
         );
-        User user = new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "123abc", "", proccessRoles);
+        User user = new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "", proccessRoles, "123abc");
         proccessRoles.get(0).setUser(user);
-        swapOutForUser(new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "123abc", "", proccessRoles));
+        swapOutForUser(new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "", proccessRoles, "123abc"));
 
 
     }
@@ -109,13 +109,13 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         ObjectNode response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccessObject();
         double completedPercentage = response.get("completedPercentage").asDouble();
         double delta = 0.10;
-        assertEquals(42.0, completedPercentage, delta);
+        assertEquals(45.65, completedPercentage, delta);
 
         questionController.markAsInComplete(28L, APPLICATION_ID, leadApplicantProcessRole);
 
         response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccessObject();
         completedPercentage = response.get("completedPercentage").asDouble();
-        assertEquals(40.0, completedPercentage, delta);
+        assertEquals(43.47, completedPercentage, delta);
     }
 
     @Test

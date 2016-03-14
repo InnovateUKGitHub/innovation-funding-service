@@ -7,12 +7,11 @@ import com.worth.ifs.application.service.UserService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.security.TokenAuthenticationService;
+import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.login.LoginController;
 import com.worth.ifs.registration.form.RegistrationForm;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
@@ -36,6 +35,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.worth.ifs.login.HomeController.getRedirectUrlForUser;
+
 @Controller
 @RequestMapping("/registration")
 public class RegistrationController {
@@ -56,7 +57,7 @@ public class RegistrationController {
     private InviteRestService inviteRestService;
 
     @Autowired
-    private TokenAuthenticationService tokenAuthenticationService;
+    private UidAuthenticationService uidAuthenticationService;
 
     @Autowired
     protected UserAuthenticationService userAuthenticationService;
@@ -93,13 +94,13 @@ public class RegistrationController {
     public String registerForm(Model model, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
-            return LoginController.getRedirectUrlForUser(user);
+            return getRedirectUrlForUser(user);
         }
 
         String destination = "registration-register";
 
         if (!processOrganisation(request, model)) {
-            destination = "redirect:/login";
+            destination = "redirect:/";
         }
 
         addRegistrationFormToModel(model, request);
@@ -155,8 +156,8 @@ public class RegistrationController {
                                      HttpServletResponse response,
                                      HttpServletRequest request,
                                      Model model) {
-        String destination = "registration-register";
 
+        log.warn("registerFormSubmit");
         if(setInviteeEmailAddress(registrationForm, request, model)){
             log.warn("setInviteeEmailAddress"+ registrationForm.getEmail());
             // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
@@ -166,9 +167,10 @@ public class RegistrationController {
 
         User user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
-            // user is already logged in, so redirect away from registration..
-            return LoginController.getRedirectUrlForUser(user);
+            return getRedirectUrlForUser(user);
         }
+
+        String destination = "registration-register";
 
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
 
@@ -184,7 +186,7 @@ public class RegistrationController {
             }
         } else {
             if (!processOrganisation(request, model)) {
-                destination = "redirect:/login";
+                destination = "redirect:/";
             }
         }
 
@@ -234,12 +236,6 @@ public class RegistrationController {
                         )
                 )
         );
-    }
-
-    private void loginUser(UserResource userResource, HttpServletResponse response) {
-        log.debug("loginUser");
-        CookieUtil.saveToCookie(response, "userId", String.valueOf(userResource.getId()));
-        tokenAuthenticationService.addAuthentication(response, userResource);
     }
 
     private RestResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {

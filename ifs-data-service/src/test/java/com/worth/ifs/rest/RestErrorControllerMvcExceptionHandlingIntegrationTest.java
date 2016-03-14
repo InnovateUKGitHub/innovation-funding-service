@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseWebIntegrationTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
+import com.worth.ifs.commons.service.HttpHeadersUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -14,8 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
-import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
-import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
+import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -45,7 +45,7 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
             assertEquals(NOT_FOUND, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            Error expectedError = new Error(GENERAL_NOT_FOUND.getErrorKey(), "The requested resource could not be found.", NOT_FOUND);
+            Error expectedError = new Error(GENERAL_NOT_FOUND.getErrorKey(), "The requested resource could not be found.", null);
             RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
             assertEquals(expectedResponse, restErrorResponse);
         }
@@ -66,15 +66,15 @@ public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends Base
 
             assertEquals(FORBIDDEN, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            Error expectedError = new Error(GENERAL_FORBIDDEN.getErrorKey(), "You do not have permission to access the requested resource.", FORBIDDEN);
+            Error expectedError = new Error(GENERAL_FORBIDDEN.getErrorKey(), "You do not have permission to access the requested resource.", null);
             RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
             assertEquals(expectedResponse, restErrorResponse);
         }
     }
 
     private <T> HttpEntity<T> headersEntity(){
-        HttpHeaders headers = getJSONHeaders();
-        headers.set(AUTH_TOKEN, "789ghi");
+        HttpHeaders headers = HttpHeadersUtils.getJSONHeaders();
+        headers.set(AUTH_TOKEN, "847ac08d-5486-3f3a-9e15-06303fb01ffb");
         return new HttpEntity<>(headers);
     }
 }

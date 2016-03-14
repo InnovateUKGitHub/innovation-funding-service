@@ -1,11 +1,8 @@
 package com.worth.ifs.transactional;
 
-import java.io.IOException;
-import java.util.concurrent.Future;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worth.ifs.Application;
 import com.worth.ifs.BaseWebIntegrationTest;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.service.ApplicationRestService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
@@ -14,7 +11,6 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.security.SecuritySetter;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,13 +22,15 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.security.TokenAuthenticationService.AUTH_TOKEN;
-import static com.worth.ifs.commons.service.RestTemplateAdaptor.getJSONHeaders;
+import java.io.IOException;
+import java.util.concurrent.Future;
+
+import static com.worth.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static com.worth.ifs.commons.security.UidAuthenticationService.AUTH_TOKEN;
+import static com.worth.ifs.commons.service.HttpHeadersUtils.getJSONHeaders;
+import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -87,7 +85,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
             assertEquals(NOT_FOUND, e.getStatusCode());
             RestErrorResponse restErrorResponse = new ObjectMapper().readValue(e.getResponseBodyAsString(), RestErrorResponse.class);
-            Error expectedError = notFoundError(Application.class, 9999L);
+            Error expectedError = new Error(GENERAL_NOT_FOUND, "Application not found", asList(Application.class.getSimpleName(), 9999L), null);
             RestErrorResponse expectedResponse = new RestErrorResponse(expectedError);
             assertEquals(expectedResponse, restErrorResponse);
         }
@@ -97,7 +95,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     public void testFailureRestResultHandledAsync() throws Exception {
         final User initial = SecuritySetter.swapOutForUser(leadApplicantUser());
         try {
-            final long applicationIdThatDoesNotExist = 9999L;
+            final long applicationIdThatDoesNotExist = -1L;
             final Future<RestResult<Double>> completeQuestionsPercentage = applicationRestService.getCompleteQuestionsPercentage(applicationIdThatDoesNotExist);
             // We have set the future going but now we need to call it. This call should not throw
             final RestResult<Double> doubleRestResult = completeQuestionsPercentage.get();
@@ -110,19 +108,25 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     }
 
 
-    private <T> HttpEntity<T> assessorHeadersEntity(){
-        HttpHeaders headers = getJSONHeaders();
-        headers.set(AUTH_TOKEN, "789ghi");
-        return new HttpEntity<>(headers);
+    private <T> HttpEntity<T> leadApplicantHeadersEntity(){
+        return getUserJSONHeaders(leadApplicantUser());
     }
 
-    private <T> HttpEntity<T> leadApplicantHeadersEntity(){
+    private <T> HttpEntity<T> assessorHeadersEntity(){
+        return getUserJSONHeaders(assessorUser());
+    }
+
+    private <T> HttpEntity<T> getUserJSONHeaders(User user) {
         HttpHeaders headers = getJSONHeaders();
-        headers.set(AUTH_TOKEN, "123abc");
+        headers.set(AUTH_TOKEN, user.getUid());
         return new HttpEntity<>(headers);
     }
 
     private User leadApplicantUser(){
-        return userRepository.findOne(1L);
+        return userRepository.findByEmail("steve.smith@empire.com").get();
+    }
+
+    private User assessorUser(){
+        return userRepository.findByEmail("paul.plum@gmail.com").get();
     }
 }

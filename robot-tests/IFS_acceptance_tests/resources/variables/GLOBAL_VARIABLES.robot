@@ -1,10 +1,11 @@
 *** Variables ***
 ${BROWSER}        Firefox
 ${SERVER_BASE}    localhost:8085
-${PROTOCOL}       http://
+${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${RUNNING_ON_DEV}    ${EMPTY}
-${LOGIN_URL}      ${SERVER}/login
+${LOGIN_URL}      ${SERVER}/
+${TEMPORARY_LOGOUT_URL}   ${LOGIN_URL}idp/profile/SAML2/Redirect/SSO
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/1/summary
 ${QUESTION11_URL}    ${SERVER}/application-form/1/section/1/#question-11
@@ -18,8 +19,8 @@ ${ECONOMIC_BENEFIT_URL_APPLICATION_3}    ${SERVER}/application/3/form/question/4
 ${applicant_dashboard_url}    ${SERVER}/applicant/dashboard
 ${assessor_dashboard_url}    ${SERVER}/assessor/dashboard
 ${COMPETITION_DETAILS_URL}    ${SERVER}/competition/1/details/
-${LOG_OUT}        ${SERVER}/logout
-${APPLICATION_QUESTIONS_SECTION_URL}    ${SERVER}/application-form/1/se
+${LOG_OUT}        ${LOGIN_URL}/Logout
+${APPLICATION_QUESTIONS_SECTION_URL}    ${SERVER}/application-form/1/section/2/
 ${SEARCH_COMPANYHOUSE_URL}    ${SERVER}/organisation/create/find-business
 ${APPLICATION_DETAILS_URL}    ${SERVER}/application/1/form/question/9
 ${PROJECT_SUMMARY_URL}    ${SERVER}/application/1/form/question/11
@@ -50,6 +51,7 @@ ${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/1/contributors/invite
 ${404_error_message}    Page Not Found
 ${403_error_message}    You do not have the necessary permissions for your request
 ${wrong_filetype_validation_error}          Please upload a file in .pdf format only
+${too_large_pdf_validation_error}           ${EMPTY}
 ${REGISTRATION_SUCCESS}    ${SERVER}/registration/success
 ${verify_link_1}    ${SERVER}/registration/verify-email/4a5bc71c9f3a2bd50fada434d888579aec0bd53fe7b3ca3fc650a739d1ad5b1a110614708d1fa083
 ${verify_link_2}    ${SERVER}/registration/verify-email/5f415b7ec9e9cc497996e251294b1d6bccfebba8dfc708d87b52f1420c19507ab24683bd7e8f49a0

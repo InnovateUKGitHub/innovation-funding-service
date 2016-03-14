@@ -1,5 +1,7 @@
+set -e
+
 cd ../../ifs-data-service
-./gradlew testCommonCode testCommonCodeCopy cleanDeploy
+./gradlew -s testCommonCode testCommonCodeCopy cleanDeploy
 cd -
 cd ../../ifs-web-service
-./gradlew cleanDeploy
+./gradlew -s cleanDeploy

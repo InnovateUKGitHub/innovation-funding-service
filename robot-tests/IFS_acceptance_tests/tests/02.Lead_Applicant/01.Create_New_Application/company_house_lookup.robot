@@ -43,7 +43,7 @@ Invalid registration number
 
 Company with spaces in the name
     [Documentation]    INFUND-1757
-    [Tags]    Create application
+    [Tags]    Create application        FailingForLocal
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")

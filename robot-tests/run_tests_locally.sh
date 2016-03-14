@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo echo "Thanks for entering sudo!"
+
 function coloredEcho(){
     local exp=$1;
     local color=$2;
@@ -69,7 +71,16 @@ function buildAndDeploy {
 
 }
 
+function resetLDAP {
+    cd ${shibbolethCommonScriptsPath}
+    ./reset-users-from-database.sh
+}
+
 function startServers {
+    echo "********START SHIBBOLETH***********"
+    cd ${shibbolethOsScriptsPath}
+    ./startup.sh
+
     echo "********START THE DATA SERVER********"
     cd ${dataTomcatBinPath}
     ./startup.sh
@@ -94,7 +105,7 @@ function startServers {
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase  -v PROTOCOL:http:// -v UPLOAD_FOLDER:$uploadFileDir --exclude Failing --exclude Pending --exclude FailingForLocal --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v UPLOAD_FOLDER:$uploadFileDir -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --name IFS $testDirectory
 }
 
 
@@ -117,8 +128,24 @@ echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
 echo "scriptDir:        ${scriptDir}"
 uploadFileDir=${scriptDir}"/upload_files"
+cd ../setup-files/scripts/shibboleth/common
+shibbolethCommonScriptsPath=$(pwd)
+echo "shibbolethCommonScriptsPath:        ${shibbolethCommonScriptsPath}"
+
+if [[ $OSTYPE == linux* ]]; then
+  os=linux
+elif [[ $OSTYPE == darwin* ]]; then
+  os=mac
+else
+  echo "Unable to determine a supported operating system for this script.  Currently only supported on Linux and Macs"
+  exit 1
+fi
+
+cd ../${os}
+shibbolethOsScriptsPath=$(pwd)
+echo "shibbolethOsScriptsPath:        ${shibbolethOsScriptsPath}"
+cd ../../../../ifs-data-service
 dateFormat=`date +%Y-%m-%d`
-cd ../ifs-data-service
 dataServiceCodeDir=`pwd`
 echo "dataServiceCodeDir:${dataServiceCodeDir}"
 dataWebappsPath=`sed '/^\#/d' dev-build.gradle | grep 'ext.tomcatWebAppsDir'  | cut -d "=" -f2 | sed 's/"//g'`
@@ -151,7 +178,7 @@ webLogFilePath=${webLogPath}"/catalina."${dateFormat}".log"
 echo "webLogFilePath:    ${webLogFilePath}"
 webPort=`sed '/^\#/d' dev-build.gradle | grep 'ext.serverPort'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "webPort:           ${webPort}"
-webBase="localhost:"${webPort}
+webBase="ifs-local-dev"
 echo "webBase:           ${webBase}"
 
 
@@ -159,10 +186,12 @@ unset opt
 unset quickTest
 unset testScrub
 unset happyPath
+unset useXvfb
 unset remoteRun
 
+
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :r :d:" opt ; do
+while getopts ":q :t :h :r :d: :x" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -172,6 +201,9 @@ while getopts ":q :t :h :r :d:" opt ; do
 	;;
 	h)
 	 happyPath=1
+	;;
+	x)
+	 useXvfb=true
 	;;
         r)
          remoteRun=1
@@ -201,6 +233,7 @@ if [ "$quickTest" ]
 then
     echo "using quickTest:   TRUE" >&2
     resetDB
+    resetLDAP
     clearDownFileRepository
     runTests
 elif [ "$testScrub" ]

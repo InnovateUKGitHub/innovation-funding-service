@@ -10,7 +10,10 @@ ext.serverPort="8090"
 ext.ifsDataServiceRestBaseURL="http://localhost:8090"
 ext.ifsWebBaseURL="http://localhost:8080"
 ext.silRestBaseURL="http://localhost:8090/silstub"
+ext.idpRestBaseURL="https://ifs-local-dev/regapi"
+ext.idpRestKey=1234567890
 ext.tomcatWebAppsDir="/Users/rogier/Projects/misc/ifs/apache-tomcat-data/webapps"
+ext.shibbolethDir="/home/dwatson/development/projects/ifs/environment/shibboleth"
 
 project.ext['flyway.url']='jdbc:mysql://127.0.0.1:3306?characterEncoding=utf8'
 project.ext['flyway.schemas']='ifs,ifs_test'
@@ -49,6 +52,3 @@ ext.ifsSmtpAuth=true
 ext.ifsSmtpPassword="example-password"
 ext.ifsSmtpTlsEnabled=true
 ext.ifsMailTimeoutMillis=10000
-
-ext.postcodeLookupURL="http://ws.postcoder.com/pcw"
-ext.postcodeLookupKey=""

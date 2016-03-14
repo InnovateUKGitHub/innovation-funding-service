@@ -1,5 +1,6 @@
 package com.worth.ifs.registration.form;
 
+import com.worth.ifs.util.FormUtil;
 import com.worth.ifs.validator.constraints.FieldMatch;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -17,7 +18,7 @@ import javax.validation.constraints.Size;
 
 @FieldMatch(first = "password", second = "retypedPassword", message = "Passwords must match")
 public class RegistrationForm {
-    @Email(message = "Please enter a valid email address")
+    @Email(regexp = FormUtil.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "Please enter a valid email address")
     @NotEmpty(message = "Please enter your email")
     @Size(max = 256, message = "Your email address has a maximum length of 256 characters")
     private String email;

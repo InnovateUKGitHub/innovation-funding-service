@@ -11,7 +11,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
-${correct_password}    testtest
+${correct_password}    Passw0rd
 ${incorrect_password}    wrongpassword
 ${long_password}    passwordpasswordpasswordpasswordpasswordpasswordpassword
 ${short_password}    pass
@@ -210,32 +210,31 @@ the user submits their information
 the user cannot login with their new details
     [Arguments]    ${email}    ${password}
     go to    ${LOGIN_URL}
-    #Disable browser validations
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Input Text    id=id_email    ${email}
-    Input Password    id=id_password    ${password}
-    Submit Form
+    Input Text    id=username    ${email}
+    Input Password    id=password    ${password}
+    Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
 
 the user cannot login with either password
     go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${valid_email}
-    Input Password    id=id_password    ${correct_password}
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Submit Form
+    Input Text    id=username    ${valid_email}
+    Input Password    id=password    ${correct_password}
+    Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
     go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${valid_email}
-    Input Password    id=id_password    ${incorrect_password}
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Submit Form
+    Input Text    id=username    ${valid_email}
+    Input Password    id=password    ${incorrect_password}
+    Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
 
 the user can login with their new details
     go to    ${LOGIN_URL}
-    Input Text    id=id_email    ${email_already_in_db}
-    Input Password    id=id_password    ${correct_password}
-    Submit Form
+    Input Text    id=username    ${email_already_in_db}
+    Input Password    id=password    ${correct_password}
+    Click Button    css=button[name="_eventId_proceed"]
     Page Should Not Contain    something has gone wrong
 
 the user follows the standard path to the account creation page for non registered users
