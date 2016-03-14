@@ -1,1 +1,0 @@
-ALTER TABLE `application` ADD COLUMN `submitted_date` DATETIME NULL DEFAULT NULL COMMENT '';

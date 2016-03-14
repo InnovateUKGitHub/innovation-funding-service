@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.43, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.24, for osx10.8 (x86_64)
 --
--- Host: localhost    Database: ifs
+-- Host: 127.0.0.1    Database: ifs
 -- ------------------------------------------------------
--- Server version	5.5.43-0ubuntu0.14.04.1
+-- Server version	5.6.25
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,6 +16,21 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `academic`
+--
+
+DROP TABLE IF EXISTS `academic`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `academic` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_UNIQUE` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=964 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `address`
 --
 
@@ -27,14 +42,11 @@ CREATE TABLE `address` (
   `address_line1` varchar(255) DEFAULT NULL,
   `address_line2` varchar(255) DEFAULT NULL,
   `address_line3` varchar(255) DEFAULT NULL,
-  `care_of` varchar(255) DEFAULT NULL,
-  `country` varchar(255) DEFAULT NULL,
-  `locality` varchar(255) DEFAULT NULL,
-  `po_box` varchar(255) DEFAULT NULL,
-  `postal_code` varchar(255) DEFAULT NULL,
-  `region` varchar(255) DEFAULT NULL,
+  `town` varchar(255) DEFAULT NULL,
+  `postcode` varchar(255) DEFAULT NULL,
+  `county` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -51,12 +63,13 @@ CREATE TABLE `application` (
   `start_date` date DEFAULT NULL,
   `application_status_id` bigint(20) DEFAULT NULL,
   `competition` bigint(20) DEFAULT NULL,
+  `submitted_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_mdoygpekookkkntrvgy67jjlb` (`application_status_id`),
   KEY `FK_r6qpl12jw4qehsirycsa416ka` (`competition`),
   CONSTRAINT `FK_mdoygpekookkkntrvgy67jjlb` FOREIGN KEY (`application_status_id`) REFERENCES `application_status` (`id`),
   CONSTRAINT `FK_r6qpl12jw4qehsirycsa416ka` FOREIGN KEY (`competition`) REFERENCES `competition` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,11 +85,12 @@ CREATE TABLE `application_finance` (
   `organisation_id` bigint(20) DEFAULT NULL,
   `organisation_size` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_application_id_organisation_id` (`application_id`,`organisation_id`),
   KEY `FK_53xvxooxtgbfppaln9leak72m` (`application_id`),
   KEY `FK_98i98ljbqxb2yp5bok9pu5wcc` (`organisation_id`),
   CONSTRAINT `FK_53xvxooxtgbfppaln9leak72m` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`),
   CONSTRAINT `FK_98i98ljbqxb2yp5bok9pu5wcc` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,7 +104,7 @@ CREATE TABLE `application_status` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,6 +143,7 @@ CREATE TABLE `competition` (
   `end_date` date DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `start_date` date DEFAULT NULL,
+  `max_research_ratio` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -146,14 +161,15 @@ CREATE TABLE `cost` (
   `description` varchar(255) DEFAULT NULL,
   `item` varchar(255) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `application_finance_id` bigint(20) DEFAULT NULL,
   `question_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_14n47e1gx72ud7hj3t2yscu1v` (`application_finance_id`),
   KEY `FK_3ocl28vkv3coj1t5hmgixvl6` (`question_id`),
-  CONSTRAINT `FK_14n47e1gx72ud7hj3t2yscu1v` FOREIGN KEY (`application_finance_id`) REFERENCES `application_finance` (`id`),
+  CONSTRAINT `FK_14n47e1gx72ud7hj3t2yscu1v` FOREIGN KEY (`application_finance_id`) REFERENCES `application_finance` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_3ocl28vkv3coj1t5hmgixvl6` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,7 +200,7 @@ CREATE TABLE `cost_value` (
   `value` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`cost_id`,`cost_field_id`),
   KEY `FK_h6lijwiwnsblqurwxjftvdn7n` (`cost_field_id`),
-  CONSTRAINT `FK_cryaaiuibh4b0sqw3aqrkspmb` FOREIGN KEY (`cost_id`) REFERENCES `cost` (`id`),
+  CONSTRAINT `FK_cryaaiuibh4b0sqw3aqrkspmb` FOREIGN KEY (`cost_id`) REFERENCES `cost` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_h6lijwiwnsblqurwxjftvdn7n` FOREIGN KEY (`cost_field_id`) REFERENCES `cost_field` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -224,7 +240,7 @@ CREATE TABLE `form_input` (
   KEY `FK_hgdynqsaela2nuwm41nohmxg1` (`competition_id`),
   CONSTRAINT `FK_hgdynqsaela2nuwm41nohmxg1` FOREIGN KEY (`competition_id`) REFERENCES `competition` (`id`),
   CONSTRAINT `FK_pvbo288244dfas1gd12t17pkv` FOREIGN KEY (`form_input_type_id`) REFERENCES `form_input_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -312,15 +328,16 @@ CREATE TABLE `invite` (
   `email` varchar(255) DEFAULT NULL,
   `hash` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `status` int(11) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   `application_id` bigint(20) DEFAULT NULL,
   `invite_organisation_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_e5xbk2ld658t66m1rv60igb5s` (`application_id`,`email`),
   KEY `FK_skcmllljwagey78x7lmt2n00c` (`application_id`),
   KEY `FK_hexhehvongoy5cqgpem81xs86` (`invite_organisation_id`),
   CONSTRAINT `FK_hexhehvongoy5cqgpem81xs86` FOREIGN KEY (`invite_organisation_id`) REFERENCES `invite_organisation` (`id`),
   CONSTRAINT `FK_skcmllljwagey78x7lmt2n00c` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -337,7 +354,7 @@ CREATE TABLE `invite_organisation` (
   PRIMARY KEY (`id`),
   KEY `FK_ae3mvog2j5kdcilv57hwcokmr` (`organisation_id`),
   CONSTRAINT `FK_ae3mvog2j5kdcilv57hwcokmr` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -356,7 +373,7 @@ CREATE TABLE `organisation` (
   PRIMARY KEY (`id`),
   KEY `FK_syoqdheljsd92k1vtdjfae31m` (`organisation_type_id`),
   CONSTRAINT `FK_syoqdheljsd92k1vtdjfae31m` FOREIGN KEY (`organisation_type_id`) REFERENCES `organisation_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -376,7 +393,7 @@ CREATE TABLE `organisation_address` (
   KEY `FK_prle5vffxxpi4ibqymh6ic87x` (`address_id`),
   CONSTRAINT `FK_k8ipyjlxpsqfga85v2vhg0m0x` FOREIGN KEY (`organisation_id`) REFERENCES `organisation` (`id`),
   CONSTRAINT `FK_prle5vffxxpi4ibqymh6ic87x` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -461,7 +478,7 @@ CREATE TABLE `process_role` (
   CONSTRAINT `FK_gm7bql0vdig803ktf5pc5mo2b` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FK_gwtw85iv3vxq2914vxbluc8e9` FOREIGN KEY (`application_id`) REFERENCES `application` (`id`),
   CONSTRAINT `FK_j0syxe9gnfpvde1f6mqtul154` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -493,7 +510,7 @@ CREATE TABLE `question` (
   KEY `FK_dyisjpgv8bmnrhy8t72lloed3` (`section_id`),
   CONSTRAINT `FK_dyisjpgv8bmnrhy8t72lloed3` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`),
   CONSTRAINT `FK_hgdynqsaela2nuwm41nohmxg0` FOREIGN KEY (`competition_id`) REFERENCES `competition` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -542,7 +559,7 @@ CREATE TABLE `question_status` (
   CONSTRAINT `FK_h3hna6d57cxximuty8600kysj` FOREIGN KEY (`assignee_id`) REFERENCES `process_role` (`id`),
   CONSTRAINT `FK_plbuqijqpe0e69q122a0b5i03` FOREIGN KEY (`marked_as_complete_by_id`) REFERENCES `process_role` (`id`),
   CONSTRAINT `FK_thcio7r5atcoq9xbisqi3yq9y` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -608,6 +625,25 @@ CREATE TABLE `section` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `token`
+--
+
+DROP TABLE IF EXISTS `token`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `token` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `class_name` varchar(255) DEFAULT NULL,
+  `class_pk` bigint(20) DEFAULT NULL,
+  `extra_info` longtext,
+  `hash` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_mtjr5jkw9dpbqhgx3mu1bomlt` (`hash`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `user`
 --
 
@@ -620,16 +656,16 @@ CREATE TABLE `user` (
   `image_url` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `token` varchar(255) DEFAULT NULL,
   `first_name` varchar(255) DEFAULT NULL,
   `invite_name` varchar(255) DEFAULT NULL,
   `last_name` varchar(255) DEFAULT NULL,
   `phone_number` varchar(255) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `uid` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_ob8kqyqqgmefl0aco34akdtpe` (`email`),
-  UNIQUE KEY `UK_mtqx5podr73c7h25y9qqu96x2` (`token`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `UK_ob8kqyqqgmefl0aco34akdtpe` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -675,4 +711,4 @@ CREATE TABLE `user_role` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-01-14 12:13:31
+-- Dump completed on 2016-03-14 14:19:46
