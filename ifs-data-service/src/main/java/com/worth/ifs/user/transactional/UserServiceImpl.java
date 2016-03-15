@@ -157,10 +157,15 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         Optional<Token> token = tokenRepository.findByHash(hash);
         if(token.isPresent() && TokenType.RESET_PASSWORD.equals(token.get().getType())) {
             User user = userRepository.findOne(token.get().getClassPk());
-            identityProviderService.updateUserPassword(user.getUid(), password);
-            userRepository.save(user);
-            tokenRepository.delete(token.get());
-            return serviceSuccess();
+            ServiceResult<String> result = identityProviderService.updateUserPassword(user.getUid(), password);
+
+            return result.handleSuccessOrFailure(
+                    failure -> serviceFailure(failure.getErrors()),
+                    success -> {
+                        tokenRepository.delete(token.get());
+                        return serviceSuccess();
+                    }
+            );
         }
         return serviceFailure(notFoundError(Token.class, hash));
     }
