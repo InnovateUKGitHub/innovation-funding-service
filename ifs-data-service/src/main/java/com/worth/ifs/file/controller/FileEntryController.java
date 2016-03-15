@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -57,18 +58,20 @@ public class FileEntryController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) throws IOException {
 
-            find(validContentLengthHeader(contentLength),
-                    validContentTypeHeader(contentType),
-                    validFilename(originalFilename)).andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> {
+        ServiceResult<FileEntry> asdfasdf = find(validContentLengthHeader(contentLength),
+                validContentTypeHeader(contentType),
+                validFilename(originalFilename)).andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> {
 
-                    return find(validContentLength(lengthFromHeader),
-                        validMediaType(typeFromHeader)).andOnSuccess((validLength, validType) -> {
-                        FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, validType, validLength);
-                        fileService.createFile(fileEntry, inputStreamSupplier(request)).toPostCreateResponse();
+            return find(validContentLength(lengthFromHeader),
+                    validMediaType(typeFromHeader)).andOnSuccess((validLength, validType) -> {
 
-                    });
+                FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, validType, validLength);
+                ServiceResult<Pair<File, FileEntry>> fileEntryResult = fileService.createFile(fileEntry, inputStreamSupplier(request));
+                return fileEntryResult.andOnSuccessReturn(result -> result.getValue());
             });
-            return null;
+        });
+
+        return asdfasdf.toPostCreateResponse();
     }
 
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
