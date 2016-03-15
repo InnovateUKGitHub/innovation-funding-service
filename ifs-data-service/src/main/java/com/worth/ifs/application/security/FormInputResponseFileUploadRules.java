@@ -1,5 +1,7 @@
 package com.worth.ifs.application.security;
 
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
@@ -36,9 +38,13 @@ public class FormInputResponseFileUploadRules {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
     @PermissionRule(value = "UPDATE", description = "An Applicant can upload a file for an answer to one of their own Applications")
     public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, User user) {
-        return userIsApplicantOnThisApplication(fileEntry, user);
+        Application application = applicationRepository.findOne(fileEntry.getCompoundId().getApplicationId());
+        return userIsApplicantOnThisApplication(fileEntry, user) && application.isOpen();
     }
 
     @PermissionRule(value = "READ", description = "An Applicant can download a file for an answer to one of their own Applications")

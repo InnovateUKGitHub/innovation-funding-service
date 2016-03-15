@@ -31,7 +31,7 @@ public class ApplicationStatusBuilder extends BaseBuilder<ApplicationStatus, App
     }
 
     public ApplicationStatusBuilder withName(ApplicationStatusConstants... names) {
-        return withArray((name, applicationStatus) -> applicationStatus.setName(name.getName()), names);
+        return withArray((name, applicationStatus) -> {applicationStatus.setName(name.getName()); applicationStatus.setId(name.getId());}, names);
     }
 
     public ApplicationStatusBuilder withName(String... names) {

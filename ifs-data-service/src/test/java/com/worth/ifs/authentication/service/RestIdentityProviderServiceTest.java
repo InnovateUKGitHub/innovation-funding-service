@@ -80,7 +80,7 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
     public void testCreateUserRecordWithUidButDuplicateEmailFailureResponseReturned() throws JsonProcessingException {
 
         CreateUserResource createRequest = new CreateUserResource("email@example.com", "thepassword");
-        IdentityProviderError errorResponse = new IdentityProviderError(DUPLICATE_EMAIL_ADDRESS.name(), emptyList());
+        IdentityProviderError[] errorResponse = new IdentityProviderError[]{new IdentityProviderError(DUPLICATE_EMAIL_ADDRESS.name(), emptyList())};
         ResponseEntity<String> errorResponseEntity = new ResponseEntity<>(asJson(errorResponse), CONFLICT);
 
         when(mockRestTemplate.postForEntity("http://idprest/user", adaptor.jsonEntity(createRequest), String.class)).thenReturn(errorResponseEntity);
@@ -94,7 +94,7 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
     public void testCreateUserRecordWithUidButOtherFailureResponseReturned() throws JsonProcessingException {
 
         CreateUserResource createRequest = new CreateUserResource("email@example.com", "thepassword");
-        IdentityProviderError errorResponse = new IdentityProviderError(UNABLE_TO_CREATE_USER.name(), emptyList());
+        IdentityProviderError[] errorResponse = new IdentityProviderError[]{new IdentityProviderError(UNABLE_TO_CREATE_USER.name(), emptyList())};
         ResponseEntity<String> errorResponseEntity = new ResponseEntity<>(asJson(errorResponse), CONFLICT);
 
         when(mockRestTemplate.postForEntity("http://idprest/user", adaptor.jsonEntity(createRequest), String.class)).thenReturn(errorResponseEntity);

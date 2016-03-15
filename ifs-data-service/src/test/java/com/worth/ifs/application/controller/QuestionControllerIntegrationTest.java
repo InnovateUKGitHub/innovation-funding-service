@@ -170,7 +170,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         Question nextQuestion = controller.getNextQuestionBySection(10L).getSuccessObject();
         assertNotNull(nextQuestion);
         assertNotNull(nextQuestion.getId());
-        assertEquals(36L, nextQuestion.getId().longValue());
+        assertEquals(41L, nextQuestion.getId().longValue());
     }
 
     @Test

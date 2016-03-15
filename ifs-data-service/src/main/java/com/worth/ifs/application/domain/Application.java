@@ -1,6 +1,7 @@
 package com.worth.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.invite.domain.Invite;
@@ -13,10 +14,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Application defines database relations and a model to use client side and server side.
@@ -165,6 +163,11 @@ public class Application {
     @JsonIgnore
     public List<Invite> getInvites() {
         return this.invites;
+    }
+
+    @JsonIgnore
+    public boolean isOpen(){
+        return Objects.equals(applicationStatus.getId(), ApplicationStatusConstants.OPEN.getId());
     }
 
     public void setInvites(List<Invite> invites) {
