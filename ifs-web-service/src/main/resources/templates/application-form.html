@@ -41,7 +41,7 @@
                 <p class="subtitle" th:if="${currentSection.getDescription()}" th:text="${currentSection.getDescription()}" />
                 <div th:each="question : ${sectionQuestions.get(currentSection.id)}" th:remove="tag">
                     <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
-                         th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())}),financeReadOnly=(${readonly != null ? readonly : (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))})">
+                         th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
                         <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
                         <div th:replace="'finance/'+${financeView} :: ${formInput.getFormInputType().getTitle()}" />
                         <div th:replace="finance/finance-summary :: ${formInput.getFormInputType().getTitle()}" />
