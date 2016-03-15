@@ -182,6 +182,9 @@ public class RegistrationController {
                 acceptInvite(request, response, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
                 destination = "redirect:/registration/success";
             } else {
+                if (!processOrganisation(request, model)) {
+                    destination = "redirect:/";
+                }
                 addEnvelopeErrorsToBindingResultErrors(createUserResult.getFailure().getErrors(), bindingResult);
             }
         } else {
@@ -229,12 +232,7 @@ public class RegistrationController {
 
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {
         errors.forEach(
-                error -> bindingResult.addError(
-                        new ObjectError(
-                                error.getErrorKey(),
-                                error.getErrorMessage()
-                        )
-                )
+                error -> bindingResult.reject("registration."+error.getErrorKey())
         );
     }
 
