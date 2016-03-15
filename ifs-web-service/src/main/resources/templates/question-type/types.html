@@ -68,7 +68,8 @@
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''"
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']',
-         noFileUploaded=${(#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}">
+         noFileUploaded=${(#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))},
+         downloadURL=${question.id} + '/forminput/' + ${formInput.id} + '/download'">
         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
         <input th:if="${noFileUploaded}" type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'" class="inputfile"/>
         <label th:if="${noFileUploaded}" th:for="${formInput.getId()}" class="button-secondary extra-margin">+ Upload</label>
@@ -76,7 +77,7 @@
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
         <div th:if="${!#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName())}">
             <div>
-                <a th:href="@{${question.getId()} + '/forminput/' + ${formInput.getId()} + '/download'}" class="uploaded-file" th:text="${responses?.get(formInput.getId())?.getFileEntry()?.getName()}">The-uploaded-file-example.pdf</a>
+                <a th:href="@{downloadURL}" class="uploaded-file" th:text="${responses?.get(formInput.getId())?.getFileEntry()?.getName()}">The-uploaded-file-example.pdf</a>
             </div>
             <div class="alignright" th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}">
                 <button class="button-secondary no-margin-right" type="submit" name="remove_uploaded_file">Remove</button>

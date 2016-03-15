@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-    <div th:include="finance/finance-summary" th:remove="tag" />
-
     <div th:fragment="your_finance" th:remove="tag">
 
         <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}" />
@@ -208,5 +206,13 @@
             </div>
         </fieldset>
       </div>
+    </div>
+
+    <!-- ===========================Form: Fileupload =========================== -->
+    <div th:fragment="finance_upload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''"
+         th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']',
+         noFileUploaded=${(#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName()))},
+         name='jes-upload'">
+        <div th:include="question-type/types :: fileupload" th:remove="tag" />
     </div>
 </html>

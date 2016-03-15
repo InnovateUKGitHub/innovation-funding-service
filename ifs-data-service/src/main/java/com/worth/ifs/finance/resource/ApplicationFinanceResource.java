@@ -24,6 +24,7 @@ public class ApplicationFinanceResource {
     Long id;
     private Long organisation;
     private Long application;
+    private Long financeFileEntry;
     private OrganisationSize organisationSize;
     private EnumMap<CostType, CostCategory> financeOrganisationDetails;
 
@@ -68,6 +69,14 @@ public class ApplicationFinanceResource {
 
     public void setApplication(Long application) {
         this.application = application;
+    }
+
+    public Long getFinanceFileEntry() {
+        return financeFileEntry;
+    }
+
+    public void setFinanceFileEntry(Long financeFileEntry) {
+        this.financeFileEntry = financeFileEntry;
     }
 
     public OrganisationSize getOrganisationSize() {
@@ -173,6 +182,7 @@ public class ApplicationFinanceResource {
                 .append(id, that.id)
                 .append(organisation, that.organisation)
                 .append(application, that.application)
+                .append(financeFileEntry, that.financeFileEntry)
                 .append(organisationSize, that.organisationSize)
                 .append(financeOrganisationDetails, that.financeOrganisationDetails)
                 .isEquals();
@@ -184,6 +194,7 @@ public class ApplicationFinanceResource {
                 .append(id)
                 .append(organisation)
                 .append(application)
+                .append(financeFileEntry)
                 .append(organisationSize)
                 .append(financeOrganisationDetails)
                 .toHashCode();

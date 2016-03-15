@@ -11,16 +11,24 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.exception.UnableToReadUploadedFile;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.transactional.FileEntryService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.util.MessageUtil;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,10 +43,15 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private FileEntryService fileEntryService;
+
+    public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
 
     @Override
     public void update(HttpServletRequest request, Long userId, Long applicationId) {
         storeCostItems(request, userId, applicationId);
+        storeJESUpload(request, userId, applicationId);
     }
 
     private void storeCostItems(HttpServletRequest request, Long userId, Long applicationId) {
@@ -148,6 +161,35 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
             return question.getId();
         } else {
             return null;
+        }
+    }
+
+    private void storeJESUpload(HttpServletRequest request, Long userId, Long applicationId) {
+        final Map<String, String[]> params = request.getParameterMap();
+
+        if (params.containsKey(REMOVE_UPLOADED_FILE)) {
+            formInputResponseService.removeFile(formInput.getId(), applicationId, processRoleId).getSuccessObjectOrThrowException();
+        } else {
+            final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
+            final MultipartFile file = fileMap.get("formInput[" + formInput.getId() + "]");
+            if (file != null && !file.isEmpty()) {
+                try {
+                    RestResult<FileEntryResource> result = formInputResponseService.createFile(formInput.getId(),
+                            applicationId,
+                            processRoleId,
+                            file.getContentType(),
+                            file.getSize(),
+                            file.getOriginalFilename(),
+                            file.getBytes());
+                    if (result.isFailure()) {
+                        errorMap.put(formInput.getId(),
+                                result.getFailure().getErrors().stream()
+                                        .map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
+                    }
+                } catch (IOException e) {
+                    throw new UnableToReadUploadedFile();
+                }
+            }
         }
     }
 
