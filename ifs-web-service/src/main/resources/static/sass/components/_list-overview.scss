@@ -1,6 +1,7 @@
 
 .list-overview{
-	margin-left: 0;
+
+		margin-left: 0;
     padding: 0;
     list-style-type: none;
 
@@ -85,4 +86,25 @@
     dd + dt {
       clear: both;
     }
+}
+
+
+.dl-left {
+	overflow: hidden;
+
+	dd,dt {
+		line-height:1.5;
+	}
+	dd {
+		float:left;
+		font-weight:bold;
+		clear:left;
+		margin-right:5px;
+		@include media-down(tablet) {
+				display:block;
+				float:none;
+				margin: 0;
+		}
+	}
+
 }
