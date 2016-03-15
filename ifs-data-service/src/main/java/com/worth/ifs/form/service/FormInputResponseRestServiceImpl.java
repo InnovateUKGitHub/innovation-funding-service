@@ -62,7 +62,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
 
         final HttpHeaders headers = createHeader(contentType,  contentLength);
 
-        return adaptor.postWithRestResult(url, file, headers, FileEntryResource.class);
+        return postWithRestResult(url, file, headers, FileEntryResource.class);
     }
 
     @Override
