@@ -93,10 +93,10 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         assertTrue(restResult.isFailure());
     }
 
+    @Ignore("TODO DW - INFUND-936 - Not valid test after passwords moved out to Shib")
     @Test
     public void testPasswordReset() {
-
-        RestResult<Void> restResult = controller.resetPassword("a2e2928b-960f-469d-859f-f038b2bd9f42", "newPassword");
+        RestResult<Void> restResult = controller.resetPassword("a2e2928b-960f-469d-859f-f038b2bd9f42", "newPasswsadf0rd");
         assertTrue(restResult.isSuccess());
     }
 
