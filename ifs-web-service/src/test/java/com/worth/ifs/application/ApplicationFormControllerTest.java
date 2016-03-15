@@ -90,7 +90,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         this.loginDefaultUser();
         this.setupUserRoles();
         this.setupFinances();
-
+        this.setupInvites();
 
         application = applications.get(0);
         sectionId = Long.valueOf(1);

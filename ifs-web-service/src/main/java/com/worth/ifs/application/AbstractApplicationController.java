@@ -1,42 +1,62 @@
 package com.worth.ifs.application;
 
+import static com.worth.ifs.application.service.Futures.call;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+
 import com.worth.ifs.BaseController;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.finance.view.DefaultFinanceModelManager;
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
-import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.service.*;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.application.service.ProcessRoleService;
+import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.application.service.ResponseService;
+import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.ui.Model;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.application.service.Futures.call;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This object contains shared methods for all the Controllers related to the {@link ApplicationResource} data.
@@ -83,6 +103,9 @@ public abstract class AbstractApplicationController extends BaseController {
     @Autowired
     protected CompetitionService competitionService;
 
+    @Autowired
+    protected InviteRestService inviteRestService;
+    
     @Autowired
     protected FinanceOverviewModelManager financeOverviewModelManager;
 
@@ -145,7 +168,7 @@ public abstract class AbstractApplicationController extends BaseController {
         }
         form.application = application;
 
-        addOrganisationDetails(model, userOrganisation, userApplicationRoles);
+        addOrganisationDetails(model, application, userOrganisation, userApplicationRoles);
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
@@ -181,13 +204,26 @@ public abstract class AbstractApplicationController extends BaseController {
         }
     }
 
-    protected void addOrganisationDetails(Model model, Optional<Organisation> userOrganisation,
+    protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation,
                                           List<ProcessRole> userApplicationRoles) {
 
-
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
-        model.addAttribute("applicationOrganisations", getApplicationOrganisations(userApplicationRoles));
+        
+        Set<Organisation> applicationOrganisations = getApplicationOrganisations(userApplicationRoles);
+        model.addAttribute("applicationOrganisations", applicationOrganisations);
+        
+        List<String> activeApplicationOrganisationNames = applicationOrganisations.stream().map(Organisation::getName).collect(Collectors.toList());
+        
+        List<String> pendingOrganisationNames = pendingInvitations(application).stream()
+        		.map(InviteResource::getInviteOrganisationName)
+        		.distinct()
+        		.filter(orgName -> {
+        			return StringUtils.hasText(orgName) 
+        					&& activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName));
+        		}).collect(Collectors.toList());
 
+        model.addAttribute("pendingOrganisationNames", pendingOrganisationNames);
+        
         Optional<Organisation> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
         leadOrganisation.ifPresent(org ->
                         model.addAttribute("leadOrganisation", org)
@@ -258,10 +294,27 @@ public abstract class AbstractApplicationController extends BaseController {
         List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         questionService.removeNotifications(notifications);
 
+        List<InviteResource> pendingAssignableUsers = pendingInvitations(application);
+        
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
+        model.addAttribute("pendingAssignableUsers", pendingAssignableUsers);
         model.addAttribute("questionAssignees", questionAssignees);
         model.addAttribute("notifications", notifications);
     }
+
+	private List<InviteResource> pendingInvitations(ApplicationResource application) {
+		List<InviteResource> pendingAssignableUsers;
+        RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(application.getId());
+        if(pendingAssignableUsersResult.isSuccess()) {
+        	pendingAssignableUsers = pendingAssignableUsersResult.getSuccessObject().stream()
+        			.flatMap(item -> item.getInviteResources().stream())
+        			.filter(item -> !InviteStatusConstants.ACCEPTED.equals(item.getStatus()))
+        			.collect(Collectors.toList());
+        } else {
+        	pendingAssignableUsers = new ArrayList<>(0);
+        }
+		return pendingAssignableUsers;
+	}
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                             Optional<SectionResource> currentSection,

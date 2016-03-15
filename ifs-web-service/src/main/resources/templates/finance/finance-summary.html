@@ -63,6 +63,18 @@
                             </div>
                         </div>
                     </tr>
+                    <tr th:each="pendingOrganisationName : ${pendingOrganisationNames}">
+                        <th scope="row">
+                            <div th:text="${pendingOrganisationName}"></div>
+                            <div><small>(pending)</small></div>
+                        </th>
+                        <div th:remove="tag">
+                            <td class="numeric"><strong class="numeric">&pound;0</strong></td>
+                        </div>
+                        <div th:each="financeSubSection : ${financeSectionChildren}" th:remove="tag">
+                            <td class="numeric">&pound;0</td>
+                        </div>
+                    </tr>
                     <tr>
                         <th scope="row">Total</th>
                         <td class="numeric">
@@ -125,6 +137,26 @@
                         <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}"/>
                     </div>
                     <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                        <td class="numeric">
+                            <strong>&pound;0</strong>
+                        </td>
+                        <td class="numeric">0%</td>
+                        <td class="numeric">&pound;0</td>
+                        <td class="numeric">&pound;0</td>
+                        <td class="numeric">&pound;0</td>
+                    </div>
+                </tr>
+                <tr th:each="pendingOrganisationName : ${pendingOrganisationNames}">
+                    <th scope="row">
+                        <div>
+                            <div th:text="${pendingOrganisationName}" />
+                            <div>
+                                <small>(pending)</small>
+                            </div>
+                            
+                        </div>
+                    </th>
+                    <div th:remove="tag">
                         <td class="numeric">
                             <strong>&pound;0</strong>
                         </td>
