@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+</head>
+<body class="app-dashboard">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <div class="event-alert is-open" th:each="notification:${notifications}">
+        <p>
+            <span th:text="${notification?.assignedByName + ' has assigned a question to you'}"></span>
+        </p>
+    </div>
+
+    <div class="my-applications">
+        <h1 class="heading-large">Your dashboard</h1>
+
+        <section class="in-progress">
+            <h2 class="heading-medium">Application in progress</h2>
+            <ul class="boxed-list">
+                <li th:each="application : ${applicationsInProcess}" th:classappend="${applicationsAssigned?.contains(application.id) ? 'assigned-to-me' : '' }">
+                    <div class="grid-row" th:unless="${applicationStatuses.get(application.getId()).getName() == 'submitted'}" >
+                        <div class="column-half">
+                            <h3 class="heading-medium">
+                                <a th:unless="${T(com.worth.ifs.application.constant.ApplicationStatusConstants).CREATED.name == application.applicationStatusName}"
+                                        th:href="@{/application/{id}(id=${application.getId()})}" th:text="((${application.name} == '') ? ${competitions.get(application.getId()).getName()}: ${application.name})"/>
+                                <a th:if="${T(com.worth.ifs.application.constant.ApplicationStatusConstants).CREATED.name == application.applicationStatusName}"
+                                        th:href="@{/application/{id}/contributors/invite?newApplication(id=${application.getId()})}" th:text="((${application.name} == '') ? ${competitions.get(application.getId()).getName()}: ${application.name})"/>
+                            </h3>
+                            <p class="form-hint">Application number: <span th:text="${#numbers.formatInteger(application.id,8)}"></span></p>
+                            <p class="form-hint">Current progress: </p>
+                            <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${applicationProgress.get(application.getId())}" th:remove="tag" />
+                        </div>
+                        <div class="column-half">
+                            <div th:include="fragments/elements :: competition-deadline" th:with="endDate=${competitions.get(application.getId()).getEndDate()}" th:remove="tag" />
+                            <div th:include="fragments/elements :: pie" th:with="daysPercentage=${competitions.get(application.getId()).getStartDateToEndDatePercentage()},daysLeft=${competitions.get(application.getId()).getDaysLeft()}" th:remove="tag" />
+                        </div>
+                    </div>
+                    <div class="grid-row" th:if="${applicationStatuses.get(application.getId()).getName() == 'submitted'}" >
+                        <div class="column-two-thirds">
+                            <h3 class="heading-medium">
+                                <a th:href="@{/application/{id}/track(id=${application.getId()})}" th:text="${application.name}">placeholder</a>
+                            </h3>
+                            <p class="form-hint">Application number: <span th:text="${#numbers.formatInteger(application.id,8)}"></span></p>
+                            <strong class="greentext">Application submitted</strong>
+                        </div>
+                        <div class="column-third">
+                            <div class="awaiting-assessment">
+                                Awaiting <br/> assessment
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <section class="previous-applications">
+            <h2 class="heading-medium">Previous Applications</h2>
+            <ul class="boxed-list">
+                <li th:each="application : ${applicationsFinished}">
+                    <div class="grid-row">
+                        <div class="column-assessment-details">
+                            <h3 class="heading-medium" th:text="${application.name}"></h3>
+                            <p class="form-hint">Application number: <span th:text="${#numbers.formatInteger(application.id,8)}"></span></p>
+                        </div>
+                        <div class="column-assessment-status navigation-right">
+                            <div th:class="((${applicationStatuses.get(application.getId()).name} == 'approved') ? 'yes' : 'no') + ' application-status assessed'">
+                                <p th:if="${applicationStatuses.get(application.getId()).name == 'rejected'}" th:text="Unsuccessful" th:class="results-status"></p>
+                                <p th:if="${applicationStatuses.get(application.getId()).name == 'approved'}" th:text="Successful" th:class="results-status"></p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+        <section class="your-profile">
+            <h2 class="heading-medium">Your Profile</h2>
+            <ul class="list-bullet">
+          		<li>
+                <a href="/profile/view">View and edit your profile details</a>
+          		</li>
+          	</ul>
+        </section>
+    </div>
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

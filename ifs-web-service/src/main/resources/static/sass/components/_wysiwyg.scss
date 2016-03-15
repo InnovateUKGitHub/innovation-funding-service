@@ -1,0 +1,85 @@
+
+//magic sprites in stead of fontAwesome as a font.
+//Good ie7 support plus better performance, SVG would be even better but isn't supported
+//font icons are blocking and this is just a couple of bytes of background images
+@import "compass/utilities/sprites";
+@import "wysiwyg/fa/*.png";
+
+.fa {
+	height: 12px;
+	width:12px;
+	@include inline-block;
+}
+
+.fa-bold    { @include fa-sprite(bold); }
+.fa-italic  { @include fa-sprite(italic); }
+.fa-list-ordered { @include fa-sprite(list-ol); }
+.fa-list-unordered { @include fa-sprite(list-ul); }
+
+button.ui-state-active {
+	.fa-bold    { @include fa-sprite(bold-b);}
+	.fa-italic  { @include fa-sprite(italic-b);}
+	.fa-list-ordered { @include fa-sprite(list-ol-b);}
+	.fa-list-unordered { @include fa-sprite(list-ul-b);}
+}
+
+//retina support
+@include device-pixel-ratio() {
+	$retina : sprite-map("wysiwyg/fa-2x/*.png");
+	.fa.fa,
+   	button.ui-state-active .fa.fa  {
+ 		background-image: sprite-url($retina);
+		background-size: 12px 96px;
+ 	}
+}
+
+[contenteditable="true"],
+.textarea-wrapped .readonly {
+
+    b {
+        font-weight:bold;
+        font-style:inherit;
+    }
+    i {
+        font-style:italic;
+        font-weight:inherit;
+    }
+    ol {
+        @extend .list-number;
+    }
+    ul {
+        @extend .list-bullet;
+    }
+    li p {
+        padding: 0;
+        margin: 0;
+    }
+}
+.textarea-wrapped [contenteditable="true"] {
+	padding-top:60px;
+}
+
+.hallotoolbar {
+	@include border-radius(10px);
+	background:#fff;
+	border:1px solid $border-colour;
+	width:auto!important;
+	margin:50px 10px 0 10px;
+
+	.ui-buttonset:first-child button.ui-corner-left{
+			@include border-radius(10px 0 0 10px);
+	}
+	.ui-buttonset:last-child button.ui-corner-right{
+			@include border-radius(0 10px 10px 0);
+	}
+
+	button {
+		border:none;
+		background:#fff;
+		padding:8px 10px;
+
+	}
+	button.ui-state-active {
+		background: #000;
+	}
+}

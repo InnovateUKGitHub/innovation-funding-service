@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Summary'"  th:remove="tag" />
+</head>
+<body class="app-summary">
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+<div th:include="fragments/modals ::modal-confirm-submit
+    (messageTitle='This is your final chance to make changes to the application.',
+     message='You will not be able to access the application after this point. Are you sure you want to submit?',
+     submitLink='/application/'+${currentApplication.getId()}+'/submit',
+     submitText='Yes, I want to submit my application',
+     cancelText='Cancel')"
+     th:remove="tag" />
+
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}" th:remove="tag" />
+
+     <div class="page-title">
+         <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+         <h1 class="heading-xlarge">Application Summary</h1>
+    </div>
+    <p class="subtitle extra-margin">
+        Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
+    </p>
+
+        <form action="#"  method="post" th:object="${form}" class="form-serialize-js section-overview">
+            <section th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
+                <h2 th:text="${section.getName()}" class="heading-medium" />
+                <div class="collapsible" th:each="question : ${sectionQuestions.get(section.id)}">
+                    <h3>
+                        <div th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" th:remove="tag" />
+                        <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Complete</div>
+                        <div class="section-status section-incomplete" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Incomplete</div>
+                    </h3>
+                    <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}' th:with="formInputIndex=(${status.index}), readonly=true, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.get(question.getId())})" th:id="'form-input-'+${formInput.getId()}" >
+                        <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' />
+                    </div>
+                </div>
+            </section>
+            <section>
+                <h2 class="heading-medium">Finance</h2>
+                <div class="collapsible">
+                    <h3>Finances Summary
+                        <div class="section-status section-complete" th:if="${sectionsMarkedAsComplete.contains(7L)}">Complete</div>
+                        <div class="section-status section-incomplete" th:unless="${sectionsMarkedAsComplete.contains(7L)}">Incomplete</div>
+                    </h3>
+                    <div class="question">
+                        <p>This is the overview of the finances provided by all partners in this project.</p>
+                        <p>To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/7/"}'>your finances</a> section.</p>
+
+                        <div th:replace="finance/finance-summary :: application_finances_summary"></div>
+                        <div th:replace="finance/finance-summary :: research_participation_alert"></div>
+
+                        <h2 class="heading-medium">Funding breakdown</h2>
+                        <div th:include="finance/finance-summary :: financial_summary_table" th:remove="tag"/>
+                    </div>
+                </div>
+            </section>
+        </form>
+    <hr/>
+    <div>
+        <span class="icon icon-information"></span>
+        <span> You will not be able to make changes to your application or resubmit after this point. By submitting this application you are agreeing to Innovate UK's <a href="">terms and conditions</a>.</span>
+    </div>
+
+    <div class="alignright-button">
+        <a role="button" tabindex="0" class="button large" data-js-modal="modal-confirm-submit" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${applicationReadyForSubmit}">Submit application</a>
+        <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
+    </div>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

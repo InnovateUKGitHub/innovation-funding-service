@@ -1,0 +1,13 @@
+$is-ie: true;
+$ie-version: 7;
+
+$browser-minimum-versions : (
+	"ie": "7"
+);
+
+@import "compass/css3";
+
+@import "govuk";
+@import "components";
+@import "pages";
+@import "print";

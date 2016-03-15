@@ -1,0 +1,121 @@
+package com.worth.ifs.transactional;
+
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.repository.ApplicationStatusRepository;
+import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.repository.CompetitionRepository;
+import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.repository.OrganisationRepository;
+import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.user.repository.RoleRepository;
+import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.util.EntityLookupCallbacks;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.function.Supplier;
+
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+
+/**
+ * This class represents the base class for transactional services.  Method calls within this service will have
+ * transaction boundaries provided to allow for safe atomic operations and persistence cascading.
+ */
+@Transactional
+public abstract class BaseTransactionalService  {
+
+    @Autowired
+    protected ResponseRepository responseRepository;
+
+    @Autowired
+    protected ProcessRoleRepository processRoleRepository;
+
+    @Autowired
+    protected UserRepository userRepository;
+
+    @Autowired
+    protected ApplicationStatusRepository applicationStatusRepository;
+
+    @Autowired
+    protected RoleRepository roleRepository;
+
+    @Autowired
+    protected CompetitionRepository competitionRepository;
+
+    @Autowired
+    protected ApplicationRepository applicationRepository;
+
+    @Autowired
+    protected OrganisationRepository organisationRepository;
+
+    protected Supplier<ServiceResult<Response>> response(Long responseId) {
+        return () -> getResponse(responseId);
+    }
+
+    protected ServiceResult<Response> getResponse(Long responseId) {
+        return find(responseRepository.findOne(responseId), notFoundError(Response.class, responseId));
+    }
+
+    protected Supplier<ServiceResult<ProcessRole>> processRole(Long processRoleId) {
+        return () -> getProcessRole(processRoleId);
+    }
+
+    protected ServiceResult<ProcessRole> getProcessRole(Long processRoleId) {
+        return find(processRoleRepository.findOne(processRoleId), notFoundError(ProcessRole.class, processRoleId));
+    }
+
+    protected Supplier<ServiceResult<Application>> application(final Long id) {
+        return () -> getApplication(id);
+    }
+
+    protected ServiceResult<Application> getApplication(final Long id) {
+        return find(applicationRepository.findOne(id), notFoundError(Application.class, id));
+    }
+
+    protected Supplier<ServiceResult<User>> user(final Long id) {
+        return () -> getUser(id);
+    }
+
+    protected ServiceResult<User> getUser(final Long id) {
+        return find(userRepository.findOne(id), notFoundError(User.class, id));
+    }
+
+    protected Supplier<ServiceResult<Competition>> competition(final Long id) {
+        return () -> getCompetition(id);
+    }
+
+    protected ServiceResult<Competition> getCompetition(final Long id) {
+        return find(competitionRepository.findOne(id), notFoundError(Competition.class, id));
+    }
+
+    protected Supplier<ServiceResult<ApplicationStatus>> applicationStatus(final Long id) {
+        return () -> getApplicationStatus(id);
+    }
+
+    protected ServiceResult<ApplicationStatus> getApplicationStatus(final Long id) {
+        return find(applicationStatusRepository.findOne(id), notFoundError(ApplicationStatus.class, id));
+    }
+
+    protected Supplier<ServiceResult<Role>> role(UserRoleType roleType) {
+        return () -> getRole(roleType);
+    }
+
+    protected ServiceResult<Role> getRole(UserRoleType roleType) {
+        return find(roleRepository.findByName(roleType.getName()), notFoundError(Role.class, roleType.getName())).
+                andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
+    }
+
+    protected Supplier<ServiceResult<Organisation>> organisation(Long id) {
+        return () -> getOrganisation(id);
+    }
+
+    protected ServiceResult<Organisation> getOrganisation(Long id) {
+        return find(organisationRepository.findOne(id), notFoundError(Organisation.class, id));
+    }
+}

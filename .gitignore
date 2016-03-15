@@ -1,0 +1,107 @@
+##user created
+
+rebel_project.xml
+nbijl.xml
+.bundle/config
+
+
+# idea files
+*/**.iml
+.idea
+
+
+# eclipse files
+.settings/
+.classpath
+.project
+bin/
+
+# additional application.properties locations to get in-eclipse and in-idea deploys to tomcat servers working
+ifs-data-service/src/main/resources/config/
+ifs-web-service/src/main/resources/config/
+ifs-data-service/idea-support/
+ifs-web-service/idea-support/
+
+
+
+
+# ignore properties
+**/*-build.gradle
+**/application-*.properties
+!**/application-automated.properties
+
+# Created with help from https://www.gitignore.io
+
+### Gradle ###
+.gradle
+build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+### Sass ###
+.sass-cache
+*.css.map
+
+
+### OSX ###
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+
+ifs-web-service/out
+workspace.xml
+.vagrant
+ifs-data-service/.idea/dictionaries
+*.iml
+ifs-web-service/libs
+rebel.xml
+
+coverage-error.log
+ifs-data-service.ipr
+ifs-data-service.iws
+ifs-web-service.ipr
+robot-tests/target
+robot-tests/benchmarking_report.txt
+jmeter/jmeter.log
+
+
+classes/
+
+#Node modules, except styledocco as we've made changes in that one. 
+**/node_modules
+!**/node_modules/styledocco
+
+ifs-web-service.iws
+/out
+
+
+# python bytecode nonsense
+*.pyc
+

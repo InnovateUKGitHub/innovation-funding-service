@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="assessment-details">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'#'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <h1 class="heading-xlarge no-margin">Contact us</h1>
+    </div>
+
+    <div class="grid-row">
+        <div class="column-half">
+            <h2 class="heading-small">Customer support service</h2>
+            
+            <p>Innovate UK <br />
+            North Star House <br />
+            North Star Avenue <br />
+            Swindon <br />
+            Wiltshire <br />
+            SN2 1UE</p>
+
+        </div>
+        <div class="column-half">
+            <p class="extra-margin">Email:<br/>
+                <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>
+            </p>
+
+            <p>Customer support service<br />
+                0300 321 4357</p>
+        </div>
+    </div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

@@ -1,0 +1,137 @@
+
+.collapsible { 
+	
+	h2{
+		&.section-complete:before{
+			top: 13px;
+			@include media-down(mobile) {
+				content: "";
+				right: 40px;
+				min-height: 20px;
+				min-width: 20px;
+			}
+		}
+		&.section-incomplete:before{
+			top: 13px;
+			@include media-down(mobile) {
+				content: "";
+				right: 40px;
+				min-height: 20px;
+				min-width: 20px;
+			}
+		}
+		span{
+			&.section-status{
+				&.place-in-header{
+					top: 9px;
+				}
+			}
+		}
+	}
+
+}
+
+
+table{
+	.section-complete{
+		th{
+			@extend %icon-tick;
+			background-position: right 50%;
+		}
+		td{
+			background: $page-colour;
+		}
+	}
+
+	.section-incomplete{
+		th{
+			@extend %icon-incomplete;
+			background-position: right 50%;
+		}
+		td{
+			background: $page-colour;
+		}
+	}
+}
+
+
+
+.textarea-wrapped{
+	&.assigned-to-me{
+		.textarea-header{
+			@extend %mark-assigned-left;
+		}
+	}
+
+	&.marked-as-complete{
+		.textarea-header{
+			@extend %mark-done-left;
+		}
+	}
+}
+
+
+
+/*----- Competition admin status' ----*/
+
+.comp-status{
+	background: $button-colour;
+	text-align: center;
+	padding: 20px;
+	color: $white;
+	
+	&.closed{
+		background: $red;
+	}
+
+	&.funders-panel{
+		background: $light-blue;
+	}
+
+	&.in-assessment{
+		background: $orange;
+	}
+
+	&.prep{
+		background: $grey-1;
+	}
+
+	h2{
+		margin: 0 0 0.5em 0;
+	}
+
+	sup{
+		font-size: 0.5em;
+	}
+}
+
+/*----- Application dashboard - aligning titles ----*/
+
+.app-dashboard{
+
+	.application-status{
+
+		.results-status{
+			
+			padding: 35px 0;
+
+		}
+
+	}
+
+}
+
+
+/*----- Marking yes /no with tick / cross used in assessor invite tables ----*/
+
+td .yes{
+	@extend %icon-tick;
+	padding-left: 28px;
+}
+
+td .no{
+	@extend %icon-cross;
+	padding-left: 28px; 
+}
+
+

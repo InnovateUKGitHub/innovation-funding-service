@@ -1,0 +1,141 @@
+.textarea-wrapped {
+    position: relative;
+
+    .textarea-header {
+       //padding: 20px 0 5px 10px;
+        text-align:left;
+    }
+
+    &.assigned-to-me{
+		border: 2px solid $link-colour;
+		 .textarea-header {
+			padding-left: 60px;
+		}
+	}
+
+	&.marked-as-complete{
+		 .textarea-header {
+			padding-left: 60px;
+		}
+	}
+}
+
+.textarea-footer{
+	button{
+		vertical-align: top;
+	}
+	.assign-button{
+		padding-top: 6px;
+	}
+}
+
+/*----- Inline form elements for academic finances ----*/
+
+.form-inline{
+
+	.form-group{
+		margin-bottom: 20px;
+
+		&.underline{
+			border-bottom: 1px solid $black;
+			margin-top: 10px
+		}
+
+		&.border-top{
+			border-top: 1px solid $black;
+			margin-top: 10px;
+			margin-bottom: 20px;
+			padding: 20px 0;
+		}
+
+		&.totals{
+			border: 1px solid $border-colour;
+			background: $panel-colour; 
+			padding: 10px 5px;
+
+			.form-control{
+				border: none;
+				background: none;
+				font-weight: bold;
+			}
+		}
+
+	}
+
+	.form-label{
+		float: left;
+		width: 30%;
+		margin-right: 20px;
+		padding-top: 5px;
+	}
+
+	.form-control{
+		float: left;
+	}
+}
+
+/*----- File upload / download styling ----*/
+
+.upload-section{
+	border: 1px solid $border-colour;
+	background: $grey-4;
+	padding: 16px 16px 8px 16px;
+	margin-top: 16px;
+
+	&.error{
+		@extend .warning-alert;
+		background: none;
+		padding-left: 16px;
+	}
+
+	.inputfile{
+		width: 0.1px;
+		height: 0.1px;
+		opacity: 0;
+		overflow: hidden;
+		position: absolute;
+		z-index: -1;
+
+		& + label{
+			margin-top: 20px;
+		}
+	}
+
+	.uploaded-file{
+		display: block;
+		background: $panel-colour;
+		padding: 20px;
+		font-weight: bold;
+		margin: 10px 0;
+	}
+
+}
+
+
+.form-group{
+	&.download{
+		padding: 5px 0 0 50px;
+		background: url(../images/icons/icon-download.png) no-repeat;
+	}
+}
+
+
+/*----- Search / filtering ----*/
+
+.search-filters{
+	padding: 20px; 
+	background: $panel-colour; 
+	margin-bottom: 40px;
+
+	.form-control{
+		width: 100%;
+	}
+
+	button{
+		margin: 20px 0 0 0;
+	}
+}
+
+
+
+

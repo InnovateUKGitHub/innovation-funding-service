@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Offer status'}, ${'/prototypes/1588-project-status'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Project details'})" th:remove="tag" />
+	
+	<form action="#">
+
+		<fieldset>
+			
+			<h2 class="heading-large no-margin-top">Partner finance contacts</h2>
+
+			<legend class="visuallyhidden">Partner finance contacts</legend>
+
+			<table>
+				<thead>
+					<tr>
+						<th scope="col">Partner</th>
+						<th scope="col">Finance contact</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							Worth systems
+						</td>
+						<td>
+							<span id="finance-contact">John Smith</span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Nomensa
+						</td>
+						<td>
+							&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td>
+							C@C
+						</td>
+						<td>
+							David Evans (Pending)
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<h3 class="heading-medium no-margin-bottom">Your finance contact</h3>
+				
+			<fieldset>
+				
+				<legend class="visuallyhidden">Your finances contact</legend>
+
+				<p class="form-hint">Who will be responsible for the project finances in your organisation?</p>
+
+				<details>
+				    <summary><span class="summary">What should I include in the finance contact section?</span></summary>
+				    <div class="panel-indent">
+				        <p>This is the person in your organisation responsible for the project’s finances. They will also claim funding once your project is live. We will ask them to provide bank details for your organisation before the project can begin.</p>
+				    </div>
+				</details>
+
+				<div class="form-group extra-margin">			
+					<label for="finances-name-1" class="block-label">
+						<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
+						John Smith
+					</label>
+
+					<label for="finances-name-2" class="block-label">
+						<input id="finances-name-2" type="radio" name="finances-name-group" value="John Smith" />
+						Ann Jones
+					</label>
+
+					<label for="finances-name-invite" class="block-label" id="invited-finance-contact" style="display: none">
+						<input id="finances-name-invite" type="radio" name="finances-name-group" value="" />
+						<span id="finance-name">Ann Jones (pending)</span>
+					</label>
+					
+				</div>
+				
+				<button class="buttonlink" id="add-finance-contact">Add new team member</button>
+			
+			</fieldset>
+
+			<div th:include="prototypes/fragments/project-setup :: prototype-add-users('finance-contact')" th:remove="tag" />
+
+		</fieldset>
+		
+		<fieldset>
+			
+			<h3 class="heading-medium no-margin-bottom">Target project date</h3>
+
+			<legend class="visuallyhidden">Target project date</legend>
+
+			<p class="form-hint">When will the project start</p>
+
+			<details>
+			    <summary><span class="summary">What should I include in the target project start date section?</span></summary>
+			    <div class="panel-indent">
+					<p>The project can start only when:</p>  
+					<ul class="list-bullet">  
+						<li>you have provided the documents we need</li> 
+						<li>we have approved your financial information</li>
+						<li>you have received, signed and returned the grant offer letter</li>
+					</ul>
+			    </div>
+			</details>
+
+			<div class="date-group extra-margin">
+				<div class="day">
+					<label class="form-label" for="workshop-day">
+							<div>Day</div>
+						</label>
+						<input class="form-control width-extra-small" type="number" placeholder="DD" id="workshop-day" name="workshop-day" value="" />
+				</div>
+
+				<div class="month">
+					<label class="form-label" for="workshop-month">
+							<div>Month</div>
+						</label>
+						<input class="form-control width-extra-small" type="number" placeholder="MM" id="workshop-month" name="workshop-month" value="" />
+				</div>
+
+				<div class="year">
+					<label class="form-label" for="workshop-year">
+							<div>Year</div>
+						</label>
+						<input class="form-control width-extra-small" type="number" placeholder="YYYY" id="workshop-year" name="workshop-year" value="" />
+				</div>
+			</div>
+
+			<h3 class="heading-medium">Project duration</h3>
+
+			<p>Project duration stated in application: <br /><strong>9 months</strong></p>
+
+		</fieldset>
+
+		<fieldset>
+
+			<h3 class="heading-medium">Project manager</h3>
+
+			<legend class="visuallyhidden">Project manager</legend>
+
+			<p class="form-hint">Who will be the project manager for this project?</p>
+
+			<details>
+			    <summary><span class="summary">What should I include the project manager section?</span></summary>
+			    <div class="panel-indent">
+					<p>We need this information now so that your monitoring officer can contact you. As lead partner you should provide a project manager for the duration of the project. We will invite them to register and join the project.</p>  
+			    </div>
+			</details>
+
+			<div class="form-group extra-margin">
+				<label for="pm-name-1" class="block-label">
+					<input id="pm-name-1" type="radio" name="pm-name-group" value="John Smith" />
+					John Smith
+				</label>
+				
+				<label for="pm-name-2" class="block-label">
+					<input id="pm-name-2" type="radio" name="pm-name-group" value="John Smith" />
+					Ann Jones
+				</label>
+			</div>
+			
+			<button class="buttonlink" id="add-pm">Add new team member</button>	
+
+		</fieldset>
+
+
+		
+		<div th:include="prototypes/fragments/project-setup :: prototype-add-users('pm')" th:remove="tag" />
+
+
+		<fieldset>
+			
+			<h3 class="heading-medium">Address</h3>
+
+			<legend class="visuallyhidden">Address</legend>
+
+			<p class="form-hint">Where is the main location of the project?</p>
+
+			<details>
+			    <summary><span class="summary">What should I include the address section?</span></summary>
+			    <div class="panel-indent">
+					<p>This is the location where the monitoring officer will visit your project.</p>  
+			    </div>
+			</details>
+
+			<div class="form-group extra-margin" th:unless="${param.edit != null}">
+				<label class="form-label" for="postcode-check">
+					<span class="form-label-bold">Postcode</span>
+				</label>
+				<input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
+				<button type="submit" id="postcode-lookup" class="button">Find UK address</button>
+				<div>
+					<a href="#" id="enter-address-manually">Enter address manually</a>
+				</div>
+			</div>
+
+
+			<div class="form-group" id="select-address-block" style="display: none">
+				<label class="form-label" for="select-address">
+					<span class="form-label-bold">Select your address</span>
+				</label>
+				<select class="form-control" id="select-address" name="select-address">
+					<option value="">SN1 2BD, 1, Station Road, Swindon </option>
+					<option value="">SN1 2BD, 1A, Station Road, Swindon  </option>
+					<option value="">SN1 2BD, 2, Station Road, Swindon </option>
+					<option value="">SN1 2BD, 3, Station Road, Swindon </option>
+					<option value="">SN1 2BD, 4, Station Road, Swindon </option>
+					<option value="">SN1 2BD, 5, Station Road, Swindon </option>
+				</select>
+			</div>
+			
+
+			<fieldset id="address-details" class="extra-margin" th:style="${param.edit == null ? 'display: none' : 'display: block'}">
+				<legend class="visuallyhidden">Address details</legend>
+				<div class="form-group">
+					<label class="form-label" for="street">
+						<span class="form-label-bold">Street</span>
+					</label>
+					<input class="form-control" id="street" name="street" type="text" th:value="${(param.edit == null ? '':'4 Station Road')}"/>
+				</div>
+				<div class="form-group">
+					<label class="form-label visuallyhidden" for="street-2">
+						<span class="form-label-bold">Street line 2</span>
+					</label>
+					<input class="form-control" id="street-2" name="street-2" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="street-2">
+						<span class="form-label-bold visuallyhidden">Street line 3</span>
+					</label>
+					<input class="form-control" id="street-3" name="street-2" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="town">
+						<span class="form-label-bold">Town</span>
+					</label>
+					<input class="form-control" id="town" name="town" type="text" th:value="${(param.edit == null ? '':'Swindon')}" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="county">
+						<span class="form-label-bold">County</span>
+					</label>
+					<input class="form-control" id="county" name="county" type="text" th:value="${(param.edit == null ? '':'Wiltshire')}" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="postcode">
+						<span class="form-label-bold">Postcode</span>
+					</label>
+					<input class="form-control" id="postcode" name="postcode" type="text" th:value="${(param.edit == null ? '':'SN1 2BD')}" />
+				</div>
+			</fieldset>
+
+		</fieldset>
+
+
+		<div class="extra-margin">
+			
+			<a href="/prototypes/1588-project-status" class="button-secondary">Save and return to project setup</a>
+
+		</div>
+
+		<div class="extra-margin">
+			
+			<a href="#" class="button">Mark as complete</a>
+
+		</div>
+
+
+
+
+	</form>
+
+	
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+		jQuery('#add-finance-contact').on('click',function(e){ 
+			e.preventDefault();
+			jQuery('#finance-contact-table').show();
+
+		});
+
+		jQuery('#invite-finance-contact').on('click',function(e){ 
+			e.preventDefault();
+
+			var financeContact = jQuery('#name-finance-contact1').val();
+
+			jQuery('#finance-name').text(financeContact + ' (Pending)')
+			jQuery("#finances-name-invite").attr('checked', 'checked');
+			jQuery('#finance-contact-table').hide();
+			jQuery('#invited-finance-contact').show();
+
+		});
+
+
+
+		jQuery('#add-pm').on('click',function(e){ 
+			e.preventDefault();
+			jQuery('#pm-table').show();
+
+		});
+
+		jQuery('#invite-pm').on('click',function(e){ 
+			e.preventDefault();
+			jQuery('#pm-table').hide();
+		});
+
+
+		jQuery('#postcode-lookup').on('click',function(e){ 
+			e.preventDefault();
+			jQuery("#select-address-block").show();
+		});
+
+		jQuery('#select-address').on('change',function(e){ 
+			e.preventDefault();
+			jQuery("#address-details").show();
+			jQuery("#street").val("4 Station Road");
+			jQuery("#county").val("Wiltshire");
+			jQuery("#town").val("Swindon");
+			jQuery("#postcode").val("SN1 2BD");
+
+		});
+
+		jQuery('#enter-address-manually').on('click',function(e){ 
+			e.preventDefault();
+			jQuery("#address-details").show();
+			jQuery("#select-address-block").hide();
+		});
+
+	});
+	// ]]>
+</script>
+</body>
+</html>

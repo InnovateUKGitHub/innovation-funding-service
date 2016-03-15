@@ -1,0 +1,96 @@
+/*
+
+###Event alert
+
+
+```
+<div class="event-alert event-alert-warning is-open">
+    <p>
+         <span>Steve Smith (Lead Applicant) is editing a field</span>
+    </p>
+</div>
+```
+
+##Information alert
+
+```
+<div class="event-alert">
+    <p>
+         <span>Steve Smith (Lead Applicant) is editing a field</span>
+    </p>
+</div>
+```
+*/
+@include keyframes(slideup) {
+    0% {
+        @include transform(translate(0,0));
+    }
+    100% {
+        @include transform(translate(0,-120px));
+
+    }
+}
+.no-js .event-alert {
+    position: relative;
+}
+
+
+.event-alert {
+    position:fixed;
+    @include ie-lte(10) {
+      position:relative; //because ie9 and lower don't have css animations we have the content at the top of the page all the time.
+    }
+
+    background-color: $grey-3;
+    display: block;
+    font-size: 19px;
+    left: 0;
+    text-align: center;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+
+    max-height: 120px;
+    overflow: hidden;
+    @include animation(slideup .66s ease-in-out 3s forwards);
+
+    p {
+        border-top: 10px solid $govuk-blue;
+        margin: 0;
+        padding: 0 10px;
+
+        span {
+            background: {
+                image: url(/images/icons/icon-information.png);
+                repeat: no-repeat;
+                position: 0 50%;
+            }
+            display: inline-block;
+            padding: 15px 0 15px 35px;
+        }
+    }
+
+    &-warning {
+
+        p {
+            border-top: 10px solid $beta-colour;
+
+            span {
+                background-image: url(/images/icons/icon-important.png);
+                padding: 15px 0 15px 45px;
+            }
+        }
+    }
+
+    &-error {
+
+        p {
+            border-top: 10px solid $error-colour;
+
+            span {
+                background-image: url(/images/icons/icon-important.png);
+                padding: 15px 0 15px 45px;
+            }
+        }
+    }
+}

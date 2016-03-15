@@ -1,0 +1,92 @@
+/*
+
+ Next and previous page navigation
+
+```
+<ul class="pagination">
+    <li class="prev"">
+        <a href="#" rel="prev" title="Navigate to previous part">
+            <span class="pagination-label">Previous</span>
+            <span class="pagination-part-title">Business proposition</span>
+        </a>
+    </li>
+    <li class="next">
+        <a href="#" rel="next" title="Navigate to next part">
+            <span class="pagination-label">Next</span>
+            <span class="pagination-part-title">Funding</span>
+        </a>
+    </li>
+</ul>
+
+```
+
+*/
+
+
+.pagination {
+    display: block;
+    margin: 3em 0px 15px;
+    list-style: none;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 400;
+    overflow:hidden;
+    border-top: 1px solid $grey-2;
+    clear: both;
+
+    li {
+        float: left;
+        text-align: right;
+        width: 49%;
+    }
+
+    a {
+        color: $govuk-blue;
+        display: block;
+        text-decoration: none;
+    }
+
+    .prev {
+        float: left;
+        text-align: left;
+    }
+    .prev a {
+        padding: 1.2em 0px 1.2em 3em;
+    }
+    .prev a:before {
+        background: transparent url("../images/arrow-sprite.png") no-repeat scroll -20px -11px;
+        margin: -4px 0px 0px -32px;
+        display: block;
+        float: left;
+        width: 30px;
+        height: 38px;
+        content: " ";
+    }
+    .next {
+        float: right;
+        text-align: right;
+    }
+    .next a {
+        padding: 1.2em 3em 1.2em 0px;
+    }
+    .next a:before {
+        background: transparent url("../images/arrow-sprite.png") no-repeat scroll -102px -11px;
+        margin: -4px -32px 0px 0px;
+        display: block;
+        float: right;
+        width: 30px;
+        height: 38px;
+        content: " ";
+    }
+    .pagination-label {
+        font-size: 27px;
+        line-height: 1.25;
+        font-weight: 400;
+        margin-bottom: 0.1em;
+        display: block;
+    }
+
+    .pagination-part-title {
+        text-decoration: underline;
+    }
+}

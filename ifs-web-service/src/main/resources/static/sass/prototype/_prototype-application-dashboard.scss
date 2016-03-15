@@ -1,0 +1,11 @@
+.app-dashboard{
+	.application-status{
+
+		min-height: auto;
+
+		&.invite{
+			padding-top: 20px; 
+			//min-height: 90px;
+		}
+	}
+}

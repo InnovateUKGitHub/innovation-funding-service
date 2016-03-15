@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Print Application'"  th:remove="tag" />
+
+
+</head>
+<body class="print-doc">
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<div class="print-bar">
+    <button class="button" onclick="window.print()">Print your application</button>
+    <div class="hidden">You can print your application by pressing CTRL+P (Windows) or CMD+P (mac)</div>
+</div>
+
+    <div>
+        <section class="portrait" th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
+            <h1 th:text="${section.getName()}" class="heading-large" />
+            <div th:each="question : ${sectionQuestions.get(section.id)}" th:remove="tag">
+                <div class="form-group"  th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}'
+                     th:with="formInputIndex=(${status.index}), readonly=true, response=(${responses.get(formInput.getId())})">
+                    <div th:replace="application/print-elements :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' th:remove="tag" />
+                </div>
+            </div>
+        </section>
+
+        <section class="landscape">
+            <div>
+              <h1 class="heading-large">Finances</h1>
+                    <p>This is the overview of the finances provided by all partners in this project.</p>
+                    <div th:replace="application/print-elements :: application_finances_summary"></div>
+              </div>
+          </section>
+          <section class="landscape">
+              <div>
+                    <h2 class="heading-medium">Funding breakdown</h2>
+                    <div th:include="application/print-elements :: financial_summary_table" th:remove="tag"/>
+            </div>
+        </section>
+    </div>
+  <div th:include="fragments/layout :: body-end" th:remove="tag" />
+  <div th:unless="${param.noprint}" th:remove="tag">
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            //setTimeout to load late, because of safari font loading bug
+            setTimeout(function(){window.print()},0);
+        });
+      </script>
+  </div>
+</body>
+</html>
