@@ -14,12 +14,15 @@
 #set ($title = $springMacroRequestContext.getMessage("idp.title", "Web Login Service"))
 #set ($titleSuffix = $springMacroRequestContext.getMessage("idp.client-storage-read.suffix", "Loading Session State..."))
 ##
+
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8" />
         <title>$title - $titleSuffix</title>
-        <link rel="stylesheet" type="text/css" href="//#springMessageText('ifs.webserver.resources.url', '#')/css/main.css">
+        <link rel="stylesheet" type="text/css" href="//#springMessageText('ifs.webserver.resources.url', '#')/css/fonts.css" >
+        <link rel="stylesheet" type="text/css" href="//#springMessageText('ifs.webserver.resources.url', '#')/css/screen.css" >
         <script>
         <!--
         #include( "client-storage/local-storage-read.js" )
@@ -38,34 +41,71 @@
         </script>
     </head>
     <body onload="doLoad()">
-        <div class="wrapper">
-            <div class="container">
-                <header>
-                    <h3>$title - $titleSuffix</h3>
-                </header>
-                <noscript>
-                    <div class="content">
-                    $springMacroRequestContext.getMessage("idp.client-storage.no-js", "Since your browser does not support JavaScript, you must press the Continue button once to proceed.")
+
+        <header role="banner" id="global-header">
+            <div class="header-wrapper">
+                <div class="header-global">
+                    <div>
+                        <div class="header-logo">
+                            <a href="https://www.gov.uk" title="Go to the GOV.UK homepage" id="logo" class="content">
+                                <img src="https://ifs.dev.innovateuk.org/images/gov.uk_logotype_crown.png" width="35" height="31" alt="GOV.UK">
+                                GOV.UK
+                            </a>
+                        </div>
+                        <p class="innovate-title">Innovation Funding Service</p>  
                     </div>
-                </noscript>
-                <form name="form1" action="${flowExecutionUrl}" method="post">
-                    #foreach ($key in $loadContext.getStorageKeys())
-                        <input name="shib_idp_ls_exception.$key" type="hidden" />
-                        <input name="shib_idp_ls_success.$key" type="hidden" value="false" />
-                        <input name="shib_idp_ls_value.$key" type="hidden" />
-                    #end
-                    <input name="shib_idp_ls_supported" type="hidden" />
-                    <input name="_eventId_proceed" type="hidden" />
-                    <noscript>
-                        <input type="submit" value="Continue" />
-                    </noscript>
-                </form>
-            </div>
-            <footer>
-                <div class="container container-footer">
-                    <p class="footer-text">#springMessageText("idp.footer", "Insert your footer text here.")</p>
                 </div>
-            </footer>
-        </div>
+            </div>
+        </header>
+
+        <main id="content">
+
+            <div class="phase-banner">
+                <p>
+                    <strong class="phase-tag">BETA</strong>
+                    <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
+                </p>
+            </div>
+
+            <h3 class="heading-large">$title - $titleSuffix</h3>
+
+            <noscript>
+                <div class="content">
+                $springMacroRequestContext.getMessage("idp.client-storage.no-js", "Since your browser does not support JavaScript, you must press the Continue button once to proceed.")
+                </div>
+            </noscript>
+            <form name="form1" action="${flowExecutionUrl}" method="post" class="extra-margin">
+                #foreach ($key in $loadContext.getStorageKeys())
+                    <input name="shib_idp_ls_exception.$key" type="hidden" />
+                    <input name="shib_idp_ls_success.$key" type="hidden" value="false" />
+                    <input name="shib_idp_ls_value.$key" type="hidden" />
+                #end
+                <input name="shib_idp_ls_supported" type="hidden" />
+                <input name="_eventId_proceed" type="hidden" />
+                <noscript>
+                    <input type="submit" class="button button-large" value="Continue" />
+                </noscript>
+            </form>
+        </main>
+
+         <footer class="group js-footer" id="footer" role="contentinfo">
+            <div class="footer-wrapper">
+              <div class="footer-meta">
+
+                  <div class="footer-meta-inner">
+                    <div class="open-government-licence">
+                      <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
+                        <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
+                    </div>               
+                  </div>
+
+                  <div class="copyright">
+                    <a href="http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/">© Crown copyright</a>
+                  </div>
+
+              </div>
+            </div>
+      </footer>
+       
     </body>
 </html>

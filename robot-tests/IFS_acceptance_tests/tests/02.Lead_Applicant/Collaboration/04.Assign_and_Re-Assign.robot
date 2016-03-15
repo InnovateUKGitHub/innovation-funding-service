@@ -50,7 +50,7 @@ Verify the ' Last update message'
     Then the question should contain the correct status/name    css=#form-input-12 .textarea-footer    Last updated: Today by you
 
 Verify the collaborator cannot assign the question
-    [Documentation]     INFUND-939
+    [Documentation]     INFUND-839
     [Tags]      Collaboration   Pending
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then The user should not see the text in the page       Assign to

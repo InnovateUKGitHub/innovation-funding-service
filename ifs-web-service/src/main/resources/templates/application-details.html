@@ -20,7 +20,20 @@
 
     <div class="grid-row">
         <div class="column-half">
-            <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage},size='medium'" th:remove="tag"></div>
+          <dl class="dl-left">
+            <dd>Competition:</dd>
+            <dt th:text="${currentCompetition.name}" />
+            <dd>Funding body:</dd>
+            <dt>Innovate UK</dt>
+            <dd>Application deadline:</dd>
+            <dt>
+              12:00pm
+              <div th:remove="tag" th:text="${#temporals.dayOfWeekName(currentCompetition.endDate)}" />
+              <div th:include="fragments/elements :: ordinal-day (date=${currentCompetition.endDate})" th:remove="tag" />
+              <div th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'MMMM yyyy')}" />
+            </dt>
+          </dl>
+            <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage},size='medium'" class="extra-margin" />
         </div>
         <div class="column-half">
             <ul class="list-bullet">
@@ -28,15 +41,10 @@
             </ul>
         </div>
     </div>
-
-
-    <h2 class="bold-medium">Competition Summary</h2>
-    <p th:utext="${currentCompetition.getDescription()}" />
-
     <form action="#" method="post" class="application-overview">
-        <div th:remove="tag" th:each="section : ${sections.values()}">
+        <div th:remove="tag" th:each="section,iteration : ${sections.values()}">
             <section th:id="'section-'+${section.getId()}">
-                <h2 th:text="${section.name}" class="heading-medium no-margin-bottom"/>
+                <h2 th:text="${section.name}" th:class="${iteration.index==0} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
                 <p th:text="${section.description}"></p>
                 <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
                     <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
