@@ -30,7 +30,10 @@
               <div th:remove="tag" th:text="${#temporals.format(currentApplication.submittedDate, 'hh:mm a')}" />.
             </div>
           </p>
-    			<p><a th:href="@{/application/{id}(id=${currentApplication.getId()})}">View application</a></p>
+    			<p class="linkbar">
+            <a th:href="@{/application/{id}(id=${currentApplication.getId()})}">View application</a>
+            <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}">Print Application</a>
+          </p>
     		</div>
     	</li>
     	<li class="current">

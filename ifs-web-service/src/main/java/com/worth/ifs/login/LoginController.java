@@ -1,7 +1,9 @@
 package com.worth.ifs.login;
 
 import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.exception.InvalidURLException;
+import com.worth.ifs.commons.rest.RestResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * This controller handles user login, logout and authentication / authorization.
@@ -66,9 +69,17 @@ public class LoginController {
         if (bindingResult.hasErrors()) {
             return "login/reset-password-form";
         } else {
-            userService.resetPassword(hash, resetPasswordForm.getPassword())
-                    .getSuccessObjectOrThrowException();
-            return "login/password-changed";
+            RestResult<Void> result = userService.resetPassword(hash, resetPasswordForm.getPassword());
+            if(result.isFailure()){
+                List<Error> errors = result.getFailure().getErrors();
+                for (Error error : errors) {
+                    bindingResult.rejectValue("password", "registration."+error.getErrorKey());
+                }
+
+                return "login/reset-password-form";
+            }else{
+                return "login/password-changed";
+            }
         }
     }
 }
