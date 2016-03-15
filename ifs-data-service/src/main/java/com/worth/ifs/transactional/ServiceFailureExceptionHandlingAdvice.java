@@ -36,13 +36,8 @@ public class ServiceFailureExceptionHandlingAdvice {
         try {
             ServiceResult<?> result = (ServiceResult<?>) joinPoint.proceed();
 
-            if (result == null) {
-                handleFailure();
-            }
-
-            if (result != null && result.isFailure()) {
-                LOG.warn("Failed ServiceResult being returned from method - " + result.getFailure().getErrors());
-                handleFailure();
+            if (result == null || result.isFailure()) {
+                handleFailure(result);
             }
 
             if (result == null) {
@@ -54,13 +49,20 @@ public class ServiceFailureExceptionHandlingAdvice {
 
         } catch (Throwable e) {
             LOG.warn(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a ServiceFailure");
-            handleFailure();
+            handleFailure(null);
             return serviceFailure(internalServerErrorError());
         }
     }
 
-    private void handleFailure() {
+    private void handleFailure(ServiceResult<?> result) {
         LOG.debug("Failure encountered during processing of a ServiceResult-returning Service method - rolling back any transactions");
+        if(result!=null) {
+            result.getFailure().getErrors().stream().findFirst().ifPresent(x -> {
+                LOG.warn(x.getErrorMessage());
+                LOG.warn(x.getErrorKey());
+            });
+        }
+
         try {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         } catch (NoTransactionException e) {
