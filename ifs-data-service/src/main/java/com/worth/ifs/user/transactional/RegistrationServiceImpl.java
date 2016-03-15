@@ -76,6 +76,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Override
     public ServiceResult<Void> activateUser(Long userId){
         return getUser(userId).andOnSuccessReturnVoid(u -> {
+            idpService.activateUser(u.getUid());
+
+            // TODO DW - INFUND-2086 - can these come out now that the user is activated in the IDP?
             u.setStatus(UserStatus.ACTIVE);
             userRepository.save(u);
         });
