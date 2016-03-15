@@ -57,7 +57,7 @@ function buildAndDeploy {
     cd ${dataServiceCodeDir}
     ## Before we start the build we need to have an webtest test build environment
     echo "********SWAPPING IN THE WEBTEST BUILD PROPERTIES********"
-    sed 's/ext\.ifsFlywayLocations.*/ext\.ifsFlywayLocations="db\/migration,db\/webtest"/' dev-build.gradle > webtest.gradle.tmp
+    sed 's/ext\.ifsFlywayLocations.*/ext\.ifsFlywayLocations="db\/migration,db\/setup,db\/webtest"/' dev-build.gradle > webtest.gradle.tmp
     mv dev-build.gradle dev-build.gradle.tmp
     mv webtest.gradle.tmp dev-build.gradle
     ./gradlew clean client clientCopy testCommonCode testCommonCodeCopy deployToTomcat
