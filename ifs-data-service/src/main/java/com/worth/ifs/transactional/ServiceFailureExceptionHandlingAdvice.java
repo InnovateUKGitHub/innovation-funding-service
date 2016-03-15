@@ -36,7 +36,12 @@ public class ServiceFailureExceptionHandlingAdvice {
         try {
             ServiceResult<?> result = (ServiceResult<?>) joinPoint.proceed();
 
-            if (result == null || result.isFailure()) {
+            if (result == null) {
+                handleFailure();
+            }
+
+            if (result != null && result.isFailure()) {
+                LOG.warn("Failed ServiceResult being returned from method - " + result.getFailure().getErrors());
                 handleFailure();
             }
 
