@@ -32,7 +32,6 @@ import static org.springframework.http.HttpStatus.OK;
 @Service
 public class RestIdentityProviderService implements IdentityProviderService {
 
-
     @Autowired
     @Qualifier("shibboleth_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
@@ -76,13 +75,11 @@ public class RestIdentityProviderService implements IdentityProviderService {
 
     @Override
     public ServiceResult<String> updateUserPassword(String uid, String password) {
-
         return handlingErrors(() -> {
-
             UpdateUserResource updateUserRequest = new UpdateUserResource(password);
-            Either<ResponseEntity<IdentityProviderError>, Void> response = restPut(idpBaseURL + idpUserPath + "/" + uid + "/password", updateUserRequest, Void.class, IdentityProviderError.class, OK);
+            Either<ResponseEntity<IdentityProviderError[]>, Void> response = restPut(idpBaseURL + idpUserPath + "/" + uid + "/password", updateUserRequest, Void.class, IdentityProviderError[].class, OK);
             return response.mapLeftOrRight(
-                    failure -> serviceFailure(internalServerErrorError()),
+                    failure -> serviceFailure(errors(failure.getStatusCode(), failure.getBody())),
                     success -> serviceSuccess(uid)
             );
         });
@@ -90,9 +87,7 @@ public class RestIdentityProviderService implements IdentityProviderService {
 
     @Override
     public ServiceResult<String> activateUser(String uid) {
-
         return handlingErrors(() -> {
-
             Either<ResponseEntity<IdentityProviderError>, Void> response = restPut(idpBaseURL + idpUserPath + "/" + uid + "/activateUser", null, Void.class, IdentityProviderError.class, OK);
             return response.mapLeftOrRight(
                     failure -> serviceFailure(internalServerErrorError()),

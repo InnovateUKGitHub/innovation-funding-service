@@ -38,8 +38,14 @@
           <small>(Lead organisation)</small>
         </h2>
         <h2 class="heading-medium"  th:unless="${organisationStats.index == 0}">
-          <div th:remove="tag" th:text="${organisationInviteResource.organisationName}" />
-          <small th:unless="${organisationInviteResource.organisation}">(pending)</small>
+
+          <div th:if="${organisationInviteResource.organisationNameConfirmed != null}" th:remove="tag">
+              <div th:text="${organisationInviteResource.organisationNameConfirmed}" th:remove="tag"/>
+          </div>
+          <div th:if="${organisationInviteResource.organisationNameConfirmed == null}" th:remove="tag">
+            <div th:remove="tag" th:text="${organisationInviteResource.organisationName}" />
+            <small>(pending)</small>
+          </div>
         </h2>
         <ul class="list-bullet">
             <li th:if="${organisationStats.index == 0}">
