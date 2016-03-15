@@ -63,7 +63,7 @@ Red warning should show when the finances are incomplete
     And the user clicks the button/link    css=[aria-controls="collapsible-1"]
     And the user clicks the button/link    jQuery=#collapsible-1 button:contains("Edit")
     Then the red warnng should be visible
-    And the user should see the element     css=.warning-alert
+    And the user should see the element    css=.warning-alert
     And the user should see the text in the page    The following organisations have not maked their finances as complete:
     [Teardown]
 
@@ -119,4 +119,4 @@ both green checks should be visible
 
 the red warnng should be visible
     go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
-    Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img
+    Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img[src="/images/warning-icon.png"]
