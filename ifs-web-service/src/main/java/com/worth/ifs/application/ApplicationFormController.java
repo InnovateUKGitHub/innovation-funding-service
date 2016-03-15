@@ -44,6 +44,7 @@ import org.springframework.web.multipart.support.StringMultipartFileEditor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -59,6 +60,8 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 @RequestMapping("/application/{applicationId}/form")
 public class ApplicationFormController extends AbstractApplicationController {
     public static final String MARK_AS_COMPLETE = "mark_as_complete";
+    public static final String MARK_SECTION_AS_COMPLETE = "mark_section_as_complete";
+    public static final String MARK_SECTION_AS_INCOMPLETE = "mark_section_as_incomplete";
     public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
     public static final String UPLOAD_FILE = "upload_file";
     public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
@@ -339,11 +342,11 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         Map<Long, List<String>> errors;
         if(question != null) {
-            errors = saveQuestionResponses(application, Collections.singletonList(question), user.getId(), processRole.getId(), bindingResult, request, response);
+            errors = saveQuestionResponses(application, Collections.singletonList(question), user.getId(), processRole.getId(), bindingResult, request);
         } else {
             SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
             List<Question> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
-            errors = saveQuestionResponses(application, questions, user.getId(), processRole.getId(), bindingResult, request, response);
+            errors = saveQuestionResponses(application, questions, user.getId(), processRole.getId(), bindingResult, request);
         }
 
         Map<String, String[]> params = request.getParameterMap();
@@ -354,13 +357,51 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(userIsLeadApplicant) {
             applicationService.save(application);
         }
-        markApplicationQuestions(application, processRole.getId(), request, response, errors);
+
+        if(isMarkQuestionRequest(params)) {
+            markApplicationQuestions(application, processRole.getId(), request, response, errors);
+        } else if(isMarkSectionRequest(params)){
+            SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
+            markAllQuestionsInSection(application, selectedSection, processRole.getId(), request, response, errors);
+        }
 
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         return bindingResult;
+    }
+
+    private void markAllQuestionsInSection(ApplicationResource application,
+                                                     SectionResource selectedSection,
+                                                     Long processRoleId,
+                                                     HttpServletRequest request,
+                                                     HttpServletResponse response,
+                                                     Map<Long, List<String>> errors) {
+        Map<String, String[]> params = request.getParameterMap();
+
+        final Set<Long> allQuestions = sectionService.getQuestionsForSectionAndSubsections(selectedSection.getId());
+
+        List<Question> questions = simpleMap(allQuestions, questionService::getById);
+
+        String action = params.containsKey(MARK_SECTION_AS_COMPLETE) ? MARK_AS_COMPLETE : MARK_AS_INCOMPLETE;
+
+        for(final Question question : questions) {
+            boolean marked = markQuestion(question.getId(), action, application.getId(), processRoleId, errors);
+
+            // if a question is marked as complete, don't show the field saved message.
+            if (!marked) {
+                cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+            }
+        }
+    }
+
+    private boolean isMarkQuestionRequest(@NotNull Map<String, String[]> params){
+        return params.containsKey(MARK_AS_COMPLETE) || params.containsKey(MARK_AS_INCOMPLETE);
+    }
+
+    private boolean isMarkSectionRequest(@NotNull Map<String, String[]> params){
+        return params.containsKey(MARK_SECTION_AS_COMPLETE) || params.containsKey(MARK_SECTION_AS_INCOMPLETE);
     }
 
     private SectionResource getSelectedSection(List<Long> sectionIds, Long sectionId) {
@@ -371,18 +412,18 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .get();
     }
 
-    private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<Question> questions, Long userId, Long processRoleId, BindingResult bindingResult,  HttpServletRequest request, HttpServletResponse response) {
+    private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<Question> questions, Long userId, Long processRoleId, BindingResult bindingResult,  HttpServletRequest request) {
         Map<Long, List<String>> errors = saveQuestionResponses(request, questions, userId, processRoleId, application.getId());
         errors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue("formInput[" + k + "]", e, e)));
         return errors;
     }
 
     private void markApplicationQuestions(ApplicationResource application, Long processRoleId, HttpServletRequest request, HttpServletResponse response, Map<Long, List<String>> errors) {
-        // if a question is marked as complete, don't show the field saved message.
         Map<String, String[]> params = request.getParameterMap();
 
         boolean marked = markQuestion(request, params, application.getId(), processRoleId, errors);
 
+        // if a question is marked as complete, don't show the field saved message.
         if (!marked) {
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
         }
@@ -443,13 +484,33 @@ public class ApplicationFormController extends AbstractApplicationController {
                 questionService.markAsComplete(questionId, applicationId, processRoleId);
                 success = true;
             }
-        }
-        if (params.containsKey(MARK_AS_INCOMPLETE)) {
+        } else if (params.containsKey(MARK_AS_INCOMPLETE)) {
             Long questionId = Long.valueOf(request.getParameter(MARK_AS_INCOMPLETE));
             questionService.markAsInComplete(questionId, applicationId, processRoleId);
             success = true;
-
         }
+
+        return success;
+    }
+
+    private boolean markQuestion(long questionId, String action, Long applicationId, Long processRoleId, Map<Long, List<String>> errors) {
+        if (processRoleId == null) {
+            return false;
+        }
+        boolean success = false;
+        if (action.equals(MARK_AS_COMPLETE)) {
+            if (errors.containsKey(questionId) && !errors.get(questionId).isEmpty()) {
+                List<String> fieldErrors = errors.get(questionId);
+                fieldErrors.add("Please enter valid data before marking a question as complete.");
+            } else {
+                questionService.markAsComplete(questionId, applicationId, processRoleId);
+                success = true;
+            }
+        } else if (action.equals(MARK_AS_INCOMPLETE)) {
+            questionService.markAsInComplete(questionId, applicationId, processRoleId);
+            success = true;
+        }
+
         return success;
     }
 

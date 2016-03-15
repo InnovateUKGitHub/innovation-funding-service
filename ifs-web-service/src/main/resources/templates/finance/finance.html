@@ -125,9 +125,6 @@
                            th:id="${'section-total-'+subSection.id}"
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
                 </div>
-                <div class="alignright-button">
-                    <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
-                </div>
             </div>
         </div>
     </div>
@@ -195,7 +192,7 @@
                        th:name="${type +'-total-' + question.id + '-' + cost.id}"
                        readonly="readonly"
                        th:id="${'cost-labour-'+cost.id+'-labourTotalCost'}"
-                       th:attr="data-calculation-fields=${'#cost-labour-'+cost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays,#cost-labour-'+cost.id+'-labourDays'},data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}"
+                       th:attr="datax-calculation-fields=${'#cost-labour-'+cost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays,#cost-labour-'+cost.id+'-labourDays'},data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}"
                        th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}" />
             </td>
 
@@ -330,11 +327,6 @@
 
                     </div>
                 </div>
-
-
-                <div class="alignright-button">
-                    <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
-                </div>
             </div>
         </div>
     </div>
@@ -377,9 +369,6 @@
                        th:attr="data-calculation-rawvalue=${costCategory.total}"
                        th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
 
-            </div>
-            <div class="alignright-button">
-                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
             </div>
         </div>
     </div>
@@ -457,9 +446,6 @@
                        data-calculation-fields="[id*=netCost]"
                        data-calculation-operations="+"
                        th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
-            </div>
-            <div class="alignright-button">
-                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag" />
             </div>
         </div>
     </div>
@@ -591,9 +577,6 @@
                        th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
                        th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
             </div>
-            <div class="alignright-button">
-                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
-            </div>
         </div>
     </div>
 
@@ -678,9 +661,6 @@
                        th:id="${'section-total-'+subSection.id}"
                        th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"
                        title="Total travel and subsistence costs" />
-            </div>
-            <div class="alignright-button">
-                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
             </div>
         </div>
     </div>
@@ -769,9 +749,6 @@
                        data-calculation-fields="[id*=otherCost]"
                        data-calculation-operations="+"
                        th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}"/>
-            </div>
-            <div class="alignright-button">
-                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
             </div>
         </div>
     </div>
@@ -883,9 +860,6 @@
                 </details> */-->
 
             </fieldset>
-            <div class="alignright-button extra-margin">
-                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
-            </div>
         </div>
     </div>
 

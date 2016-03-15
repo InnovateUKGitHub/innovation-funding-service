@@ -143,4 +143,9 @@ public class SectionServiceImpl implements SectionService {
     public SectionResource getSectionByQuestionId(Long questionId) {
         return sectionRestService.getSectionByQuestionId(questionId).getSuccessObjectOrThrowException();
     }
+
+    @Override
+    public Set<Long> getQuestionsForSectionAndSubsections(Long sectionId) {
+        return sectionRestService.getQuestionsForSectionAndSubsections(sectionId).getSuccessObjectOrThrowException();
+    }
 }

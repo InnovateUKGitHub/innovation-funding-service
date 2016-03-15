@@ -1,13 +1,13 @@
 package com.worth.ifs.application.service;
 
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.rest.RestResult;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
-
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.rest.RestResult;
 
 /**
  * Interface for CRUD operations on {@link Section} related data.
@@ -22,4 +22,5 @@ public interface SectionRestService {
     Future<RestResult<SectionResource>> getPreviousSection(Long sectionId);
     Future<RestResult<SectionResource>> getNextSection(Long sectionId);
     RestResult<SectionResource> getSectionByQuestionId(Long questionId);
+    RestResult<Set<Long>> getQuestionsForSectionAndSubsections(Long sectionId);
 }

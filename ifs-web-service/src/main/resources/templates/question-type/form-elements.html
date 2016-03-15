@@ -350,6 +350,20 @@
     </button>
     </div>
 </div>
+
+<!-- ====================== Mark all as complete buttons for finance section =========================== -->
+
+<div th:fragment="form-mark-all-as-complete-buttons">
+    <div th:remove="tag" th:unless="${appIsClosed}">
+        <button
+                type="submit"
+                name="mark_section_as_complete"
+                th:value="${currentSection.getId()}"
+                th:class="button">Mark finance section as complete
+        </button>
+    </div>
+</div>
+
 <!-- ========================= edit link =========================== -->
 
 <div th:fragment="form-edit-question-button">
