@@ -58,7 +58,7 @@ public class FileEntryController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) throws IOException {
 
-        ServiceResult<FileEntry> asdfasdf = find(validContentLengthHeader(contentLength),
+        ServiceResult<FileEntry> fileAddedResult = find(validContentLengthHeader(contentLength),
                 validContentTypeHeader(contentType),
                 validFilename(originalFilename)).andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> {
 
@@ -71,7 +71,7 @@ public class FileEntryController {
             });
         });
 
-        return asdfasdf.toPostCreateResponse();
+        return fileAddedResult.toPostCreateResponse();
     }
 
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
