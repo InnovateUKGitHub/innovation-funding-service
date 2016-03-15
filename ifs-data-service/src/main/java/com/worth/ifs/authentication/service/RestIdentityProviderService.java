@@ -88,6 +88,19 @@ public class RestIdentityProviderService implements IdentityProviderService {
         });
     }
 
+    @Override
+    public ServiceResult<String> activateUser(String uid) {
+
+        return handlingErrors(() -> {
+
+            Either<ResponseEntity<IdentityProviderError>, Void> response = restPut(idpBaseURL + idpUserPath + "/" + uid + "/activateUser", null, Void.class, IdentityProviderError.class, OK);
+            return response.mapLeftOrRight(
+                    failure -> serviceFailure(internalServerErrorError()),
+                    success -> serviceSuccess(uid)
+            );
+        });
+    }
+
     protected <T, R> Either<ResponseEntity<R>, T> restPut(String path, Object postEntity, Class<T> successClass, Class<R> failureClass, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         return adaptor.restPutWithEntity(path, postEntity, successClass, failureClass, expectedSuccessCode, otherExpectedStatusCodes).mapLeftOrRight(
                 failure -> left(failure),
