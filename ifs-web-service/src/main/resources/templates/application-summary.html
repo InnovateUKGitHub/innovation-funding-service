@@ -74,6 +74,7 @@
 	</div>
 
     <div class="alignright-button">
+        <a id="disabled-submit-application-button" role="button" tabindex="0" class="button large disabled" style="display: none; margin-right:0;" th:if="${applicationReadyForSubmit}">Submit application</a>
         <a id="submit-application-button" role="button" tabindex="0" class="button large" data-js-modal="modal-confirm-submit-application" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${applicationReadyForSubmit}">Submit application</a>
         <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
     </div>
