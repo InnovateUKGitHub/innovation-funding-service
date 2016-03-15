@@ -1,12 +1,12 @@
 package com.worth.ifs.invite.mapper;
 
 import com.worth.ifs.application.mapper.ApplicationMapper;
-import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.invite.transactional.InviteService;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
     componentModel = "spring",
@@ -15,24 +15,26 @@ import org.springframework.beans.factory.annotation.Autowired;
         InviteOrganisationMapper.class
     }
 )
-public abstract class InviteMapper {
+public abstract class InviteMapper extends BaseMapper<Invite, InviteResource, Long> {
 
-    @Autowired
-    private InviteService service;
-
-    public abstract InviteResource mapInviteToResource(Invite object);
-
-    public abstract Invite resourceToInvite(InviteResource resource);
+    @Mappings({
+            @Mapping(source = "application.competition.name", target = "competitionName"),
+            @Mapping(source = "application.competition.id", target = "competitionId"),
+            @Mapping(source = "application.leadOrganisation.name", target = "leadOrganisation"),
+            @Mapping(source = "application.leadApplicant.name", target = "leadApplicant"),
+            @Mapping(source = "application.leadApplicant.email", target = "leadApplicantEmail"),
+            @Mapping(source = "application.name", target = "applicationName"),
+            @Mapping(source = "application.id", target = "application"),
+            @Mapping(source = "inviteOrganisation.id", target = "inviteOrganisation"),
+            @Mapping(source = "inviteOrganisation.organisationName", target = "inviteOrganisationName"),
+            @Mapping(source = "inviteOrganisation.organisation.name", target = "inviteOrganisationNameConfirmed"),
+    })
+    public abstract InviteResource mapToResource(Invite domain);
 
     public Long mapInviteToId(Invite object) {
         if (object == null) {
             return null;
         }
         return object.getId();
-    }
-
-    public Invite mapIdToInvite(Long id) {
-        ServiceResult<Invite> inviteResult = service.findOne(id);
-        return inviteResult.isSuccess() ? inviteResult.getSuccessObject() : null;
     }
 }

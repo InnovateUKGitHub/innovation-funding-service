@@ -8,27 +8,32 @@ Documentation     -INFUND-184: As an applicant and on the over view of the appli
 ...               -INFUND-42: As an applicant and I am on the application form, I get guidance for questions, so I know what I need to fill in.
 ...
 ...               -INFUND-183: As a an applicant and I am in the application form, I can see the character count that I have left, so I comply to the rules of the question
-Suite Setup       Run Keywords    Login as User    &{lead_applicant_credentials}
+Suite Setup       Run Keywords    Guest user log-in    &{lead_applicant_credentials}
 ...               AND    Create new application
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${CREATE_APPLICATION_PAGE}    ${SERVER}/application/create/1?accept=accepted
 ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}    ${SERVER}/application/1/form/question/11
 ${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}    ${SERVER}/application/1/form/question/12
 ${NEW_TEST_APPLICATION_OVERVIEW}    ${SERVER}/application/1
+${JSFUNCTION}   window.document.getElementById("18").onChange();
+
 
 *** Test Cases ***
+
+
+
 Verify the Autosave for the form text areas
     [Documentation]    INFUND-189
-    [Tags]    Applicant    Autosave    Form
+    [Tags]    Applicant    Autosave    Form    HappyPath
     [Setup]
-    Given Applicant goes to the 'project summary' question of the new application
+    Given the user navigates to the page    ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}
     When the Applicant enters some text
     And the Applicant refreshes the page
     Then the text should be visible
@@ -36,20 +41,20 @@ Verify the Autosave for the form text areas
 Verify the Questions guidance for the "Rovel additive..." Application form
     [Documentation]    INFUND-190
     [Tags]    Applicant    Form
-    Given Applicant goes to the 'project summary' question
+    Given the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the applicant clicks the "What should I include in project summary?" question
     Then the guidance should be visible
 
 Verify the navigation in the form sections
     [Documentation]    INFUND-189
-    [Tags]    Applicant    Form
-    Given Applicant goes to the Overview page
+    [Tags]    Applicant    Form    HappyPath
+    Given the user navigates to the page        ${APPLICATION_OVERVIEW_URL}
     When the Applicant clicks a section then the Applicant navigates to the correct section
 
 Verify that the word count works
     [Documentation]    INFUND-198
-    [Tags]    Applicant    Word count    Form
-    Given Applicant goes to the 'public description' question of the new application
+    [Tags]    Applicant    Word count    Form    # HappyPath
+    Given the user navigates to the page    ${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}
     When the Applicant edits the Public description
     Then the word count should be correct for the Public description
     And the Applicant edits the Project description question (300 words)
@@ -57,25 +62,25 @@ Verify that the word count works
 
 Verify the "review and submit" button
     [Tags]    Applicant    Review and submit    Form
-    Given the applicant is on the application overview page
+    Given the user navigates to the page        ${APPLICATION_OVERVIEW_URL}
     When the Applicant clicks the "Review and submit" button
     Then the Applicant will navigate to the summary page
 
 Verify that when the Applicant marks as complete the text box should be green and the state changes to edit
     [Documentation]    INFUND-210,
     ...    INFUND-202
-    [Tags]    Applicant    Mark as complete    Form
-    Given Applicant goes to the 'public description' question of the new application
+    [Tags]    Applicant    Mark as complete    Form    HappyPath
+    Given the user navigates to the page    ${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}
     When the Applicant edits 'Public description' and marks it as complete
     Then the text box should turn to green
     And the button state should change to 'Edit'
     And the question should be marked as complete on the application overview page
 
-Verify that when the Applicant marks as incomplete the text box should be green and the state changes to edit
+Verify that when the Applicant marks as incomplete the text box is no longer green and the state changes to be editable
     [Documentation]    INFUND-210,
     ...    INFUND-202
-    [Tags]    Applicant    Mark as complete    Form
-    Given Applicant goes to the 'public description' question of the new application
+    [Tags]    Applicant    Mark as complete    Form    HappyPath
+    Given the user navigates to the page    ${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}
     When the Applicant marks as incomplete 'Public description'
     Then the text box should be editable
     And the button state should change to 'Mark as complete'
@@ -222,7 +227,6 @@ the button state should change to 'Edit'
     Page Should Contain Element    css=#form-input-12 button    Edit
 
 the word count for the Project description question should be correct (100 words)
-
     Element Should Contain    css=#form-input-12 .count-down    100
 
 the Applicant edits 'Public description' and marks it as complete
@@ -234,7 +238,7 @@ the Applicant edits 'Public description' and marks it as complete
     Click Element    css=#form-input-12 div.textarea-footer button[name="mark_as_complete"]
 
 the question should be marked as complete on the application overview page
-    Go To    ${NEW_TEST_APPLICATION_OVERVIEW}
+    The user navigates to the page    ${NEW_TEST_APPLICATION_OVERVIEW}
     Page Should Contain Element    css=#form-input-12 .complete
 
 the Applicant marks as incomplete 'Public description'
@@ -247,15 +251,10 @@ the button state should change to 'Mark as complete'
     Page Should Contain Element    css=#form-input-12 button    Mark as complete
 
 the question should not be marked as complete on the application overview page
-    Go To    ${NEW_TEST_APPLICATION_OVERVIEW}
+    The user navigates to the page    ${NEW_TEST_APPLICATION_OVERVIEW}
     Page Should Contain Element    css=#form-input-12    Question element found on application overview
     Page Should Not Contain Element    css=#form-input-12 div.marked-as-complete img.marked-as-complete    Mark as complete class is not found, that's correct
 
-the applicant is on the application overview page
-    Go To    ${APPLICATION_OVERVIEW_URL}
 
-Applicant goes to the 'project summary' question of the new application
-    Go To    ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}
 
-Applicant goes to the 'public description' question of the new application
-    go to    ${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}
+

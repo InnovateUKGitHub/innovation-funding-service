@@ -3,6 +3,7 @@ package com.worth.ifs.commons.error;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -107,6 +108,7 @@ public class Error {
                 .append(errorKey, error.errorKey)
                 .append(arguments, error.arguments)
                 .append(errorMessage, error.errorMessage)
+                .append(statusCode, error.statusCode)
                 .isEquals();
     }
 
@@ -116,6 +118,17 @@ public class Error {
                 .append(errorKey)
                 .append(arguments)
                 .append(errorMessage)
+                .append(statusCode)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("errorKey", errorKey)
+                .append("arguments", arguments)
+                .append("errorMessage", errorMessage)
+                .append("statusCode", statusCode)
+                .toString();
     }
 }

@@ -1,6 +1,7 @@
 package com.worth.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.invite.domain.Invite;
@@ -12,10 +13,8 @@ import com.worth.ifs.user.domain.UserRoleType;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * Application defines database relations and a model to use client side and server side.
@@ -28,6 +27,7 @@ public class Application {
 
     private String name;
     private LocalDate startDate;
+    private LocalDateTime submittedDate;
     @Min(0)
     private Long durationInMonths; // in months
 
@@ -143,21 +143,21 @@ public class Application {
     }
 
     @JsonIgnore
-    public Optional<User> getLeadApplicant(){
+    public User getLeadApplicant(){
         Optional<ProcessRole> role = this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
         if(role.isPresent()){
-            return Optional.ofNullable(role.get().getUser());
+            return role.get().getUser();
         }
-        return Optional.empty();
+        return null;
     }
 
     @JsonIgnore
-    public Optional<Organisation> getLeadOrganisation(){
+    public Organisation getLeadOrganisation(){
         Optional<ProcessRole> role = this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
         if(role.isPresent()){
-            return Optional.ofNullable(role.get().getOrganisation());
+            return role.get().getOrganisation();
         }
-        return Optional.empty();
+        return null;
     }
 
     @JsonIgnore
@@ -165,7 +165,20 @@ public class Application {
         return this.invites;
     }
 
+    @JsonIgnore
+    public boolean isOpen(){
+        return Objects.equals(applicationStatus.getId(), ApplicationStatusConstants.OPEN.getId());
+    }
+
     public void setInvites(List<Invite> invites) {
         this.invites = invites;
+    }
+
+    public LocalDateTime getSubmittedDate() {
+        return submittedDate;
+    }
+
+    public void setSubmittedDate(LocalDateTime submittedDate) {
+        this.submittedDate = submittedDate;
     }
 }

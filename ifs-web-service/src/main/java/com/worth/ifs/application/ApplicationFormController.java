@@ -5,27 +5,31 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.AjaxResult;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.finance.service.CostService;
-import com.worth.ifs.application.finance.view.FinanceFormHandler;
+import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.exception.AutosaveElementException;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.category.LabourCostCategory;
+import com.worth.ifs.exception.UnableToReadUploadedFile;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.CostType;
-import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.util.AjaxResult;
+import com.worth.ifs.util.MessageUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -33,13 +37,20 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StringMultipartFileEditor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -49,24 +60,33 @@ import java.util.*;
 public class ApplicationFormController extends AbstractApplicationController {
     public static final String MARK_AS_COMPLETE = "mark_as_complete";
     public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
+    public static final String UPLOAD_FILE = "upload_file";
+    public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
+    public static final String ADD_COST = "add_cost";
+    public static final String REMOVE_COST = "remove_cost";
+    public static final String EDIT_QUESTION = "edit_question";
+
     private static final Log log = LogFactory.getLog(ApplicationFormController.class);
 
     @Autowired
     private CostService costService;
 
+    @Autowired
+    private FinanceHandler financeHandler;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
         dataBinder.registerCustomEditor(LocalDate.class, "application.startDate", new LocalDatePropertyEditor(webRequest));
+        dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
     }
 
     @ProfileExecution
     @RequestMapping
     public String applicationForm(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         this.addFormAttributes(application, competition, Optional.empty(), user.getId(), model, form, Optional.empty(),
                 userApplicationRoles);
@@ -74,17 +94,17 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.GET)
+    @RequestMapping(value = {"/question/{questionId}", "/question/edit/{questionId}"}, method = RequestMethod.GET)
     public String showQuestion(@ModelAttribute("form") ApplicationForm form,
                                BindingResult bindingResult, Model model,
                                @PathVariable("applicationId") final Long applicationId,
                                @PathVariable("questionId") final Long questionId,
-                               HttpServletRequest request) {
+                               HttpServletRequest request) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
-        Section section = sectionService.getSectionByQuestionId(questionId);
+        SectionResource section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
         this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
@@ -95,18 +115,34 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @ProfileExecution
+    @RequestMapping(value = "/question/{questionId}/forminput/{formInputId}/download", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<?> downloadQuestionFile(
+                                @PathVariable("applicationId") final Long applicationId,
+                                @PathVariable("questionId") final Long questionId,
+                                @PathVariable("formInputId") final Long formInputId,
+                                HttpServletRequest request) throws Exception {
+        final User user = userAuthenticationService.getAuthenticatedUser(request);
+        ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentLength(resource.contentLength());
+        httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
+        return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
+    }
+
+    @ProfileExecution
     @RequestMapping(value = "/section/{sectionId}", method = RequestMethod.GET)
     public String applicationFormWithOpenSection(@Valid @ModelAttribute("form") ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable("applicationId") final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
-                                                 HttpServletRequest request) {
+                                                 HttpServletRequest request) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Section section = sectionService.getById(sectionId);
+        SectionResource section = sectionService.getById(sectionId);
 
         ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetition());
-        super.addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-        super.addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
+        addOrganisationAndUserFinanceDetails(applicationId, user.getId(), model, form);
 
         addNavigation(section, applicationId, model);
 
@@ -117,14 +153,17 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addFormAttributes(ApplicationResource application,
-                                   Competition competition,
-                                   Optional<Section> section,
+                                   CompetitionResource competition,
+                                   Optional<SectionResource> section,
                                    Long userId, Model model,
                                    ApplicationForm form, Optional<Question> question,
                                    List<ProcessRole> userApplicationRoles){
         addApplicationDetails(application, competition, userId, section, Optional.ofNullable(question.get().getId()), model, form, userApplicationRoles);
         addNavigation(question.get(), application.getId(), model);
         model.addAttribute("currentQuestion", question.get());
+        if(question.isPresent()) {
+            model.addAttribute("title", question.get().getShortName());
+        }
     }
 
     @ProfileExecution
@@ -135,42 +174,58 @@ public class ApplicationFormController extends AbstractApplicationController {
                                      @PathVariable("applicationId") final Long applicationId,
                                      @PathVariable("questionId") final Long questionId,
                                      HttpServletRequest request,
-                                     HttpServletResponse response) {
+                                     HttpServletResponse response) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        Question question = questionService.getById(questionId);
-        Section section = sectionService.getSectionByQuestionId(questionId);
-        ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetition());
-        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-
-        /* Start save action */
-        bindingResult = saveApplicationForm(form, applicationId, null, question, request, response, bindingResult);
 
         Map<String, String[]> params = request.getParameterMap();
-        if (params.containsKey("assign_question")) {
-            assignQuestion(applicationId, request);
-            cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
-        }
 
-        form.bindingResult = bindingResult;
-        form.objectErrors = bindingResult.getAllErrors();
-        /* End save action */
-
-        if(bindingResult.hasErrors()){
-            this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
-                    Optional.ofNullable(question), userApplicationRoles);
-            return "application-form";
+        // Check if the request is to just open edit view or to save
+        if(params.containsKey(EDIT_QUESTION)){
+            ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+            if (processRole != null) {
+                questionService.markAsInComplete(questionId, applicationId, processRole.getId());
+            } else {
+                log.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
+            }
+            return showQuestion(form, bindingResult, model, applicationId, questionId, request);
         } else {
-            return getRedirectUrl(request, applicationId);
+            Question question = questionService.getById(questionId);
+            SectionResource section = sectionService.getSectionByQuestionId(questionId);
+            ApplicationResource application = applicationService.getById(applicationId);
+            CompetitionResource competition = competitionService.getById(application.getCompetition());
+            List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+
+            /* Start save action */
+            bindingResult = saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
+
+            if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
+                assignQuestion(applicationId, request);
+                cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
+            }
+
+            form.bindingResult = bindingResult;
+            form.objectErrors = bindingResult.getAllErrors();
+            /* End save action */
+
+            if (bindingResult.hasErrors()) {
+                this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
+                        Optional.ofNullable(question), userApplicationRoles);
+                return "application-form";
+            } else {
+                return getRedirectUrl(request, applicationId);
+            }
         }
     }
 
     private String getRedirectUrl(HttpServletRequest request, Long applicationId) {
-        if (request.getParameter("assign_question") != null ||
+        if (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||
                 request.getParameter(MARK_AS_INCOMPLETE) != null ||
-                request.getParameter("add_cost") != null ||
-                request.getParameter("remove_cost") != null ||
-                request.getParameter(MARK_AS_COMPLETE) != null) {
+                request.getParameter(ADD_COST) != null ||
+                request.getParameter(REMOVE_COST) != null ||
+                request.getParameter(MARK_AS_COMPLETE) != null ||
+                request.getParameter(REMOVE_UPLOADED_FILE) != null ||
+                request.getParameter(UPLOAD_FILE) != null ||
+                request.getParameter(EDIT_QUESTION) != null) {
             // user did a action, just display the same page.
             log.info("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
@@ -181,24 +236,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    @ProfileExecution
-    @RequestMapping(value = "/question/edit/{questionId}", method = RequestMethod.GET)
-    public String showQuestionInEditMode(@ModelAttribute("form") ApplicationForm form,
-                                         BindingResult bindingResult, Model model,
-                                         @PathVariable("applicationId") final Long applicationId,
-                                         @PathVariable("questionId") final Long questionId,
-                                         HttpServletRequest request) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
-        if (processRole != null) {
-            questionService.markAsInComplete(questionId, applicationId, processRole.getId());
-        } else {
-            log.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
-        }
-        return showQuestion(form, bindingResult, model, applicationId, questionId, request);
-    }
-
-    private void addNavigation(Section section, Long applicationId, Model model) {
+    private void addNavigation(SectionResource section, Long applicationId, Model model) {
         if (section == null) {
             return;
         }
@@ -223,7 +261,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         String previousText;
 
         if (previousQuestion != null) {
-            Section previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
+            SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
             if (previousSection.isQuestionGroup()) {
                 previousUrl = "/application/" + applicationId + "/form/section/" + previousSection.getId();
                 previousText = previousSection.getName();
@@ -241,7 +279,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         String nextText;
 
         if (nextQuestion != null) {
-            Section nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
+            SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
 
             if (nextSection.isQuestionGroup()) {
                 nextUrl = "/application/" + applicationId + "/form/section/" + nextSection.getId();
@@ -265,27 +303,18 @@ public class ApplicationFormController extends AbstractApplicationController {
         String type = costItem.getCostType().getType();
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
-
-        if (CostType.fromString(type).equals(CostType.LABOUR)) {
-            ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(applicationId, user.getId());
-            LabourCostCategory costCategory = (LabourCostCategory) applicationFinanceResource.getFinanceOrganisationDetails(CostType.fromString(type));
-            model.addAttribute("costCategory", costCategory);
-        }
-
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
-        model.addAttribute("type", type);
-        model.addAttribute("question", questionService.getById(questionId));
-        model.addAttribute("cost", costItem);
-
-        return String.format("question-type/types :: %s_row", type);
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
+        organisationService.getUserOrganisation(applicationResource, user.getId());
+        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, user.getId(), questionId, type);
+        return String.format("finance/finance :: %s_row", type);
     }
 
     @RequestMapping(value = "/remove_cost/{costId}")
-    public @ResponseBody String removeCostRow(@ModelAttribute("form") ApplicationForm form, Model model,
-                         @PathVariable("applicationId") final Long applicationId,
-                         @PathVariable("costId") final Long costId,
-                         HttpServletRequest request) throws JsonProcessingException {
+    public @ResponseBody String removeCostRow(@ModelAttribute("form") ApplicationForm form,
+                                              @PathVariable("costId") final Long costId) throws JsonProcessingException {
         costService.delete(costId);
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
@@ -294,58 +323,65 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private CostItem addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(applicationId, user.getId());
-        return costService.add(applicationFinance.getId(), questionId, null);
+        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+        return financeHandler.getFinanceFormHandler(organisationType).addCost(applicationId, user.getId(), questionId);
     }
 
-    private BindingResult saveApplicationForm(ApplicationForm form,
+    private BindingResult saveApplicationForm(ApplicationResource application,
+                                              CompetitionResource competition,
+                                              ApplicationForm form,
                                               Long applicationId, Long sectionId, Question question,
-                                              HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult) {
+                                              HttpServletRequest request,
+                                              HttpServletResponse response,
+                                              BindingResult bindingResult) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(application.getCompetition());
+        ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+
         Map<Long, List<String>> errors;
         if(question != null) {
-            errors = saveQuestionResponses(application, Collections.singletonList(question), request, user.getId(), bindingResult);
+            errors = saveQuestionResponses(application, Collections.singletonList(question), user.getId(), processRole.getId(), bindingResult, request, response);
         } else {
-            Section selectedSection = getSelectedSection(competition.getSections(), sectionId);
-            errors = saveQuestionResponses(application, selectedSection.getQuestions(), request, user.getId(), bindingResult);
+            SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
+            List<Question> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
+            errors = saveQuestionResponses(application, questions, user.getId(), processRole.getId(), bindingResult, request, response);
         }
 
         Map<String, String[]> params = request.getParameterMap();
         params.forEach((key, value) -> log.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
 
-
         setApplicationDetails(application, form.getApplication());
-        applicationService.save(application);
-        markApplicationQuestions(application, user.getId(), request, response, errors);
-
-        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, user.getId(), application.getId());
-        if (financeFormHandler.handle(request)) {
-            cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
+        if(userIsLeadApplicant) {
+            applicationService.save(application);
         }
+        markApplicationQuestions(application, processRole.getId(), request, response, errors);
+
+        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+        financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
+        cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         return bindingResult;
     }
 
-    private Section getSelectedSection(List<Section> sections, Long sectionId) {
-        return sections.stream()
+    private SectionResource getSelectedSection(List<Long> sectionIds, Long sectionId) {
+        return sectionIds.stream()
+                .map(sectionService::getById)
                 .filter(x -> x.getId().equals(sectionId))
                 .findFirst()
                 .get();
     }
 
-    private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<Question> questions, HttpServletRequest request, Long userId, BindingResult bindingResult) {
-        Map<Long, List<String>> errors = saveQuestionResponses(request, questions, userId, application.getId());
+    private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<Question> questions, Long userId, Long processRoleId, BindingResult bindingResult,  HttpServletRequest request, HttpServletResponse response) {
+        Map<Long, List<String>> errors = saveQuestionResponses(request, questions, userId, processRoleId, application.getId());
         errors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue("formInput[" + k + "]", e, e)));
         return errors;
     }
 
-    private void markApplicationQuestions(ApplicationResource application, Long userId, HttpServletRequest request, HttpServletResponse response, Map<Long, List<String>> errors) {
+    private void markApplicationQuestions(ApplicationResource application, Long processRoleId, HttpServletRequest request, HttpServletResponse response, Map<Long, List<String>> errors) {
         // if a question is marked as complete, don't show the field saved message.
         Map<String, String[]> params = request.getParameterMap();
 
-        boolean marked = markQuestion(request, params, application.getId(), userId, errors);
+        boolean marked = markQuestion(request, params, application.getId(), processRoleId, errors);
 
         if (!marked) {
             cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
@@ -364,15 +400,18 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         @PathVariable("applicationId") final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
                                         HttpServletRequest request,
-                                        HttpServletResponse response) {
+                                        HttpServletResponse response) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
+        ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+
         Map<String, String[]> params = request.getParameterMap();
 
         bindingResult.getAllErrors().forEach((e) -> log.info("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
-        bindingResult = saveApplicationForm(form, applicationId, sectionId, null, request, response, bindingResult);
+        bindingResult = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
         bindingResult.getAllErrors().forEach((e) -> log.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
-        if (params.containsKey("assign_question")) {
+        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             assignQuestion(applicationId, request);
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
@@ -381,19 +420,16 @@ public class ApplicationFormController extends AbstractApplicationController {
         form.objectErrors = bindingResult.getAllErrors();
 
         if(bindingResult.hasErrors()){
-            ApplicationResource application = applicationService.getById(applicationId);
-            Competition competition = competitionService.getById(application.getCompetition());
             addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
-            addOrganisationAndUserFinanceDetails(application, user.getId(), model, form);
+            addOrganisationAndUserFinanceDetails(application.getId(), user.getId(), model, form);
             return "application-form";
         } else {
             return getRedirectUrl(request, applicationId);
         }
     }
 
-    private boolean markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long userId, Map<Long, List<String>> errors) {
-        ProcessRole processRole = processRoleService.findProcessRole(userId, applicationId);
-        if (processRole == null) {
+    private boolean markQuestion(HttpServletRequest request, Map<String, String[]> params, Long applicationId, Long processRoleId, Map<Long, List<String>> errors) {
+        if (processRoleId == null) {
             return false;
         }
         boolean success = false;
@@ -404,26 +440,47 @@ public class ApplicationFormController extends AbstractApplicationController {
                 List<String> fieldErrors = errors.get(questionId);
                 fieldErrors.add("Please enter valid data before marking a question as complete.");
             } else {
-                questionService.markAsComplete(questionId, applicationId, processRole.getId());
+                questionService.markAsComplete(questionId, applicationId, processRoleId);
                 success = true;
             }
         }
         if (params.containsKey(MARK_AS_INCOMPLETE)) {
             Long questionId = Long.valueOf(request.getParameter(MARK_AS_INCOMPLETE));
-            questionService.markAsInComplete(questionId, applicationId, processRole.getId());
+            questionService.markAsInComplete(questionId, applicationId, processRoleId);
             success = true;
 
         }
         return success;
     }
 
-    private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request, List<Question> questions, Long userId, Long applicationId) {
+    private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request,
+                                                          List<Question> questions,
+                                                          Long userId,
+                                                          Long processRoleId,
+                                                          Long applicationId) {
+        final Map<String, String[]> params = request.getParameterMap();
+
+        Map<Long, List<String>> errorMap = new HashMap<>();
+
+        errorMap.putAll(saveNonFileUploadQuestions(questions, params, request, userId, applicationId));
+
+        errorMap.putAll(saveFileUploadQuestionsIfAny(questions, params, request, applicationId, processRoleId));
+
+        return errorMap;
+    }
+
+    private Map<Long, List<String>> saveNonFileUploadQuestions(List<Question> questions,
+                                                               Map<String, String[]> params,
+                                                               HttpServletRequest request,
+                                                               Long userId,
+                                                               Long applicationId){
         Map<Long, List<String>> errorMap = new HashMap<>();
         questions.stream()
                 .forEach(question -> question.getFormInputs()
                                 .stream()
+                                .filter(formInput1 -> (!formInput1.getFormInputType().getTitle().equals("fileupload")))
                                 .forEach(formInput -> {
-                                            if (request.getParameterMap().containsKey("formInput[" + formInput.getId() + "]")) {
+                                            if (params.containsKey("formInput[" + formInput.getId() + "]")) {
                                                 String value = request.getParameter("formInput[" + formInput.getId() + "]");
                                                 List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
                                                 if (errors.size() != 0) {
@@ -434,7 +491,45 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         }
                                 )
                 );
+        return errorMap;
+    }
 
+    private Map<Long, List<String>> saveFileUploadQuestionsIfAny(List<Question> questions,
+                                                                 final Map<String, String[]> params,
+                                                                 HttpServletRequest request,
+                                                                 Long applicationId,
+                                                                 Long processRoleId){
+        Map<Long, List<String>> errorMap = new HashMap<>();
+        questions.stream()
+                .forEach(question -> question.getFormInputs()
+                        .stream()
+                        .filter(formInput1 -> (formInput1.getFormInputType().getTitle().equals("fileupload") && request instanceof StandardMultipartHttpServletRequest))
+                        .forEach(formInput -> {
+                            if (params.containsKey(REMOVE_UPLOADED_FILE)) {
+                                formInputResponseService.removeFile(formInput.getId(), applicationId, processRoleId).getSuccessObjectOrThrowException();
+                            } else {
+                                final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
+                                final MultipartFile file = fileMap.get("formInput[" + formInput.getId() + "]");
+                                if (file != null && !file.isEmpty()) {
+                                    try {
+                                        RestResult<FileEntryResource> result = formInputResponseService.createFile(formInput.getId(),
+                                                applicationId,
+                                                processRoleId,
+                                                file.getContentType(),
+                                                file.getSize(),
+                                                file.getOriginalFilename(),
+                                                file.getBytes());
+                                        if (result.isFailure()) {
+                                            errorMap.put(formInput.getId(),
+                                                    result.getFailure().getErrors().stream()
+                                                            .map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
+                                        }
+                                    } catch (IOException e) {
+                                        throw new UnableToReadUploadedFile();
+                                    }
+                                }
+                            }
+                        }));
         return errorMap;
     }
 
@@ -489,35 +584,21 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
+    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) throws Exception {
         List<String> errors = new ArrayList<>();
+        String organisationType = organisationService.getOrganisationType(userId, applicationId);
+
         if (fieldName.startsWith("application.")) {
             errors = this.saveApplicationDetails(applicationId, fieldName, value, errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
-            FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
-            financeFormHandler.ajaxUpdateFinancePosition(fieldName, value);
+            financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value);
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
-            storeCostField(userId, applicationId, fieldName, value);
+            financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value);
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             errors = formInputResponseService.save(userId, applicationId, formInputId, value);
         }
         return errors;
-    }
-
-    private void storeCostField(Long userId, Long applicationId, String fieldName, String value) {
-        FinanceFormHandler financeFormHandler = new FinanceFormHandler(costService, financeService, applicationFinanceRestService, userId, applicationId);
-
-        if (fieldName != null && value != null) {
-            String cleanedFieldName = fieldName;
-            if (fieldName.startsWith("cost-")) {
-                cleanedFieldName = fieldName.replace("cost-", "");
-            } else if (fieldName.startsWith("formInput[")) {
-                cleanedFieldName = fieldName.replace("formInput[", "").replace("]", "");
-            }
-            log.info("store field: " + cleanedFieldName + " val: " + value);
-            financeFormHandler.storeField(cleanedFieldName, value);
-        }
     }
 
     private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
@@ -532,7 +613,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return node;
     }
 
-    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value, List<String> errors) {
+    private List<String> saveApplicationDetails(Long applicationId, String fieldName, String value, List<String> errors) throws Exception {
         ApplicationResource application = applicationService.getById(applicationId);
 
         if ("application.name".equals(fieldName)) {

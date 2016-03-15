@@ -1,11 +1,10 @@
 package com.worth.ifs.user.mapper;
 
+import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.RoleResource;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -13,14 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
         ProcessRoleMapper.class
     }
 )
-public abstract class RoleMapper {
-
-    @Autowired
-    private RoleRepository repository;
-
-    public abstract RoleResource mapRoleToResource(Role object);
-
-    public abstract Role resourceToRole(RoleResource resource);
+public abstract class RoleMapper  extends BaseMapper<Role, RoleResource, Long> {
 
     public Long mapRoleToId(Role object) {
         if (object == null) {
@@ -28,9 +20,4 @@ public abstract class RoleMapper {
         }
         return object.getId();
     }
-
-    public Role mapIdToRole(Long id) {
-        return repository.findOne(id);
-    }
-
 }

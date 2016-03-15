@@ -19,6 +19,6 @@ public class ProcessOutcomeController {
 
     @RequestMapping("/{id}")
     public ProcessOutcomeResource findById(@PathVariable("id") final Long id) {
-        return mapper.mapProcessOutcomeToResource(service.findOne(id));
+        return mapper.mapToResource(service.findOne(id));
     }
 }

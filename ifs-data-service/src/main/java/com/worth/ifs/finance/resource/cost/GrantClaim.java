@@ -6,8 +6,10 @@ public class GrantClaim implements CostItem {
     private Long id;
     private Integer grantClaimPercentage;
     private CostType costType;
+    private String name;
     public GrantClaim() {
         this.costType = CostType.FINANCE;
+        this.name = this.costType.getType();
     }
 
     public GrantClaim(Long id, Integer grantClaimPercentage) {
@@ -35,6 +37,11 @@ public class GrantClaim implements CostItem {
 
     public void setGrantClaimPercentage(Integer grantClaimPercentage) {
         this.grantClaimPercentage = grantClaimPercentage;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     @Override

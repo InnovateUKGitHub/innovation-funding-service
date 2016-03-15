@@ -1,29 +1,33 @@
 package com.worth.ifs.user.transactional;
 
-import com.worth.ifs.commons.error.Error;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.notifications.resource.*;
+import com.worth.ifs.notifications.service.NotificationService;
+import com.worth.ifs.token.domain.Token;
+import com.worth.ifs.token.domain.TokenType;
+import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.user.domain.*;
-import com.worth.ifs.user.repository.OrganisationRepository;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.UserStatus;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
-import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.util.EntityLookupCallbacks;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.USERS_DUPLICATE_EMAIL_ADDRESS;
-import static com.worth.ifs.commons.error.Errors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -31,8 +35,17 @@ import static java.util.stream.Collectors.toSet;
  */
 @Service
 public class UserServiceImpl extends BaseTransactionalService implements UserService {
+    final JsonNodeFactory factory = JsonNodeFactory.instance;
 
     private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
+
+    enum Notifications {
+        VERIFY_EMAIL_ADDRESS,
+        RESET_PASSWORD
+    }
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     @Autowired
     private UserRepository repository;
@@ -41,23 +54,19 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     private ProcessRoleRepository processRoleRepository;
 
     @Autowired
-    private OrganisationRepository organisationRepository;
+    private TokenRepository tokenRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private IdentityProviderService identityProviderService;
 
     @Override
-    public ServiceResult<User> getUserByToken(final String token) {
-        return find(() -> repository.findByToken(token), notFoundError(User.class, token)).
-                andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
-    }
-
-    @Override
-    public ServiceResult<User> getUserByEmailandPassword(final String email, final String password) {
-
-        return find(() -> repository.findByEmail(email), notFoundError(User.class, email)).
-                andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail).
-                andOnSuccess(user -> user.passwordEquals(password) ? serviceSuccess(user) : serviceFailure(notFoundError(User.class)));
+    public ServiceResult<User> getUserByUid(final String uid) {
+        return find(repository.findOneByUid(uid), notFoundError(User.class, uid));
     }
 
     @Override
@@ -67,7 +76,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<List<User>> getUserByName(final String name) {
-        return find(() -> repository.findByName(name), notFoundError(User.class, name));
+        return find(repository.findByName(name), notFoundError(User.class, name));
     }
 
     @Override
@@ -76,9 +85,12 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<List<UserResource>> findByEmail(final String email) {
-        List<User> users = repository.findByEmail(email);
-        return serviceSuccess(users.stream().map(UserResource::new).collect(Collectors.toList()));
+    public ServiceResult<User> findByEmail(final String email) {
+        Optional<User> user = repository.findByEmail(email);
+        if(user.isPresent()){
+            return serviceSuccess(user.get());
+        }
+        return serviceFailure(notFoundError(User.class, email));
     }
 
     @Override
@@ -106,88 +118,61 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<UserResource> createUser(final Long organisationId, UserResource userResource) {
+    public ServiceResult<Void> sendPasswordResetNotification(User user) {
+        if(UserStatus.ACTIVE.equals(user.getStatus())){
+            String hash = getAndSavePasswordResetToken(user);
 
-        return handlingErrors(() -> {
+            NotificationSource from = systemNotificationSource;
+            NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
 
-            User newUser = assembleUserFromResource(userResource);
-            addOrganisationToUser(newUser, organisationId);
-            addRoleToUser(newUser, UserRoleType.APPLICANT.getName());
+            Map<String, Object> notificationArguments = new HashMap<>();
+            notificationArguments.put("passwordResetLink", getPasswordResetLink(hash));
 
-            if (repository.findByEmail(userResource.getEmail()).isEmpty()) {
-                UserResource createdUserResource = createUserWithToken(newUser);
-                return serviceSuccess(createdUserResource);
-            } else {
-                return serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, userResource.getEmail()));
-            }
-        });
-    }
-
-    public ServiceResult<UserResource> updateUser(UserResource userResource) {
-        List<User> existingUser = repository.findByEmail(userResource.getEmail());
-        if (existingUser == null || existingUser.size() <= 0) {
-            LOG.error("User with email " + userResource.getEmail() + " doesn't exist!");
-            return serviceFailure(notFoundError(User.class, userResource.getEmail()));
+            Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
+            ServiceResult<Notification> result = notificationService.sendNotification(notification, EMAIL);
+            return result.andOnSuccessReturnVoid();
+        }else{
+            return serviceFailure(notFoundError(User.class, user.getEmail(), UserStatus.ACTIVE));
         }
-        User newUser = createUser(existingUser.get(0), userResource);
-        UserResource updatedUser = createUser(newUser);
-        return serviceSuccess(updatedUser);
     }
 
-    private UserResource createUserWithToken(User user) {
-        User createdUser = repository.save(user);
-        User createdUserWithToken = addTokenBasedOnIdToUser(createdUser);
-        User finalUser = repository.save(createdUserWithToken);
-        return new UserResource(finalUser);
+    @Override
+    public ServiceResult<Void> checkPasswordResetHashValidity(String hash) {
+        Optional<Token> token = tokenRepository.findByHash(hash);
+        if(token.isPresent() && TokenType.RESET_PASSWORD.equals(token.get().getType())) {
+            return serviceSuccess();
+        }
+        return serviceFailure(notFoundError(Token.class, hash));
     }
 
-    private User createUser(User existingUser, UserResource updatedUserResource) {
-        existingUser.setPhoneNumber(updatedUserResource.getPhoneNumber());
-        existingUser.setTitle(updatedUserResource.getTitle());
-        existingUser.setLastName(updatedUserResource.getLastName());
-        existingUser.setFirstName(updatedUserResource.getFirstName());
-        return existingUser;
+    private String getAndSavePasswordResetToken(User user) {
+        String hash = getRandomHash();
+        Token token = new Token(TokenType.RESET_PASSWORD, User.class.getName(), user.getId(), hash, factory.objectNode());
+        tokenRepository.save(token);
+        return hash;
     }
 
-    private UserResource createUser(User user) {
-        User savedUser = repository.save(user);
-        return new UserResource(savedUser);
+    @Override
+    public ServiceResult<Void> changePassword(String hash, String password){
+        Optional<Token> token = tokenRepository.findByHash(hash);
+        if(token.isPresent() && TokenType.RESET_PASSWORD.equals(token.get().getType())) {
+            User user = userRepository.findOne(token.get().getClassPk());
+            identityProviderService.updateUserPassword(user.getUid(), password);
+            user.setPassword(password);
+            userRepository.save(user);
+            tokenRepository.delete(token.get());
+            return serviceSuccess();
+        }
+        return serviceFailure(notFoundError(Token.class, hash));
     }
 
-    private void addRoleToUser(User user, String roleName) {
-        List<Role> userRoles = roleRepository.findByName(roleName);
-        user.setRoles(userRoles);
+
+    private String getRandomHash() {
+        return UUID.randomUUID().toString();
     }
 
-    private void addOrganisationToUser(User user, Long organisationId) {
-        Organisation userOrganisation = organisationRepository.findOne(organisationId);
-        List<Organisation> userOrganisationList = new ArrayList<>();
-        userOrganisationList.add(userOrganisation);
-        user.setOrganisations(userOrganisationList);
+    private String getPasswordResetLink(String hash) {
+        return String.format("%s/login/reset-password/hash/%s", webBaseUrl, hash);
     }
 
-    private User assembleUserFromResource(UserResource userResource) {
-        User newUser = new User();
-        newUser.setFirstName(userResource.getFirstName());
-        newUser.setLastName(userResource.getLastName());
-        newUser.setPassword(userResource.getPassword());
-        newUser.setEmail(userResource.getEmail());
-        newUser.setTitle(userResource.getTitle());
-        newUser.setPhoneNumber(userResource.getPhoneNumber());
-
-        String fullName = concatenateFullName(userResource.getFirstName(), userResource.getLastName());
-        newUser.setName(fullName);
-
-        return newUser;
-    }
-
-    private String concatenateFullName(String firstName, String lastName) {
-        return firstName + " " + lastName;
-    }
-
-    private User addTokenBasedOnIdToUser(User user) {
-        String userToken = user.getId() + "abc123";
-        user.setToken(userToken);
-        return user;
-    }
 }

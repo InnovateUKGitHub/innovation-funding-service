@@ -2,9 +2,12 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.user.controller.UserController;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -12,11 +15,11 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.*;
-import static java.util.Collections.emptyList;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.processRoleListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
 
 /**
  * UserRestServiceImpl is a utility for CRUD operations on {@link User}.
@@ -25,7 +28,7 @@ import static java.util.Collections.emptyList;
  */
 @Service
 public class UserRestServiceImpl extends BaseRestService implements UserRestService {
-
+    private static final Log LOG = LogFactory.getLog(UserRestServiceImpl.class);
     private String userRestURL;
     private String processRoleRestURL;
 
@@ -40,28 +43,50 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<User> retrieveUserByToken(String token) {
-        if(StringUtils.isEmpty(token))
-            return restFailure(notFoundError(User.class, token));
+    public RestResult<User> retrieveUserByUid(String uid) {
+        if(StringUtils.isEmpty(uid))
+            return restFailure(notFoundError(User.class, uid));
 
-        return getWithRestResult(userRestURL + "/token/" + token, User.class);
+        return getWithRestResult(userRestURL + "/uid/" + uid, User.class);
     }
 
     @Override
-    public RestResult<List<UserResource>> findUserByEmail(String email) {
-        if(StringUtils.isEmpty(email)) {
-            return restSuccess(emptyList());
-        }
-
-        return getWithRestResult(userRestURL + "/findByEmail/" + email + "/", userResourceListType());
-    }
-
-    @Override
-    public RestResult<User> retrieveUserByEmailAndPassword(String email, String password) {
-        if(StringUtils.isEmpty(email) || StringUtils.isEmpty(password))
+    public RestResult<Void> sendPasswordResetNotification(String email) {
+        if(StringUtils.isEmpty(email))
             return restFailure(notFoundError(User.class, email));
 
-        return getWithRestResult(userRestURL + "/email/" + email + "/password/" + password, User.class);
+        return getWithRestResult(userRestURL + "/"+UserController.URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
+    }
+
+    @Override
+    public RestResult<Void> checkPasswordResetHash(String hash) {
+        LOG.warn("checkPasswordResetHash");
+
+        if(StringUtils.isEmpty(hash))
+            return restFailure(badRequestError("Missing the hash to reset the password with"));
+
+        LOG.warn("checkPasswordResetHash 2 " + userRestURL + "/"+ UserController.URL_CHECK_PASSWORD_RESET_HASH+"/"+hash);
+        return getWithRestResult(userRestURL + "/"+ UserController.URL_CHECK_PASSWORD_RESET_HASH+"/"+hash, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> resetPassword(String hash, String password) {
+        LOG.warn("resetPassword");
+
+        if(StringUtils.isEmpty(hash))
+            return restFailure(badRequestError("Missing the hash to reset the password with"));
+
+        LOG.warn("resetPassword 2 " + userRestURL + "/"+ UserController.URL_PASSWORD_RESET+"/"+hash+"/"+password);
+        return getWithRestResult(String.format("%s/%s/%s/%s", userRestURL, UserController.URL_PASSWORD_RESET, hash, password), Void.class);
+    }
+
+    @Override
+    public RestResult<UserResource> findUserByEmail(String email) {
+        if(StringUtils.isEmpty(email)) {
+            return restFailure(notFoundError(User.class, email));
+        }
+
+        return getWithRestResult(userRestURL + "/findByEmail/" + email + "/", UserResource.class);
     }
 
     @Override
@@ -109,7 +134,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
+    public RestResult<Void> verifyEmail(String hash){
+        return getWithRestResult(userRestURL + "/verifyEmail/"+hash, Void.class);
+    }
+
+    @Override
+    public RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId) {
         UserResource user = new UserResource();
 
         user.setFirstName(firstName);
@@ -119,9 +149,18 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setTitle(title);
         user.setPhoneNumber(phoneNumber);
 
-        String url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId;
+        String url;
+        if(competitionId != null){
+            url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId +"/"+competitionId;
+        }else{
+            url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId;
+        }
 
         return postWithRestResult(url, user, UserResource.class);
+    }
+    @Override
+    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
+        return this.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, null);
     }
 
     @Override

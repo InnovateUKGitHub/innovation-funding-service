@@ -2,24 +2,27 @@ package com.worth.ifs;
 
 import com.worth.ifs.application.builder.QuestionBuilder;
 import com.worth.ifs.application.builder.SectionBuilder;
+import com.worth.ifs.application.builder.SectionResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
+import com.worth.ifs.application.finance.view.*;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.model.UserRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.service.AssessmentRestService;
-import com.worth.ifs.commons.security.TokenAuthenticationService;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -27,13 +30,25 @@ import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
+import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.resource.OrganisationTypeResource;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.OrganisationTypeRestService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.method.HandlerMethod;
@@ -55,21 +70,28 @@ import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newAppl
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 public class BaseUnitTest {
+
     public MockMvc mockMvc;
     public User loggedInUser;
     public User assessor;
@@ -114,18 +136,41 @@ public class BaseUnitTest {
     @Mock
     public OrganisationService organisationService;
     @Mock
+    public OrganisationTypeRestService organisationTypeRestService;
+    @Mock
     public SectionService sectionService;
     @Mock
     public CompetitionService competitionService;
     @Mock
-    public TokenAuthenticationService tokenAuthenticationService;
+    public InviteRestService inviteRestService;
+    @Mock
+    public FinanceModelManager financeModelManager;
+    @Mock
+    public DefaultFinanceModelManager defaultFinanceModelManager;
+    @Mock
+    public DefaultFinanceFormHandler defaultFinanceFormHandler;
+    @Mock
+    public FinanceHandler financeHandler;
+    @Mock
+    public FinanceOverviewModelManager financeOverviewModelManager;
+    @Mock
+    public FinanceFormHandler financeFormHandler;
+
+    @Mock
+    public Environment env;
+
+    @Mock
+    public MessageSource messageSource;
 
     public List<ApplicationResource> applications;
     public List<Section> sections;
+    public List<SectionResource> sectionResources;
     public Map<Long, Question> questions;
     public Map<Long, FormInputResponse> formInputsToFormInputResponses;
     public List<Competition> competitions;
     public Competition competition;
+    public List<CompetitionResource> competitionResources;
+    public CompetitionResource competitionResource;
     public List<User> users;
     public List<Organisation> organisations;
     TreeSet<Organisation> organisationSet;
@@ -152,6 +197,18 @@ public class BaseUnitTest {
 
 
     private Random randomGenerator;
+    private FormInput formInput;
+    private FormInputType formInputType;
+    public OrganisationTypeResource organisationTypeResource;
+    public InviteResource invite;
+    public InviteResource acceptedInvite;
+    public InviteResource existingUserInvite;
+
+    public static final String INVITE_HASH = "b157879c18511630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
+    public static final String INVITE_HASH_EXISTING_USER = "cccccccccc630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
+    public static final String INVALID_INVITE_HASH = "aaaaaaa7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
+    public static final String ACCEPTED_INVITE_HASH = "BBBBBBBBB7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
+
 
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -168,10 +225,10 @@ public class BaseUnitTest {
     }
 
     public void setup(){
-        loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "test", "tokenABC", "image", new ArrayList());
+        loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "test", "image", new ArrayList(), "my-uid");
         applicant = loggedInUser;
-        User user2 = new User(2L, "Brent de Kok", "email@email.nl", "test", "tokenBCD", "image", new ArrayList());
-        assessor = new User(3L, "Assessor", "email@assessor.nl", "test", "tokenDEF", "image", new ArrayList<>());
+        User user2 = new User(2L, "Brent de Kok", "email@email.nl", "test", "image", new ArrayList(), "my-uid2");
+        assessor = new User(3L, "Assessor", "email@assessor.nl", "test", "image", new ArrayList<>(), "my-uid3");
         users = asList(loggedInUser, user2);
 
         loggedInUserAuthentication = new UserAuthentication(loggedInUser);
@@ -181,6 +238,28 @@ public class BaseUnitTest {
         questions = new HashMap<>();
         organisations = new ArrayList<>();
         randomGenerator = new Random();
+        
+    }
+
+    public void setupOrganisationTypes() {
+        ArrayList<OrganisationTypeResource> organisationTypes = new ArrayList<>();
+        organisationTypeResource = new OrganisationTypeResource(1L, "Business", null);
+        organisationTypes.add(organisationTypeResource);
+        OrganisationTypeResource research = new OrganisationTypeResource(2L, "Research", null);
+        organisationTypes.add(research);
+        organisationTypes.add(new OrganisationTypeResource(3L, "Public Sector", null));
+        organisationTypes.add(new OrganisationTypeResource(4L, "Charity", null));
+        organisationTypes.add(new OrganisationTypeResource(5L, "University (HEI)", 2L));
+        organisationTypes.add(new OrganisationTypeResource(6L, "Research & technology organisation (RTO)", 2L));
+        organisationTypes.add(new OrganisationTypeResource(7L, "Catapult", 2L));
+        organisationTypes.add(new OrganisationTypeResource(8L, "Public sector research establishment", 2L));
+        organisationTypes.add(new OrganisationTypeResource(9L, "Research council institute", 2L));
+
+        when(organisationTypeRestService.getAll()).thenReturn(restSuccess(organisationTypes));
+        when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource(99L, "Unknown organisation type", null)));
+        when(organisationTypeRestService.findOne(1L)).thenReturn(restSuccess(organisationTypeResource));
+        when(organisationTypeRestService.findOne(2L)).thenReturn(restSuccess(research));
+
     }
 
     public void loginDefaultUser(){
@@ -194,16 +273,24 @@ public class BaseUnitTest {
     }
 
     public void setupCompetition(){
+        formInput = newFormInput().build();
+        formInputType = new FormInputType(1L, "textarea");
+        formInput.setFormInputType(formInputType);
 
         competition = newCompetition().with(id(1L)).with(name("Competition x")).with(description("Description afds")).
                 withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).
                 build();
 
+        competitionResource = newCompetitionResource().with(id(1L)).with(name("Competition x")).with(description("Description afds")).
+                withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).
+                build();
+
         QuestionBuilder questionBuilder = newQuestion().with(competition(competition));
         SectionBuilder sectionBuilder = newSection().with(competition(competition));
+        SectionResourceBuilder sectionResourceBuilder = newSectionResource().with(competition(competition.getId()));
 
         Question q01 = questionBuilder.with(id(1L)).with(name("Application details")).
-                withFormInputs(newFormInput().with(incrementingIds(1)).build(3)).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(3)).
                 build();
 
         Section section1 = sectionBuilder.
@@ -212,7 +299,14 @@ public class BaseUnitTest {
                 withQuestions(singletonList(q01)).
                 build();
 
+        SectionResource sectionResource1 = sectionResourceBuilder.
+                with(id(1L)).
+                with(name("Application details")).
+                withQuestions(simpleMap(singletonList(q01), Question::getId)).
+                build();
+
         Question q10 = questionBuilder.with(id(10L)).with(name("How does your project align with the scope of this competition?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).
                 build();
 
         Section section2 = sectionBuilder.
@@ -220,35 +314,73 @@ public class BaseUnitTest {
                 with(name("Scope (Gateway question)")).
                 withQuestions(singletonList(q10)).
                 build();
-
-        Question q20 = questionBuilder.with(id(20L)).with(name("1. What is the business opportunity that this project addresses?")).
+        SectionResource sectionResource2 = sectionResourceBuilder.
+                with(id(2L)).
+                with(name("Scope (Gateway question)")).
+                withQuestions(simpleMap(singletonList(q10), Question::getId)).
                 build();
 
-        Question q21 = questionBuilder.with(id(21L)).with(name("2. What is the size of the market opportunity that this project might open up?")).build();
-        Question q22 = questionBuilder.with(id(22L)).with(name("3. How will the results of the project be exploited and disseminated?")).build();
-        Question q23 = questionBuilder.with(id(23L)).with(name("4. What economic, social and environmental benefits is the project expected to deliver?")).build();
+        Question q20 = questionBuilder.with(id(20L)).with(name("1. What is the business opportunity that this project addresses?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).
+                build();
+
+        Question q21 = questionBuilder.with(id(21L)).with(name("2. What is the size of the market opportunity that this project might open up?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
+        Question q22 = questionBuilder.with(id(22L)).with(name("3. How will the results of the project be exploited and disseminated?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
+        Question q23 = questionBuilder.with(id(23L)).with(name("4. What economic, social and environmental benefits is the project expected to deliver?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
 
         Section section3 = sectionBuilder.
                 with(id(3L)).
                 with(name("Business proposition (Q1 - Q4)")).
                 withQuestions(asList(q20, q21, q22, q23)).
                 build();
+        SectionResource sectionResource3 = sectionResourceBuilder.
+                with(id(3L)).
+                with(name("Business proposition (Q1 - Q4)")).
+                withQuestions(simpleMap(asList(q20, q21, q22, q23), Question::getId)).
+                build();
 
-        Question q30 = questionBuilder.with(id(30L)).with(name("5. What technical approach will be adopted and how will the project be managed?")).build();
-        Question q31 = questionBuilder.with(id(31L)).with(name("6. What is innovative about this project?")).build();
-        Question q32 = questionBuilder.with(id(32L)).with(name("7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?")).build();
-        Question q33 = questionBuilder.with(id(33L)).with(name("8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?")).build();
+
+        Question q30 = questionBuilder.with(id(30L)).with(name("5. What technical approach will be adopted and how will the project be managed?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
+        Question q31 = questionBuilder.with(id(31L)).with(name("6. What is innovative about this project?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
+        Question q32 = questionBuilder.with(id(32L)).with(name("7. What are the risks (technical, commercial and environmental) to project success? What is the project's risk management strategy?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
+        Question q33 = questionBuilder.with(id(33L)).with(name("8. Does the project team have the right skills and experience and access to facilities to deliver the identified benefits?")).
+                withFormInputs(newFormInput().with(incrementingIds(1)).withFormInputType(formInputType).build(1)).build();
 
         Section section4 = sectionBuilder.
                 with(id(4L)).
                 with(name("Project approach (Q5 - Q8)")).
                 withQuestions(asList(q30, q31, q32, q33)).
                 build();
+        SectionResource sectionResource4 = sectionResourceBuilder.
+                with(id(4L)).
+                with(name("Project approach (Q5 - Q8)")).
+                withQuestions(simpleMap(asList(q30, q31, q32, q33), Question::getId)).
+                build();
 
         Section section5 = sectionBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).build();
         Section section6 = sectionBuilder.with(id(6L)).with(name("Finances")).build();
+        Section section7 = sectionBuilder.with(id(7L)).with(name("Your finances")).build();
+        section6.setChildSections(Arrays.asList(section7));
+        SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).build();
+        SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).build();
+        SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your finances")).build();
+        sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
 
-        sections = asList(section1, section2, section3, section4, section5, section6);
+
+        sections = asList(section1, section2, section3, section4, section5, section6, section7);
+        sectionResources = asList(sectionResource1, sectionResource2, sectionResource3, sectionResource4, sectionResource5, sectionResource6, sectionResource7);
+        sectionResources.forEach(s -> {
+                    s.setChildSections(new ArrayList<>());
+                    when(sectionService.getById(s.getId())).thenReturn(s);
+                    when(sectionService.getByName(s.getName())).thenReturn(s);
+                }
+        );
 
         ArrayList<Question> questionList = new ArrayList<>();
         for (Section section : sections) {
@@ -262,11 +394,18 @@ public class BaseUnitTest {
             }
         }
 
+        questions.forEach((id, question) -> {
+            when(questionService.getById(id)).thenReturn(question);
+        });
+
+        competition.setSections(sections);
+        competitionResource.setSections(sections.stream().map(s -> s.getId()).collect(toList()));
+        when(sectionService.getParentSections(anyList())).thenReturn(sectionResources);
         competitions = singletonList(competition);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionRestService.getAll()).thenReturn(restSuccess(competitions));
-        when(competitionService.getById(any(Long.class))).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competitionResource));
+        when(competitionRestService.getAll()).thenReturn(restSuccess(competitionResources));
+        when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
     }
 
     public void setupUserRoles() {
@@ -369,7 +508,7 @@ public class BaseUnitTest {
         users.get(0).addUserApplicationRole(processRole5);
         applications = applicationResources;
 
-        when(sectionService.getParentSections(competition.getSections())).thenReturn(sections);
+        when(sectionService.getParentSections(simpleMap(competition.getSections(), Section::getId))).thenReturn(sectionResources);
         when(sectionService.getCompleted(applicationList.get(0).getId(), organisation1.getId())).thenReturn(asList(1L, 2L));
         when(sectionService.getInCompleted(applicationList.get(0).getId())).thenReturn(asList(3L, 4L));
         when(processRoleService.findProcessRole(applicant.getId(), applicationList.get(0).getId())).thenReturn(processRole1);
@@ -409,7 +548,8 @@ public class BaseUnitTest {
         when(organisationService.getApplicationOrganisations(applications.get(1))).thenReturn(organisationSet);
         when(organisationService.getApplicationOrganisations(applications.get(2))).thenReturn(organisationSet);
         when(organisationService.getApplicationOrganisations(applications.get(3))).thenReturn(organisationSet);
-        when(userService.isLeadApplicant(loggedInUser.getId(),applications.get(0))).thenReturn(true);
+        when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn("Business");
+        when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0))).thenReturn(processRole1);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1))).thenReturn(processRole2);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(2))).thenReturn(processRole3);
@@ -419,8 +559,8 @@ public class BaseUnitTest {
         when(organisationService.getApplicationLeadOrganisation(applications.get(2))).thenReturn(Optional.of(organisation1));
         processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(settable(processRole)));
 
-        when(sectionService.getById(1L)).thenReturn(sections.get(0));
-        when(sectionService.getById(3L)).thenReturn(sections.get(2));
+        when(sectionService.getById(1L)).thenReturn(sectionResources.get(0));
+        when(sectionService.getById(3L)).thenReturn(sectionResources.get(2));
     }
 
     public void setupApplicationResponses(){
@@ -460,9 +600,11 @@ public class BaseUnitTest {
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), OrganisationSize.LARGE);
-        when(financeService.getApplicationFinanceDetails(application.getId(), loggedInUser.getId())).thenReturn(applicationFinanceResource);
+        when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
+        when(financeHandler.getFinanceFormHandler("Business")).thenReturn(defaultFinanceFormHandler);
+        when(financeHandler.getFinanceModelManager("Business")).thenReturn(defaultFinanceModelManager);
     }
 
     public void setupAssessment(){
@@ -500,14 +642,58 @@ public class BaseUnitTest {
         assessments.forEach(assessment -> when(assessmentRestService.getScore(assessment.getId())).thenReturn(restSuccess(new Score())));
     }
 
+    public void setupInvites() {
+        when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
+
+
+        invite = new InviteResource();
+        invite.setStatus(InviteStatusConstants.SEND);
+        invite.setApplication(1L);
+        invite.setName("Some Invitee");
+        invite.setHash(INVITE_HASH);
+        String email = "invited@email.com";
+        invite.setEmail(email);
+        when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(restSuccess(invite));
+        when(userService.findUserByEmail(eq(email))).thenReturn(restFailure(notFoundError(User.class, email)));
+        when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(emptyList()));
+
+        acceptedInvite = new InviteResource();
+        acceptedInvite.setStatus(InviteStatusConstants.ACCEPTED);
+        acceptedInvite.setApplication(1L);
+        acceptedInvite.setName("Some Invitee");
+        acceptedInvite.setHash(ACCEPTED_INVITE_HASH);
+        acceptedInvite.setEmail(email);
+        when(inviteRestService.getInviteByHash(eq(ACCEPTED_INVITE_HASH))).thenReturn(restSuccess(acceptedInvite));
+
+        existingUserInvite = new InviteResource();
+        existingUserInvite.setStatus(InviteStatusConstants.SEND);
+        existingUserInvite.setApplication(1L);
+        existingUserInvite.setName("Some Invitee");
+        existingUserInvite.setHash(INVITE_HASH_EXISTING_USER);
+        existingUserInvite.setEmail("existing@email.com");
+        when(userService.findUserByEmail(eq("existing@email.com"))).thenReturn(restSuccess(new UserResource()));
+        when(inviteRestService.getInviteByHash(eq(INVITE_HASH_EXISTING_USER))).thenReturn(restSuccess(existingUserInvite));
+
+        when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
+        when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
+
+    }
+
     public ExceptionHandlerExceptionResolver createExceptionResolver() {
         ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {
             protected ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception exception) {
                 Method method = new ExceptionHandlerMethodResolver(ErrorController.class).resolveMethod(exception);
-                return new ServletInvocableHandlerMethod(new ErrorController(), method);
+                return new ServletInvocableHandlerMethod(new ErrorController(env, messageSource), method);
             }
         };
         exceptionResolver.afterPropertiesSet();
         return exceptionResolver;
+    }
+
+    @Bean(name = "messageSource")
+    public MessageSource testMessageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("messages");
+        return messageSource;
     }
 }

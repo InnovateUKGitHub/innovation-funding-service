@@ -24,12 +24,12 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
 
     @Override
     public ProcessRole findProcessRole(Long userId, Long applicationId) {
-        return userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrNull();
+        return userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public List<ProcessRole> findProcessRolesByApplicationId(Long applicationId) {
-        return userRestService.findProcessRole(applicationId).getSuccessObjectOrNull();
+        return userRestService.findProcessRole(applicationId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -39,6 +39,6 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
 
     @Override
     public Future<ProcessRole> getById(Long id){
-        return adapt(userRestService.findProcessRoleById(id), RestResult::getSuccessObjectOrNull);
+        return adapt(userRestService.findProcessRoleById(id), RestResult::getSuccessObjectOrThrowException);
     }
 }

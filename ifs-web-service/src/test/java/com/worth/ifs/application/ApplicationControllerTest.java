@@ -1,8 +1,10 @@
 package com.worth.ifs.application;
 
+import com.worth.ifs.Application;
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.user.domain.User;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -10,14 +12,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
+import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -39,12 +40,10 @@ public class ApplicationControllerTest extends BaseUnitTest {
         super.setup();
         MockitoAnnotations.initMocks(this);
 
-
         mockMvc = MockMvcBuilders.standaloneSetup(applicationController)
                 .setViewResolvers(viewResolver())
                 .setHandlerExceptionResolvers(createExceptionResolver())
                 .build();
-
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -61,7 +60,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        System.out.println("Show dashboard for application: " + app.getId());
+        log.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-details"))
@@ -89,31 +88,44 @@ public class ApplicationControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses));
     }
 
+    @Test
     public void testNotExistingApplicationDetails() throws Exception {
         ApplicationResource app = applications.get(0);
 
-        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
+        when(env.acceptsProfiles("uat", "dev", "test")).thenReturn(true);
+        when(messageSource.getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH)).thenReturn(
+                testMessageSource().getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH));
         when(applicationService.getById(app.getId())).thenReturn(app);
+        when(applicationService.getById(1234l)).thenThrow(new ObjectNotFoundException(testMessageSource().getMessage
+                (ObjectNotFoundException.class.getName(), null, Locale.ENGLISH), Arrays.asList(1234l)));
 
-        System.out.println("Show dashboard for application: " + app.getId());
+        List<Object> arguments = new ArrayList();
+        arguments.add(Application.class.getName());
+        arguments.add(1234l);
+
+        log.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/1234"))
-                .andExpect(view().name("404"));
+                .andExpect(view().name("404"))
+                .andExpect(model().attribute("url", "http://localhost/application/1234"))
+                .andExpect(model().attribute("exception", new InstanceOf(ObjectNotFoundException.class)))
+                .andExpect(model().attribute("message",
+                        testMessageSource().getMessage(ObjectNotFoundException.class.getName(), arguments.toArray(), Locale.ENGLISH)))
+                .andExpect(model().attributeExists("stacktrace"));
     }
 
     @Test
     public void testApplicationDetailsOpenSection() throws Exception {
         ApplicationResource app = applications.get(0);
-        Section section = sections.get(2);
+        SectionResource section = sectionResources.get(2);
 
-        Map<Long, Section> collectedSections =
-                sections.stream().collect(Collectors.toMap(Section::getId,
+        Map<Long, SectionResource> collectedSections =
+                sectionResources.stream().collect(Collectors.toMap(SectionResource::getId,
                         Function.identity()));
 
-        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        System.out.println("Show dashboard for application: " + app.getId());
+        log.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId() +"/section/"+ section.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-details"))
@@ -147,8 +159,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
     public void testApplicationSubmit() throws Exception {
         ApplicationResource app = applications.get(0);
 
-
-        //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
@@ -193,7 +203,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
         User user = new User(1L, "testname", null, null, null, null, null);
 
-
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
         MvcResult result = mockMvc.perform(post("/application/create/1").param("application_name", "     "))
@@ -209,7 +218,6 @@ public class ApplicationControllerTest extends BaseUnitTest {
         application.setId(1L);
 
         User user = new User(1L, "testname", null, null, null, null, null);
-
 
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);

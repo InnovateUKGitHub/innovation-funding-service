@@ -2,11 +2,11 @@ package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.mapper.QuestionStatusMapper;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.transactional.FormInputTypeService;
@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -109,10 +109,9 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     public ServiceResult<Void> updateNotification(final Long questionStatusId,
                                                   final Boolean notify) {
 
-        return find(() -> questionStatusRepository.findOne(questionStatusId), notFoundError(QuestionStatus.class, questionStatusId)).andOnSuccess(questionStatus -> {
+        return find(questionStatusRepository.findOne(questionStatusId), notFoundError(QuestionStatus.class, questionStatusId)).andOnSuccessReturnVoid(questionStatus -> {
             questionStatus.setNotified(notify);
             questionStatusRepository.save(questionStatus);
-            return serviceSuccess();
         });
     }
 
@@ -149,18 +148,19 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     // TODO DW - INFUND-1555 - in situation where next / prev question not found, should this be a 404?
     @Override
     public ServiceResult<Question> getPreviousQuestionBySection(final Long sectionId) {
-        return sectionService.getById(sectionId).andOnSuccess(section -> {
+        return sectionService.getById(sectionId).andOnSuccessReturn(section -> {
 
             if (section.getParentSection() != null) {
-                Section previousSection = sectionService.getPreviousSection(section).getSuccessObjectOrNull();
+                SectionResource previousSection = sectionService.getPreviousSection(section).getSuccessObjectOrThrowException();
                 if (previousSection != null) {
                     Optional<Question> lastQuestionInSection = previousSection.getQuestions()
                             .stream()
+                            .map(questionRepository::findOne)
                             .max(comparing(Question::getPriority));
-                    return serviceSuccess(lastQuestionInSection.orElse(null));
+                    return lastQuestionInSection.orElse(null);
                 }
             }
-            return serviceSuccess(null);
+            return null;
         });
     }
 
@@ -168,18 +168,19 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Override
     public ServiceResult<Question> getNextQuestionBySection(final Long sectionId) {
 
-        return sectionService.getById(sectionId).andOnSuccess(section -> {
+        return sectionService.getById(sectionId).andOnSuccessReturn(section -> {
 
             if (section.getParentSection() != null) {
-                Section nextSection = sectionService.getNextSection(section).getSuccessObjectOrNull();
-                if (nextSection != null) {
+                SectionResource nextSection = sectionService.getNextSection(section).getSuccessObjectOrThrowException();
+                if(nextSection!=null) {
                     Optional<Question> firstQuestionInSection = nextSection.getQuestions()
                             .stream()
+                            .map(questionRepository::findOne)
                             .min(comparing(Question::getPriority));
-                    return serviceSuccess(firstQuestionInSection.orElse(null));
+                    return firstQuestionInSection.orElse(null);
                 }
             }
-            return serviceSuccess(null);
+            return null;
         });
     }
 
@@ -219,29 +220,34 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Override
     public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
-        return serviceSuccess(simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper::mapQuestionStatusToPopulatedResource));
+        return serviceSuccess(simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper::mapToResource));
     }
 
     @Override
     public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(Long[] questionIds, Long applicationId, Long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdIsInAndApplicationId(Arrays.asList(questionIds), applicationId);
-        return serviceSuccess(simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper::mapQuestionStatusToPopulatedResource));
+        return serviceSuccess(simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper::mapToResource));
     }
 
     @Override
     public ServiceResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(Long applicationId, Long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationId(applicationId);
-        return serviceSuccess(simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper::mapQuestionStatusToPopulatedResource));
+        return serviceSuccess(simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper::mapToResource));
     }
 
     @Override
     public ServiceResult<QuestionStatus> getQuestionStatusResourceById(Long id) {
-        return find(() -> questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id));
+        return find(questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id));
     }
 
     @Override
     public ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle) {
         return getOnlyFormInputTypeByTitle(formInputTypeTitle).andOnSuccessReturn(inputType -> inputType.getFormInput().get(0).getQuestion());
+    }
+
+    @Override
+    public ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(Long applicationId, Long assigneeId){
+        return serviceSuccess(questionStatusRepository.countByApplicationIdAndAssigneeId(applicationId, assigneeId));
     }
 
     private ServiceResult<Void> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
@@ -262,7 +268,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {
-        Section nextSection = sectionService.getNextSection(section).getSuccessObject();
+        SectionResource nextSection = sectionService.getNextSection(section).getSuccessObjectOrNull();
         if (nextSection != null) {
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, nextSection.getId());
         }
@@ -271,7 +277,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private Question getPreviousQuestionBySection(Long section, Long competitionId) {
-        Section previousSection = sectionService.getPreviousSection(section).getSuccessObject();
+        SectionResource previousSection = sectionService.getPreviousSection(section).getSuccessObjectOrNull();
 
         if (previousSection != null) {
             return questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(competitionId, previousSection.getId());
@@ -360,6 +366,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private ServiceResult<Question> getQuestion(Long questionId) {
-        return find(() -> questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
+        return find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
     }
 }

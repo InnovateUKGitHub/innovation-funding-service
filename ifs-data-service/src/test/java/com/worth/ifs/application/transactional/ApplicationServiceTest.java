@@ -39,8 +39,8 @@ public class ApplicationServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void applicationServiceShouldReturnApplicationByUserId() throws Exception {
-        User testUser2 = new User(2L, "testUser2",  "email2@email.nl", "password", "test/image/url/2", "testToken456def", null);
-        User testUser1 = new User(1L, "testUser1",  "email1@email.nl", "password", "test/image/url/1", "testToken123abc", null);
+        User testUser2 = new User(2L, "testUser2",  "email2@email.nl", "password", "testToken456def", null, "my-uid");
+        User testUser1 = new User(1L, "testUser1",  "email1@email.nl", "password", "testToken123abc", null, "my-uid");
 
         Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
         Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
@@ -71,9 +71,9 @@ public class ApplicationServiceTest extends BaseUnitTestMocksTest {
             add(testProcessRole4);
         }});
 
-        when(applicationMapperMock.mapApplicationToResource(testApplication1)).thenReturn(testApplication1Resource);
-        when(applicationMapperMock.mapApplicationToResource(testApplication2)).thenReturn(testApplication2Resource);
-        when(applicationMapperMock.mapApplicationToResource(testApplication3)).thenReturn(testApplication3Resource);
+        when(applicationMapperMock.mapToResource(testApplication1)).thenReturn(testApplication1Resource);
+        when(applicationMapperMock.mapToResource(testApplication2)).thenReturn(testApplication2Resource);
+        when(applicationMapperMock.mapToResource(testApplication3)).thenReturn(testApplication3Resource);
 
         List<ApplicationResource> applicationsForUser1 = applicationService.findByUserId(testUser1.getId()).getSuccessObject();
         assertEquals(2, applicationsForUser1.size());
@@ -115,7 +115,7 @@ public class ApplicationServiceTest extends BaseUnitTestMocksTest {
         }));
 
         when(applicationRepositoryMock.save(applicationExpectations)).thenReturn(applicationExpectations);
-        when(applicationMapperMock.mapApplicationToResource(applicationExpectations)).thenReturn(newApplication);
+        when(applicationMapperMock.mapToResource(applicationExpectations)).thenReturn(newApplication);
 
         ApplicationResource created = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, applicationName).getSuccessObject();
         assertEquals(newApplication, created);

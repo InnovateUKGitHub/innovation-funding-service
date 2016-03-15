@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard?status=projectSetup'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Project setup status'})" th:remove="tag" />
+
+	<p class="form-hint">You need to complete the following steps before this project can begin.</p>
+
+	<ul class="application-progress-list extra-margin">
+		<li class="complete">
+			<span>
+				<h2 class="heading-medium">Successful application</h2>
+				<p>The application <strong>Machine learning in robots</strong> has been successful within the <strong>Technology inspired</strong> competition</p>
+				<a href="/prototypes/1196-readonly-application-view" class="buttonlink">View application</a> 
+				<a href="/prototypes/545-application-feedback" class="buttonlink">View feedback</a> 
+				<a href="#" class="buttonlink">View terms &#38; conditions of grant offer</a>
+			</span>
+		</li>
+
+		<li th:class="${(param.user != null and param.user[0] == 'nonLead' ? 'complete' : 'require-action')}">
+			<span>
+				<h2 class="heading-medium">
+					<a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1574-project-finance-contact' : '/prototypes/1575-project-details')}">Project details</a></h2>  
+				<p>Confirm the contact details, proposed start date and location of the project.</p>
+			</span>
+		</li>
+
+		<li th:class="${(param.user != null and param.user[0] == 'nonLead' ? 'complete' : 'waiting')}">
+			<span>
+				<h2 class="heading-medium">Monitoring officer assigned</h2> 
+				<p>Your monitoring officer for this project is <a href="#">Tom Evans</a>.</p>
+			</span>
+		</li>
+
+		<li class="require-action">
+			<span>
+				<h2 class="heading-medium"><a href="#">Bank details</a></h2>
+				<p>We need bank details for each consortium member so that we can pay the grant.</p>
+			</span>
+		</li>
+
+		<li class="waiting">
+			<span>
+				<h2 class="heading-medium"><a href="#">Finance checks</a></h2>
+				<p>We will review all project costs and contact you if we have any queries.</p>
+			</span>
+		</li>
+
+		<li>
+			<span>
+				<h2 class="heading-medium">Forecasts</h2>
+				<p>Once we have approved your financial information, we will produce a financial forecast.</p>
+			</span>
+		</li>
+
+		<li th:class="${(param.user != null and param.user[0] == 'nonLead' ? 'waiting' : 'require-action')}">
+			<span>
+				
+				<div th:unless="${param.user != null}" th:remove="tag">
+
+					<h2 class="heading-medium"><a href="/prototypes/1590-document-upload">Other documents</a></h2>
+					<p>As the lead partner in the consortium, you will need to upload documents including:</p>
+
+				</div>
+				
+				<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
+					
+					<h2 class="heading-medium"><a href="/prototypes/1590-document-upload?user=nonLead">Other documents</a></h2>
+					<p>The lead partner of the consortium will need to upload documents including:</p>
+
+				</div>
+
+				<ul class="list-bullet">
+					<li>A collaboration agreement</li>
+					<li>Exploitation plan</li>
+					<li>Project plan</li>
+				</ul>
+			</span>
+		</li>
+
+		<li>
+			<span>
+				<h2 class="heading-medium">Grant offer letter</h2>
+				<p>When you have completed all of these tasks, we will send you a grant offer letter. Returning a signed copy of this letter marks the start of your project.</p>
+			</span>
+		</li>
+
+	</ul>
+
+	
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

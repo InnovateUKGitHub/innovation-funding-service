@@ -2,8 +2,8 @@
 //Dependencies to load first : hallo.min.js
 IFS.editor = (function(){
     "use strict";
-    var s; // private alias to settings 
-    var converter; 
+    var s; // private alias to settings
+    var converter;
 
     return {
         settings : {
@@ -21,10 +21,14 @@ IFS.editor = (function(){
              jQuery.each(textareas,function(){
                 IFS.editor.prepareEditor(this);
             });
+            jQuery(".js-md-to-html").each(function(){
+              var content = jQuery(this).html();
+              var html =  IFS.editor.markdownToHtml(content);
+              jQuery(this).html(html);
+            });
 
             IFS.editor.initEditors();
             IFS.editor.bindEditors();
-           // IFS.editor.contentEditableEnterFix();
         },
         prepareEditor : function(textarea){
             var el = jQuery(textarea);
@@ -61,7 +65,7 @@ IFS.editor = (function(){
               return;
             }
             var html = IFS.editor.markdownToHtml(sourceVal);
-            jQuery(editorEl).html(html); 
+            jQuery(editorEl).html(html);
         },
         processHtmlToMarkdown : function(editorEl,sourceEl) {
             var markdown = IFS.editor.htmlToMarkdown(editorEl);
@@ -83,12 +87,12 @@ IFS.editor = (function(){
             }
             else {
                 html = converter.makeHtml(content);
-
             }
+            html = jQuery.htmlClean(html, s.htmlOptions);
             return html;
         }
         // contentEditableEnterFix : function(){
-        //    // for having good html we only agree upon <p>test</p> and not p<br/> 
+        //    // for having good html we only agree upon <p>test</p> and not p<br/>
         //    // however <br/> is default behaviour in FF, Chrome with contenteditble sections
         //     var formatBlockSupported = document.queryCommandSupported("formatBlock");
 

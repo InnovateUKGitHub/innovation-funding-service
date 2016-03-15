@@ -1,25 +1,30 @@
 package com.worth.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.springframework.hateoas.core.Relation;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-@Relation(value="application", collectionRelation="applications")
 public class ApplicationResource {
 
     private Long id;
     private String name;
     private LocalDate startDate;
+    private LocalDateTime submittedDate;
     private Long durationInMonths;
     private List<Long> processRoles = new ArrayList<>();
     private List<Long> applicationFinances = new ArrayList<>();
     private Long applicationStatus;
+    private String applicationStatusName;
     private Long competition;
+    private String competitionName;
     private List<Long> invites;
 
     public Long getId() {
@@ -32,6 +37,15 @@ public class ApplicationResource {
 
     public String getName() {
         return name;
+    }
+
+    @JsonIgnore
+    public String getApplicationDisplayName() {
+        if(StringUtils.isNotEmpty(name)){
+            return name;
+        }else{
+            return competitionName;
+        }
     }
 
     public void setName(String name) {
@@ -95,6 +109,11 @@ public class ApplicationResource {
         this.invites = invites;
     }
 
+    @JsonIgnore
+    public boolean isOpen(){
+        return Objects.equals(applicationStatus, ApplicationStatusConstants.OPEN.getId());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -129,5 +148,29 @@ public class ApplicationResource {
                 .append(competition)
                 .append(invites)
                 .toHashCode();
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
+
+    public LocalDateTime getSubmittedDate() {
+        return submittedDate;
+    }
+
+    public String getApplicationStatusName() {
+        return applicationStatusName;
+    }
+
+    public void setApplicationStatusName(String applicationStatusName) {
+        this.applicationStatusName = applicationStatusName;
+    }
+
+    public void setSubmittedDate(LocalDateTime submittedDate) {
+        this.submittedDate = submittedDate;
     }
 }

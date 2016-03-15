@@ -16,9 +16,14 @@ public interface UserService {
     List<User> getAssignable(Long applicationId);
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
     ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application);
-    RestResult<List<UserResource>> findUserByEmail(String email);
+    RestResult<Void> verifyEmail(String hash);
+    RestResult<Void> sendPasswordResetNotification(String email);
+    RestResult<Void> checkPasswordResetHash(String hash);
+    RestResult<Void> resetPassword(String hash, String password);
+    RestResult<UserResource> findUserByEmail(String email);
     Set<User> getAssignableUsers(ApplicationResource application);
     Set<User> getApplicationUsers(ApplicationResource application);
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
+    RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId);
     RestResult<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber);
 }

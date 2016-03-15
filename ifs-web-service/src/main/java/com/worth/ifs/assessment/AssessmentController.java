@@ -1,10 +1,23 @@
 package com.worth.ifs.assessment;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import com.worth.ifs.application.AbstractApplicationController;
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.finance.view.DefaultFinanceModelManager;
+import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.dto.Score;
@@ -13,12 +26,13 @@ import com.worth.ifs.assessment.viewmodel.AssessmentDashboardModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentDashboardModel.AssessmentWithApplicationAndScore;
 import com.worth.ifs.assessment.viewmodel.AssessmentSubmitReviewModel;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,15 +41,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import static com.worth.ifs.application.service.Futures.call;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -62,6 +76,9 @@ public class AssessmentController extends AbstractApplicationController {
     @Autowired
     AssessmentRestService assessmentRestService;
 
+    @Autowired
+    FinanceOverviewModelManager financeOverviewModelManager;
+
     private String competitionAssessmentsURL(Long competitionID) {
         return "/assessor/competitions/" + competitionID + "/applications";
     }
@@ -71,17 +88,17 @@ public class AssessmentController extends AbstractApplicationController {
     public ModelAndView competitionAssessmentDashboard(@PathVariable("competitionId") final Long competitionId,
                                                        HttpServletRequest request) {
 
-        Competition competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionService.getById(competitionId);
 
         /* gets all the assessments assigned to this assessor in this competition */
-        List<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId()).getSuccessObjectOrNull();
+        List<Assessment> allAssessments = assessmentRestService.getAllByAssessorAndCompetition(getLoggedUser(request).getId(), competition.getId()).getSuccessObjectOrThrowException();
         allAssessments.sort(new AssessmentStatusComparator());
 
         List<AssessmentWithApplicationAndScore> assessments = allAssessments.stream()
                 .filter(a -> !a.isSubmitted())
                 .map(a -> {
-                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObjectOrNull();
-                    Score score = assessmentRestService.getScore(a.getId()).getSuccessObjectOrNull();
+                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObjectOrThrowException();
+                    Score score = assessmentRestService.getScore(a.getId()).getSuccessObjectOrThrowException();
                     return new AssessmentWithApplicationAndScore(a, ar, score);
                 }).collect(toList());
 
@@ -90,8 +107,8 @@ public class AssessmentController extends AbstractApplicationController {
         List<AssessmentWithApplicationAndScore> submittedAssessments = allAssessments.stream()
                 .filter(Assessment::isSubmitted)
                 .map(a -> {
-                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObjectOrNull();
-                    Score score = assessmentRestService.getScore(a.getId()).getSuccessObjectOrNull();
+                    ApplicationResource ar = applicationService.findByProcessRoleId(a.getProcessRole().getId()).getSuccessObjectOrThrowException();
+                    Score score = assessmentRestService.getScore(a.getId()).getSuccessObjectOrThrowException();
                     return new AssessmentWithApplicationAndScore(a, ar, score);
                 })
                 .collect(toList());
@@ -158,7 +175,7 @@ public class AssessmentController extends AbstractApplicationController {
             log.warn("User is not an Assessor on this application");
             return showInvalidAssessmentView(model, competitionId, null);
         }
-        Assessment assessment = assessmentRestService.getOneByProcessRole(assessorProcessRole.getId()).getSuccessObjectOrNull();
+        Assessment assessment = assessmentRestService.getOneByProcessRole(assessorProcessRole.getId()).getSuccessObjectOrThrowException();
         if (assessment == null) {
             log.warn("No assessment could be found for the User " + userId + " and the Application " + applicationId);
             return showInvalidAssessmentView(model, competitionId, null);
@@ -187,20 +204,20 @@ public class AssessmentController extends AbstractApplicationController {
             ProcessRole assessorProcessRole,
             ApplicationResource application,
             List<ProcessRole> userApplicationRoles) {
-        Competition competition = competitionService.getById(application.getCompetition());
-        Optional<Section> currentSection = getSection(competition.getSections(), sectionId, true);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        Optional<SectionResource> currentSection = getSection(simpleMap(competition.getSections(),section -> sectionService.getById(section)), sectionId, true);
         addApplicationDetails(application, competition, userId, currentSection, Optional.empty(), model, null, userApplicationRoles);
         addSectionDetails(model, currentSection);
         List<Response> questionResponses = responseService.getByApplication(application.getId());
         Map<Long, Response> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
         model.addAttribute("processRole", assessorProcessRole);
         model.addAttribute("questionResponses", questionResponsesMap);
-        addFinanceDetails(model, application);
+        financeOverviewModelManager.addFinanceDetails(model, application.getId());
         return assessmentDetails;
     }
 
     private String showInvalidAssessmentView(Model model, Long competitionId, Assessment assessment) {
-        Competition competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionService.getById(competitionId);
         model.addAttribute("competition", competition);
         model.addAttribute("assessment", assessment);
         return assessorDashboard;
@@ -208,7 +225,7 @@ public class AssessmentController extends AbstractApplicationController {
 
     private String showApplicationReviewView(Model model, Long competitionId, Long userId, ApplicationResource application,
                                              List<ProcessRole> userApplicationRoles) {
-        Competition competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationDetails(application, competition, userId, empty(), Optional.empty(), model, null, userApplicationRoles);
         getAndPassAssessmentDetails(competitionId, application.getId(), userId, model);
         Set<String> partners = call(application.getProcessRoles().stream().
@@ -249,13 +266,27 @@ public class AssessmentController extends AbstractApplicationController {
             throw new IllegalStateException("User is not an Assessor on this application");
         }
 
-        Assessment assessment = assessmentRestService.getOneByProcessRole(assessorProcessRole.getId()).getSuccessObjectOrNull();
+        Assessment assessment = assessmentRestService.getOneByProcessRole(assessorProcessRole.getId()).getSuccessObjectOrThrowException();
         ApplicationResource application = applicationService.getById(applicationId);
-        Competition competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionService.getById(competitionId);
         List<Response> responses = getResponses(application);
 
-        Score score = assessmentRestService.getScore(assessment.getId()).getSuccessObjectOrNull();
-        AssessmentSubmitReviewModel viewModel = new AssessmentSubmitReviewModel(assessment, responses, application, competition, score);
+        Score score = assessmentRestService.getScore(assessment.getId()).getSuccessObjectOrThrowException();
+
+        List<Question> questions = competition.getSections()
+                .stream()
+                .map(sectionService::getById)
+                .flatMap(section -> section.getQuestions()
+                        .stream())
+                .map(questionService::getById)
+                .collect(toList());
+
+        List<SectionResource> sections = competition.getSections()
+                .stream()
+                .map(sectionService::getById)
+                .collect(toList());
+
+        AssessmentSubmitReviewModel viewModel = new AssessmentSubmitReviewModel(assessment, responses, application, competition, score, questions, sections);
 
         return new ModelAndView(assessmentSubmitReview, "model", viewModel);
     }
@@ -362,11 +393,11 @@ public class AssessmentController extends AbstractApplicationController {
         return ! (recommendationValue.equals("no") && feedback.isEmpty());
     }
 
-    private Pair<Competition, Assessment> getAndPassAssessmentDetails(Long competitionId, Long applicationId, Long userId, Model model) {
+    private Pair<CompetitionResource, Assessment> getAndPassAssessmentDetails(Long competitionId, Long applicationId, Long userId, Model model) {
         //gets
-        Competition competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionService.getById(competitionId);
         ProcessRole assessmentProcessRole = processRoleService.findProcessRole(userId, applicationId);
-        Assessment assessment = assessmentRestService.getOneByProcessRole(assessmentProcessRole.getId()).getSuccessObjectOrNull();
+        Assessment assessment = assessmentRestService.getOneByProcessRole(assessmentProcessRole.getId()).getSuccessObjectOrThrowException();
 
         //pass to view
         model.addAttribute("competition", competition);

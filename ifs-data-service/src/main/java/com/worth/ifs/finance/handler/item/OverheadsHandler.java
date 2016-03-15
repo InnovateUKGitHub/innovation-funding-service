@@ -14,6 +14,8 @@ import java.util.List;
  * or for sending it over.
  */
 public class OverheadsHandler extends CostHandler {
+    public static final String COST_KEY = "overhead";
+
     @Override
     public Cost toCost(CostItem costItem) {
         Cost cost = null;
@@ -26,7 +28,7 @@ public class OverheadsHandler extends CostHandler {
                 rateType = overhead.getRateType().toString();
             }
 
-            cost = new Cost(overhead.getId(), rateType, "", rate, null, null, null);
+            cost = new Cost(overhead.getId(), COST_KEY, rateType, "", rate, null, null, null);
         }
         return cost;
     }

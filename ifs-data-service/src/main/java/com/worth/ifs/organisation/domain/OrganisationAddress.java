@@ -1,10 +1,12 @@
 package com.worth.ifs.organisation.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.user.domain.AddressType;
+import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 
 /**
  * Resource object to store the address details, from the company, from the company house api.
@@ -18,6 +20,7 @@ public class OrganisationAddress {
 
     @ManyToOne
     private Organisation organisation;
+    @Valid
     @ManyToOne(cascade = CascadeType.ALL)
     private Address address;
 

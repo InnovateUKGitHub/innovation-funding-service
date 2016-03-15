@@ -42,6 +42,11 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
         MockMvc originalMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
+        //
+        // We need to register custom MessageConverters with MockMVC manually.  Unfortunately there's no way to simply add a new
+        // one to the custom set of MessageConverters that comes out of the box.  Therefore we need to get the original set as
+        // a list, add our custom one to the list, and then set this list as the full set of MessageConverters
+        //
         List<HandlerAdapter> defaultHandlerAdapters = (List<HandlerAdapter>) getField(getField(originalMvc, "servlet"), "handlerAdapters");
         RequestMappingHandlerAdapter requestMappingHandlerAdapter = (RequestMappingHandlerAdapter) defaultHandlerAdapters.stream().filter(handler -> handler instanceof RequestMappingHandlerAdapter).collect(toList()).get(0);
         List<HttpMessageConverter<?>> originalMessageConverters = requestMappingHandlerAdapter.getMessageConverters();

@@ -36,11 +36,11 @@ public class User {
     private String inviteName;
     private String phoneNumber;
     private String imageUrl;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     @Column(unique=true)
-    private String token;
-
-
+    private String uid;
 
     @Column(unique=true)
     private String email;
@@ -65,19 +65,19 @@ public class User {
 
     }
 
-    public User(String name, String email, String password, String token, String imageUrl,
-                List<ProcessRole> processRoles) {
+    public User(String name, String email, String password, String imageUrl,
+                List<ProcessRole> processRoles, String uid) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.token = token;
         this.imageUrl = imageUrl;
         this.processRoles = processRoles;
+        this.uid = uid;
     }
 
-    public User(Long id, String name, String email, String password, String token, String imageUrl,
-                List<ProcessRole> processRoles) {
-        this(name, email, password, token, imageUrl, processRoles);
+    public User(Long id, String name, String email, String password, String imageUrl,
+                List<ProcessRole> processRoles, String uid) {
+        this(name, email, password, imageUrl, processRoles, uid);
         this.id = id;
     }
 
@@ -102,8 +102,8 @@ public class User {
         return imageUrl;
     }
 
-    public String getToken() {
-        return token;
+    public String getUid() {
+        return uid;
     }
 
     @JsonIgnore
@@ -204,7 +204,9 @@ public class User {
         this.email = email;
     }
 
-    public void setToken(String token) { this.token = token; }
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public String getPassword() {
         return this.password;
@@ -229,4 +231,13 @@ public class User {
                 .append(id)
                 .toHashCode();
     }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
 }

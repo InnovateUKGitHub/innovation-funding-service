@@ -1,3 +1,20 @@
+/*----- Comp admin - comp status label ----*/
+
+.comp-status-label{
+	background: #6F72AF; 
+	padding: 20px; 
+	text-align: center; 
+	color: white;
+	margin-top: -75px;
+
+	@include media-down(mobile){
+		margin-top: 10px;
+	}
+}
+
+
+/*----- Comp admin tables styles----*/
+
 table{
 
 	.full-view{
@@ -16,6 +33,18 @@ table{
 		tr.full-view{
 			display: table-row;
 		}
+	}
+}
+
+.assessment-panel-start{
+	td, th{
+		border-top: 2px solid $black;
+	}
+}
+
+.assessment-panel-end{
+	td, th{
+		border-bottom: 2px solid $black;
 	}
 }
 
@@ -58,7 +87,7 @@ table{
 
 		.info-area{
 			float: left;
-			width: 24%;
+			width: 19%;
 			margin-right: 10px;
 			padding: 0%;
 			max-height: 90%;
@@ -87,17 +116,21 @@ table{
 			.grid-row{
 				margin: 0;
 			}
-
+			
+			.column-one,
+			.column-half,
 			.column-quarter,
 			.column-third{
-				width: 50%;
-				//clear: both;
+				width: 100%;
+				clear: both;
+				padding: 0;
 			}
+	
 		}
 
 		.data-area{
 			float: right;
-			width: 73%;
+			width: 80%;
 
 			& > .heading-large:first-child{
 				margin-top: 0;
@@ -107,7 +140,7 @@ table{
 		.fixed .info-area{
 			position: fixed;
 			top: 0;
-			width: 23%;
+			width: 18%;
 			background: white;
 			z-index: 10;
 			box-sizing: border-box;
@@ -116,4 +149,17 @@ table{
 
 	}
 }
+
+/* @include media($min-width: 1700px){
+	.full-width{
+		.info-area{
+			.column-quarter,
+			.column-third{
+				width: 50%;
+				clear: none; 
+			}
+		}
+	}
+} */
+
 

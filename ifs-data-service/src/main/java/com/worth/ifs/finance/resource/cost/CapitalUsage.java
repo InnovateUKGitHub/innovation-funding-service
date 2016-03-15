@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 public class CapitalUsage implements CostItem {
     private final Log log = LogFactory.getLog(getClass());
     Long id;
+    String name;
     Integer deprecation;
     String description;
     String existing;
@@ -23,6 +24,7 @@ public class CapitalUsage implements CostItem {
 
     public CapitalUsage() {
         this.costType = CostType.CAPITAL_USAGE;
+        this.name = this.costType.getType();
     }
 
     public CapitalUsage(Long id, Integer deprecation, String description, String existing,
@@ -74,6 +76,11 @@ public class CapitalUsage implements CostItem {
         return npv.subtract(residualValue)
                 .multiply(new BigDecimal(utilisation)
                 .divide(new BigDecimal(100), 2, BigDecimal.ROUND_HALF_EVEN));
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     public CostType getCostType() {

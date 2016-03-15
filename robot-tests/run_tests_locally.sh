@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo echo "Thanks for entering sudo!"
+
 function coloredEcho(){
     local exp=$1;
     local color=$2;
@@ -24,8 +26,10 @@ function stopServers {
     echo "********SHUTDOWN TOMCAT********"
     cd ${webTomcatBinPath}
     ./shutdown.sh
+    wait
     cd ${dataTomcatBinPath}
     ./shutdown.sh
+    wait
     echo "********UNDEPLOYING THE APPLICATION********"
     cd ${dataWebappsPath}
     rm -rf ROOT ROOT.war
@@ -35,9 +39,18 @@ function stopServers {
 
 function resetDB {
     echo "********DROP THE DATABASE********"
+    cd ${scriptDir}
     `mysql -u${mysqlUser} -p${mysqlPassword} -e"DROP DATABASE ifs"`
     `mysql -u${mysqlUser} -p${mysqlPassword} -e"CREATE DATABASE ifs CHARACTER SET utf8"`
+    cd ../ifs-data-service
+    ./gradlew flywayClean flywayMigrate
 }
+
+function clearDownFileRepository {
+    echo "***********Deleting any uploaded files***************"
+    rm -rf /tmp/ifs/
+}
+
 
 function buildAndDeploy {
     echo "********BUILD AND DEPLOY THE APPLICATION********"
@@ -55,11 +68,19 @@ function buildAndDeploy {
 
     cd ${webServiceCodeDir}
     ./gradlew clean deployToTomcat
-    
 
 }
 
+function resetLDAP {
+    cd ${shibbolethCommonScriptsPath}
+    ./reset-users-from-database.sh
+}
+
 function startServers {
+    echo "********START SHIBBOLETH***********"
+    cd ${shibbolethOsScriptsPath}
+    ./startup.sh
+
     echo "********START THE DATA SERVER********"
     cd ${dataTomcatBinPath}
     ./startup.sh
@@ -78,26 +99,53 @@ function startServers {
     do
       [[ "${logLine}" == *"Deployment of web application archive"* ]] && pkill -P $$ tail
     done
-    sleep 5
 }
+
 
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase --exclude Failing --exclude Pending --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v UPLOAD_FOLDER:$uploadFileDir -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --name IFS $testDirectory
 }
 
-testDirectory='IFS_acceptance_tests/tests/*'
-if [ -n "$1" ]; then
- testDirectory="$1"
-fi
+
+function runHappyPathTests {
+    echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
+    cd ${scriptDir}
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:http:// --include HappyPath --exclude Pending --exclude Failing --exclude FailingForLocal --name IFS $testDirectory
+}
+
+
+function runTestsRemotely {
+    echo "***********RUNNING AGAINST THE IFS DEV SERVER...**********"
+    cd ${scriptDir}
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:ifs.dev.innovateuk.org  -v PROTOCOL:https:// -v RUNNING_ON_DEV:yes --exclude Failing --exclude Pending --exclude FailingForDev --name IFS $testDirectory
+}
+
 
 cd "$(dirname "$0")"
 echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
 echo "scriptDir:        ${scriptDir}"
+uploadFileDir=${scriptDir}"/upload_files"
+cd ../setup-files/scripts/shibboleth/common
+shibbolethCommonScriptsPath=$(pwd)
+echo "shibbolethCommonScriptsPath:        ${shibbolethCommonScriptsPath}"
+
+if [[ $OSTYPE == linux* ]]; then
+  os=linux
+elif [[ $OSTYPE == darwin* ]]; then
+  os=mac
+else
+  echo "Unable to determine a supported operating system for this script.  Currently only supported on Linux and Macs"
+  exit 1
+fi
+
+cd ../${os}
+shibbolethOsScriptsPath=$(pwd)
+echo "shibbolethOsScriptsPath:        ${shibbolethOsScriptsPath}"
+cd ../../../../ifs-data-service
 dateFormat=`date +%Y-%m-%d`
-cd ../ifs-data-service
 dataServiceCodeDir=`pwd`
 echo "dataServiceCodeDir:${dataServiceCodeDir}"
 dataWebappsPath=`sed '/^\#/d' dev-build.gradle | grep 'ext.tomcatWebAppsDir'  | cut -d "=" -f2 | sed 's/"//g'`
@@ -130,16 +178,20 @@ webLogFilePath=${webLogPath}"/catalina."${dateFormat}".log"
 echo "webLogFilePath:    ${webLogFilePath}"
 webPort=`sed '/^\#/d' dev-build.gradle | grep 'ext.serverPort'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "webPort:           ${webPort}"
-webBase="localhost:"${webPort}
+webBase="ifs-local-dev"
 echo "webBase:           ${webBase}"
+
 
 unset opt
 unset quickTest
 unset testScrub
+unset happyPath
+unset useXvfb
+unset remoteRun
 
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :d:" opt ; do
+while getopts ":q :t :h :r :d: :x" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -147,6 +199,15 @@ while getopts ":q :t :d:" opt ; do
 	t)
 	 testScrub=1
 	;;
+	h)
+	 happyPath=1
+	;;
+	x)
+	 useXvfb=true
+	;;
+        r)
+         remoteRun=1
+        ;;
         d)
          testDirectory="$OPTARG"
         ;;
@@ -172,18 +233,35 @@ if [ "$quickTest" ]
 then
     echo "using quickTest:   TRUE" >&2
     resetDB
+    resetLDAP
+    clearDownFileRepository
     runTests
 elif [ "$testScrub" ]
 then
     echo "using testScrub mode: this will do all the dirty work but omit the tests" >&2
     stopServers
     resetDB
+    clearDownFileRepository
     buildAndDeploy
     startServers
+elif [ "$happyPath" ]
+then 
+    echo "using happyPath mode: this will run a pared down set of tests as a sanity check for developers pre-commit" >&2
+    stopServers
+    resetDB
+    clearDownFileRepository
+    buildAndDeploy
+    startServers
+    runHappyPathTests
+elif [ "$remoteRun" ]
+then 
+    echo "Pointing the tests at the ifs dev server - note that some tests may fail if you haven't scrubbed the dev server's db" >&2
+    runTestsRemotely
 else
     echo "using quickTest:   FALSE" >&2
     stopServers
     resetDB
+    clearDownFileRepository
     buildAndDeploy
     startServers
     runTests

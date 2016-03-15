@@ -4,14 +4,18 @@ import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.application.transactional.SectionService;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @Rollback
 public class SectionControllerIntegrationTest extends BaseControllerIntegrationTest<SectionController> {
@@ -69,8 +73,8 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
 
     @Test
     public void testGetById() throws Exception {
-        Section section = controller.getById(sectionId).getSuccessObject();
-        assertEquals("Details", section.getName());
+        SectionResource section = controller.getById(sectionId).getSuccessObject();
+        assertEquals("Project details", section.getName());
 
         section = controller.getById(2L).getSuccessObject();
         assertEquals("Application questions", section.getName());

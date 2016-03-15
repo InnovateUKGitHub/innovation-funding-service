@@ -11,9 +11,8 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-  
-    <h1 class="heading-large">Oops, something went wrong</h1>
-
+    <h1 class="heading-large" th:if="${title != null}" th:text="${title}">Internal Server Error</h1>
+    <h1 class="heading-large" th:unless="${title != null}">Internal Server Error</h1>
 
     <p th:if="${url}">
         <b>Page:</b> <span th:text="${url}">Page URL</span>
@@ -30,19 +29,21 @@
 
     <!--/* ${ex} is set by ourSimpleMappingExceptionResolver,
            ${exception} or ${message} are set internally by Spring Boot. */-->
-    <div 
-            th:if="${exception} or (${message} and ${message.length() != 0})">
-        <pre style="padding:10px; white-space: pre-wrap;font-size:15px">
-        <span th:if="${ex}" th:text="${ex}">exception ...</span>
-        <span th:if="${exception}" th:text="${exception}">exception ...</span>
-		<span th:if="${message} and ${message.length() != 0}"
-              th:text="${message}">message ...</span>
-        </pre>
+
+    <div>
+		<span>
+            We are unable to complete your request. This could be because something went wrong at our end, or you are trying to perform an action that does not exist.  You can either go back to the page you were previously on or click <a th:href="@{/}">here</a> to get back to the IFS application.
+        </span>
     </div>
 
-    <p
-            th:unless="${exception} or (${message} and ${message.length() != 0})">
-        Cause unknown (no exception details available)</p>
+
+    <span th:if="${message} and ${message.length() != 0}" th:utext="${'&lt;!--' + message + ' --&gt;'}" th:remove="tag">
+        Error message will be displayed here for developers on dev/UAT environments.
+    </span>
+
+    <p th:unless="${exception} or (${message} and ${message.length() != 0})">
+        Cause unknown (no exception details available)
+    </p>
    <!--/*
     <p>
         You are seeing this error page due to Spring Boot (which returns a
@@ -52,7 +53,9 @@
         )
     </p> */-->
 
-
+    <pre th:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
+        Stack trace will be printed here...
+    </pre>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

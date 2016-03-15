@@ -12,39 +12,41 @@
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
               <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to application overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
                 <!-- HARDCODED PROTOTYPE HTML -->
-                <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Technology inspired - Application number: 12347353'}, ${'Assessment summary'})" th:remove="tag" />
+                <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'12347353: A novel solution to an old problem'}, ${'Assessment summary'})" th:remove="tag" />
                   
                   <h2 class="heading-medium">Overall scores</h2>
-                  <table>
-                    <tbody>
-                      <tr>
-                        <th>Question</th>
-                        <td><a href="/prototypes/984-assessor-question1">Q1</a></td>
-                        <td><a href="/prototypes/984-assessor-question2">Q2</a></td>
-                        <td><a href="/prototypes/984-assessor-question3">Q3</a></td>
-                        <td><a href="/prototypes/984-assessor-question4">Q4</a></td>
-                        <td><a href="/prototypes/984-assessor-question5">Q5</a></td>
-                        <td><a href="/prototypes/984-assessor-question6">Q6</a></td>
-                        <td><a href="/prototypes/984-assessor-question7">Q7</a></td>
-                        <td><a href="/prototypes/984-assessor-question8">Q8</a></td>
-                        <td><a href="/prototypes/984-assessor-question9">Q9</a></td>
-                        <td><a href="/prototypes/984-assessor-question10">Q10</a></td>
-                      </tr>
-                      <tr>
-                        <th>Score</th>
-                        <td>3</td>
-                        <td>7</td>
-                        <td>3</td>
-                        <td>3</td>
-                        <td></td>
-                        <td></td>
-                        <td>5</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div class="table-overflow">
+                    <table>
+                      <tbody>
+                        <tr>
+                          <th>Question</th>
+                          <td><a href="/prototypes/984-assessor-question1">Q1</a></td>
+                          <td><a href="/prototypes/984-assessor-question2">Q2</a></td>
+                          <td><a href="/prototypes/984-assessor-question3">Q3</a></td>
+                          <td><a href="/prototypes/984-assessor-question4">Q4</a></td>
+                          <td><a href="/prototypes/984-assessor-question5">Q5</a></td>
+                          <td><a href="/prototypes/984-assessor-question6">Q6</a></td>
+                          <td><a href="/prototypes/984-assessor-question7">Q7</a></td>
+                          <td><a href="/prototypes/984-assessor-question8">Q8</a></td>
+                          <td><a href="/prototypes/984-assessor-question9">Q9</a></td>
+                          <td><a href="/prototypes/984-assessor-question10">Q10</a></td>
+                        </tr>
+                        <tr>
+                          <th>Score</th>
+                          <td>3</td>
+                          <td>7</td>
+                          <td>3</td>
+                          <td>3</td>
+                          <td></td>
+                          <td></td>
+                          <td>5</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                   <div class="extra-margin alignright">
                     <p class="no-margin"><strong>Total: 21/100</strong></p>
                     <p><strong>21%</strong></p>
@@ -58,102 +60,65 @@
                     <div id="collapsible-1" aria-hidden="false">
                       <div class="question">
                         <div class="form-group">
-                          <div class="grid-row">
-                            <div class="column-three-quarters">
-                              <p>This is the feedback text here. </p>
+                              <p>This is the feedback text here.</p>
                               <p><a href="/prototypes/984-assessor-question-scope">Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
                               <p class="assessor-score alignright">
-                                <span class="score">In scope: <strong>Yes</strong></span>
+                                <span class="score">In scope: <strong>Yes</strong></span> 
                               </p>
-                            </div>
-                          </div>
                         </div>
                       </div>
                     </div>
-                    <h2>1. Business opportunity
+                    <h2><span>1. Business opportunity</span>
                       <div class="section-status section-complete">Complete</div>
+                      <div class="section-score">Score: 3/10</div>
                     </h2>
                     <div id="collapsible-2" aria-hidden="false">
                       <div class="question" >
                         <div class="form-group">
-                          <div class="grid-row">
-                            <div class="column-three-quarters">
-                              <p>This is the feedback text here. </p>
-                              <p><a href="/prototypes/984-assessor-question1">Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                              <p class="assessor-score alignright">
-                                <span class="score">Score: <strong>3</strong></span>
-                              </p>
-                            </div>
-                          </div>
+                            <p>This is the feedback text here. </p>
+                            <p><a href="/prototypes/984-assessor-question1">Return to this question in the application</a></p>
                         </div>
                       </div>
                     </div>
-                    <h2>2. Potential market
+                    <h2><span>2. Potential market</span>
                       <div class="section-status section-complete">Complete</div>
+                      <div class="section-score">Score: 7/10</div>
                     </h2>
                     <div id="collapsible-3" aria-hidden="false">
                       <div class="question">
                         <div class="form-group">
-                          <div class="grid-row">
-                            <div class="column-three-quarters">
-                              <p>This is the feedback text here. </p>
-                              <p><a href="/prototypes/984-assessor-question2">Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                              <p class="assessor-score alignright">
-                                <span class="score">Score: <strong>7</strong></span>
-                              </p>
-                            </div>
-                          </div>
+                            <p>This is the feedback text here. </p>
+                            <p><a href="/prototypes/984-assessor-question2">Return to this question in the application</a></p>
                         </div>
                       </div>
                     </div>
-                    <h2>3. Project exploitation
+                    <h2><span>3. Project exploitation</span>
                       <div class="section-status section-complete">Complete</div>
+                      <div class="section-score">Score: 7/10</div>
                     </h2>
                     <div id="collapsible-4" aria-hidden="false">
                       <div class="question">
                         <div class="form-group">
-                          <div class="grid-row">
-                            <div class="column-three-quarters">
-                              <p>This is the feedback text here? </p>
-                              <p><a href="/prototypes/984-assessor-question3">Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                              <p class="assessor-score alignright">
-                                <span class="score">Score: <strong>7</strong></span>
-                              </p>
-                            </div>
-                          </div>
+                            <p>This is the feedback text here? </p>
+                            <p><a href="/prototypes/984-assessor-question3">Return to this question in the application</a></p>
                         </div>
                       </div>
                     </div>
-                    <h2>4. Economic benefit
+                    <h2><span>4. Economic benefit</span>
                       <div class="section-status section-complete">Complete</div>
+                      <div class="section-score">Score: 7/10</div>
                     </h2>
                     <div id="collapsible-4" aria-hidden="false">
                       <div class="question">
                         <div class="form-group">
-                          <div class="grid-row">
-                            <div class="column-three-quarters">
-                              <p>This is the feedback text here? </p>
-                              <p><a href="/prototypes/984-assessor-question4">Return to this question in the application</a></p>
-                            </div>
-                            <div class="column-quarter">
-                              <p class="assessor-score alignright">
-                                <span class="score">Score: <strong>3</strong></span>
-                              </p>
-                            </div>
-                          </div>
+                            <p>This is the feedback text here? </p>
+                            <p><a href="/prototypes/984-assessor-question4">Return to this question in the application</a></p>
                         </div>
                       </div>
                     </div>
-                    <h2>5. Technical approach
+                    <h2><span>5. Technical approach</span>
                       <div class="section-status section-incomplete">Incomplete</div>
+                      <div class="section-score">Score: N/A</div>
                     </h2>
                     <div id="collapsible-4" aria-hidden="false">
                       <div class="question">
@@ -162,8 +127,9 @@
                         </div>
                       </div>
                     </div>
-                    <h2>6. Innovate
+                    <h2><span>6. Innovate</span>
                       <div class="section-status section-incomplete">Incomplete</div>
+                      <div class="section-score">Score: N/A</div>
                     </h2>
                     <div id="collapsible-4" aria-hidden="false">
                       <div class="question">
@@ -172,8 +138,9 @@
                         </div>
                       </div>
                     </div>
-                    <h2>7. Risks
+                    <h2><span>7. Risks</span>
                       <div class="section-status section-complete">Complete</div>
+                      <div class="section-score">Score: 7/10</div>
                     </h2>
                     <div id="collapsible-4" aria-hidden="false">
                       <div class="question">
@@ -182,8 +149,9 @@
                         </div>
                       </div>
                     </div>
-                    <h2>8. Project team
+                    <h2><span>8. Project team</span>
                       <div class="section-status section-incomplete">Incomplete</div>
+                      <div class="section-score">Score: N/A</div>
                     </h2>
                     <div id="collapsible-4" aria-hidden="false">
                       <div class="question">
@@ -192,8 +160,9 @@
                         </div>
                       </div>
                     </div>
-                    <h2>9. Funding
+                    <h2><span>9. Funding</span>
                       <div class="section-status section-incomplete">Incomplete</div>
+                      <div class="section-score">Score: N/A</div>
                     </h2>
                     <div id="collapsible-4" aria-hidden="false">
                       <div class="question">
@@ -202,8 +171,9 @@
                         </div>
                       </div>
                     </div>
-                    <h2>10. Adding value
+                    <h2><span>10. Adding value</span>
                       <div class="section-status section-incomplete">Incomplete</div>
+                      <div class="section-score">Score: N/A</div>
                     </h2>
                     <div id="collapsible-4" aria-hidden="false">
                       <div class="question">
@@ -212,6 +182,10 @@
                         </div>
                       </div>
                     </div>
+                  </div>
+                   <div class="extra-margin alignright">
+                    <p class="no-margin"><strong>Total: 21/100</strong></p>
+                    <p><strong>21%</strong></p>
                   </div>
                   <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
                   <fieldset class="inline">

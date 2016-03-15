@@ -11,6 +11,7 @@ import com.worth.ifs.finance.resource.cost.SubContractingCost;
  */
 public class SubContractingCostHandler extends CostHandler {
     public static final String COST_FIELD_COUNTRY = "country";
+    public static final String COST_KEY = "subcontracting";
 
     @Override
     public Cost toCost(CostItem costItem) {
@@ -35,7 +36,7 @@ public class SubContractingCostHandler extends CostHandler {
 
     public Cost mapSubContractingCost(CostItem costItem) {
         SubContractingCost subContractingCost = (SubContractingCost) costItem;
-        Cost cost =  new Cost(subContractingCost.getId(), subContractingCost.getName(), subContractingCost.getRole(),
+        Cost cost =  new Cost(subContractingCost.getId(), COST_KEY, subContractingCost.getName(), subContractingCost.getRole(),
                 0, subContractingCost.getCost(),null,null);
         cost.getCostValues().add(
                 new CostValue(cost, costFields.get(COST_FIELD_COUNTRY), subContractingCost.getCountry()));

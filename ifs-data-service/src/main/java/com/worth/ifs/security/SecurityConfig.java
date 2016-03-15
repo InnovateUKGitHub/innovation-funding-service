@@ -1,6 +1,5 @@
 package com.worth.ifs.security;
 
-import com.worth.ifs.commons.security.StatelessAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -41,12 +40,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // allow anonymous resource requests
                 .requestMatchers(statelessAuthenticationFilter.getIgnoredRequestMatchers()).permitAll()
-                .antMatchers("/user/email/*/password/*").permitAll()
+                .antMatchers("/user/uid/*").permitAll()
+                .antMatchers("/user/verifyEmail/*").permitAll()
                 .antMatchers("/user/createLeadApplicantForOrganisation/*").permitAll()
                 .antMatchers("/user/findByEmail/*/").permitAll()
-                .antMatchers("/user/token/*").permitAll()
                 .antMatchers("/organisation/findById/*").permitAll()
+                .antMatchers("/address/doLookup/*").permitAll()
                 .antMatchers("/browser/**").permitAll()
+                .antMatchers("/idpstub/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()

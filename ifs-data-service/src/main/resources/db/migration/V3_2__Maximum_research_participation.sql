@@ -1,1 +1,0 @@
-ALTER TABLE `competition` ADD COLUMN `max_research_ratio` INT NULL DEFAULT 0 COMMENT '' AFTER `start_date`;

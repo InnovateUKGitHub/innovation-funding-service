@@ -1,21 +1,21 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import junit.framework.Assert;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userResourceListType;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
 
@@ -53,29 +53,28 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void findExistingUserByEmailShouldReturnUserResource() {
         UserResource userResource = newUserResource().withEmail("testemail@email.com").build();
 
-        List<UserResource> userResourceList = singletonList(userResource);
-        setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + userResource.getEmail() + "/", userResourceListType(), userResourceList);
+        setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + userResource.getEmail() + "/", UserResource.class, userResource);
 
-        List<UserResource> users = service.findUserByEmail(userResource.getEmail()).getSuccessObject();
-        assertEquals(1, users.size());
-        assertEquals(userResource, users.get(0));
+        UserResource user = service.findUserByEmail(userResource.getEmail()).getSuccessObject();
+        assertEquals(userResource, user);
     }
 
     @Test
     public void findingNonExistingUserByEmailShouldReturnEmptyList() {
         String email = "email@test.test";
 
-        setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + email + "/", userResourceListType(), emptyList());
+        setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + email + "/", UserResource.class, null, HttpStatus.NOT_FOUND);
 
-        List<UserResource> users = service.findUserByEmail(email).getSuccessObject();
-        assertTrue(users.isEmpty());
+        RestResult<UserResource> restResult = service.findUserByEmail(email);
+        assertTrue(restResult.isFailure());
     }
 
     @Test
     public void searchingByEmptyUserEmailShouldReturnNull() {
         String email = "";
-        List<UserResource> users = service.findUserByEmail(email).getSuccessObject();
-        assertEquals(0, users.size());
+        RestResult<UserResource> restResult = service.findUserByEmail(email);
+        assertTrue(restResult.isFailure());
+        Assert.assertEquals(restResult.getStatusCode(), HttpStatus.NOT_FOUND);
     }
 
     @Test

@@ -1,7 +1,6 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
@@ -49,10 +48,6 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
 
     public UserResourceBuilder withPhoneNumber(String... phoneNumbers) {
         return withArray((phoneNumber, user) -> setField("phoneNumber", phoneNumber, user), phoneNumbers);
-    }
-
-    public UserResourceBuilder withToken(String... tokens) {
-        return withArray((token, user) -> setField("token", token, user), tokens);
     }
 
     public UserResourceBuilder withEmail(String... emails) {

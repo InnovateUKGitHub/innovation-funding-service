@@ -106,7 +106,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
         when(costServiceMock.addCost(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
 
         mockMvc.perform(get("/applicationfinance/add/{applicationId}/{organisationId}", "123", "456"))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         verify(costServiceMock, times(1)).addCost(123L, 456L);
     }

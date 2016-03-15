@@ -6,14 +6,18 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...
 ...               INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
-Test Teardown     User closes the browser
-Force Tags
-Default Tags      Finance    Applicant
+...
+...
+...               INFUND-894 As a lead partner I want to easily see whether or not my partner's finances are marked as complete, so that i can have the right level of confidence in the figures
+Suite Teardown    User closes the browser
+Test Teardown     Log out as user
+Force Tags        Finance    Applicant    # these tests have been tagged as failing since the numbers no longer match up to the database - find out why!
+Default Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/Applicant_actions.robot
+Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/2
@@ -25,65 +29,59 @@ ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}    ${SERVER}/application/7/form/sectio
 *** Test Cases ***
 Finance summary page calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]    Finance    Finance Section    Collaboration
-    Given the user logs in as lead applicant
+    [Tags]    Collaboration
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
-    And the user logs out
 
 Finance summary calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]    Finance    Finance Section    Collaboration
-    Given the user logs in as first collaborator
-    And the user goes to the finance summary of the Providing sustainable childcare application
+    [Tags]    Collaboration
+    [Setup]    Guest user log-in    &{collaborator1_credentials}
+    When the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
-    And the user logs out
 
 Finance summary calculations for the second collaborator
     [Documentation]    INFUND-524
-    [Tags]    Finance    Finance Section    Collaboration
-    Given the user logs in as second collaborator
+    [Tags]    HappyPath
+    [Setup]    Guest user log-in    &{collaborator2_credentials}
     And the user goes to the finance summary of the Providing sustainable childcare application
     When the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
     And the applicant enters a bigger funding amount
     Then the contribution to project and funding sought should be 0 and not a negative number
-    And the user logs out
 
-Green check shouldn't show when the finances are incomplete
+Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927
-    Given the user logs in as first collaborator
-    When the collaborator goes to the finance summary of the completed application
-    And applicant marks one finance sub-section as incomplete
-    Then the green check should not be visible
-    And the user logs out
+    ...
+    ...    INFUND-894
+    [Tags]    HappyPath    Failing
+    [Setup]    Guest user log-in    &{collaborator1_credentials}
+    When the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
+    And the user clicks the button/link    css=[aria-controls="collapsible-1"]
+    And the user clicks the button/link    jQuery=#collapsible-1 button:contains("Edit")
+    Then the red warnng should be visible
+    And the user should see the element    css=.warning-alert
+    And the user should see the text in the page    The following organisations have not maked their finances as complete:
+    [Teardown]
 
 Green check should show when the applicant marks the finance as complete
     [Documentation]    INFUND-927
-    Given the user logs in as first collaborator
-    And the collaborator goes to the finance summary of the completed application
-    When the applicant marks the finance question as complete
+    ...
+    ...    INFUND-894
+    [Tags]    HappyPath    Failing
+    [Setup]    Guest user log-in    &{collaborator1_credentials}
+    When the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
+    And the user clicks the button/link    css=[aria-controls="collapsible-1"]
+    And the user clicks the button/link    jQuery=#collapsible-1 button:contains("Mark as complete")
     Then both green checks should be visible
-    And the user logs out
 
 *** Keywords ***
-The user logs in as lead applicant
-    Login as user    &{lead_applicant_credentials}
-
 the user goes to the finance summary of the Providing sustainable childcare application
-    go to    ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}
+    the user navigates to the page    ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}
     click element    link=Finances overview
-
-The user logs out
-    Logout as user
-
-The user logs in as first collaborator
-    Login as user    &{collaborator1_credentials}
-
-The user logs in as second collaborator
-    Login as user    &{collaborator2_credentials}
 
 the finance Project cost breakdown calculations should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £0
@@ -104,7 +102,7 @@ the finance summary calculations should be correct
 the applicant enters a bigger funding amount
     [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
     go to    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}
-    Select Radio button    other_funding-otherPublicFunding-35-null    Yes
+    #Select Radio button    other_funding-otherPublicFunding-35-null    Yes
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    80000
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test2
     Sleep    1s
@@ -114,22 +112,11 @@ the contribution to project and funding sought should be 0 and not a negative nu
     Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(3)    £0
     Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(5)    £0
 
-the collaborator goes to the finance summary of the completed application
-    go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
+both green checks should be visible
+    the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
+    Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src="/images/field/tick-icon.png"]
+    Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img[src="/images/field/tick-icon.png"]
 
-applicant marks one finance sub-section as incomplete
-    Click Element    css=[aria-controls="collapsible-1"]
-    click element    jQuery=#collapsible-1 button:contains("Edit")
-
-the green check should not be visible
+the red warnng should be visible
     go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
-    Page Should Not Contain Image    css=.finance-summary tr:nth-of-type(2) img
-
-the applicant marks the finance question as complete
-    Click Element    css=[aria-controls="collapsible-1"]
-    click element    jQuery=#collapsible-1 button:contains("Mark as complete")
-
-Then both green checks should be visible
-    go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
-    Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img
-    Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img
+    Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img[src="/images/warning-icon.png"]

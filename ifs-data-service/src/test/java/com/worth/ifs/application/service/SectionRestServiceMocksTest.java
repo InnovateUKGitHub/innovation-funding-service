@@ -1,12 +1,13 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.application.domain.Section;
-import org.junit.Test;
-
 import java.util.List;
 
-import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.application.resource.SectionResource;
+
+import org.junit.Test;
+
+import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -55,12 +56,12 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     public void test_getSection() {
 
         String expectedUrl = sectionRestUrl + "/findByName/Section 1";
-        Section returnedResponse = newSection().build();
+        SectionResource returnedResponse = newSectionResource().build();
 
-        setupGetWithRestResultExpectations(expectedUrl, Section.class, returnedResponse);
+        setupGetWithRestResultExpectations(expectedUrl, SectionResource.class, returnedResponse);
 
         // now run the method under test
-        Section response = service.getSection("Section 1").getSuccessObject();
+        SectionResource response = service.getSection("Section 1").getSuccessObject();
         assertEquals(returnedResponse, response);
     }
 }

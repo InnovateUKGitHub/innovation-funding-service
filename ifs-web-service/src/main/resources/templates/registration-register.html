@@ -52,7 +52,16 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input th:class="${#fields.hasErrors('firstName') ? 'form-control field-error' : 'form-control'}" class="form-control" type="text" th:field="*{firstName}" required="required" data-required-errormessage="Please enter a first name"/>
+                    <input th:class="${#fields.hasErrors('firstName') ? 'form-control field-error' : 'form-control'}"
+                           class="form-control"
+                           type="text"
+                           th:field="*{firstName}"
+                           required="required"
+                           minlength="2"
+                           maxlength="70"
+                           data-minlength-errormessage="Your first name should have at least 2 characters"
+                           data-maxlength-errormessage="Your first name cannot have more than 70 characters"
+                           data-required-errormessage="Please enter a first name"/>
                 </div>
 
                 <div th:class="${#fields.hasErrors('lastName')}? 'form-group error':'form-group'">
@@ -62,7 +71,16 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-error' : 'form-control'}"  id="lastName" name="lastName" type="text" th:field="*{lastName}" required="required" data-required-errormessage="Please enter a last name"/>
+                    <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-error' : 'form-control'}"
+                           id="lastName"
+                           type="text"
+                           th:field="*{lastName}"
+                           required="required"
+                           minlength="2"
+                           maxlength="70"
+                           data-minlength-errormessage="Your last name should have at least 2 characters"
+                           data-maxlength-errormessage="Your last name cannot have more than 70 characters"
+                           data-required-errormessage="Please enter a last name"/>
                 </div>
                 <div th:class="${#fields.hasErrors('phoneNumber')}? 'form-group error':'form-group'">
                     <label class="form-label" for="phoneNumber">
@@ -72,17 +90,43 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
                         </span>
                      </label>
-                    <input th:class="${#fields.hasErrors('phoneNumber') ? 'form-control field-error' : 'form-control'}"  type="text" th:field="*{phoneNumber}" required="required" data-required-errormessage="Please enter a phone number"/>
+                    <input th:class="${#fields.hasErrors('phoneNumber') ? 'form-control field-error' : 'form-control'}"
+                           type="tel"
+                           th:field="*{phoneNumber}"
+                           minlength="8"
+                           maxlength="20"
+                           required="required"
+                           data-minlength-errormessage="Input for your phone number has a minimum length of 8 characters"
+                           data-maxlength-errormessage="Input for your phone number has a maximum length of 20 characters"
+                           data-required-errormessage="Please enter a phone number"/>
                 </div>
-                <div th:class="${#fields.hasErrors('email')}? 'form-group error':'form-group'">
+                <div th:class="${#fields.hasErrors('email') and invitee == null}? 'form-group error':'form-group'">
                     <label class="form-label" for="email">
                         <span class="form-label-bold">Email</span>
-                        <span class="form-hint">You will need this to sign into your account</span>
-                        <span th:if="${#fields.hasErrors('email')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}" />
+
+                        <span th:if="${invitee}">
+                            <span class="form-hint">You will need this to sign into your account, the provided email is:
+                                <br/>
+                            <strong><span th:remove="tag" th:text="${registrationForm.email}"></span></strong>
+                            </span>
                         </span>
-                   </label>
-                    <input th:class="${#fields.hasErrors('email') ? 'form-control field-error' : 'form-control'}" type="email" th:field="*{email}"  required="required" data-required-errormessage="Please enter your email" />
+                        <span th:unless="${invitee}">
+                            <span class="form-hint">You will need this to sign into your account</span>
+                            <span th:if="${#fields.hasErrors('email')}" th:remove="tag">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}" />
+                            </span>
+                        </span>
+                    </label>
+
+                    <span th:unless="${invitee}">
+                        <input th:class="${#fields.hasErrors('email') ? 'form-control field-error' : 'form-control'}"
+                               type="email"
+                               th:field="*{email}"
+                               maxlength="256"
+                               required="required"
+                               data-maxlength-errormessage="Your email address has a maximum length of 256 characters"
+                               data-required-errormessage="Please enter your email" />
+                    </span>
                 </div>
                 <div th:class="${#fields.hasErrors('password')}? 'form-group error':'form-group'">
                     <label class="form-label" for="password">
@@ -92,7 +136,15 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input th:class="${#fields.hasErrors('password') ? 'form-control field-error' : 'form-control'}" type="password" th:field="*{password}" required="required" data-required-errormessage="Please enter your password" minlength="6" data-minlength-errormessage="Password size should be between 6 and 30 characters"/>
+                    <input th:class="${#fields.hasErrors('password') ? 'form-control field-error' : 'form-control'}"
+                           type="password"
+                           th:field="*{password}"
+                           required="required"
+                           minlength="6"
+                           maxlength="30"
+                           data-required-errormessage="Please enter your password"
+                           data-minlength-errormessage="Your password should have at least 6 characters"
+                           data-maxlength-errormessage="Your password cannot have more than 30 characters" />
                 </div>
                 <div th:class="${#fields.hasErrors('retypedPassword')}? 'form-group error':'form-group'">
                     <label class="form-label" for="retypedPassword">
@@ -101,7 +153,15 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input th:class="${#fields.hasErrors('retypedPassword') ? 'form-control field-error' : 'form-control'}" type="password" th:field="*{retypedPassword}" required="required" data-required-errormessage="Please re-type your password" minlength="6" data-minlength-errormessage="Password size should be between 6 and 30 characters" />
+                    <input th:class="${#fields.hasErrors('retypedPassword') ? 'form-control field-error' : 'form-control'}"
+                           type="password"
+                           th:field="*{retypedPassword}"
+                           required="required"
+                           minlength="6"
+                           maxlength="30"
+                           data-required-errormessage="Please enter your password"
+                           data-minlength-errormessage="Your password should have at least 6 characters"
+                           data-maxlength-errormessage="Your password cannot have more than 30 characters" />
                 </div>
                 <div th:class="${#fields.hasErrors('termsAndConditions')}? 'form-group error':'form-group'">
                   <fieldset>

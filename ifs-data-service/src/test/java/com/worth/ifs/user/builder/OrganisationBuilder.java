@@ -2,6 +2,7 @@ package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.OrganisationType;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -43,5 +44,8 @@ public class OrganisationBuilder extends BaseBuilder<Organisation, OrganisationB
     }
     public OrganisationBuilder withCompanyHouseNumber(String... numbers) {
         return withArray((number, organisation) -> setField("companyHouseNumber", number, organisation), numbers);
+    }
+    public OrganisationBuilder withTypes(OrganisationType... organisationTypes) {
+        return withArray((organisationType, organisation) -> setField("organisationType", organisationType, organisation), organisationTypes);
     }
 }

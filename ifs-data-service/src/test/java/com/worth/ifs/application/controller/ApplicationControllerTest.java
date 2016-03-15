@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
@@ -37,13 +39,14 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void applicationControllerShouldReturnApplicationById() throws Exception {
         Application testApplication1 = newApplication().withId(1L).withName("testApplication1Name").build();
         Application testApplication2 = newApplication().withId(2L).withName("testApplication2Name").build();
-        ApplicationResource testApplicationResource1 = newApplicationResource().withId(1L).withName("testApplication1Name").build();
-        ApplicationResource testApplicationResource2 = newApplicationResource().withId(2L).withName("testApplication2Name").build();
+        Competition competition = newCompetition().withName("Technology Inspired").build();
+        ApplicationResource testApplicationResource1 = newApplicationResource().withId(1L).withCompetition(competition).withName("testApplication1Name").build();
+        ApplicationResource testApplicationResource2 = newApplicationResource().withId(2L).withCompetition(competition).withName("testApplication2Name").build();
 
         when(applicationService.getApplicationById(testApplication1.getId())).thenReturn(serviceSuccess(testApplicationResource1));
         when(applicationService.getApplicationById(testApplication2.getId())).thenReturn(serviceSuccess(testApplicationResource2));
 
-        mockMvc.perform(get("/application/normal/1"))
+        mockMvc.perform(get("/application/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(testApplicationResource1)))
                 .andDo(document("application/get-application",
@@ -51,20 +54,23 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                                 fieldWithPath("id").description("Id of the application"),
                                 fieldWithPath("name").description("Name of the application"),
                                 fieldWithPath("startDate").description("Estimated timescales: project start date"),
+                                fieldWithPath("submittedDate").description("The date the applicant has submitted this application."),
                                 fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
                                 fieldWithPath("processRoles").description("list of ProcessRole Id's"),
                                 fieldWithPath("applicationStatus").description("ApplicationStatus Id"),
+                                fieldWithPath("applicationStatusName").description("ApplicationStatus name"),
                                 fieldWithPath("competition").description("Competition Id"),
+                                fieldWithPath("competitionName").description("Competition Name"),
                                 fieldWithPath("applicationFinances").description("list of ApplicationFinance Id's"))));
-        mockMvc.perform(get("/application/normal/2"))
+        mockMvc.perform(get("/application/2"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(testApplicationResource2)));
     }
 
     @Test
     public void applicationControllerShouldReturnApplicationByUserId() throws Exception {
-        User testUser2 = new User(2L, "testUser2", "email2@email.nl", "password", "test/image/url/2", "testToken456def", null);
-        User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "test/image/url/1", "testToken123abc", null);
+        User testUser2 = new User(2L, "testUser2", "email2@email.nl", "password", "testToken456def", null, "my-uid");
+        User testUser1 = new User(1L, "testUser1", "email1@email.nl", "password", "testToken123abc", null, "my-uid2");
 
         ApplicationResource testApplicationResource1 = newApplicationResource().withId(1L).withName("testApplication1Name").build();
         ApplicationResource testApplicationResource2 = newApplicationResource().withId(2L).withName("testApplication2Name").build();
@@ -116,7 +122,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         mockMvc.perform(post("/application/createApplicationByName/" + competitionId + "/" + userId, "json")
                 .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(applicationNameNode)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", notNullValue()))
                 .andDo(document("application/create-application"));
     }

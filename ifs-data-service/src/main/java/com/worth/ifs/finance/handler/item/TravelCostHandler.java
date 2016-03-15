@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class TravelCostHandler extends CostHandler {
     private final Log log = LogFactory.getLog(getClass());
+    public static final String COST_KEY = "travel";
 
     @Override
     public Cost toCost(CostItem costItem) {
@@ -20,7 +21,7 @@ public class TravelCostHandler extends CostHandler {
         log.info("COST TRAVEL UPDATE");
         if (costItem.getCostType().equals(CostType.TRAVEL)) {
             TravelCost travel = (TravelCost) costItem;
-            cost = new Cost(travel.getId(), travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
+            cost = new Cost(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
         }
         return cost;
     }

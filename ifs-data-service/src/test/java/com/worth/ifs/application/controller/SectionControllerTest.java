@@ -1,23 +1,26 @@
 package com.worth.ifs.application.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.competition.domain.Competition;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
+import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static java.util.stream.Collectors.toList;
@@ -84,7 +87,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
     @Test
     public void findByNameTest() throws Exception {
-        Section section = newSection().build();
+        SectionResource section = newSectionResource().build();
         when(sectionService.findByName("testname")).thenReturn(serviceSuccess(section));
 
         mockMvc.perform(post("/section/findByName/testname")
@@ -97,7 +100,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
     @Test
     public void getNextSectionTest() throws Exception {
         Section section = newSection().withCompetitionAndPriority(newCompetition().build(), 1).build();
-        Section nextSection = newSection().build();
+        SectionResource nextSection = newSectionResource().build();
         when(sectionService.getNextSection(section.getId())).thenReturn(serviceSuccess(nextSection));
 
         mockMvc.perform(get("/section/getNextSection/" + section.getId())
@@ -110,7 +113,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
     @Test
     public void getPreviousSectionTest() throws Exception {
         Section section = newSection().withCompetitionAndPriority(newCompetition().build(), 1).build();
-        Section previousSection = newSection().build();
+        SectionResource previousSection = newSectionResource().build();
         when(sectionService.getPreviousSection(section.getId())).thenReturn(serviceSuccess(previousSection));
 
         mockMvc.perform(get("/section/getPreviousSection/" + section.getId())

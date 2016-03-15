@@ -7,6 +7,8 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserRestService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
  */
 @Service
 public class UserServiceImpl implements UserService {
+    private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
 
     @Autowired
     private UserRestService userRestService;
@@ -33,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     // TODO DW - INFUND-1555 - get service to return RestResult
     public List<User> getAssignable(Long applicationId) {
-        return userRestService.findAssignableUsers(applicationId).getSuccessObjectOrNull();
+        return userRestService.findAssignableUsers(applicationId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -80,6 +83,10 @@ public class UserServiceImpl implements UserService {
     public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
         return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
     }
+    @Override
+    public RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId) {
+        return userRestService.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, competitionId);
+    }
 
     @Override
     public RestResult<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
@@ -87,7 +94,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RestResult<List<UserResource>> findUserByEmail(String email) {
+    public RestResult<Void> verifyEmail(String hash) {
+        return userRestService.verifyEmail(hash);
+    }
+
+    @Override
+    public RestResult<Void> sendPasswordResetNotification(String email) {
+        return userRestService.sendPasswordResetNotification(email);
+    }
+
+    @Override
+    public RestResult<Void> checkPasswordResetHash(String hash) {
+        return userRestService.checkPasswordResetHash(hash);
+    }
+
+    @Override
+    public RestResult<Void> resetPassword(String hash, String password) {
+        return userRestService.resetPassword(hash,password);
+    }
+
+    @Override
+    public RestResult<UserResource> findUserByEmail(String email) {
         return userRestService.findUserByEmail(email);
     }
 }

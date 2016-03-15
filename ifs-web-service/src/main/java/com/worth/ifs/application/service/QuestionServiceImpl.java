@@ -3,6 +3,7 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,12 +43,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<Question> findByCompetition(Long competitionId) {
-        return questionRestService.findByCompetition(competitionId).getSuccessObjectOrNull();
+        return questionRestService.findByCompetition(competitionId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId) {
-        return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId).getSuccessObjectOrNull());
+        return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId).getSuccessObjectOrThrowException());
     }
 
     private Map<Long, QuestionStatusResource> mapToQuestionIds(final List<QuestionStatusResource> questionStatusResources){
@@ -79,12 +80,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question getById(Long questionId) {
-        return questionRestService.findById(questionId).getSuccessObjectOrNull();
+        return questionRestService.findById(questionId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public Question getNextQuestion(Long questionId) {
-        return questionRestService.getNextQuestion(questionId).getSuccessObjectOrNull();
+        return questionRestService.getNextQuestion(questionId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -94,7 +95,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question getPreviousQuestionBySection(Long sectionId) {
-        return questionRestService.getPreviousQuestionBySection(sectionId).getSuccessObjectOrNull();
+        return questionRestService.getPreviousQuestionBySection(sectionId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -103,8 +104,13 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public RestResult<Question> getQuestionByFormInputType(String formInputType) {
+        return questionRestService.getQuestionByFormInputType(formInputType);
+    }
+
+    @Override
     public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
-        List<QuestionStatusResource> questionStatuses = questionStatusRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId).getSuccessObjectOrNull();
+        List<QuestionStatusResource> questionStatuses = questionStatusRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId).getSuccessObjectOrThrowException();
         if(questionStatuses == null || questionStatuses.size() == 0){
             return null;
         }
@@ -113,6 +119,6 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId){
-        return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccessObjectOrNull());
+        return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccessObjectOrThrowException());
     }
 }

@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 
@@ -38,16 +38,13 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public ServiceResult<Notification> sendNotification(Notification notification, NotificationMedium notificationMedium, NotificationMedium... otherNotificationMedia) {
 
-        return handlingErrors(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE), () -> {
+        Set<NotificationMedium> allMediaToSendNotificationBy = new LinkedHashSet<>(combineLists(notificationMedium, otherNotificationMedia));
 
-            Set<NotificationMedium> allMediaToSendNotificationBy = new LinkedHashSet<>(combineLists(notificationMedium, otherNotificationMedia));
+        List<ServiceResult<Notification>> results = simpleMap(allMediaToSendNotificationBy, medium ->
+                getNotificationSender(medium).andOnSuccess(serviceForMedium ->
+                        serviceForMedium.sendNotification(notification)));
 
-            List<ServiceResult<Notification>> results = simpleMap(allMediaToSendNotificationBy, medium ->
-                    getNotificationSender(medium).andOnSuccess(serviceForMedium ->
-                            serviceForMedium.sendNotification(notification)));
-
-            return processAnyFailuresOrSucceed(results, serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)), serviceSuccess(notification));
-        });
+        return processAnyFailuresOrSucceed(results, serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)), serviceSuccess(notification));
     }
 
     private ServiceResult<NotificationSender> getNotificationSender(NotificationMedium medium) {

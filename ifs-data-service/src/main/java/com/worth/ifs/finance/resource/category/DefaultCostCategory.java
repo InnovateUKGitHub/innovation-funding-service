@@ -32,7 +32,7 @@ public class DefaultCostCategory implements CostCategory {
     @Override
     public void calculateTotal() {
         total = costs.stream()
-                .map(c -> c.getTotal())
+                .map(c -> c.getTotal() == null ? BigDecimal.ZERO : c.getTotal())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

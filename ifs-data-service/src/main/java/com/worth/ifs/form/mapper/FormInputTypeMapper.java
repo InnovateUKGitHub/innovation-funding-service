@@ -1,11 +1,10 @@
 package com.worth.ifs.form.mapper;
 
+import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.form.domain.FormInputType;
-import com.worth.ifs.form.repository.FormInputTypeRepository;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -13,14 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
         FormInputMapper.class
     }
 )
-public abstract class FormInputTypeMapper {
-
-    @Autowired
-    private FormInputTypeRepository repository;
-
-    public abstract FormInputTypeResource mapFormInputTypeToResource(FormInputType object);
-
-    public abstract FormInputType resourceToFormInputType(FormInputTypeResource resource);
+public abstract class FormInputTypeMapper  extends BaseMapper<FormInputType, FormInputTypeResource, Long> {
 
     public Long mapFormInputTypeToId(FormInputType object) {
         if (object == null) {
@@ -28,9 +20,4 @@ public abstract class FormInputTypeMapper {
         }
         return object.getId();
     }
-
-    public FormInputType mapIdToFormInputType(Long id) {
-        return repository.findOne(id);
-    }
-
 }

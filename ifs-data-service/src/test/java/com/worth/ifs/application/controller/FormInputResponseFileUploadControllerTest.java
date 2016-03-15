@@ -5,9 +5,9 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.error.Errors;
-import com.worth.ifs.commons.rest.RestErrorEnvelope;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInput;
@@ -28,10 +28,10 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
-import static com.worth.ifs.commons.error.Errors.payloadTooLargeError;
+import static com.worth.ifs.commons.error.CommonErrors.payloadTooLargeError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
-import static com.worth.ifs.commons.error.Errors.notFoundError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
@@ -154,29 +154,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
-        RestErrorEnvelope restErrorResponse = new ObjectMapper().readValue(content, RestErrorEnvelope.class);
-        assertTrue(restErrorResponse.is(generalError));
-    }
-
-    @Test
-    public void testCreateFileButApplicationServiceCallFailsThrowsException() throws Exception {
-
-        when(applicationService.createFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isSupplierMatcher())).thenThrow(new RuntimeException("No files today!"));
-
-        MvcResult response = mockMvc.
-                perform(
-                        post("/forminputresponse/file").
-                                param("formInputId", "123").
-                                param("applicationId", "456").
-                                param("processRoleId", "789").
-                                param("filename", "original.pdf").
-                                header("Content-Type", "application/pdf").
-                                header("Content-Length", "1000").
-                                content("My PDF content")).
-                andExpect(status().isInternalServerError()).
-                andReturn();
-
-        assertResponseErrorMessageEqual("Error creating file", internalServerErrorError("Error creating file"), response);
+        RestErrorResponse restErrorResponse = new ObjectMapper().readValue(content, RestErrorResponse.class);
+        assertEqualsUpNoIncludingStatusCode(restErrorResponse, generalError);
     }
 
     @Test
@@ -232,7 +211,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_missingContentLength")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", Errors.lengthRequiredError(5000), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", CommonErrors.lengthRequiredError(5000), response);
     }
 
     @Test
@@ -252,7 +231,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_unsupportedContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", CommonErrors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
@@ -271,7 +250,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpload_missingContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", CommonErrors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
@@ -379,27 +358,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testUpdateFileButApplicationServiceCallFailsThrowsException() throws Exception {
-
-        when(applicationService.updateFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isSupplierMatcher())).thenThrow(new RuntimeException("No files today!"));
-
-        MvcResult response = mockMvc.
-                perform(
-                        put("/forminputresponse/file").
-                                param("formInputId", "123").
-                                param("applicationId", "456").
-                                param("processRoleId", "789").
-                                param("filename", "original.pdf").
-                                header("Content-Type", "application/pdf").
-                                header("Content-Length", "1000").
-                                content("My PDF content")).
-                andExpect(status().isInternalServerError()).
-                andReturn();
-
-        assertResponseErrorMessageEqual("Error updating file", internalServerErrorError("Error updating file"), response);
-    }
-
-    @Test
     public void testUpdateFileButFormInputNotFound() throws Exception {
         assertUpdateFileButEntityNotFound(FormInput.class, "formInputNotFound", "FormInput not found");
     }
@@ -452,7 +410,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_missingContentLength")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", Errors.lengthRequiredError(5000), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Length HTTP header.  Maximum 5000", CommonErrors.lengthRequiredError(5000), response);
     }
 
     @Test
@@ -472,7 +430,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_unsupportedContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", CommonErrors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
@@ -491,7 +449,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andDo(document("forminputresponsefileupload/file_fileUpdate_missingContentType")).
                 andReturn();
 
-        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", Errors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
+        assertResponseErrorMessageEqual("Please supply a valid Content-Type HTTP header.  Valid types are application/pdf, application/json", CommonErrors.unsupportedMediaTypeError(asList("application/pdf", "application/json")), response);
     }
 
     @Test
@@ -562,23 +520,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("processRoleId", "789")).
                 andExpect(status().isInternalServerError()).
                 andDo(document("forminputresponsefileupload/file_fileDelete_internalServerError")).
-                andReturn();
-
-        assertResponseErrorMessageEqual("Error deleting file", internalServerErrorError("Error deleting file"), response);
-    }
-
-    @Test
-    public void testDeleteFileButApplicationServiceCallFailsThrowsException() throws Exception {
-
-        when(applicationService.deleteFormInputResponseFileUpload(isA(FormInputResponseFileEntryId.class))).thenThrow(new RuntimeException("No files today!"));
-
-        MvcResult response = mockMvc.
-                perform(
-                        delete("/forminputresponse/file").
-                                param("formInputId", "123").
-                                param("applicationId", "456").
-                                param("processRoleId", "789")).
-                andExpect(status().isInternalServerError()).
                 andReturn();
 
         assertResponseErrorMessageEqual("Error deleting file", internalServerErrorError("Error deleting file"), response);
@@ -960,13 +901,20 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
     private void assertResponseErrorMessageEqual(String expectedMessage, Error expectedError, MvcResult mvcResult) throws IOException {
         String content = mvcResult.getResponse().getContentAsString();
-        RestErrorEnvelope restErrorResponse = new ObjectMapper().readValue(content, RestErrorEnvelope.class);
+        RestErrorResponse restErrorResponse = new ObjectMapper().readValue(content, RestErrorResponse.class);
         assertErrorMessageEqual(expectedMessage, expectedError, restErrorResponse);
     }
 
-    private void assertErrorMessageEqual(String expectedMessage, Error expectedError, RestErrorEnvelope restErrorResponse) {
+    private void assertErrorMessageEqual(String expectedMessage, Error expectedError, RestErrorResponse restErrorResponse) {
         assertEquals(expectedMessage, restErrorResponse.getErrors().get(0).getErrorMessage());
-        assertTrue(restErrorResponse.is(expectedError));
+        assertEqualsUpNoIncludingStatusCode(restErrorResponse, expectedError);
+    }
+
+    private void assertEqualsUpNoIncludingStatusCode(final RestErrorResponse restErrorResponse, final Error expectedError){
+        assertTrue(restErrorResponse.getErrors().size() == 1);
+        assertEquals(restErrorResponse.getErrors().get(0).getErrorMessage(), expectedError.getErrorMessage());
+        assertEquals(restErrorResponse.getErrors().get(0).getArguments() , expectedError.getArguments());
+        assertEquals(restErrorResponse.getErrors().get(0).getErrorKey() , expectedError.getErrorKey());
     }
 
     private FormInputResponseFileEntryId fileEntryExpectations() {

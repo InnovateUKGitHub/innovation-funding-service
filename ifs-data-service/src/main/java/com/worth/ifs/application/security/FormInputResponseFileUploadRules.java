@@ -1,5 +1,7 @@
 package com.worth.ifs.application.security;
 
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
@@ -13,8 +15,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
+import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
 
 /**
@@ -33,14 +38,18 @@ public class FormInputResponseFileUploadRules {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
     @PermissionRule(value = "UPDATE", description = "An Applicant can upload a file for an answer to one of their own Applications")
     public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, User user) {
-        return userIsApplicantOnThisApplication(fileEntry, user);
+        Application application = applicationRepository.findOne(fileEntry.getCompoundId().getApplicationId());
+        return userIsApplicantOnThisApplication(fileEntry, user) && application.isOpen();
     }
 
     @PermissionRule(value = "READ", description = "An Applicant can download a file for an answer to one of their own Applications")
     public boolean applicantCanDownloadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, User user) {
-        return userIsApplicantOnThisApplication(fileEntry.getCompoundId().getApplicationId(), user);
+        return userIsApplicantOnThisApplication(fileEntry, user);
     }
 
     private boolean userIsApplicantOnThisApplication(FormInputResponseFileEntryResource fileEntry, User user) {
@@ -48,13 +57,8 @@ public class FormInputResponseFileUploadRules {
     }
 
     private boolean userIsApplicantOnThisApplication(long applicationId, User user) {
-        List<Role> leadApplicantRoles = roleRepository.findByName(LEADAPPLICANT.getName());
-        if (leadApplicantRoles.isEmpty()) {
-            LOG.error("Could not find a Lead Applicant role");
-            return false;
-        }
-        Role leadApplicantRole = leadApplicantRoles.get(0);
-        List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(), leadApplicantRole, applicationId);
+        List<Role> allApplicantRoles = roleRepository.findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()));
+        List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, applicationId);
         return !applicantProcessRoles.isEmpty();
     }
 }

@@ -1,16 +1,18 @@
 package com.worth.ifs.util;
 
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ExceptionThrowingFunction;
 import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.Errors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Optional.ofNullable;
@@ -25,23 +27,28 @@ public class EntityLookupCallbacks {
     private static final Log log = LogFactory.getLog(EntityLookupCallbacks.class);
 
     public static <SuccessType> ServiceResult<SuccessType> find(
-            Supplier<SuccessType> getterFn,
+            SuccessType result,
             Error failureResponse) {
 
-        SuccessType getterResult = getterFn.get();
-
-        if (getterResult instanceof Collection && ((Collection) getterResult).isEmpty()) {
+        if (result instanceof Collection && ((Collection) result).isEmpty()) {
             return serviceFailure(failureResponse);
         }
+        if (result instanceof Optional) {
+            return ((Optional<SuccessType>) result).map(ServiceResult::serviceSuccess).orElse(serviceFailure(failureResponse));
+        }
 
-        return ofNullable(getterResult).map(ServiceResult::serviceSuccess).orElse(serviceFailure(failureResponse));
+        return ofNullable(result).map(ServiceResult::serviceSuccess).orElse(serviceFailure(failureResponse));
     }
 
-    public static <SuccessType> ServiceResult<SuccessType> find(
-            SuccessType getterFn,
+    public static <T> ServiceResult<T> find(
+            Optional<T> result,
             Error failureResponse) {
 
-        return find(() -> getterFn, failureResponse);
+        if(result.isPresent()){
+            return serviceSuccess(result.get());
+        }else{
+            return serviceFailure(failureResponse);
+        }
     }
 
     /**
@@ -150,6 +157,12 @@ public class EntityLookupCallbacks {
         }
         return serviceSuccess(list.iterator().next());
     }
+    public static <T> ServiceResult<T> getOptionalElementOrFail(Optional<T> item) {
+        if (!item.isPresent()) {
+            return serviceFailure(internalServerErrorError("Optional element not present - " + item));
+        }
+        return serviceSuccess(item.get());
+    }
 
     /**
      * This class is produced by the find() method, which given 2 ServiceResult suppliers, is able to execute the ServiceResults
@@ -168,6 +181,14 @@ public class EntityLookupCallbacks {
 
         public <R> ServiceResult<R> andOnSuccess(Function<T, ServiceResult<R>> mainFunction) {
             return getterFn1.get().andOnSuccess(result1 -> mainFunction.apply(result1));
+        }
+
+        public <T> ServiceResult<T> andOnSuccess(Supplier<T> supplier) {
+            return getterFn1.get().andOnSuccess(result1 -> serviceSuccess(supplier.get()));
+        }
+
+        public <R> ServiceResult<R> andOnSuccessReturn(ExceptionThrowingFunction<T, R> successFn) {
+            return getterFn1.get().andOnSuccessReturn(result1 -> successFn.apply(result1));
         }
     }
 
@@ -191,6 +212,10 @@ public class EntityLookupCallbacks {
 
         public <T> ServiceResult<T> andOnSuccess(BiFunction<R, S, ServiceResult<T>> mainFunction) {
             return getterFn1.get().andOnSuccess(result1 -> getterFn2.get().andOnSuccess(result2 -> mainFunction.apply(result1, result2)));
+        }
+
+        public <T> ServiceResult<T> andOnSuccess(Supplier<T> supplier) {
+            return andOnSuccess((p1, p2) -> serviceSuccess(supplier.get()));
         }
     }
 
@@ -219,6 +244,10 @@ public class EntityLookupCallbacks {
                     andOnSuccess(result1 -> getterFn2.get().
                             andOnSuccess(result2 -> getterFn3.get().
                                     andOnSuccess(result3 -> mainFunction.apply(result1, result2, result3))));
+        }
+
+        public <T> ServiceResult<T> andOnSuccess(Supplier<T> supplier) {
+            return andOnSuccess((p1, p2, p3) -> serviceSuccess(supplier.get()));
         }
     }
 
@@ -251,6 +280,11 @@ public class EntityLookupCallbacks {
                                     andOnSuccess(result3 -> getterFn4.get().
                                             andOnSuccess(result4 -> mainFunction.apply(result1, result2, result3, result4)))));
         }
+
+        public <T> ServiceResult<T> andOnSuccess(Supplier<T> supplier) {
+            return andOnSuccess((p1, p2, p3, p4) -> serviceSuccess(supplier.get()));
+        }
+
     }
 
     @FunctionalInterface

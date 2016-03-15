@@ -7,6 +7,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.mapper.ApplicationStatusMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
@@ -21,8 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @Rollback
 public class ApplicationControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationController> {
@@ -56,9 +56,9 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
                 null
             )
         );
-        User user = new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "123abc", "", proccessRoles);
+        User user = new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "", proccessRoles, "123abc");
         proccessRoles.get(0).setUser(user);
-        swapOutForUser(new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "123abc", "", proccessRoles));
+        swapOutForUser(new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "", proccessRoles, "123abc"));
 
 
     }
@@ -80,8 +80,13 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Test
-    public void testUpdateApplication() {
+    public void testFindAll() {
+        RestResult<List<ApplicationResource>> all = controller.findAll();
+        assertEquals(5, all.getSuccessObject().size());
+    }
 
+    @Test
+    public void testUpdateApplication() {
         String originalTitle= "A novel solution to an old problem";
         String newTitle = "A new title";
 
@@ -104,28 +109,43 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         ObjectNode response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccessObject();
         double completedPercentage = response.get("completedPercentage").asDouble();
         double delta = 0.10;
-        assertEquals(51.21, completedPercentage, delta);
+        assertEquals(45.65, completedPercentage, delta);
 
         questionController.markAsInComplete(28L, APPLICATION_ID, leadApplicantProcessRole);
 
         response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccessObject();
         completedPercentage = response.get("completedPercentage").asDouble();
-        assertEquals(48.78, completedPercentage, delta);
+        assertEquals(43.47, completedPercentage, delta);
     }
 
     @Test
-    public void testUpdateApplicationStatus() throws Exception {
+    public void testUpdateApplicationStatusApproved() throws Exception {
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.APPROVED.getId());
-        assertEquals(ApplicationStatusConstants.APPROVED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
+        assertEquals(ApplicationStatusConstants.APPROVED.getName(), applicationStatusMapper.mapIdToDomain(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
+    }
 
+    @Test
+    public void testUpdateApplicationStatusRejected() throws Exception {
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.REJECTED.getId());
-        assertEquals(ApplicationStatusConstants.REJECTED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
+        assertEquals(ApplicationStatusConstants.REJECTED.getName(), applicationStatusMapper.mapIdToDomain(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
+    }
 
+    @Test
+    public void testUpdateApplicationStatusCreated() throws Exception {
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.CREATED.getId());
-        assertEquals(ApplicationStatusConstants.CREATED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
+        assertEquals(ApplicationStatusConstants.CREATED.getName(), applicationStatusMapper.mapIdToDomain(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
+    }
+
+    @Test
+    public void testUpdateApplicationStatusSubmitted() throws Exception {
+        ApplicationResource applicationBefore = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
+        assertNull(applicationBefore.getSubmittedDate());
 
         controller.updateApplicationStatus(APPLICATION_ID, ApplicationStatusConstants.SUBMITTED.getId());
-        assertEquals(ApplicationStatusConstants.SUBMITTED.getName(), applicationStatusMapper.mapIdToApplicationStatus(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
+        assertEquals(ApplicationStatusConstants.SUBMITTED.getName(), applicationStatusMapper.mapIdToDomain(controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationStatus()).getName());
+
+        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
+        assertNotNull(applicationAfter.getSubmittedDate());
     }
 
     @Test
