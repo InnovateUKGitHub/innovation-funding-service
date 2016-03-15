@@ -92,7 +92,6 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         user.setFirstName("testFirstName");
         user.setLastName("testLastName");
         user.setPhoneNumber("testPhoneNumber");
-        user.setPassword("testPassword");
         user.setName("testFirstName testLastName");
         user.setTitle("Mr");
 

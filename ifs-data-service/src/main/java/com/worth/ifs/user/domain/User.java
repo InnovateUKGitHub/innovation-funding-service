@@ -2,11 +2,10 @@ package com.worth.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -44,7 +43,6 @@ public class User {
 
     @Column(unique=true)
     private String email;
-    private String password;
 
     @OneToMany(mappedBy="user")
     private List<ProcessRole> processRoles = new ArrayList<>();
@@ -69,7 +67,6 @@ public class User {
                 List<ProcessRole> processRoles, String uid) {
         this.name = name;
         this.email = email;
-        this.password = password;
         this.imageUrl = imageUrl;
         this.processRoles = processRoles;
         this.uid = uid;
@@ -139,18 +136,6 @@ public class User {
         this.organisations.addAll(Arrays.asList(o));
     }
 
-    public Boolean passwordEquals(String passwordInput){
-        StandardPasswordEncoder encoder = new StandardPasswordEncoder(PASSWORD_SECRET);
-        LOG.debug(encoder.matches(passwordInput, this.password));
-        return encoder.matches(passwordInput, this.password);
-    }
-
-    public void setPassword(String setPassword) {
-        StandardPasswordEncoder encoder = new StandardPasswordEncoder(PASSWORD_SECRET);
-        setPassword = encoder.encode(setPassword);
-        this.password = setPassword;
-    }
-
     public List<Role> getRoles() {
         return roles;
     }
@@ -206,10 +191,6 @@ public class User {
 
     public void setUid(String uid) {
         this.uid = uid;
-    }
-
-    public String getPassword() {
-        return this.password;
     }
 
     @Override

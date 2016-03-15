@@ -130,7 +130,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         User newUser = new User();
         newUser.setFirstName(userResource.getFirstName());
         newUser.setLastName(userResource.getLastName());
-        newUser.setPassword(userResource.getPassword());
         newUser.setEmail(userResource.getEmail());
         newUser.setTitle(userResource.getTitle());
         newUser.setPhoneNumber(userResource.getPhoneNumber());
