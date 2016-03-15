@@ -34,7 +34,7 @@ IFS.formValidation = (function(){
             },
             maxlength : {
                 fields : '[maxlength]',
-                messageInvalid : "This field should contain at least %maxlength% characters"
+                messageInvalid : "This field cannot contain more than %maxlength% characters"
             },
             tel : {
                 fields : '[type="tel"]',
