@@ -60,6 +60,10 @@ public abstract class BaseRestService {
         return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
     }
 
+    protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, HttpHeaders additionalHeaders, Class<R> returnType) {
+        return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, additionalHeaders, returnType);
+    }
+
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, ParameterizedTypeReference<R> returnType, HttpStatus expectedStatusCode, HttpStatus... otherExpectedStatusCodes) {
         return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType, expectedStatusCode, otherExpectedStatusCodes);
     }

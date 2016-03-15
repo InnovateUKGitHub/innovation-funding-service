@@ -27,4 +27,13 @@ public interface IdentityProviderService {
      */
     @NotSecured("TODO - implement when permissions matrix defined")
     ServiceResult<String> updateUserPassword(String uid, String password);
+
+    /**
+     * Activate a user in the Identity Provider
+     *
+     * @param uid
+     * @return
+     */
+    @NotSecured("TODO - implement when permissions matrix defined")
+    ServiceResult<String> activateUser(String uid);
 }
