@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.documentation.AddressDocs.addressResourceFields;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
@@ -42,15 +43,7 @@ public class AddressControllerTest extends BaseControllerMockMVCTest<AddressCont
                     pathParameters(
                         parameterWithName("id").description("Id of the address that needs to be found")
                     ),
-                    responseFields(
-                        fieldWithPath("id").description("id of the address"),
-                        fieldWithPath("addressLine1").description("first addressLine"),
-                        fieldWithPath("addressLine2").description("second addressLine"),
-                        fieldWithPath("addressLine3").description("third addressLine"),
-                        fieldWithPath("town").description("fourth addressLine"),
-                        fieldWithPath("county").description("county where requested address is located"),
-                        fieldWithPath("postcode").description("postcode of the requested address")
-                    )
+                    responseFields(addressResourceFields)
                 ));
     }
 
