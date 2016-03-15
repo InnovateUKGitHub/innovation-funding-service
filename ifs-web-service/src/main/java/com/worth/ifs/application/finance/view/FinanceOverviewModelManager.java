@@ -5,6 +5,7 @@ import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,11 +39,14 @@ public class FinanceOverviewModelManager {
         OrganisationFinanceOverview organisationFinanceOverview = new OrganisationFinanceOverview(financeService, applicationId);
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
-        model.addAttribute("organisationFinances", organisationFinanceOverview.getApplicationFinancesByOrganisation());
+        Map<Long, ApplicationFinanceResource> organisationFinances = organisationFinanceOverview.getApplicationFinancesByOrganisation();
+        model.addAttribute("organisationFinances", organisationFinances);
+        model.addAttribute("academicFileEntries", organisationFinanceOverview.getAcademicOrganisationFileEntries());
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
         model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException());
+
     }
 
     private void addFinanceSections(Model model) {
