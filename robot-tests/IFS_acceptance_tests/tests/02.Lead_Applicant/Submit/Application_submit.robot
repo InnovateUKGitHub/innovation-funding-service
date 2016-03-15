@@ -8,6 +8,8 @@ Documentation     This test has been put last (with the 1.) because the other ap
 ...
 ...
 ...               -INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
+...
+...               -INFUND-1137 As an applicant I want to be shown confirmation information when I submit my application submission so I can confirm this has been sent and I can be given guidance for the next stages
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant    Submit
@@ -59,6 +61,16 @@ Submit flow (complete application)
     Then the user should be redirected to the correct page    ${SUBMITTED_PAGE_APPLICATION_7}
     And the user should see the text in the page    Application submitted
 
+Status of the submitted application
+    [Documentation]    INFUND-1137
+    When the user navigates to the page    ${DASHBOARD_URL}
+    Then the status of the "Marking it as complete" application should be submitted
+    And the user clicks the button/link    Link=Marking it as complete
+    And the user should see the element    Link=View application
+    And the user should see the element    Link=Print Application
+    When the user clicks the button/link    Link=Print Application
+    Then the user should be redirected to the correct page    ${SERVER}/application/7/print
+
 *** Keywords ***
 the applicant clicks Yes in the submit modal
     click element    link=Submit application
@@ -85,3 +97,6 @@ The applicant marks the first finance section as complete
     go to    ${FINANCE_SECTION_7}
     Click Element    css=[aria-controls="collapsible-1"]
     click element    jQuery=#collapsible-1 button:contains("Mark as complete")
+
+Then the status of the "Marking it as complete" application should be submitted
+    Element Should Contain    css=li:nth-child(4)    Application submitted

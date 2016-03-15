@@ -21,15 +21,26 @@
         <div class="progress-status" />
     		<div class="progress-info">
     			<h2 class="heading-medium">Submitted application</h2>
-    			<p>Your application '<strong th:text="${currentApplication.name}" />' was submitted into the competition '<strong th:text="${currentCompetition.name}"/>' on 12 March at 10.17am -- <strong th:text="${currentApplication.submittedDate}" />.</p>
-    			<p><a th:href="@{/application/{id}(id=${currentApplication.getId()})}">View application</a></p>
+    			<p>Your application '<strong th:text="${currentApplication.name}" />' was submitted into the competition '<strong th:text="${currentCompetition.name}"/>'
+            <div th:remove="tag" th:if="${currentApplication.submittedDate != null}">
+              on
+              <div th:remove="tag" th:text="${#temporals.monthName(currentApplication.submittedDate)}" />
+              <div th:include="fragments/elements :: ordinal-day (date=${currentApplication.submittedDate})" th:remove="tag" />
+              at
+              <div th:remove="tag" th:text="${#temporals.format(currentApplication.submittedDate, 'hh:mm a')}" />.
+            </div>
+          </p>
+    			<p class="linkbar">
+            <a th:href="@{/application/{id}(id=${currentApplication.getId()})}">View application</a>
+            <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}">Print Application</a>
+          </p>
     		</div>
     	</li>
     	<li class="current">
         <div class="progress-status" />
         <div class="progress-info">
     			<h2 class="heading-medium">Assessment process</h2>
-    			<p>Your application is currently in the process of being assessed. Once the competition siubmission deadline is reached, all application submitted to the competition are sent for assessment.</p>
+    			<p>Your application is currently in the process of being assessed. Once the competition submission deadline is reached, all application submitted to the competition are sent for assessment.</p>
 
     			<ul class="list-bullet">
     				<li>Your application is currently being assessed independently by experts from both business and academia.</li>

@@ -35,7 +35,7 @@ Valid invitation submit
     And the user verifies their email   ${verify_link_3}
     And the user logs back in
     Then The user should see the text in the page    Application overview
-    And The user should see the notification    Invites send
+    And The user should see the notification    Invites sent
 
 Lead applicant can access the Application team page(Link in the overview page)
     [Documentation]    INFUND-928

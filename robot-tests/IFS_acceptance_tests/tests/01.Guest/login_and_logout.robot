@@ -73,7 +73,7 @@ The Applicant clicks the log-out button
     Click Element    link=Logout
 
 the Applicant is logged-in
-    Element Should Be Visible    link=Logout
+    Wait Until Element Is Visible       link=Logout
 
 the user should be logged-in as an Assessor
     Title Should Be    Innovation Funding Service - Assessor Dashboard
