@@ -23,6 +23,5 @@ You will be notified via e-mail of the result by 5:30pm ${endDate?string["dd-MM-
 
 If you have any queries with your submission please contact our customer support services at support@innovateuk.gov.uk or 0300 321 4357.
 
-Many thanks,
 Competitions Team
 Innovate UK
