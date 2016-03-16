@@ -253,7 +253,7 @@ public class OrganisationCreationController {
 
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = MANUAL_ADDRESS, method = RequestMethod.POST)
     public String manualAddressWithCompanyHouse(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                                HttpServletRequest request, HttpServletResponse response) {
+                                                HttpServletResponse response) {
         organisationForm.setAddressForm(new AddressForm());
         organisationForm.getAddressForm().setManualAddress(true);
         organisationForm.setOrganisationSearching(false);
@@ -407,7 +407,7 @@ public class OrganisationCreationController {
 
     @RequestMapping(value = "/" + SELECTED_ORGANISATION + "/**", params = MANUAL_ADDRESS, method = RequestMethod.POST)
     public String manualAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                HttpServletRequest request, HttpServletResponse response) {
+                                HttpServletResponse response) {
         organisationForm.setAddressForm(new AddressForm());
         organisationForm.getAddressForm().setManualAddress(true);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));

@@ -278,7 +278,7 @@ public class ApplicationController extends AbstractApplicationController {
         addQuestionsDetails(model, application, null);
         addUserDetails(model, application, user.getId());
         addApplicationInputs(application, model);
-        addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, userApplicationRoles);
+        addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
         financeOverviewModelManager.addFinanceDetails(model, applicationId);
 
         return "/application/print";

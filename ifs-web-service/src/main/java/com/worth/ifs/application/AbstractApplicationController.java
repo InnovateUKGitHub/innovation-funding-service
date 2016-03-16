@@ -152,7 +152,7 @@ public abstract class AbstractApplicationController extends BaseController {
         userOrganisation.ifPresent(org ->
             addAssignableDetails(model, application, org, userId, section, currentQuestionId)
         );
-        addMappedSectionsDetails(model, application, competition, section, userOrganisation, userApplicationRoles);
+        addMappedSectionsDetails(model, application, competition, section, userOrganisation);
         addCompletedDetails(model, application, userOrganisation, userApplicationRoles);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
@@ -265,8 +265,7 @@ public abstract class AbstractApplicationController extends BaseController {
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                             Optional<SectionResource> currentSection,
-                                            Optional<Organisation> userOrganisation,
-                                            List<ProcessRole> userApplicationRoles) {
+                                            Optional<Organisation> userOrganisation) {
         List<SectionResource> sectionsList = sectionService.getParentSections(competition.getSections());
 
         Map<Long, SectionResource> sections =

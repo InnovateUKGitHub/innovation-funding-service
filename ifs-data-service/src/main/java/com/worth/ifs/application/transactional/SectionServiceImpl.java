@@ -183,7 +183,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     public ServiceResult<Boolean> isMainSectionComplete(Section section, Long applicationId, Long organisationId, boolean ignoreOtherOrganisations) {
         boolean sectionIsComplete = true;
         for (Question question : section.getQuestions()) {
-            if (!ignoreOtherOrganisations && question.getName() != null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING") && section.getParentSection() != null) {
+            if (!ignoreOtherOrganisations && question.getName() != null && "FINANCE_SUMMARY_INDICATOR_STRING".equals(question.getName()) && section.getParentSection() != null) {
                 if (!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section).getSuccessObject()) {
                     sectionIsComplete = false;
                 }

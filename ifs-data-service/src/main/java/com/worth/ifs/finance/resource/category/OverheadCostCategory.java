@@ -2,8 +2,6 @@ package com.worth.ifs.finance.resource.category;
 
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.Overhead;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -16,7 +14,6 @@ import java.util.Optional;
  */
 public class OverheadCostCategory implements CostCategory {
     public static final String ACCEPT_RATE = "Accept Rate";
-    private final Log log = LogFactory.getLog(getClass());
     List<CostItem> costs = new ArrayList<>();
     BigDecimal total = BigDecimal.ZERO;
     BigDecimal labourCostTotal = BigDecimal.ZERO;
