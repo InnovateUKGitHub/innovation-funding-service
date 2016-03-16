@@ -58,3 +58,5 @@ ${verify_link_2}    ${SERVER}/registration/verify-email/5f415b7ec9e9cc497996e251
 ${verify_link_3}    ${SERVER}/registration/verify-email/8223991f065abb7ed909c8c7c772fbdd24c966d246abd63c2ff7eeba9add3bafe42b067b602f761b
 ${REGISTRATION_VERIFIED}    ${SERVER}/registration/verified
 ${UPLOAD_FOLDER}      uploaded_files
+${VIRTUAL_DISPLAY}      ${EMPTY}
+
