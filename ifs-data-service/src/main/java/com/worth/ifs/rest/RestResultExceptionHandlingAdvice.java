@@ -35,7 +35,7 @@ public class RestResultExceptionHandlingAdvice {
                 LOG.warn("Null RestResult returned from method " + joinPoint.getTarget() + " - converting to default 500 RestResult");
                 return internalServerErrorRestFailure();
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             LOG.warn("Exception caught while processing RestResult-returning method.  Converting to default 500 RestResult", e);
             return restFailure(internalServerErrorError());
         }

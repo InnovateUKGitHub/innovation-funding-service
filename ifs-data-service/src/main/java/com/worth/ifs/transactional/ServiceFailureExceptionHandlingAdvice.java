@@ -47,7 +47,7 @@ public class ServiceFailureExceptionHandlingAdvice {
                 return result;
             }
 
-        } catch (Throwable e) {
+        } catch (Exception e) {
             LOG.warn(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a ServiceFailure");
             handleFailure(null);
             return serviceFailure(internalServerErrorError());
