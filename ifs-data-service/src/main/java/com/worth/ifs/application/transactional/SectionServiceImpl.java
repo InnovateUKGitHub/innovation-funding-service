@@ -2,6 +2,7 @@ package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.SectionResource;
@@ -37,6 +38,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
     @Autowired
     private SectionMapper sectionMapper;
+
+    @Autowired
+    private QuestionMapper questionMapper;
 
     @Autowired
     private QuestionService questionService;
@@ -96,6 +100,27 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
             return serviceSuccess(completedSections);
         });
+    }
+
+    @Override
+    public ServiceResult<Set<Long>> getQuestionsForSectionAndSubsections(final Long sectionId){
+        Section section = sectionRepository.findOne(sectionId);
+        Set<Long> questions= collectAllQuestionFrom(section);
+        return serviceSuccess(questions);
+    }
+
+    private Set<Long> collectAllQuestionFrom(final Section section){
+        final Set<Long> questions = new HashSet<>();
+
+        questions.addAll(section.getQuestions().stream().map(questionMapper::questionToId).collect(Collectors.toSet()));
+
+        if(section.getChildSections() != null) {
+            for (Section childSection : section.getChildSections()) {
+                questions.addAll(collectAllQuestionFrom(childSection));
+            }
+        }
+
+        return questions;
     }
 
 
