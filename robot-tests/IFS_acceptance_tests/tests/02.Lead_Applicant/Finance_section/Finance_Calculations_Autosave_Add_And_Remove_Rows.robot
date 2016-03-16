@@ -22,7 +22,8 @@ Labour
     ...    Acceptance tests for the Labour section calculations
     ...    INFUND-736
     ...    INFUND-1256
-    [Tags]    Labour    Autosave    Calculations    Finance
+    [Tags]    Labour    Autosave    Calculations    Finance     Pending
+    # Pending due to INFUND-2145
     Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And the Applicant fills in the Labour costs
     And the calculations of the labour should be correct
