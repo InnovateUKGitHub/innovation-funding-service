@@ -133,7 +133,7 @@
 
 <div th:fragment="form-duration (id, field)">
   <div class="form-group">
-    <div th:include="question-type/form-elements :: form-label (name='Duration months',id=${id},bold=false)" th:remove="tag"/>
+    <div th:include="question-type/form-elements :: form-label (name='Duration in months',id=${id},bold=false)" th:remove="tag"/>
       <div th:include="question-type/form-elements :: form-validation-messages (id=${id})" th:remove="tag" />
     <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}, field=${field})" th:remove="tag"/>
   </div>

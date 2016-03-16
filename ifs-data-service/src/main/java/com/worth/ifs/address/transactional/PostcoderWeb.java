@@ -118,6 +118,7 @@ public class PostcoderWeb implements AddressLookupService {
             LOG.error(cle);
             return ServiceResult.serviceFailure(new Error(cle.getMessage(), cle.getStatusCode()));
         } catch (URISyntaxException e) {
+        	LOG.error(e);
             return ServiceResult.serviceFailure(new Error(e.getReason(), HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }

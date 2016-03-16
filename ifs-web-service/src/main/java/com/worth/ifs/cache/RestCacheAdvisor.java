@@ -23,7 +23,7 @@ public class RestCacheAdvisor extends AbstractPointcutAdvisor {
         setOrder(REST_CACHE);
     }
 
-    private final StaticMethodMatcherPointcut pointcut = new
+    private final transient StaticMethodMatcherPointcut pointcut = new
             StaticMethodMatcherPointcut() {
                 @Override
                 public boolean matches(Method method, Class<?> targetClass) {
@@ -32,7 +32,7 @@ public class RestCacheAdvisor extends AbstractPointcutAdvisor {
             };
 
     @Autowired
-    private  RestCacheMethodInterceptor interceptor;
+    private transient RestCacheMethodInterceptor interceptor;
 
     @Override
     public Pointcut getPointcut() {

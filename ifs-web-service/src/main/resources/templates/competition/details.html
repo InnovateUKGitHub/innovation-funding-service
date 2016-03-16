@@ -13,26 +13,33 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
     <div class="page-title">
-        <h1 class="heading-xlarge">Technology Inspired</h1>
+        <h1 class="heading-xlarge" th:text="${currentCompetition.name}" />
     </div>
 
     <div class="grid-row">
-        <div class="column-two-thirds" style="padding-right: 45px;">
+        <div th:class="${#authorization.expression('isAuthenticated()')  ? 'column-half' : 'column-two-thirds'}">
             <p>Investment of up to &pound;3 million in feasibility studies to stimulate innovation across four enabling technology areas that underpin future UK growth: advanced materials; biosciences; electronics, sensors and photonics; and information and communication technology (ICT).</p>
         </div>
-        <div class="column-third">
+        <div th:class="${#authorization.expression('isAuthenticated()')  ? 'column-half' : 'column-third'}">
             <div th:include="competition/fragments :: apply-button" th:remove="tag" />
         </div>
     </div>
     <h2 class="heading-large">Summary</h2>
     <div class="grid-row">
         <div class="column-third">
-            <ul>
-                <li><h3 class="heading-small">Opens:</h3> 18 May 2015</li>
-                <li><h3 class="heading-small">Closes:</h3> 09 Sept 2015</li>
-                <li><h3 class="heading-small">Innovative area:</h3> Digital economy</li>
-                <li><h3 class="heading-small">Programme type:</h3> Collaborative R&amp;D</li>
-            </ul>
+            <dl>
+                <dt class="font-small">Opens:</dt>
+                <dd th:text="${#temporals.format(currentCompetition.startDate, 'd MMM yyyy')}" />
+
+                <dt class="font-small extra-margin">Closes:</dt>
+                <dd th:text="${#temporals.format(currentCompetition.endDate, 'dd MMM yyyy')}" />
+
+                <dt class="font-small extra-margin">Innovative area:</dt>
+                <dd>Digital economy</dd>
+
+                <dt class="font-small extra-margin">Programme type:</dt>
+                <dd>Collaborative R&amp;D</dd>
+            </dl>
             <h2 class="heading-small">Eligibility:</h2>
             <ul class="list-bullet">
                 <li>All organisations must be UK based</li>
@@ -48,7 +55,7 @@
             <p>Studies must be led by a business. Projects are open to companies of any size, but must be led by a small or micro company, working in collaboration with one or more business or research partners.</p>
             <p>Small or micro businesses could receive up to 70% of their eligible project costs, medium-sized businesses 60% and large businesses 50%.</p>
             <p>We expect projects to last 6 to 15 months and to range in size from total costs of £50,000 to £150,000, although we may consider projects outside this range.</p>
-            <p>This competition opens on 18 May 2015, and the deadline for applications is at noon on 9 September 2015. There will be a briefing day for potential applicants in London on 20 May 2015.</p>
+            <p>This competition opens on  <span th:remove="tag" th:text="${#temporals.format(currentCompetition.startDate, 'd MMM yyyy')}" />, and the deadline for applications is at noon on <span th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'd MMM yyyy')}" />,. There will be a briefing day for potential applicants in London on 20 May 2015.</p>
         </div>
     </div>
 
@@ -65,7 +72,7 @@
             <h2 class="heading-large">Before you apply</h2>
             <p>Before you apply for a competition you must first create an account. If you already have an account you'll need to sign in.</p>
             <div th:include="competition/fragments :: apply-button" th:remove="tag" />
-            <span class="form-hint">Closing date: 09 Sep 2015</span>
+            <span class="form-hint">Closing date: <span th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'dd MMM yyyy')}" /></span>
         </div>
     </div>
 

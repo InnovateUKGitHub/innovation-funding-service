@@ -55,7 +55,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
             }
 
         }catch (IllegalArgumentException e){
-            log.error(String.format("No CostHandler for type: ", costType.getType()));
+            log.error(String.format("No CostHandler for type: %s", costType.getType()));
         }
         return null;
     }
