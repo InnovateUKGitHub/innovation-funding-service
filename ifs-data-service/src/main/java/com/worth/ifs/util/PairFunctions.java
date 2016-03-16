@@ -11,8 +11,10 @@ import java.util.function.Predicate;
 /**
  * Utility class to provide useful reusable Functions around Pairs throughout the codebase
  */
-public class PairFunctions {
+public final class PairFunctions {
 
+	private PairFunctions() {}
+	
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(PairFunctions.class);
 

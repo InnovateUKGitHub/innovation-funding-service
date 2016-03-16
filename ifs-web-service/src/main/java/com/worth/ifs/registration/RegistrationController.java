@@ -68,21 +68,17 @@ public class RegistrationController {
     public final static String EMAIL_FIELD_NAME = "email";
 
     @RequestMapping(value = "/success", method = RequestMethod.GET)
-    public String registrationSuccessful(Model model, HttpServletRequest request) {
+    public String registrationSuccessful() {
         return "registration/successful";
     }
 
     @RequestMapping(value = "/verified", method = RequestMethod.GET)
-    public String verificationSuccessful(Model model, HttpServletRequest request) {
+    public String verificationSuccessful() {
         return "registration/verified";
     }
 
     @RequestMapping(value = "/verify-email/{hash}", method = RequestMethod.GET)
-    public String verifyEmailAddress(
-        @PathVariable("hash") final String hash,
-        HttpServletResponse response,
-        Model model
-    ){
+    public String verifyEmailAddress(@PathVariable("hash") final String hash){
         if(userService.verifyEmail(hash).isSuccess()){
             return "redirect:/registration/verified";
         }else{

@@ -181,7 +181,7 @@ Valid account creation
     And the user submits their information
     And the user verifies their email    ${verify_link_1}
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    And the user clicks the button/link    jQuery=.button:contains("Sign")
+    And the user clicks the button/link    jQuery=.button:contains("Log")
     Then the user should be redirected to the correct page    ${LOGIN_URL}
     And the user can login with their new details
     And the user should see the element    link=Logout

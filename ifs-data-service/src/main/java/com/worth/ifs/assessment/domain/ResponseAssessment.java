@@ -16,7 +16,9 @@ public class ResponseAssessment {
     //example
     private Integer score;
 
-    public ResponseAssessment() {}
+    public ResponseAssessment() {
+    	// no-arg constructor
+    }
 
     public ResponseAssessment( Response response ) {
         this.response = response;

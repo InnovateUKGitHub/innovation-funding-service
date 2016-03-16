@@ -17,8 +17,6 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +32,6 @@ import static com.worth.ifs.util.CollectionFunctions.combineLists;
 @Controller
 @RequestMapping("/applicant")
 public class ApplicantController {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     ApplicationService applicationService;
@@ -81,7 +78,7 @@ public class ApplicantController {
                     ProcessRole role = processRoleService.findProcessRole(user.getId(), applicationResource.getId());
                     if(!role.getRole().getName().equals("leadapplicant")){
                         int count = applicationService.getAssignedQuestionsCount(applicationResource.getId(), role.getId());
-                        return (count == 0 ? false : true);
+                        return count == 0 ? false : true;
                     }else{
                         return false;
                     }

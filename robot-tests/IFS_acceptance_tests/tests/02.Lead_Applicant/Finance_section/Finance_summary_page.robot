@@ -29,7 +29,8 @@ ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}    ${SERVER}/application/7/form/sectio
 *** Test Cases ***
 Finance summary page calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]    Collaboration
+    [Tags]    Collaboration     Pending
+    # Pending until the academic finances db update comes through
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
@@ -37,7 +38,8 @@ Finance summary page calculations for Lead applicant
 
 Finance summary calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]    Collaboration
+    [Tags]    Collaboration     Pending
+     # Pending until the academic finances db update comes through
     [Setup]    Guest user log-in    &{collaborator1_credentials}
     When the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
@@ -45,7 +47,8 @@ Finance summary calculations for the first collaborator
 
 Finance summary calculations for the second collaborator
     [Documentation]    INFUND-524
-    [Tags]    HappyPath
+    [Tags]    HappyPath     Pending
+     # Pending until the academic finances db update comes through
     [Setup]    Guest user log-in    &{collaborator2_credentials}
     And the user goes to the finance summary of the Providing sustainable childcare application
     When the finance summary calculations should be correct

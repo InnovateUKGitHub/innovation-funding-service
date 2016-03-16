@@ -19,7 +19,7 @@ addRow(document).ready(function(){
 
     jQuery('.boxed-list li > input').trigger('keyup');
 
-    
+
     function addPartner(){
         var html =  '<li>\
             <h2 class="heading-medium">Partner Organisation <span></span></h2>\
@@ -30,7 +30,7 @@ addRow(document).ready(function(){
                     <thead>\
                     <tr>\
                         <th>Name</th>\
-                        <th>E-mail</th>\
+                        <th>Email</th>\
                         <th>&nbsp;</th>\
                     </tr>\
                     </thead>\
@@ -126,11 +126,11 @@ addRow(document).ready(function(){
             "<td>"+ category +"</td>" +
             "<td>"+ assessors +"</td>" +
             "<td><a href='#' class='view-application'>View</a>" +
-            "<td class='full-view'>-</td>" + 
-            "<td class='full-view'>-</td>" + 
-            "<td class='full-view'>-</td>" + 
-            "<td class='full-view'>-</td>" + 
-            "<td class='full-view'>-</td>" + 
+            "<td class='full-view'>-</td>" +
+            "<td class='full-view'>-</td>" +
+            "<td class='full-view'>-</td>" +
+            "<td class='full-view'>-</td>" +
+            "<td class='full-view'>-</td>" +
             "<td class='alignright'><a href='#' class='undo-application'>Undo</a>" +
             "</tr>"
             );
@@ -153,7 +153,7 @@ addRow(document).ready(function(){
 
     //----- Asign assessor to an application ------//
 
-    jQuery('.assign-assessor').on('click',function(e){ 
+    jQuery('.assign-assessor').on('click',function(e){
         e.preventDefault();
         counter ++;
 
@@ -229,7 +229,7 @@ addRow(document).ready(function(){
 
      //----- Asign application to an assessor ------//
 
-     jQuery('.assign-application').on('click',function(e){ 
+     jQuery('.assign-application').on('click',function(e){
         e.preventDefault();
         counter ++;
 
@@ -252,23 +252,5 @@ addRow(document).ready(function(){
         addRowApplication(appNumber, projectTitle, lead, category, assessors);
         //alert(skills);
     });
-
-
-    //----- Get URL parameters ----//
-
-    function $_GET(param) {
-        var vars = {};
-        window.location.href.replace( location.hash, '' ).replace( 
-            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
-            function( m, key, value ) { // callback
-                vars[key] = value !== undefined ? value : '';
-            }
-        );
-
-        if ( param ) {
-            return vars[param] ? vars[param] : null;    
-        }
-        return vars;
-    }
 
 });

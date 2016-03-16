@@ -108,7 +108,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
             newCost.getCostValues()
                     .stream()
                     .filter(c -> c.getValue() != null)
-                    .filter(c -> !c.getValue().equals("null"))
+                    .filter(c -> !"null".equals(c.getValue()))
                     .forEach(costValue -> updateCostValue(costValue, savedCost));
 
             return updatedCost;
