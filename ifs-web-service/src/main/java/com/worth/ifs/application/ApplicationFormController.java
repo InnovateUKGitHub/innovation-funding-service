@@ -565,7 +565,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         questions.stream()
                 .forEach(question -> question.getFormInputs()
                         .stream()
-                        .filter(formInput1 -> ("fileupload".equals(formInput1.getFormInputType().getTitle()) && request instanceof StandardMultipartHttpServletRequest))
+                        .filter(formInput1 -> "fileupload".equals(formInput1.getFormInputType().getTitle()) && request instanceof StandardMultipartHttpServletRequest)
                         .forEach(formInput -> {
                             if (params.containsKey(REMOVE_UPLOADED_FILE)) {
                                 formInputResponseService.removeFile(formInput.getId(), applicationId, processRoleId).getSuccessObjectOrThrowException();
@@ -667,7 +667,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     private ObjectNode createJsonObjectNode(boolean success, List<String> errors) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
-        node.put("success", (success ? "true" : "false"));
+        node.put("success", success ? "true" : "false");
         if (!success) {
             ArrayNode errorsNode = mapper.createArrayNode();
             errors.stream().forEach(errorsNode::add);

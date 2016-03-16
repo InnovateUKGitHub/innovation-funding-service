@@ -34,6 +34,7 @@ public class CapitalUsage implements CostItem {
         this.utilisation = utilisation;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -62,6 +63,7 @@ public class CapitalUsage implements CostItem {
         return utilisation;
     }
 
+    @Override
     public BigDecimal getTotal() {
         // ( npv - residualValue ) * utilisation-percentage
         if(npv == null || residualValue == null || utilisation == null) {
@@ -78,6 +80,7 @@ public class CapitalUsage implements CostItem {
         return name;
     }
 
+    @Override
     public CostType getCostType() {
         return costType;
     }

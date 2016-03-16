@@ -46,8 +46,8 @@ public class OrganisationFinanceOverview {
     }
 
 
-    public EnumMap<CostType, BigDecimal> getTotalPerType() {
-        EnumMap<CostType, BigDecimal> totalPerType = new EnumMap<>(CostType.class);
+    public Map<CostType, BigDecimal> getTotalPerType() {
+        Map<CostType, BigDecimal> totalPerType = new EnumMap<>(CostType.class);
         for(CostType costType : CostType.values()) {
             BigDecimal typeTotal = applicationFinances.stream()
                     .filter(o -> o.getFinanceOrganisationDetails(costType) != null)

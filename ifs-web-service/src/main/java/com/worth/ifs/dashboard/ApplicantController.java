@@ -78,7 +78,7 @@ public class ApplicantController {
                     ProcessRole role = processRoleService.findProcessRole(user.getId(), applicationResource.getId());
                     if(!role.getRole().getName().equals("leadapplicant")){
                         int count = applicationService.getAssignedQuestionsCount(applicationResource.getId(), role.getId());
-                        return (count == 0 ? false : true);
+                        return count == 0 ? false : true;
                     }else{
                         return false;
                     }

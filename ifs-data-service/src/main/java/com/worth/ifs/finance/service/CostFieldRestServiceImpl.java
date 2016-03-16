@@ -22,6 +22,7 @@ public class CostFieldRestServiceImpl extends BaseRestService implements CostFie
     @Value("${ifs.data.service.rest.costfield}")
     String costFieldRestURL;
 
+    @Override
     public RestResult<List<CostFieldResource>> getCostFields() {
         return getWithRestResult(costFieldRestURL + "/findAll/", costFieldResourceListType());
     }

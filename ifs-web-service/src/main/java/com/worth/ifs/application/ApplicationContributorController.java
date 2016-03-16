@@ -226,36 +226,38 @@ public class ApplicationContributorController{
     }
 
     private void saveContributors(@PathVariable("applicationId") Long applicationId, @ModelAttribute ContributorsForm contributorsForm, HttpServletResponse response) {
-        contributorsForm.getOrganisations().forEach((organisationInvite) -> {
-            List<InviteResource> invites = new ArrayList<>();
-            Organisation existingOrganisation = null;
-            if (organisationInvite.getOrganisationId() != null) {
-                // check if there is a organisation with this ID, just to make sure the user has not entered a non-existing organisation id.
-                existingOrganisation = organisationService.getOrganisationById(organisationInvite.getOrganisationId());
-            }
+        contributorsForm.getOrganisations().forEach((invite) -> saveContributor(invite, applicationId, response));
+    }
+    
+    private void saveContributor(OrganisationInviteForm organisationInvite, Long applicationId, HttpServletResponse response) {
+    	List<InviteResource> invites = new ArrayList<>();
+        Organisation existingOrganisation = null;
+        if (organisationInvite.getOrganisationId() != null) {
+            // check if there is a organisation with this ID, just to make sure the user has not entered a non-existing organisation id.
+            existingOrganisation = organisationService.getOrganisationById(organisationInvite.getOrganisationId());
+        }
 
-            organisationInvite.getInvites().stream().forEach(invite -> {
-                InviteResource inviteResource = new InviteResource(invite.getPersonName(), invite.getEmail(), applicationId);
-                if (organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))) {
-                    inviteResource.setInviteOrganisation(organisationInvite.getOrganisationInviteId());
-                }
-                invites.add(inviteResource);
-            });
-
+        organisationInvite.getInvites().stream().forEach(invite -> {
+            InviteResource inviteResource = new InviteResource(invite.getPersonName(), invite.getEmail(), applicationId);
             if (organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))) {
-                // save new invites, to InviteOrganisation that already is saved.
-                inviteRestService.saveInvites(invites);
-                cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
-            } else if (existingOrganisation != null) {
-                // Save invites, and link to existing organisation.
-                inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
-                cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
-            } else {
-                // Save invites, and create new InviteOrganisation
-                inviteRestService.createInvitesByInviteOrganisation(organisationInvite.getOrganisationName(), invites);
-                cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
+                inviteResource.setInviteOrganisation(organisationInvite.getOrganisationInviteId());
             }
+            invites.add(inviteResource);
         });
+
+        if (organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))) {
+            // save new invites, to InviteOrganisation that already is saved.
+            inviteRestService.saveInvites(invites);
+            cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
+        } else if (existingOrganisation != null) {
+            // Save invites, and link to existing organisation.
+            inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
+            cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
+        } else {
+            // Save invites, and create new InviteOrganisation
+            inviteRestService.createInvitesByInviteOrganisation(organisationInvite.getOrganisationName(), invites);
+            cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
+        }
     }
 
     /**

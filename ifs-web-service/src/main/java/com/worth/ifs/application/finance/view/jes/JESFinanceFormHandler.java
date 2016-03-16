@@ -1,28 +1,23 @@
 package com.worth.ifs.application.finance.view.jes;
 
-import com.worth.ifs.Application;
+import java.util.Arrays;
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.NotImplementedException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.finance.view.item.CostHandler;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.CostType;
-import com.worth.ifs.form.domain.FormInputType;
-import org.apache.commons.lang3.NotImplementedException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class JESFinanceFormHandler implements FinanceFormHandler {
@@ -46,11 +41,9 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         while(parameterNames.hasMoreElements()) {
             String parameter = parameterNames.nextElement();
             String[] parameterValues = request.getParameterValues(parameter);
-            String value = "";
 
             if(parameterValues.length > 0) {
-                value = parameterValues[0];
-                storeCost(userId, applicationId, parameter, value);
+                storeCost(userId, applicationId, parameter, parameterValues[0]);
             }
         }
     }
@@ -58,14 +51,9 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     @Override
     public void storeCost(Long userId, Long applicationId, String fieldName, String value) {
         if (fieldName != null && value != null) {
-            String cleanedFieldName = fieldName;
             if (fieldName.startsWith("cost-")) {
-                cleanedFieldName = fieldName.replace("cost-", "");
-            } else {
-                // only accept cost fields for storage
-                return;
+                storeField(fieldName.replace("cost-", ""), value, userId, applicationId);
             }
-            storeField(cleanedFieldName, value, userId, applicationId);
         }
     }
 
@@ -111,7 +99,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     }
 
     private Long getQuestionId(String costFieldName) {
-        Question question = null;
+        Question question;
         switch (costFieldName) {
             case "tsb_reference":
                 question = questionService.getQuestionByFormInputType("your_finance").getSuccessObject();
@@ -143,6 +131,9 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
             case "exceptions_other_costs":
                 question = questionService.getQuestionByFormInputType("other_costs").getSuccessObject();
                 break;
+            default:
+            	question = null;
+            	break;
         }
         if (question != null) {
             return question.getId();

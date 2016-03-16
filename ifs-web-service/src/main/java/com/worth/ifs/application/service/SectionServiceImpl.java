@@ -1,19 +1,24 @@
 package com.worth.ifs.application.service;
 
+import static com.worth.ifs.application.service.Futures.adapt;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.stream.Collectors.toList;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.Future;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.concurrent.Future;
-
-import static com.worth.ifs.application.service.Futures.adapt;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.stream.Collectors.toList;
 
 /**
  * This class contains methods to retrieve and store {@link Section} related data,
@@ -106,7 +111,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public List<Long> getUserAssignedSections(List<SectionResource> sections, HashMap<Long, QuestionStatus> questionAssignees, Long userId ) {
+    public List<Long> getUserAssignedSections(List<SectionResource> sections, Map<Long, QuestionStatus> questionAssignees, Long userId ) {
         List<Long> userAssignedSections = new ArrayList<>();
 
         for(SectionResource section : sections) {

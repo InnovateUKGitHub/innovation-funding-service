@@ -21,10 +21,11 @@ public abstract class FormValidatorMapper extends BaseMapper<FormValidator, Form
         return object.getId();
     }
 
-
+    @Override
     public FormValidatorResource mapToResource(FormValidator domain){
         return mapToResource(domain);
     }
+    @Override
     public FormValidator mapToDomain(FormValidatorResource resource){
         return mapToDomain(resource);
     }
