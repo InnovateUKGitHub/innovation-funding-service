@@ -140,7 +140,7 @@
                        th:name="${type +'-role-' + question.id + '-' + cost.id}"
                        th:id="${'cost-labour-'+cost.id+'-labourRole'}"
                        th:value="${cost.getRole()}"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                       th:readonly="${complete == 'complete'}"
                         />
             </td>
             <td class="numeric">
@@ -149,7 +149,7 @@
                        class="form-control width-full"
                        th:name="${type +'-grossAnnualSalary-' + question.id + '-' + cost.id}"
                        th:id="${'cost-labour-'+cost.id+'-labourGrossSalary'}"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                       th:readonly="${complete == 'complete'}"
                        th:value="${#numbers.formatDecimal(cost.grossAnnualSalary,0,0)}"
                         />
             </td>
@@ -168,13 +168,13 @@
                 <input type="number"
                        aria-labelledby="labour-days"
                        class="form-control width-full"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                       th:readonly="${complete == 'complete'}"
                        th:id="${'cost-labour-'+cost.id+'-labourDays'}"
                        th:name="${type + '-labourDays-' + question.id + '-' + cost.id}"
                        th:value="${cost.labourDays}"
                         />
             </td>
-            <td rowspan="2" th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
+            <td rowspan="2" th:unless="${complete == 'complete'}">
                 <button type="submit"
                         name="remove_cost"
                         class="buttonlink js-remove-row"
@@ -383,7 +383,7 @@
                        th:name="${type +'-item-' + question.id + '-' + cost.id}"
                        th:id="${'cost-materials-'+cost.id+'-item'}"
                        th:value="${cost.getItem()}"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" />
+                       th:readonly="${complete == 'complete'}" />
             </td>
             <td>
                 <input type="number"
@@ -392,7 +392,7 @@
                        th:name="${type +'-quantity-' + question.id + '-' + cost.id}"
                        th:id="${'cost-materials-'+cost.id+'-quantity'}"
                        th:value="${cost.getQuantity()}"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" />
+                       th:readonly="${complete == 'complete'}" />
             </td>
             <td>
                 <input type="number"
@@ -401,7 +401,7 @@
                        th:name="${type +'-cost-' + question.id + '-' + cost.id}"
                        th:id="${'cost-materials-'+cost.id+'-cost'}"
                        th:value="${#numbers.formatDecimal(cost.getCost(),0,0)}"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" />
+                       th:readonly="${complete == 'complete'}" />
             </td>
             <td>
                 <input type="text"
@@ -415,7 +415,7 @@
                        th:value="'£ ' + ${#numbers.formatDecimal(cost.total, 0, 0)}"
                         />
             </td>
-            <td class="alignright remove" th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
+            <td class="alignright remove" th:unless="${complete == 'complete'}">
                 <button type="submit"
                         name="remove_cost"
                         th:value="${cost.id}"
@@ -456,7 +456,7 @@
         <div th:attr="data-repeatable-row=${cost.id}" class="form-row">
             <div class="form-group">
                 <label th:for="${'cost-capital_usage-'+cost.id+'-item'}">Item description</label>
-                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='item', value=${cost.getDescription()},readonly=${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))})" th:remove="tag" />
+                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='item', value=${cost.getDescription()},readonly=${complete == 'complete'})" th:remove="tag" />
             </div>
             <div class="form-group">
 
@@ -468,7 +468,7 @@
                                th:name="${type +'-existing-' + question.id + '-' + cost.id}"
                                value="New"
                                th:checked="${cost.existing == 'New'}"
-                               th:disabled="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}">
+                               th:disabled="${complete == 'complete'}">
                         New
                         </input>
                     </label>
@@ -478,7 +478,7 @@
                                th:name="${type +'-existing-' + question.id + '-' + cost.id}"
                                value="Existing"
                                th:checked="${cost.existing == 'Existing'}"
-                               th:disabled="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}">
+                               th:disabled="${complete == 'complete'}">
                         Existing
                         </input>
                     </label>
@@ -493,7 +493,7 @@
                         class="form-control form-finances-capital-usage-depreciation"
                         th:name="${type +'-deprecation_period-' + cost.id}"
                         th:value="${cost.deprecation}"
-                        th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" />
+                        th:readonly="${complete == 'complete'}" />
             </div>
 
             <div class="form-group">
@@ -505,7 +505,7 @@
                         class="form-control form-finances-capital-usage-npv"
                         th:name="${type +'-npv-' + question.id + '-' + cost.id}"
                         th:value="${#numbers.formatDecimal(cost.npv,0,0)}"
-                        th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" />
+                        th:readonly="${complete == 'complete'}" />
             </div>
 
             <div class="form-group">
@@ -516,7 +516,7 @@
                         class="form-control form-finances-capital-usage-residual-value"
                         th:name="${type +'-residual_value-' + question.id + '-' + cost.id}"
                         th:value="${#numbers.formatDecimal(cost.residualValue,0,0)}"
-                        th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" />
+                        th:readonly="${complete == 'complete'}" />
             </div>
 
             <div class="form-group">
@@ -527,7 +527,7 @@
                        class="form-control form-finances-capital-usage-utilisation"
                        th:name="${type +'-utilisation-' + question.id + '-' + cost.id}"
                        th:value="${cost.utilisation}"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" />
+                       th:readonly="${complete == 'complete'}" />
             </div>
 
             <div class="form-group">
@@ -584,7 +584,7 @@
         <div class="form-row" th:attr="data-repeatable-row=${cost.id}">
             <div class="form-group">
                 <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-companyName'}">Subcontractor name</label>
-                <input type="text" th:name="${type +'-name-' + cost.id}" class="form-control form-finances-subcontracting-company" th:id="${'cost-subcontracting-'+cost.id+'-companyName'}" th:value="${cost.name}" th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"   />
+                <input type="text" th:name="${type +'-name-' + cost.id}" class="form-control form-finances-subcontracting-company" th:id="${'cost-subcontracting-'+cost.id+'-companyName'}" th:value="${cost.name}" th:readonly="${complete == 'complete'}"   />
             </div>
             <div class="form-group">
                 <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-country'}">Country where the subcontractor will work</label>
@@ -593,13 +593,13 @@
                        class="form-control"
                        th:id="${'cost-subcontracting-'+cost.id+'-country'}"
                        th:value="${cost.country}"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"   />
+                       th:readonly="${complete == 'complete'}"   />
             </div>
 
             <div class="form-group">
                 <label class="form-label" th:for="${'cost-'+ type + '-'+cost.id+'-role'}">Role of the subcontractor in the project and description of the work they’ll do</label>
 
-                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='role', value=${cost.role},readonly=${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))})" th:remove="tag" />
+                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='role', value=${cost.role},readonly=${complete == 'complete'})" th:remove="tag" />
             </div>
 
             <div class="form-group">
@@ -610,9 +610,9 @@
                        th:name="${type +'-subcontractingCost-' + question.id + '-' + cost.id}"
                        th:id="${'cost-subcontracting_costs-'+cost.id+'-subcontractingCost'}"
                        th:value="${#numbers.formatDecimal(cost.cost,0,0)}"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" />
+                       th:readonly="${complete == 'complete'}" />
             </div>
-            <button th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" type="submit"
+            <button th:unless="${complete == 'complete'}" type="submit"
                     name="remove_cost"
                     class="buttonlink js-remove-row"
                     th:value="${cost.id}"
@@ -675,7 +675,7 @@
                        class="form-control width-full"
                        th:id="${'cost-'+type+'-'+cost.id+'-travelPurpose'}"
                        th:value="${cost.getItem()}"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" />
+                       th:readonly="${complete == 'complete'}" />
             </td>
             <td class="numeric">
                 <input type="number"
@@ -684,7 +684,7 @@
                        class="form-control width-full"
                        th:id="${'cost-'+type+'-'+cost.id+'-travelNumTimes'}"
                        th:value="${cost.getQuantity()}"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"  />
+                       th:readonly="${complete == 'complete'}"  />
             </td>
             <td class="numeric">
                 <input type="number"
@@ -693,7 +693,7 @@
                        class="form-control width-full"
                        th:id="${'cost-'+type+'-'+cost.id+'-travelCostEach'}"
                        th:value="${#numbers.formatDecimal(cost.cost,0,0)}"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"  />
+                       th:readonly="${complete == 'complete'}"  />
             </td>
             <td class="numeric">
                 <input type="text"
@@ -706,7 +706,7 @@
                        data-calculation-operations="*"
                        th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
             </td>
-            <td th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" >
+            <td th:unless="${complete == 'complete'}">
                 <button type="submit"
                         name="remove_cost"
                         class="buttonlink js-remove-row"
@@ -757,7 +757,7 @@
     <div th:fragment="other_costs_row" th:remove="tag">
         <tr th:attr="data-repeatable-row=${cost.id}">
             <td>
-                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='description', value=${cost.description},readonly=${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))})" th:remove="tag" />
+                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='description', value=${cost.description},readonly=${complete == 'complete'})" th:remove="tag" />
             </td>
             <td class="numeric">
                 <input aria-labelledby="other_costs-cost"
@@ -766,9 +766,9 @@
                        class="form-control"
                        th:id="${'cost-'+type+'-'+cost.id+'-otherCost'}"
                        th:value="${#numbers.formatDecimal(cost.getCost(),0,0)}"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" />
+                       th:readonly="${complete == 'complete'}" />
             </td>
-            <td th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
+            <td th:unless="${complete == 'complete'}">
                 <button type="submit"
                         class="buttonlink js-remove-row"
                         name="remove_cost"
@@ -829,7 +829,7 @@
                         </thead>
                         <tbody>
                         <div th:each="cost : ${costCategory.costs}"  th:remove="tag">
-                            <div th:include="finance/finance :: other_funding_row" th:remove="tag"/>
+                            <div th:include="finance/finance :: other_funding_row(readonly=${readonly}, question=${question})" th:remove="tag"/>
                         </div>
                         </tbody>
                     </table>
@@ -864,7 +864,7 @@
     </div>
 
 
-    <div th:fragment="other_funding_row" th:remove="tag">
+    <div th:fragment="other_funding_row (readonly, question)" th:remove="tag">
 
         <tr th:attr="data-repeatable-row=${cost.id}">
             <td>
