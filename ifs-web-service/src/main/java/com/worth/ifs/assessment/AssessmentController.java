@@ -390,7 +390,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     public boolean assessmentSummaryIsValidToSave(String recommendationValue, String feedback) {
-        return ! (recommendationValue.equals("no") && feedback.isEmpty());
+        return ! ("no".equals(recommendationValue) && feedback.isEmpty());
     }
 
     private Pair<CompetitionResource, Assessment> getAndPassAssessmentDetails(Long competitionId, Long applicationId, Long userId, Model model) {
