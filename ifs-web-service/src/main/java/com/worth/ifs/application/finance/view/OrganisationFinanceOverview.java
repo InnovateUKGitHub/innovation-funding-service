@@ -23,7 +23,7 @@ public class OrganisationFinanceOverview {
     private FinanceService financeService;
 
     public OrganisationFinanceOverview() {
-
+    	// no-arg constructor
     }
 
     public OrganisationFinanceOverview(FinanceService financeService, Long applicationId) {

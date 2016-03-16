@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class ApplicationStatusResource {
 
     public ApplicationStatusResource() {
-
+    	// no-arg constructor
     }
 
     public ApplicationStatusResource(Long id, String name) {

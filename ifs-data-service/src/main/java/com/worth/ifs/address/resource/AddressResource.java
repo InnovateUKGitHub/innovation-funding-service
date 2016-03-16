@@ -23,6 +23,7 @@ public class AddressResource {
     private List<Long> organisations = new ArrayList<>();
 
     public AddressResource() {
+    	// no-arg constructor
     }
 
     public AddressResource(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode) {

@@ -3,9 +3,7 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -21,9 +19,6 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     public enum ServiceFailures {
         UNABLE_TO_UPDATE_USER
     }
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Override
     public ServiceResult<UserResource> updateProfile(UserResource userResource) {

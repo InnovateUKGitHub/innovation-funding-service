@@ -514,8 +514,8 @@ public class OrganisationCreationController {
             final OrganisationResource finalOrganisationResource = organisationResource;
 
             inviteRestService.getInviteByHash(cookieHash).andOnSuccess(
-                    s -> {
-                        return inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
+                    s -> 
+                        inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
                                 f -> restFailure(HttpStatus.NOT_FOUND),
                                 i -> {
                                     if (i.getOrganisation() == null) {
@@ -525,8 +525,7 @@ public class OrganisationCreationController {
                                     }
                                     return restFailure(HttpStatus.ALREADY_REPORTED);
                                 }
-                        );
-                    }
+                        )
             );
         }
     }
