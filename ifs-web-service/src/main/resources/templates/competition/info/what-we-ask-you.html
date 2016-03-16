@@ -13,7 +13,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition eligibility',linkClass='link-back',linkUrl=@{eligibility},currentApplication=${currentApplication}" th:remove="tag" />
 
     <div class="page-title">
-        <h1 class="heading-xlarge no-margin">Technology inspired</h1>
+      <h1 class="heading-xlarge no-margin" th:text="${currentCompetition.name}" />
         <h2 class="heading-large">What we ask you....</h2>
     </div>
     <p>The application is split into 3 sections.  Each section has questions which you can individually mark as complete to track your progress in the application.</p>
