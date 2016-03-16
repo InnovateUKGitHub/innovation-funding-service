@@ -55,7 +55,7 @@
                              id="incurred-staff"
                              th:name="cost- + ${academicFinance.incurredStaff?.id} + -incurred_staff"
                              th:value="${academicFinance.incurredStaff?.value}"
-                             th:readonly="${false}"  />
+                             th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
                     </div>
                 </div>
             </div>
