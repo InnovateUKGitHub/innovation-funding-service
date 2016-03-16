@@ -24,6 +24,7 @@ public class AssessorFeedbackResource {
     }
 
     public AssessorFeedbackResource() {
+    	// no-arg constructor
     }
 
     public Long getId() {

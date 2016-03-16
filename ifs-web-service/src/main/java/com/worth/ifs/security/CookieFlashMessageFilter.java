@@ -1,7 +1,5 @@
 package com.worth.ifs.security;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -33,7 +31,6 @@ import java.util.List;
 @Service
 @Configurable
 public class CookieFlashMessageFilter extends GenericFilterBean {
-    private final Log log = LogFactory.getLog(getClass());
     public static final String COOKIE_NAME = "flashMessage";
 
     @Value("${server.session.cookie.secure}")

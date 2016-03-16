@@ -12,7 +12,7 @@ public class AcademicFinanceHandler extends CostHandler {
 
     @Override
     public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
-        if(financeFormFields!=null && financeFormFields.size() > 0) {
+        if(financeFormFields!=null && !financeFormFields.isEmpty()) {
             FinanceFormField academicField = financeFormFields.get(0);
             return toCostItem(id, academicField);
         }

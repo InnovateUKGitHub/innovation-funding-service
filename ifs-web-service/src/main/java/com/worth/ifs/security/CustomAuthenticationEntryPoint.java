@@ -1,7 +1,5 @@
 package com.worth.ifs.security;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -17,7 +15,6 @@ import java.io.IOException;
  */
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    private final Log log = LogFactory.getLog(getClass());
     private String accessDeniedUrl;
 
     public CustomAuthenticationEntryPoint() {

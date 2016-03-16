@@ -25,6 +25,8 @@ public class OverheadsHandler extends CostHandler {
                     break;
                 case "customRate":
                     customRate = Integer.valueOf(financeFormField.getValue());
+                    agreedRate = Integer.valueOf(financeFormField.getValue());
+                    break;
                 case "agreedRate":
                     agreedRate = Integer.valueOf(financeFormField.getValue());
                     break;

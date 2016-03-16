@@ -32,10 +32,12 @@ public class LabourCost implements CostItem {
         this.description = description;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -77,6 +79,7 @@ public class LabourCost implements CostItem {
         return description;
     }
 
+    @Override
     public BigDecimal getTotal() {
         return total;
     }

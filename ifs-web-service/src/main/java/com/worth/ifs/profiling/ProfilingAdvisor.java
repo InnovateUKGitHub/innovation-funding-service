@@ -22,7 +22,7 @@ public class ProfilingAdvisor extends AbstractPointcutAdvisor {
 
     private static final long serialVersionUID = 1L;
 
-    private final StaticMethodMatcherPointcut pointcut = new
+    private final transient StaticMethodMatcherPointcut pointcut = new
             StaticMethodMatcherPointcut() {
                 @Override
                 public boolean matches(Method method, Class<?> targetClass) {
@@ -31,7 +31,7 @@ public class ProfilingAdvisor extends AbstractPointcutAdvisor {
             };
 
     @Autowired
-    private ProfilingMethodInterceptor interceptor;
+    private transient ProfilingMethodInterceptor interceptor;
 
     @Override
     public Pointcut getPointcut() {

@@ -22,8 +22,7 @@ public class PostcodeValidator implements ConstraintValidator<Postcode, String> 
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        boolean valid = false;
-        valid = addressRestService.validatePostcode(value).handleSuccessOrFailure(f -> false, s -> s);
+        boolean valid = addressRestService.validatePostcode(value).handleSuccessOrFailure(f -> false, s -> s);
 
         if(!value.isEmpty() && !valid) {
             addConstraintViolationMessageToField(context);

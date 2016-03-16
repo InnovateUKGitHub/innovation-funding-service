@@ -1,8 +1,6 @@
 package com.worth.ifs.configuration;
 
 import com.worth.ifs.interceptors.MenuLinksHandlerInterceptor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +18,6 @@ import java.util.Locale;
 
 @Configuration
 public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
-    private static final Log LOG = LogFactory.getLog(IFSWebConfiguration.class);
     public static final int CACHE_PERIOD = 60 * 60 * 24 * 60;
 
     @Autowired

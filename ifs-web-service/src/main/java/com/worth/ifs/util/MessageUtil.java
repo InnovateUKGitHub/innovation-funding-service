@@ -1,12 +1,18 @@
 package com.worth.ifs.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 
 import java.util.Locale;
 
-public class MessageUtil {
+public final class MessageUtil {
 
+	private MessageUtil() {}
+	
+	private static final Log LOG = LogFactory.getLog(MessageUtil.class);
+	
     public static String getFromMessageBundle(final MessageSource messageSource, final String key, final String defaultMsg, final Locale locale){
         return getFromMessageBundle(messageSource, key, defaultMsg, null, locale);
     }
@@ -19,6 +25,7 @@ public class MessageUtil {
                 msg = defaultMsg;
             }
         } catch(NoSuchMessageException nsme){
+        	LOG.error(nsme);
             msg = defaultMsg;
         }
         return msg;

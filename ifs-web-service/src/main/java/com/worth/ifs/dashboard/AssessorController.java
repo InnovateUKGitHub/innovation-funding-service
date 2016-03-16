@@ -12,8 +12,6 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.User;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/assessor")
 public class AssessorController {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     CompetitionService competitionService;
@@ -45,9 +42,6 @@ public class AssessorController {
 
     @RequestMapping(value="/dashboard", method= RequestMethod.GET)
     public String dashboard(Model model, HttpServletRequest request) {
-
-        //gets logged user to know what to show
-        User user = getLoggedUser(request);
 
         //for now gets all the competitions to show in the dashboard (assumes user was invited and accepted all)
 

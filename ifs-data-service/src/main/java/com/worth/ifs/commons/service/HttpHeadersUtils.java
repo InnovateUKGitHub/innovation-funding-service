@@ -7,6 +7,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 
 public final class HttpHeadersUtils {
+	
+	private HttpHeadersUtils(){}
+	
     public static HttpHeaders getJSONHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(APPLICATION_JSON);

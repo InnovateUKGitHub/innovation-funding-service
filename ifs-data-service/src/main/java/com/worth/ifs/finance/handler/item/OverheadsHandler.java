@@ -35,7 +35,7 @@ public class OverheadsHandler extends CostHandler {
 
     @Override
     public CostItem toCostItem(Cost cost) {
-        OverheadRateType type = (OverheadRateType.valueOf(cost.getItem()) != null ? OverheadRateType.valueOf(cost.getItem()) : OverheadRateType.NONE);
+        OverheadRateType type = OverheadRateType.valueOf(cost.getItem()) != null ? OverheadRateType.valueOf(cost.getItem()) : OverheadRateType.NONE;
         return new Overhead(cost.getId(), type, cost.getQuantity());
     }
 

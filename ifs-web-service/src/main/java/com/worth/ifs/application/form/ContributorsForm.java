@@ -1,3 +1,4 @@
+
 package com.worth.ifs.application.form;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ContributorsForm implements Serializable {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(ContributorsForm.class);
 
     private boolean triedToSave = false;
     private Long applicationId;
@@ -72,7 +73,7 @@ public class ContributorsForm implements Serializable {
                     .filter(o -> StringUtils.isNotEmpty(o.getOrganisationName()) && o.getOrganisationName().equals(oC.getOrganisationName()))
                     .findAny();
             if(existingOrgOptional.isPresent()){
-                log.debug("merge after " + existingOrgOptional.get().getOrganisationName() + " invite count: " + existingOrgOptional.get().getInvites().size());
+                LOG.debug("merge after " + existingOrgOptional.get().getOrganisationName() + " invite count: " + existingOrgOptional.get().getInvites().size());
             }
         }
     }

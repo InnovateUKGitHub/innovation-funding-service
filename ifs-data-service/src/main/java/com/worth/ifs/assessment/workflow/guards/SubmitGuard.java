@@ -2,8 +2,6 @@ package com.worth.ifs.assessment.workflow.guards;
 
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.guard.Guard;
 
@@ -12,7 +10,6 @@ import org.springframework.statemachine.guard.Guard;
  * to the next state. This will not happen if the evaluation is failing.
  */
 public class SubmitGuard implements Guard<String, String> {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Override
     public boolean evaluate(StateContext<String, String> context) {
@@ -20,6 +17,6 @@ public class SubmitGuard implements Guard<String, String> {
         if(assessment ==null)
             return false;
 
-        return (assessment.hasAssessmentStarted() && !assessment.getProcessStatus().equals(AssessmentStates.SUBMITTED));
+        return assessment.hasAssessmentStarted() && !assessment.getProcessStatus().equals(AssessmentStates.SUBMITTED);
     }
 }

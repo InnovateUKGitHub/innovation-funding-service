@@ -48,6 +48,7 @@ public class AssessorFeedback {
     }
 
     public AssessorFeedback() {
+    	// no-arg constructor
     }
 
     public Long getId() {

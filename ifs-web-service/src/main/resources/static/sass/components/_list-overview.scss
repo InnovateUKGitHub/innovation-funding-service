@@ -61,6 +61,7 @@
     }
 }
 
+
 .list-eligibility{
     overflow: auto;
     @include core-24;
@@ -68,6 +69,7 @@
         display: block;
         float: left;
         width: 50%;
+				font-weight:normal;
         margin-bottom: 0.5em;
         @include media-down(tablet) {
             width: 70%;
@@ -88,12 +90,22 @@
     }
 }
 
+dl dd,
+dl dt {
+	display: block;
+}
+
+dl dt,
+dl dt.font-small {
+	font-weight:bold;
+}
 
 .dl-left {
 	overflow: hidden;
 
 	dd,dt {
 		line-height:1.5;
+		font-weight:normal;
 	}
 	dd {
 		float:left;

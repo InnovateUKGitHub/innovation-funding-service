@@ -13,5 +13,6 @@ import java.util.List;
  */
 public interface ApplicationStatusRepository extends PagingAndSortingRepository<ApplicationStatus, Long> {
     List<ApplicationStatus> findByName(@Param("name") String name);
+    @Override
     List<ApplicationStatus> findAll();
 }

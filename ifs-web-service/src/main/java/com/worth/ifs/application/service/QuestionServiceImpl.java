@@ -74,6 +74,7 @@ public class QuestionServiceImpl implements QuestionService {
         questionStatuses.stream().forEach(qs -> questionRestService.updateNotification(qs.getId(), true));
     }
 
+    @Override
     public Future<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
         return questionRestService.getMarkedAsComplete(applicationId, organisationId);
     }
@@ -111,7 +112,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId){
         List<QuestionStatusResource> questionStatuses = questionStatusRestService.getByQuestionIdAndApplicationIdAndOrganisationId(questionId, applicationId, organisationId).getSuccessObjectOrThrowException();
-        if(questionStatuses == null || questionStatuses.size() == 0){
+        if(questionStatuses == null || questionStatuses.isEmpty()){
             return null;
         }
         return questionStatuses.get(0);

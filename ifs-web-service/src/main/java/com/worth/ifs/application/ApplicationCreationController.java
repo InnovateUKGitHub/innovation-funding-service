@@ -39,7 +39,6 @@ public class ApplicationCreationController extends AbstractApplicationController
     @RequestMapping("/check-eligibility/{competitionId}")
     public String checkEligibility(Model model,
                                    @PathVariable(COMPETITION_ID) Long competitionId,
-                                   HttpServletRequest request,
                                    HttpServletResponse response) {
         model.addAttribute(COMPETITION_ID, competitionId);
         CookieUtil.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));

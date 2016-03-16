@@ -133,7 +133,7 @@
 
 <div th:fragment="form-duration (id, field)">
   <div class="form-group">
-    <div th:include="question-type/form-elements :: form-label (name='Duration months',id=${id},bold=false)" th:remove="tag"/>
+    <div th:include="question-type/form-elements :: form-label (name='Duration in months',id=${id},bold=false)" th:remove="tag"/>
       <div th:include="question-type/form-elements :: form-validation-messages (id=${id})" th:remove="tag" />
     <div th:include="question-type/form-elements :: form-number-extra-small (id=${id}, field=${field})" th:remove="tag"/>
   </div>
@@ -350,6 +350,28 @@
     </button>
     </div>
 </div>
+
+<!-- ====================== Mark all as complete buttons for finance section =========================== -->
+
+<div th:fragment="form-mark-all-as-complete-buttons">
+    <div th:remove="tag" th:unless="${appIsClosed}">
+        <button th:unless="${readonly}"
+                th:if="${!completedSections?.contains(currentSection.getId())}"
+                type="submit"
+                name="mark_section_as_complete"
+                th:value="${currentSection.getId()}"
+                th:class="button">Mark all as complete
+        </button>
+        <button th:unless="${readonly}"
+                th:if="${completedSections?.contains(currentSection.getId())}"
+                type="submit"
+                name="mark_section_as_incomplete"
+                th:value="${currentSection.getId()}"
+                th:class="buttonlink">Edit
+        </button>
+    </div>
+</div>
+
 <!-- ========================= edit link =========================== -->
 
 <div th:fragment="form-edit-question-button">
