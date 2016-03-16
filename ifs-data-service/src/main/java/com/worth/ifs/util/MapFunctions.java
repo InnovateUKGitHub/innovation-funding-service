@@ -9,8 +9,10 @@ import static java.util.stream.Collectors.groupingBy;
 /**
  * Helper utilities related to Maps
  */
-public class MapFunctions {
+public final class MapFunctions {
 
+	private MapFunctions() {}
+	
     /**
      * Given an even number of name value pairs as vararg arguments e.g. asMap("key1", 1L, "key2", 2L), this function will
      * return a Map with the given keys and their respective values

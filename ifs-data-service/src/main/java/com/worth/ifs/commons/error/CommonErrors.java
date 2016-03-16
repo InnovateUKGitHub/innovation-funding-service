@@ -13,8 +13,10 @@ import static org.springframework.http.HttpStatus.*;
  * in the way we construct, for instance, Errors that pertain to not being able to find an entity by a set of credentials
  * (e.g. its primary key)
  */
-public class CommonErrors {
+public final class CommonErrors {
 
+	private CommonErrors() {}
+	
     public static Error notFoundError(Class<?> entityClazz, List<Object> arguments) {
         List<Object> allArguments = new ArrayList<>();
         allArguments.add(entityClazz.getSimpleName());

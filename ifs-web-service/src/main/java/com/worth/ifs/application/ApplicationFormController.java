@@ -540,7 +540,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         questions.stream()
                 .forEach(question -> question.getFormInputs()
                                 .stream()
-                                .filter(formInput1 -> (!formInput1.getFormInputType().getTitle().equals("fileupload")))
+                                .filter(formInput1 -> !"fileupload".equals(formInput1.getFormInputType().getTitle()))
                                 .forEach(formInput -> {
                                             if (params.containsKey("formInput[" + formInput.getId() + "]")) {
                                                 String value = request.getParameter("formInput[" + formInput.getId() + "]");
@@ -565,7 +565,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         questions.stream()
                 .forEach(question -> question.getFormInputs()
                         .stream()
-                        .filter(formInput1 -> (formInput1.getFormInputType().getTitle().equals("fileupload") && request instanceof StandardMultipartHttpServletRequest))
+                        .filter(formInput1 -> ("fileupload".equals(formInput1.getFormInputType().getTitle()) && request instanceof StandardMultipartHttpServletRequest))
                         .forEach(formInput -> {
                             if (params.containsKey(REMOVE_UPLOADED_FILE)) {
                                 formInputResponseService.removeFile(formInput.getId(), applicationId, processRoleId).getSuccessObjectOrThrowException();
@@ -587,6 +587,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                             .map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
                                         }
                                     } catch (IOException e) {
+                                    	log.error(e);
                                         throw new UnableToReadUploadedFile();
                                     }
                                 }

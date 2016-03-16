@@ -55,7 +55,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
             }
 
         }catch (IllegalArgumentException e){
-            log.error(String.format("No CostHandler for type: ", costType.getType()));
+            log.error(String.format("No CostHandler for type: %s", costType.getType()), e);
         }
         return null;
     }
@@ -123,6 +123,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
                 .forEach(cc -> cc.setCosts(new ArrayList<>()));
     }
 
+    @Override
     public Cost costItemToCost(CostItem costItem) {
         CostHandler costHandler = getCostHandler(costItem.getCostType());
         List<CostField> costFields = costFieldRepository.findAll();

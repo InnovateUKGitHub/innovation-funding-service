@@ -22,6 +22,7 @@ public class ResponseRestServiceImpl extends BaseRestService implements Response
     @Value("${ifs.data.service.rest.response}")
     String responseRestURL;
 
+    @Override
     public RestResult<List<Response>> getResponsesByApplicationId(Long applicationId) {
         return getWithRestResult(responseRestURL + "/findResponsesByApplication/" + applicationId, responseListType());
     }

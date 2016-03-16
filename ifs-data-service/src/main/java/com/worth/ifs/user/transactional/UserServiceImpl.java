@@ -14,8 +14,6 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserStatus;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,8 +34,6 @@ import static java.util.stream.Collectors.toSet;
 @Service
 public class UserServiceImpl extends BaseTransactionalService implements UserService {
     final JsonNodeFactory factory = JsonNodeFactory.instance;
-
-    private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
 
     enum Notifications {
         VERIFY_EMAIL_ADDRESS,
@@ -98,7 +94,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<User> assignables = roles.stream()
-                .filter(r -> r.getRole().getName().equals("leadapplicant") || r.getRole().getName().equals("collaborator"))
+                .filter(r -> "leadapplicant".equals(r.getRole().getName()) || "collaborator".equals(r.getRole().getName()))
                 .map(ProcessRole::getUser)
                 .collect(toSet());
 

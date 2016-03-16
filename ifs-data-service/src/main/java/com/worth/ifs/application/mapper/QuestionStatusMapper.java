@@ -25,6 +25,7 @@ public abstract class QuestionStatusMapper  extends BaseMapper<QuestionStatus, Q
             @Mapping(source = "assignedBy.user.name", target = "assignedByName"),
             @Mapping(source = "assignedBy.user.id", target = "assignedByUserId")
     })
+    @Override
     public abstract QuestionStatusResource mapToResource(QuestionStatus domain);
 
     public Long mapQuestionStatusToId(QuestionStatus object) {

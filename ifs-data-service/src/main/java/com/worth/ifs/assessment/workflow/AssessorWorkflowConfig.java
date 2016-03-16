@@ -9,8 +9,6 @@ import com.worth.ifs.assessment.workflow.actions.SubmitAction;
 import com.worth.ifs.assessment.workflow.guards.AssessmentGuard;
 import com.worth.ifs.assessment.workflow.guards.ProcessOutcomeGuard;
 import com.worth.ifs.assessment.workflow.guards.SubmitGuard;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
@@ -25,7 +23,6 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 @Configuration
 @EnableStateMachine
 public class AssessorWorkflowConfig extends StateMachineConfigurerAdapter<String, String> {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Override
     public void configure(StateMachineStateConfigurer<String, String> states) throws Exception {

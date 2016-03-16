@@ -62,8 +62,8 @@ public class SimpleEmailEndpointController {
     @RequestMapping(value="/sendmail", method = POST)
     public RestResult<Void> sendMail(@RequestBody SilEmailMessage message) {
 
-        SilEmailBody plainTextBody = simpleFilter(message.getBody(), body -> body.getContentType().equals("text/plain")).get(0);
-        SilEmailBody htmlBody = simpleFilter(message.getBody(), body -> body.getContentType().equals("text/html")).get(0);
+        SilEmailBody plainTextBody = simpleFilter(message.getBody(), body -> "text/plain".equals(body.getContentType())).get(0);
+        SilEmailBody htmlBody = simpleFilter(message.getBody(), body -> "text/html".equals(body.getContentType())).get(0);
 
         LOG.info("Stubbing out SIL outbound email:\n\n" +
                 "From: " + message.getFrom().getEmail() + "\n" +

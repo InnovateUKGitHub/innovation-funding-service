@@ -76,7 +76,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
         CostHandler costHandler = new AcademicFinanceHandler();
         Long costFormFieldId = 0L;
-        if (financeFormField.getId() != null && !financeFormField.getId().equals("null")) {
+        if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
         CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(financeFormField));
