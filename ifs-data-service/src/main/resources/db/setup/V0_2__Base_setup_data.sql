@@ -163,6 +163,7 @@ INSERT  IGNORE INTO `question` (`id`, `assessor_confirmation_question`, `assign_
 /* Following two updates added to allow marking and unmarking of Organisation Size and Funding Level on finance section */
 UPDATE `question` SET `mark_as_completed_enabled`=1 WHERE `id`='38';
 UPDATE `question` SET `mark_as_completed_enabled`=1 WHERE `id`='40';
+UPDATE `ifs`.`question` SET `mark_as_completed_enabled`=1 WHERE `id`='20';
 
 /*!40000 ALTER TABLE `question` ENABLE KEYS */;
 UNLOCK TABLES;
