@@ -184,7 +184,7 @@ Academic organisation (accept invitation flow)
     When user selects the radio button    organisationType    5
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Search")
-    Then the user should see an error    may not be empty
+    Then the user should see an error    This field cannot be left blank
     When the user enters text to a text field    id=org-name    Liverpool
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    University of Liverpool
