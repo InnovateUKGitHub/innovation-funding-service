@@ -33,6 +33,7 @@ public class RestTemplateAdaptorFactory {
     @Value("${ifs.data.company-house.key}")
     private String companyhouseKey = null;
 
+
     @Bean(autowire = Autowire.BY_TYPE)
     @Qualifier("companyhouse_adaptor")
     public AbstractRestTemplateAdaptor companyHouseAdaptor(){
@@ -48,4 +49,16 @@ public class RestTemplateAdaptorFactory {
             }
         };
     }
+
+    @Bean(autowire = Autowire.BY_TYPE)
+    @Qualifier("sil_adaptor")
+    public AbstractRestTemplateAdaptor silAdaptor(){
+        return new AbstractRestTemplateAdaptor() {
+            @Override
+            public HttpHeaders getHeaders() {
+                return HttpHeadersUtils.getJSONHeaders();
+            }
+        };
+    }
+
 }
