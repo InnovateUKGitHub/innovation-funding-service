@@ -89,7 +89,7 @@ public class ByFileIdFileStorageStrategy extends BaseFileStorageStrategy {
     }
 
     private String separatorForSplit(String fileSeparator) {
-        if (fileSeparator.equals("\\")) {
+        if ("\\".equals(fileSeparator)) {
             return "\\\\";
         }
         return fileSeparator;

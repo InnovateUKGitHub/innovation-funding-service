@@ -13,7 +13,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition eligibility',linkClass='link-back',linkUrl=@{eligibility},currentApplication=${currentApplication}" th:remove="tag" />
 
     <div class="page-title">
-        <h1 class="heading-xlarge no-margin">Technology inspired</h1>
+      <h1 class="heading-xlarge no-margin" th:text="${currentCompetition.name}" />
         <h2 class="heading-large">What we ask you....</h2>
     </div>
     <p>The application is split into 3 sections.  Each section has questions which you can individually mark as complete to track your progress in the application.</p>
@@ -119,7 +119,7 @@
 
 <h3 class="heading-small">Adding value</h3>
 <dl class="questions-dl">
-  <dt>10. How does financial support from Innovate UK and its funding partners add value?
+  <dt>10. How will financial support from Innovate UK and its funding partners add value?
     <div>You should describe:</div>
   </dt>
 <dd>why you are unable to fund the project yourself from commercial resources</dd>
@@ -141,7 +141,7 @@
 <li>other</li>
 </ul>
 
-<p><strong>Business Size:</strong>  If you are a business applicant, you must select the size of your business as being either small, medium or large.  If you are unsure, please <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">use the EU definition available here</a>.  The size of your business determines the amount of grant that you are eligible to receive.
+<p><strong>Business size:</strong>  If you are a business applicant, you must select the size of your business as being either small, medium or large.  If you are unsure, please <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">use the EU definition available here</a>.  The size of your business determines the amount of grant that you are eligible to receive.
 </p>
 
 <p><strong>Funding level:</strong> You must enter the percentage of grant funding you wish to receive as an individual partner in the project.  This figure must not be greater than the funding level permitted for your business size. For more information read the funding rules here : <span style="color:red;font-weight:bold;">&lt;link to funding rules&gt;</span> </p>

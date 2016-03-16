@@ -30,7 +30,7 @@ public class OtherFundingCostCategory implements CostCategory {
 
     @Override
     public void calculateTotal() {
-        if(getOtherPublicFunding() == null || !getOtherPublicFunding().equals("Yes")) {
+        if(getOtherPublicFunding() == null || !"Yes".equals(getOtherPublicFunding())) {
             total = BigDecimal.ZERO;
         } else {
             total = costs.stream()

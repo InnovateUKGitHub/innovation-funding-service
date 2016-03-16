@@ -22,7 +22,7 @@ public class CallFuturesInModelAdvisor extends AbstractPointcutAdvisor {
         setOrder(CALL_FUTURES_ORDER);
     }
 
-    private final StaticMethodMatcherPointcut pointcut = new
+    private final transient StaticMethodMatcherPointcut pointcut = new
             StaticMethodMatcherPointcut() {
                 @Override
                 public boolean matches(Method method, Class<?> targetClass) {
@@ -31,7 +31,7 @@ public class CallFuturesInModelAdvisor extends AbstractPointcutAdvisor {
             };
 
     @Autowired
-    private CallFuturesInModelMethodInterceptor interceptor;
+    private transient CallFuturesInModelMethodInterceptor interceptor;
 
     @Override
     public Pointcut getPointcut() {

@@ -28,7 +28,7 @@ public class ResponseResource {
     }
 
     public ResponseResource() {
-
+    	// no-arg constructor
     }
 
     public Long getId() {

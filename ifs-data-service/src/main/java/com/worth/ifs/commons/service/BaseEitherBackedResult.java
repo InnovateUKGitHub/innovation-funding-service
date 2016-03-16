@@ -22,6 +22,7 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
         this.result = result;
     }
 
+    @Override
     public <T1> T1 handleSuccessOrFailure(ExceptionThrowingFunction<? super FailureType, ? extends T1> failureHandler, ExceptionThrowingFunction<? super T, ? extends T1> successHandler) {
         return mapLeftOrRight(failureHandler, successHandler);
     }
@@ -36,18 +37,22 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
         return flatMap(successHandler);
     }
 
+    @Override
     public boolean isSuccess() {
         return isRight();
     }
 
+    @Override
     public boolean isFailure() {
         return isLeft();
     }
 
+    @Override
     public FailureType getFailure() {
         return getLeft();
     }
 
+    @Override
     public T getSuccessObject() {
         return getRight();
     }

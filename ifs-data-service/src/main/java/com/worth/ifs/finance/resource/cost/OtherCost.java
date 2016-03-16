@@ -1,7 +1,5 @@
 package com.worth.ifs.finance.resource.cost;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import java.math.BigDecimal;
 
 public class OtherCost implements CostItem {
@@ -23,6 +21,7 @@ public class OtherCost implements CostItem {
         this.cost = cost;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -35,6 +34,7 @@ public class OtherCost implements CostItem {
         return description;
     }
 
+    @Override
     public BigDecimal getTotal() {
         return cost;
     }

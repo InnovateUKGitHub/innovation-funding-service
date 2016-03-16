@@ -68,4 +68,9 @@ public class SectionController {
     public RestResult<SectionResource> getSectionByQuestionId(@PathVariable("questionId") final Long questionId) {
         return sectionService.getSectionByQuestionId(questionId).toGetResponse();
     }
+
+    @RequestMapping("/getQuestionsForSectionAndSubsections/{sectionId}")
+    public RestResult<Set<Long>> getQuestionsForSectionAndSubsections(@PathVariable("sectionId") final Long sectionId){
+        return sectionService.getQuestionsForSectionAndSubsections(sectionId).toGetResponse();
+    }
 }

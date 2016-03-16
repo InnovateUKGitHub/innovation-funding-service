@@ -9,7 +9,7 @@
         <fieldset>
             <legend class="visuallyhidden">Sign in</legend>
             <div class="form-group">
-                <label class="form-label" for="id_email">E-mail address</label>
+                <label class="form-label" for="id_email">Email address</label>
                 <input class="form-control form-control-3-4" type="text" id="id_email" name="email" value="" />
             </div><!-- .form-group -->
 
@@ -537,7 +537,7 @@
 <!-- ========Applicant view - readonly application view======= -->
 <div th:fragment="prototype-readonly-application">
     <div th:include="prototypes/fragments/applicant-view :: prototype-application-details-panel" th:remove="tag" />
-    
+
 
     <div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'} or ${param.status != null} and ${param.status[0] == 'assessorFeedback'}" th:remove="tag">
 

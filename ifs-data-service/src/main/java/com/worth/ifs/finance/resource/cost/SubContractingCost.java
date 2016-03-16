@@ -28,6 +28,7 @@ public class SubContractingCost implements CostItem {
         this.role = role;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -40,6 +41,7 @@ public class SubContractingCost implements CostItem {
         return country;
     }
 
+    @Override
     public String getName() {
         return name;
     }

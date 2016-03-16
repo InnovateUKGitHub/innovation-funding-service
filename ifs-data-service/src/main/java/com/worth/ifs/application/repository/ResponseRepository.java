@@ -18,5 +18,6 @@ public interface ResponseRepository extends PagingAndSortingRepository<Response,
     List<Response> findByUpdatedBy(@Param("updatedBy") ProcessRole updatedBy);
     Response findByApplicationAndQuestion(@Param("application") Application application, @Param("question") Question question);
     Response findByApplicationIdAndQuestionId(@Param("applicationId") Long applicationId, @Param("questionId") Long questionId);
+    @Override
     List<Response> findAll();
 }

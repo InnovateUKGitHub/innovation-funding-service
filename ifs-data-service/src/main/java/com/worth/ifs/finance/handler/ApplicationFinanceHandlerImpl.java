@@ -9,8 +9,6 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.repository.OrganisationRepository;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +16,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ApplicationFinanceHandlerImpl handles the finance information on application level.
  */
 @Service
 public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
     ApplicationFinanceRepository applicationFinanceRepository;
@@ -92,7 +90,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
     protected void setFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
         Organisation organisation = organisationRepository.findOne(applicationFinanceResource.getOrganisation());
         OrganisationFinanceHandler organisationFinanceHandler = organiastionFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
-        EnumMap<CostType, CostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
+        Map<CostType, CostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
         applicationFinanceResource.setFinanceOrganisationDetails(costs);
     }
 }

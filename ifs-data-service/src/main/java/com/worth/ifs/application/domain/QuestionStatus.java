@@ -41,6 +41,7 @@ public class QuestionStatus {
     private Boolean notified;
 
     public QuestionStatus() {
+    	// no-arg constructor
     }
 
     public QuestionStatus(Question question,  Application application, ProcessRole markedAsCompleteBy, Boolean markedAsComplete) {

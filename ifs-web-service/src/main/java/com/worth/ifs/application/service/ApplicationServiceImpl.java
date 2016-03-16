@@ -44,10 +44,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     public List<ApplicationResource> getInProgress(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrThrowException();
         return applications.stream()
-                .filter(a -> (fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.CREATED.getName())
+                .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.CREATED.getName())
                         || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.SUBMITTED.getName())
                         || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.OPEN.getName())
-                ))
+                )
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -55,8 +55,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     public List<ApplicationResource> getFinished(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrThrowException();
         return applications.stream()
-                .filter(a -> (fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.APPROVED.getName())
-                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.REJECTED.getName())))
+                .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.APPROVED.getName())
+                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.REJECTED.getName()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 

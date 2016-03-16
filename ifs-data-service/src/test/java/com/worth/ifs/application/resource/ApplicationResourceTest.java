@@ -1,19 +1,21 @@
 package com.worth.ifs.application.resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.user.domain.ProcessRole;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Arrays.asList;
 
 public class ApplicationResourceTest {
     ApplicationResource applicationResource;
@@ -44,14 +46,12 @@ public class ApplicationResourceTest {
         processRoles.add(new ProcessRole(3L,null,null,null,null));
 
         applicationResource = newApplicationResource()
-            .withCompetition(competition)
+            .withCompetition(competition.getId())
             .withName(name)
             .withProcessRoles(
-                new ProcessRole(1L,null,null,null,null),
-                new ProcessRole(2L,null,null,null,null),
-                new ProcessRole(3L,null,null,null,null)
+                asList(1L,2L,3L)
             )
-            .withApplicationStatus(applicationStatus)
+            .withApplicationStatus(applicationStatus.getId())
             .withId(id)
             .build();
         applicationResource.setApplicationFinances(simpleMap(applicationFinances,ApplicationFinance::getId));

@@ -7,8 +7,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserRestService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +23,6 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
  */
 @Service
 public class UserServiceImpl implements UserService {
-    private static final Log LOG = LogFactory.getLog(UserServiceImpl.class);
 
     @Autowired
     private UserRestService userRestService;

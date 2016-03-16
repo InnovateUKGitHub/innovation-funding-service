@@ -1,20 +1,20 @@
 package com.worth.ifs.application.service;
 
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.service.BaseRestService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.service.BaseRestService;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.stereotype.Service;
-
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsSetType;
 
 /**
  * SectionRestServiceImpl is a utility for CRUD operations on {@link Section}.
@@ -70,5 +70,10 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     @Override
     public RestResult<SectionResource> getSectionByQuestionId(Long questionId) {
         return getWithRestResult(sectionRestURL + "/getSectionByQuestionId/" + questionId, SectionResource.class);
+    }
+
+    @Override
+    public RestResult<Set<Long>> getQuestionsForSectionAndSubsections(Long sectionId) {
+        return getWithRestResult(sectionRestURL + "/getQuestionsForSectionAndSubsections/" + sectionId, longsSetType());
     }
 }

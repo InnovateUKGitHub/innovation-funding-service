@@ -9,11 +9,11 @@ IFS.formValidation = (function(){
             },
             min : {
                 fields: '[min]',
-                messageInvalid : 'This field should be %min%% or higher'
+                messageInvalid : 'This field should be %min% or higher'
             },
             max : {
                 fields: '[max]',
-                messageInvalid : 'This field should be %max%% or lower'
+                messageInvalid : 'This field should be %max% or lower'
             },
             password: {
                 field1 : '[name="password"]',
@@ -26,7 +26,7 @@ IFS.formValidation = (function(){
             },
             required : {
                 fields: '[required]',
-                messageInvalid : "Please enter this field"
+                messageInvalid : "This field cannot be left blank"
             },
             minlength : {
                 fields : '[minlength]',
@@ -34,7 +34,7 @@ IFS.formValidation = (function(){
             },
             maxlength : {
                 fields : '[maxlength]',
-                messageInvalid : "This field should contain at least %maxlength% characters"
+                messageInvalid : "This field cannot contain more than %maxlength% characters"
             },
             tel : {
                 fields : '[type="tel"]',

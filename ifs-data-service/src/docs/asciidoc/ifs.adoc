@@ -105,6 +105,10 @@ include::address.adoc[]
 == Application
 include::application.adoc[]
 
+[[applicationstatus]]
+== Application Status
+include::application-status.adoc[]
+
 [[assessment]]
 == Assessment
 include::assessment.adoc[]

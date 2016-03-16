@@ -28,6 +28,7 @@ public class QuestionStatusModel {
     private Boolean notified;
 
     public QuestionStatusModel() {
+    	// no-arg constructor
     }
 
     public QuestionStatusModel(Question question,  Application application, ProcessRole markedAsCompleteBy, Boolean markedAsComplete) {
