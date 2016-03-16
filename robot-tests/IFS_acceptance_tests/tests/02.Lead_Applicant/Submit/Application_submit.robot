@@ -78,7 +78,7 @@ the applicant clicks Yes in the submit modal
 
 the applicant marks the first question as incomplete
     Click Element    css=.section-overview section:nth-of-type(1) .collapsible:nth-of-type(2)
-    click element    css=#form-input-11 .button-secondary
+    click element    jQuery= button:contains('Edit')
 
 the applicant marks the first question as complete
     click element    css=.section-overview section:nth-of-type(1) .collapsible:nth-of-type(2)
