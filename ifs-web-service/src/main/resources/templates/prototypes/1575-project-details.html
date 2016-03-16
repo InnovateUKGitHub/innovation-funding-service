@@ -268,18 +268,21 @@
 
 			if(financesNamePending == null){
 				jQuery('#finance-contact-status').text('Yes');
-				jQuery('#finance-contact-status').addClass('complete');
+				jQuery('#finance-contact-status').addClass('yes');
+				jQuery('#finance-contact-status').removeClass('no');
 			}else{
 				jQuery('#finance-contact').text(financesNamePending.replace(/\+/g,' '));
 				jQuery('#finance-contact-status').text('Pending');
-				jQuery('#finance-contact-status').removeClass('complete');
+				jQuery('#finance-contact-status').removeClass('yes');
+				jQuery('#finance-contact-status').removeClass('no');
 			}
 		}
 
 		if(financesName == null & userType == 'nonLead'){
 			jQuery('#finance-partner-contact').text('-');
 			jQuery('#finance-partner-contact-status').text('No');
-			jQuery('#finance-partner-contact-status').removeClass('complete');
+			jQuery('#finance-partner-contact-status').addClass('no');
+			jQuery('#finance-partner-contact-status').removeClass('yes');
 
 		}else if(financesName != null & userType == 'nonLead'){
 
@@ -287,11 +290,13 @@
 
 			if(financesNamePending == null){
 				jQuery('#finance-partner-contact-status').text('Yes');
-				jQuery('#finance-partner-contact-status').addClass('complete');
+				jQuery('#finance-partner-contact-status').addClass('yes');
+				jQuery('#finance-partner-contact-status').removeClass('no');
 			}else{
 				jQuery('#finance-partner-contact').text(financesNamePending.replace(/\+/g,' '));
 				jQuery('#finance-partner-contact-status').text('Pending');
-				jQuery('#finance-partner-contact-status').removeClass('complete');
+				jQuery('#finance-partner-contact-status').removeClass('yes');
+				jQuery('#finance-partner-contact-status').removeClass('no');
 			}
 		}
 
@@ -310,7 +315,7 @@
 			jQuery('#finance-name').text(financeContact + ' (Pending)')
 			jQuery("#finances-name-invite").attr('checked', 'checked');
 			jQuery('#finance-contact-table').hide();
-			jQuery('#invited-finance-contact').show();
+			jQuery('#invited-finance-contact').show(); 
 
 		});
 
