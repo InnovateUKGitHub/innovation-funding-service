@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project details'}, ${'/prototypes/1575-project-details'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Project manager'})" th:remove="tag" />
+	
+	<form action="/prototypes/1575-project-details">
+
+		<fieldset>
+
+			<h2 class="heading-medium">Project manager</h2>
+
+			<legend class="visuallyhidden">Project manager</legend>
+
+			<p class="form-hint">Who will be the overall project manager for this project?</p>
+
+			<p>We need this information now so that your monitoring officer can contact you. As lead partner you should provide a project manager for the duration of the project. We will invite them to register and join the project.</p>
+
+		
+			<div class="form-group extra-margin">
+				<label for="pm-name-1" class="block-label">
+					<input id="pm-name-1" type="radio" name="pm-name-group" value="John Smith" />
+					John Smith
+				</label>
+				
+				<label for="pm-name-2" class="block-label">
+					<input id="pm-name-2" type="radio" name="pm-name-group" value="Ann Jones" />
+					Ann Jones
+				</label>
+				
+				<label for="pm-name-invite" class="block-label" id="invited-pm" style="display: none">
+					<input id="pm-name-invite" type="radio" name="pm-name-group" value="" />
+					<span id="pm-name">Ann Jones (pending)</span>
+				</label>
+			</div>
+			
+			<button class="buttonlink" id="add-pm">Add new team member</button>	
+
+		</fieldset>
+
+		<div th:include="prototypes/fragments/project-setup :: prototype-add-users('pm')" th:remove="tag" />
+
+		<button class="button button-large extra-margin" style="display: none;" id="pm-cta">Save</button>
+
+	</form>
+
+	
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+		jQuery('#add-pm').on('click',function(e){ 
+			e.preventDefault();
+			jQuery('#pm-table').show();
+		});
+
+		jQuery('#invite-pm').on('click',function(e){ 
+			e.preventDefault();
+
+			var pmContact = jQuery('#name-pm1').val();
+
+			jQuery('#pm-name').text(pmContact + ' (Pending)')
+			jQuery("#pm-name-invite").attr('checked', 'checked');
+			//jQuery('#pm-table').hide();
+			jQuery('#invited-pm').show();
+			jQuery('#pm-cta').text('Send invitation');
+			jQuery('#pm-cta').show();
+		});
+
+		jQuery('input').on('click',function(e){ 
+			if(jQuery(this).is(':checked')){
+
+				if(jQuery(this).attr('id') != 'pm-name-invite'){
+					jQuery('#pm-cta').text('Save');
+				}else{
+					jQuery('#pm-cta').text('Send invitation');
+				}
+				
+				jQuery('#pm-cta').show();
+			}
+		});
+
+
+	});
+	// ]]>
+</script>
+</body>
+</html>
