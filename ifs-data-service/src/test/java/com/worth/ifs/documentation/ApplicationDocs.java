@@ -1,7 +1,14 @@
 package com.worth.ifs.documentation;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import com.worth.ifs.application.builder.ApplicationResourceBuilder;
+
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class ApplicationDocs {
@@ -18,4 +25,19 @@ public class ApplicationDocs {
             fieldWithPath("competitionName").description("Competition Name"),
             fieldWithPath("applicationFinances").description("list of ApplicationFinance Id's")
     };
+
+    public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
+            .withId(1L)
+            .withName("application name")
+            .withStartDate(LocalDate.now())
+            .withSubmittedDate(LocalDateTime.now())
+            .withDuration(1L)
+            .withProcessRoles(asList(1L,2L,3L))
+            .withApplicationFinance(asList(1L,2L,3L))
+            .withApplicationStatus(1L)
+            .withApplicationStatusName("OPEN")
+            .withCompetition(1L)
+            .withCompetitionName("competition name")
+            .withInviteList(asList(1L,2L,3L));
+
 }

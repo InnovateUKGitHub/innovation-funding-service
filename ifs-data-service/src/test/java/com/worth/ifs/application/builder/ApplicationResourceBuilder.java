@@ -1,19 +1,15 @@
 package com.worth.ifs.application.builder;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationStatusResource;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.user.domain.ProcessRole;
-
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.resource.ApplicationResource;
+
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource, ApplicationResourceBuilder> {
@@ -40,23 +36,48 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((id, application) -> setField("id", id, application), ids);
     }
 
-    public ApplicationResourceBuilder withCompetition(Competition competition) {
-        return with(application -> application.setCompetition(competition.getId()));
+    public ApplicationResourceBuilder withCompetition(Long competition) {
+        return with(application -> application.setCompetition(competition));
     }
 
-    public ApplicationResourceBuilder withApplicationStatus(ApplicationStatusResource... applicationStatus) {
-        return withArray((applicationState, application) -> application.setApplicationStatus(applicationState.getId()), applicationStatus);
+    public ApplicationResourceBuilder withApplicationStatus(Long... applicationStatus) {
+        return withArray((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
     }
 
     public ApplicationResourceBuilder withStartDate(LocalDate... dates) {
         return withArray((date, application) -> application.setStartDate(date), dates);
     }
 
-    public ApplicationResourceBuilder withProcessRoles(ProcessRole... processRoles) {
-        return with(application -> application.setProcessRoles(simpleMap(asList(processRoles),ProcessRole::getId)));
+    public ApplicationResourceBuilder withProcessRoles(List<Long>... processRolesLists) {
+        return withArray((processRoles, application) -> application.setProcessRoles(processRoles), processRolesLists);
     }
 
     public ApplicationResourceBuilder withName(String name) {
         return with(application -> application.setName(name));
     }
+
+    public ApplicationResourceBuilder withSubmittedDate(LocalDateTime... submittedDates) {
+        return withArray((submittedDate, address) -> setField("submittedDate", submittedDate, address), submittedDates);
+    }
+
+    public ApplicationResourceBuilder withDuration(Long... durations) {
+        return withArray((duration, address) -> setField("durationInMonths", duration, address), durations);
+    }
+
+    public ApplicationResourceBuilder withApplicationFinance(List<Long>... applicationFinances) {
+        return withArray((applicationFinance, address) -> setField("applicationFinances", applicationFinance, address), applicationFinances);
+    }
+
+    public ApplicationResourceBuilder withApplicationStatusName(String... applicationStatusNames) {
+        return withArray((applicationStatusName, address) -> setField("applicationStatusName", applicationStatusName, address), applicationStatusNames);
+    }
+
+    public ApplicationResourceBuilder withCompetitionName(String... competitionNames) {
+        return withArray((competitionName, address) -> setField("competitionName", competitionName, address), competitionNames);
+    }
+
+    public ApplicationResourceBuilder withInviteList(List<Long>... inviteLists) {
+        return withArray((inviteList, address) -> setField("invites", inviteList, address), inviteLists);
+    }
+
 }

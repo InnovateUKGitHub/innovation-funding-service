@@ -1,6 +1,7 @@
-package com.worth.ifs.application.controller;
+package com.worth.ifs.application.documentation;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.controller.ApplicationStatusController;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.transactional.ApplicationStatusService;
 import com.worth.ifs.commons.service.ServiceResult;
