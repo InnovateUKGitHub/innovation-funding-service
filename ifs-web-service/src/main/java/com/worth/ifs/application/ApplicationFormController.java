@@ -587,6 +587,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                             .map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
                                         }
                                     } catch (IOException e) {
+                                    	log.error(e);
                                         throw new UnableToReadUploadedFile();
                                     }
                                 }

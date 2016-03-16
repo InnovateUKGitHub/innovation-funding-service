@@ -20,8 +20,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.CookieUtil;
 import com.worth.ifs.util.JsonUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,7 +41,6 @@ public class ApplicationContributorController{
     public static final String APPLICATION_CONTRIBUTORS_DISPLAY = "application-contributors/display";
     public static final String APPLICATION_CONTRIBUTORS_INVITE = "application-contributors/invite";
     private static final String CONTRIBUTORS_COOKIE = "contributor_invite_state";
-    private final Log log = LogFactory.getLog(getClass());
     @Autowired
     private InviteRestService inviteRestService;
     @Autowired

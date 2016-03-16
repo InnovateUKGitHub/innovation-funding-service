@@ -22,6 +22,8 @@ public abstract class ApplicationFinanceMapper extends BaseMapper<ApplicationFin
     @Mappings({
         @Mapping(target = "financeOrganisationDetails", ignore = true )
     })
+    
+    @Override
     public abstract ApplicationFinanceResource mapToResource(ApplicationFinance domain);
 
 

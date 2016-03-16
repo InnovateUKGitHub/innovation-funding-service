@@ -74,6 +74,7 @@ public class QuestionServiceImpl implements QuestionService {
         questionStatuses.stream().forEach(qs -> questionRestService.updateNotification(qs.getId(), true));
     }
 
+    @Override
     public Future<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
         return questionRestService.getMarkedAsComplete(applicationId, organisationId);
     }

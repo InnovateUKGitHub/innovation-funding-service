@@ -11,6 +11,7 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface QuestionRepository extends PagingAndSortingRepository<Question, Long> {
+	@Override
     List<Question> findAll();
     List<Question> findByCompetitionId(Long competitionId);
     Question findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Long sectionId, Integer priority);

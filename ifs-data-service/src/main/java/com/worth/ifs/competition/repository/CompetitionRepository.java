@@ -15,6 +15,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     List<Competition> findByName(@Param("name") String name);
     Competition findById(@Param("id") Long id);
+    @Override
     List<Competition> findAll();
 
 }
