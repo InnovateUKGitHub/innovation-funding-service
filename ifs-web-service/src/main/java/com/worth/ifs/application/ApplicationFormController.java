@@ -223,6 +223,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     private String getRedirectUrl(HttpServletRequest request, Long applicationId) {
         if (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||
                 request.getParameter(MARK_AS_INCOMPLETE) != null ||
+                request.getParameter(MARK_SECTION_AS_INCOMPLETE) != null ||
                 request.getParameter(ADD_COST) != null ||
                 request.getParameter(REMOVE_COST) != null ||
                 request.getParameter(MARK_AS_COMPLETE) != null ||

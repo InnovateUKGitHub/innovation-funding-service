@@ -110,14 +110,14 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     private Set<Long> collectAllQuestionFrom(final Section section){
-        if(section.getChildSections() == null || section.getChildSections().isEmpty())
-            return Collections.emptySet();
-
         final Set<Long> questions = new HashSet<>();
 
-        for(Section childSection : section.getChildSections()){
-            questions.addAll(childSection.getQuestions().stream().map(questionMapper :: questionToId).collect(Collectors.toSet()));
-            questions.addAll(collectAllQuestionFrom(childSection));
+        questions.addAll(section.getQuestions().stream().map(questionMapper::questionToId).collect(Collectors.toSet()));
+
+        if(section.getChildSections() != null) {
+            for (Section childSection : section.getChildSections()) {
+                questions.addAll(collectAllQuestionFrom(childSection));
+            }
         }
 
         return questions;
