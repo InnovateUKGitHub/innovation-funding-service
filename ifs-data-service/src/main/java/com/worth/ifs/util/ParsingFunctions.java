@@ -5,8 +5,10 @@ import java.util.Optional;
 /**
  * A utility class providing handy methods around parsing.
  */
-public class ParsingFunctions {
+public final class ParsingFunctions {
 
+	private ParsingFunctions() {}
+	
     public static Optional<Long> validLong(String string) {
         try {
             return Optional.of(Long.parseLong(string));

@@ -147,7 +147,7 @@ public class ApplicationContributorController{
 
         String json = CookieUtil.getCookieValue(request, CONTRIBUTORS_COOKIE);
 
-        if (json != null && !json.equals("")) {
+        if (json != null && !"".equals(json)) {
             ContributorsForm contributorsFormCookie = JsonUtil.getObjectFromJson(json, ContributorsForm.class);
             if (contributorsFormCookie.getApplicationId().equals(applicationId)) {
                 if (contributorsFormCookie.isTriedToSave()) {
@@ -178,8 +178,7 @@ public class ApplicationContributorController{
                                      @RequestParam(name = "newApplication", required = false) String newApplication,
                                      @ModelAttribute ContributorsForm contributorsForm,
                                      BindingResult bindingResult,
-                                     HttpServletResponse response,
-                                     HttpServletRequest request) {
+                                     HttpServletResponse response) {
         ApplicationResource application = applicationService.getById(applicationId);
         ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         // User should never be able to set the organisation name or id of the lead-organisation.

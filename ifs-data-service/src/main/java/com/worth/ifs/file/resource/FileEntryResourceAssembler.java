@@ -5,8 +5,10 @@ import com.worth.ifs.file.domain.FileEntry;
 /**
  * Convert between a FileEntry entity and a FileEntryResource.  This is a standin for a true Hateoas resource assembler
  */
-public class FileEntryResourceAssembler {
+public final class FileEntryResourceAssembler {
 
+	private FileEntryResourceAssembler(){}
+	
     public static FileEntry valueOf(FileEntryResource resource) {
         return new FileEntry(resource.getId(), resource.getName(), resource.getMediaType(), resource.getFilesizeBytes());
     }

@@ -8,8 +8,6 @@ import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +20,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/application")
 public class ApplicationController {
-
-    private static Log LOG = LogFactory.getLog(ApplicationController.class);
 
     @Autowired
     private ApplicationService applicationService;

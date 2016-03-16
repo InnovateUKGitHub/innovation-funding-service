@@ -7,7 +7,9 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 
-public class JsonUtil {
+public final class JsonUtil {
+	private JsonUtil() {}
+	
     private static final Log log = LogFactory.getLog(JsonUtil.class);
     public static String getSerializedObject(Object object) {
         ObjectMapper mapper = new ObjectMapper();
