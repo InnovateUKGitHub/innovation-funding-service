@@ -77,6 +77,7 @@ public abstract class AbstractRestTemplateAdaptor {
             ResponseEntity<String> asString = restPostWithEntity(path, postEntity, String.class);
             return handleSuccessOrFailureJsonResponse(asString, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
         } catch (HttpClientErrorException | HttpServerErrorException e) {
+        	LOG.error(e);
             return handleSuccessOrFailureJsonResponse(new ResponseEntity<>(e.getResponseBodyAsString(), e.getStatusCode()), responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
         }
     }
@@ -107,6 +108,7 @@ public abstract class AbstractRestTemplateAdaptor {
             ResponseEntity<String> asString = restPutWithEntity(path, putEntity, String.class);
             return handleSuccessOrFailureJsonResponse(asString, responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
         } catch (HttpClientErrorException | HttpServerErrorException e) {
+        	LOG.error(e);
             return handleSuccessOrFailureJsonResponse(new ResponseEntity<>(e.getResponseBodyAsString(), e.getStatusCode()), responseType, failureType, expectedSuccessCode, otherExpectedStatusCodes);
         }
     }
@@ -163,6 +165,7 @@ public abstract class AbstractRestTemplateAdaptor {
         try {
             return right(new ObjectMapper().readValue(json, responseType));
         } catch (IOException e) {
+        	LOG.error(e);
             return left();
         }
     }

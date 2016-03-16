@@ -1,24 +1,40 @@
 package com.worth.ifs.finance.handler;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.finance.handler.item.*;
-import com.worth.ifs.finance.repository.CostFieldRepository;
-import com.worth.ifs.finance.repository.CostRepository;
-import com.worth.ifs.finance.resource.category.*;
-import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.CostType;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.handler.item.CapitalUsageHandler;
+import com.worth.ifs.finance.handler.item.CostHandler;
+import com.worth.ifs.finance.handler.item.GrantClaimHandler;
+import com.worth.ifs.finance.handler.item.LabourCostHandler;
+import com.worth.ifs.finance.handler.item.MaterialsHandler;
+import com.worth.ifs.finance.handler.item.OtherCostHandler;
+import com.worth.ifs.finance.handler.item.OtherFundingHandler;
+import com.worth.ifs.finance.handler.item.OverheadsHandler;
+import com.worth.ifs.finance.handler.item.SubContractingCostHandler;
+import com.worth.ifs.finance.handler.item.TravelCostHandler;
+import com.worth.ifs.finance.repository.CostFieldRepository;
+import com.worth.ifs.finance.repository.CostRepository;
+import com.worth.ifs.finance.resource.category.CostCategory;
+import com.worth.ifs.finance.resource.category.DefaultCostCategory;
+import com.worth.ifs.finance.resource.category.GrantClaimCategory;
+import com.worth.ifs.finance.resource.category.LabourCostCategory;
+import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
+import com.worth.ifs.finance.resource.category.OverheadCostCategory;
+import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.CostType;
 
 /**
  * OrganisationFinanceDefaultHandler maintains the finances from
@@ -55,7 +71,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
             }
 
         }catch (IllegalArgumentException e){
-            log.error(String.format("No CostHandler for type: ", costType.getType()));
+            log.error(String.format("No CostHandler for type: %s", costType.getType()), e);
         }
         return null;
     }
@@ -66,7 +82,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
     @Override
-    public EnumMap<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {
+    public Map<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {
         List<Cost> costs = costRepository.findByApplicationFinanceId(applicationFinanceId);
         createCostCategories();
         addCostsToCategories(costs);
@@ -75,7 +91,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
     @Override
-    public EnumMap<CostType, CostCategory> getOrganisationFinanceTotals(Long applicationFinanceId) {
+    public Map<CostType, CostCategory> getOrganisationFinanceTotals(Long applicationFinanceId) {
         getOrganisationFinances(applicationFinanceId);
         resetCosts();
         return costCategories;
@@ -123,6 +139,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
                 .forEach(cc -> cc.setCosts(new ArrayList<>()));
     }
 
+    @Override
     public Cost costItemToCost(CostItem costItem) {
         CostHandler costHandler = getCostHandler(costItem.getCostType());
         List<CostField> costFields = costFieldRepository.findAll();

@@ -1,22 +1,20 @@
 package com.worth.ifs.token.transactional;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.user.domain.User;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional
 public class TokenServiceImpl implements TokenService{
-    private static final Log LOG = LogFactory.getLog(TokenServiceImpl.class);
 
     @Autowired
     TokenRepository repository;

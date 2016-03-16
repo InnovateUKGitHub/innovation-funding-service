@@ -24,7 +24,7 @@ ${text_file}            testing.txt
 
 Verify that the applicant can upload pdf files
     [Documentation]        INFUND-832
-    [Tags]      Collaboration       Upload      Pending
+    [Tags]      Collaboration       Upload
     [Setup]     Guest user log-in   &{lead_applicant_credentials}
     Given the user can see the option to upload a file on the page      ${project_team_url}
     And the user uploads the file to the project team page        ${valid_pdf}
@@ -32,7 +32,7 @@ Verify that the applicant can upload pdf files
 Questions can be assigned with appendices to the collaborator
     [Documentation]     INFUND-832
     ...                 INFUND-409
-    [Tags]      Collaboration       Upload      Pending
+    [Tags]      Collaboration       Upload
     [Setup]     Guest user log-in   &{lead_applicant_credentials}
     Given the user navigates to the page     ${project_team_url}
     And the user can see the uploaded file  ${valid_pdf}
@@ -48,7 +48,7 @@ Questions can be assigned with appendices to the collaborator
 
 Appendices are only available for the correct questions
     [Documentation]        INFUND-832
-    [Tags]      Collaboration       Upload      Pending
+    [Tags]      Collaboration       Upload
     [Setup]     Guest user log-in   &{lead_applicant_credentials}
     the user cannot see the option to upload a file on the page     ${business_opportunity_url}
     the user cannot see the option to upload a file on the page     ${potential_market_url}
@@ -64,8 +64,7 @@ Appendices are only available for the correct questions
 
 Large pdf uploads not allowed
     [Documentation]        INFUND-832
-    [Tags]      Collaboration       Upload      Pending
-    # "Too large pdf validation error is currently empty due to INFUND-2116: Can be changed to match for an error message once this is implemented
+    [Tags]      Collaboration       Upload
     Given the user can see the option to upload a file on the page      ${project_team_url}
     When the user uploads the file to the project team page       ${too_large_pdf}
     Then the user should get an error page      ${too_large_pdf_validation_error}
@@ -73,7 +72,7 @@ Large pdf uploads not allowed
 
 Non pdf uploads not allowed
     [Documentation]     INFUND-832
-    [Tags]      Collaboration       Upload      Pending
+    [Tags]      Collaboration       Upload
     Given the user can see the option to upload a file on the page      ${PROJECT_TEAM_URL}
     When the user uploads the file to the project team page     ${text_file}
     Then the user should get an error page      ${wrong_filetype_validation_error}

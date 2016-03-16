@@ -52,7 +52,7 @@ public class ApplicationFinanceResourceRules {
         }
         Role role = roles.get(0);
         ProcessRole processRole = processRoleRepository.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(user.getId(), role.getId(), applicationId, organisationId);
-        return (processRole!=null);
+        return processRole != null;
     }
 
 }

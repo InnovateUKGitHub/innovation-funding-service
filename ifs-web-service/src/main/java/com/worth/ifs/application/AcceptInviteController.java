@@ -10,8 +10,6 @@ import com.worth.ifs.registration.OrganisationCreationController;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
 import com.worth.ifs.util.CookieUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 public class AcceptInviteController {
     public static final String INVITE_HASH = "invite_hash";
     public static final String ORGANISATION_TYPE = "organisationType";
-    private final Log log = LogFactory.getLog(getClass());
     Validator validator;
     @Autowired
     private InviteRestService inviteRestService;

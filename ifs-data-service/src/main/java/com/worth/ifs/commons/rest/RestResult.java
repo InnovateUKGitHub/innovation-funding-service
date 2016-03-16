@@ -9,6 +9,9 @@ import com.worth.ifs.commons.service.ExceptionThrowingFunction;
 import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.util.Either;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -32,6 +35,8 @@ import static org.springframework.http.HttpStatus.*;
  */
 public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
+	private static final Log LOG = LogFactory.getLog(RestResult.class);
+	
     private HttpStatus successfulStatusCode;
 
     public RestResult(RestResult<T> original) {
@@ -213,6 +218,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         try {
             return right(new ObjectMapper().readValue(json, clazz));
         } catch (IOException e) {
+        	LOG.error(e);
             return left();
         }
     }

@@ -26,6 +26,9 @@ public interface SectionService {
                                    final Long organisationId);
 
     @NotSecured("TODO")
+    ServiceResult<Set<Long>> getQuestionsForSectionAndSubsections(final Long sectionId);
+
+    @NotSecured("TODO")
     ServiceResult<List<Long>> getIncompleteSections(final Long applicationId);
 
     @NotSecured("TODO")

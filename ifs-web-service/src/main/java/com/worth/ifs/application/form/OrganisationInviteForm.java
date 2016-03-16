@@ -1,11 +1,12 @@
 package com.worth.ifs.application.form;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.validation.Valid;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class OrganisationInviteForm implements Serializable, Cloneable {
 
@@ -28,6 +29,7 @@ public class OrganisationInviteForm implements Serializable, Cloneable {
         this.invites = new LinkedList<>();
     }
 
+    @Override
     public OrganisationInviteForm clone(){
         return new OrganisationInviteForm(this.getOrganisationName(), this.organisationId, this.organisationInviteId);
     }

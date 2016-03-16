@@ -11,8 +11,6 @@ import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +31,6 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 @Controller
 @RequestMapping("/application")
 public class ApplicationController extends AbstractApplicationController {
-    private final Log log = LogFactory.getLog(getClass());
 
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();
@@ -281,7 +278,7 @@ public class ApplicationController extends AbstractApplicationController {
         addQuestionsDetails(model, application, null);
         addUserDetails(model, application, user.getId());
         addApplicationInputs(application, model);
-        addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, userApplicationRoles);
+        addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
         financeOverviewModelManager.addFinanceDetails(model, applicationId);
 
         return "/application/print";
