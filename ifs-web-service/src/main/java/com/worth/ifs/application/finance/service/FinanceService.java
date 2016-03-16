@@ -1,5 +1,7 @@
 package com.worth.ifs.application.finance.service;
 
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 
@@ -10,10 +12,13 @@ import java.util.List;
  * consists of costs.
  */
 public interface FinanceService {
-    public ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId);
-    public ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId);
-    public ApplicationFinanceResource getApplicationFinanceDetails( Long userId, Long applicationId);
-    public List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId);
-    public CostItem addCost(Long applicationFinanceId , Long questionId);
-    public List<CostItem> getCosts(Long applicationFinanceId);
+    ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId);
+    ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId);
+    ApplicationFinanceResource getApplicationFinanceDetails( Long userId, Long applicationId);
+    List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId);
+    CostItem addCost(Long applicationFinanceId , Long questionId);
+    List<CostItem> getCosts(Long applicationFinanceId);
+    RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file);
+    RestResult<Void> removeFinanceDocument(Long applicationFinanceId);
+    RestResult<FileEntryResource> getFinanceEntry(Long applicationFinanceId);
 }

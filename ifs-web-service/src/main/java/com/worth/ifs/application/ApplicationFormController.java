@@ -357,7 +357,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         markApplicationQuestions(application, processRole.getId(), request, response, errors);
 
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
+        Map<String, List<String>> financeErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
+        financeErrors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue(k, e, e)));
+
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         return bindingResult;

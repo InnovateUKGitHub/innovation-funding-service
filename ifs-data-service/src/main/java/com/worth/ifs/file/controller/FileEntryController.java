@@ -51,29 +51,6 @@ public class FileEntryController {
         return fileEntryService.findOne(id).toGetResponse();
     }
 
-    @RequestMapping(value = "/add", method = POST, produces = "application/json")
-    public RestResult<FileEntry> addFile(
-            @RequestHeader(value = "Content-Type", required = false) String contentType,
-            @RequestHeader(value = "Content-Length", required = false) String contentLength,
-            @RequestParam(value = "filename", required = false) String originalFilename,
-            HttpServletRequest request) throws IOException {
-
-        ServiceResult<FileEntry> fileAddedResult = find(validContentLengthHeader(contentLength),
-                validContentTypeHeader(contentType),
-                validFilename(originalFilename)).andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> {
-
-            return find(validContentLength(lengthFromHeader),
-                    validMediaType(typeFromHeader)).andOnSuccess((validLength, validType) -> {
-
-                FileEntryResource fileEntry = new FileEntryResource(null, originalFilename, validType, validLength);
-                ServiceResult<Pair<File, FileEntry>> fileEntryResult = fileService.createFile(fileEntry, inputStreamSupplier(request));
-                return fileEntryResult.andOnSuccessReturn(result -> result.getValue());
-            });
-        });
-
-        return fileAddedResult.toPostCreateResponse();
-    }
-
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
         return () -> {
             try {

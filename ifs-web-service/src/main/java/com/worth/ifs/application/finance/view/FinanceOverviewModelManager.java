@@ -5,6 +5,7 @@ import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,20 +24,22 @@ public class FinanceOverviewModelManager {
     SectionService sectionService;
     QuestionService questionService;
     FinanceService financeService;
+    FileEntryRestService fileEntryRestService;
 
     @Autowired
     public FinanceOverviewModelManager(ApplicationFinanceRestService applicationFinanceRestService, SectionService sectionService,
-                                       FinanceService financeService, QuestionService questionService) {
+                                       FinanceService financeService, QuestionService questionService, FileEntryRestService fileEntryRestService) {
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
         this.financeService = financeService;
         this.questionService = questionService;
+        this.fileEntryRestService = fileEntryRestService;
     }
 
     // TODO DW - INFUND-1555 - handle rest results
     public void addFinanceDetails(Model model, Long applicationId) {
         addFinanceSections(model);
-        OrganisationFinanceOverview organisationFinanceOverview = new OrganisationFinanceOverview(financeService, applicationId);
+        OrganisationFinanceOverview organisationFinanceOverview = new OrganisationFinanceOverview(financeService, fileEntryRestService, applicationId);
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
         Map<Long, ApplicationFinanceResource> organisationFinances = organisationFinanceOverview.getApplicationFinancesByOrganisation();

@@ -211,7 +211,7 @@
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="finance_upload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''"
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']',
-         noFileUploaded=${(#strings.isEmpty(responses?.get(formInput.getId())?.getFileEntry()?.getName()))},
+         noFileUploaded=${(#strings.isEmpty(filename))},
          name='jes-upload'">
         <div th:include="question-type/types :: fileupload" th:remove="tag" />
     </div>

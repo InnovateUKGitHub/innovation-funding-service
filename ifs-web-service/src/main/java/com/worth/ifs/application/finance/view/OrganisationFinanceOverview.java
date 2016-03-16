@@ -24,6 +24,7 @@ public class OrganisationFinanceOverview {
 
     @Autowired
     private FinanceService financeService;
+
     @Autowired
     private FileEntryRestService fileEntryService;
 
@@ -31,9 +32,10 @@ public class OrganisationFinanceOverview {
 
     }
 
-    public OrganisationFinanceOverview(FinanceService financeService, Long applicationId) {
+    public OrganisationFinanceOverview(FinanceService financeService, FileEntryRestService fileEntryRestService, Long applicationId) {
         this.applicationId = applicationId;
         this.financeService = financeService;
+        this.fileEntryService = fileEntryRestService;
         initializeOrganisationFinances();
     }
 
@@ -60,7 +62,6 @@ public class OrganisationFinanceOverview {
 
     public FileEntryResource getFileEntry(ApplicationFinanceResource orgFinance){
         if(orgFinance.getFinanceFileEntry() != null && orgFinance.getFinanceFileEntry() > 0L){
-            System.out.println("Search for : "+ orgFinance.getFinanceFileEntry());
             RestResult<FileEntryResource> result = fileEntryService.findOne(orgFinance.getFinanceFileEntry());
             if(result.isSuccess()){
                 return result.getSuccessObject();

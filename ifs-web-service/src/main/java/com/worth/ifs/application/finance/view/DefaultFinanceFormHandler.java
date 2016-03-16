@@ -39,7 +39,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Override
-    public void update(HttpServletRequest request, Long userId, Long applicationId) {
+    public Map<String, List<String>> update(HttpServletRequest request, Long userId, Long applicationId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         if (applicationFinanceResource == null){
             applicationFinanceResource = financeService.addApplicationFinance(userId, applicationId);
@@ -50,6 +50,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
         storeCostItems(costItems);
 
         addRemoveCostRows(request, applicationId, userId);
+        return new HashMap<>();
     }
 
     @Override

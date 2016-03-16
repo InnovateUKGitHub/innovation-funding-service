@@ -34,6 +34,9 @@ public class ApplicationFinanceResource {
             this.organisation = applicationFinance.getOrganisation().getId();
             this.application = applicationFinance.getApplication().getId();
             this.organisationSize = applicationFinance.getOrganisationSize();
+            if(applicationFinance.getFinanceFileEntry()!=null) {
+                this.financeFileEntry = applicationFinance.getFinanceFileEntry().getId();
+            }
         }
     }
 
