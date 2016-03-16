@@ -1,5 +1,13 @@
 package com.worth.ifs.finance.handler;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
@@ -12,12 +20,6 @@ import com.worth.ifs.finance.resource.category.DefaultCostCategory;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
 
 @Component
 public class OrganisationJESFinance implements OrganisationFinanceHandler {
@@ -35,7 +37,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     }
 
     @Override
-    public EnumMap<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {
+    public Map<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {
         List<Cost> costs = costRepository.findByApplicationFinanceId(applicationFinanceId);
         createCostCategories();
         addCostsToCategories(costs);
@@ -43,7 +45,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     }
 
     @Override
-    public EnumMap<CostType, CostCategory> getOrganisationFinanceTotals(Long applicationFinanceId) {
+    public Map<CostType, CostCategory> getOrganisationFinanceTotals(Long applicationFinanceId) {
         getOrganisationFinances(applicationFinanceId);
         calculateTotals();
         resetCosts();

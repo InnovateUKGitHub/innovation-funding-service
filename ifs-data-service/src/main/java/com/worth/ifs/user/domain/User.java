@@ -147,8 +147,7 @@ public class User {
 
     public void setPassword(String setPassword) {
         StandardPasswordEncoder encoder = new StandardPasswordEncoder(PASSWORD_SECRET);
-        setPassword = encoder.encode(setPassword);
-        this.password = setPassword;
+        this.password = encoder.encode(setPassword);
     }
 
     public List<Role> getRoles() {

@@ -109,13 +109,13 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
 
 
     private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value) {
-        fieldName = fieldName.replace("financePosition-", "");
-        switch (fieldName) {
+        String fieldNameReplaced = fieldName.replace("financePosition-", "");
+        switch (fieldNameReplaced) {
             case "organisationSize":
                 applicationFinance.setOrganisationSize(OrganisationSize.valueOf(value));
                 break;
             default:
-                log.error(String.format("value not saved: %s / %s", fieldName, value));
+                log.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
         }
     }
 

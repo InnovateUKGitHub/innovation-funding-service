@@ -43,9 +43,6 @@ public class AssessorController {
     @RequestMapping(value="/dashboard", method= RequestMethod.GET)
     public String dashboard(Model model, HttpServletRequest request) {
 
-        //gets logged user to know what to show
-        User user = getLoggedUser(request);
-
         //for now gets all the competitions to show in the dashboard (assumes user was invited and accepted all)
 
         // TODO DW - INFUND-1555 - handle success or failure properly

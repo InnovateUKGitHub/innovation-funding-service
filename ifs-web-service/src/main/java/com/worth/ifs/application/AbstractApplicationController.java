@@ -3,10 +3,8 @@ package com.worth.ifs.application;
 import com.worth.ifs.BaseController;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.finance.view.DefaultFinanceModelManager;
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
-import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.model.UserApplicationRole;
@@ -311,7 +309,7 @@ public abstract class AbstractApplicationController extends BaseController {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
 
-        TreeSet<Organisation> organisations = getApplicationOrganisations(userApplicationRoles);
+        SortedSet<Organisation> organisations = getApplicationOrganisations(userApplicationRoles);
         Set<Long> questionsCompletedByAllOrganisation = new TreeSet<>(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(organisations.first()))));
         // only keep the questionIDs of questions that are complete by all organisations
         organisations.forEach(o -> questionsCompletedByAllOrganisation.retainAll(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(o)))));
@@ -384,10 +382,10 @@ public abstract class AbstractApplicationController extends BaseController {
         financeOverviewModelManager.addFinanceDetails(model, applicationId);
     }
 
-    public TreeSet<Organisation> getApplicationOrganisations(List<ProcessRole> userApplicationRoles) {
+    public SortedSet<Organisation> getApplicationOrganisations(List<ProcessRole> userApplicationRoles) {
         Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
-        Supplier<TreeSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
+        Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
 
         return userApplicationRoles.stream()
                 .filter(uar -> (uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName())))
