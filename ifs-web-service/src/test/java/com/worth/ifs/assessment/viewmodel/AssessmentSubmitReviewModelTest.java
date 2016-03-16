@@ -88,7 +88,7 @@ public class AssessmentSubmitReviewModelTest {
                 build();
 
         ApplicationResource applicationResource = newApplicationResource().
-            withCompetition(competition).
+            withCompetition(competition.getId()).
             build();
 
         ResponseBuilder responseBuilder = newResponse().
@@ -205,7 +205,7 @@ public class AssessmentSubmitReviewModelTest {
         Competition competition = newCompetition().withSections(sections).build();
         CompetitionResource competitionResource = newCompetitionResource().withSections(simpleMap(sections,Section::getId)).build();
         Application application = newApplication().withCompetition(competition).build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition).build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
         Assessment assessment = newAssessment().withProcessRole(assessorProcessRole).build();
 
         assessorProcessRole.setApplication(application);
@@ -250,7 +250,7 @@ public class AssessmentSubmitReviewModelTest {
         Competition competition = newCompetition().withSections(sections).build();
         CompetitionResource competitionResource = newCompetitionResource().withSections(simpleMap(sections, Section::getId)).build();
         Application application = newApplication().withCompetition(competition).build();
-        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition).build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competition.getId()).build();
         Assessment assessment = newAssessment().withProcessRole(assessorProcessRole).build();
 
         assessorProcessRole.setApplication(application);
