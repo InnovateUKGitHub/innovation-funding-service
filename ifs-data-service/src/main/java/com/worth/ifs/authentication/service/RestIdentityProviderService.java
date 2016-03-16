@@ -4,10 +4,13 @@ import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.CreateUserResponse;
 import com.worth.ifs.authentication.resource.IdentityProviderError;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
+import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.AbstractRestTemplateAdaptor;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.util.Either;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +25,7 @@ import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -31,6 +35,8 @@ import static org.springframework.http.HttpStatus.OK;
  */
 @Service
 public class RestIdentityProviderService implements IdentityProviderService {
+
+    private static final Log LOG = LogFactory.getLog(RestIdentityProviderService.class);
 
     @Autowired
     @Qualifier("shibboleth_adaptor")
@@ -63,6 +69,10 @@ public class RestIdentityProviderService implements IdentityProviderService {
     }
 
     private static final List<Error> errors(HttpStatus code, IdentityProviderError... errors){
+        if (errors.length == 0) {
+            LOG.warn("Expected to get some error messages in the response body from the IDP Rest API, but got none.  Returning an error with same HTTP status code");
+            return singletonList(new Error(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR, "Empty error response encountered from IDP API", code));
+        }
         return asList(errors).stream().map(e -> new Error(e.getKey(), code)).collect(toList());
     }
 

@@ -1,15 +1,11 @@
 package com.worth.ifs.application.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.Future;
-
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionResource;
+
+import java.util.*;
+import java.util.concurrent.Future;
 
 /**
  * Interface for CRUD operations on {@link Section} related data.
@@ -27,4 +23,5 @@ public interface SectionService {
     Future<SectionResource> getPreviousSection(Optional<SectionResource> sectionId);
     Future<SectionResource> getNextSection(Optional<SectionResource> sectionId);
     SectionResource getSectionByQuestionId(Long questionId);
+    Set<Long> getQuestionsForSectionAndSubsections(Long sectionId);
 }

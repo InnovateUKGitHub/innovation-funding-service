@@ -1,7 +1,6 @@
 package com.worth.ifs.commons.service;
 
-import java.util.List;
-
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Response;
@@ -16,13 +15,14 @@ import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.resource.UserResource;
-
 import org.springframework.core.ParameterizedTypeReference;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * A utility for commonly used ParameterizedTypeReferences
@@ -36,6 +36,10 @@ public class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<Long>> longsListType() {
         return new ParameterizedTypeReference<List<Long>>() {};
+    }
+
+    public static ParameterizedTypeReference<Set<Long>> longsSetType() {
+        return new ParameterizedTypeReference<Set<Long>>() {};
     }
 
     public static ParameterizedTypeReference<List<String>> stringsListType() {
