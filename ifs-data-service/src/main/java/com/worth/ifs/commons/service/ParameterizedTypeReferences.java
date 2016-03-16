@@ -27,9 +27,10 @@ import java.util.Set;
 /**
  * A utility for commonly used ParameterizedTypeReferences
  */
-public class ParameterizedTypeReferences {
+public final class ParameterizedTypeReferences {
 
-
+	private ParameterizedTypeReferences() {}
+	
     /**
      * Basic types
      */

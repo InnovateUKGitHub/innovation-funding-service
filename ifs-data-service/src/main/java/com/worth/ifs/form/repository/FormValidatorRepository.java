@@ -12,6 +12,7 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface FormValidatorRepository extends PagingAndSortingRepository<FormValidator, Long> {
+	@Override
     List<FormValidator> findAll();
     FormValidator findById(@Param("id") Long id);
 }

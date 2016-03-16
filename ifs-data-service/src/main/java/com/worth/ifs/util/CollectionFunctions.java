@@ -17,7 +17,9 @@ import static java.util.stream.Collectors.*;
 /**
  * Utility class to provide useful reusable Functions around Collections throughout the codebase
  */
-public class CollectionFunctions {
+public final class CollectionFunctions {
+
+	private CollectionFunctions(){}
 
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(CollectionFunctions.class);

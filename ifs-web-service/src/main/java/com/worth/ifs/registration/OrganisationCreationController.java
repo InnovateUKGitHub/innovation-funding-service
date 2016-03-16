@@ -234,7 +234,7 @@ public class OrganisationCreationController {
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = SEARCH_ORGANISATION, method = RequestMethod.POST)
     public String searchOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                      HttpServletRequest request, HttpServletResponse response) {
-        OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
+        addOrganisationType(organisationForm, request);
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
@@ -244,7 +244,7 @@ public class OrganisationCreationController {
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = NOT_IN_COMPANY_HOUSE, method = RequestMethod.POST)
     public String manualOrganisationEntry(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                           HttpServletRequest request, HttpServletResponse response) {
-        OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
+        addOrganisationType(organisationForm, request);
         organisationForm.setOrganisationSearching(false);
         organisationForm.setManualEntry(true);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
@@ -253,7 +253,7 @@ public class OrganisationCreationController {
 
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = MANUAL_ADDRESS, method = RequestMethod.POST)
     public String manualAddressWithCompanyHouse(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                                HttpServletRequest request, HttpServletResponse response) {
+                                                HttpServletResponse response) {
         organisationForm.setAddressForm(new AddressForm());
         organisationForm.getAddressForm().setManualAddress(true);
         organisationForm.setOrganisationSearching(false);
@@ -356,7 +356,7 @@ public class OrganisationCreationController {
                                 HttpServletRequest request,
                                 HttpServletResponse response,
                                 @RequestHeader(value = REFERER, required = false) final String referer) {
-        OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
+        addOrganisationType(organisationForm, request);
         addSelectedOrganisation(organisationForm, model);
         organisationForm.getAddressForm().setSelectedPostcodeIndex(null);
         organisationForm.getAddressForm().setTriedToSearch(true);
@@ -398,7 +398,7 @@ public class OrganisationCreationController {
     public String selectAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                 HttpServletRequest request, HttpServletResponse response,
                                 @RequestHeader(value = REFERER, required = false) final String referer) {
-        OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
+        addOrganisationType(organisationForm, request);
         organisationForm.getAddressForm().setSelectedPostcode(null);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
 //        return String.format("redirect:/organisation/create/selected-organisation/%s/%s/%s", organisationForm.getSearchOrganisationId(), organisationForm.getAddressForm().getPostcodeInput(), Integer.valueOf(organisationForm.getAddressForm().getSelectedPostcodeIndex()));
@@ -407,7 +407,7 @@ public class OrganisationCreationController {
 
     @RequestMapping(value = "/" + SELECTED_ORGANISATION + "/**", params = MANUAL_ADDRESS, method = RequestMethod.POST)
     public String manualAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                HttpServletRequest request, HttpServletResponse response) {
+                                HttpServletResponse response) {
         organisationForm.setAddressForm(new AddressForm());
         organisationForm.getAddressForm().setManualAddress(true);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
@@ -452,7 +452,7 @@ public class OrganisationCreationController {
             return "redirect:" + RegistrationController.BASE_URL + "?organisationId=" + CookieUtil.getCookieValue(request, ORGANISATION_ID);
         }
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
-        OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
+        addOrganisationType(organisationForm, request);
         addSelectedOrganisation(organisationForm, model);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION;
@@ -513,9 +513,9 @@ public class OrganisationCreationController {
         if (StringUtils.hasText(cookieHash)) {
             final OrganisationResource finalOrganisationResource = organisationResource;
 
-            RestResult<Void> inviteRestResult = inviteRestService.getInviteByHash(cookieHash).andOnSuccess(
-                    s -> {
-                        return inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
+            inviteRestService.getInviteByHash(cookieHash).andOnSuccess(
+                    s -> 
+                        inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
                                 f -> restFailure(HttpStatus.NOT_FOUND),
                                 i -> {
                                     if (i.getOrganisation() == null) {
@@ -525,8 +525,7 @@ public class OrganisationCreationController {
                                     }
                                     return restFailure(HttpStatus.ALREADY_REPORTED);
                                 }
-                        );
-                    }
+                        )
             );
         }
     }

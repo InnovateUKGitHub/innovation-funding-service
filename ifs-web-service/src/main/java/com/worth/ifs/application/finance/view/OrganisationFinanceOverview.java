@@ -3,8 +3,6 @@ package com.worth.ifs.application.finance.view;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.CostType;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
@@ -17,7 +15,6 @@ import java.util.stream.Collectors;
 
 @Configurable
 public class OrganisationFinanceOverview {
-    private final Log log = LogFactory.getLog(getClass());
 
     Long applicationId;
     List<ApplicationFinanceResource> applicationFinances = new ArrayList<>();
@@ -26,7 +23,7 @@ public class OrganisationFinanceOverview {
     private FinanceService financeService;
 
     public OrganisationFinanceOverview() {
-
+    	// no-arg constructor
     }
 
     public OrganisationFinanceOverview(FinanceService financeService, Long applicationId) {
@@ -49,8 +46,8 @@ public class OrganisationFinanceOverview {
     }
 
 
-    public EnumMap<CostType, BigDecimal> getTotalPerType() {
-        EnumMap<CostType, BigDecimal> totalPerType = new EnumMap<>(CostType.class);
+    public Map<CostType, BigDecimal> getTotalPerType() {
+        Map<CostType, BigDecimal> totalPerType = new EnumMap<>(CostType.class);
         for(CostType costType : CostType.values()) {
             BigDecimal typeTotal = applicationFinances.stream()
                     .filter(o -> o.getFinanceOrganisationDetails(costType) != null)

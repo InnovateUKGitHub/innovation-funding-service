@@ -41,6 +41,7 @@ public class AcademicCost implements CostItem {
         return item;
     }
 
+    @Override
     public String getName() {
         return name;
     }

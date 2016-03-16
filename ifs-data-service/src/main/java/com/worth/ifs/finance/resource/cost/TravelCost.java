@@ -28,6 +28,7 @@ public class TravelCost implements CostItem {
         this.quantity = quantity;
     }
 
+    @Override
     public Long getId() {
         return id;
     }

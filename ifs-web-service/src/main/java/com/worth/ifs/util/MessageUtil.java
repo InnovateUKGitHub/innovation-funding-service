@@ -7,8 +7,10 @@ import org.springframework.context.NoSuchMessageException;
 
 import java.util.Locale;
 
-public class MessageUtil {
+public final class MessageUtil {
 
+	private MessageUtil() {}
+	
 	private static final Log LOG = LogFactory.getLog(MessageUtil.class);
 	
     public static String getFromMessageBundle(final MessageSource messageSource, final String key, final String defaultMsg, final Locale locale){

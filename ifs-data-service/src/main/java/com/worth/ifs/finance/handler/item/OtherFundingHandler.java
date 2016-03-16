@@ -32,7 +32,7 @@ public class OtherFundingHandler extends CostHandler {
 
     private Cost mapOtherFunding(CostItem costItem) {
         OtherFunding otherFunding = (OtherFunding) costItem;
-        String item = null;
+        String item;
         if (otherFunding.getOtherPublicFunding() != null) {
             item = otherFunding.getOtherPublicFunding();
         } else {

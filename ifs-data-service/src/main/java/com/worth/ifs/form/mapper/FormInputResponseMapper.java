@@ -25,6 +25,8 @@ public abstract class FormInputResponseMapper extends BaseMapper<FormInputRespon
     @Mappings({
             @Mapping(source = "formInput.wordCount", target = "formInputMaxWordCount")
     })
+    
+    @Override
     public abstract FormInputResponseResource mapToResource(FormInputResponse domain);
 
     public Long mapFormInputResponseToId(FormInputResponse object) {

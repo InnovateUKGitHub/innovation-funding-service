@@ -57,9 +57,9 @@ public class ServiceFailureExceptionHandlingAdvice {
     private void handleFailure(ServiceResult<?> result) {
         LOG.debug("Failure encountered during processing of a ServiceResult-returning Service method - rolling back any transactions");
         if(result!=null) {
-            result.getFailure().getErrors().stream().forEach(error -> {
-                LOG.debug("    " + error.getErrorKey() + ": " + error.getErrorMessage());
-            });
+            result.getFailure().getErrors().stream().forEach(error ->
+                LOG.debug("    " + error.getErrorKey() + ": " + error.getErrorMessage())
+            );
         }
 
         try {

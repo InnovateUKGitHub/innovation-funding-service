@@ -1,6 +1,7 @@
-package com.worth.ifs.application.controller;
+package com.worth.ifs.application.documentation;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.controller.AssessorFeedbackController;
 import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.application.transactional.AssessorFeedbackService;
 

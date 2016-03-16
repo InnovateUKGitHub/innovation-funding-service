@@ -45,6 +45,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
     @Qualifier("companyhouse_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
 
+    @Override
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
 
         return decodeString(encodedSearchText).andOnSuccess(decodedSearchText -> {
@@ -58,6 +59,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
         });
     }
 
+    @Override
     public ServiceResult<OrganisationSearchResult> getOrganisationById(String id) {
         LOG.debug("getOrganisationById " + id);
 
@@ -71,7 +73,6 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
     }
 
     private OrganisationSearchResult companyProfileMapper(JsonNode jsonNode) {
-        String description = null;
         AddressResource officeAddress = getAddress(jsonNode, "registered_office_address");
         ObjectMapper mapper = new ObjectMapper();
 
@@ -104,8 +105,6 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
 
     private OrganisationSearchResult companySearchMapper(JsonNode jsonNode) {
         AddressResource officeAddress = getAddress(jsonNode, "address");
-
-        ObjectMapper mapper = new ObjectMapper();
 
         OrganisationSearchResult org = new OrganisationSearchResult(jsonNode.path("company_number").asText(), jsonNode.path("title").asText());
         Map<String, Object> extras = new HashMap<>();

@@ -1,13 +1,15 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.commons.rest.RestResult;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.commons.rest.RestResult;
 
 /**
  * This class contains methods to retrieve and store {@link Response} related data,
@@ -26,7 +28,7 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public HashMap<Long, Response> mapResponsesToQuestion(List<Response> responses) {
+    public Map<Long, Response> mapResponsesToQuestion(List<Response> responses) {
         HashMap<Long, Response> responseMap = new HashMap<>();
         for (Response response : responses) {
             responseMap.put(response.getQuestion().getId(), response);
