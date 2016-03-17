@@ -26,8 +26,6 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<User> updateUser(User existingUser, UserResource updatedUserResource){
-
-        existingUser.setName(concatenateFullName(updatedUserResource.getFirstName(), updatedUserResource.getLastName()));
         existingUser.setPhoneNumber(updatedUserResource.getPhoneNumber());
         existingUser.setTitle(updatedUserResource.getTitle());
         existingUser.setLastName(updatedUserResource.getLastName());
@@ -39,9 +37,5 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
     private ServiceResult<User> getUserByEmailAddress(UserResource userResource) {
         return find(userRepository.findByEmail(userResource.getEmail()), notFoundError(User.class, userResource.getEmail()));
-    }
-
-    private String concatenateFullName(String firstName, String lastName) {
-        return firstName+" "+lastName;
     }
 }

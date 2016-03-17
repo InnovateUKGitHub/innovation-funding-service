@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -30,7 +31,6 @@ public class User {
     private Long id;
 
     private String title;
-    private String name;
     private String firstName;
     private String lastName;
     private String inviteName;
@@ -65,9 +65,10 @@ public class User {
     	// no-arg constructor
     }
 
-    public User(String name, String email, String password, String imageUrl,
+    public User(String firstName, String lastName, String email, String password, String imageUrl,
                 List<ProcessRole> processRoles, String uid) {
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.imageUrl = imageUrl;
@@ -75,23 +76,15 @@ public class User {
         this.uid = uid;
     }
 
-    public User(Long id, String name, String email, String password, String imageUrl,
+    public User(Long id, String firstName, String lastName, String email, String password, String imageUrl,
                 List<ProcessRole> processRoles, String uid) {
-        this(name, email, password, imageUrl, processRoles, uid);
+        this(firstName, lastName, email, password, imageUrl, processRoles, uid);
         this.id = id;
     }
 
 
     public Long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getEmail() {
@@ -164,6 +157,21 @@ public class User {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @JsonIgnore
+    public String getName() {
+        StringBuilder stringBuilder = new StringBuilder();
+        if(StringUtils.hasText(firstName)){
+            stringBuilder.append(firstName)
+                    .append(" ");
+        }
+
+        stringBuilder
+                .append(lastName)
+                .toString();
+
+        return stringBuilder.toString();
     }
 
     public String getLastName() {
