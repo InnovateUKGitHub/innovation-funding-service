@@ -38,7 +38,7 @@ public class ErrorController extends BaseErrorController{
 
     @ResponseStatus(HttpStatus.ALREADY_REPORTED)     // 400
     @ExceptionHandler(value = InvalidURLException.class)
-    public ModelAndView invalidUrlErrorHandler(HttpServletRequest req, InvalidURLException e) {
+    public ModelAndView invalidUrlErrorHandler(InvalidURLException e) {
         log.debug("ErrorController invalidUrlErrorHandler", e);
         return new ModelAndView("url-hash-invalid");
     }

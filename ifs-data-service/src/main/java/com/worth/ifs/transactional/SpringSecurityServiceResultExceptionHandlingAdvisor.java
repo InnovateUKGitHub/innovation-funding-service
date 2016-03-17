@@ -27,7 +27,7 @@ public class SpringSecurityServiceResultExceptionHandlingAdvisor extends Abstrac
         setOrder(LOWEST_PRECEDENCE);
     }
 
-    private final StaticMethodMatcherPointcut pointcut = new
+    private transient final StaticMethodMatcherPointcut pointcut = new
             StaticMethodMatcherPointcut() {
                 @Override
                 public boolean matches(Method method, Class<?> targetClass) {
@@ -36,7 +36,7 @@ public class SpringSecurityServiceResultExceptionHandlingAdvisor extends Abstrac
             };
 
     @Autowired
-    private SpringSecurityServiceResultExceptionHandlingInterceptor interceptor;
+    private transient SpringSecurityServiceResultExceptionHandlingInterceptor interceptor;
 
     @Override
     public Pointcut getPointcut() {
