@@ -1,0 +1,11 @@
+=== Retrieve a single Assessor Feedback
+==== Request
+include::{snippets}/assessor-feedback/find-one/http-request.adoc[]
+include::{snippets}/assessor-feedback/find-one/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessor-feedback/find-one/http-response.adoc[]
+include::{snippets}/assessor-feedback/find-one/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessor-feedback/find-one/curl-request.adoc[]

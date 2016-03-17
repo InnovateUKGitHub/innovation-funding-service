@@ -220,7 +220,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     private Boolean childSectionsCompleteForAllOrganisations(Application application, Section parentSection) {
     	boolean allSectionsWithSubsectionsAreComplete = true;
 
-        List<Section> sections = null;
+        List<Section> sections;
         // if no parent defined, just check all sections.
         if(parentSection == null){
             sections = sectionRepository.findAll();

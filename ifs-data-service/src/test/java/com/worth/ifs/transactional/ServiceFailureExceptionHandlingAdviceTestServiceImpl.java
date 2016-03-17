@@ -23,7 +23,7 @@ public class ServiceFailureExceptionHandlingAdviceTestServiceImpl extends BaseTr
     public ServiceResult<String> successfulMethod() {
 
         User user = getUser();
-        user.setName("Successful");
+        user.setFirstName("Successful");
         userRepository.save(user);
 
         return serviceSuccess("Successful");
@@ -33,7 +33,7 @@ public class ServiceFailureExceptionHandlingAdviceTestServiceImpl extends BaseTr
     public ServiceResult<String> restoreSuccessfulMethod() {
 
         User user = getUser();
-        user.setName("Steve Smith");
+        user.setFirstName("Steve");
         userRepository.save(user);
 
         return serviceSuccess("Successful restore");
@@ -43,7 +43,7 @@ public class ServiceFailureExceptionHandlingAdviceTestServiceImpl extends BaseTr
     public ServiceResult<String> failingMethod() {
 
         User user = getUser();
-        user.setName("Failure");
+        user.setFirstName("Failure");
         userRepository.save(user);
 
         return serviceFailure(notFoundError(User.class, "Failure"));
@@ -53,7 +53,7 @@ public class ServiceFailureExceptionHandlingAdviceTestServiceImpl extends BaseTr
     public ServiceResult<String> exceptionThrowingMethod() {
 
         User user = getUser();
-        user.setName("Exception");
+        user.setFirstName("Exception");
         userRepository.save(user);
 
         throw new RuntimeException("Exception");

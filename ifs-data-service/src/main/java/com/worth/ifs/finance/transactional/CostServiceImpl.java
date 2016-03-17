@@ -196,7 +196,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Override
     public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
         ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
-        return getApplicationFinanceForOrganisation(applicationId, organisationId, applicationFinanceResourceId);
+        return getApplicationFinanceForOrganisation(applicationFinanceResourceId);
     }
 
     @Override
@@ -208,7 +208,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         return find(applicationFinanceHandler.getApplicationTotals(applicationId), notFoundError(ApplicationFinance.class, applicationId));
     }
 
-    private ServiceResult<ApplicationFinanceResource> getApplicationFinanceForOrganisation(Long applicationId, Long organisationId, ApplicationFinanceResourceId applicationFinanceResourceId) {
+    private ServiceResult<ApplicationFinanceResource> getApplicationFinanceForOrganisation(ApplicationFinanceResourceId applicationFinanceResourceId) {
         return serviceSuccess(applicationFinanceHandler.getApplicationOrganisationFinances(applicationFinanceResourceId));
     }
 
