@@ -29,6 +29,7 @@ public class UserResource {
     private List<Long> organisationIds = new ArrayList<>();
 
     public UserResource() {
+    	// no-arg constructor
     }
 
     public UserResource(User user) {

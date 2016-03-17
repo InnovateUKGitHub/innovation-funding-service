@@ -45,6 +45,7 @@ public class Competition {
     private Integer maxResearchRatio;
 
     public Competition() {
+    	// no-arg constructor
     }
     public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;

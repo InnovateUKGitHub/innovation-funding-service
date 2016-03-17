@@ -36,6 +36,7 @@ public class Cost {
     private Question question;
 
     public Cost() {
+    	// no-arg constructor
     }
 
     public Cost(String name, String item, String description, Integer quantity, BigDecimal cost,

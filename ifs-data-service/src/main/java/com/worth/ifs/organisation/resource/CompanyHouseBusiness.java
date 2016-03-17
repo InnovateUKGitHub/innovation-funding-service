@@ -20,6 +20,7 @@ public class CompanyHouseBusiness{
     private AddressResource officeAddress;
 
     public CompanyHouseBusiness() {
+    	// no-arg constructor
     }
 
     public CompanyHouseBusiness(String companyNumber, String name, String type, String dateOfCreation, String description, AddressResource officeAddress) {

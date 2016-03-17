@@ -123,10 +123,6 @@ public class PostcoderWeb implements AddressLookupService {
         }
     }
 
-    private <R> R mapToAddressResource(JsonNode jsonNode) {
-        return null;
-    }
-
     private URI getLookupURL(String lookup) throws URISyntaxException {
         URIBuilder uriBuilder = new URIBuilder(POSTCODE_LOOKUP_URL);
         uriBuilder.setPath(uriBuilder.getPath() + "/" + POSTCODE_LOOKUP_KEY + "/" + POSTCODE_LOOKUP_LEVEL + "/" + POSTCODE_LOOKUP_COUNTRY + "/" + lookup);

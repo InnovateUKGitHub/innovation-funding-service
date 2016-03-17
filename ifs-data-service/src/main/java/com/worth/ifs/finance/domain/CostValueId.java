@@ -10,7 +10,7 @@ public class CostValueId implements Serializable {
     private Long costField;
 
     public CostValueId() {
-
+    	// no-arg constructor
     }
 
     public CostValueId(Long cost, Long costField) {

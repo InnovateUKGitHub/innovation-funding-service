@@ -19,7 +19,7 @@ public class FormInputResponseResource {
     private Long fileEntry;
 
     public FormInputResponseResource() {
-
+    	// no-arg constructor
     }
     public FormInputResponseResource(LocalDateTime updateDate, String value, ProcessRole updatedBy, FormInput formInput, Application application) {
         this.updateDate = updateDate;

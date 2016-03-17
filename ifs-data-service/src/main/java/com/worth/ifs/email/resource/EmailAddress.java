@@ -15,6 +15,7 @@ public class EmailAddress {
      * For builder use only
      */
     public EmailAddress() {
+    	// no-arg constructor
     }
 
     public EmailAddress(String emailAddress, String name) {

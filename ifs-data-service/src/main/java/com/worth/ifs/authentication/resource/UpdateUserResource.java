@@ -14,6 +14,7 @@ public class UpdateUserResource {
      * For JSON marshalling
      */
     public UpdateUserResource() {
+    	// no-arg constructor
     }
 
     public UpdateUserResource(String password) {
