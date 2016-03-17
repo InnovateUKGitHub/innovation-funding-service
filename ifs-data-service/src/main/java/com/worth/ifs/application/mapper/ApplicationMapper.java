@@ -35,9 +35,13 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(source = "competition.name", target = "competitionName"),
             @Mapping(source = "applicationStatus.name", target = "applicationStatusName")
     })
+    @Override
     public abstract ApplicationResource mapToResource(Application domain);
+    @Override
     public abstract Iterable<ApplicationResource> mapToResource(Iterable<Application> domain);
+    @Override
     public abstract Application mapToDomain(ApplicationResource resource);
+    @Override
     public abstract Iterable<Application> mapToDomain(Iterable<ApplicationResource> resource);
 
 

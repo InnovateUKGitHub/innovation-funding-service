@@ -68,20 +68,4 @@ public class AddressControllerTest extends BaseControllerMockMVCTest<AddressCont
                     )
                 ));
     }
-
-    @Test
-    public void documentValidatePostcode() throws Exception {
-        String postCode = "BA12LN";
-
-        when(addressLookupServiceMock.validatePostcode(postCode)).thenReturn(serviceSuccess(true));
-
-        mockMvc.perform(get("/address/validatePostcode/{postcode}", postCode))
-                .andExpect(status().isOk())
-                .andDo(document(
-                    "address/validate",
-                    pathParameters(
-                        parameterWithName("postcode").description("Postcode to validate")
-                    )
-                ));
-    }
 }

@@ -5,7 +5,10 @@ import org.apache.commons.lang3.BooleanUtils;
 /**
  * created to fix ambiguous reference compile errors
  */
-public class BooleanFunctions {
+public final class BooleanFunctions {
+	
+	private BooleanFunctions(){}
+	
     public static boolean and(boolean... booleans){
         return BooleanUtils.and(booleans);
     }

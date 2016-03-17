@@ -17,278 +17,119 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Project details'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Project details'})" th:remove="tag" />
 	
-	<form action="#">
+	<p>Please supply the following details about your project and the team so that we can conduct the necessary finance checks before the project begins.</p>
 
-		<fieldset>
+	<h2 class="heading-medium">Project details</h2>
+
+	<p>You are providing these details as the lead applicant on behalf of the overall project.</p>
+
+	<table>
+		<thead>
+			<tr>
+				<th scope="col" style="width: 45%">Question</th>
+				<th scope="col" style="width: 45%">Answer</th>
+				<th scope="col" style="width: 20%">Complete</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<a href="/prototypes/1575-start-date" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Start date</a>
+					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Start date</span>
+				</td>
+				<td id="start-date">
+					&nbsp;
+				</td>
+				<td>
+					<span id="start-date-status">&nbsp;</span>
+				</td>
+			</tr>
+			<tr>
+				<td>					
+					<a href="/prototypes/1575-project-address" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Project address</a>
+					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Project address</span>
+				</td>
+				<td id="project-address">
+					&nbsp;
+				</td>
+				<td>
+					<span id="project-address-status">&nbsp;</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a href="/prototypes/1575-project-manager" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Project manager</a>
+					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Project manager</span>
+				</td>
+				<td id="project-manager">
+					&nbsp;
+				</td>
+				<td>
+					<span id="project-manager-status">&nbsp;</span>
+				</td>
+			</tr>
 			
-			<h2 class="heading-large no-margin-top">Partner finance contacts</h2>
+		</tbody>
+	</table>
 
-			<legend class="visuallyhidden">Partner finance contacts</legend>
+	<h2 class="heading-medium">Finance contacts</h2>
 
-			<table>
-				<thead>
-					<tr>
-						<th scope="col">Partner</th>
-						<th scope="col">Finance contact</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>
-							Worth systems
-						</td>
-						<td>
-							<span id="finance-contact">John Smith</span>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							Nomensa
-						</td>
-						<td>
-							&nbsp;
-						</td>
-					</tr>
-					<tr>
-						<td>
-							C@C
-						</td>
-						<td>
-							David Evans (Pending)
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			
-			<h3 class="heading-medium no-margin-bottom">Your finance contact</h3>
-				
-			<fieldset>
-				
-				<legend class="visuallyhidden">Your finances contact</legend>
+	<p>Each partner is required to provide a finance contact who will be sent any queries from Innovate UK around project finances.</p>
 
-				<p class="form-hint">Who will be responsible for the project finances in your organisation?</p>
+	<table>
+		<thead>
+			<tr>
+				<th scope="col" style="width: 45%">Partner</th>
+				<th scope="col" style="width: 45%">Finance contact</th>
+				<th scope="col" style="width: 10%">Complete</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<a href="/prototypes/1575-finance-contact" th:unless="${param.user != null and param.user[0] == 'nonLead'}" >Worth systems</a>
+					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Worth systems</span>
+				</td>
+				<td>
+					<span id="finance-contact">John Smith</span>
+				</td>
+				<td>
+					<span id="finance-contact-status" class="yes">Yes</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span th:unless="${param.user != null and param.user[0] == 'nonLead'}">Nomensa</span>
+					<a href="/prototypes/1575-finance-contact?user=nonLead" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Nomensa</a>
+				</td>
+				<td>
+					<span id="finance-partner-contact">-</span>
+				</td>
+				<td>
+					<span id="finance-partner-contact-status" class="no">No</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					C@C
+				</td>
+				<td>
+					David Evans
+				</td>
+				<td>
+					<span id="finance-partner2-contact-status">Pending</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 
-				<details>
-				    <summary><span class="summary">What should I include in the finance contact section?</span></summary>
-				    <div class="panel-indent">
-				        <p>This is the person in your organisation responsible for the project’s finances. They will also claim funding once your project is live. We will ask them to provide bank details for your organisation before the project can begin.</p>
-				    </div>
-				</details>
+	<p class="extra-margin">Any new team members invited at this stage are required to join this project before this section can be marked as complete.</p>
 
-				<div class="form-group extra-margin">			
-					<label for="finances-name-1" class="block-label">
-						<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
-						John Smith
-					</label>
-
-					<label for="finances-name-2" class="block-label">
-						<input id="finances-name-2" type="radio" name="finances-name-group" value="John Smith" />
-						Ann Jones
-					</label>
-
-					<label for="finances-name-invite" class="block-label" id="invited-finance-contact" style="display: none">
-						<input id="finances-name-invite" type="radio" name="finances-name-group" value="" />
-						<span id="finance-name">Ann Jones (pending)</span>
-					</label>
-					
-				</div>
-				
-				<button class="buttonlink" id="add-finance-contact">Add new team member</button>
-			
-			</fieldset>
-
-			<div th:include="prototypes/fragments/project-setup :: prototype-add-users('finance-contact')" th:remove="tag" />
-
-		</fieldset>
-		
-		<fieldset>
-			
-			<h3 class="heading-medium no-margin-bottom">Target project date</h3>
-
-			<legend class="visuallyhidden">Target project date</legend>
-
-			<p class="form-hint">When will the project start</p>
-
-			<details>
-			    <summary><span class="summary">What should I include in the target project start date section?</span></summary>
-			    <div class="panel-indent">
-					<p>The project can start only when:</p>  
-					<ul class="list-bullet">  
-						<li>you have provided the documents we need</li> 
-						<li>we have approved your financial information</li>
-						<li>you have received, signed and returned the grant offer letter</li>
-					</ul>
-			    </div>
-			</details>
-
-			<div class="date-group extra-margin">
-				<div class="day">
-					<label class="form-label" for="workshop-day">
-							<div>Day</div>
-						</label>
-						<input class="form-control width-extra-small" type="number" placeholder="DD" id="workshop-day" name="workshop-day" value="" />
-				</div>
-
-				<div class="month">
-					<label class="form-label" for="workshop-month">
-							<div>Month</div>
-						</label>
-						<input class="form-control width-extra-small" type="number" placeholder="MM" id="workshop-month" name="workshop-month" value="" />
-				</div>
-
-				<div class="year">
-					<label class="form-label" for="workshop-year">
-							<div>Year</div>
-						</label>
-						<input class="form-control width-extra-small" type="number" placeholder="YYYY" id="workshop-year" name="workshop-year" value="" />
-				</div>
-			</div>
-
-			<h3 class="heading-medium">Project duration</h3>
-
-			<p>Project duration stated in application: <br /><strong>9 months</strong></p>
-
-		</fieldset>
-
-		<fieldset>
-
-			<h3 class="heading-medium">Project manager</h3>
-
-			<legend class="visuallyhidden">Project manager</legend>
-
-			<p class="form-hint">Who will be the project manager for this project?</p>
-
-			<details>
-			    <summary><span class="summary">What should I include the project manager section?</span></summary>
-			    <div class="panel-indent">
-					<p>We need this information now so that your monitoring officer can contact you. As lead partner you should provide a project manager for the duration of the project. We will invite them to register and join the project.</p>  
-			    </div>
-			</details>
-
-			<div class="form-group extra-margin">
-				<label for="pm-name-1" class="block-label">
-					<input id="pm-name-1" type="radio" name="pm-name-group" value="John Smith" />
-					John Smith
-				</label>
-				
-				<label for="pm-name-2" class="block-label">
-					<input id="pm-name-2" type="radio" name="pm-name-group" value="John Smith" />
-					Ann Jones
-				</label>
-			</div>
-			
-			<button class="buttonlink" id="add-pm">Add new team member</button>	
-
-		</fieldset>
-
-
-		
-		<div th:include="prototypes/fragments/project-setup :: prototype-add-users('pm')" th:remove="tag" />
-
-
-		<fieldset>
-			
-			<h3 class="heading-medium">Address</h3>
-
-			<legend class="visuallyhidden">Address</legend>
-
-			<p class="form-hint">Where is the main location of the project?</p>
-
-			<details>
-			    <summary><span class="summary">What should I include the address section?</span></summary>
-			    <div class="panel-indent">
-					<p>This is the location where the monitoring officer will visit your project.</p>  
-			    </div>
-			</details>
-
-			<div class="form-group extra-margin" th:unless="${param.edit != null}">
-				<label class="form-label" for="postcode-check">
-					<span class="form-label-bold">Postcode</span>
-				</label>
-				<input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
-				<button type="submit" id="postcode-lookup" class="button">Find UK address</button>
-				<div>
-					<a href="#" id="enter-address-manually">Enter address manually</a>
-				</div>
-			</div>
-
-
-			<div class="form-group" id="select-address-block" style="display: none">
-				<label class="form-label" for="select-address">
-					<span class="form-label-bold">Select your address</span>
-				</label>
-				<select class="form-control" id="select-address" name="select-address">
-					<option value="">SN1 2BD, 1, Station Road, Swindon </option>
-					<option value="">SN1 2BD, 1A, Station Road, Swindon  </option>
-					<option value="">SN1 2BD, 2, Station Road, Swindon </option>
-					<option value="">SN1 2BD, 3, Station Road, Swindon </option>
-					<option value="">SN1 2BD, 4, Station Road, Swindon </option>
-					<option value="">SN1 2BD, 5, Station Road, Swindon </option>
-				</select>
-			</div>
-			
-
-			<fieldset id="address-details" class="extra-margin" th:style="${param.edit == null ? 'display: none' : 'display: block'}">
-				<legend class="visuallyhidden">Address details</legend>
-				<div class="form-group">
-					<label class="form-label" for="street">
-						<span class="form-label-bold">Street</span>
-					</label>
-					<input class="form-control" id="street" name="street" type="text" th:value="${(param.edit == null ? '':'4 Station Road')}"/>
-				</div>
-				<div class="form-group">
-					<label class="form-label visuallyhidden" for="street-2">
-						<span class="form-label-bold">Street line 2</span>
-					</label>
-					<input class="form-control" id="street-2" name="street-2" type="text" />
-				</div>
-				<div class="form-group">
-					<label class="form-label" for="street-2">
-						<span class="form-label-bold visuallyhidden">Street line 3</span>
-					</label>
-					<input class="form-control" id="street-3" name="street-2" type="text" />
-				</div>
-				<div class="form-group">
-					<label class="form-label" for="town">
-						<span class="form-label-bold">Town</span>
-					</label>
-					<input class="form-control" id="town" name="town" type="text" th:value="${(param.edit == null ? '':'Swindon')}" />
-				</div>
-				<div class="form-group">
-					<label class="form-label" for="county">
-						<span class="form-label-bold">County</span>
-					</label>
-					<input class="form-control" id="county" name="county" type="text" th:value="${(param.edit == null ? '':'Wiltshire')}" />
-				</div>
-				<div class="form-group">
-					<label class="form-label" for="postcode">
-						<span class="form-label-bold">Postcode</span>
-					</label>
-					<input class="form-control" id="postcode" name="postcode" type="text" th:value="${(param.edit == null ? '':'SN1 2BD')}" />
-				</div>
-			</fieldset>
-
-		</fieldset>
-
-
-		<div class="extra-margin">
-			
-			<a href="/prototypes/1588-project-status" class="button-secondary">Save and return to project setup</a>
-
-		</div>
-
-		<div class="extra-margin">
-			
-			<a href="#" class="button">Mark as complete</a>
-
-		</div>
-
-
-
-
-	</form>
+	<div class="extra-margin">
+		<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1588-project-status?user=nonLead' :'/prototypes/1588-project-status'}" class="button-secondary">Save and return to project setup</a>
+	</div>
 
 	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
@@ -298,10 +139,167 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 	// <![CDATA[
 	jQuery(document).ready(function(){
+
+		function $_GET(param) {
+	        var vars = {};
+	        window.location.href.replace( location.hash, '' ).replace( 
+	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+	            function( m, key, value ) { // callback
+	                vars[key] = value !== undefined ? value : '';
+	            }
+	        );
+
+	        if ( param ) {
+	            return vars[param] ? vars[param] : null;    
+	        }
+	        return vars;
+	    }
+
+		var startDay = $_GET('start-day'),
+			startMonth = $_GET('start-month'),
+			startYear = $_GET('start-year'),
+			street = $_GET('street'),
+			town = $_GET('town'),
+			postcode = $_GET('postcode'),
+			pmName = $_GET('pm-name-group'),
+			pmNamePending = $_GET('name-pm1'),
+			financesName = $_GET('finances-name-group'),
+			financesNamePending = $_GET('name-finance-contact1'),
+			userType = $_GET('user');
+
+		if (startDay != null || startMonth != null || startYear != null){
+			localStorage.setItem('startDate', startDay+'/'+startMonth+'/'+startYear)
+		}
+		var startDate = localStorage.getItem('startDate');
+
+		if (postcode != null){
+			localStorage.setItem('projectAddress', street+','+town+','+postcode)
+		}
+		var projectAddress = localStorage.getItem('projectAddress');
+
+		if (pmName != null){
+			localStorage.setItem('pmName', pmName);
+			localStorage.removeItem('pmNamePending');
+		}
+		var pmName = localStorage.getItem('pmName');
+
+		if (pmNamePending != null){
+			localStorage.setItem('pmNamePending', pmNamePending);
+			localStorage.removeItem('pmName');
+		}
+		var pmNamePending = localStorage.getItem('pmNamePending');
+
+		if (financesName != null){
+			localStorage.setItem('financesName', financesName);
+			localStorage.removeItem('financesNamePending');
+		}
+		var financesName = localStorage.getItem('financesName');
+
+		if (financesNamePending != null){
+			localStorage.setItem('financesNamePending', financesNamePending);
+			localStorage.removeItem('financesName');
+		}
+		var financesNamePending = localStorage.getItem('financesNamePending');
+		
+
+		if(startDate == null){
+			jQuery('#start-date').text('-');
+			jQuery('#start-date-status').text('No');
+			jQuery('#start-date-status').addClass('no');
+			jQuery('#start-date-status').removeClass('yes');	
+		}else{
+			jQuery('#start-date').text(startDate);
+			jQuery('#start-date-status').text('Yes');
+			jQuery('#start-date-status').addClass('yes');
+			jQuery('#start-date-status').removeClass('yes');
+
+		}
+
+		if(projectAddress == null){
+			jQuery('#project-address').text('-');
+			jQuery('#project-address-status').text('No');
+			jQuery('#project-address-status').addClass('no');
+			jQuery('#project-address-status').removeClass('yes');
+		}else{
+			jQuery('#project-address').text(projectAddress.replace(/\+/g,' '));
+			jQuery('#project-address-status').text('Yes');
+			jQuery('#project-address-status').addClass('yes');
+			jQuery('#project-address-status').removeClass('no');
+
+		}
+
+		if(pmName == null){
+			jQuery('#project-manager').text('-');
+			jQuery('#project-manager-status').text('No');
+			jQuery('#project-manager-status').addClass('no');
+			jQuery('#project-manager-status').removeClass('yes');	
+		}else{
+			jQuery('#project-manager').text(pmName.replace(/\+/g,' '));
+
+			if(pmNamePending == null){
+				jQuery('#project-manager-status').text('Yes');
+				jQuery('#project-manager-status').addClass('yes');
+				jQuery('#project-manager-status').removeClass('no');	
+
+			}else{
+				jQuery('#project-manager').text(pmNamePending.replace(/\+/g,' '));
+				jQuery('#project-manager-status').text('Pending');
+				jQuery('#project-manager-status').removeClass('yes');
+				jQuery('#project-manager-status').removeClass('no');
+			}
+		}
+
+		if(financesName == null & userType == null){
+			jQuery('#finance-contact').text('John Smith');
+			jQuery('#finance-contact-status').text('No');
+			jQuery('#finance-contact-status').addClass('no');
+			jQuery('#finance-contact-status').removeClass('yes');
+
+		}else if(financesName != null & userType == null){
+
+			jQuery('#finance-contact').text(financesName.replace(/\+/g,' '));
+
+
+
+			if(financesNamePending == null){
+				jQuery('#finance-contact-status').text('Yes');
+				jQuery('#finance-contact-status').addClass('yes');
+				jQuery('#finance-contact-status').removeClass('no');
+			}else{
+				jQuery('#finance-contact').text(financesNamePending.replace(/\+/g,' '));
+				jQuery('#finance-contact-status').text('Pending');
+				jQuery('#finance-contact-status').removeClass('yes');
+				jQuery('#finance-contact-status').removeClass('no');
+			}
+		}
+
+		if(financesName == null & userType == 'nonLead'){
+			jQuery('#finance-partner-contact').text('-');
+			jQuery('#finance-partner-contact-status').text('No');
+			jQuery('#finance-partner-contact-status').addClass('no');
+			jQuery('#finance-partner-contact-status').removeClass('yes');
+
+		}else if(financesName != null & userType == 'nonLead'){
+
+			jQuery('#finance-partner-contact').text(financesName.replace(/\+/g,' '));
+
+			if(financesNamePending == null){
+				jQuery('#finance-partner-contact-status').text('Yes');
+				jQuery('#finance-partner-contact-status').addClass('yes');
+				jQuery('#finance-partner-contact-status').removeClass('no');
+			}else{
+				jQuery('#finance-partner-contact').text(financesNamePending.replace(/\+/g,' '));
+				jQuery('#finance-partner-contact-status').text('Pending');
+				jQuery('#finance-partner-contact-status').removeClass('yes');
+				jQuery('#finance-partner-contact-status').removeClass('no');
+			}
+		}
+
 
 		jQuery('#add-finance-contact').on('click',function(e){ 
 			e.preventDefault();
@@ -317,7 +315,7 @@
 			jQuery('#finance-name').text(financeContact + ' (Pending)')
 			jQuery("#finances-name-invite").attr('checked', 'checked');
 			jQuery('#finance-contact-table').hide();
-			jQuery('#invited-finance-contact').show();
+			jQuery('#invited-finance-contact').show(); 
 
 		});
 

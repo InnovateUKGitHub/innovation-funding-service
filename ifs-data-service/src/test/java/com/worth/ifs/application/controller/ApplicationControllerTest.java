@@ -41,8 +41,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         Application testApplication1 = newApplication().withId(application1Id).withName("testApplication1Name").build();
         Application testApplication2 = newApplication().withId(2L).withName("testApplication2Name").build();
         Competition competition = newCompetition().withName("Technology Inspired").build();
-        ApplicationResource testApplicationResource1 = newApplicationResource().withId(application1Id).withCompetition(competition).withName("testApplication1Name").build();
-        ApplicationResource testApplicationResource2 = newApplicationResource().withId(2L).withCompetition(competition).withName("testApplication2Name").build();
+        ApplicationResource testApplicationResource1 = newApplicationResource().withId(application1Id).withCompetition(competition.getId()).withName("testApplication1Name").build();
+        ApplicationResource testApplicationResource2 = newApplicationResource().withId(2L).withCompetition(competition.getId()).withName("testApplication2Name").build();
 
         when(applicationService.getApplicationById(testApplication1.getId())).thenReturn(serviceSuccess(testApplicationResource1));
         when(applicationService.getApplicationById(testApplication2.getId())).thenReturn(serviceSuccess(testApplicationResource2));

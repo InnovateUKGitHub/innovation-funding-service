@@ -19,7 +19,7 @@ public interface SectionService {
     List<SectionResource> getParentSections(List<Long> sections);
     SectionResource getByName(String name);
     void removeSectionsQuestionsWithType(SectionResource section, String name);
-    List<Long> getUserAssignedSections(List<SectionResource> sections, HashMap<Long, QuestionStatus> questionAssignees, Long currentProcessRoleId);
+    List<Long> getUserAssignedSections(List<SectionResource> sections, Map<Long, QuestionStatus> questionAssignees, Long currentProcessRoleId);
     Future<SectionResource> getPreviousSection(Optional<SectionResource> sectionId);
     Future<SectionResource> getNextSection(Optional<SectionResource> sectionId);
     SectionResource getSectionByQuestionId(Long questionId);

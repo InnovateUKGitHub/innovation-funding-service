@@ -22,7 +22,8 @@ Labour
     ...    Acceptance tests for the Labour section calculations
     ...    INFUND-736
     ...    INFUND-1256
-    [Tags]    Labour    Autosave    Calculations    Finance
+    [Tags]    Labour    Autosave    Calculations    Finance     Pending
+    # Pending due to bug INFUND-2145
     Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And the Applicant fills in the Labour costs
     And the calculations of the labour should be correct
@@ -39,7 +40,8 @@ Overheads
     [Documentation]    INFUND-192
     ...    Acceptance tests for the Overheads section calculations
     ...    INFUND-736
-    [Tags]    Overheads    Autosave    Calculations    Finance
+    [Tags]    Overheads    Autosave    Calculations    Finance      Pending
+    # Pending due to bug INFUND-2145
     Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And the Applicant fills in the Overheads costs
     And the calculations of the overheads should be correct
@@ -115,7 +117,8 @@ Other costs
 
 Other Funding
     [Documentation]    INFUND-438
-    [Tags]    Applicant    Application    Finances    Other funding
+    [Tags]    Applicant    Application    Finances    Other funding     Pending
+    # Pending due to bug INFUND-1943
     Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And Applicant selects 'Yes' for other funding
     And Applicant chooses to add another source of funding

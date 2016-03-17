@@ -20,8 +20,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.CookieUtil;
 import com.worth.ifs.util.JsonUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,7 +41,6 @@ public class ApplicationContributorController{
     public static final String APPLICATION_CONTRIBUTORS_DISPLAY = "application-contributors/display";
     public static final String APPLICATION_CONTRIBUTORS_INVITE = "application-contributors/invite";
     private static final String CONTRIBUTORS_COOKIE = "contributor_invite_state";
-    private final Log log = LogFactory.getLog(getClass());
     @Autowired
     private InviteRestService inviteRestService;
     @Autowired
@@ -150,7 +147,7 @@ public class ApplicationContributorController{
 
         String json = CookieUtil.getCookieValue(request, CONTRIBUTORS_COOKIE);
 
-        if (json != null && !json.equals("")) {
+        if (json != null && !"".equals(json)) {
             ContributorsForm contributorsFormCookie = JsonUtil.getObjectFromJson(json, ContributorsForm.class);
             if (contributorsFormCookie.getApplicationId().equals(applicationId)) {
                 if (contributorsFormCookie.isTriedToSave()) {
@@ -181,8 +178,7 @@ public class ApplicationContributorController{
                                      @RequestParam(name = "newApplication", required = false) String newApplication,
                                      @ModelAttribute ContributorsForm contributorsForm,
                                      BindingResult bindingResult,
-                                     HttpServletResponse response,
-                                     HttpServletRequest request) {
+                                     HttpServletResponse response) {
         ApplicationResource application = applicationService.getById(applicationId);
         ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         // User should never be able to set the organisation name or id of the lead-organisation.
@@ -230,36 +226,38 @@ public class ApplicationContributorController{
     }
 
     private void saveContributors(@PathVariable("applicationId") Long applicationId, @ModelAttribute ContributorsForm contributorsForm, HttpServletResponse response) {
-        contributorsForm.getOrganisations().forEach((organisationInvite) -> {
-            List<InviteResource> invites = new ArrayList<>();
-            Organisation existingOrganisation = null;
-            if (organisationInvite.getOrganisationId() != null) {
-                // check if there is a organisation with this ID, just to make sure the user has not entered a non-existing organisation id.
-                existingOrganisation = organisationService.getOrganisationById(organisationInvite.getOrganisationId());
-            }
+        contributorsForm.getOrganisations().forEach((invite) -> saveContributor(invite, applicationId, response));
+    }
+    
+    private void saveContributor(OrganisationInviteForm organisationInvite, Long applicationId, HttpServletResponse response) {
+    	List<InviteResource> invites = new ArrayList<>();
+        Organisation existingOrganisation = null;
+        if (organisationInvite.getOrganisationId() != null) {
+            // check if there is a organisation with this ID, just to make sure the user has not entered a non-existing organisation id.
+            existingOrganisation = organisationService.getOrganisationById(organisationInvite.getOrganisationId());
+        }
 
-            organisationInvite.getInvites().stream().forEach(invite -> {
-                InviteResource inviteResource = new InviteResource(invite.getPersonName(), invite.getEmail(), applicationId);
-                if (organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))) {
-                    inviteResource.setInviteOrganisation(organisationInvite.getOrganisationInviteId());
-                }
-                invites.add(inviteResource);
-            });
-
+        organisationInvite.getInvites().stream().forEach(invite -> {
+            InviteResource inviteResource = new InviteResource(invite.getPersonName(), invite.getEmail(), applicationId);
             if (organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))) {
-                // save new invites, to InviteOrganisation that already is saved.
-                inviteRestService.saveInvites(invites);
-                cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
-            } else if (existingOrganisation != null) {
-                // Save invites, and link to existing organisation.
-                inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
-                cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
-            } else {
-                // Save invites, and create new InviteOrganisation
-                inviteRestService.createInvitesByInviteOrganisation(organisationInvite.getOrganisationName(), invites);
-                cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
+                inviteResource.setInviteOrganisation(organisationInvite.getOrganisationInviteId());
             }
+            invites.add(inviteResource);
         });
+
+        if (organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))) {
+            // save new invites, to InviteOrganisation that already is saved.
+            inviteRestService.saveInvites(invites);
+            cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
+        } else if (existingOrganisation != null) {
+            // Save invites, and link to existing organisation.
+            inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
+            cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
+        } else {
+            // Save invites, and create new InviteOrganisation
+            inviteRestService.createInvitesByInviteOrganisation(organisationInvite.getOrganisationName(), invites);
+            cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
+        }
     }
 
     /**
@@ -280,10 +278,7 @@ public class ApplicationContributorController{
     private Set<String> getSavedEmailAddresses(ApplicationResource application) {
         Set<String> savedEmails = new TreeSet<>();
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
-        savedInvites.forEach(s -> {
-                    s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail()));
-                }
-        );
+        savedInvites.forEach(s -> s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail())));
         return savedEmails;
     }
 
@@ -299,7 +294,7 @@ public class ApplicationContributorController{
 
         // Removing the last person from a organisation will also remove the organisation itself.
         contributorsForm.getOrganisations().get(organisationIndex).getInvites().remove(personIndex);
-        if (organisationIndex != 0 && contributorsForm.getOrganisations().get(organisationIndex).getInvites().size() == 0) {
+        if (organisationIndex != 0 && contributorsForm.getOrganisations().get(organisationIndex).getInvites().isEmpty()) {
             contributorsForm.getOrganisations().remove(organisationIndex);
         }
     }

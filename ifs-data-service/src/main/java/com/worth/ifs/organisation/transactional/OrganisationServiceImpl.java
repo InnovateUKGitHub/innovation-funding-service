@@ -14,7 +14,6 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.mapper.OrganisationMapper;
-import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +37,6 @@ import static java.util.stream.Collectors.toCollection;
 @Service
 public class OrganisationServiceImpl extends BaseTransactionalService implements OrganisationService {
 
-    @Autowired
-    private OrganisationRepository organisationRepository;
     @Autowired
     private AcademicRepository academicRepository;
     @Autowired

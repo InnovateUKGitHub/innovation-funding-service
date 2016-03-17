@@ -7,8 +7,10 @@ import java.util.List;
 /**
  * A collection of helpful methods for dealing with Files and Filesystem concerns
  */
-public class FileFunctions {
+public final class FileFunctions {
 
+	private FileFunctions(){}
+	
     static String separator = File.separator;
     
     /**

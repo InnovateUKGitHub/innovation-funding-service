@@ -1,18 +1,19 @@
 package com.worth.ifs.finance.resource;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.user.domain.OrganisationSize;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.math.BigDecimal;
-import java.util.EnumMap;
 
 /**
  * Application finance reosurce holda the organisation's finance resources for an application
@@ -25,7 +26,7 @@ public class ApplicationFinanceResource {
     private Long organisation;
     private Long application;
     private OrganisationSize organisationSize;
-    private EnumMap<CostType, CostCategory> financeOrganisationDetails;
+    private Map<CostType, CostCategory> financeOrganisationDetails;
 
     public ApplicationFinanceResource(ApplicationFinance applicationFinance) {
         if (applicationFinance != null) {
@@ -78,11 +79,11 @@ public class ApplicationFinanceResource {
         this.organisationSize = organisationSize;
     }
 
-    public EnumMap<CostType, CostCategory> getFinanceOrganisationDetails() {
+    public Map<CostType, CostCategory> getFinanceOrganisationDetails() {
         return financeOrganisationDetails;
     }
 
-    public void setFinanceOrganisationDetails(EnumMap<CostType, CostCategory> financeOrganisationDetails) {
+    public void setFinanceOrganisationDetails(Map<CostType, CostCategory> financeOrganisationDetails) {
         this.financeOrganisationDetails = financeOrganisationDetails;
     }
 
@@ -129,7 +130,7 @@ public class ApplicationFinanceResource {
 
     public Integer getGrantClaimPercentage() {
         CostCategory costCategory = getFinanceOrganisationDetails(CostType.FINANCE);
-        return (costCategory != null && costCategory.getTotal()!= null? costCategory.getTotal().intValueExact() : null);
+        return costCategory != null && costCategory.getTotal()!= null? costCategory.getTotal().intValueExact() : null;
     }
 
     public BigDecimal getTotalFundingSought() {
@@ -153,7 +154,7 @@ public class ApplicationFinanceResource {
 
     public BigDecimal getTotalOtherFunding() {
         CostCategory otherFundingCategory = getFinanceOrganisationDetails(CostType.OTHER_FUNDING);
-        return (otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO);
+        return otherFundingCategory != null ? otherFundingCategory.getTotal() : BigDecimal.ZERO;
     }
 
     @JsonIgnore

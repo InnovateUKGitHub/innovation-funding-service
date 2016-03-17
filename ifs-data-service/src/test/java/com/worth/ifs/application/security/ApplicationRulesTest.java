@@ -1,5 +1,8 @@
 package com.worth.ifs.application.security;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.builder.ApplicationStatusResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -10,12 +13,10 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -23,6 +24,7 @@ import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertFalse;
@@ -61,8 +63,8 @@ public class ApplicationRulesTest extends BaseUnitTestMocksTest {
         processRole1 = newProcessRole().withRole(leadApplicantRole).build();
         processRole2 = newProcessRole().withRole(applicantRole).build();
         applicationStatusOpen = ApplicationStatusResourceBuilder.newApplicationStatusResource().withName(ApplicationStatusConstants.OPEN).build();
-        applicationResource1 = newApplicationResource().withProcessRoles(processRole1).withApplicationStatus(applicationStatusOpen).build();
-        applicationResource2 = newApplicationResource().withProcessRoles(processRole2).build();
+        applicationResource1 = newApplicationResource().withProcessRoles(asList(processRole1.getId())).withApplicationStatus(applicationStatusOpen.getId()).build();
+        applicationResource2 = newApplicationResource().withProcessRoles(asList(processRole2.getId())).build();
         application1 = newApplication().withId(applicationResource1.getId()).withProcessRoles(processRole1).build();
         application2 = newApplication().withId(applicationResource2.getId()).withProcessRoles(processRole2).build();
         processRole1.setApplication(application1);

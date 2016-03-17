@@ -25,6 +25,7 @@ public class UidAuthenticationService implements UserAuthenticationService {
     /**
      * Retrieve the Authenticated user by its authentication token in the request header.
      */
+    @Override
     public User getAuthenticatedUser(HttpServletRequest request) {
         Authentication authentication = getAuthentication(request);
         if(authentication!=null) {
@@ -33,6 +34,7 @@ public class UidAuthenticationService implements UserAuthenticationService {
         return null;
     }
 
+    @Override
     public Authentication getAuthentication(HttpServletRequest request) {
         String uid = uidSupplier.getUid(request);
 

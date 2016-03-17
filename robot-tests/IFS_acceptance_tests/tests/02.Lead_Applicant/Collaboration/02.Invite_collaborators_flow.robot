@@ -93,12 +93,16 @@ the applicant enters valid inputs
     Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    tester
     Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    ewan+1@hiveit.co.uk
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
-    Input Text    name=organisations[2].organisationName    Fannie May
-    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
-    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+10@hiveit.co.uk
-    Click Element    jquery=li:nth-child(3) button:contains('Add person')
-    Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
-    Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
+    Input Text    name=organisations[3].organisationName    Fannie May
+    #Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
+    Input Text      name=organisations[3].invites[0].personName                     Collaborator 2
+    #Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(3) input    ewan+10@hiveit.co.uk
+    Input Text      name=organisations[3].invites[0].email                          ewan+10@hiveit.co.uk
+    Click Element    jquery=li:nth-child(4) button:contains('Add person')
+    #Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
+    Input Text      name=organisations[3].invites[1].personName                     Collaborator 3
+    #Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
+    Input Text      name=organisations[3].invites[1].email                        ewan+11@hiveit.co.uk
     focus    jquery=li:nth-child(3) button:contains('Add person')
     Sleep    1s
     Click Element    jquery=button:contains("Begin application")

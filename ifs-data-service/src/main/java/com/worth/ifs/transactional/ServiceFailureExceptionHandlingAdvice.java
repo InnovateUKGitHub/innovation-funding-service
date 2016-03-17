@@ -48,7 +48,7 @@ public class ServiceFailureExceptionHandlingAdvice {
             }
 
         } catch (Exception e) {
-            LOG.warn(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a ServiceFailure");
+            LOG.warn(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a ServiceFailure", e);
             handleFailure(null);
             return serviceFailure(internalServerErrorError());
         }
@@ -57,9 +57,9 @@ public class ServiceFailureExceptionHandlingAdvice {
     private void handleFailure(ServiceResult<?> result) {
         LOG.debug("Failure encountered during processing of a ServiceResult-returning Service method - rolling back any transactions");
         if(result!=null) {
-            result.getFailure().getErrors().stream().forEach(error -> {
-                LOG.debug("    " + error.getErrorKey() + ": " + error.getErrorMessage());
-            });
+            result.getFailure().getErrors().stream().forEach(error ->
+                LOG.debug("    " + error.getErrorKey() + ": " + error.getErrorMessage())
+            );
         }
 
         try {

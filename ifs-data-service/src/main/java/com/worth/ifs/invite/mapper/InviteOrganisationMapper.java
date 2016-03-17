@@ -23,11 +23,13 @@ public abstract class InviteOrganisationMapper extends BaseMapper<InviteOrganisa
         @Mapping(source = "invites", target = "inviteResources"),
         @Mapping(source = "organisation.name", target = "organisationNameConfirmed"),
     })
+    @Override
     public abstract InviteOrganisationResource mapToResource(InviteOrganisation domain);
 
     @Mappings({
         @Mapping(source = "inviteResources", target = "invites")
     })
+    @Override
     public abstract InviteOrganisation mapToDomain(InviteOrganisationResource resource);
 
 }

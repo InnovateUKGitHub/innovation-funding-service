@@ -22,15 +22,18 @@ public class CompanyHouseRestServiceImpl  extends BaseRestService implements Com
 
     @Value("${ifs.data.service.rest.companyhouse}")
     String companyHouseRestUrl;
-
+    @Override
     public List<OrganisationSearchResult> searchOrganisations(String searchText){
+    	String searchTextEncoded;
         try {
-            searchText = UriUtils.encode(searchText, "UTF-8");
+        	searchTextEncoded = UriUtils.encode(searchText, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             log.error(e);
+            searchTextEncoded = searchText;
         }
-        return asList(restGet(companyHouseRestUrl + "/searchCompanyHouse/"+searchText, OrganisationSearchResult[].class));
+        return asList(restGet(companyHouseRestUrl + "/searchCompanyHouse/"+searchTextEncoded, OrganisationSearchResult[].class));
     }
+    @Override
     public OrganisationSearchResult getOrganisationById(String id){
 
         return restGet(companyHouseRestUrl + "/getCompanyHouse/"+id, OrganisationSearchResult.class);

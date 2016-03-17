@@ -188,9 +188,9 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Override
     public ServiceResult<Void> submitAssessment(Long assessorUserId, Long applicationId, String suitableValue, String suitableFeedback, String comments) {
 
-        return find(() -> usersRolesService.getProcessRoleByUserIdAndApplicationId(assessorUserId, applicationId)).andOnSuccess(processRole -> {
+        return find(() -> usersRolesService.getProcessRoleByUserIdAndApplicationId(assessorUserId, applicationId)).andOnSuccess(processRole -> 
 
-            return getOneByProcessRole(processRole.getId()).andOnSuccessReturnVoid(assessment -> {
+            getOneByProcessRole(processRole.getId()).andOnSuccessReturnVoid(assessment -> {
 
                 Assessment newAssessment = new Assessment();
                 ProcessOutcome processOutcome = new ProcessOutcome();
@@ -200,8 +200,8 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                 newAssessment.setProcessStatus(assessment.getProcessStatus());
 
                 assessmentWorkflowEventHandler.recommend(processRole.getId(), newAssessment, processOutcome);
-            });
-        });
+            })
+        );
     }
 
     @Override

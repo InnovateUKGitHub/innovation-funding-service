@@ -2,8 +2,6 @@ package com.worth.ifs.commons.service;
 
 import com.worth.ifs.application.service.FutureAdapterWithExceptionHandling;
 import com.worth.ifs.commons.rest.RestResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,7 +25,6 @@ import static org.springframework.http.HttpStatus.*;
 
 @Component
 public class RestTemplateAdaptor extends AbstractRestTemplateAdaptor {
-    private final static Log LOG = LogFactory.getLog(RestTemplateAdaptor.class);
 
 
     // Synchronous public calls

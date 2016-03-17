@@ -72,14 +72,14 @@ function buildAndDeploy {
 }
 
 function resetLDAP {
-    cd ${shibbolethCommonScriptsPath}
-    ./reset-users-from-database.sh
+    cd ${shibbolethScriptsPath}
+    ./reset-shibboleth-users.sh
 }
 
 function startServers {
     echo "********START SHIBBOLETH***********"
-    cd ${shibbolethOsScriptsPath}
-    ./startup.sh
+    cd ${shibbolethScriptsPath}
+    ./startup-shibboleth.sh
 
     echo "********START THE DATA SERVER********"
     cd ${dataTomcatBinPath}
@@ -128,23 +128,11 @@ echo "********GETTING ALL THE VARIABLES********"
 scriptDir=`pwd`
 echo "scriptDir:        ${scriptDir}"
 uploadFileDir=${scriptDir}"/upload_files"
-cd ../setup-files/scripts/shibboleth/common
-shibbolethCommonScriptsPath=$(pwd)
-echo "shibbolethCommonScriptsPath:        ${shibbolethCommonScriptsPath}"
+cd ../setup-files/scripts/environments
+shibbolethScriptsPath=$(pwd)
+echo "shibbolethScriptsPath:        ${shibbolethScriptsPath}"
 
-if [[ $OSTYPE == linux* ]]; then
-  os=linux
-elif [[ $OSTYPE == darwin* ]]; then
-  os=mac
-else
-  echo "Unable to determine a supported operating system for this script.  Currently only supported on Linux and Macs"
-  exit 1
-fi
-
-cd ../${os}
-shibbolethOsScriptsPath=$(pwd)
-echo "shibbolethOsScriptsPath:        ${shibbolethOsScriptsPath}"
-cd ../../../../ifs-data-service
+cd ../../../ifs-data-service
 dateFormat=`date +%Y-%m-%d`
 dataServiceCodeDir=`pwd`
 echo "dataServiceCodeDir:${dataServiceCodeDir}"
