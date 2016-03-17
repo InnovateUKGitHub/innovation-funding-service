@@ -42,7 +42,7 @@ public class Invite {
     private InviteStatusConstants status;
 
     public Invite() {
-
+    	// no-arg constructor
     }
 
     public Invite(String name, String email, Application application, InviteOrganisation inviteOrganisation, String hash, InviteStatusConstants status) {

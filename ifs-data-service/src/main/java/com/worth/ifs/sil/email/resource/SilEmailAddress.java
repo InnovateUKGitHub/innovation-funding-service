@@ -16,7 +16,7 @@ public class SilEmailAddress {
      * For JSON marshalling only
      */
     public SilEmailAddress() {
-
+    	// no-arg constructor
     }
 
     public SilEmailAddress(String name, String email) {

@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class IncorrectlyReportedMediaTypeException extends IFSRuntimeException {
     public IncorrectlyReportedMediaTypeException() {
+    	// no-arg constructor
     }
 
     public IncorrectlyReportedMediaTypeException(List<Object> arguments) {

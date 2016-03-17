@@ -69,6 +69,7 @@ import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationSize;
@@ -145,6 +146,8 @@ public class BaseUnitTest {
 
     @Mock
     public ApplicationFinanceRestService applicationFinanceRestService;
+    @Mock
+    public InviteOrganisationRestService inviteOrganisationRestService;
     @Mock
     public UserAuthenticationService userAuthenticationService;
     @Mock
@@ -686,7 +689,7 @@ public class BaseUnitTest {
 
     public void setupInvites() {
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
-
+        InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", null, null);
 
         invite = new InviteResource();
         invite.setStatus(InviteStatusConstants.SEND);
@@ -695,7 +698,12 @@ public class BaseUnitTest {
         invite.setHash(INVITE_HASH);
         String email = "invited@email.com";
         invite.setEmail(email);
+        invite.setInviteOrganisation(inviteOrganisation.getId());
+        inviteOrganisation.setInviteResources(Arrays.asList(invite));
+
         when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(restSuccess(invite));
+        when(inviteOrganisationRestService.findOne(eq(invite.getInviteOrganisation()))).thenReturn(restSuccess(inviteOrganisation));
+        when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
         when(userService.findUserByEmail(eq(email))).thenReturn(restFailure(notFoundError(User.class, email)));
         when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(emptyList()));
 

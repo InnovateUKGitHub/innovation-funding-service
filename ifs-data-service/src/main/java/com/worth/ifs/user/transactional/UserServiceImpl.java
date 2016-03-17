@@ -159,10 +159,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
                     }
             );
 
-//            user.setPassword(password);
-//            userRepository.save(user);
-//
-//            return ;
         }
         return serviceFailure(notFoundError(Token.class, hash));
     }

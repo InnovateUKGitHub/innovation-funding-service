@@ -12,6 +12,7 @@ public class CreateUserResource {
      * For JSON marshalling
      */
     public CreateUserResource() {
+    	// no-arg constructor
     }
 
     public CreateUserResource(String email, String password) {

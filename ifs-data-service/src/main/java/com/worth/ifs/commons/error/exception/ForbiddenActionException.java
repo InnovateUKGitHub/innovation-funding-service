@@ -9,6 +9,7 @@ import java.util.List;
 public class ForbiddenActionException extends IFSRuntimeException {
 
     public ForbiddenActionException() {
+    	// no-arg constructor
     }
 
     public ForbiddenActionException(List<Object> arguments) {
