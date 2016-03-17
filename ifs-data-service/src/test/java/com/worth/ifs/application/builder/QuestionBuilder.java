@@ -1,17 +1,22 @@
 package com.worth.ifs.application.builder;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.form.domain.FormInput;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.form.domain.FormInput;
+
+import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
+import static com.worth.ifs.BuilderAmendFunctions.setField;
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
@@ -72,7 +77,45 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         });
     }
 
+    public QuestionBuilder withId(Long... ids) {
+        return withArray((id, address) -> setField("id", id, address), ids);
+    }
 
+    public QuestionBuilder withName(String... names) {
+        return withArray((name, object) -> setField("name", name, object), names);
+    }
+
+    public QuestionBuilder withShortName(String... shortNames) {
+        return withArray((shortName, object) -> setField("shortName", shortName, object), shortNames);
+    }
+
+    public QuestionBuilder withDescription(String... descriptions) {
+        return withArray((description, object) -> setField("description", description, object), descriptions);
+    }
+
+    public QuestionBuilder withAssessorConfirmationQuestion(String... assessorConfirmationQuestions) {
+        return withArray((assessorConfirmationQuestion, object) -> setField("assessorConfirmationQuestion", assessorConfirmationQuestion, object), assessorConfirmationQuestions);
+    }
+
+    public QuestionBuilder withCompetition(Competition... competitions) {
+        return withArray((competition, object) -> setField("competition", competition, object), competitions);
+    }
+
+    public QuestionBuilder withSection(Section... sections) {
+        return withArray((section, object) -> setField("section", section, object), sections);
+    }
+
+    public QuestionBuilder withResponses(List<Response>... responses) {
+        return withArray((response, object) -> setField("responses", response, object), responses);
+    }
+
+    public QuestionBuilder withQuestionStatuses(List<QuestionStatus>... questionStatuses) {
+        return withArray((questionStatus, object) -> setField("questionStatuses", questionStatus, object), questionStatuses);
+    }
+
+    public QuestionBuilder withCosts(List<Cost>... costs) {
+        return withArray((cost, object) -> setField("costs", cost, object), costs);
+    }
 
     @Override
     protected Question createInitial() {
