@@ -20,7 +20,8 @@ public class CompetitionResourceDocs {
             fieldWithPath("endDate").description("date the submissions phase of the competition closes"),
             fieldWithPath("assessmentStartDate").description("date on which the assessments start"),
             fieldWithPath("assessmentEndDate").description("date on which all the assessments should be finished"),
-            fieldWithPath("maxResearchRatio").description("maximum ratio of research participation")
+            fieldWithPath("maxResearchRatio").description("maximum ratio of research participation"),
+            fieldWithPath("academicGrantPercentage").description("grant claim percentage for the academics")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -32,5 +33,6 @@ public class CompetitionResourceDocs {
             .withEndDate(LocalDate.now().plusDays(30))
             .withAssessmentStartDate(LocalDate.now().plusDays(32))
             .withAssessmentEndDate(LocalDate.now().plusDays(44))
-            .withMaxResearchRatio(20);
+            .withMaxResearchRatio(20)
+            .withAcademicGrantClaimPercentage(100);
 }

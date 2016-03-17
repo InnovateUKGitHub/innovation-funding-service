@@ -185,7 +185,7 @@ public abstract class AbstractApplicationController extends BaseController {
 
 
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
-        TreeSet<Organisation> organisations = getApplicationOrganisations(userApplicationRoles);
+        SortedSet<Organisation> organisations = getApplicationOrganisations(userApplicationRoles);
         model.addAttribute("applicationOrganisations", organisations);
         model.addAttribute("academicOrganisations", getAcademicOrganisations(organisations));
 
@@ -396,7 +396,7 @@ public abstract class AbstractApplicationController extends BaseController {
                 .collect(Collectors.toCollection(supplier));
     }
 
-    public TreeSet<Organisation> getAcademicOrganisations(TreeSet<Organisation> organisations) {
+    public TreeSet<Organisation> getAcademicOrganisations(SortedSet<Organisation> organisations) {
         Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
         Supplier<TreeSet<Organisation>> supplier = () -> new TreeSet<>(compareById);

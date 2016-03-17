@@ -43,6 +43,7 @@ public class OrganisationFinanceOverview {
     public List<ApplicationFinanceResource> getApplicationFinances() {
         return applicationFinances;
     }
+
     public Map<Long, ApplicationFinanceResource> getApplicationFinancesByOrganisation(){
         return applicationFinances
                 .stream()

@@ -143,7 +143,7 @@ public class ApplicationFinanceResource {
 
     public Integer getGrantClaimPercentage() {
         CostCategory costCategory = getFinanceOrganisationDetails(CostType.FINANCE);
-        return costCategory != null && costCategory.getTotal()!= null? costCategory.getTotal().intValueExact() : null;
+        return (costCategory != null && costCategory.getTotal() != null) ? costCategory.getTotal().intValueExact() : null;
     }
 
     public BigDecimal getTotalFundingSought() {
