@@ -1,6 +1,8 @@
 package com.worth.ifs.user.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 
@@ -10,14 +12,15 @@ import java.util.List;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class UserControllerTest extends BaseControllerMockMVCTest<UserController> {
 
@@ -68,6 +71,39 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("uid", is(testUser1.getUid())))
                 .andDo(document("user/get-user"));
     }
+
+
+    @Test
+    public void updatePassword() throws Exception {
+        final String password = "Passw0rd";
+        final String hash = "bf5b6392-1e08-4acc-b667-f0a16d6744de";
+        when(userServiceMock.changePassword(hash, password)).thenReturn(serviceSuccess(null));
+        mockMvc.perform(get("/user/" + URL_PASSWORD_RESET + "/{hash}/{password}", hash, password))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""))
+                .andDo(document("user/update-password",
+                                pathParameters(
+                                        parameterWithName("hash").description("The hash to validate the legitimacy of the request"),
+                                        parameterWithName("password").description("The new password")
+                                ))
+                );
+    }
+
+    @Test
+    public void updatePasswordTokenNotFound() throws Exception {
+        final String password = "Passw0rd";
+        final String hash = "bf5b6392-1e08-4acc-b667-f0a16d6744de";
+        final Error error = notFoundError(Token.class, hash);
+        when(userServiceMock.changePassword(hash, password)).thenReturn(serviceFailure(error));
+        mockMvc.perform(get("/user/" + URL_PASSWORD_RESET + "/" + hash + "/" + password))
+                .andExpect(status().isNotFound())
+                .andExpect(contentIs(error))
+                .andDo(document("user/update-password-token-not-found"));
+    }
+
+
+
+
 
     @Test
     public void userControllerShouldReturnUserByUid() throws Exception {
