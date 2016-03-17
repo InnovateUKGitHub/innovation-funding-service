@@ -25,7 +25,7 @@ public final class MessageUtil {
                 msg = defaultMsg;
             }
         } catch(NoSuchMessageException nsme){
-        	LOG.error(nsme);
+        	LOG.debug(nsme);
             msg = defaultMsg;
         }
         return msg;

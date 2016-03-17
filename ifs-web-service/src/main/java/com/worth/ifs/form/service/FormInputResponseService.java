@@ -15,7 +15,7 @@ import java.util.Map;
 public interface FormInputResponseService {
     List<FormInputResponse> getByApplication(Long applicationId);
     Map<Long, FormInputResponse> mapFormInputResponsesToFormInput(List<FormInputResponse> responses);
-    List<String> save(Long userId, Long applicationId, Long formInputId, String value);
+    List<String> save(Long userId, Long applicationId, Long formInputId, String value, boolean ignoreEmpty);
     RestResult<FileEntryResource> createFile(Long formInputId, Long applicationId, Long processRoleId, String contentType,
                                              Long contentLength, String originalFileName, byte[] file);
     RestResult<Void> removeFile(Long formInputId, Long applicationId, Long processRoleId);

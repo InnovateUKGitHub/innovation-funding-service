@@ -41,13 +41,18 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<String>> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String value) {
+    public RestResult<List<String>> saveQuestionResponse(Long userId,
+                                                         Long applicationId,
+                                                         Long formInputId,
+                                                         String value,
+                                                         boolean ignoreEmpty) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
         node.put("userId", userId);
         node.put("applicationId", applicationId);
         node.put("formInputId", formInputId);
         node.put("value", HtmlUtils.htmlEscape(value));
+        node.put("ignoreEmpty", ignoreEmpty);
         return postWithRestResult(formInputResponseRestURL + "/saveQuestionResponse/", node, stringsListType());
     }
 
