@@ -62,6 +62,7 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
     /**
      * @deprecated Should handled either success or failure case explicitly, usually by using handlesuccessorfailure()
      */
+    @Deprecated
     public T getSuccessObjectOrNull() {
         return isRight() ? getRight() : null;
     }
