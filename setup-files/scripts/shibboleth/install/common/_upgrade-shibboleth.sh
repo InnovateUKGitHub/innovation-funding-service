@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd ../../common
+cd ../../run/common
 
 bash _purge-shibboleth.sh
 

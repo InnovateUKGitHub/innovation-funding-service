@@ -12,6 +12,7 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface FormInputRepository extends PagingAndSortingRepository<FormInput, Long> {
+	@Override
     List<FormInput> findAll();
     List<FormInput> findByCompetitionId(@Param("competitionId") Long competitionId);
 }

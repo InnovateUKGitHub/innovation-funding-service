@@ -50,7 +50,7 @@ public class Response {
     }
 
     public Response () {
-
+    	// no-arg constructor
     }
 
     public Long getId() {

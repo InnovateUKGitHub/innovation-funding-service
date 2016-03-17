@@ -1,5 +1,12 @@
 package com.worth.ifs.application.finance.view.jes;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+
 import com.worth.ifs.application.finance.form.AcademicFinance;
 import com.worth.ifs.application.finance.model.AcademicFinanceFormField;
 import com.worth.ifs.application.finance.service.FinanceService;
@@ -13,12 +20,6 @@ import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.user.domain.ProcessRole;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
-
-import java.math.BigDecimal;
-import java.util.EnumMap;
 
 @Component
 public class JESFinanceModelManager implements FinanceModelManager {
@@ -35,7 +36,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
 
         ProcessRole processRole = processRoleService.findProcessRole(userId, applicationId);
         String organisationName = processRole.getOrganisation().getName();
-        EnumMap<CostType, CostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
+        Map<CostType, CostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
         AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails, model);
         financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).andOnSuccessReturn(
                 fileEntry -> {
@@ -64,7 +65,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
         return applicationFinanceResource;
     }
 
-    protected AcademicFinance mapFinancesToFields(EnumMap<CostType, CostCategory> organisationFinanceDetails, Model model) {
+    protected AcademicFinance mapFinancesToFields(Map<CostType, CostCategory> organisationFinanceDetails, Model model) {
         AcademicFinance academicFinance = new AcademicFinance();
         organisationFinanceDetails.values()
                 .stream()

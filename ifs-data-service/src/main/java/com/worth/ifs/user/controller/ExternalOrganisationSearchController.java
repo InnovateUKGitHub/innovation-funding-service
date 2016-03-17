@@ -7,8 +7,6 @@ import com.worth.ifs.organisation.transactional.CompanyHouseApiService;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.transactional.OrganisationTypeService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +22,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/organisationsearch")
 public class ExternalOrganisationSearchController {
-
-    private static final Log LOG = LogFactory.getLog(ExternalOrganisationSearchController.class);
 
     @Autowired
     private OrganisationService organisationService;

@@ -72,9 +72,9 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
         }
 
         return find(user(userId), application(applicationId), formInput(formInputId)).
-                andOnSuccess((user, application, formInput) -> {
+                andOnSuccess((user, application, formInput) -> 
 
-            return getOrCreateResponse(application, formInput, userAppRole).andOnSuccessReturn(response -> {
+            getOrCreateResponse(application, formInput, userAppRole).andOnSuccessReturn(response -> {
 
                 if (!response.getValue().equals(htmlUnescapedValue)) {
                     response.setUpdateDate(LocalDateTime.now());
@@ -84,15 +84,15 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
                 response.setValue(htmlUnescapedValue);
                 formInputResponseRepository.save(response);
                 return response;
-            });
-        });
+            })
+        );
     }
 
     private ServiceResult<FormInputResponse> getOrCreateResponse(Application application, FormInput formInput, ProcessRole userAppRole) {
 
         List<FormInputResponse> existingResponse = formInputResponseRepository.findByApplicationIdAndFormInputId(application.getId(), formInput.getId());
 
-        return existingResponse != null && existingResponse.size() > 0 ?
+        return existingResponse != null && !existingResponse.isEmpty() ?
                 serviceSuccess(existingResponse.get(0)) :
                 serviceSuccess(new FormInputResponse(LocalDateTime.now(), "", userAppRole, formInput, application));
     }

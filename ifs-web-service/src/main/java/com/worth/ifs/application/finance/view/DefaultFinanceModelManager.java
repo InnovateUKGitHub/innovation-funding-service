@@ -1,28 +1,18 @@
 package com.worth.ifs.application.finance.view;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.finance.service.FinanceService;
-import com.worth.ifs.application.form.Form;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.application.service.SectionService;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.category.LabourCostCategory;
-import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.CostType;
-import com.worth.ifs.finance.service.ApplicationFinanceRestService;
-import com.worth.ifs.user.domain.Organisation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import com.worth.ifs.application.finance.service.FinanceService;
+import com.worth.ifs.application.form.Form;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.category.LabourCostCategory;
+import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.CostType;
+import com.worth.ifs.user.domain.Organisation;
 
 /**
  * Managing all the view attributes for the finances
@@ -39,6 +29,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     @Autowired
     OrganisationService organisationService;
 
+    @Override
     public void addOrganisationFinanceDetails(Model model, Long applicationId, Long userId, Form form) {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
         Organisation organisation = organisationService.getOrganisationById(applicationFinanceResource.getOrganisation());
@@ -72,6 +63,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         return applicationFinanceResource;
     }
 
+    @Override
     public void addCost(Model model, CostItem costItem, long applicationId, long userId, Long questionId, String costType) {
         if (CostType.fromString(costType).equals(CostType.LABOUR)) {
             ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);

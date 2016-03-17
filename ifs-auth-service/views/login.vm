@@ -48,7 +48,7 @@
                             GOV.UK
                         </a>
                     </div>
-                    <p class="innovate-title">Innovation Funding Service</p>  
+                    <p class="innovate-title">Innovation Funding Service</p>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@
       <div class="phase-banner">
         <p>
           <strong class="phase-tag">BETA</strong>
-          <span>This is a new service – your <a href="mailto:support@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
+          <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
         </p>
       </div>
 
@@ -79,7 +79,7 @@
                 Sign in
               </legend>
             #end
-                        
+
             #if ($passwordEnabled)
               <div class="form-group">
                 <label for="username" class="form-label"><span>E-mail address</span></label>
@@ -122,7 +122,7 @@
             #end
             </form>
 
-            <!-- 
+            <!--
 
 			       #*
               //
@@ -146,16 +146,16 @@
             #end
 
           -->
-            
+
           </section>
           <section class="column-half">
             <h1 class="heading-large">New to this service?</h1>
-            <p>If you haven't used this service before you must <a href="#">create an account</a>, even if you already have an existing account with "Innovate UK".</p>
+            <p>If you haven't used this service before you must create an account, even if you already have an existing account with Innovate UK.</p>
+            <p>Currently this can be done by <a href="//#springMessageText("ifs.webserver.resources.url", "#")/competition/1/details">entering our 'Technology Inspired' competition.</a></p>
             <ul class="list-bullet extra-margin">
               #if ($passwordEnabled)
                 <li class="list-help-item"><a href="//#springMessageText("ifs.webserver.resources.url", "#")/login/reset-password">#springMessageText("idp.login.forgotPassword", "Forgot your password?")</a></li>
               #end
-              <li class="list-help-item"><a href="#springMessageText("idp.url.helpdesk", "#")">#springMessageText("idp.login.needHelp", "Need Help?")</a></li>
             </ul>
           </div>
         </section>
@@ -169,7 +169,7 @@
                 <div class="open-government-licence">
                   <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
                     <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
-                </div>               
+                </div>
               </div>
 
               <div class="copyright">

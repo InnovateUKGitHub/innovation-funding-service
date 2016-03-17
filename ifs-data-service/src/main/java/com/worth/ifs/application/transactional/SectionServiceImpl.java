@@ -1,7 +1,25 @@
 package com.worth.ifs.application.transactional;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.SectionResource;
@@ -13,15 +31,6 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -39,6 +48,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     private SectionMapper sectionMapper;
 
     @Autowired
+    private QuestionMapper questionMapper;
+
+    @Autowired
     private QuestionService questionService;
 
     @Override
@@ -49,29 +61,29 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     // TODO DW - INFUND-1555 - remove getSuccessObject call
     @Override
     public ServiceResult<Map<Long, Set<Long>>> getCompletedSections(final Long applicationId) {
+        return getApplication(applicationId).andOnSuccessReturn(this::completedSections);
+    }
 
-        return getApplication(applicationId).andOnSuccessReturn(application -> {
-
-            List<Section> sections = application.getCompetition().getSections();
-            List<Organisation> organisations = application.getProcessRoles().stream()
-                    .filter(p ->
-                            p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName())      ||
-                                    p.getRole().getName().equals(UserRoleType.APPLICANT.getName())          ||
-                                    p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName())
-                    )
-                    .map(ProcessRole::getOrganisation).collect(Collectors.toList());
-            Map<Long, Set<Long>> organisationMap = new HashMap<>();
-            for (Organisation organisation : organisations) {
-                Set<Long> completedSections = new LinkedHashSet<>();
-                for (Section section : sections) {
-                    if (this.isSectionComplete(section, applicationId, organisation.getId()).getSuccessObject()) {
-                        completedSections.add(section.getId());
-                    }
+    private Map<Long, Set<Long>> completedSections(Application application) {
+    	List<Section> sections = application.getCompetition().getSections();
+        List<Organisation> organisations = application.getProcessRoles().stream()
+                .filter(p ->
+                        p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName())      ||
+                                p.getRole().getName().equals(UserRoleType.APPLICANT.getName())          ||
+                                p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName())
+                )
+                .map(ProcessRole::getOrganisation).collect(Collectors.toList());
+        Map<Long, Set<Long>> organisationMap = new HashMap<>();
+        for (Organisation organisation : organisations) {
+            Set<Long> completedSections = new LinkedHashSet<>();
+            for (Section section : sections) {
+                if (this.isSectionComplete(section, application.getId(), organisation.getId()).getSuccessObject()) {
+                    completedSections.add(section.getId());
                 }
-                organisationMap.put(organisation.getId(), completedSections);
             }
-            return organisationMap;
-        });
+            organisationMap.put(organisation.getId(), completedSections);
+        }
+        return organisationMap;
     }
 
     // TODO DW - INFUND-1555 - remove getSuccessObject call
@@ -98,38 +110,59 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         });
     }
 
+    @Override
+    public ServiceResult<Set<Long>> getQuestionsForSectionAndSubsections(final Long sectionId){
+        Section section = sectionRepository.findOne(sectionId);
+        Set<Long> questions= collectAllQuestionFrom(section);
+        return serviceSuccess(questions);
+    }
+
+    private Set<Long> collectAllQuestionFrom(final Section section){
+        final Set<Long> questions = new HashSet<>();
+
+        questions.addAll(section.getQuestions().stream().map(questionMapper::questionToId).collect(Collectors.toSet()));
+
+        if(section.getChildSections() != null) {
+            for (Section childSection : section.getChildSections()) {
+                questions.addAll(collectAllQuestionFrom(childSection));
+            }
+        }
+
+        return questions;
+    }
+
 
     @Override
     public ServiceResult<List<Long>> getIncompleteSections(final Long applicationId) {
+        return getApplication(applicationId).andOnSuccessReturn(this::incompleteSections);
+    }
+    
+    private List<Long> incompleteSections(Application application) {
+    	List<Section> sections = application.getCompetition().getSections();
+        List<Long> incompleteSections = new ArrayList<>();
 
-        return getApplication(applicationId).andOnSuccessReturn(application -> {
+        for (Section section : sections) {
+            boolean sectionIncomplete = false;
 
-            List<Section> sections = application.getCompetition().getSections();
-            List<Long> incompleteSections = new ArrayList<>();
-
-            for (Section section : sections) {
-                boolean sectionIncomplete = false;
-
-                List<Question> questions = section.fetchAllChildQuestions();
-                for (Question question : questions) {
-                    if (question.getFormInputs().stream().anyMatch(input -> input.getWordCount() != null && input.getWordCount() > 0)) {
-                        // if there is a maxWordCount, ensure that no responses have gone over the limit
-                        sectionIncomplete = question.getFormInputs().stream().anyMatch(input -> {
-                            List<FormInputResponse> responses = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, input.getId());
-                            return responses.stream().anyMatch(response -> response.getWordCountLeft() < 0);
-                        });
-                    } else {
-                        // no wordcount.
-                        sectionIncomplete = false;
-                    }
-                }
-                if (sectionIncomplete) {
-                    incompleteSections.add(section.getId());
+            List<Question> questions = section.fetchAllChildQuestions();
+            for (Question question : questions) {
+                if (question.getFormInputs().stream().anyMatch(input -> input.getWordCount() != null && input.getWordCount() > 0)) {
+                    // if there is a maxWordCount, ensure that no responses have gone over the limit
+                    sectionIncomplete = question.getFormInputs().stream().anyMatch(input -> {
+                        List<FormInputResponse> responses = formInputResponseRepository.findByApplicationIdAndFormInputId(application.getId(), input.getId());
+                        return responses.stream().anyMatch(response -> response.getWordCountLeft() < 0);
+                    });
+                } else {
+                    // no wordcount.
+                    sectionIncomplete = false;
                 }
             }
+            if (sectionIncomplete) {
+                incompleteSections.add(section.getId());
+            }
+        }
 
-            return incompleteSections;
-        });
+        return incompleteSections;	
     }
 
     @Override
@@ -158,7 +191,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     public ServiceResult<Boolean> isMainSectionComplete(Section section, Long applicationId, Long organisationId, boolean ignoreOtherOrganisations) {
         boolean sectionIsComplete = true;
         for (Question question : section.getQuestions()) {
-            if (!ignoreOtherOrganisations && question.getName() != null && question.getName().equals("FINANCE_SUMMARY_INDICATOR_STRING") && section.getParentSection() != null) {
+            if (!ignoreOtherOrganisations && question.getName() != null && "FINANCE_SUMMARY_INDICATOR_STRING".equals(question.getName()) && section.getParentSection() != null) {
                 if (!childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section).getSuccessObject()) {
                     sectionIsComplete = false;
                 }
@@ -181,33 +214,33 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     // TODO DW - INFUND-1555 - work out the getSuccessObject call
     @Override
     public ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection) {
+        return getApplication(applicationId).andOnSuccessReturn(application -> childSectionsCompleteForAllOrganisations(application, parentSection));
+    }
+    
+    private Boolean childSectionsCompleteForAllOrganisations(Application application, Section parentSection) {
+    	boolean allSectionsWithSubsectionsAreComplete = true;
 
-        return getApplication(applicationId).andOnSuccessReturn(application -> {
+        List<Section> sections;
+        // if no parent defined, just check all sections.
+        if(parentSection == null){
+            sections = sectionRepository.findAll();
+        }else{
+            sections = parentSection.getChildSections();
+        }
 
-            boolean allSectionsWithSubsectionsAreComplete = true;
-
-            List<Section> sections = null;
-            // if no parent defined, just check all sections.
-            if(parentSection == null){
-                sections = sectionRepository.findAll();
-            }else{
-                sections = parentSection.getChildSections();
-            }
-
-            List<ApplicationFinance> applicationFinanceList = application.getApplicationFinances();
-            for (Section section : sections) {
-                for (ApplicationFinance applicationFinance : applicationFinanceList) {
-                    if (!this.isMainSectionComplete(section, applicationId, applicationFinance.getOrganisation().getId(), true).getSuccessObject()) {
-                        allSectionsWithSubsectionsAreComplete = false;
-                        break;
-                    }
-                }
-                if (!allSectionsWithSubsectionsAreComplete) {
+        List<ApplicationFinance> applicationFinanceList = application.getApplicationFinances();
+        for (Section section : sections) {
+            for (ApplicationFinance applicationFinance : applicationFinanceList) {
+                if (!this.isMainSectionComplete(section, application.getId(), applicationFinance.getOrganisation().getId(), true).getSuccessObject()) {
+                    allSectionsWithSubsectionsAreComplete = false;
                     break;
                 }
             }
-            return allSectionsWithSubsectionsAreComplete;
-        });
+            if (!allSectionsWithSubsectionsAreComplete) {
+                break;
+            }
+        }
+        return allSectionsWithSubsectionsAreComplete;
     }
 
     @Override

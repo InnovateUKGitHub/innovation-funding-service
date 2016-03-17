@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class UnableToSendNotificationException extends IFSRuntimeException {
     public UnableToSendNotificationException() {
+    	// no-arg constructor
     }
 
     public UnableToSendNotificationException(List<Object> arguments) {

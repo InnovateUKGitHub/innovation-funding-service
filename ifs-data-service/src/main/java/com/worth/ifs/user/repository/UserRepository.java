@@ -13,8 +13,8 @@ import java.util.Optional;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
-        List<User> findByName(@Param("name") String name);
         Optional<User> findByEmail(@Param("email") String email);
+        @Override
         List<User> findAll();
         User findOneByUid(@Param("uid") String uid);
 }

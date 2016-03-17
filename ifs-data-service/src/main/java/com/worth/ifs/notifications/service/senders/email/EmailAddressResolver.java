@@ -7,8 +7,10 @@ import com.worth.ifs.notifications.resource.NotificationTarget;
 /**
  * A helper utility to resolve a set of Email Address details from given Notifications, for the "from" and "to" of the emails to be sent
  */
-public class EmailAddressResolver {
+public final class EmailAddressResolver {
 
+	private EmailAddressResolver() {}
+	
     /**
      * Given a Notification Source, attempts to extract Email Address information from it
      *

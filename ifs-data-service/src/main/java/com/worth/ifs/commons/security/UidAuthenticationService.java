@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.security;
 
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class UidAuthenticationService implements UserAuthenticationService {
     /**
      * Retrieve the Authenticated user by its authentication token in the request header.
      */
+    @Override
     public User getAuthenticatedUser(HttpServletRequest request) {
         Authentication authentication = getAuthentication(request);
         if(authentication!=null) {
@@ -32,8 +34,14 @@ public class UidAuthenticationService implements UserAuthenticationService {
         return null;
     }
 
+    @Override
     public Authentication getAuthentication(HttpServletRequest request) {
         String uid = uidSupplier.getUid(request);
+
+        if (StringUtils.isBlank(uid)) {
+            return null;
+        }
+
         User user = validator.retrieveUserByUid(uid).getSuccessObjectOrNull();
         return user != null ? new UserAuthentication(user) : null;
     }

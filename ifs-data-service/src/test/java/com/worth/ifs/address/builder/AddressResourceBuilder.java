@@ -1,10 +1,10 @@
 package com.worth.ifs.address.builder;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.address.resource.AddressResource;
-
 import java.util.List;
 import java.util.function.BiConsumer;
+
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.address.resource.AddressResource;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
@@ -36,4 +36,29 @@ public class AddressResourceBuilder extends BaseBuilder<AddressResource, Address
     public AddressResourceBuilder withAddressLine1(String... addressLines) {
         return withArray((addressLine, address) -> setField("addressLine1", addressLine, address), addressLines);
     }
+
+    public AddressResourceBuilder withAddressLine2(String... addressLines) {
+        return withArray((addressLine, address) -> setField("addressLine2", addressLine, address), addressLines);
+    }
+
+    public AddressResourceBuilder withAddressLine3(String... addressLines) {
+        return withArray((addressLine, address) -> setField("addressLine3", addressLine, address), addressLines);
+    }
+
+    public AddressResourceBuilder withTown(String... towns) {
+        return withArray((town, address) -> setField("town", town, address), towns);
+    }
+
+    public AddressResourceBuilder withCounty(String... counties) {
+        return withArray((county, address) -> setField("county", county, address), counties);
+    }
+
+    public AddressResourceBuilder withPostcode(String... postcodes) {
+        return withArray((postcode, address) -> setField("postcode", postcode, address), postcodes);
+    }
+
+    public AddressResourceBuilder withOrganisationList(List<Long>... organisationLists) {
+        return withArray((organisationList, address) -> setField("organisations", organisationList, address), organisationLists);
+    }
+
 }

@@ -36,9 +36,9 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void test_findAll() {
 
         User user1 = new User();
-        user1.setPassword("user1");
+
         User user2 = new User();
-        user2.setPassword("user2");
+
 
         List<User> userList = asList(user1, user2);
         setupGetWithRestResultExpectations(usersUrl + "/findAll/", userListType(), userList);

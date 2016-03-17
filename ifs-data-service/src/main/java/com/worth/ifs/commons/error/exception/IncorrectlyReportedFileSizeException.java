@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class IncorrectlyReportedFileSizeException extends IFSRuntimeException {
     public IncorrectlyReportedFileSizeException() {
+    	// no-arg constructor
     }
 
     public IncorrectlyReportedFileSizeException(List<Object> arguments) {

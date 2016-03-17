@@ -13,6 +13,7 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface CostValueRepository extends PagingAndSortingRepository<CostValue, CostValueId> {
+	@Override
     List<CostValue> findAll();
     void deleteByCostId(@Param("costId") Long costId);
 }

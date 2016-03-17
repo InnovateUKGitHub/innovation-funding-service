@@ -102,6 +102,15 @@
 
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+		localStorage.clear();
+
+	});
+	// ]]>
+</script>
 
 </body>
 </html>

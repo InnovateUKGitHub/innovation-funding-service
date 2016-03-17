@@ -113,13 +113,13 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
 
 
     private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value) {
-        fieldName = fieldName.replace("financePosition-", "");
-        switch (fieldName) {
+        String fieldNameReplaced = fieldName.replace("financePosition-", "");
+        switch (fieldNameReplaced) {
             case "organisationSize":
                 applicationFinance.setOrganisationSize(OrganisationSize.valueOf(value));
                 break;
             default:
-                log.error(String.format("value not saved: %s / %s", fieldName, value));
+                log.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
         }
     }
 
@@ -153,7 +153,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
             if (financeFormField == null)
                 continue;
 
-            if (financeFormField.getId() != null && !financeFormField.getId().equals("null")) {
+            if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
                 Long id = Long.valueOf(financeFormField.getId());
                 if (costKeyMap.containsKey(id)) {
                     costKeyMap.get(id).add(financeFormField);
@@ -189,7 +189,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
         CostType costType = CostType.fromString(financeFormField.getKeyType());
         CostHandler costHandler = getCostItemHandler(costType);
         Long costFormFieldId = 0L;
-        if (financeFormField.getId() != null && !financeFormField.getId().equals("null")) {
+        if (financeFormField.getId() != null && !"null".equals(financeFormField.getId())) {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
         CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(financeFormField));

@@ -12,6 +12,7 @@ public class OrganisationTypeResource {
     }
 
     public OrganisationTypeResource() {
+    	// no-arg constructor
     }
 
     public Long getId() {

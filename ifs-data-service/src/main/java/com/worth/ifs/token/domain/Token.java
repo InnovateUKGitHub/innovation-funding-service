@@ -33,7 +33,7 @@ public class Token {
     }
 
     public Token() {
-
+    	// no-arg constructor
     }
 
     public TokenType getType() {

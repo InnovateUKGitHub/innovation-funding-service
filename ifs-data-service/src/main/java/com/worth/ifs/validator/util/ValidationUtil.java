@@ -10,9 +10,11 @@ import org.springframework.validation.Validator;
 
 import java.util.Set;
 
-public class ValidationUtil {
+public final class ValidationUtil {
     public final static Log log = LogFactory.getLog(ValidationUtil.class);
 
+    private ValidationUtil() {}
+    
     public static BindingResult validateResponse(FormInputResponse response) {
         Set<FormValidator> validators = response.getFormInput().getFormValidators();
 

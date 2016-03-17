@@ -27,6 +27,7 @@ public class InviteResource {
     private InviteStatusConstants status;
 
     public InviteResource() {
+    	// no-arg constructor
     }
 
 

@@ -31,7 +31,7 @@ public class SectionResource {
     }
 
     public SectionResource() {
-
+    	// no-arg constructor
     }
 
     public String getName() {

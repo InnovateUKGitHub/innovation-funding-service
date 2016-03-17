@@ -1,24 +1,27 @@
 package com.worth.ifs.application.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static org.junit.Assert.*;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +45,9 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 withName("created", "submitted", "something", "finished", "approved", "rejected").
                 buildArray(6, ApplicationStatusResource.class);
 
-        applications = newApplicationResource().withApplicationStatus(statuses).build(6);
+        Long[] ids = asList(statuses).stream().map(ApplicationStatusResource::getId).toArray(size -> new Long[size]);
+
+        applications = newApplicationResource().withApplicationStatus(ids).build(6);
 
         userId = 1L;
         when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(restSuccess(applications));
@@ -71,7 +76,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test(expected= ObjectNotFoundException.class)
     public void testGetByIdNotFound() throws Exception {
         Long applicationId = 5L;
-        when(applicationRestService.getApplicationById(applicationId)).thenThrow(new ObjectNotFoundException("Application not found", Arrays.asList(applicationId)));
+        when(applicationRestService.getApplicationById(applicationId)).thenThrow(new ObjectNotFoundException("Application not found", asList(applicationId)));
         ApplicationResource returnedApplication = service.getById(applicationId);
         assertEquals(null, returnedApplication);
     }

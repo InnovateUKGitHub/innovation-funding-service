@@ -28,7 +28,7 @@
 		    		</span>
 
                 </label>
-                <input class="form-control" id="tsb-ref" type="text" th:name="cost- + ${academicFinance.tsbReference?.id} + -tsb_reference" th:value="${academicFinance.tsbReference?.value}" />
+                <input class="form-control" id="tsb-ref" type="text" th:name="cost- + ${academicFinance.tsbReference?.id} + -tsb_reference" th:value="${academicFinance.tsbReference?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
             </div>
         </fieldset>
         <fieldset>
@@ -53,7 +53,7 @@
                              id="incurred-staff"
                              th:name="cost- + ${academicFinance.incurredStaff?.id} + -incurred_staff"
                              th:value="${academicFinance.incurredStaff?.value}"
-                             th:readonly="${false}"  />
+                             th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                         <span>Travel &amp; subsistence </span>
                     </label>
                     <div class="column-two-thirds">
-                      <input class="form-control width-full" id="travel" th:name="cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -incurred_travel_subsistence" type="number" th:value="${academicFinance.incurredTravelAndSubsistence?.value}" />
+                      <input class="form-control width-full" id="travel" th:name="cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -incurred_travel_subsistence" type="number" th:value="${academicFinance.incurredTravelAndSubsistence?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                       <span>Other costs</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="other" th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -incurred_other_costs" type="number" th:value="${academicFinance.incurredOtherCosts?.value}" />
+                    <input class="form-control width-full" id="other" th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -incurred_other_costs" type="number" th:value="${academicFinance.incurredOtherCosts?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                   </div>
               </div>
             </div>
@@ -104,7 +104,7 @@
                       <span>Investigators</span>
                     </label>
                     <div class="column-two-thirds">
-                      <input class="form-control width-full" id="investigators" th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="number" th:value="${academicFinance.allocatedInvestigators?.value}"/>
+                      <input class="form-control width-full" id="investigators" th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="number" th:value="${academicFinance.allocatedInvestigators?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                     </div>
                 </div>
             </div>
@@ -114,7 +114,7 @@
                       <span>Estates Costs</span>
                   </label>
                   <div class="column-two-thirds">
-                      <input class="form-control width-full" id="estates" th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="number" th:value="${academicFinance.allocatedEstatesCosts?.value}" />
+                      <input class="form-control width-full" id="estates" th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="number" th:value="${academicFinance.allocatedEstatesCosts?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                   </div>
               </div>
             </div>
@@ -124,7 +124,7 @@
                       <span>Other costs</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="other-direct" th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="number" th:value="${academicFinance.allocatedOtherCosts?.value}"/>
+                    <input class="form-control width-full" id="other-direct" th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="number" th:value="${academicFinance.allocatedOtherCosts?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                   </div>
               </div>
             </div>
@@ -150,7 +150,7 @@
                       <span class="form-label-bold">Indirect costs </span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="indirect" th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs" type="number" th:value="${academicFinance.indirectCosts?.value}" />
+                    <input class="form-control width-full" id="indirect" th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs" type="number" th:value="${academicFinance.indirectCosts?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                   </div>
               </div>
             </div>
@@ -168,7 +168,7 @@
                       <span>Staff</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="exceptions-staff" th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="number" th:value="${academicFinance.exceptionsStaff?.value}" />
+                    <input class="form-control width-full" id="exceptions-staff" th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="number" th:value="${academicFinance.exceptionsStaff?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
                   </div>
               </div>
             </div>
@@ -178,7 +178,7 @@
                       <span>Other costs</span>
                   </label>
                   <div class="column-two-thirds">
-                    <input class="form-control width-full" id="exceptions-other-direct" th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs" type="number" th:value="${academicFinance.exceptionsOtherCosts?.value}" />
+                    <input class="form-control width-full" id="exceptions-other-direct" th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs" type="number" th:value="${academicFinance.exceptionsOtherCosts?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
                   </div>
               </div>
             </div>

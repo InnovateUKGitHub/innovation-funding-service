@@ -15,6 +15,7 @@ public class RestSuccess<T> {
      * For JSON marshalling
      */
     public RestSuccess() {
+    	// no-arg constructor
     }
 
     public RestSuccess(T result, HttpStatus statusCode) {

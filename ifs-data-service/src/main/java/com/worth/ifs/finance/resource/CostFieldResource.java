@@ -12,6 +12,7 @@ public class CostFieldResource {
     private List<CostValueId> costValues = new ArrayList<>();
 
     public CostFieldResource() {
+    	// no-arg constructor
     }
 
     public CostFieldResource(Long id, String title, String type) {

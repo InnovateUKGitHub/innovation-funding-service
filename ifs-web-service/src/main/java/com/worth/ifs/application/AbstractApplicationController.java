@@ -151,7 +151,7 @@ public abstract class AbstractApplicationController extends BaseController {
         userOrganisation.ifPresent(org ->
             addAssignableDetails(model, application, org, userId, section, currentQuestionId)
         );
-        addMappedSectionsDetails(model, application, competition, section, userOrganisation, userApplicationRoles);
+        addMappedSectionsDetails(model, application, competition, section, userOrganisation);
         addCompletedDetails(model, application, userOrganisation, userApplicationRoles);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
@@ -266,8 +266,7 @@ public abstract class AbstractApplicationController extends BaseController {
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                             Optional<SectionResource> currentSection,
-                                            Optional<Organisation> userOrganisation,
-                                            List<ProcessRole> userApplicationRoles) {
+                                            Optional<Organisation> userOrganisation) {
         List<SectionResource> sectionsList = sectionService.getParentSections(competition.getSections());
 
         Map<Long, SectionResource> sections =
@@ -313,7 +312,7 @@ public abstract class AbstractApplicationController extends BaseController {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
 
-        TreeSet<Organisation> organisations = getApplicationOrganisations(userApplicationRoles);
+        SortedSet<Organisation> organisations = getApplicationOrganisations(userApplicationRoles);
         Set<Long> questionsCompletedByAllOrganisation = new TreeSet<>(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(organisations.first()))));
         // only keep the questionIDs of questions that are complete by all organisations
         organisations.forEach(o -> questionsCompletedByAllOrganisation.retainAll(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(o)))));
@@ -386,10 +385,10 @@ public abstract class AbstractApplicationController extends BaseController {
         financeOverviewModelManager.addFinanceDetails(model, applicationId);
     }
 
-    public TreeSet<Organisation> getApplicationOrganisations(List<ProcessRole> userApplicationRoles) {
+    public SortedSet<Organisation> getApplicationOrganisations(List<ProcessRole> userApplicationRoles) {
         Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
-        Supplier<TreeSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
+        Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
 
         return userApplicationRoles.stream()
                 .filter(uar -> (uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName())))

@@ -1,5 +1,37 @@
 package com.worth.ifs.application.transactional;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
+
+import java.io.File;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -23,39 +55,18 @@ import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
-import com.worth.ifs.notifications.resource.*;
+import com.worth.ifs.notifications.resource.ExternalUserNotificationTarget;
+import com.worth.ifs.notifications.resource.Notification;
+import com.worth.ifs.notifications.resource.NotificationSource;
+import com.worth.ifs.notifications.resource.NotificationTarget;
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -96,40 +107,40 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
+        return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, user, competition));
+    }
+    
+    private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, User user, Competition competition) {
+        Application application = new Application();
+        application.setName(applicationName);
+        LocalDate currentDate = LocalDate.now();
+        application.setStartDate(currentDate);
 
-        return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
+        String name = ApplicationStatusConstants.CREATED.getName();
 
-           Application application = new Application();
-           application.setName(applicationName);
-           LocalDate currentDate = LocalDate.now();
-           application.setStartDate(currentDate);
+        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
+        ApplicationStatus applicationStatus = applicationStatusList.get(0);
 
-           String name = ApplicationStatusConstants.CREATED.getName();
+        application.setApplicationStatus(applicationStatus);
+        application.setDurationInMonths(3L);
 
-           List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
-           ApplicationStatus applicationStatus = applicationStatusList.get(0);
+        List<Role> roles = roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName());
+        Role role = roles.get(0);
 
-           application.setApplicationStatus(applicationStatus);
-           application.setDurationInMonths(3L);
+        Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
 
-           List<Role> roles = roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName());
-           Role role = roles.get(0);
+        ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
-           Organisation userOrganisation = user.getProcessRoles().get(0).getOrganisation();
+        List<ProcessRole> processRoles = new ArrayList<>();
+        processRoles.add(processRole);
 
-           ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+        application.setProcessRoles(processRoles);
+        application.setCompetition(competition);
 
-           List<ProcessRole> processRoles = new ArrayList<>();
-           processRoles.add(processRole);
+        applicationRepository.save(application);
+        processRoleRepository.save(processRole);
 
-           application.setProcessRoles(processRoles);
-           application.setCompetition(competition);
-
-           applicationRepository.save(application);
-           processRoleRepository.save(processRole);
-
-           return serviceSuccess(applicationMapper.mapToResource(application));
-       });
+        return serviceSuccess(applicationMapper.mapToResource(application));
     }
 
     @Override
@@ -451,7 +462,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 boolean readyForSubmit = false;
                 if (allSectionsComplete &&
                         progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0 &&
-                        researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) == -1) {
+                        researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0) {
                     readyForSubmit = true;
                 }
 
@@ -460,7 +471,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 node.put(READY_FOR_SUBMIT, readyForSubmit);
                 node.put(PROGRESS, progressPercentage);
                 node.put(RESEARCH_PARTICIPATION, researchParticipation);
-                node.put(RESEARCH_PARTICIPATION_VALID, (researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) == -1));
+                node.put(RESEARCH_PARTICIPATION_VALID, researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0);
                 node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
                 return node;
             })
@@ -510,7 +521,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 BigDecimal result = BigDecimal.valueOf(100.00).setScale(10, BigDecimal.ROUND_HALF_DOWN);
                 result = result.divide(new BigDecimal(totalQuestions.toString()), 10, BigDecimal.ROUND_HALF_UP);
                 result = result.multiply(new BigDecimal(countCompleted.toString()));
-//                (100.0 / totalQuestions) * countCompleted);
                 return result;
             }
         });

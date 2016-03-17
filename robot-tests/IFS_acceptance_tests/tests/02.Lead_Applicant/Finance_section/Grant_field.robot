@@ -8,7 +8,7 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
-*** variables ***
+*** Variables ***
 
 *** Test Cases ***
 Auto-save test for the "Grant" field
@@ -24,16 +24,16 @@ the grant value should be correct in the finance summary page
 
 auto-save should work for the "Grant" field
     Clear Element Text    id=cost-financegrantclaim
-    focus    jQuery= button:contains('Mark as complete')
+    focus    jQuery= button:contains('complete')
     Sleep    1s
     Reload Page
     ${input_value} =    Get Value    id=cost-financegrantclaim
     Should Be Equal As Strings    ${input_value}    0
     Clear Element Text    id=cost-financegrantclaim
     Input Text    id=cost-financegrantclaim    25
-    focus    jQuery= button:contains('Mark as complete')
+    focus    jQuery= button:contains('complete')
     Sleep    1s
     Reload Page
-    focus    jQuery= button:contains('Mark as complete')
+    focus    jQuery= button:contains('complete')
     ${input_value} =    Get Value    id=cost-financegrantclaim
     Should Be Equal As Strings    ${input_value}    25

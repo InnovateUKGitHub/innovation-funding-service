@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class IncorrectArgumentTypeException extends IFSRuntimeException {
     public IncorrectArgumentTypeException() {
+    	// no-arg constructor
     }
 
     public IncorrectArgumentTypeException(List<Object> arguments) {

@@ -8,6 +8,7 @@ import java.util.List;
 public class LengthRequiredException extends IFSRuntimeException {
 
     public LengthRequiredException() {
+    	// no-arg constructor
     }
 
     public LengthRequiredException(List<Object> arguments) {

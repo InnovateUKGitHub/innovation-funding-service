@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ../../mac
+cd ../../run/mac
 source _mac-set-docker-vars.sh
 
 cd -

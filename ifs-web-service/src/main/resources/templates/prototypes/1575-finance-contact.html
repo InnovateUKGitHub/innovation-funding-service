@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project details'}, ${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1575-project-details?user=nonLead':'/prototypes/1575-project-details')})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Finance contact'})" th:remove="tag" />
+	
+	<form action="/prototypes/1575-project-details">
+
+		<fieldset>
+
+			<h2 class="heading-medium">Finance contact</h2>
+
+			<legend class="visuallyhidden">Finance contact</legend>
+
+			<p class="form-hint">Who will be responsible for project finances in your organisation?</p>
+
+			<p>We will ask this person to provide bank details for your organisation, confirm project costs and financial forecasts before the project can begin.</p>
+
+		
+			<div class="form-group extra-margin">			
+					<label for="finances-name-1" class="block-label">
+						<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
+						John Smith
+					</label>
+
+					<label for="finances-name-2" class="block-label">
+						<input id="finances-name-2" type="radio" name="finances-name-group" value="Ann Jones" />
+						Ann Jones
+					</label>
+
+					<label for="finances-name-invite" class="block-label" id="invited-finance-contact" style="display: none">
+						<input id="finances-name-invite" type="radio" name="finances-name-group" value="" />
+						<span id="finance-name">Ann Jones (pending)</span>
+					</label>
+
+					<input type="hidden" name="user" th:value="${param.user[0]}" th:unless="${param.user == null}" />
+					
+				</div>
+				
+				<button class="buttonlink" id="add-finance-contact">Add new team member</button>
+
+		</fieldset>
+
+		<div th:include="prototypes/fragments/project-setup :: prototype-add-users('finance-contact')" th:remove="tag" />
+
+		<button class="button button-large extra-margin" style="display: none;" id="finance-cta">Save</button>
+
+	</form>
+
+	
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+		jQuery('#add-finance-contact').on('click',function(e){ 
+			e.preventDefault();
+			jQuery('#finance-contact-table').show();
+
+		});
+
+		jQuery('#invite-finance-contact').on('click',function(e){ 
+			e.preventDefault();
+
+			var financeContact = jQuery('#name-finance-contact1').val();
+
+			jQuery('#finance-name').text(financeContact + ' (Pending)')
+			jQuery("#finances-name-invite").attr('checked', 'checked');
+			//jQuery('#finance-contact-table').hide();
+			jQuery('#invited-finance-contact').show();
+			jQuery('#finance-cta').text('Send invitation');
+			jQuery('#finance-cta').show();
+
+		});
+
+		jQuery('input').on('click',function(e){ 
+			if(jQuery(this).is(':checked')){
+
+				if(jQuery(this).attr('id') != 'finances-name-invite'){
+					jQuery('#finance-cta').text('Save');
+				}else{
+					jQuery('#finance-cta').text('Send invitation');
+				}
+				
+				jQuery('#finance-cta').show();
+			}
+		});
+
+
+
+		
+
+	});
+	// ]]>
+</script>
+</body>
+</html>

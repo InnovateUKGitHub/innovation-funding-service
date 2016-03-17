@@ -11,6 +11,7 @@ import java.util.List;
 public class UnableToReadUploadedFile extends IFSRuntimeException {
 
     public UnableToReadUploadedFile() {
+    	// no-arg constructor
     }
 
     public UnableToReadUploadedFile(List<Object> arguments) {

@@ -1,41 +1,94 @@
-=== Retrieve application
+=== Create application
 ==== Request
-include::{snippets}/application/get-application/http-request.adoc[]
+include::{snippets}/application/create-application/http-request.adoc[]
+include::{snippets}/application/create-application/path-parameters.adoc[]
+include::{snippets}/application/create-application/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/application/get-application/http-response.adoc[]
-
-include::{snippets}/application/get-application/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/application/get-application/curl-request.adoc[]
-
-=== Retrieve user's applications
-==== Request
-include::{snippets}/application/find-user-applications/http-request.adoc[]
-
-==== Response
-include::{snippets}/application/find-user-applications/http-response.adoc[]
+include::{snippets}/application/create-application/http-response.adoc[]
+include::{snippets}/application/create-application/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/application/find-user-applications/curl-request.adoc[]
+include::{snippets}/application/create-application/curl-request.adoc[]
 
-=== Retrieve all applications
+=== Find all applications
 ==== Request
 include::{snippets}/application/find-all-applications/http-request.adoc[]
 
 ==== Response
 include::{snippets}/application/find-all-applications/http-response.adoc[]
+include::{snippets}/application/find-all-applications/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/application/find-all-applications/curl-request.adoc[]
 
-=== Create application
+=== Find all applications belonging to a user
 ==== Request
-include::{snippets}/application/create-application/http-request.adoc[]
+include::{snippets}/application/find-user-applications/http-request.adoc[]
+include::{snippets}/application/find-user-applications/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/application/create-application/http-response.adoc[]
+include::{snippets}/application/find-user-applications/http-response.adoc[]
+include::{snippets}/application/find-user-applications/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/application/create-application/curl-request.adoc[]
+include::{snippets}/application/find-user-applications/curl-request.adoc[]
+
+=== Find one application by id
+==== Request
+include::{snippets}/application/get-application/http-request.adoc[]
+include::{snippets}/application/get-application/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/application/get-application/http-response.adoc[]
+include::{snippets}/application/get-application/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/application/get-application/curl-request.adoc[]
+
+=== Get progress percentage for application id
+==== Request
+include::{snippets}/application/get-progress-percentage/http-request.adoc[]
+include::{snippets}/application/get-progress-percentage/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/application/get-progress-percentage/http-response.adoc[]
+include::{snippets}/application/get-progress-percentage/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/application/get-progress-percentage/curl-request.adoc[]
+
+=== Check is application is ready for submit
+==== Request
+include::{snippets}/application/ready-for-submit/http-request.adoc[]
+include::{snippets}/application/ready-for-submit/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/application/ready-for-submit/http-response.adoc[]
+include::{snippets}/application/ready-for-submit/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/application/ready-for-submit/curl-request.adoc[]
+
+=== Save application details
+==== Request
+include::{snippets}/application/save-application-details/http-request.adoc[]
+include::{snippets}/application/save-application-details/path-parameters.adoc[]
+include::{snippets}/application/save-application-details/request-fields.adoc[]
+
+==== Response
+include::{snippets}/application/save-application-details/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/application/save-application-details/curl-request.adoc[]
+
+=== Update application status
+==== Request
+include::{snippets}/application/update-application-status/http-request.adoc[]
+include::{snippets}/application/update-application-status/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/application/update-application-status/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/application/update-application-status/curl-request.adoc[]

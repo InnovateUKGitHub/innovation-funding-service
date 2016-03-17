@@ -140,7 +140,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         NotificationTarget to = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
 
         Map<String, Object> notificationArguments = new HashMap<>();
-        notificationArguments.put("applicationName", invite.getApplication().getName());
+        if(StringUtils.isNotEmpty(invite.getApplication().getName())){
+            notificationArguments.put("applicationName", invite.getApplication().getName());
+        }
         notificationArguments.put("competitionName", invite.getApplication().getCompetition().getName());
         notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite));
         if(invite.getInviteOrganisation().getOrganisation() != null){
@@ -293,7 +295,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         Invite invite = new Invite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatusConstants.CREATED);
         if(newInviteOrganisation.getOrganisation()!= null){
             List<InviteOrganisation> existingOrgInvite = inviteOrganisationRepository.findByOrganisationId(newInviteOrganisation.getOrganisation().getId());
-            if(existingOrgInvite.size() > 0){
+            if(!existingOrgInvite.isEmpty()){
                 invite.setInviteOrganisation(existingOrgInvite.get(0));
             }
         }

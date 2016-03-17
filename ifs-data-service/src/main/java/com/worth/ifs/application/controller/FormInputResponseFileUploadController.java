@@ -67,16 +67,14 @@ public class FormInputResponseFileUploadController {
 
         ServiceResult<FormInputResponseFileEntryResource> creationResult =
                 find(validContentLengthHeader(contentLength), validContentTypeHeader(contentType), validFilename(originalFilename)).
-                        andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> {
-
-            return find(
-                    validContentLength(lengthFromHeader),
-                    validMediaType(typeFromHeader)).andOnSuccess((validLength, validType) -> {
-
-                return createFormInputResponseFile(validType, validLength, originalFilename, formInputId, applicationId, processRoleId, request).
-                        andOnSuccessReturn(Pair::getValue);
-            });
-        });
+                        andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> 
+                        	find(
+                        			validContentLength(lengthFromHeader),
+                        			validMediaType(typeFromHeader)).andOnSuccess((validLength, validType) -> 
+                        				createFormInputResponseFile(validType, validLength, originalFilename, formInputId, applicationId, processRoleId, request).
+                        				andOnSuccessReturn(Pair::getValue)
+            )
+        );
 
         ServiceResult<FormInputResponseFileEntryCreatedResponse> response = creationResult.andOnSuccessReturn(entry -> new FormInputResponseFileEntryCreatedResponse(entry.getFileEntryResource().getId()));
         return response.toPostCreateResponse();
@@ -95,16 +93,16 @@ public class FormInputResponseFileUploadController {
         ServiceResult<FormInputResponseFileEntryResource> updateResult = find(
                 validContentLengthHeader(contentLength),
                 validContentTypeHeader(contentType),
-                validFilename(originalFilename)).andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> {
+                validFilename(originalFilename)).andOnSuccess((lengthFromHeader, typeFromHeader, filenameParameter) -> 
 
-            return find(
+            find(
                     validContentLength(lengthFromHeader),
                     validMediaType(typeFromHeader)).
-                    andOnSuccess((validLength, validType) -> {
+                    andOnSuccess((validLength, validType) -> 
 
-                return updateFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request);
-            });
-        });
+                updateFormInputResponseFile(validType, lengthFromHeader, originalFilename, formInputId, applicationId, processRoleId, request)
+            )
+        );
 
         return updateResult.toPutResponse();
     }

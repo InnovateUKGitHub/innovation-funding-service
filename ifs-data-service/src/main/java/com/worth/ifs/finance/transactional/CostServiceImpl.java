@@ -114,7 +114,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
             newCost.getCostValues()
                     .stream()
                     .filter(c -> c.getValue() != null)
-                    .filter(c -> !c.getValue().equals("null"))
+                    .filter(c -> !"null".equals(c.getValue()))
                     .forEach(costValue -> updateCostValue(costValue, savedCost));
 
             return updatedCost;
@@ -216,7 +216,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Override
     public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
         ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
-        return getApplicationFinanceForOrganisation(applicationId, organisationId, applicationFinanceResourceId);
+        return getApplicationFinanceForOrganisation(applicationFinanceResourceId);
     }
 
     @Override
@@ -228,7 +228,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         return find(applicationFinanceHandler.getApplicationTotals(applicationId), notFoundError(ApplicationFinance.class, applicationId));
     }
 
-    private ServiceResult<ApplicationFinanceResource> getApplicationFinanceForOrganisation(Long applicationId, Long organisationId, ApplicationFinanceResourceId applicationFinanceResourceId) {
+    private ServiceResult<ApplicationFinanceResource> getApplicationFinanceForOrganisation(ApplicationFinanceResourceId applicationFinanceResourceId) {
         return serviceSuccess(applicationFinanceHandler.getApplicationOrganisationFinances(applicationFinanceResourceId));
     }
 
