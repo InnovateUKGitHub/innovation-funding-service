@@ -270,7 +270,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
      * This will be a bodiless RestResult with a "200 - OK" response.
      */
     @Deprecated
-    public static <T> RestResult<Void> toPostUpdateResponse() {
+    public static RestResult<Void> toPostUpdateResponse() {
         return restSuccess();
     }
 

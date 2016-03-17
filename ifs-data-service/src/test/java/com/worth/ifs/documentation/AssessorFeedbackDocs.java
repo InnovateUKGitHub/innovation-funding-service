@@ -1,7 +1,10 @@
 package com.worth.ifs.documentation;
 
+import com.worth.ifs.application.builder.AssessorFeedbackResourceBuilder;
+
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import static com.worth.ifs.application.builder.AssessorFeedbackResourceBuilder.newAssessorFeedbackResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class AssessorFeedbackDocs {
@@ -15,4 +18,12 @@ public class AssessorFeedbackDocs {
             fieldWithPath("wordCount").description("amount of words used in the assessmentFeedback"),
             fieldWithPath("wordCountLeft").description("number of words that can still be used to write the assessmentFeedback")
     };
+
+    public static final AssessorFeedbackResourceBuilder assessorFeedbackResourceBuilder = newAssessorFeedbackResource()
+            .withId(1L)
+            .withResponse(1L)
+            .withAssessor(1L)
+            .withAssessorId(1L)
+            .withAssessmentValue("20")
+            .withFeedback("Assessment feedback");
 }
