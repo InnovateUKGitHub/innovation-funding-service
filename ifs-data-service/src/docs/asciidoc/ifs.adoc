@@ -117,6 +117,10 @@ include::assessor-feedback.adoc[]
 == Question
 include::question.adoc[]
 
+[[competition]]
+== Competition
+include::competition.adoc[]
+
 [[assessment]]
 == Assessment
 include::assessment.adoc[]
