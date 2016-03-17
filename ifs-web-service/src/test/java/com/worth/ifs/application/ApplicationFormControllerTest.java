@@ -101,8 +101,8 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         // save actions should always succeed.
         ArrayList<String> validationErrors = new ArrayList<>();
         validationErrors.add("Please enter some text 123");
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""))).thenReturn(validationErrors);
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString())).thenReturn(new ArrayList<>());
+        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), eq(false))).thenReturn(validationErrors);
+        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), eq(false))).thenReturn(new ArrayList<>());
     }
 
     //@Test
@@ -228,22 +228,32 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     }
 
     @Test
-    public void testApplicationFormSubmitValidationErrors() throws Exception {
+    public void testApplicationFormSubmitGivesNoValidationErrorsIfNoQuestionIsEmptyOnSectionSubmit() throws Exception {
         Long userId = loggedInUser.getId();
 
-        when(formInputResponseService.save(userId, application.getId(), 1L, "")).thenReturn(asList("Please enter some text"));
+        when(formInputResponseService.save(userId, application.getId(), 1L, "", false)).thenReturn(asList("Please enter some text"));
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        MvcResult result = mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
+                        .param("formInput[1]", "Question 1 Response")
+                        .param("formInput[2]", "Question 2 Response")
+                        .param("submit-section", "Save")
+        ).andExpect(status().is3xxRedirection()).andReturn();
+    }
+
+    // See INFUND-1222 - not checking empty values on save now (only on mark as complete).
+    @Test
+    public void testApplicationFormSubmitGivesNoValidationErrorsIfQuestionIsEmptyOnSectionSubmit() throws Exception {
+        Long userId = loggedInUser.getId();
+
+        when(formInputResponseService.save(userId, application.getId(), 1L, "", false)).thenReturn(asList("Please enter some text"));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
                         .param("formInput[2]", "Question 2 Response")
                         .param("submit-section", "Save")
-        ).andExpect(status().isOk())
-                .andExpect(view().name("application-form"))
-                .andExpect(model().attributeHasFieldErrors("form", "formInput[1]"))
-                .andExpect(model().attributeErrorCount("form", 1))
-                .andExpect(model().attributeHasFieldErrorCode("form", "formInput[1]", "Please enter some text"))
-                .andReturn();
+        ).andExpect(status().is3xxRedirection()).andReturn();
     }
 
     @Test
@@ -252,7 +262,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         ArrayList<String> validationErrors = new ArrayList<>();
         validationErrors.add("Please enter some text");
-        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""))).thenReturn(validationErrors);
+        when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), eq(false))).thenReturn(validationErrors);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         Long userId = loggedInUser.getId();
 
@@ -297,7 +307,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         ).andExpect(status().isOk())
                 .andReturn();
 
-        Mockito.inOrder(formInputResponseService).verify(formInputResponseService, calls(1)).save(loggedInUser.getId(), application.getId(), formInputId, value);
+        Mockito.inOrder(formInputResponseService).verify(formInputResponseService, calls(1)).save(loggedInUser.getId(), application.getId(), formInputId, value, false);
     }
 
     @Test
