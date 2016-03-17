@@ -27,6 +27,7 @@ public class Materials implements CostItem {
         this.quantity = quantity;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -43,6 +44,7 @@ public class Materials implements CostItem {
         return quantity;
     }
 
+    @Override
     public BigDecimal getTotal() {
         if(quantity!=null && cost!=null) {
             total = cost.multiply(new BigDecimal(quantity));

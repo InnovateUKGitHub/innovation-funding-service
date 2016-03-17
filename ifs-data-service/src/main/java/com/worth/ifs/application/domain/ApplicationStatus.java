@@ -14,7 +14,7 @@ import javax.persistence.Id;
 public class ApplicationStatus {
 
     public ApplicationStatus() {
-
+    	// no-arg constructor
     }
 
     public ApplicationStatus(Long id, String name) {

@@ -11,6 +11,7 @@ import java.util.List;
 public class ObjectNotFoundException extends IFSRuntimeException {
 
     public ObjectNotFoundException() {
+    	// no-arg constructor
     }
 
     public ObjectNotFoundException(List<Object> arguments) {

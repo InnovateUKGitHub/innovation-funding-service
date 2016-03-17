@@ -38,7 +38,7 @@
                         <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Complete</div>
                         <div class="section-status section-incomplete" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Incomplete</div>
                     </h3>
-                    <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}' th:with="formInputIndex=(${status.index}), readonly=true, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.get(question.getId())})" th:id="'form-input-'+${formInput.getId()}" >
+                    <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}' th:with="formInputIndex=(${status.index}), readonly=true, appIsClosed=${!currentApplication.isOpen()}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.get(question.getId())})" th:id="'form-input-'+${formInput.getId()}" >
                         <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' />
                     </div>
                 </div>
@@ -69,7 +69,7 @@
         <span> You will not be able to make changes to your application or resubmit after this point. By submitting this application you are agreeing to Innovate UK's <a href="">terms and conditions</a>.</span>
     </div>
 
-    <div class="alignright-button">
+    <div class="alignright-button" th:unless="${!currentApplication.isOpen()}">
         <a role="button" tabindex="0" class="button large" data-js-modal="modal-confirm-submit" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${applicationReadyForSubmit}">Submit application</a>
         <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
     </div>

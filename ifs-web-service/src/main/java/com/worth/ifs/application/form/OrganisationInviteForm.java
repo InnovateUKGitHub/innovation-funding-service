@@ -11,25 +11,34 @@ public class OrganisationInviteForm implements Serializable, Cloneable {
 
     @NotEmpty
     String organisationName;
+    String organisationNameConfirmed;
     Long organisationId;
     Long organisationInviteId;
     @Valid
     List<InviteeForm> invites;
-
-    public OrganisationInviteForm(String organisationName, Long organisationId, Long organisationInviteId) {
+    public OrganisationInviteForm(String organisationName, Long organisationId, Long organisationInviteId, String organisationNameConfirmed) {
         this.organisationName = organisationName;
         this.organisationId = organisationId;
         this.organisationInviteId = organisationInviteId;
+        this.organisationNameConfirmed = organisationNameConfirmed;
         this.invites = new LinkedList<>();
     }
-
     public OrganisationInviteForm() {
         organisationName = "";
         this.invites = new LinkedList<>();
     }
 
-    public OrganisationInviteForm clone(){
-        return new OrganisationInviteForm(this.getOrganisationName(), this.organisationId, this.organisationInviteId);
+    public String getOrganisationNameConfirmed() {
+        return organisationNameConfirmed;
+    }
+
+    public void setOrganisationNameConfirmed(String organisationNameConfirmed) {
+        this.organisationNameConfirmed = organisationNameConfirmed;
+    }
+
+    @Override
+    public OrganisationInviteForm clone() {
+        return new OrganisationInviteForm(this.getOrganisationName(), this.organisationId, this.organisationInviteId, this.organisationNameConfirmed);
     }
 
     public String getOrganisationName() {

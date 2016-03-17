@@ -60,7 +60,7 @@ public class User {
     private List<Role> roles = new ArrayList<>();
 
     public User() {
-
+    	// no-arg constructor
     }
 
     public User(String name, String email, String password, String imageUrl,

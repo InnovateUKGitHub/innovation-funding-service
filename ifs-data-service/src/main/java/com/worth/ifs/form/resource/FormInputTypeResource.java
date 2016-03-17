@@ -14,7 +14,7 @@ public class FormInputTypeResource {
     }
 
     public FormInputTypeResource() {
-
+    	// no-arg constructor
     }
 
     public Long getId() {

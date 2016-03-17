@@ -34,6 +34,7 @@ public class OrganisationAddress {
     }
 
     public OrganisationAddress() {
+    	// no-arg constructor
     }
 
     @JsonIgnore

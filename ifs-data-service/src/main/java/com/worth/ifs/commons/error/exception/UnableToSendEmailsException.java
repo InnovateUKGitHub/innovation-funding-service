@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class UnableToSendEmailsException extends IFSRuntimeException{
     public UnableToSendEmailsException() {
+    	// no-arg constructor
     }
 
     public UnableToSendEmailsException(List<Object> arguments) {

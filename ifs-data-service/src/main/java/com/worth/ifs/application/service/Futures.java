@@ -18,8 +18,10 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
-public class Futures {
+public final class Futures {
 
+	private Futures() {}
+	
     public static void callAllFutures(Model modelWithFutures) throws InterruptedException {
         for (Entry<String, Object> entry : modelWithFutures.asMap().entrySet()) {
             String key = entry.getKey();

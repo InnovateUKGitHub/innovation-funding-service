@@ -141,6 +141,7 @@ public class OrganisationCreationController {
         try{
             searchLabel = messageSource.getMessage(String.format("registration.%s.%s", orgTypeEnum.toString(), textKey), null, locale);
         }catch(NoSuchMessageException e){
+        	log.error(e);
             searchLabel = messageSource.getMessage(String.format("registration.DEFAULT.%s", textKey), null, locale);
         }
         return searchLabel;
@@ -233,7 +234,7 @@ public class OrganisationCreationController {
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = SEARCH_ORGANISATION, method = RequestMethod.POST)
     public String searchOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                      HttpServletRequest request, HttpServletResponse response) {
-        OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
+        addOrganisationType(organisationForm, request);
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
@@ -243,7 +244,7 @@ public class OrganisationCreationController {
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = NOT_IN_COMPANY_HOUSE, method = RequestMethod.POST)
     public String manualOrganisationEntry(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                           HttpServletRequest request, HttpServletResponse response) {
-        OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
+        addOrganisationType(organisationForm, request);
         organisationForm.setOrganisationSearching(false);
         organisationForm.setManualEntry(true);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
@@ -252,7 +253,7 @@ public class OrganisationCreationController {
 
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = MANUAL_ADDRESS, method = RequestMethod.POST)
     public String manualAddressWithCompanyHouse(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                                HttpServletRequest request, HttpServletResponse response) {
+                                                HttpServletResponse response) {
         organisationForm.setAddressForm(new AddressForm());
         organisationForm.getAddressForm().setManualAddress(true);
         organisationForm.setOrganisationSearching(false);
@@ -355,7 +356,7 @@ public class OrganisationCreationController {
                                 HttpServletRequest request,
                                 HttpServletResponse response,
                                 @RequestHeader(value = REFERER, required = false) final String referer) {
-        OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
+        addOrganisationType(organisationForm, request);
         addSelectedOrganisation(organisationForm, model);
         organisationForm.getAddressForm().setSelectedPostcodeIndex(null);
         organisationForm.getAddressForm().setTriedToSearch(true);
@@ -374,21 +375,21 @@ public class OrganisationCreationController {
 
         if (!referer.contains(FIND_ORGANISATION)) {
             if (StringUtils.hasText(organisationForm.getSearchOrganisationId()) && organisationForm.getAddressForm().getSelectedPostcodeIndex() != null && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:" + BASE_URL + "/%s/%s/%s/%s", redirectPart, organisationForm.getSearchOrganisationId(), organisationForm.getAddressForm().getPostcodeInput(), organisationForm.getAddressForm().getSelectedPostcodeIndex());
+                return String.format("redirect:%s/%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), organisationForm.getAddressForm().getPostcodeInput(), organisationForm.getAddressForm().getSelectedPostcodeIndex());
             } else if (StringUtils.hasText(organisationForm.getSearchOrganisationId()) && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:" + BASE_URL + "/%s/%s/%s", redirectPart, organisationForm.getSearchOrganisationId(), organisationForm.getAddressForm().getPostcodeInput());
+                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), organisationForm.getAddressForm().getPostcodeInput());
             } else if (StringUtils.hasText(organisationForm.getSearchOrganisationId())) {
-                return String.format("redirect:" + BASE_URL + "/%s/%s", redirectPart, organisationForm.getSearchOrganisationId());
+                return String.format("redirect:%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId());
             } else {
-                return String.format("redirect:" + BASE_URL + "/%s", redirectPart);
+                return String.format("redirect:%s/%s", BASE_URL, redirectPart);
             }
         } else {
             if (organisationForm.getAddressForm().getSelectedPostcodeIndex() != null && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:" + BASE_URL + "/%s/%s/%s", redirectPart, organisationForm.getAddressForm().getPostcodeInput(), organisationForm.getAddressForm().getSelectedPostcodeIndex());
+                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getAddressForm().getPostcodeInput(), organisationForm.getAddressForm().getSelectedPostcodeIndex());
             } else if (StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:" + BASE_URL + "/%s/%s", redirectPart, organisationForm.getAddressForm().getPostcodeInput());
+                return String.format("redirect:%s/%s/%s", BASE_URL, redirectPart, organisationForm.getAddressForm().getPostcodeInput());
             } else {
-                return String.format("redirect:" + BASE_URL + "/%s", redirectPart);
+                return String.format("redirect:%s/%s", BASE_URL, redirectPart);
             }
         }
     }
@@ -397,20 +398,19 @@ public class OrganisationCreationController {
     public String selectAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                 HttpServletRequest request, HttpServletResponse response,
                                 @RequestHeader(value = REFERER, required = false) final String referer) {
-        OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
+        addOrganisationType(organisationForm, request);
         organisationForm.getAddressForm().setSelectedPostcode(null);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-//        return String.format("redirect:/organisation/create/selected-organisation/%s/%s/%s", organisationForm.getSearchOrganisationId(), organisationForm.getAddressForm().getPostcodeInput(), Integer.valueOf(organisationForm.getAddressForm().getSelectedPostcodeIndex()));
         return getRedirectUrlInvalidSave(organisationForm, referer);
     }
 
     @RequestMapping(value = "/" + SELECTED_ORGANISATION + "/**", params = MANUAL_ADDRESS, method = RequestMethod.POST)
     public String manualAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                HttpServletRequest request, HttpServletResponse response) {
+                                HttpServletResponse response) {
         organisationForm.setAddressForm(new AddressForm());
         organisationForm.getAddressForm().setManualAddress(true);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-        return String.format("redirect:" + BASE_URL + "/" + SELECTED_ORGANISATION + "/%s", organisationForm.getSearchOrganisationId());
+        return String.format("redirect:%s/%s/%s", BASE_URL, SELECTED_ORGANISATION, organisationForm.getSearchOrganisationId());
     }
 
     @RequestMapping(value = {"/selected-organisation/**", "/" + FIND_ORGANISATION + "**"}, params = SAVE_ORGANISATION_DETAILS, method = RequestMethod.POST)
@@ -451,7 +451,7 @@ public class OrganisationCreationController {
             return "redirect:" + RegistrationController.BASE_URL + "?organisationId=" + CookieUtil.getCookieValue(request, ORGANISATION_ID);
         }
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
-        OrganisationTypeResource organisationType = addOrganisationType(organisationForm, request);
+        addOrganisationType(organisationForm, request);
         addSelectedOrganisation(organisationForm, model);
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION;
@@ -512,9 +512,9 @@ public class OrganisationCreationController {
         if (StringUtils.hasText(cookieHash)) {
             final OrganisationResource finalOrganisationResource = organisationResource;
 
-            RestResult<Void> inviteRestResult = inviteRestService.getInviteByHash(cookieHash).andOnSuccess(
-                    s -> {
-                        return inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
+            inviteRestService.getInviteByHash(cookieHash).andOnSuccess(
+                    s -> 
+                        inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
                                 f -> restFailure(HttpStatus.NOT_FOUND),
                                 i -> {
                                     if (i.getOrganisation() == null) {
@@ -524,8 +524,7 @@ public class OrganisationCreationController {
                                     }
                                     return restFailure(HttpStatus.ALREADY_REPORTED);
                                 }
-                        );
-                    }
+                        )
             );
         }
     }

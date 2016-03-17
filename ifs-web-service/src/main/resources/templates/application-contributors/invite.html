@@ -18,7 +18,7 @@
           <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
           <h1 class="heading-xlarge">Manage Contributors</h1>
       </div>
-      <p>From this page you are able to invite contributors to your application.</p>
+      <p>From this page you are able to invite contributors to your application. To save your changes, please click on 'save changes' at the bottom of the page.</p>
     </div>
     <!--/* new application text */-->
     <div th:if="${param.newApplication != null}" th:remove="tag">
@@ -51,15 +51,22 @@
                 <div th:unless="${organisationStats.index == 0}" th:remove="tag">
                   <h3 class="heading-medium">Partner Organisation</h3>
 
-                  <div class="form-group">
-                    <label class="form-label" th:for="organisations[__${organisationStats.index}__].organisationName">Organisation Name</label>
-                    <input  type="text"
-                            class="form-control js-partner-name"
-                            placeholder="Name of the partner company"
-                            th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].organisationName')}? 'field-error'"
-                            th:field="*{organisations[__${organisationStats.index}__].organisationName}"
-                            th:readonly="${organisationInviteForm.organisationInviteId != null} and ${organisationInvites?.get(organisationInviteForm.organisationInviteId)?.inviteResources?.size()}" />
-                  </div>
+                    <div class="form-group">
+                        <label class="form-label" th:for="organisations[__${organisationStats.index}__].organisationName">Organisation Name</label>
+                        <input type="text"
+                               class="form-control js-partner-name"
+                               placeholder="Name of the partner company"
+                               th:classappend="${#fields.hasErrors('organisations[__${organisationStats.index}__].organisationName')}? 'field-error'"
+                               th:field="*{organisations[__${organisationStats.index}__].organisationName}"
+                               th:readonly="${organisationInviteForm.organisationInviteId != null} and ${organisationInvites?.get(organisationInviteForm.organisationInviteId)?.inviteResources?.size()}"/>
+                    </div>
+                    <div class="form-group" th:if="${organisationInviteForm.organisationNameConfirmed != null}">
+                        <label class="form-label" th:for="organisations[__${organisationStats.index}__].organisationNameConfirmed">Confirmed Organisation Name</label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{organisations[__${organisationStats.index}__].organisationNameConfirmed}"
+                               th:readonly="${true}"/>
+                    </div>
                 </div>
                 <!--/* all org */-->
                 <!--<div th:text="${organisationStats.index}"></div>-->
@@ -70,7 +77,7 @@
                     <thead>
                     <tr>
                         <th>Name</th>
-                        <th>E-mail</th>
+                        <th>Email</th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>

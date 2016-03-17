@@ -6,8 +6,6 @@ import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +19,6 @@ import java.util.Set;
 @RestController
 @RequestMapping("/organisation")
 public class OrganisationController {
-
-    private static final Log LOG = LogFactory.getLog(OrganisationController.class);
 
     @Autowired
     private OrganisationService organisationService;

@@ -1,9 +1,5 @@
 package com.worth.ifs.finance.resource.cost;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.math.BigDecimal;
 
 
@@ -11,7 +7,6 @@ import java.math.BigDecimal;
  * {@code CapitalUsage} implements {@link CostItem}
  */
 public class CapitalUsage implements CostItem {
-    private final Log log = LogFactory.getLog(getClass());
     Long id;
     String name;
     Integer deprecation;
@@ -39,6 +34,7 @@ public class CapitalUsage implements CostItem {
         this.utilisation = utilisation;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -67,6 +63,7 @@ public class CapitalUsage implements CostItem {
         return utilisation;
     }
 
+    @Override
     public BigDecimal getTotal() {
         // ( npv - residualValue ) * utilisation-percentage
         if(npv == null || residualValue == null || utilisation == null) {
@@ -83,6 +80,7 @@ public class CapitalUsage implements CostItem {
         return name;
     }
 
+    @Override
     public CostType getCostType() {
         return costType;
     }

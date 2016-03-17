@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 public class AddressRestServiceImpl extends BaseRestService implements AddressRestService {
-    private static Log LOG = LogFactory.getLog(AddressRestServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(AddressRestServiceImpl.class);
 
     @Value("${ifs.data.service.rest.address}")
     String addressRestUrl;

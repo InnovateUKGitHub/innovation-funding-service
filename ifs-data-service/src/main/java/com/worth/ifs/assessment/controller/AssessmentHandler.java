@@ -8,7 +8,6 @@ import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.transactional.ResponseService;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
-import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.competition.domain.Competition;
@@ -49,7 +48,9 @@ public class AssessmentHandler {
     @Autowired
     private ResponseService responseService;
 
-    public AssessmentHandler(){}
+    public AssessmentHandler(){
+    	// no-arg constructor
+    }
 
     public void save(Assessment a) {
         assessmentRepository.save(a);

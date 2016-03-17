@@ -35,6 +35,7 @@ public enum AssessmentStates implements ProcessStates {
         this.ordinal = ordinal;
     }
 
+    @Override
     public String getState() {
         return state;
     }

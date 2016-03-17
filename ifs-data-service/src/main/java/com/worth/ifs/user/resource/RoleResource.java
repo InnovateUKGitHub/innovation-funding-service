@@ -17,6 +17,7 @@ public class RoleResource {
     private List<User> users = new ArrayList<>();
 
     public RoleResource() {
+    	// no-arg constructor
     }
 
     public RoleResource(Long id, String name, List<ProcessRole> processRoles) {

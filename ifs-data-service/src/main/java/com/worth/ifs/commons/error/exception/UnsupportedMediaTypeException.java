@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class UnsupportedMediaTypeException extends IFSRuntimeException {
     public UnsupportedMediaTypeException() {
+    	// no-arg onstructor
     }
 
     public UnsupportedMediaTypeException(List<Object> arguments) {

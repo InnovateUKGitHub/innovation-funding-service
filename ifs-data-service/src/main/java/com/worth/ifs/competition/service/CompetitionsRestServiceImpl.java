@@ -28,10 +28,12 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @SuppressWarnings("unused")
     private final Log log = LogFactory.getLog(getClass());
 
+    @Override
     public RestResult<List<CompetitionResource>> getAll() {
         return getWithRestResult(competitionsRestURL + "/findAll", competitionResourceListType());
     }
 
+    @Override
     public RestResult<CompetitionResource> getCompetitionById(Long competitionId) {
         return getWithRestResult(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
     }

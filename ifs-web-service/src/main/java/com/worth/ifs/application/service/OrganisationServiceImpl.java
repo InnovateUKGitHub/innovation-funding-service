@@ -38,6 +38,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     @Autowired
     private ProcessRoleService processRoleService;
 
+    @Override
     public TreeSet<Organisation> getApplicationOrganisations(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
                 .map(id -> processRoleService.getById(id))
@@ -53,6 +54,7 @@ public class OrganisationServiceImpl implements OrganisationService {
                 .collect(Collectors.toCollection(supplier));
     }
 
+    @Override
     public Optional<Organisation> getApplicationLeadOrganisation(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
                 .map(id -> processRoleService.getById(id))
@@ -64,6 +66,7 @@ public class OrganisationServiceImpl implements OrganisationService {
                 .findFirst();
     }
 
+    @Override
     public Optional<Organisation> getUserOrganisation(ApplicationResource application, Long userId) {
         List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
                 .map(id -> processRoleService.getById(id))

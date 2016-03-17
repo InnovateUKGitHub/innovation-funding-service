@@ -11,5 +11,6 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface CostFieldRepository extends PagingAndSortingRepository<CostField, Long> {
+	@Override
     List<CostField> findAll();
 }

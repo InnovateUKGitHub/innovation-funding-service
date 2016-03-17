@@ -44,7 +44,7 @@ Verify that clicking the edit link in the summary redirects the applicant to the
     [Tags]    Applicant    Summary
     Given the user navigates to the page    ${SUMMARY_URL}
     When the user clicks the button/link    css=.section-overview > section:first-child .collapsible:nth-of-type(2) > h3 button
-    And the user clicks the button/link    css=#form-input-11 .textarea-footer a
+    And the user clicks the button/link    css=#form-input-11 .textarea-footer button.button
     Then the user is on the page    ${PROJECT_SUMMARY_EDIT_URL}
 
 *** Keywords ***

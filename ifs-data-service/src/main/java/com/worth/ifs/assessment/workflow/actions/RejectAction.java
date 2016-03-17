@@ -25,7 +25,7 @@ public class RejectAction implements Action<String, String> {
     ProcessOutcomeRepository processOutcomeRepository;
 
     public RejectAction() {
-
+    	// no-arg constructor
     }
 
     @Override

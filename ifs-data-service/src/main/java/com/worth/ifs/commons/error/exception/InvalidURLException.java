@@ -11,6 +11,7 @@ import java.util.List;
 public class InvalidURLException extends IFSRuntimeException {
 
     public InvalidURLException() {
+    	// no-arg constructor
     }
 
     public InvalidURLException(List<Object> arguments) {
