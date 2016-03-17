@@ -1,0 +1,22 @@
+=== Retrieve application by id
+==== Request
+include::{snippets}/competitions/get-one/http-request.adoc[]
+include::{snippets}/competitions/get-one/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitions/get-one/http-response.adoc[]
+include::{snippets}/competitions/get-one/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitions/get-one/curl-request.adoc[]
+
+=== Retrieve all applications
+==== Request
+include::{snippets}/competitions/get-all/http-request.adoc[]
+
+==== Response
+include::{snippets}/competitions/get-all/http-response.adoc[]
+include::{snippets}/competitions/get-all/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitions/get-all/curl-request.adoc[]
