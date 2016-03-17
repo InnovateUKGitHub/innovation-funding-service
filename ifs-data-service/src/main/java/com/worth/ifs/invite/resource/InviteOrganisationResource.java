@@ -21,7 +21,7 @@ public class InviteOrganisationResource {
     List<InviteResource> inviteResources;
 
     public InviteOrganisationResource() {
-
+    	// no-arg constructor
     }
 
     public InviteOrganisationResource(Long id, String organisationName, Organisation organisation, List<InviteResource> inviteResources) {

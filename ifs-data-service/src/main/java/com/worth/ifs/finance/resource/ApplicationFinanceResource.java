@@ -38,6 +38,7 @@ public class ApplicationFinanceResource {
     }
 
     public ApplicationFinanceResource() {
+    	// no-arg constructor
     }
 
     public ApplicationFinanceResource(Long id, Long organisation, Long application, OrganisationSize organisationSize) {

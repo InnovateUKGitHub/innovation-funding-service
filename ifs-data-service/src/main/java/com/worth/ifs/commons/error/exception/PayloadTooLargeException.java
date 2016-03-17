@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class PayloadTooLargeException extends IFSRuntimeException {
     public PayloadTooLargeException() {
+    	// no-arg constructor
     }
 
     public PayloadTooLargeException(List<Object> arguments) {

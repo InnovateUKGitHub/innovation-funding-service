@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class UnableToUpdateFileException extends IFSRuntimeException {
     public UnableToUpdateFileException() {
+    	// no-arg constructor
     }
 
     public UnableToUpdateFileException(List<Object> arguments) {

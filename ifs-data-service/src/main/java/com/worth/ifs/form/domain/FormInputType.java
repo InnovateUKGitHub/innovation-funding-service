@@ -28,7 +28,7 @@ public class FormInputType {
     }
 
     public FormInputType() {
-
+    	// no-arg constructor
     }
 
     public Long getId() {

@@ -1,7 +1,5 @@
 package com.worth.ifs.finance.resource.cost;
 
-import com.worth.ifs.organisation.domain.Academic;
-
 import java.math.BigDecimal;
 
 public class AcademicCost implements CostItem {
@@ -12,7 +10,7 @@ public class AcademicCost implements CostItem {
     private String item;
 
     public AcademicCost() {
-
+    	// no-arg constructor
     }
 
     public AcademicCost(Long id, String name, BigDecimal cost, String item) {

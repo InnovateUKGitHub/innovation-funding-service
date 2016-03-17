@@ -37,7 +37,7 @@ public class ProcessRole {
     private List<Response> responses = new ArrayList<>();
 
     public ProcessRole(){
-
+    	// no-arg constructor
     }
 
     public ProcessRole(Long id, User user, Application application, Role role, Organisation organisation) {

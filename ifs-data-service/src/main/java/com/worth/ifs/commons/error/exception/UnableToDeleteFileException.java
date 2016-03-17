@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class UnableToDeleteFileException extends IFSRuntimeException {
     public UnableToDeleteFileException() {
+    	// no-arg constructor
     }
 
     public UnableToDeleteFileException(List<Object> arguments) {

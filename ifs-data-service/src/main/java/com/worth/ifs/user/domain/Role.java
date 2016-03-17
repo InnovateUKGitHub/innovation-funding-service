@@ -31,6 +31,7 @@ public class Role {
     private List<User> users = new ArrayList<>();
 
     public Role() {
+    	// no-arg constructor
     }
 
     protected Boolean canEqual(Object other) {

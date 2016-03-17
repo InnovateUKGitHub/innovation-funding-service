@@ -521,7 +521,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 BigDecimal result = BigDecimal.valueOf(100.00).setScale(10, BigDecimal.ROUND_HALF_DOWN);
                 result = result.divide(new BigDecimal(totalQuestions.toString()), 10, BigDecimal.ROUND_HALF_UP);
                 result = result.multiply(new BigDecimal(countCompleted.toString()));
-//                (100.0 / totalQuestions) * countCompleted);
                 return result;
             }
         });
