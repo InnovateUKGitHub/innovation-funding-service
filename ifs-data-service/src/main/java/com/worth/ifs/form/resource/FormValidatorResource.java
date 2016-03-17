@@ -14,7 +14,7 @@ public class FormValidatorResource {
     }
 
     public FormValidatorResource() {
-
+    	// no-arg constructor
     }
 
     public Long getId() {

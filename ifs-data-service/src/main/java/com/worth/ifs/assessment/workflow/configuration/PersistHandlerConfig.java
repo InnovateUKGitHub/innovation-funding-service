@@ -20,7 +20,7 @@ public class PersistHandlerConfig {
     private StateMachine<String, String> stateMachine;
 
     public PersistHandlerConfig() {
-
+    	// no-arg constructor
     }
 
     @Bean

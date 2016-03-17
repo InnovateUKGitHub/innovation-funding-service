@@ -17,10 +17,11 @@ public class ProcessRoleResource {
     private Long organisation;
     private List<Response> responses = new ArrayList<>();
 
-    public ProcessRoleResource(){}
+    public ProcessRoleResource(){
+    	// no-arg constructor
+    }
 
-    public ProcessRoleResource(Long id, User user, Application application, Role role, Organisation organisation
-    ) {
+    public ProcessRoleResource(Long id, User user, Application application, Role role, Organisation organisation) {
         this.id = id;
         this.user = user;
         this.application = application.getId();

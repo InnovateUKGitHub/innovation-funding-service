@@ -29,6 +29,7 @@ public class ApplicationFinance {
     private OrganisationSize organisationSize;
 
     public ApplicationFinance() {
+    	// no-arg constructor
     }
 
     public ApplicationFinance(Application application, Organisation organisation) {

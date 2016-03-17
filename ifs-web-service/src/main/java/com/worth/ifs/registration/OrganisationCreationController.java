@@ -401,7 +401,6 @@ public class OrganisationCreationController {
         addOrganisationType(organisationForm, request);
         organisationForm.getAddressForm().setSelectedPostcode(null);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-//        return String.format("redirect:/organisation/create/selected-organisation/%s/%s/%s", organisationForm.getSearchOrganisationId(), organisationForm.getAddressForm().getPostcodeInput(), Integer.valueOf(organisationForm.getAddressForm().getSelectedPostcodeIndex()));
         return getRedirectUrlInvalidSave(organisationForm, referer);
     }
 

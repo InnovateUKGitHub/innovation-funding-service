@@ -1,8 +1,8 @@
 package com.worth.ifs.finance.domain;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 //@Entity
 public class FinanceType {
@@ -12,10 +12,8 @@ public class FinanceType {
 
     String description;
 
-    //@OneToMany(mappedBy="financeType")
-    //private List<Cost> cost = new ArrayList<>();
-
     public FinanceType() {
+    	// no-arg constructor
     }
 
     public FinanceType(Long id, String description) {

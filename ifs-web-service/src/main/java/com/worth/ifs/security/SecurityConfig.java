@@ -43,7 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .cacheControl().disable();
 
 
-        //.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
     }
 
 }

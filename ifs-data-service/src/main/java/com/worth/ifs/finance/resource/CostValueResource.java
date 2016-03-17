@@ -11,6 +11,7 @@ public class CostValueResource {
     private Long costField;
 
     public CostValueResource() {
+    	// no-arg constructor
     }
 
     public CostValueResource(CostField costField, String value) {

@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class GeneralUnexpectedErrorException extends IFSRuntimeException {
     public GeneralUnexpectedErrorException() {
+    	// no-arg constructor
     }
 
     public GeneralUnexpectedErrorException(List<Object> arguments) {

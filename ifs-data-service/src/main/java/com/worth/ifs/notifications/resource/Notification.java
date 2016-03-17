@@ -31,6 +31,7 @@ public class Notification {
      * For builder use only
      */
     public Notification() {
+    	// no-arg constructor
     }
 
     public Notification(NotificationSource from, List<NotificationTarget> to, Enum<?> messageKey, Map<String, Object> arguments) {
