@@ -45,6 +45,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
         );
 
         model.addAttribute("title", organisationName + " finances");
+        model.addAttribute("applicationFinanceId", applicationFinanceResource.getId());
         model.addAttribute("financeView", "academic-finance");
         model.addAttribute("academicFinance", academicFinance);
     }

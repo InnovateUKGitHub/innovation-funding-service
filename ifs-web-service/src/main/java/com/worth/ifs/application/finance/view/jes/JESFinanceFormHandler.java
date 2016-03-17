@@ -23,6 +23,7 @@ import com.worth.ifs.util.MessageUtil;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
@@ -182,9 +183,10 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
                             file.getOriginalFilename(),
                             file.getBytes());
                     if (result.isFailure()) {
-                        errorMap.put("jes-upload",
+                        errorMap.put("formInput[jes-upload]",
                                 result.getFailure().getErrors().stream()
-                                        .map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
+                                        .map(e ->
+                                                MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
                     }
                 } catch (IOException e) {
                     throw new UnableToReadUploadedFile();
@@ -192,6 +194,11 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
             }
         }
         return errorMap;
+    }
+
+    @Override
+    public RestResult<ByteArrayResource> getFile(Long applicationFinanceId) {
+        return financeService.getFinanceDocumentByApplicationFinance(applicationFinanceId);
     }
 
     @Override

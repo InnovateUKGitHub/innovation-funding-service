@@ -124,6 +124,22 @@ public class ApplicationFormController extends AbstractApplicationController {
         final User user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        return getPdfFile(resource);
+    }
+
+    @RequestMapping(value = "/{applicationFinanceId}/finance-download", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<?> downloadQuestionFile(
+            @PathVariable("applicationId") final Long applicationId,
+            @PathVariable("applicationFinanceId") final Long applicationFinanceId,
+            HttpServletRequest request) throws Exception {
+        final User user = userAuthenticationService.getAuthenticatedUser(request);
+        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+
+        final ByteArrayResource resource = financeHandler.getFinanceFormHandler(organisationType).getFile(applicationFinanceId).getSuccessObjectOrThrowException();
+        return getPdfFile(resource);
+    }
+
+    private ResponseEntity<?> getPdfFile(ByteArrayResource resource) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentLength(resource.contentLength());
         httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
@@ -196,7 +212,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
             /* Start save action */
-            bindingResult = saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
+            bindingResult = saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult, model);
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 assignQuestion(applicationId, request);
@@ -333,7 +349,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                                               Long applicationId, Long sectionId, Question question,
                                               HttpServletRequest request,
                                               HttpServletResponse response,
-                                              BindingResult bindingResult) throws Exception {
+                                              BindingResult bindingResult,
+                                              Model model) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
 
@@ -358,7 +375,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         Map<String, List<String>> financeErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
-        financeErrors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue(k, e, e)));
+        financeErrors.forEach((k, errorsList) ->
+                errorsList.forEach(e -> bindingResult.rejectValue(k, e, e)));
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
@@ -410,7 +428,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         Map<String, String[]> params = request.getParameterMap();
 
         bindingResult.getAllErrors().forEach((e) -> log.info("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
-        bindingResult = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
+        bindingResult = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult, model);
         bindingResult.getAllErrors().forEach((e) -> log.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
@@ -422,7 +440,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         form.objectErrors = bindingResult.getAllErrors();
 
         if(bindingResult.hasErrors()){
-            addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+            SectionResource section = sectionService.getById(sectionId);
+            addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
             addOrganisationAndUserFinanceDetails(application.getId(), user.getId(), model, form);
             return "application-form";
         } else {

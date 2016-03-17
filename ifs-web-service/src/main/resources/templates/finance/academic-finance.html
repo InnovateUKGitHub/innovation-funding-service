@@ -209,10 +209,11 @@
     </div>
 
     <!-- ===========================Form: Fileupload =========================== -->
-    <div th:fragment="finance_upload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''"
-         th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']',
+    <div th:fragment="finance_upload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[jes-upload]')} ? error : ''"
+         th:with="currentUser=${#authentication.getDetails()},validationId='formInput[\'jes-upload\']',
          noFileUploaded=${(#strings.isEmpty(filename))},
-         name='jes-upload'">
+         name='jes-upload',
+         downloadURL='/application/'+ ${currentApplication.id} + '/form/' + ${applicationFinanceId} + '/finance-download'">
         <div th:include="question-type/types :: fileupload" th:remove="tag" />
     </div>
 </html>

@@ -10,6 +10,7 @@ import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -89,5 +90,10 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public RestResult<FileEntryResource> getFinanceEntry(Long applicationFinanceId) {
         return fileEntryRestService.findOne(applicationFinanceId);
+    }
+
+    @Override
+    public RestResult<ByteArrayResource> getFinanceDocumentByApplicationFinance(Long applicationFinanceId) {
+        return applicationFinanceRestService.getFile(applicationFinanceId);
     }
 }

@@ -195,18 +195,20 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         return find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
             dbFinance.merge(applicationFinance);
             Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
-            if(financeFileEntryId!=null) {
-                dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
-            }
+            dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
             dbFinance = applicationFinanceRepository.save(dbFinance);
             return serviceSuccess(new ApplicationFinanceResource(dbFinance));
         });
     }
 
     private ApplicationFinance setFinanceUpload(ApplicationFinance applicationFinance, Long fileEntryId) {
-        FileEntry fileEntry = fileEntryRepository.findOne(fileEntryId);
-        if(fileEntry!=null) {
-            applicationFinance.setFinanceFileEntry(fileEntry);
+        if(fileEntryId==null || fileEntryId == 0L) {
+            applicationFinance.setFinanceFileEntry(null);
+        } else {
+            FileEntry fileEntry = fileEntryRepository.findOne(fileEntryId);
+            if (fileEntry != null) {
+                applicationFinance.setFinanceFileEntry(fileEntry);
+            }
         }
         return applicationFinance;
     }
