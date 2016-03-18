@@ -115,7 +115,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @ProfileExecution
     @RequestMapping(value = "/question/{questionId}/forminput/{formInputId}/download", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<?> downloadQuestionFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
                                 @PathVariable("applicationId") final Long applicationId,
                                 @PathVariable("questionId") final Long questionId,
                                 @PathVariable("formInputId") final Long formInputId,
@@ -127,7 +127,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/{applicationFinanceId}/finance-download", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<?> downloadQuestionFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             HttpServletRequest request) throws Exception {
@@ -138,7 +138,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return getPdfFile(resource);
     }
 
-    private ResponseEntity<?> getPdfFile(ByteArrayResource resource) {
+    private ResponseEntity<ByteArrayResource> getPdfFile(ByteArrayResource resource) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentLength(resource.contentLength());
         httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
