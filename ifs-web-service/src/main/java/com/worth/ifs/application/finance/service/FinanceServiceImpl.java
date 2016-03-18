@@ -1,5 +1,8 @@
 package com.worth.ifs.application.finance.service;
 
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
@@ -7,6 +10,7 @@ import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -27,6 +31,9 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
+
+    @Autowired
+    private FileEntryRestService fileEntryRestService;
 
     @Override
     public ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId) {
@@ -68,5 +75,25 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public CostItem addCost(Long applicationFinanceId, Long questionId) {
         return costRestService.add(applicationFinanceId, questionId, null).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file) {
+        return applicationFinanceRestService.addFinanceDocument(applicationFinanceId, contentType, contentLength, originalFilename, file);
+    }
+
+    @Override
+    public RestResult<Void> removeFinanceDocument(Long applicationFinanceId) {
+        return applicationFinanceRestService.removeFinanceDocument(applicationFinanceId);
+    }
+
+    @Override
+    public RestResult<FileEntryResource> getFinanceEntry(Long applicationFinanceId) {
+        return fileEntryRestService.findOne(applicationFinanceId);
+    }
+
+    @Override
+    public RestResult<ByteArrayResource> getFinanceDocumentByApplicationFinance(Long applicationFinanceId) {
+        return applicationFinanceRestService.getFile(applicationFinanceId);
     }
 }

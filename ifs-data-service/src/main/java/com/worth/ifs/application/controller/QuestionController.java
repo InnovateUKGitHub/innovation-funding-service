@@ -1,15 +1,16 @@
 package com.worth.ifs.application.controller;
 
+import java.util.List;
+import java.util.Set;
+
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.rest.RestResult;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -77,7 +78,7 @@ public class QuestionController {
         return questionService.getPreviousQuestionBySection(sectionId).toGetResponse();
     }
 
-    @RequestMapping(value = "/getNextQuestionBySection/{sectionId}")
+    @RequestMapping("/getNextQuestionBySection/{sectionId}")
     public RestResult<Question> getNextQuestionBySection(@PathVariable("sectionId") final Long sectionId) {
         return questionService.getNextQuestionBySection(sectionId).toGetResponse();
     }

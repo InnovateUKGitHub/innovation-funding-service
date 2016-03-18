@@ -21,6 +21,7 @@ public class CostField {
     private List<CostValue> costValues = new ArrayList<>();
 
     public CostField() {
+    	// no-arg constructor
     }
 
     public CostField(Long id, String title, String type) {

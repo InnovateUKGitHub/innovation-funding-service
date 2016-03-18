@@ -14,8 +14,8 @@ import java.util.Map;
  */
 public class Form {
     private Map<String, String> formInput;
-    public List<ObjectError> objectErrors;
-    public BindingResult bindingResult;
+    private List<ObjectError> objectErrors;
+    private BindingResult bindingResult;
 
     public Form() {
         this.formInput = new HashMap<>();
@@ -35,4 +35,16 @@ public class Form {
     public String getFormInput(String key){
         return this.formInput.get(key);
     }
+    public List<ObjectError> getObjectErrors() {
+		return objectErrors;
+	}
+    public void setObjectErrors(List<ObjectError> objectErrors) {
+		this.objectErrors = objectErrors;
+	}
+    public BindingResult getBindingResult() {
+		return bindingResult;
+	}
+    public void setBindingResult(BindingResult bindingResult) {
+		this.bindingResult = bindingResult;
+	}
 }

@@ -110,7 +110,6 @@ public class OrganisationCreationController {
 
     @RequestMapping(value = {"/" + FIND_ORGANISATION, "/" + FIND_ORGANISATION + "/**"}, method = RequestMethod.GET)
     public String createOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                     BindingResult bindingResult,
                                      Model model,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
@@ -264,7 +263,6 @@ public class OrganisationCreationController {
 
     @RequestMapping(value = {"/" + SELECTED_ORGANISATION + "/{searchOrganisationId}"}, method = RequestMethod.GET)
     public String amendOrganisationAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                           BindingResult bindingResult,
                                            Model model,
                                            @PathVariable("searchOrganisationId") final String searchOrganisationId,
                                            HttpServletRequest request,
@@ -300,12 +298,9 @@ public class OrganisationCreationController {
     }
 
     @RequestMapping(value = {"/" + SELECTED_ORGANISATION + "/{searchOrganisationId}/{postcode}/{selectedPostcodeIndex}"}, method = RequestMethod.GET)
-    public String amendOrganisationAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                           BindingResult bindingResult,
+    public String amendOrganisationAddressPostCode(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                            Model model,
                                            @PathVariable("searchOrganisationId") final String searchOrganisationId,
-                                           @PathVariable("postcode") final String postcode,
-                                           @PathVariable("selectedPostcodeIndex") final Long selectedPostcodeIndex,
                                            HttpServletRequest request,
                                            HttpServletResponse response) {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
@@ -326,11 +321,9 @@ public class OrganisationCreationController {
     }
 
     @RequestMapping(value = {"/selected-organisation/{searchOrganisationId}/{postcode}"}, method = RequestMethod.GET)
-    public String amendOrganisationAddress(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                           BindingResult bindingResult,
+    public String amendOrganisationAddressPostcode(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
                                            Model model,
                                            @PathVariable("searchOrganisationId") final String searchOrganisationId,
-                                           @PathVariable("postcode") final String postcode,
                                            HttpServletRequest request,
                                            HttpServletResponse response) {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
@@ -401,7 +394,6 @@ public class OrganisationCreationController {
         addOrganisationType(organisationForm, request);
         organisationForm.getAddressForm().setSelectedPostcode(null);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-//        return String.format("redirect:/organisation/create/selected-organisation/%s/%s/%s", organisationForm.getSearchOrganisationId(), organisationForm.getAddressForm().getPostcodeInput(), Integer.valueOf(organisationForm.getAddressForm().getSelectedPostcodeIndex()));
         return getRedirectUrlInvalidSave(organisationForm, referer);
     }
 

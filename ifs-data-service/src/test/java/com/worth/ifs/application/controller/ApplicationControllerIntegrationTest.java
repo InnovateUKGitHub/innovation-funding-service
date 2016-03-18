@@ -56,9 +56,9 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
                 null
             )
         );
-        User user = new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "", proccessRoles, "123abc");
+        User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", proccessRoles, "123abc");
         proccessRoles.get(0).setUser(user);
-        swapOutForUser(new User(leadApplicantId, "steve", "steve.smith@empire.com", "test", "", proccessRoles, "123abc"));
+        swapOutForUser(new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", proccessRoles, "123abc"));
 
 
     }

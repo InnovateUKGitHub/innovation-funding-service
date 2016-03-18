@@ -75,19 +75,6 @@ public class ResponseResource {
         return responseAssessmentFeedbacks;
     }
 
-    /*public Optional<AssessorFeedback> getResponseAssessmentForAssessor(ProcessRole assessor) {
-        return responseAssessmentFeedbacks.stream().filter(r -> r.getAssessorId().equals(assessor.getId())).findFirst();
-    }
-
-    public AssessorFeedback getOrCreateResponseAssessorFeedback(ProcessRole assessor) {
-        Optional<AssessorFeedback> existingFeedback = getResponseAssessmentForAssessor(assessor);
-        return existingFeedback.andOnSuccess(Function.identity()).orElseGet(() -> {
-            AssessorFeedback feedback = createForResponseAndAssessor(this, assessor);
-            responseAssessmentFeedbacks.add(feedback);
-            return feedback;
-        });
-    }*/
-
     public void setUpdatedBy(Long updatedBy) {
         this.updatedBy = updatedBy;
     }

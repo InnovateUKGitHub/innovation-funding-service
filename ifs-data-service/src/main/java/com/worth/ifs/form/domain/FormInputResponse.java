@@ -44,7 +44,7 @@ public class FormInputResponse {
 
 
     public FormInputResponse() {
-
+    	// no-arg constructor
     }
 
     public FormInputResponse(LocalDateTime updateDate, String value, ProcessRole updatedBy, FormInput formInput, Application application) {

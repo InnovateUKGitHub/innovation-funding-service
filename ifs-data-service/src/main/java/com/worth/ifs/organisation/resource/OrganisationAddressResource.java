@@ -17,6 +17,7 @@ public class OrganisationAddressResource {
     }
 
     public OrganisationAddressResource() {
+    	// no-arg constructor
     }
 
     public Long getOrganisation() {

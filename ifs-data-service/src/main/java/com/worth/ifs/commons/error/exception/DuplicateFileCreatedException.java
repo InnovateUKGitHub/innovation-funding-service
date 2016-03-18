@@ -9,6 +9,7 @@ import java.util.List;
 public class DuplicateFileCreatedException extends IFSRuntimeException {
 
     public DuplicateFileCreatedException() {
+    	// no-arg constructor
     }
 
     public DuplicateFileCreatedException(List<Object> arguments) {

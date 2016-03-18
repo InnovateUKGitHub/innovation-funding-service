@@ -12,19 +12,19 @@ public class UserTest {
 
     List<ProcessRole> processRoles;
     Long id;
-    String name;
     String imageUrl;
-    String password;
     String email;
     String uid;
+    private String firstName;
+    private String lastName;
 
 
     @Before
     public void setUp() throws Exception {
         id = 0L;
-        name = "testname";
+        firstName = "firstName";
+        lastName = "lastName";
         email = "test@innovateuk.org";
-        password = "test123";
         imageUrl = "/image/url/test";
         uid = "uid";
 
@@ -33,13 +33,15 @@ public class UserTest {
         processRoles.add(new ProcessRole());
         processRoles.add(new ProcessRole());
 
-        user = new User(id, name, email, password, imageUrl, processRoles, "uid");
+        user = new User(id, firstName, lastName, email, imageUrl, processRoles, "uid");
     }
 
     @Test
     public void userShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(user.getProcessRoles(), processRoles);
-        Assert.assertEquals(user.getName(), name);
+        Assert.assertEquals(user.getFirstName(), firstName);
+        Assert.assertEquals(user.getLastName(), lastName);
+        Assert.assertEquals(user.getName(), firstName + " " + lastName);
         Assert.assertEquals(user.getId(), id);
         Assert.assertEquals(user.getImageUrl(),imageUrl);
         Assert.assertEquals(user.getUid(), uid);

@@ -1,24 +1,42 @@
 package com.worth.ifs.application.finance.view;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.stereotype.Component;
+
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
-import com.worth.ifs.application.finance.view.item.*;
+import com.worth.ifs.application.finance.view.item.CapitalUsageHandler;
+import com.worth.ifs.application.finance.view.item.CostHandler;
+import com.worth.ifs.application.finance.view.item.GrantClaimHandler;
+import com.worth.ifs.application.finance.view.item.LabourCostHandler;
+import com.worth.ifs.application.finance.view.item.MaterialsHandler;
+import com.worth.ifs.application.finance.view.item.OtherCostHandler;
+import com.worth.ifs.application.finance.view.item.OtherFundingHandler;
+import com.worth.ifs.application.finance.view.item.OverheadsHandler;
+import com.worth.ifs.application.finance.view.item.SubContractingCostHandler;
+import com.worth.ifs.application.finance.view.item.TravelCostHandler;
+import com.worth.ifs.application.finance.view.item.YourFinanceHandler;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.user.domain.OrganisationSize;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * {@code DefaultFinanceFormHandler} retrieves the costs and handles the finance data retrieved from the request, so it can be
@@ -39,7 +57,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Override
-    public void update(HttpServletRequest request, Long userId, Long applicationId) {
+    public Map<String, List<String>> update(HttpServletRequest request, Long userId, Long applicationId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         if (applicationFinanceResource == null){
             applicationFinanceResource = financeService.addApplicationFinance(userId, applicationId);
@@ -50,6 +68,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
         storeCostItems(costItems);
 
         addRemoveCostRows(request, applicationId, userId);
+        return new HashMap<>();
     }
 
     @Override
@@ -120,17 +139,16 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
     }
 
     private List<CostItem> getCostItems(HttpServletRequest request) {
-        List<CostFieldResource> costFields = costService.getCostFields();
-        return mapRequestParametersToCostItems(request, costFields);
+        return mapRequestParametersToCostItems(request);
     }
 
-    private List<CostItem> mapRequestParametersToCostItems(HttpServletRequest request, List<CostFieldResource> costFields) {
+    private List<CostItem> mapRequestParametersToCostItems(HttpServletRequest request) {
         List<CostItem> costItems = new ArrayList<>();
         for (CostType costType : CostType.values()) {
             List<String> costTypeKeys = request.getParameterMap().keySet().stream().
                     filter(k -> k.startsWith(costType.getType() + "-")).collect(Collectors.toList());
             Map<Long, List<FinanceFormField>> costFieldMap = getCostDataRows(request, costTypeKeys);
-            List<CostItem> costItemsForType = getCostItems(costFieldMap, costType, costTypeKeys);
+            List<CostItem> costItemsForType = getCostItems(costFieldMap, costType);
             costItems.addAll(costItemsForType);
         }
 
@@ -166,7 +184,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
     /**
      * Retrieve the cost items from the request based on their type
      */
-    private List<CostItem> getCostItems(Map<Long, List<FinanceFormField>> costFieldMap, CostType costType, List<String> costTypeKeys) {
+    private List<CostItem> getCostItems(Map<Long, List<FinanceFormField>> costFieldMap, CostType costType) {
         List<CostItem> costItems = new ArrayList<>();
         CostHandler costHandler = getCostItemHandler(costType);
 
@@ -249,5 +267,11 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
 
     private void storeCostItems(List<CostItem> costItems) {
         costItems.stream().forEach(c -> costService.update(c));
+    }
+
+    @Override
+    public RestResult<ByteArrayResource> getFile(Long applicationFinanceId) {
+        throw new NotImplementedException("Finance upload is not available for the default finances");
+
     }
 }

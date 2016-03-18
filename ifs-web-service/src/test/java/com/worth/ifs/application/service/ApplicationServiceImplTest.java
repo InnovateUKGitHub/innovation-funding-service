@@ -1,27 +1,24 @@
 package com.worth.ifs.application.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
-
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import java.util.List;
+import java.util.Map;
+
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
 
@@ -50,6 +47,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         applications = newApplicationResource().withApplicationStatus(ids).build(6);
 
         userId = 1L;
+
         when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(restSuccess(applications));
         when(applicationRestService.getCompleteQuestionsPercentage(applications.get(0).getId())).thenReturn(settable(restSuccess(20.5d)));
         for(ApplicationStatusResource status : statuses) {

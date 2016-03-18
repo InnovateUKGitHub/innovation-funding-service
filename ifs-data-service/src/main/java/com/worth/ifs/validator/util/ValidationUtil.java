@@ -2,6 +2,7 @@ package com.worth.ifs.validator.util;
 
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
+import com.worth.ifs.validator.NotEmptyValidator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.BindingResult;
@@ -15,7 +16,7 @@ public final class ValidationUtil {
 
     private ValidationUtil() {}
     
-    public static BindingResult validateResponse(FormInputResponse response) {
+    public static BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
         Set<FormValidator> validators = response.getFormInput().getFormValidators();
 
         DataBinder binder = new DataBinder(response);
@@ -26,8 +27,10 @@ public final class ValidationUtil {
                 {
                     Validator validator = null;
                     try {
-                        validator = (Validator) Class.forName(v.getClazzName()).getConstructor().newInstance();
-                        binder.addValidators(validator);
+                        if(!(ignoreEmpty && v.getClazzName().equals(NotEmptyValidator.class.getName()))) {
+                            validator = (Validator) Class.forName(v.getClazzName()).getConstructor().newInstance();
+                            binder.addValidators(validator);
+                        }
                     } catch (Exception e) {
                         log.error("Could not find validator class: " + v.getClazzName());
                         log.error("Exception message: " + e.getMessage());
@@ -36,9 +39,6 @@ public final class ValidationUtil {
                 }
         );
         binder.validate();
-        BindingResult bindingResult = binder.getBindingResult();
-        return bindingResult;
+        return binder.getBindingResult();
     }
-
-
 }

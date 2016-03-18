@@ -130,19 +130,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         User newUser = new User();
         newUser.setFirstName(userResource.getFirstName());
         newUser.setLastName(userResource.getLastName());
-        newUser.setPassword(userResource.getPassword());
         newUser.setEmail(userResource.getEmail());
         newUser.setTitle(userResource.getTitle());
         newUser.setPhoneNumber(userResource.getPhoneNumber());
 
-        String fullName = concatenateFullName(userResource.getFirstName(), userResource.getLastName());
-        newUser.setName(fullName);
-
         return newUser;
-    }
-
-    private String concatenateFullName(String firstName, String lastName) {
-        return firstName+" "+lastName;
     }
 
     private ServiceResult<Notification> sendUserVerificationEmail(User user, Optional<Long> competitionId) {

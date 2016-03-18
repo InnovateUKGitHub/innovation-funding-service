@@ -24,6 +24,7 @@ public class FileEntry {
     private long filesizeBytes;
 
     public FileEntry() {
+    	// no-arg constructor
     }
 
     public FileEntry(Long id, String originalFilename, MediaType mediaType, long filesizeBytes) {

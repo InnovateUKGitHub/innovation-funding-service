@@ -8,7 +8,6 @@ import com.worth.ifs.user.domain.User;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Arrays.asList;
@@ -25,8 +24,7 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
 
     public static UserBuilder newUser() {
         return new UserBuilder(emptyList()).
-                with(uniqueIds()).
-                with(idBasedNames("User "));
+                with(uniqueIds());
     }
 
     @Override

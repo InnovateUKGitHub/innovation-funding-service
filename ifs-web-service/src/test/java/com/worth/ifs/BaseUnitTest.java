@@ -1,53 +1,20 @@
 package com.worth.ifs;
 
-import java.lang.reflect.Method;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.worth.ifs.application.builder.QuestionBuilder;
 import com.worth.ifs.application.builder.SectionBuilder;
 import com.worth.ifs.application.builder.SectionResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
-import com.worth.ifs.application.finance.view.DefaultFinanceFormHandler;
-import com.worth.ifs.application.finance.view.DefaultFinanceModelManager;
-import com.worth.ifs.application.finance.view.FinanceFormHandler;
-import com.worth.ifs.application.finance.view.FinanceHandler;
-import com.worth.ifs.application.finance.view.FinanceModelManager;
-import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
+import com.worth.ifs.application.finance.view.*;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.model.UserRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.service.ApplicationRestService;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.ApplicationStatusRestService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.application.service.ProcessRoleService;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.application.service.ResponseService;
-import com.worth.ifs.application.service.SectionService;
-import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.dto.Score;
@@ -69,17 +36,12 @@ import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.OrganisationSize;
-import com.worth.ifs.user.domain.OrganisationType;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mockito.ArgumentCaptor;
@@ -96,12 +58,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import static com.worth.ifs.BuilderAmendFunctions.competition;
-import static com.worth.ifs.BuilderAmendFunctions.description;
-import static com.worth.ifs.BuilderAmendFunctions.id;
-import static com.worth.ifs.BuilderAmendFunctions.idBasedValues;
-import static com.worth.ifs.BuilderAmendFunctions.incrementingIds;
-import static com.worth.ifs.BuilderAmendFunctions.name;
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+
+import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
@@ -125,11 +88,7 @@ import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 public class BaseUnitTest {
@@ -145,6 +104,8 @@ public class BaseUnitTest {
 
     @Mock
     public ApplicationFinanceRestService applicationFinanceRestService;
+    @Mock
+    public InviteOrganisationRestService inviteOrganisationRestService;
     @Mock
     public UserAuthenticationService userAuthenticationService;
     @Mock
@@ -267,10 +228,10 @@ public class BaseUnitTest {
     }
 
     public void setup(){
-        loggedInUser = new User(1L, "Nico Bijl", "email@email.nl", "test", "image", new ArrayList(), "my-uid");
-        applicant = loggedInUser;
-        User user2 = new User(2L, "Brent de Kok", "email@email.nl", "test", "image", new ArrayList(), "my-uid2");
-        assessor = new User(3L, "Assessor", "email@assessor.nl", "test", "image", new ArrayList<>(), "my-uid3");
+        applicant = new User(1L, "Nico", "Bijl", "email@email.nl", "image", new ArrayList(), "my-uid");
+        loggedInUser = applicant;
+        User user2 = new User(2L, "Brent", "de Kok", "email@email.nl", "image", new ArrayList(), "my-uid2");
+        assessor = new User(3L, "Assessor", "LastName", "email@assessor.nl", "image", new ArrayList<>(), "my-uid3");
         users = asList(loggedInUser, user2);
 
         loggedInUserAuthentication = new UserAuthentication(loggedInUser);
@@ -280,7 +241,9 @@ public class BaseUnitTest {
         questions = new HashMap<>();
         organisations = new ArrayList<>();
         randomGenerator = new Random();
-        
+
+
+        setupUserRoles();
     }
 
     public void setupOrganisationTypes() {
@@ -453,7 +416,7 @@ public class BaseUnitTest {
     public void setupUserRoles() {
         Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
         Role applicantRole = new Role(4L, UserRole.APPLICANT.getRoleName(), null);
-        loggedInUser.setRoles(singletonList(applicantRole));
+        applicant.setRoles(singletonList(applicantRole));
         assessor.setRoles(singletonList(assessorRole));
     }
 
@@ -686,7 +649,7 @@ public class BaseUnitTest {
 
     public void setupInvites() {
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
-
+        InviteOrganisationResource inviteOrganisation = new InviteOrganisationResource(2L, "Invited Organisation Ltd", null, null);
 
         invite = new InviteResource();
         invite.setStatus(InviteStatusConstants.SEND);
@@ -695,7 +658,12 @@ public class BaseUnitTest {
         invite.setHash(INVITE_HASH);
         String email = "invited@email.com";
         invite.setEmail(email);
+        invite.setInviteOrganisation(inviteOrganisation.getId());
+        inviteOrganisation.setInviteResources(Arrays.asList(invite));
+
         when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(restSuccess(invite));
+        when(inviteOrganisationRestService.findOne(eq(invite.getInviteOrganisation()))).thenReturn(restSuccess(inviteOrganisation));
+        when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
         when(userService.findUserByEmail(eq(email))).thenReturn(restFailure(notFoundError(User.class, email)));
         when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(emptyList()));
 

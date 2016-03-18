@@ -12,6 +12,9 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 public class CompetitionResource{
     private Long id;
     private List<Long> applications = new ArrayList<>();
@@ -23,9 +26,17 @@ public class CompetitionResource{
     private LocalDate endDate;
     private LocalDate assessmentStartDate;
     private LocalDate assessmentEndDate;
+
+    @Min(0)
+    @Max(100)
     private Integer maxResearchRatio;
 
+    @Min(0)
+    @Max(100)
+    private Integer academicGrantPercentage;
+
     public CompetitionResource() {
+    	// no-arg constructor
     }
     public CompetitionResource(Long id, List<Long> applications, List<Long> questions, List<Long> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
@@ -159,6 +170,14 @@ public class CompetitionResource{
 
     public void setMaxResearchRatio(Integer maxResearchRatio) {
         this.maxResearchRatio = maxResearchRatio;
+    }
+
+    public Integer getAcademicGrantPercentage() {
+        return academicGrantPercentage;
+    }
+
+    public void setAcademicGrantPercentage(Integer academicGrantPercentage) {
+        this.academicGrantPercentage = academicGrantPercentage;
     }
 
     public void setId(Long id) {

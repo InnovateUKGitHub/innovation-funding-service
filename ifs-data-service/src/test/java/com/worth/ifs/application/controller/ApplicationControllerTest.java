@@ -1,7 +1,5 @@
 package com.worth.ifs.application.controller;
 
-import java.util.List;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerMockMVCTest;
@@ -9,8 +7,9 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.User;
-
 import org.junit.Test;
+
+import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -24,9 +23,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
 
@@ -59,8 +56,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void applicationControllerShouldReturnApplicationByUserId() throws Exception {
         Long userId = 1L;
-        User testUser2 = new User(2L, "testUser2", "email2@email.nl", "password", "testToken456def", null, "my-uid");
-        User testUser1 = new User(userId, "testUser1", "email1@email.nl", "password", "testToken123abc", null, "my-uid2");
+        User testUser2 = new User(2L, "test", "User2", "email2@email.nl", "testToken456def", null, "my-uid");
+        User testUser1 = new User(userId, "test", "User1", "email1@email.nl", "testToken123abc", null, "my-uid2");
 
         ApplicationResource testApplicationResource1 = newApplicationResource().withId(1L).withName("testApplication1Name").build();
         ApplicationResource testApplicationResource2 = newApplicationResource().withId(2L).withName("testApplication2Name").build();

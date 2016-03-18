@@ -58,4 +58,22 @@ public class AssessorFeedbackResourceBuilder extends BaseBuilder<AssessorFeedbac
             setField("assessorId", assessorProcessRole.getId(), feedback);
         });
     }
+
+    public AssessorFeedbackResourceBuilder withId(Long... ids) {
+        return withArray((id, address) -> setField("id", id, address), ids);
+    }
+
+    public AssessorFeedbackResourceBuilder withResponse(Long... responses) {
+        return withArray((response, address) -> setField("response", response, address), responses);
+    }
+
+    public AssessorFeedbackResourceBuilder withAssessor(Long... assessors) {
+        return withArray((assessor, address) -> setField("assessor", assessor, address), assessors);
+    }
+
+    public AssessorFeedbackResourceBuilder withAssessorId(Long... assessorIds) {
+        return withArray((assessorId, address) -> setField("assessorId", assessorId, address), assessorIds);
+    }
+
+
 }

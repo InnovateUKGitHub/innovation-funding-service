@@ -14,6 +14,7 @@ public class IdentityProviderError {
      * For JSON marshalling
      */
     public IdentityProviderError() {
+    	// no-arg constructor
     }
 
     public IdentityProviderError(String key, List<String> arguments) {

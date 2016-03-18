@@ -1,3 +1,4 @@
+
 package com.worth.ifs.commons.error.exception;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
  */
 public class UnableToCreateFileException extends IFSRuntimeException {
     public UnableToCreateFileException() {
+    	// no-arg constructor
     }
 
     public UnableToCreateFileException(List<Object> arguments) {

@@ -18,6 +18,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     private String accessDeniedUrl;
 
     public CustomAuthenticationEntryPoint() {
+    	// no-arg constructor
 
     }
 

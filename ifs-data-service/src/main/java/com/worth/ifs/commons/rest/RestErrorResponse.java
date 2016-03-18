@@ -32,6 +32,7 @@ public class RestErrorResponse {
      * For JSON marshalling
      */
     public RestErrorResponse() {
+    	// no-arg constructor
     }
 
     public RestErrorResponse(Error error) {

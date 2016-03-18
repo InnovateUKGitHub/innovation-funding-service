@@ -67,11 +67,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<List<User>> getUserByName(final String name) {
-        return find(repository.findByName(name), notFoundError(User.class, name));
-    }
-
-    @Override
     public ServiceResult<List<User>> findAll() {
         return serviceSuccess(repository.findAll());
     }
@@ -159,10 +154,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
                     }
             );
 
-//            user.setPassword(password);
-//            userRepository.save(user);
-//
-//            return ;
         }
         return serviceFailure(notFoundError(Token.class, hash));
     }

@@ -27,7 +27,7 @@ public class InviteOrganisation {
     private List<Invite> invites;
 
     public InviteOrganisation() {
-
+    	// no-arg constructor
     }
 
     public InviteOrganisation(String organisationName, Organisation organisation, List<Invite> invites) {

@@ -1,10 +1,14 @@
 package com.worth.ifs.finance.handler;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.finance.resource.cost.GrantClaim;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +35,12 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     @Autowired
     CostFieldRepository costFieldRepository;
 
+    @Autowired
+    ApplicationRepository applicationRepository;
+
+    @Autowired
+    ApplicationRepository applicationFinance;
+
     @Override
     public Iterable<Cost> initialiseCostType(ApplicationFinance applicationFinance, CostType costType) {
         return null;
@@ -39,17 +49,24 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     @Override
     public Map<CostType, CostCategory> getOrganisationFinances(Long applicationFinanceId) {
         List<Cost> costs = costRepository.findByApplicationFinanceId(applicationFinanceId);
+
         createCostCategories();
         addCostsToCategories(costs);
         return costCategories;
     }
 
     @Override
-    public Map<CostType, CostCategory> getOrganisationFinanceTotals(Long applicationFinanceId) {
+    public Map<CostType, CostCategory> getOrganisationFinanceTotals(Long applicationFinanceId, Competition competition) {
         getOrganisationFinances(applicationFinanceId);
+        setGrantClaimPercentage(competition);
         calculateTotals();
         resetCosts();
         return costCategories;
+    }
+
+    public void setGrantClaimPercentage(Competition competition) {
+        CostItem costItem = new GrantClaim(0L, competition.getAcademicGrantPercentage());
+        costCategories.get(CostType.FINANCE).addCost(costItem);
     }
 
     private void calculateTotals() {

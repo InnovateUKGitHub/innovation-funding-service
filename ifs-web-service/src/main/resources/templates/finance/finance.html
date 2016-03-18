@@ -192,7 +192,7 @@
                        th:name="${type +'-total-' + question.id + '-' + cost.id}"
                        readonly="readonly"
                        th:id="${'cost-labour-'+cost.id+'-labourTotalCost'}"
-                       th:attr="datax-calculation-fields=${'#cost-labour-'+cost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays,#cost-labour-'+cost.id+'-labourDays'},data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}"
+                       th:attr="data-calculation-fields=${'#cost-labour-'+cost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays,#cost-labour-'+cost.id+'-labourDays'},data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}"
                        th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}" />
             </td>
 
@@ -829,7 +829,7 @@
                         </thead>
                         <tbody>
                         <div th:each="cost : ${costCategory.costs}"  th:remove="tag">
-                            <div th:include="finance/finance :: other_funding_row(readonly=${readonly}, question=${question})" th:remove="tag"/>
+                            <div th:include="finance/finance :: other_funding_row" th:remove="tag"/>
                         </div>
                         </tbody>
                     </table>
@@ -864,13 +864,13 @@
     </div>
 
 
-    <div th:fragment="other_funding_row (readonly, question)" th:remove="tag">
+    <div th:fragment="other_funding_row" th:remove="tag">
 
         <tr th:attr="data-repeatable-row=${cost.id}">
             <td>
                 <input type="text"
                        aria-labelledby="other-funding-source"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                        th:name="${type +'-fundingSource-' + question.id + '-' + cost.id}"
                        class="form-control width-full"
                        th:id="${'cost-'+type+'-'+cost.id+'-source'}"
@@ -880,7 +880,7 @@
                 <label th:for="${'cost-'+type+'-'+cost.id+'-date'}" class="visuallyhidden">Date secured</label>
                 <input type="text"
                        aria-labelledby="other-funding-date"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                        th:name="${type +'-dateSecured-' + question.id + '-' + cost.id}"
                        class="form-control width-medium"
                        th:id="${'cost-'+type+'-'+cost.id+'-date'}"
@@ -891,13 +891,13 @@
                 <input class="form-control width-medium"
                        type="number"
                        aria-labelledby="other-funding-amount"
-                       th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                       th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                        th:name="${type +'-fundingAmount-' + question.id + '-' + cost.id}"
                        th:id="${'cost-'+type+'-'+cost.id+'-fundingAmount'}"
                        th:value="${#numbers.formatDecimal(cost.fundingAmount,0,0)}"
                         />
             </td>
-            <td th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
+            <td th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
                 <button type="submit"
                         name="remove_cost"
                         class="buttonlink js-remove-row"

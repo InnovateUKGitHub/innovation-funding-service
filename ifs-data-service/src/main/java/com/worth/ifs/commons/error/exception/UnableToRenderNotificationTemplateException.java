@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class UnableToRenderNotificationTemplateException extends IFSRuntimeException {
     public UnableToRenderNotificationTemplateException() {
+    	// no-arg constructor
     }
 
     public UnableToRenderNotificationTemplateException(List<Object> arguments) {

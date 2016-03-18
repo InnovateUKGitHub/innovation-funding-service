@@ -6,6 +6,8 @@ import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -22,11 +24,17 @@ public class ProfilingAdvisor extends AbstractPointcutAdvisor {
 
     private static final long serialVersionUID = 1L;
 
+    @Value("${ifs.web.profilerEnabled:false}")
+    private boolean profilerEnabled;
+
+    @Autowired
+    Environment environment;
+
     private final transient StaticMethodMatcherPointcut pointcut = new
             StaticMethodMatcherPointcut() {
                 @Override
                 public boolean matches(Method method, Class<?> targetClass) {
-                    return method.isAnnotationPresent(ProfileExecution.class);
+                    return isProfilerEnabled() && method.isAnnotationPresent(ProfileExecution.class);
                 }
             };
 
@@ -44,4 +52,7 @@ public class ProfilingAdvisor extends AbstractPointcutAdvisor {
     }
 
 
+    public boolean isProfilerEnabled() {
+        return profilerEnabled;
+    }
 }

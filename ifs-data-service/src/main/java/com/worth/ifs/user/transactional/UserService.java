@@ -19,9 +19,6 @@ public interface UserService {
     ServiceResult<User> getUserById(final Long id);
 
     @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<List<User>> getUserByName(final String name);
-
-    @NotSecured("TODO - implement when permissions matrix in place")
     ServiceResult<List<User>> findAll();
 
     @NotSecured("TODO - implement when permissions matrix in place")

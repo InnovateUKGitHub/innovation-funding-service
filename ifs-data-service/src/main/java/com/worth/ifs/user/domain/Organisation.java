@@ -45,7 +45,7 @@ public class Organisation {
     private List<InviteOrganisation> inviteOrganisations = new ArrayList<>();
 
     public Organisation() {
-
+    	// no-arg constructor
     }
 
     public Organisation(Long id, String name) {

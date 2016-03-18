@@ -16,7 +16,7 @@ public class Score {
     }
 
     public Score(){
-
+    	// no-arg constructor
     }
 
     public int getTotal() {

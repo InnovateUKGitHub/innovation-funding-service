@@ -56,6 +56,7 @@ public class Feedback {
         private Long assessorUserId;
 
         public Id() {
+        	// no-arg constructor
         }
 
         public Id(Long responseId, Long assessorUserId) {

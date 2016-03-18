@@ -185,7 +185,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
         ApplicationResource application = new ApplicationResource();
         application.setName("application");
 
-        User user = new User(1L, "testname", null, null, null, null, null);
+        User user = new User(1L, "test", "name", null, null, null, null);
 
 
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
@@ -201,7 +201,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
         ApplicationResource application = new ApplicationResource();
         application.setName("application");
 
-        User user = new User(1L, "testname", null, null, null, null, null);
+        User user = new User(1L, "test", "name", null, null, null, null);
 
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
@@ -217,7 +217,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
         application.setName("application");
         application.setId(1L);
 
-        User user = new User(1L, "testname", null, null, null, null, null);
+        User user = new User(1L, "test", "name", null, null, null, null);
 
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
