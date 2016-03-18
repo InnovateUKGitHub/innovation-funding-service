@@ -137,6 +137,7 @@ public class ApplicationContributorController{
                 .forEach(inviteOrg -> {
                     OrganisationInviteForm invitedOrgForm = new OrganisationInviteForm();
                     invitedOrgForm.setOrganisationName(inviteOrg.getOrganisationName());
+                    invitedOrgForm.setOrganisationNameConfirmed(inviteOrg.getOrganisationNameConfirmed());
                     invitedOrgForm.setOrganisationId(inviteOrg.getOrganisation());
                     invitedOrgForm.setOrganisationInviteId(inviteOrg.getId());
                     contributorsForm.getOrganisations().add(invitedOrgForm);

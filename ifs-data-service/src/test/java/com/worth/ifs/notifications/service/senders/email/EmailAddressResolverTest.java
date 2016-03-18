@@ -7,7 +7,6 @@ import com.worth.ifs.notifications.resource.UserNotificationTarget;
 import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 
-import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 
@@ -19,7 +18,7 @@ public class EmailAddressResolverTest {
     @Test
     public void testFromNotificationSourceWithUserNotificationSource() {
 
-        User user = newUser().with(name("My User")).withEmailAddress("my@email.com").build();
+        User user = newUser().withFirstName("My").withLastName("User").withEmailAddress("my@email.com").build();
         UserNotificationSource notificationSource = new UserNotificationSource(user);
 
         EmailAddress resolvedEmailAddress = EmailAddressResolver.fromNotificationSource(notificationSource);
@@ -30,7 +29,7 @@ public class EmailAddressResolverTest {
     @Test
     public void testFromNotificationTargetWithUserNotificationTarget() {
 
-        User user = newUser().with(name("My User")).withEmailAddress("my@email.com").build();
+        User user = newUser().withFirstName("My").withLastName("User").withEmailAddress("my@email.com").build();
         UserNotificationTarget notificationTarget = new UserNotificationTarget(user);
 
         EmailAddress resolvedEmailAddress = EmailAddressResolver.fromNotificationTarget(notificationTarget);

@@ -108,7 +108,7 @@ public class FormInputResponseFileUploadController {
     }
 
     @RequestMapping(value = "/file", method = GET)
-    public @ResponseBody ResponseEntity<?> getFileContents(
+    public @ResponseBody ResponseEntity<Object> getFileContents(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
             @RequestParam("processRoleId") long processRoleId) throws IOException {
@@ -142,7 +142,7 @@ public class FormInputResponseFileUploadController {
     }
 
     @RequestMapping(value = "/fileentry", method = GET, produces = "application/json")
-    public @ResponseBody ResponseEntity<?> getFileEntryDetails(
+    public @ResponseBody ResponseEntity<Object> getFileEntryDetails(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
             @RequestParam("processRoleId") long processRoleId) throws IOException {

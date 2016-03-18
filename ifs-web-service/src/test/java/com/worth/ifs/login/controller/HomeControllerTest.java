@@ -1,7 +1,9 @@
 package com.worth.ifs.login.controller;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.login.HomeController;
+import com.worth.ifs.user.domain.User;
 import org.junit.Test;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,5 +29,55 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         mockMvc.perform(get("/"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
+    }
+
+    @Test
+    public void testHomeEmptyAuth() throws Exception {
+        setLoggedInUserAuthentication(null);
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
+
+    @Test
+    public void testHomeNotAuthenticated() throws Exception {
+        UserAuthentication userAuth = new UserAuthentication(null);
+        userAuth.setAuthenticated(false);
+        setLoggedInUserAuthentication(userAuth);
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+    }
+
+    @Test
+    public void testHomeLoggedInApplicant() throws Exception {
+        this.setup();
+        setLoggedInUser(applicant);
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/applicant/dashboard"));
+    }
+
+    @Test
+    public void testHomeLoggedInAssessor() throws Exception {
+        this.setup();
+        setLoggedInUser(assessor);
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/assessor/dashboard"));
+    }
+
+    @Test
+    public void testHomeLoggedInWithoutRoles() throws Exception {
+        this.setup();
+        setLoggedInUser(new User());
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/dashboard"));
     }
 }

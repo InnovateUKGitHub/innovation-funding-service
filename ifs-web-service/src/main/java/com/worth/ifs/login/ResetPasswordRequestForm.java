@@ -16,7 +16,6 @@ public class ResetPasswordRequestForm {
     @NotEmpty(message = "Please enter your e-mail address")
     @Email(regexp = FormUtil.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "Please enter a valid e-mail address")
     private String email;
-    private String actionUrl = "/login/reset-password";
 
     public String getEmail() {
         return email;
@@ -24,14 +23,6 @@ public class ResetPasswordRequestForm {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getActionUrl() {
-        return actionUrl;
-    }
-
-    public void setActionUrl(String actionUrl) {
-        this.actionUrl = actionUrl;
     }
 
 }

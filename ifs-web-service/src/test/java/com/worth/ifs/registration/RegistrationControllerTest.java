@@ -1,6 +1,6 @@
 package com.worth.ifs.registration;
 
-import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
@@ -18,7 +18,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -45,7 +44,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class RegistrationControllerTest extends BaseUnitTest {
+public class RegistrationControllerTest extends BaseControllerMockMVCTest<RegistrationController> {
+
     private static String VERIFY_HASH;
     private static String INVALID_VERIFY_HASH;
     @InjectMocks
@@ -55,9 +55,14 @@ public class RegistrationControllerTest extends BaseUnitTest {
     Validator validator;
     private Cookie inviteHashCookie;
 
+    @Override
+    protected RegistrationController supplyControllerUnderTest() {
+        return new RegistrationController();
+    }
+
     @Before
     public void setUp() {
-        super.setup();
+        super.setUp();
 
         VERIFY_HASH = UUID.randomUUID().toString();
         INVALID_VERIFY_HASH = UUID.randomUUID().toString();
@@ -65,12 +70,6 @@ public class RegistrationControllerTest extends BaseUnitTest {
 
         setupUserRoles();
         setupInvites();
-
-
-        mockMvc = MockMvcBuilders.standaloneSetup(registrationController, new ErrorController())
-                .setViewResolvers(viewResolver())
-                .setHandlerExceptionResolvers(createExceptionResolver())
-                .build();
 
         registrationController.setValidator(new LocalValidatorFactoryBean());
 
@@ -149,7 +148,7 @@ public class RegistrationControllerTest extends BaseUnitTest {
     public void testVerifyEmailInvalid() throws Exception {
         mockMvc.perform(get("/registration/verify-email/"+INVALID_VERIFY_HASH))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("url-hash-invalid"))
+                .andExpect(view().name(ErrorController.URL_HASH_INVALID_TEMPLATE))
         ;
     }
 
@@ -264,6 +263,8 @@ public class RegistrationControllerTest extends BaseUnitTest {
         
         verifyNoMoreInteractions(userService);
     }
+
+
 
     @Test
     public void incorrectPasswordSizeShouldReturnError() throws Exception {

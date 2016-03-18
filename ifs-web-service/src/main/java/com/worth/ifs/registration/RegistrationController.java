@@ -208,7 +208,7 @@ public class RegistrationController {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
             RestResult<InviteResource> restResult = inviteRestService.getInviteByHash(inviteHash).andOnSuccessReturn(i -> {
-                HttpStatus statusCode = inviteRestService.acceptInvite(inviteHash, userResource.getId()).getStatusCode();
+                inviteRestService.acceptInvite(inviteHash, userResource.getId()).getStatusCode();
                 return i;
             });
             CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);

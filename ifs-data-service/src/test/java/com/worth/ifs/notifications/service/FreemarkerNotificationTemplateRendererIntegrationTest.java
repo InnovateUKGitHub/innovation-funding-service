@@ -32,8 +32,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     @Test
     public void testTemplateRender() throws URISyntaxException, IOException {
 
-        UserNotificationSource notificationSource = new UserNotificationSource(newUser().build());
-        UserNotificationTarget notificationTarget = new UserNotificationTarget(newUser().build());
+        UserNotificationSource notificationSource = new UserNotificationSource(newUser().withFirstName("User").withLastName("2").build());
+        UserNotificationTarget notificationTarget = new UserNotificationTarget(newUser().withFirstName("User").withLastName("2").build());
 
         Map<String, Object> templateArguments = asMap(
                 "applicationName", "My Application",

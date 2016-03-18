@@ -1,12 +1,12 @@
 package com.worth.ifs.competition.builder;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.competition.resource.CompetitionResource;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
+
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.competition.resource.CompetitionResource;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
@@ -40,6 +40,34 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withEndDate(LocalDate endDate) {
         return with(competition -> setField("endDate", endDate, competition));
+    }
+
+    public CompetitionResourceBuilder withId(Long... ids) {
+        return withArray((id, object) -> setField("id", id, object), ids);
+    }
+
+    public CompetitionResourceBuilder withName(String... names) {
+        return withArray((name, object) -> setField("name", name, object), names);
+    }
+
+    public CompetitionResourceBuilder withDescription(String... descriptions) {
+        return withArray((description, object) -> setField("description", description, object), descriptions);
+    }
+
+    public CompetitionResourceBuilder withAssessmentStartDate(LocalDate... assessmentStartDates) {
+        return withArray((assessmentStartDate, object) -> setField("assessmentStartDate", assessmentStartDate, object), assessmentStartDates);
+    }
+
+    public CompetitionResourceBuilder withAssessmentEndDate(LocalDate... assessmentEndDates) {
+        return withArray((assessmentEndDate, object) -> setField("assessmentEndDate", assessmentEndDate, object), assessmentEndDates);
+    }
+
+    public CompetitionResourceBuilder withMaxResearchRatio(Integer... maxResearchRatios) {
+        return withArray((maxResearchRatio, object) -> setField("maxResearchRatio", maxResearchRatio, object), maxResearchRatios);
+    }
+
+    public CompetitionResourceBuilder withAcademicGrantClaimPercentage(Integer... grantClaimPercentages) {
+        return withArray((grantClaimPercentage, object) -> setField("academicGrantPercentage", grantClaimPercentage, object), grantClaimPercentages);
     }
 
     @Override

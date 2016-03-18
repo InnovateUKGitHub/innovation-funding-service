@@ -16,8 +16,26 @@ import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.finance.view.item.CostHandler;
 import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.exception.UnableToReadUploadedFile;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.CostType;
+import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.util.MessageUtil;
+import org.apache.commons.lang3.NotImplementedException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class JESFinanceFormHandler implements FinanceFormHandler {
@@ -30,10 +48,15 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    protected MessageSource messageSource;
+
+    public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
 
     @Override
-    public void update(HttpServletRequest request, Long userId, Long applicationId) {
+    public Map<String, List<String>> update(HttpServletRequest request, Long userId, Long applicationId) {
         storeCostItems(request, userId, applicationId);
+        return storeJESUpload(request, userId, applicationId);
     }
 
     private void storeCostItems(HttpServletRequest request, Long userId, Long applicationId) {
@@ -140,6 +163,42 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         } else {
             return null;
         }
+    }
+
+    private Map<String, List<String>> storeJESUpload(HttpServletRequest request, Long userId, Long applicationId) {
+        final Map<String, String[]> params = request.getParameterMap();
+        ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
+
+        Map<String, List<String>> errorMap = new HashMap<>();
+        if (params.containsKey(REMOVE_UPLOADED_FILE)) {
+            financeService.removeFinanceDocument(applicationFinance.getId()).getSuccessObjectOrThrowException();
+        } else {
+            final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
+            final MultipartFile file = fileMap.get("jes-upload");
+            if (file != null && !file.isEmpty()) {
+                try {
+                    RestResult<FileEntryResource> result = financeService.addFinanceDocument(applicationFinance.getId(),
+                            file.getContentType(),
+                            file.getSize(),
+                            file.getOriginalFilename(),
+                            file.getBytes());
+                    if (result.isFailure()) {
+                        errorMap.put("formInput[jes-upload]",
+                                result.getFailure().getErrors().stream()
+                                        .map(e ->
+                                                MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
+                    }
+                } catch (IOException e) {
+                    throw new UnableToReadUploadedFile();
+                }
+            }
+        }
+        return errorMap;
+    }
+
+    @Override
+    public RestResult<ByteArrayResource> getFile(Long applicationFinanceId) {
+        return financeService.getFinanceDocumentByApplicationFinance(applicationFinanceId);
     }
 
     @Override

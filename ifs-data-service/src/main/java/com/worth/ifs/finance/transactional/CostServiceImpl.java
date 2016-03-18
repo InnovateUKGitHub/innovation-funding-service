@@ -4,6 +4,9 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.file.repository.FileEntryRepository;
+import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
@@ -63,6 +66,9 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Autowired
     OrganisationFinanceDelegate organisationFinanceDelegate;
+
+    @Autowired
+    FileEntryRepository fileEntryRepository;
 
     @Override
     public ServiceResult<CostField> getCostFieldById(Long id) {
@@ -188,15 +194,29 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
         return find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
             dbFinance.merge(applicationFinance);
+            Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
+            dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
             dbFinance = applicationFinanceRepository.save(dbFinance);
             return serviceSuccess(new ApplicationFinanceResource(dbFinance));
         });
     }
 
+    private ApplicationFinance setFinanceUpload(ApplicationFinance applicationFinance, Long fileEntryId) {
+        if(fileEntryId==null || fileEntryId == 0L) {
+            applicationFinance.setFinanceFileEntry(null);
+        } else {
+            FileEntry fileEntry = fileEntryRepository.findOne(fileEntryId);
+            if (fileEntry != null) {
+                applicationFinance.setFinanceFileEntry(fileEntry);
+            }
+        }
+        return applicationFinance;
+    }
+
     @Override
     public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
         ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
-        return getApplicationFinanceForOrganisation(applicationId, organisationId, applicationFinanceResourceId);
+        return getApplicationFinanceForOrganisation(applicationFinanceResourceId);
     }
 
     @Override
@@ -208,7 +228,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         return find(applicationFinanceHandler.getApplicationTotals(applicationId), notFoundError(ApplicationFinance.class, applicationId));
     }
 
-    private ServiceResult<ApplicationFinanceResource> getApplicationFinanceForOrganisation(Long applicationId, Long organisationId, ApplicationFinanceResourceId applicationFinanceResourceId) {
+    private ServiceResult<ApplicationFinanceResource> getApplicationFinanceForOrganisation(ApplicationFinanceResourceId applicationFinanceResourceId) {
         return serviceSuccess(applicationFinanceHandler.getApplicationOrganisationFinances(applicationFinanceResourceId));
     }
 

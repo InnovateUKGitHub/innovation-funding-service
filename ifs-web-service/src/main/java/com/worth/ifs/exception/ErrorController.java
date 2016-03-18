@@ -25,6 +25,7 @@ import java.util.Collections;
 @ControllerAdvice
 public class ErrorController extends BaseErrorController{
     private final Log log = LogFactory.getLog(getClass());
+    public static final String URL_HASH_INVALID_TEMPLATE = "url-hash-invalid";
 
     public ErrorController() {
         super();
@@ -38,9 +39,9 @@ public class ErrorController extends BaseErrorController{
 
     @ResponseStatus(HttpStatus.ALREADY_REPORTED)     // 400
     @ExceptionHandler(value = InvalidURLException.class)
-    public ModelAndView invalidUrlErrorHandler(HttpServletRequest req, InvalidURLException e) {
+    public ModelAndView invalidUrlErrorHandler(InvalidURLException e) {
         log.debug("ErrorController invalidUrlErrorHandler", e);
-        return new ModelAndView("url-hash-invalid");
+        return new ModelAndView(URL_HASH_INVALID_TEMPLATE);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)     // 400
