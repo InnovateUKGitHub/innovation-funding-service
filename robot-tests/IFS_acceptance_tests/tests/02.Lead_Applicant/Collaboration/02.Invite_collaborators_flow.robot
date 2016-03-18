@@ -35,7 +35,7 @@ Valid invitation submit
     And the user verifies their email   ${verify_link_3}
     And the user logs back in
     Then The user should see the text in the page    Your dashboard
-    # And The user should see the notification    Invites sent
+    And the lead applicant logs back in
 
 Lead applicant can access the Application team page(Link in the overview page)
     [Documentation]    INFUND-928
@@ -153,8 +153,10 @@ the applicant should not be able to assign the question to the users that still 
 the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    That's you!
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-child(3)    (pending)
-    Element Should Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
+    Element Should Not Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
 
 the user logs back in
-    and guest user log-in       ewan+1@hiveit.co.uk     Passw0rd
+    guest user log-in       ewan+1@hiveit.co.uk     Passw0rd
 
+the lead applicant logs back in
+    guest user log-in        &{lead_applicant_credentials}
