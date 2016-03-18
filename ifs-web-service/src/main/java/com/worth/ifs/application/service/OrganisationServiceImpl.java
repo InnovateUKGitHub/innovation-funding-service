@@ -1,27 +1,28 @@
 package com.worth.ifs.application.service;
 
+import static com.worth.ifs.application.service.Futures.call;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.organisation.service.CompanyHouseRestService;
-import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import static com.worth.ifs.application.service.Futures.call;
 
 /**
  * This class contains methods to retrieve and store {@link Organisation} related data,
@@ -39,14 +40,14 @@ public class OrganisationServiceImpl implements OrganisationService {
     private ProcessRoleService processRoleService;
 
     @Override
-    public TreeSet<Organisation> getApplicationOrganisations(ApplicationResource application) {
+    public SortedSet<Organisation> getApplicationOrganisations(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
                 .map(id -> processRoleService.getById(id))
                 .collect(Collectors.toList()));
 
         Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
-        Supplier<TreeSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
+        Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
 
         return userApplicationRoles.stream()
                 .filter(uar -> (uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName())))

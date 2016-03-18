@@ -124,8 +124,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
                 Optional.ofNullable(question), userApplicationRoles);
-        form.bindingResult = bindingResult;
-        form.objectErrors = bindingResult.getAllErrors();
+        form.setBindingResult(bindingResult);
+        form.setObjectErrors(bindingResult.getAllErrors());
         return "application-form";
     }
 
@@ -177,8 +177,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         addNavigation(section, applicationId, model);
 
-        form.bindingResult = bindingResult;
-        form.objectErrors = bindingResult.getAllErrors();
+        form.setBindingResult(bindingResult);
+        form.setObjectErrors(bindingResult.getAllErrors());
 
         return "application-form";
     }
@@ -234,8 +234,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                 cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
             }
 
-            form.bindingResult = bindingResult;
-            form.objectErrors = bindingResult.getAllErrors();
+            form.setBindingResult(bindingResult);
+            form.setObjectErrors(bindingResult.getAllErrors());
             /* End save action */
 
             if (bindingResult.hasErrors()) {
@@ -498,8 +498,8 @@ public class ApplicationFormController extends AbstractApplicationController {
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
-        form.bindingResult = bindingResult;
-        form.objectErrors = bindingResult.getAllErrors();
+        form.setBindingResult(bindingResult);
+        form.setObjectErrors(bindingResult.getAllErrors());
 
         if(bindingResult.hasErrors()){
             SectionResource section = sectionService.getById(sectionId);
