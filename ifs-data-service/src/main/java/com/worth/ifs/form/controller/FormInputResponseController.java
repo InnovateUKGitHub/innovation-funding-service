@@ -17,8 +17,6 @@ import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-
 /**
  * ApplicationController exposes Application data and operations through a REST API.
  */
@@ -45,11 +43,14 @@ public class FormInputResponseController {
         Long userId = jsonObj.get("userId").asLong();
         Long applicationId = jsonObj.get("applicationId").asLong();
         Long formInputId = jsonObj.get("formInputId").asLong();
+        JsonNode ignoreEmptyNode = jsonObj.get("ignoreEmpty");
+        Boolean ignoreEmpty;
+        ignoreEmpty = ignoreEmptyNode != null && ignoreEmptyNode.asBoolean();
         String value = HtmlUtils.htmlUnescape(jsonObj.get("value").asText(""));
 
         ServiceResult<List<String>> result = formInputService.saveQuestionResponse(userId, applicationId, formInputId, value).andOnSuccessReturn(response -> {
 
-            BindingResult bindingResult = ValidationUtil.validateResponse(response);
+            BindingResult bindingResult = ValidationUtil.validateResponse(response, ignoreEmpty);
             if (bindingResult.hasErrors()) {
                 LOG.debug("Got validation errors: ");
                 bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Validation: " + e.getDefaultMessage()));

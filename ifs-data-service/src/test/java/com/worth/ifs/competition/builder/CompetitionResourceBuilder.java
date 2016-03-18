@@ -66,6 +66,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((maxResearchRatio, object) -> setField("maxResearchRatio", maxResearchRatio, object), maxResearchRatios);
     }
 
+    public CompetitionResourceBuilder withAcademicGrantClaimPercentage(Integer... grantClaimPercentages) {
+        return withArray((grantClaimPercentage, object) -> setField("academicGrantPercentage", grantClaimPercentage, object), grantClaimPercentages);
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);

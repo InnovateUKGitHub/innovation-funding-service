@@ -1,9 +1,9 @@
 package com.worth.ifs.login;
 
-import com.worth.ifs.application.service.UserService;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.error.exception.InvalidURLException;
-import com.worth.ifs.commons.rest.RestResult;
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.List;
+import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.exception.InvalidURLException;
+import com.worth.ifs.commons.rest.RestResult;
 
 /**
  * This controller handles user login, logout and authentication / authorization.
@@ -41,13 +42,13 @@ public class LoginController {
 
 
     @RequestMapping(value = "/" + LOGIN_BASE + "/" + RESET_PASSWORD, method = RequestMethod.GET)
-    public String requestPasswordReset(ResetPasswordRequestForm resetPasswordRequestForm, Model model, HttpServletRequest request) {
+    public String requestPasswordReset(ResetPasswordRequestForm resetPasswordRequestForm, Model model) {
         model.addAttribute("resetPasswordRequestForm", resetPasswordRequestForm);
         return LOGIN_BASE + "/" + RESET_PASSWORD;
     }
 
     @RequestMapping(value = "/" + LOGIN_BASE + "/" + RESET_PASSWORD, method = RequestMethod.POST)
-    public String requestPasswordResetPost(@ModelAttribute @Valid ResetPasswordRequestForm resetPasswordRequestForm, BindingResult bindingResult, Model model, HttpServletRequest request) {
+    public String requestPasswordResetPost(@ModelAttribute @Valid ResetPasswordRequestForm resetPasswordRequestForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("resetPasswordRequestForm", resetPasswordRequestForm);
             return LOGIN_BASE + "/" + RESET_PASSWORD;
@@ -59,7 +60,7 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}", method = RequestMethod.GET)
-    public String resetPassword(@PathVariable("hash") String hash, @ModelAttribute ResetPasswordForm resetPasswordForm, Model model, HttpServletRequest request) {
+    public String resetPassword(@PathVariable("hash") String hash) {
         if (userService.checkPasswordResetHash(hash).isFailure()) {
             throw new InvalidURLException();
         }
@@ -67,7 +68,7 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}", method = RequestMethod.POST)
-    public String resetPasswordPost(@PathVariable("hash") String hash, @Valid @ModelAttribute ResetPasswordForm resetPasswordForm, BindingResult bindingResult, Model model, HttpServletRequest request) {
+    public String resetPasswordPost(@PathVariable("hash") String hash, @Valid @ModelAttribute ResetPasswordForm resetPasswordForm, BindingResult bindingResult) {
         if (userService.checkPasswordResetHash(hash).isFailure()) {
             throw new InvalidURLException();
         }

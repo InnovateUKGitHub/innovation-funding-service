@@ -2,11 +2,14 @@ package com.worth.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationSize;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ApplicationFinance defines database relations and a model to use client side and server side.
@@ -27,6 +30,11 @@ public class ApplicationFinance {
 
     @Enumerated(EnumType.STRING)
     private OrganisationSize organisationSize;
+
+    @ManyToOne
+    @JoinColumn(name="financeFileEntryId", referencedColumnName="id")
+    private FileEntry financeFileEntry;
+
 
     public ApplicationFinance() {
     	// no-arg constructor
@@ -66,6 +74,14 @@ public class ApplicationFinance {
 
     public void setOrganisationSize(OrganisationSize organisationSize) {
         this.organisationSize = organisationSize;
+    }
+
+    public FileEntry getFinanceFileEntry() {
+        return financeFileEntry;
+    }
+
+    public void setFinanceFileEntry(FileEntry financeFileEntry) {
+        this.financeFileEntry = financeFileEntry;
     }
 
     public void merge(ApplicationFinanceResource applicationFinance) {

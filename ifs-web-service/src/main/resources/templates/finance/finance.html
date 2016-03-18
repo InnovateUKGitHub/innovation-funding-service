@@ -192,7 +192,7 @@
                        th:name="${type +'-total-' + question.id + '-' + cost.id}"
                        readonly="readonly"
                        th:id="${'cost-labour-'+cost.id+'-labourTotalCost'}"
-                       th:attr="datax-calculation-fields=${'#cost-labour-'+cost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays,#cost-labour-'+cost.id+'-labourDays'},data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}"
+                       th:attr="data-calculation-fields=${'#cost-labour-'+cost.id+'-labourGrossSalary,#cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays,#cost-labour-'+cost.id+'-labourDays'},data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}"
                        th:value="'£ ' + ${#numbers.formatDecimal(cost.getTotal(costCategory.workingDaysPerYear), 0, 'COMMA', 0, 'POINT')}" />
             </td>
 

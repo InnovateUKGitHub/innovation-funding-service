@@ -4,15 +4,18 @@ import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.item.*;
+import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.user.domain.OrganisationSize;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +42,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Override
-    public void update(HttpServletRequest request, Long userId, Long applicationId) {
+    public Map<String, List<String>> update(HttpServletRequest request, Long userId, Long applicationId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         if (applicationFinanceResource == null){
             applicationFinanceResource = financeService.addApplicationFinance(userId, applicationId);
@@ -50,6 +53,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
         storeCostItems(costItems);
 
         addRemoveCostRows(request, applicationId, userId);
+        return new HashMap<>();
     }
 
     @Override
@@ -249,5 +253,11 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
 
     private void storeCostItems(List<CostItem> costItems) {
         costItems.stream().forEach(c -> costService.update(c));
+    }
+
+    @Override
+    public RestResult<ByteArrayResource> getFile(Long applicationFinanceId) {
+        throw new NotImplementedException("Finance upload is not available for the default finances");
+
     }
 }
