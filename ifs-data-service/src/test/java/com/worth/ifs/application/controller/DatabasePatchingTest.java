@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.io.File;
+import java.util.ArrayList;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
@@ -29,13 +29,18 @@ public class DatabasePatchingTest extends BaseWebIntegrationTest {
 
     @Test
     public void test() throws Exception {
-        File db = new File(Thread.currentThread().getContextClassLoader().getResource("db").toURI());
-        for (File dataDirectory : db.listFiles(f -> f.isDirectory() && f.getName() != SCHEMA_SCRIPT_DIRECTORY_NAME)) {
-            String[] locations =  new String[]{db.getName() + "/" + SCHEMA_SCRIPT_DIRECTORY_NAME, db.getName() + "/" + dataDirectory.getName()};
+        ArrayList<String[]> locations = new ArrayList<>();
+        locations.add(new String[]{"db/migration"});
+        locations.add(new String[]{"db/migration", "db/setup"});
+        locations.add(new String[]{"db/migration", "db/setup", "db/webtest"});
+        locations.add(new String[]{"db/migration", "db/setup", "db/development"});
+        locations.add(new String[]{"db/migration", "db/setup", "db/integration"});
+
+        for (String[] location : locations) {
             try {
-                cleanAndMigrateDatabaseWithPatches(locations);
+                cleanAndMigrateDatabaseWithPatches(location);
             } catch (Exception e){
-                fail("Exception thrown migrating with script directories: " + asList(locations) + e.getMessage());
+                fail("Exception thrown migrating with script directories: " + asList(location) + e.getMessage());
             }
         }
     }
