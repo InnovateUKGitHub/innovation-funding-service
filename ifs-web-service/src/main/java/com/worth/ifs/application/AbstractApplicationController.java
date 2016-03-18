@@ -18,6 +18,7 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
@@ -184,7 +185,9 @@ public abstract class AbstractApplicationController extends BaseController {
 
 
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
-        model.addAttribute("applicationOrganisations", getApplicationOrganisations(userApplicationRoles));
+        SortedSet<Organisation> organisations = getApplicationOrganisations(userApplicationRoles);
+        model.addAttribute("applicationOrganisations", organisations);
+        model.addAttribute("academicOrganisations", getAcademicOrganisations(organisations));
 
         Optional<Organisation> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
         leadOrganisation.ifPresent(org ->
@@ -390,6 +393,17 @@ public abstract class AbstractApplicationController extends BaseController {
         return userApplicationRoles.stream()
                 .filter(uar -> (uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName())))
                 .map(ProcessRole::getOrganisation)
+                .collect(Collectors.toCollection(supplier));
+    }
+
+    public TreeSet<Organisation> getAcademicOrganisations(SortedSet<Organisation> organisations) {
+        Comparator<Organisation> compareById =
+                Comparator.comparingLong(Organisation::getId);
+        Supplier<TreeSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
+        ArrayList<Organisation> organisationList = new ArrayList<>(organisations);
+
+        return organisationList.stream()
+                .filter(o -> OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId().equals(o.getOrganisationType().getId()))
                 .collect(Collectors.toCollection(supplier));
     }
 

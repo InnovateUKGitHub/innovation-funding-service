@@ -27,3 +27,19 @@ include::{snippets}/user/get-user-by-token/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/user/get-user-by-token/curl-request.adoc[]
+
+=== Update user password
+==== Success case
+==== Request
+include::{snippets}/user/update-password/http-request.adoc[]
+include::{snippets}/user/update-password/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/update-password/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/user/update-password/curl-request.adoc[]
+
+==== Failure cases
+===== Invalid token
+include::{snippets}/user/update-password-token-not-found/http-response.adoc[]

@@ -57,10 +57,10 @@ public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
     @Test
     public void test_save() {
 
-        when(restServiceMock.saveQuestionResponse(123L, 456L, 789L, "A new value")).
+        when(restServiceMock.saveQuestionResponse(123L, 456L, 789L, "A new value", false)).
                 thenReturn(restSuccess(asList("an error", "another error")));
 
-        List<String> responses = service.save(123L, 456L, 789L, "A new value");
+        List<String> responses = service.save(123L, 456L, 789L, "A new value", false);
         assertEquals(asList("an error", "another error"), responses);
     }
 }

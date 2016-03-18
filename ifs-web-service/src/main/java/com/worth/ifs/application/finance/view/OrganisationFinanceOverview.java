@@ -1,16 +1,16 @@
 package com.worth.ifs.application.finance.view;
 
 import com.worth.ifs.application.finance.service.FinanceService;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.CostType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Configurable
@@ -22,13 +22,17 @@ public class OrganisationFinanceOverview {
     @Autowired
     private FinanceService financeService;
 
+    @Autowired
+    private FileEntryRestService fileEntryService;
+
     public OrganisationFinanceOverview() {
     	// no-arg constructor
     }
 
-    public OrganisationFinanceOverview(FinanceService financeService, Long applicationId) {
+    public OrganisationFinanceOverview(FinanceService financeService, FileEntryRestService fileEntryRestService, Long applicationId) {
         this.applicationId = applicationId;
         this.financeService = financeService;
+        this.fileEntryService = fileEntryRestService;
         initializeOrganisationFinances();
     }
 
@@ -39,10 +43,29 @@ public class OrganisationFinanceOverview {
     public List<ApplicationFinanceResource> getApplicationFinances() {
         return applicationFinances;
     }
+
     public Map<Long, ApplicationFinanceResource> getApplicationFinancesByOrganisation(){
         return applicationFinances
                 .stream()
                 .collect(Collectors.toMap(ApplicationFinanceResource::getOrganisation, f -> f));
+    }
+
+    public Map<Long, FileEntryResource> getAcademicOrganisationFileEntries(){
+        ArrayList<ApplicationFinanceResource> applicationFinance = new ArrayList<>(this.getApplicationFinancesByOrganisation().values());
+        Map<Long, FileEntryResource> files = applicationFinance.stream()
+                .filter(o -> o.getFinanceFileEntry() != null)
+                .collect(HashMap::new, (m,v)->m.put(v.getOrganisation(), getFileEntry(v)), HashMap::putAll);
+        return files;
+    }
+
+    public FileEntryResource getFileEntry(ApplicationFinanceResource orgFinance){
+        if(orgFinance.getFinanceFileEntry() != null && orgFinance.getFinanceFileEntry() > 0L){
+            RestResult<FileEntryResource> result = fileEntryService.findOne(orgFinance.getFinanceFileEntry());
+            if(result.isSuccess()){
+                return result.getSuccessObject();
+            }
+        }
+        return null;
     }
 
 

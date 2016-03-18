@@ -1,50 +1,5 @@
 package com.worth.ifs.application;
 
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-
-import java.io.IOException;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
-import org.springframework.web.multipart.support.StringMultipartFileEditor;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,6 +21,36 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.AjaxResult;
 import com.worth.ifs.util.MessageUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StringMultipartFileEditor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -130,7 +115,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @ProfileExecution
     @RequestMapping(value = "/question/{questionId}/forminput/{formInputId}/download", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<?> downloadQuestionFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
                                 @PathVariable("applicationId") final Long applicationId,
                                 @PathVariable("questionId") final Long questionId,
                                 @PathVariable("formInputId") final Long formInputId,
@@ -138,6 +123,22 @@ public class ApplicationFormController extends AbstractApplicationController {
         final User user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        return getPdfFile(resource);
+    }
+
+    @RequestMapping(value = "/{applicationFinanceId}/finance-download", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
+            @PathVariable("applicationId") final Long applicationId,
+            @PathVariable("applicationFinanceId") final Long applicationFinanceId,
+            HttpServletRequest request) throws Exception {
+        final User user = userAuthenticationService.getAuthenticatedUser(request);
+        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+
+        final ByteArrayResource resource = financeHandler.getFinanceFormHandler(organisationType).getFile(applicationFinanceId).getSuccessObjectOrThrowException();
+        return getPdfFile(resource);
+    }
+
+    private ResponseEntity<ByteArrayResource> getPdfFile(ByteArrayResource resource) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentLength(resource.contentLength());
         httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
@@ -210,7 +211,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
             /* Start save action */
-            bindingResult = saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
+            bindingResult = saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult, model);
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 assignQuestion(applicationId, request);
@@ -348,20 +349,24 @@ public class ApplicationFormController extends AbstractApplicationController {
                                               Long applicationId, Long sectionId, Question question,
                                               HttpServletRequest request,
                                               HttpServletResponse response,
-                                              BindingResult bindingResult) throws Exception {
+                                              BindingResult bindingResult,
+                                              Model model) throws Exception {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
 
+        // Check if action is mark as complete.  Check empty values if so, ignore otherwise. (INFUND-1222)
+        Map<String, String[]> params = request.getParameterMap();
+        boolean ignoreEmpty = (!params.containsKey(MARK_AS_COMPLETE)) && (!params.containsKey(MARK_SECTION_AS_COMPLETE));
+
         Map<Long, List<String>> errors;
         if(question != null) {
-            errors = saveQuestionResponses(application, Collections.singletonList(question), user.getId(), processRole.getId(), bindingResult, request);
+            errors = saveQuestionResponses(application, Collections.singletonList(question), user.getId(), processRole.getId(), bindingResult, request, ignoreEmpty);
         } else {
             SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
             List<Question> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
-            errors = saveQuestionResponses(application, questions, user.getId(), processRole.getId(), bindingResult, request);
+            errors = saveQuestionResponses(application, questions, user.getId(), processRole.getId(), bindingResult, request, ignoreEmpty);
         }
 
-        Map<String, String[]> params = request.getParameterMap();
         params.forEach((key, value) -> log.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
 
         setApplicationDetails(application, form.getApplication());
@@ -378,7 +383,10 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
 
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
+        Map<String, List<String>> financeErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
+        financeErrors.forEach((k, errorsList) ->
+                errorsList.forEach(e -> bindingResult.rejectValue(k, e, e)));
+
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         return bindingResult;
@@ -424,8 +432,13 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .get();
     }
 
-    private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<Question> questions, Long userId, Long processRoleId, BindingResult bindingResult,  HttpServletRequest request) {
-        Map<Long, List<String>> errors = saveQuestionResponses(request, questions, userId, processRoleId, application.getId());
+    private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<Question> questions,
+                                                          Long userId,
+                                                          Long processRoleId,
+                                                          BindingResult bindingResult,
+                                                          HttpServletRequest request,
+                                                          boolean ignoreEmpty) {
+        Map<Long, List<String>> errors = saveQuestionResponses(request, questions, userId, processRoleId, application.getId(), ignoreEmpty);
         errors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue("formInput[" + k + "]", e, e)));
         return errors;
     }
@@ -461,7 +474,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         Map<String, String[]> params = request.getParameterMap();
 
         bindingResult.getAllErrors().forEach((e) -> log.info("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
-        bindingResult = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
+        bindingResult = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult, model);
         bindingResult.getAllErrors().forEach((e) -> log.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
@@ -473,7 +486,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         form.objectErrors = bindingResult.getAllErrors();
 
         if(bindingResult.hasErrors()){
-            addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
+            SectionResource section = sectionService.getById(sectionId);
+            addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
             addOrganisationAndUserFinanceDetails(application.getId(), user.getId(), model, form);
             return "application-form";
         } else {
@@ -530,12 +544,13 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                           List<Question> questions,
                                                           Long userId,
                                                           Long processRoleId,
-                                                          Long applicationId) {
+                                                          Long applicationId,
+                                                          boolean ignoreEmpty) {
         final Map<String, String[]> params = request.getParameterMap();
 
         Map<Long, List<String>> errorMap = new HashMap<>();
 
-        errorMap.putAll(saveNonFileUploadQuestions(questions, params, request, userId, applicationId));
+        errorMap.putAll(saveNonFileUploadQuestions(questions, params, request, userId, applicationId, ignoreEmpty));
 
         errorMap.putAll(saveFileUploadQuestionsIfAny(questions, params, request, applicationId, processRoleId));
 
@@ -546,7 +561,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                                Map<String, String[]> params,
                                                                HttpServletRequest request,
                                                                Long userId,
-                                                               Long applicationId){
+                                                               Long applicationId,
+                                                               boolean ignoreEmpty){
         Map<Long, List<String>> errorMap = new HashMap<>();
         questions.stream()
                 .forEach(question -> question.getFormInputs()
@@ -555,7 +571,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                 .forEach(formInput -> {
                                             if (params.containsKey("formInput[" + formInput.getId() + "]")) {
                                                 String value = request.getParameter("formInput[" + formInput.getId() + "]");
-                                                List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value);
+                                                List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value, ignoreEmpty);
                                                 if (!errors.isEmpty()) {
                                                     log.error("save failed. " + question.getId());
                                                     errorMap.put(question.getId(), new ArrayList<>(errors));
@@ -670,7 +686,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value);
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
-            errors = formInputResponseService.save(userId, applicationId, formInputId, value);
+            errors = formInputResponseService.save(userId, applicationId, formInputId, value, false);
         }
         return errors;
     }

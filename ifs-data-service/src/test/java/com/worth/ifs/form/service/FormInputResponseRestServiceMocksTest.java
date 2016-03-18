@@ -44,13 +44,15 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
         ObjectNode entityUpdates = new ObjectMapper().createObjectNode().
                 put("userId", 123L).put("applicationId", 456L).
-                put("formInputId", 789L).put("value", "Very good answer!");
+                put("formInputId", 789L).
+                put("value", "Very good answer!").
+                put("ignoreEmpty", false);
 
         List<String> returnedResponses = asList("A returned string", "A returned string 2");
 
         setupPostWithRestResultExpectations(formInputResponseRestURL + "/saveQuestionResponse/", stringsListType(), entityUpdates, returnedResponses, OK);
 
-        List<String> responses = service.saveQuestionResponse(123L, 456L, 789L, "Very good answer!").getSuccessObject();
+        List<String> responses = service.saveQuestionResponse(123L, 456L, 789L, "Very good answer!", false).getSuccessObject();
         assertEquals(returnedResponses, responses);
     }
 }

@@ -462,7 +462,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 boolean readyForSubmit = false;
                 if (allSectionsComplete &&
                         progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0 &&
-                        researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) == -1) {
+                        researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0) {
                     readyForSubmit = true;
                 }
 
@@ -471,7 +471,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 node.put(READY_FOR_SUBMIT, readyForSubmit);
                 node.put(PROGRESS, progressPercentage);
                 node.put(RESEARCH_PARTICIPATION, researchParticipation);
-                node.put(RESEARCH_PARTICIPATION_VALID, researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) == -1);
+                node.put(RESEARCH_PARTICIPATION_VALID, researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0);
                 node.put(ALL_SECTION_COMPLETE, allSectionsComplete);
                 return node;
             })

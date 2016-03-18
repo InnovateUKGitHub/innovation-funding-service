@@ -22,6 +22,8 @@ public class CompetitionTest {
     String description;
     LocalDateTime startDate;
     LocalDateTime endDate;
+    Integer maxResearchRatio;
+    Integer academicGrantPercentage;
 
     @Before
     public void setUp() throws Exception {
@@ -31,6 +33,8 @@ public class CompetitionTest {
         description = "testCompetitionDescription";
         startDate = LocalDateTime.now();
         endDate = LocalDateTime.now().plusDays(5);
+        maxResearchRatio = 10;
+        academicGrantPercentage = 30;
 
         sections = new ArrayList<>();
         sections.add(new Section());
@@ -38,6 +42,8 @@ public class CompetitionTest {
         sections.add(new Section());
 
         competition = new Competition(id, applications, questions, sections, name, description, startDate, endDate);
+        competition.setMaxResearchRatio(maxResearchRatio);
+        competition.setAcademicGrantPercentage(academicGrantPercentage);
     }
 
     @Test
@@ -48,5 +54,7 @@ public class CompetitionTest {
 //        Assert.assertEquals(competition.getStartDate(), startDate);
 //        Assert.assertEquals(competition.getEndDate(), endDate);
         Assert.assertEquals(competition.getSections(), sections);
+        Assert.assertEquals(competition.getMaxResearchRatio(), maxResearchRatio);
+        Assert.assertEquals(competition.getAcademicGrantPercentage(), academicGrantPercentage);
     }
 }

@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
 import static com.worth.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -49,9 +48,9 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
         DUMMY_MESSAGE_KEY
     }
 
-    private User senderUser = newUser().with(name("Sender")).withEmailAddress("sender@email.com").build();
-    private User recipientUser1 = newUser().with(name("Recipient 1")).withEmailAddress("recipient1@email.com").build();
-    private User recipientUser2 = newUser().with(name("Recipient 2")).withEmailAddress("recipient2@email.com").build();
+    private User senderUser = newUser().withFirstName("Sender").withLastName("Some").withEmailAddress("sender@email.com").build();
+    private User recipientUser1 = newUser().withFirstName("Recipient").withLastName("1").withEmailAddress("recipient1@email.com").build();
+    private User recipientUser2 = newUser().withFirstName("Recipient").withLastName("2").withEmailAddress("recipient2@email.com").build();
 
     private UserNotificationSource sender = new UserNotificationSource(senderUser);
     private UserNotificationTarget recipient1 = new UserNotificationTarget(recipientUser1);

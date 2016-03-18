@@ -54,7 +54,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         for(ApplicationFinance applicationFinance : applicationFinances) {
             ApplicationFinanceResource applicationFinanceResource = new ApplicationFinanceResource(applicationFinance);
             OrganisationFinanceHandler organisationFinanceHandler = organiastionFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
-            EnumMap<CostType, CostCategory> costs = new EnumMap<>(organisationFinanceHandler.getOrganisationFinanceTotals(applicationFinanceResource.getId()));
+            EnumMap<CostType, CostCategory> costs = new EnumMap<>(organisationFinanceHandler.getOrganisationFinanceTotals(applicationFinanceResource.getId(), applicationFinance.getApplication().getCompetition()));
             applicationFinanceResource.setFinanceOrganisationDetails(costs);
             applicationFinanceResources.add(applicationFinanceResource);
         }

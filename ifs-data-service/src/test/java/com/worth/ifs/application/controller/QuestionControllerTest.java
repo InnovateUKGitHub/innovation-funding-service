@@ -45,7 +45,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
         mockMvc.perform(get("/question/getNextQuestion/" + 1L))
                 .andExpect(status().isOk())
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(nextQuestion)))
-                .andDo(document("question/next-question")).andReturn();
+                .andReturn();
     }
 
     @Test
@@ -58,8 +58,7 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
 
         mockMvc.perform(get("/question/getPreviousQuestion/" + previousQuestion.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(previousQuestion)))
-                .andDo(document("question/next-question"));
+                .andExpect(content().string(new ObjectMapper().writeValueAsString(previousQuestion)));
     }
 
     @Test

@@ -61,11 +61,6 @@ public class UserController {
         return userService.getUserById(id).toGetResponse();
     }
 
-    @RequestMapping("/name/{name}")
-    public RestResult<List<User>> getUserByName(@PathVariable("name") final String name) {
-        return userService.getUserByName(name).toGetResponse();
-    }
-
     @RequestMapping("/findAll/")
     public RestResult<List<User>> findAll() {
         return userService.findAll().toGetResponse();

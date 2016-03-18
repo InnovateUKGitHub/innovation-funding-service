@@ -43,6 +43,7 @@ public class Competition {
     private LocalDate assessmentStartDate;
     private LocalDate assessmentEndDate;
     private Integer maxResearchRatio;
+    private Integer academicGrantPercentage;
 
     public Competition() {
     	// no-arg constructor
@@ -167,11 +168,8 @@ public class Competition {
         this.endDate = endDate;
     }
 
-    /* Keep it D.R.Y */
-
     private long getDaysBetween(LocalDate dateA, LocalDate dateB) {
         return ChronoUnit.DAYS.between(dateA, dateB);
-
     }
 
     private long getDaysLeftPercentage(long daysLeft, long totalDays ) {
@@ -197,6 +195,14 @@ public class Competition {
 
     public void setMaxResearchRatio(Integer maxResearchRatio) {
         this.maxResearchRatio = maxResearchRatio;
+    }
+
+    public Integer getAcademicGrantPercentage() {
+        return academicGrantPercentage;
+    }
+
+    public void setAcademicGrantPercentage(Integer academicGrantPercentage) {
+        this.academicGrantPercentage = academicGrantPercentage;
     }
 
     public void setId(Long id) {

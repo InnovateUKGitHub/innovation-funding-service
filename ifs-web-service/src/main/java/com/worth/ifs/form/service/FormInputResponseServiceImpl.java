@@ -40,8 +40,8 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
     }
 
     @Override
-    public List<String> save(Long userId, Long applicationId, Long formInputId, String value) {
-        return responseRestService.saveQuestionResponse(userId, applicationId, formInputId, value).getSuccessObjectOrThrowException();
+    public List<String> save(Long userId, Long applicationId, Long formInputId, String value, boolean ignoreEmpty) {
+        return responseRestService.saveQuestionResponse(userId, applicationId, formInputId, value, ignoreEmpty).getSuccessObjectOrThrowException();
     }
 
     @Override

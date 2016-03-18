@@ -34,7 +34,6 @@ public class GrantClaimCategory implements CostCategory {
                 .filter(c -> c.getTotal()!=null)
                 .map(c -> c.getTotal())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        log.info("GRANT CLAIM TOTAL: " + total);
     }
 
     @Override
