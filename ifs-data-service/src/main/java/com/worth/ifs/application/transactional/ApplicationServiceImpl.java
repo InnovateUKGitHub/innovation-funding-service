@@ -161,26 +161,29 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             }
         }
 
-        return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).andOnSuccess(successfulFile -> {
+        return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).andOnSuccess(successfulFile ->
+        	createFormInputResponseFileUpload(successfulFile, existingResponse, processRoleId, applicationId, formInputId, formInputResponseFile)
+        );
+    }
+    
+    private ServiceResult<Pair<File, FormInputResponseFileEntryResource>> createFormInputResponseFileUpload(Pair<File, FileEntry> successfulFile, FormInputResponse existingResponse, long processRoleId, long applicationId, long formInputId, FormInputResponseFileEntryResource formInputResponseFile) {
+    	FileEntry fileEntry = successfulFile.getValue();
 
-            FileEntry fileEntry = successfulFile.getValue();
+        if (existingResponse != null) {
 
-            if (existingResponse != null) {
+            existingResponse.setFileEntry(fileEntry);
+            formInputResponseRepository.save(existingResponse);
+            FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputResponseFile.getCompoundId());
+            return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
 
-                existingResponse.setFileEntry(fileEntry);
-                formInputResponseRepository.save(existingResponse);
-                FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputResponseFile.getCompoundId());
-                return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
+        }
 
-            }
+        return find(processRole(processRoleId), () -> getFormInput(formInputId), application(applicationId)).andOnSuccess((processRole, formInput, application) -> {
 
-            return find(processRole(processRoleId), () -> getFormInput(formInputId), application(applicationId)).andOnSuccess((processRole, formInput, application) -> {
-
-                FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
-                formInputResponseRepository.save(newFormInputResponse);
-                FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
-                return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
-            });
+            FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
+            formInputResponseRepository.save(newFormInputResponse);
+            FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
+            return serviceSuccess(Pair.of(successfulFile.getKey(), fileEntryResource));
         });
     }
 
@@ -410,38 +413,42 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             final Long competitionId,
             final Long userId,
             final String applicationName) {
-        return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> {
-           Application application = new Application();
-           application.setName(applicationName);
-           LocalDate currentDate = LocalDate.now();
-           application.setStartDate(currentDate);
+        return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) ->
+            createApplicationByApplicationNameForUserAndCompetition(applicationName, user, competition)
+        );
+    }
+    
+    private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserAndCompetition(String applicationName, User user, Competition competition) {
+    	  Application application = new Application();
+          application.setName(applicationName);
+          LocalDate currentDate = LocalDate.now();
+          application.setStartDate(currentDate);
 
-           String name = ApplicationStatusConstants.CREATED.getName();
+          String name = ApplicationStatusConstants.CREATED.getName();
 
-           List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
-           ApplicationStatus applicationStatus = applicationStatusList.get(0);
+          List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
+          ApplicationStatus applicationStatus = applicationStatusList.get(0);
 
-           application.setApplicationStatus(applicationStatus);
-           application.setDurationInMonths(3L);
+          application.setApplicationStatus(applicationStatus);
+          application.setDurationInMonths(3L);
 
-           List<Role> roles = roleRepository.findByName("leadapplicant");
-           Role role = roles.get(0);
+          List<Role> roles = roleRepository.findByName("leadapplicant");
+          Role role = roles.get(0);
 
-           Organisation userOrganisation = user.getOrganisations().get(0);
+          Organisation userOrganisation = user.getOrganisations().get(0);
 
-           ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
+          ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
 
-           List<ProcessRole> processRoles = new ArrayList<>();
-           processRoles.add(processRole);
+          List<ProcessRole> processRoles = new ArrayList<>();
+          processRoles.add(processRole);
 
-           application.setProcessRoles(processRoles);
-           application.setCompetition(competition);
+          application.setProcessRoles(processRoles);
+          application.setCompetition(competition);
 
-           Application createdApplication = applicationRepository.save(application);
-           processRoleRepository.save(processRole);
+          Application createdApplication = applicationRepository.save(application);
+          processRoleRepository.save(processRole);
 
-           return serviceSuccess(applicationMapper.mapToResource(createdApplication));
-        });
+          return serviceSuccess(applicationMapper.mapToResource(createdApplication));
     }
 
     @Override
@@ -480,52 +487,54 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     // TODO DW - INFUND-1555 - deal with rest results
     private ServiceResult<BigDecimal> getProgressPercentageByApplicationId(final Long applicationId) {
-        return getApplication(applicationId).andOnSuccessReturn(application -> {
-            List<Section> sections = application.getCompetition().getSections();
-
-            List<Question> questions = sections.stream()
-                    .flatMap(section -> section.getQuestions().stream())
-                    .filter(Question::isMarkAsCompletedEnabled)
-                    .collect(toList());
-
-            List<ProcessRole> processRoles = application.getProcessRoles();
-
-            Set<Organisation> organisations = processRoles.stream()
-                    .filter(p -> p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
-                    .map(ProcessRole::getOrganisation).collect(Collectors.toSet());
-
-            Long countMultipleStatusQuestionsCompleted = organisations.stream()
-                    .mapToLong(org -> questions.stream()
-                            .filter(Question::getMarkAsCompletedEnabled)
-                            .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, org.getId()).getSuccessObject()).count())
-                    .sum();
-
-            Long countSingleStatusQuestionsCompleted = questions.stream()
-                    .filter(Question::getMarkAsCompletedEnabled)
-                    .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, applicationId, 0L).getSuccessObject()).count();
-
-            Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
-
-            Long totalMultipleStatusQuestions = questions.stream().filter(Question::hasMultipleStatuses).count() * organisations.size();
-            Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
-
-            Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
-            LOG.info("Total questions" + totalQuestions);
-            LOG.info("Total completed questions" + countCompleted);
-
-            if (questions.isEmpty()) {
-                return BigDecimal.ZERO;
-            } else if (totalQuestions.compareTo(countCompleted) == 0){
-                return BigDecimal.valueOf(100).setScale(2); // make sure there is no result like 100.0000000001 because of rounding issues.
-            } else {
-                BigDecimal result = BigDecimal.valueOf(100.00).setScale(10, BigDecimal.ROUND_HALF_DOWN);
-                result = result.divide(new BigDecimal(totalQuestions.toString()), 10, BigDecimal.ROUND_HALF_UP);
-                result = result.multiply(new BigDecimal(countCompleted.toString()));
-                return result;
-            }
-        });
+        return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
     }
 
+    private BigDecimal progressPercentageForApplication(Application application) {
+        List<Section> sections = application.getCompetition().getSections();
+
+        List<Question> questions = sections.stream()
+                .flatMap(section -> section.getQuestions().stream())
+                .filter(Question::isMarkAsCompletedEnabled)
+                .collect(toList());
+
+        List<ProcessRole> processRoles = application.getProcessRoles();
+
+        Set<Organisation> organisations = processRoles.stream()
+                .filter(p -> p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
+                .map(ProcessRole::getOrganisation).collect(Collectors.toSet());
+
+        Long countMultipleStatusQuestionsCompleted = organisations.stream()
+                .mapToLong(org -> questions.stream()
+                        .filter(Question::getMarkAsCompletedEnabled)
+                        .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), org.getId()).getSuccessObject()).count())
+                .sum();
+
+        Long countSingleStatusQuestionsCompleted = questions.stream()
+                .filter(Question::getMarkAsCompletedEnabled)
+                .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), 0L).getSuccessObject()).count();
+
+        Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
+
+        Long totalMultipleStatusQuestions = questions.stream().filter(Question::hasMultipleStatuses).count() * organisations.size();
+        Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
+
+        Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
+        LOG.info("Total questions" + totalQuestions);
+        LOG.info("Total completed questions" + countCompleted);
+
+        if (questions.isEmpty()) {
+            return BigDecimal.ZERO;
+        } else if (totalQuestions.compareTo(countCompleted) == 0){
+            return BigDecimal.valueOf(100).setScale(2); // make sure there is no result like 100.0000000001 because of rounding issues.
+        } else {
+            BigDecimal result = BigDecimal.valueOf(100.00).setScale(10, BigDecimal.ROUND_HALF_DOWN);
+            result = result.divide(new BigDecimal(totalQuestions.toString()), 10, BigDecimal.ROUND_HALF_UP);
+            result = result.multiply(new BigDecimal(countCompleted.toString()));
+            return result;
+        }
+    }
+    
     private List<ApplicationResource> applicationsToResources(List<Application> filtered) {
         return simpleMap(filtered, application -> applicationMapper.mapToResource(application));
     }
