@@ -13,7 +13,6 @@ public class UserTest {
     List<ProcessRole> processRoles;
     Long id;
     String imageUrl;
-    String password;
     String email;
     String uid;
     private String firstName;
@@ -26,7 +25,6 @@ public class UserTest {
         firstName = "firstName";
         lastName = "lastName";
         email = "test@innovateuk.org";
-        password = "test123";
         imageUrl = "/image/url/test";
         uid = "uid";
 
@@ -35,7 +33,7 @@ public class UserTest {
         processRoles.add(new ProcessRole());
         processRoles.add(new ProcessRole());
 
-        user = new User(id, firstName, lastName, email, password, imageUrl, processRoles, "uid");
+        user = new User(id, firstName, lastName, email, imageUrl, processRoles, "uid");
     }
 
     @Test

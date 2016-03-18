@@ -31,9 +31,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void userControllerShouldReturnAllUsers() throws Exception {
-        User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "password", "test/image/url/1", null, "testToken123abc");
-        User testUser2 = new User(2L, "test", "User2", "email2@email.nl", "password", "test/image/url/2", null, "testToken456def");
-        User testUser3 = new User(3L, "test", "User3", "email3@email.nl", "password", "test/image/url/3", null, "testToken789ghi");
+        User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "test/image/url/1", null, "testToken123abc");
+        User testUser2 = new User(2L, "test", "User2", "email2@email.nl", "test/image/url/2", null, "testToken456def");
+        User testUser3 = new User(3L, "test", "User3", "email3@email.nl", "test/image/url/3", null, "testToken789ghi");
 
         List<User> users = new ArrayList<>();
         users.add(testUser1);
@@ -63,7 +63,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void userControllerShouldReturnUserById() throws Exception {
-        User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "password", "test/image/url/1", null, "testToken123abc");
+        User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "test/image/url/1", null, "testToken123abc");
 
         when(userServiceMock.getUserById(testUser1.getId())).thenReturn(serviceSuccess(testUser1));
         mockMvc.perform(get("/user/id/" + testUser1.getId()))
@@ -111,7 +111,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void userControllerShouldReturnUserByUid() throws Exception {
-        User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "password", "test/image/url/1", null, "testToken123abc");
+        User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "test/image/url/1", null, "testToken123abc");
 
         when(userServiceMock.getUserByUid(testUser1.getUid())).thenReturn(serviceSuccess(testUser1));
 
