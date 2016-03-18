@@ -20,11 +20,17 @@ Resource          ../../../resources/keywords/User_actions.robot
 Resource          ../../../resources/variables/User_credentials.robot
 
 *** Variables ***
-${OVERVIEW_PAGE_APPLICATION_7}    ${SERVER}/application/7/
-${SUMMARY_PAGE_APPLICATION_7}    ${SERVER}/application/7/summary
-${SUBMITTED_PAGE_APPLICATION_7}    ${SERVER}/application/7/submit
-${FINANCE_SECTION_7}    ${SERVER}/application/7/form/section/7
-${PROJECT_SUMMARY_APPLICATION_7}    ${SERVER}/application/7/form/question/11
+${OVERVIEW_PAGE_APPLICATION_7}             ${SERVER}/application/7/
+${SUMMARY_PAGE_APPLICATION_7}              ${SERVER}/application/7/summary
+${SUBMITTED_PAGE_APPLICATION_7}            ${SERVER}/application/7/submit
+${FINANCE_SECTION_7}                       ${SERVER}/application/7/form/section/7
+${PROJECT_SUMMARY_APPLICATION_7}           ${SERVER}/application/7/form/question/11
+${PUBLIC_DESCRIPTION_APPLICATION_7}        ${SERVER}/application/7/form/question/12
+${BUSINESS_OPPORTUNITY_APPLICATION_7}      ${SERVER}/application/7/form/question/1
+${POTENTIAL_MARKET_APPLICATION_7}          ${SERVER}/application/7/form/question/2
+
+
+
 
 *** Test Cases ***
 Submit button disabled when the application is incomplete
@@ -67,7 +73,7 @@ Submit flow (complete application)
 Status of the submitted application
     [Documentation]    INFUND-1137
     [Tags]      Pending
-    # Note that this step is pending since we need the updated finances secitons marked as complete for each partner in the webtest database
+    # Note that this step is pending since we need the updated finances sections marked as complete for each partner in the webtest database
     # TODO EC - Get in touch with Nico to arrange this
     When the user navigates to the page    ${DASHBOARD_URL}
     Then the status of the "Marking it as complete" application should be submitted
@@ -76,6 +82,19 @@ Status of the submitted application
     And the user should see the element    Link=Print Application
     When the user clicks the button/link    Link=Print Application
     Then the user should be redirected to the correct page    ${SERVER}/application/7/print
+
+
+Submitted application is read only
+    [Documentation]         INFUND-1938
+    [Tags]          Pending
+    # Note that this step is pending since we need the updated finances sections marked as complete for each partner in the webtest database
+    Given the user navigates to the page            ${DASHBOARD_URL}
+    And the user clicks the button          Link=Marking it as complete
+    When the user clicks the button      Link=View Application
+    And the user is on the page         summary
+    Then the user can check that the sections are read only
+
+
 
 *** Keywords ***
 the applicant clicks Yes in the submit modal
@@ -112,3 +131,13 @@ The applicant marks the first finance section as complete
 
 Then the status of the "Marking it as complete" application should be submitted
     Element Should Contain    css=li:nth-child(4)    Application submitted
+
+
+
+The user can check that the sections are read only
+    The user navigates to the page      ${PUBLIC_DESCRIPTION_APPLICATION_7}
+    Wait Until Element Is Visible        css=#form-input-12 .readonly
+    The user navigates to the page      ${BUSINESS_OPPORTUNITY_APPLICATION_7}
+    Wait Until Element Is Visible        css=#form-input-1 .readonly
+    The user navigates to the page      ${POTENTIAL_MARKET_APPLICATION_7}
+    Wait Until Element Is Visible        css=#form-input-12 .readonly
