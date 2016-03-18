@@ -63,7 +63,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     @Test
     public void documentFindByUserId() throws Exception {
         Long userId = 1L;
-        User testUser1 = new User(userId, "test", "User1", "email1@email.nl", "password", "testToken123abc", null, "my-uid2");
+        User testUser1 = new User(userId, "test", "User1", "email1@email.nl", "testToken123abc", null, "my-uid2");
 
         List<ApplicationResource> applications = applicationResourceBuilder.build(2);
 

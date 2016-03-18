@@ -212,7 +212,7 @@ public class ApplicationFinanceController {
     }
 
     @RequestMapping(value = "/financeDocument", method = GET)
-    public @ResponseBody ResponseEntity<?> getFileContents(
+    public @ResponseBody ResponseEntity<Object> getFileContents(
             @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
 
         // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter

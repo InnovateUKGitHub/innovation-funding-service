@@ -21,6 +21,7 @@ import java.util.Collections;
 /**
  * This controller can handle all Exceptions, so the user should always gets a
  * nice looking error page, or a json error message is returned.
+ * NOTE: Make sure every (non json) response uses createExceptionModelAndView as it also sets login and dashboard links
  */
 @ControllerAdvice
 public class ErrorController extends BaseErrorController{
@@ -39,9 +40,9 @@ public class ErrorController extends BaseErrorController{
 
     @ResponseStatus(HttpStatus.ALREADY_REPORTED)     // 400
     @ExceptionHandler(value = InvalidURLException.class)
-    public ModelAndView invalidUrlErrorHandler(InvalidURLException e) {
+    public ModelAndView invalidUrlErrorHandler(HttpServletRequest req, InvalidURLException e) {
         log.debug("ErrorController invalidUrlErrorHandler", e);
-        return new ModelAndView(URL_HASH_INVALID_TEMPLATE);
+        return createExceptionModelAndView(e, "url-hash-invalid", req, e.getArguments(), HttpStatus.ALREADY_REPORTED);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)     // 400

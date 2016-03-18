@@ -1,5 +1,50 @@
 package com.worth.ifs.application;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+
+import java.io.IOException;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StringMultipartFileEditor;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,41 +61,12 @@ import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.AjaxResult;
 import com.worth.ifs.util.MessageUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
-import org.springframework.web.multipart.support.StringMultipartFileEditor;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -108,14 +124,14 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
                 Optional.ofNullable(question), userApplicationRoles);
-        form.bindingResult = bindingResult;
-        form.objectErrors = bindingResult.getAllErrors();
+        form.setBindingResult(bindingResult);
+        form.setObjectErrors(bindingResult.getAllErrors());
         return "application-form";
     }
 
     @ProfileExecution
     @RequestMapping(value = "/question/{questionId}/forminput/{formInputId}/download", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<?> downloadQuestionFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
                                 @PathVariable("applicationId") final Long applicationId,
                                 @PathVariable("questionId") final Long questionId,
                                 @PathVariable("formInputId") final Long formInputId,
@@ -127,7 +143,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/{applicationFinanceId}/finance-download", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<?> downloadQuestionFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             HttpServletRequest request) throws Exception {
@@ -138,7 +154,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return getPdfFile(resource);
     }
 
-    private ResponseEntity<?> getPdfFile(ByteArrayResource resource) {
+    private ResponseEntity<ByteArrayResource> getPdfFile(ByteArrayResource resource) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentLength(resource.contentLength());
         httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
@@ -161,8 +177,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         addNavigation(section, applicationId, model);
 
-        form.bindingResult = bindingResult;
-        form.objectErrors = bindingResult.getAllErrors();
+        form.setBindingResult(bindingResult);
+        form.setObjectErrors(bindingResult.getAllErrors());
 
         return "application-form";
     }
@@ -218,8 +234,8 @@ public class ApplicationFormController extends AbstractApplicationController {
                 cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
             }
 
-            form.bindingResult = bindingResult;
-            form.objectErrors = bindingResult.getAllErrors();
+            form.setBindingResult(bindingResult);
+            form.setObjectErrors(bindingResult.getAllErrors());
             /* End save action */
 
             if (bindingResult.hasErrors()) {
@@ -482,8 +498,8 @@ public class ApplicationFormController extends AbstractApplicationController {
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
-        form.bindingResult = bindingResult;
-        form.objectErrors = bindingResult.getAllErrors();
+        form.setBindingResult(bindingResult);
+        form.setObjectErrors(bindingResult.getAllErrors());
 
         if(bindingResult.hasErrors()){
             SectionResource section = sectionService.getById(sectionId);
@@ -593,34 +609,36 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .forEach(question -> question.getFormInputs()
                         .stream()
                         .filter(formInput1 -> "fileupload".equals(formInput1.getFormInputType().getTitle()) && request instanceof StandardMultipartHttpServletRequest)
-                        .forEach(formInput -> {
-                            if (params.containsKey(REMOVE_UPLOADED_FILE)) {
-                                formInputResponseService.removeFile(formInput.getId(), applicationId, processRoleId).getSuccessObjectOrThrowException();
-                            } else {
-                                final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
-                                final MultipartFile file = fileMap.get("formInput[" + formInput.getId() + "]");
-                                if (file != null && !file.isEmpty()) {
-                                    try {
-                                        RestResult<FileEntryResource> result = formInputResponseService.createFile(formInput.getId(),
-                                                applicationId,
-                                                processRoleId,
-                                                file.getContentType(),
-                                                file.getSize(),
-                                                file.getOriginalFilename(),
-                                                file.getBytes());
-                                        if (result.isFailure()) {
-                                            errorMap.put(formInput.getId(),
-                                                    result.getFailure().getErrors().stream()
-                                                            .map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
-                                        }
-                                    } catch (IOException e) {
-                                    	log.error(e);
-                                        throw new UnableToReadUploadedFile();
-                                    }
-                                }
-                            }
-                        }));
+                        .forEach(formInput -> processFormInput(formInput, params, applicationId, processRoleId, request, errorMap)));
         return errorMap;
+    }
+    
+    private void processFormInput(FormInput formInput, Map<String, String[]> params, Long applicationId, Long processRoleId, HttpServletRequest request, Map<Long, List<String>> errorMap){
+        if (params.containsKey(REMOVE_UPLOADED_FILE)) {
+            formInputResponseService.removeFile(formInput.getId(), applicationId, processRoleId).getSuccessObjectOrThrowException();
+        } else {
+            final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
+            final MultipartFile file = fileMap.get("formInput[" + formInput.getId() + "]");
+            if (file != null && !file.isEmpty()) {
+                try {
+                    RestResult<FileEntryResource> result = formInputResponseService.createFile(formInput.getId(),
+                            applicationId,
+                            processRoleId,
+                            file.getContentType(),
+                            file.getSize(),
+                            file.getOriginalFilename(),
+                            file.getBytes());
+                    if (result.isFailure()) {
+                        errorMap.put(formInput.getId(),
+                                result.getFailure().getErrors().stream()
+                                        .map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
+                    }
+                } catch (IOException e) {
+                	log.error(e);
+                    throw new UnableToReadUploadedFile();
+                }
+            }
+        }
     }
 
     /**

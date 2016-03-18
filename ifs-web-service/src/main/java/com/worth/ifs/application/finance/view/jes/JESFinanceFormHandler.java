@@ -6,6 +6,8 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,24 +23,21 @@ import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.CostType;
-import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.util.MessageUtil;
-import org.apache.commons.lang3.NotImplementedException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 public class JESFinanceFormHandler implements FinanceFormHandler {
+	
+	private static final Log LOG = LogFactory.getLog(JESFinanceFormHandler.class);
+	
     @Autowired
     private CostService costService;
 
@@ -189,6 +188,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
                                                 MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
                     }
                 } catch (IOException e) {
+                	LOG.error(e);
                     throw new UnableToReadUploadedFile();
                 }
             }
