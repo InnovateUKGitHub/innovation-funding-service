@@ -116,9 +116,9 @@ Lead Applicant should have the correct status
     Should Be Equal As Strings    ${input_value}    (Lead Applicant)
 
 the user adds new collaborator
-    Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(1)
-    Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(1) input    Roger Axe
-    Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(2) input    ewan+13@hiveit.co.uk
+    Wait Until Element Is Visible    name=organisations[0].invites[0].personName
+    Input Text    name=organisations[0].invites[0].personName    Roger Axe
+    Input Text    name=organisations[0].invites[0].email    ewan+13@hiveit.co.uk
     focus    jquery=li:nth-child(1) button:contains('Add person')
     sleep    1s
 
