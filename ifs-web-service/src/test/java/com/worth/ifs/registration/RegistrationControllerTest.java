@@ -122,7 +122,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void testSuccessUrl() throws Exception {
-        mockMvc.perform(get("/registration/success"))
+        mockMvc.perform(get("/registration/success").header("referer", "ifs-app"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("registration/successful"))
         ;
@@ -130,7 +130,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void testVerifiedUrl() throws Exception {
-        mockMvc.perform(get("/registration/verified"))
+        mockMvc.perform(get("/registration/verified").header("referer", "ifs-app"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("registration/verified"))
         ;

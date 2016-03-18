@@ -1,7 +1,6 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import org.junit.Before;
@@ -92,7 +91,7 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
                 .andExpect(view().name("registration/accept-invite"));
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void testInviteEntryPageInvalid() throws Exception {
         mockMvc.perform(
                 get(String.format("/accept-invite/%s", INVALID_INVITE_HASH))
