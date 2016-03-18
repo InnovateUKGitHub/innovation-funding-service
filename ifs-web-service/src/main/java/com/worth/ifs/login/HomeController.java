@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -19,11 +20,6 @@ public class HomeController {
 
     @Autowired
     UserAuthenticationService userAuthenticationService;
-
-    @RequestMapping(value="/", method= RequestMethod.GET)
-    public String login() {
-        return getRedirectUrlForUser();
-    }
 
     public static String getRedirectUrlForUser() {
 
@@ -42,14 +38,28 @@ public class HomeController {
 
         String roleName = "";
 
-        if(!user.getRoles().isEmpty()) {
+        if (!user.getRoles().isEmpty()) {
             roleName = user.getRoles().get(0).getName();
         }
 
-        return "redirect:/" + roleName + "/dashboard";
+        StringBuilder stringBuilder = new StringBuilder()
+                .append("redirect:");
+
+        if (StringUtils.hasText(roleName)) {
+            stringBuilder.append("/" + roleName);
+        }
+
+        return stringBuilder
+                .append("/dashboard")
+                .toString();
     }
 
     private static boolean unauthenticated(Authentication authentication) {
         return authentication == null || !authentication.isAuthenticated() || authentication.getDetails() == null;
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String login() {
+        return getRedirectUrlForUser();
     }
 }

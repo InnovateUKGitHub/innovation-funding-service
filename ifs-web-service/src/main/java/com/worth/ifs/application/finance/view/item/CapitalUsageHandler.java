@@ -1,19 +1,16 @@
 package com.worth.ifs.application.finance.view.item;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.finance.resource.cost.CapitalUsage;
 import com.worth.ifs.finance.resource.cost.CostItem;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Handles the conversion of form fields to a cost item
  */
 public class CapitalUsageHandler extends CostHandler {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Override
     public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {

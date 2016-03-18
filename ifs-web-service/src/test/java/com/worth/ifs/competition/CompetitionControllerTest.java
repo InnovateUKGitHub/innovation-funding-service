@@ -33,7 +33,7 @@ public class CompetitionControllerTest extends BaseUnitTest {
 
     @Test
     public void testCompetitionDetailsCompetitionId() throws Exception {
-        User user = new User(1L, "testname", null, null, null, null, null);
+        User user = new User(1L, "test", "name", null, null, null, null);
         loginUser(user);
 
         Long compId = 20L;

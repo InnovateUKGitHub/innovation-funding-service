@@ -1,5 +1,8 @@
 package com.worth.ifs;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.rest.RestResultHandlingHttpMessageConverter;
 import org.junit.Before;
 import org.junit.Rule;
@@ -8,16 +11,18 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.restdocs.RestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-
+import com.worth.ifs.commons.error.Error;
 import java.util.List;
 
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 /**
  * This is the base class for testing Controllers using MockMVC in addition to standard Mockito mocks.  Using MockMVC
@@ -64,5 +69,13 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                         .withHost("localhost")
                         .withPort(8090))
                 .build();
+    }
+
+    protected static ResultMatcher contentIs(final Object json) throws JsonProcessingException {
+        return content().string(new ObjectMapper().writeValueAsString(json));
+    }
+
+    protected static ResultMatcher contentIs(final Error error) throws JsonProcessingException {
+        return contentIs(new RestErrorResponse(error));
     }
 }

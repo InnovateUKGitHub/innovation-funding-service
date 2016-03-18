@@ -1,5 +1,13 @@
 package com.worth.ifs.assessment;
 
+import static com.worth.ifs.application.service.Futures.call;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Optional.empty;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +18,24 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.finance.view.DefaultFinanceModelManager;
-import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -32,29 +53,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-
-import static com.worth.ifs.application.service.Futures.call;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Optional.empty;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.OK;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -75,9 +73,6 @@ public class AssessmentController extends AbstractApplicationController {
 
     @Autowired
     AssessmentRestService assessmentRestService;
-
-    @Autowired
-    FinanceOverviewModelManager financeOverviewModelManager;
 
     private String competitionAssessmentsURL(Long competitionID) {
         return "/assessor/competitions/" + competitionID + "/applications";
@@ -124,8 +119,8 @@ public class AssessmentController extends AbstractApplicationController {
                                                HttpServletRequest req) {
 
         Long userId = getLoggedUser(req).getId();
-        form.bindingResult = bindingResult;
-        form.objectErrors = bindingResult.getAllErrors();
+        form.setBindingResult(bindingResult);
+        form.setObjectErrors(bindingResult.getAllErrors());
         model.addAttribute("form", form);
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
         return solvePageForApplicationAssessment(model, competitionId, applicationId, empty(), userId, userApplicationRoles);
@@ -138,16 +133,15 @@ public class AssessmentController extends AbstractApplicationController {
                                                HttpServletRequest req) {
 
         Long userId = getLoggedUser(req).getId();
-        form.bindingResult = bindingResult;
-        form.objectErrors = bindingResult.getAllErrors();
+        form.setBindingResult(bindingResult);
+        form.setObjectErrors(bindingResult.getAllErrors());
         model.addAttribute("form", form);
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
         return solvePageForApplicationAssessment(model, competitionId, applicationId, Optional.of(sectionId), userId, userApplicationRoles);
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/response/{responseId}", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<?> updateQuestionAssessmentFeedback(@PathVariable("competitionId") String competitionId,
-                                                              @PathVariable("responseId") final Long responseId,
+    public ResponseEntity<Void> updateQuestionAssessmentFeedback(@PathVariable("responseId") final Long responseId,
                                                               @RequestParam("feedbackValue") final Optional<String> feedbackValueParam,
                                                               @RequestParam("feedbackText") final Optional<String> feedbackTextParam,
                                                               HttpServletRequest request) {

@@ -1,3 +1,4 @@
+
 package com.worth.ifs.commons.rest;
 
 import com.worth.ifs.commons.error.Error;
@@ -53,7 +54,7 @@ public class RestFailure {
 
     public boolean has(Error... expectedErrors) {
         List<Error> expectedErrorsList = asList(expectedErrors);
-        return expectedErrorsList.size() > 0 && this.errors.size() >= expectedErrorsList.size() && hasMatchingErrorKey(errors, expectedErrorsList.get(0));
+        return !expectedErrorsList.isEmpty() && this.errors.size() >= expectedErrorsList.size() && hasMatchingErrorKey(errors, expectedErrorsList.get(0));
     }
 
     public boolean is(ErrorTemplate... expectedErrorTemplates) {

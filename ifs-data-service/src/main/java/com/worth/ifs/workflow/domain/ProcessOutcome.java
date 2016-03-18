@@ -18,6 +18,7 @@ public class ProcessOutcome {
     private Process process;
 
     public ProcessOutcome() {
+    	// no-arg constructor
     }
 
     public ProcessOutcome(String outcome, String description, String comment) {

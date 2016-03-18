@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.mapper.CompetitionMapper;
-import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 
@@ -18,9 +17,6 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
  */
 @Service
 public class CompetitionServiceImpl extends BaseTransactionalService implements CompetitionService {
-
-    @Autowired
-    private CompetitionRepository competitionRepository;
 
     @Autowired
     private CompetitionMapper competitionMapper;

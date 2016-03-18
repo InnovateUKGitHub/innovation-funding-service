@@ -13,6 +13,7 @@ import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.FinanceModelManager;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.service.ProcessRoleService;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
@@ -36,8 +37,16 @@ public class JESFinanceModelManager implements FinanceModelManager {
         ProcessRole processRole = processRoleService.findProcessRole(userId, applicationId);
         String organisationName = processRole.getOrganisation().getName();
         Map<CostType, CostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
-        AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails, model);
+        AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
+        financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).andOnSuccessReturn(
+                fileEntry -> {
+                    model.addAttribute("filename", fileEntry.getName());
+                    return fileEntry;
+                }
+        );
+
         model.addAttribute("title", organisationName + " finances");
+        model.addAttribute("applicationFinanceId", applicationFinanceResource.getId());
         model.addAttribute("financeView", "academic-finance");
         model.addAttribute("academicFinance", academicFinance);
     }
@@ -56,7 +65,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
         return applicationFinanceResource;
     }
 
-    protected AcademicFinance mapFinancesToFields(Map<CostType, CostCategory> organisationFinanceDetails, Model model) {
+    protected AcademicFinance mapFinancesToFields(Map<CostType, CostCategory> organisationFinanceDetails) {
         AcademicFinance academicFinance = new AcademicFinance();
         organisationFinanceDetails.values()
                 .stream()

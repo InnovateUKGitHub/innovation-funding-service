@@ -137,6 +137,7 @@ public class ApplicationContributorController{
                 .forEach(inviteOrg -> {
                     OrganisationInviteForm invitedOrgForm = new OrganisationInviteForm();
                     invitedOrgForm.setOrganisationName(inviteOrg.getOrganisationName());
+                    invitedOrgForm.setOrganisationNameConfirmed(inviteOrg.getOrganisationNameConfirmed());
                     invitedOrgForm.setOrganisationId(inviteOrg.getOrganisation());
                     invitedOrgForm.setOrganisationInviteId(inviteOrg.getId());
                     contributorsForm.getOrganisations().add(invitedOrgForm);
@@ -278,10 +279,7 @@ public class ApplicationContributorController{
     private Set<String> getSavedEmailAddresses(ApplicationResource application) {
         Set<String> savedEmails = new TreeSet<>();
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
-        savedInvites.forEach(s -> {
-                    s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail()));
-                }
-        );
+        savedInvites.forEach(s -> s.getInviteResources().stream().forEach(i -> savedEmails.add(i.getEmail())));
         return savedEmails;
     }
 
@@ -297,7 +295,7 @@ public class ApplicationContributorController{
 
         // Removing the last person from a organisation will also remove the organisation itself.
         contributorsForm.getOrganisations().get(organisationIndex).getInvites().remove(personIndex);
-        if (organisationIndex != 0 && contributorsForm.getOrganisations().get(organisationIndex).getInvites().size() == 0) {
+        if (organisationIndex != 0 && contributorsForm.getOrganisations().get(organisationIndex).getInvites().isEmpty()) {
             contributorsForm.getOrganisations().remove(organisationIndex);
         }
     }

@@ -1,14 +1,15 @@
-package com.worth.ifs.application.controller;
+package com.worth.ifs.application.documentation;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.controller.AssessorFeedbackController;
 import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.application.transactional.AssessorFeedbackService;
 
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static com.worth.ifs.application.builder.AssessorFeedbackResourceBuilder.newAssessorFeedbackResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.documentation.AssessorFeedbackDocs.assessorFeedbackResourceBuilder;
 import static com.worth.ifs.documentation.AssessorFeedbackDocs.assessorFeedbackResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -29,7 +30,7 @@ public class AssessorFeedbackControllerDocumentation extends BaseControllerMockM
     @Test
     public void documentFindById() throws Exception {
         Long id = 1L;
-        AssessorFeedbackResource assessorFeedback = newAssessorFeedbackResource().build();
+        AssessorFeedbackResource assessorFeedback = assessorFeedbackResourceBuilder.build();
 
         when(assessorFeedbackService.findOne(id)).thenReturn(serviceSuccess(assessorFeedback));
         mockMvc.perform(get("/assessorfeedback/{id}", id))

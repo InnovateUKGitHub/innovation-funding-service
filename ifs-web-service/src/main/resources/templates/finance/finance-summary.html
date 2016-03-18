@@ -19,7 +19,33 @@
         <h2 class="heading-medium">Project cost breakdown</h2>
         <div th:include="finance/finance-summary :: financial_summary_table" th:remove="tag"/>
         <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
+
+        <h2 class="heading-medium">Academic partner breakdown</h2>
+        <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs, please see the below documents.</p>
+        <div th:include="finance/finance-summary :: academic_partner_breakdown" th:remove="tag"/>
     </div>
+
+
+    <div th:fragment="academic_partner_breakdown" th:if="${financeTotalPerType}">
+        <div th:each="organisation : ${academicOrganisations}">
+            <h3 th:text="${organisation.name}" class="heading-medium">University</h3>
+
+            <div th:if="${academicFileEntries.containsKey(organisation.id)}" th:with="fileEntry = ${academicFileEntries.get(organisation.id)}">
+                <div class="upload-section">
+                    <h3 class="heading-small no-margin">Download Je-S form:</h3>
+                    <div class="uploaded-file"><a th:href="@{'/application/'+ ${currentApplication.id} + '/form/' + ${applicationFinanceId} + '/finance-download'}" th:text="${fileEntry.name}"></a></div>
+                </div>
+            </div>
+            <div th:unless="${academicFileEntries.containsKey(organisation.id)}">
+                <div class="upload-section">
+                    <h3 class="heading-small no-margin">Download Je-S form:</h3>
+                    <div class="uploaded-file">No file currently uploaded</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- ===========================Form: financial summary/breakdown table =========================== -->
     <div th:fragment="financial_summary_table" th:if="${financeTotalPerType}">
         <div class="form-group project-cost-breakdown">

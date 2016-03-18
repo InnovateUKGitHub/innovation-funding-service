@@ -56,8 +56,4 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
         return slr;
     }
 
-    /*@Bean
-    public Filter errorHandlerFilter(){
-        return new ErrorHandlerFilter();
-    }*/
 }

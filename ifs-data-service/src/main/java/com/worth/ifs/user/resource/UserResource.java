@@ -1,10 +1,12 @@
 package com.worth.ifs.user.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,6 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public class UserResource {
     private Long id;
     private String title;
-    private String name;
     private String firstName;
     private String lastName;
     private String inviteName;
@@ -29,12 +30,12 @@ public class UserResource {
     private List<Long> organisationIds = new ArrayList<>();
 
     public UserResource() {
+    	// no-arg constructor
     }
 
     public UserResource(User user) {
         id = user.getId();
         title = user.getTitle();
-        name = user.getName();
         firstName = user.getFirstName();
         lastName = user.getLastName();
         inviteName = user.getInviteName();
@@ -62,12 +63,19 @@ public class UserResource {
         this.title = title;
     }
 
+    @JsonIgnore
     public String getName() {
-        return name;
-    }
+        StringBuilder stringBuilder = new StringBuilder();
+        if(StringUtils.hasText(firstName)){
+            stringBuilder.append(firstName)
+                    .append(" ");
+        }
 
-    public void setName(String name) {
-        this.name = name;
+        stringBuilder
+                .append(lastName)
+                .toString();
+
+        return stringBuilder.toString();
     }
 
     public String getFirstName() {
@@ -145,7 +153,6 @@ public class UserResource {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(title, that.title)
-                .append(name, that.name)
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
                 .append(inviteName, that.inviteName)
@@ -163,7 +170,6 @@ public class UserResource {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(title)
-                .append(name)
                 .append(firstName)
                 .append(lastName)
                 .append(inviteName)

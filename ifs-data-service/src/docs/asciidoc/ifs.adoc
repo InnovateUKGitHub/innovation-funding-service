@@ -109,6 +109,18 @@ include::application.adoc[]
 == Application Status
 include::application-status.adoc[]
 
+[[assessorfeedback]]
+== AssessorFeedback
+include::assessor-feedback.adoc[]
+
+[[question]]
+== Question
+include::question.adoc[]
+
+[[competition]]
+== Competition
+include::competition.adoc[]
+
 [[assessment]]
 == Assessment
 include::assessment.adoc[]

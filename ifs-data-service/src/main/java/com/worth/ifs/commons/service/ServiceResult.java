@@ -105,6 +105,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      *
      * This will be a bodiless RestResult with a "200 - OK" response.
      */
+    @Deprecated
     public RestResult<Void> toPostUpdateResponse() {
         return handleSuccessOrFailure(failure -> toRestFailure(), success -> RestResult.toPostUpdateResponse());
     }
@@ -128,6 +129,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
      * This will be a RestResult containing the body of the ServiceResult with a "200 - OK" response, although ideally
      * PUT responses shouldn't need to inculde bodies.
      */
+    @Deprecated
     public RestResult<T> toPutWithBodyResponse() {
         return handleSuccessOrFailure(failure -> toRestFailure(), RestResult::toPutWithBodyResponse);
     }

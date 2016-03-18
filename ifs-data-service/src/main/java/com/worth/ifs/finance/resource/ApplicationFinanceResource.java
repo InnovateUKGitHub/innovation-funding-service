@@ -25,6 +25,7 @@ public class ApplicationFinanceResource {
     Long id;
     private Long organisation;
     private Long application;
+    private Long financeFileEntry;
     private OrganisationSize organisationSize;
     private Map<CostType, CostCategory> financeOrganisationDetails;
 
@@ -34,10 +35,14 @@ public class ApplicationFinanceResource {
             this.organisation = applicationFinance.getOrganisation().getId();
             this.application = applicationFinance.getApplication().getId();
             this.organisationSize = applicationFinance.getOrganisationSize();
+            if(applicationFinance.getFinanceFileEntry()!=null) {
+                this.financeFileEntry = applicationFinance.getFinanceFileEntry().getId();
+            }
         }
     }
 
     public ApplicationFinanceResource() {
+    	// no-arg constructor
     }
 
     public ApplicationFinanceResource(Long id, Long organisation, Long application, OrganisationSize organisationSize) {
@@ -69,6 +74,14 @@ public class ApplicationFinanceResource {
 
     public void setApplication(Long application) {
         this.application = application;
+    }
+
+    public Long getFinanceFileEntry() {
+        return financeFileEntry;
+    }
+
+    public void setFinanceFileEntry(Long financeFileEntry) {
+        this.financeFileEntry = financeFileEntry;
     }
 
     public OrganisationSize getOrganisationSize() {
@@ -130,7 +143,7 @@ public class ApplicationFinanceResource {
 
     public Integer getGrantClaimPercentage() {
         CostCategory costCategory = getFinanceOrganisationDetails(CostType.FINANCE);
-        return costCategory != null && costCategory.getTotal()!= null? costCategory.getTotal().intValueExact() : null;
+        return (costCategory != null && costCategory.getTotal() != null) ? costCategory.getTotal().intValueExact() : null;
     }
 
     public BigDecimal getTotalFundingSought() {
@@ -174,6 +187,7 @@ public class ApplicationFinanceResource {
                 .append(id, that.id)
                 .append(organisation, that.organisation)
                 .append(application, that.application)
+                .append(financeFileEntry, that.financeFileEntry)
                 .append(organisationSize, that.organisationSize)
                 .append(financeOrganisationDetails, that.financeOrganisationDetails)
                 .isEquals();
@@ -185,6 +199,7 @@ public class ApplicationFinanceResource {
                 .append(id)
                 .append(organisation)
                 .append(application)
+                .append(financeFileEntry)
                 .append(organisationSize)
                 .append(financeOrganisationDetails)
                 .toHashCode();

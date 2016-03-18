@@ -4,9 +4,6 @@ public class InviteResultsResource {
     private int invitesSendSuccess;
     private int invitesSendFailure;
 
-    public InviteResultsResource() {
-    }
-
     public int getInvitesSendSuccess() {
         return invitesSendSuccess;
     }

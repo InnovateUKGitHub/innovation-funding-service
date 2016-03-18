@@ -1,42 +1,27 @@
-package com.worth.ifs.application.controller;
-
-import java.util.List;
+package com.worth.ifs.application.documentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.controller.ApplicationController;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
-
 import org.junit.Test;
 
-import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ALL_SECTION_COMPLETE;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.PROGRESS;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.READY_FOR_SUBMIT;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.RESEARCH_PARTICIPATION;
-import static com.worth.ifs.application.transactional.ApplicationServiceImpl.RESEARCH_PARTICIPATION_VALID;
+import java.util.List;
+
+import static com.worth.ifs.application.transactional.ApplicationServiceImpl.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static com.worth.ifs.documentation.ApplicationDocs.applicationResourceBuilder;
 import static com.worth.ifs.documentation.ApplicationDocs.applicationResourceFields;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
-import static java.util.Arrays.asList;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 
 public class ApplicationControllerDocumentation extends BaseControllerMockMVCTest<ApplicationController> {
 
@@ -48,11 +33,9 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     @Test
     public void documentGetApplicationById() throws Exception {
         Long application1Id = 1L;
-        Application testApplication1 = newApplication().withId(application1Id).withName("testApplication1Name").build();
-        Competition competition = newCompetition().withName("Technology Inspired").build();
-        ApplicationResource testApplicationResource1 = newApplicationResource().withId(application1Id).withCompetition(competition).withName("testApplication1Name").build();
+        ApplicationResource testApplicationResource1 = applicationResourceBuilder.build();
 
-        when(applicationService.getApplicationById(testApplication1.getId())).thenReturn(serviceSuccess(testApplicationResource1));
+        when(applicationService.getApplicationById(application1Id)).thenReturn(serviceSuccess(testApplicationResource1));
 
         mockMvc.perform(get("/application/{id}", application1Id))
                 .andDo(document("application/get-application",
@@ -66,7 +49,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     @Test
     public void documentFindAll() throws Exception {
         int applicationNumber = 3;
-        List<ApplicationResource> applications = newApplicationResource().build(applicationNumber);
+        List<ApplicationResource> applications = applicationResourceBuilder.build(applicationNumber);
         when(applicationService.findAll()).thenReturn(serviceSuccess(applications));
 
         mockMvc.perform(get("/application/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
@@ -80,11 +63,11 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     @Test
     public void documentFindByUserId() throws Exception {
         Long userId = 1L;
-        User testUser1 = new User(userId, "testUser1", "email1@email.nl", "password", "testToken123abc", null, "my-uid2");
+        User testUser1 = new User(userId, "test", "User1", "email1@email.nl", "testToken123abc", null, "my-uid2");
 
-        ApplicationResource testApplicationResource1 = newApplicationResource().withId(1L).withName("testApplication1Name").build();
+        List<ApplicationResource> applications = applicationResourceBuilder.build(2);
 
-        when(applicationService.findByUserId(testUser1.getId())).thenReturn(serviceSuccess(asList(testApplicationResource1, testApplicationResource1)));
+        when(applicationService.findByUserId(testUser1.getId())).thenReturn(serviceSuccess(applications));
 
         mockMvc.perform(get("/application/findByUser/{id}", userId))
                 .andDo(document("application/find-user-applications",
@@ -101,7 +84,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         Long applicationId = 1L;
         ObjectMapper mapper = new ObjectMapper();
 
-        ApplicationResource testApplicationResource1 = newApplicationResource().withId(applicationId).withName("testApplication1Name").build();
+        ApplicationResource testApplicationResource1 = applicationResourceBuilder.build();
 
         when(applicationService.saveApplicationDetails(applicationId, testApplicationResource1)).thenReturn(serviceSuccess(null));
 
@@ -143,7 +126,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         Long applicationId = 1L;
         Long statusId = 1L;
 
-        ApplicationResource applicationResource = newApplicationResource().build();
+        ApplicationResource applicationResource = applicationResourceBuilder.build();
 
         when(applicationService.updateApplicationStatus(applicationId, statusId)).thenReturn(serviceSuccess(applicationResource));
 
@@ -191,7 +174,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         Long userId = 1L;
         UserRoleType role = LEADAPPLICANT;
 
-        List<ApplicationResource> applicationResources = newApplicationResource().build(3);
+        List<ApplicationResource> applicationResources = applicationResourceBuilder.build(2);
 
         when(applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role)).thenReturn(serviceSuccess(applicationResources));
 
@@ -214,7 +197,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         Long userId = 1L;
         String applicationName = "testApplication";
 
-        ApplicationResource applicationResource = newApplicationResource().withName(applicationName).build();
+        ApplicationResource applicationResource = applicationResourceBuilder.build();
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode applicationNameNode = mapper.createObjectNode().put("name", applicationName);

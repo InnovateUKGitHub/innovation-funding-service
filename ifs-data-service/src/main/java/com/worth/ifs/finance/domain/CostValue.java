@@ -25,6 +25,7 @@ public class CostValue {
     private CostField costField;
 
     public CostValue() {
+    	// no-arg constructor
     }
 
     public CostValue(CostField costField, String value) {

@@ -1,19 +1,30 @@
 package com.worth.ifs.user.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import static java.util.stream.Collectors.toList;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.util.StringUtils;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
@@ -21,16 +32,12 @@ import static java.util.stream.Collectors.toList;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
-    private static final CharSequence PASSWORD_SECRET = "a02214f47a45171c";
-
-    private static final Log LOG = LogFactory.getLog(User.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String title;
-    private String name;
     private String firstName;
     private String lastName;
     private String inviteName;
@@ -44,7 +51,6 @@ public class User {
 
     @Column(unique=true)
     private String email;
-    private String password;
 
     @OneToMany(mappedBy="user")
     private List<ProcessRole> processRoles = new ArrayList<>();
@@ -62,36 +68,28 @@ public class User {
     private List<Role> roles = new ArrayList<>();
 
     public User() {
-
+    	// no-arg constructor
     }
 
-    public User(String name, String email, String password, String imageUrl,
+    public User(String firstName, String lastName, String email, String imageUrl,
                 List<ProcessRole> processRoles, String uid) {
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
-        this.password = password;
         this.imageUrl = imageUrl;
         this.processRoles = processRoles;
         this.uid = uid;
     }
 
-    public User(Long id, String name, String email, String password, String imageUrl,
+    public User(Long id, String firstName, String lastName, String email, String imageUrl,
                 List<ProcessRole> processRoles, String uid) {
-        this(name, email, password, imageUrl, processRoles, uid);
+        this(firstName, lastName, email, imageUrl, processRoles, uid);
         this.id = id;
     }
 
 
     public Long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getEmail() {
@@ -139,17 +137,6 @@ public class User {
         this.organisations.addAll(Arrays.asList(o));
     }
 
-    public Boolean passwordEquals(String passwordInput){
-        StandardPasswordEncoder encoder = new StandardPasswordEncoder(PASSWORD_SECRET);
-        LOG.debug(encoder.matches(passwordInput, this.password));
-        return encoder.matches(passwordInput, this.password);
-    }
-
-    public void setPassword(String setPassword) {
-        StandardPasswordEncoder encoder = new StandardPasswordEncoder(PASSWORD_SECRET);
-        this.password = encoder.encode(setPassword);
-    }
-
     public List<Role> getRoles() {
         return roles;
     }
@@ -164,6 +151,21 @@ public class User {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @JsonIgnore
+    public String getName() {
+        StringBuilder stringBuilder = new StringBuilder();
+        if(StringUtils.hasText(firstName)){
+            stringBuilder.append(firstName)
+                    .append(" ");
+        }
+
+        stringBuilder
+                .append(lastName)
+                .toString();
+
+        return stringBuilder.toString();
     }
 
     public String getLastName() {
@@ -205,10 +207,6 @@ public class User {
 
     public void setUid(String uid) {
         this.uid = uid;
-    }
-
-    public String getPassword() {
-        return this.password;
     }
 
     @Override

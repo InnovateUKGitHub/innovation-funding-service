@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class UnableToCreateFoldersException extends IFSRuntimeException {
     public UnableToCreateFoldersException() {
+    	// no-arg constructor
     }
 
     public UnableToCreateFoldersException(List<Object> arguments) {

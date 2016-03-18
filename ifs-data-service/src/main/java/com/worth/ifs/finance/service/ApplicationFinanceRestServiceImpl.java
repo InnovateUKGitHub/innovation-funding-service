@@ -3,10 +3,14 @@ package com.worth.ifs.finance.service;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.controller.ApplicationFinanceController;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -77,5 +81,39 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
     @Override
     public RestResult<List<ApplicationFinanceResource>> getFinanceTotals(Long applicationId) {
         return getWithRestResult(applicationFinanceRestURL + "/financeTotals/" + applicationId, applicationFinanceResourceListType());
+    }
+
+    @Override
+    public RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file) {
+        String url = applicationFinanceRestURL + "/financeDocument" +
+                "?applicationFinanceId=" + applicationFinanceId +
+                "&filename=" + originalFilename;
+
+        final HttpHeaders headers = createHeader(contentType,  contentLength);
+
+        return postWithRestResult(url, file, headers, FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<Void> removeFinanceDocument(Long applicationFinanceId) {
+        String url = applicationFinanceRestURL + "/financeDocument" +
+                "?applicationFinanceId=" + applicationFinanceId;
+
+        return deleteWithRestResult(url, Void.class);
+    }
+
+    @Override
+    public RestResult<ByteArrayResource> getFile(Long applicationFinanceId) {
+        String url = applicationFinanceRestURL + "/financeDocument" +
+                "?applicationFinanceId=" + applicationFinanceId;
+
+        return getWithRestResult(url, ByteArrayResource.class);
+    }
+
+    private HttpHeaders createHeader(String contentType, long contentLength){
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(contentType));
+        headers.setContentLength(contentLength);
+        return headers;
     }
 }

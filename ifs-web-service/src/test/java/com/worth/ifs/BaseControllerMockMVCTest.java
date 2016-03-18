@@ -1,9 +1,11 @@
 package com.worth.ifs;
 
 import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.exception.ErrorController;
 import com.worth.ifs.user.domain.User;
 import org.junit.Before;
 import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -11,10 +13,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 /**
  * This is the base class for testing Controllers using MockMVC in addition to standard Mockito mocks.  Using MockMVC
  * allows Controllers to be tested via their routes and their responses' HTTP responses tested also.
- *
- * Created by dwatson on 02/10/15.
  */
-public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnitTestMocksTest {
+public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnitTest {
 
     @InjectMocks
     protected ControllerType controller = supplyControllerUnderTest();
@@ -25,8 +25,29 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     @Before
     public void setUp() {
-        super.setUp();
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        super.setup();
+        // Process mock annotations
+        MockitoAnnotations.initMocks(this);
+
+        // start with fresh ids when using builders
+        BuilderAmendFunctions.clearUniqueIds();
+
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(controller, new ErrorController())
+                .setHandlerExceptionResolvers(createExceptionResolver())
+                .setViewResolvers(viewResolver())
+                .build();
+    }
+
+    protected void setLoggedInUserAuthentication(UserAuthentication user) {
+        SecurityContextHolder.getContext().setAuthentication(user);
+    }
+
+    /**
+     * Get the user on the Spring Security ThreadLocals
+     */
+    protected User getLoggedInUser() {
+        return ((UserAuthentication) SecurityContextHolder.getContext().getAuthentication()).getDetails();
     }
 
     /**
@@ -36,12 +57,5 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
      */
     protected void setLoggedInUser(User user) {
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
-    }
-
-    /**
-     * Get the user on the Spring Security ThreadLocals
-     */
-    protected User getLoggedInUser() {
-        return ((UserAuthentication) SecurityContextHolder.getContext().getAuthentication()).getDetails();
     }
 }

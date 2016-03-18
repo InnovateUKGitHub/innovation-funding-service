@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface FormInputResponseRestService {
     RestResult<List<FormInputResponse>> getResponsesByApplicationId(Long applicationId);
-    RestResult<List<String>> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String value);
+    RestResult<List<String>> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String value, boolean ignoreEmpty);
     RestResult<FileEntryResource> createFileEntry(long formInputId, long applicationId, long processRoleId, String contentType, long contentLength, String originalFilename, byte[] file);
     RestResult<Void> removeFileEntry(long formInputId, long applicationId, long processRoleId);
     RestResult<ByteArrayResource> getFile(long formInputId, long applicationId, long processRoleId);

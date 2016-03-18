@@ -20,7 +20,7 @@ public class SilEmailBody {
      * For JSON marshalling only
      */
     public SilEmailBody() {
-
+    	// no-arg constructor
     }
 
     public SilEmailBody(String contentType, String content) {

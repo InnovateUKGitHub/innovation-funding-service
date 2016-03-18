@@ -64,7 +64,7 @@ public class Section implements Comparable<Section> {
     }
 
     public Section () {
-
+    	// no-arg constructor
     }
 
     public String getName() {
@@ -81,7 +81,7 @@ public class Section implements Comparable<Section> {
     @JsonIgnore
     public List<Question> fetchAllChildQuestions() {
         LinkedList<Question> sectionQuestions = new LinkedList<>(questions);
-        if(childSections != null && childSections.size() != 0){
+        if(childSections != null && !childSections.isEmpty()){
             LinkedList<Question> childQuestions = childSections.stream()
                     .filter(s -> s.fetchAllChildQuestions() != null && s.fetchAllChildQuestions().size() > 0)
                     .flatMap(s -> s.fetchAllChildQuestions().stream())

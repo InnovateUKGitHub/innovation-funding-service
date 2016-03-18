@@ -34,8 +34,8 @@ Valid invitation submit
     When the applicant enters valid inputs
     And the user verifies their email   ${verify_link_3}
     And the user logs back in
-    Then The user should see the text in the page    Application overview
-    And The user should see the notification    Invites sent
+    Then The user should see the text in the page    Your dashboard
+    And the lead applicant logs back in
 
 Lead applicant can access the Application team page(Link in the overview page)
     [Documentation]    INFUND-928
@@ -93,12 +93,16 @@ the applicant enters valid inputs
     Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    tester
     Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    ewan+1@hiveit.co.uk
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
-    Input Text    name=organisations[2].organisationName    Fannie May
-    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
-    Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+10@hiveit.co.uk
-    Click Element    jquery=li:nth-child(3) button:contains('Add person')
-    Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
-    Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
+    Input Text    name=organisations[3].organisationName    Fannie May
+    #Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
+    Input Text      name=organisations[3].invites[0].personName                     Collaborator 2
+    #Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(3) input    ewan+10@hiveit.co.uk
+    Input Text      name=organisations[3].invites[0].email                          ewan+10@hiveit.co.uk
+    Click Element    jquery=li:nth-child(4) button:contains('Add person')
+    #Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
+    Input Text      name=organisations[3].invites[1].personName                     Collaborator 3
+    #Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
+    Input Text      name=organisations[3].invites[1].email                        ewan+11@hiveit.co.uk
     focus    jquery=li:nth-child(3) button:contains('Add person')
     Sleep    1s
     Click Element    jquery=button:contains("Begin application")
@@ -112,9 +116,9 @@ Lead Applicant should have the correct status
     Should Be Equal As Strings    ${input_value}    (Lead Applicant)
 
 the user adds new collaborator
-    Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(1)
-    Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(1) input    Roger Axe
-    Input Text    css=li:nth-child(1) tr:nth-of-type(4) td:nth-of-type(2) input    ewan+13@hiveit.co.uk
+    Wait Until Element Is Visible    name=organisations[0].invites[0].personName
+    Input Text    name=organisations[0].invites[0].personName    Roger Axe
+    Input Text    name=organisations[0].invites[0].email    ewan+13@hiveit.co.uk
     focus    jquery=li:nth-child(1) button:contains('Add person')
     sleep    1s
 
@@ -149,8 +153,10 @@ the applicant should not be able to assign the question to the users that still 
 the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    That's you!
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-child(3)    (pending)
-    Element Should Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
+    Element Should Not Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
 
 the user logs back in
-    and guest user log-in       ewan+1@hiveit.co.uk     Passw0rd2
+    guest user log-in       ewan+1@hiveit.co.uk     Passw0rd
 
+the lead applicant logs back in
+    guest user log-in        &{lead_applicant_credentials}

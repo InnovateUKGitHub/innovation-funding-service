@@ -22,6 +22,7 @@ public class ApplicationFinanceResourceTest extends BaseUnitTestMocksTest {
     Long id;
     private Long organisation;
     private Long application;
+    private Long fileEntry;
     private OrganisationSize organisationSize;
     private ApplicationFinanceResource applicationFinanceResource;
 
@@ -31,8 +32,10 @@ public class ApplicationFinanceResourceTest extends BaseUnitTestMocksTest {
         id = 0L;
         organisation = 1L;
         application = 1L;
+        fileEntry = 1L;
         organisationSize = OrganisationSize.MEDIUM;
         applicationFinanceResource = new ApplicationFinanceResource(id, organisation, application, organisationSize);
+        applicationFinanceResource.setFinanceFileEntry(fileEntry);
     }
 
     @Test
@@ -41,6 +44,7 @@ public class ApplicationFinanceResourceTest extends BaseUnitTestMocksTest {
         assert(applicationFinanceResource.getOrganisation().equals(organisation));
         assert(applicationFinanceResource.getApplication().equals(application));
         assert(applicationFinanceResource.getOrganisationSize().equals(organisationSize));
+        assert(applicationFinanceResource.getFinanceFileEntry().equals(fileEntry));
     }
 
     @Test
@@ -50,11 +54,13 @@ public class ApplicationFinanceResourceTest extends BaseUnitTestMocksTest {
         applicationFinanceResourceEmpty.setApplication(application);
         applicationFinanceResourceEmpty.setOrganisation(organisation);
         applicationFinanceResourceEmpty.setOrganisationSize(organisationSize);
+        applicationFinanceResourceEmpty.setFinanceFileEntry(fileEntry);
 
         assert(applicationFinanceResource.getId().equals(id));
         assert(applicationFinanceResource.getOrganisation().equals(organisation));
         assert(applicationFinanceResource.getApplication().equals(application));
         assert(applicationFinanceResource.getOrganisationSize().equals(organisationSize));
+        assert(applicationFinanceResource.getFinanceFileEntry().equals(fileEntry));
     }
 
     @Test

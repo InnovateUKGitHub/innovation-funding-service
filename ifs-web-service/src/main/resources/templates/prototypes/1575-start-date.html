@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project details'}, ${'/prototypes/1575-project-details'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Project details'})" th:remove="tag" />
+	
+	<form action="#">
+
+		<fieldset>
+
+			<h2 class="heading-medium">Target project start date</h2>
+
+			<legend class="visuallyhidden">Target project start date</legend>
+
+			<p class="form-hint">When will the project begin?</p>
+			
+			<p>The project can start only when:</p>
+
+			<ul class="list-bullet">
+				<li>you have provided the documents we need</li>
+				<li>we have approved your financial information</li>
+				<li>you have received, signed and returned the grant offer letter</li>
+			</ul>
+			
+			<div class="date-group extra-margin">
+				<div class="day">
+					<label class="form-label" for="start-day">
+							<div>Day</div>
+						</label>
+						<input class="form-control width-extra-small" type="number" placeholder="DD" id="start-day" name="start-day" value="" />
+				</div>
+
+				<div class="month">
+					<label class="form-label" for="start-month">
+							<div>Month</div>
+						</label>
+						<input class="form-control width-extra-small" type="number" placeholder="MM" id="start-month" name="start-month" value="" />
+				</div>
+
+				<div class="year">
+					<label class="form-label" for="start-year">
+							<div>Year</div>
+						</label>
+						<input class="form-control width-extra-small" type="number" placeholder="YYYY" id="start-year" name="start-year" value="" />
+				</div>
+			</div>
+
+			<h3 class="heading-medium">Project duration</h3>
+
+			<p>Project duration stated in application: <br /><strong>9 months</strong></p>
+			
+			<button class="button button-large" formaction="/prototypes/1575-project-details">Save</button>
+
+		</fieldset>
+
+	</form>
+
+	
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+
+
+		//localStorage.setItem('startDate', '10/6/2016');
+
+	});
+	// ]]>
+</script>
+</body>
+</html>

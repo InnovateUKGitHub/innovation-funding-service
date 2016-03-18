@@ -26,6 +26,7 @@ public class QuestionStatusResource {
 
 
     public QuestionStatusResource() {
+    	// no-arg constructor
     }
 
     public QuestionStatusResource(Question question, Application application, ProcessRole markedAsCompleteBy, Boolean markedAsComplete) {

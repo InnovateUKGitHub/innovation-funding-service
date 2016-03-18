@@ -12,7 +12,6 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserStatus;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,9 +46,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     private UserRepository repository;
 
     @Autowired
-    private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
     private TokenRepository tokenRepository;
 
     @Autowired
@@ -68,11 +64,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     @Override
     public ServiceResult<User> getUserById(final Long id) {
         return super.getUser(id);
-    }
-
-    @Override
-    public ServiceResult<List<User>> getUserByName(final String name) {
-        return find(repository.findByName(name), notFoundError(User.class, name));
     }
 
     @Override
@@ -163,10 +154,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
                     }
             );
 
-//            user.setPassword(password);
-//            userRepository.save(user);
-//
-//            return ;
         }
         return serviceFailure(notFoundError(Token.class, hash));
     }

@@ -1,21 +1,16 @@
 package com.worth.ifs.finance.resource.category;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.worth.ifs.finance.resource.cost.CostItem;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.worth.ifs.finance.resource.cost.CostItem;
 
 /**
  * {@code DefaultCostCategory} implementation for {@link CostCategory}.
  * Default representation for costs and defaults to summing up the costs.
  */
 public class DefaultCostCategory implements CostCategory {
-    private final Log log = LogFactory.getLog(getClass());
     List<CostItem> costs = new ArrayList<>();
     BigDecimal total = BigDecimal.ZERO;
 
