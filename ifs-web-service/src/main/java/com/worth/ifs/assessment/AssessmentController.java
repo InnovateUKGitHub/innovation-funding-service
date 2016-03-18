@@ -141,8 +141,7 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/response/{responseId}", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<Void> updateQuestionAssessmentFeedback(@PathVariable("competitionId") String competitionId,
-                                                              @PathVariable("responseId") final Long responseId,
+    public ResponseEntity<Void> updateQuestionAssessmentFeedback(@PathVariable("responseId") final Long responseId,
                                                               @RequestParam("feedbackValue") final Optional<String> feedbackValueParam,
                                                               @RequestParam("feedbackText") final Optional<String> feedbackTextParam,
                                                               HttpServletRequest request) {
