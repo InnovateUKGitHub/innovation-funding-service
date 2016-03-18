@@ -10,7 +10,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Return to competition details',linkClass='link-back',linkUrl=@{../details},currentApplication=${currentApplication}" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition details',linkClass='link-back',linkUrl=@{../details},currentApplication=${currentApplication}" th:remove="tag" />
 
     <div class="page-title">
       <h1 class="heading-xlarge no-margin" th:text="${currentCompetition.name}" />
