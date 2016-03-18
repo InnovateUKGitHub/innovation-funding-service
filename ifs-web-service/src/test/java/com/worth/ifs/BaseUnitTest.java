@@ -228,8 +228,8 @@ public class BaseUnitTest {
     }
 
     public void setup(){
-        loggedInUser = new User(1L, "Nico", "Bijl", "email@email.nl", "test", "image", new ArrayList(), "my-uid");
-        applicant = loggedInUser;
+        applicant = new User(1L, "Nico", "Bijl", "email@email.nl", "test", "image", new ArrayList(), "my-uid");
+        loggedInUser = applicant;
         User user2 = new User(2L, "Brent", "de Kok", "email@email.nl", "test", "image", new ArrayList(), "my-uid2");
         assessor = new User(3L, "Assessor", "LastName", "email@assessor.nl", "test", "image", new ArrayList<>(), "my-uid3");
         users = asList(loggedInUser, user2);
@@ -241,7 +241,9 @@ public class BaseUnitTest {
         questions = new HashMap<>();
         organisations = new ArrayList<>();
         randomGenerator = new Random();
-        
+
+
+        setupUserRoles();
     }
 
     public void setupOrganisationTypes() {
@@ -414,7 +416,7 @@ public class BaseUnitTest {
     public void setupUserRoles() {
         Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
         Role applicantRole = new Role(4L, UserRole.APPLICANT.getRoleName(), null);
-        loggedInUser.setRoles(singletonList(applicantRole));
+        applicant.setRoles(singletonList(applicantRole));
         assessor.setRoles(singletonList(assessorRole));
     }
 
