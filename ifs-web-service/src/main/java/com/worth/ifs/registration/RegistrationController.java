@@ -8,7 +8,6 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteResource;
@@ -30,13 +29,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static com.worth.ifs.login.HomeController.getRedirectUrlForUser;
 
@@ -60,9 +59,6 @@ public class RegistrationController {
     private InviteRestService inviteRestService;
 
     @Autowired
-    private UidAuthenticationService uidAuthenticationService;
-
-    @Autowired
     protected UserAuthenticationService userAuthenticationService;
 
     private final Log log = LogFactory.getLog(getClass());
@@ -71,24 +67,27 @@ public class RegistrationController {
     public final static String EMAIL_FIELD_NAME = "email";
 
     @RequestMapping(value = "/success", method = RequestMethod.GET)
-    public String registrationSuccessful(@RequestHeader(value = "referer") final String referer) {
-        if(referer == null || !Objects.equals(referer, "ifs-app")){
+    public String registrationSuccessful(
+            @RequestHeader(value = "referer", required = false) final String referer,
+            final HttpServletRequest request) {
+        if(referer == null || !referer.contains(request.getServerName() + "/registration/register")){
             throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
         }
         return "registration/successful";
     }
 
     @RequestMapping(value = "/verified", method = RequestMethod.GET)
-    public String verificationSuccessful(@RequestHeader(value = "referer") final String referer) {
-        if(referer == null || !Objects.equals(referer, "ifs-app")){
+    public String verificationSuccessful(@ModelAttribute("redirectedFrom") final Object redirectedFrom) {
+        if(redirectedFrom == null || !redirectedFrom.equals("verifyEmailAddress")){
             throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
         }
         return "registration/verified";
     }
 
     @RequestMapping(value = "/verify-email/{hash}", method = RequestMethod.GET)
-    public String verifyEmailAddress(@PathVariable("hash") final String hash){
+    public String verifyEmailAddress(@PathVariable("hash") final String hash, final RedirectAttributes redirectAttributes){
         if(userService.verifyEmail(hash).isSuccess()){
+            redirectAttributes.addFlashAttribute("redirectedFrom", "verifyEmailAddress");
             return "redirect:/registration/verified";
         }else{
             throw new InvalidURLException();
