@@ -491,7 +491,7 @@
                         type="number"
                         th:id="${'cost-capital_usage-'+cost.id+'-deprecation_period'}"
                         class="form-control form-finances-capital-usage-depreciation"
-                        th:name="${type +'-deprecation_period-' + cost.id}"
+                        th:name="${type +'-deprecation_period-' + question.id + '-' +  cost.id}"
                         th:value="${cost.deprecation}"
                         th:readonly="${complete == 'complete'}" />
             </div>
@@ -554,7 +554,7 @@
     <!-- ===========================Form: subcontracting cost =========================== -->
     <div th:fragment="subcontracting_costs">
         <p th:text="${question.getDescription()}"></p>
-        <div th:remove="tag" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))}">
+        <div th:remove="tag" th:with="formInputType=${question.formInputs.get(0).formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInputType.title))},type=${formInputType.title}">
 
             <div id="subcontracting_costs">
                 <div th:each="cost : ${costCategory.costs}" th:remove="tag">
@@ -584,7 +584,12 @@
         <div class="form-row" th:attr="data-repeatable-row=${cost.id}">
             <div class="form-group">
                 <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-companyName'}">Subcontractor name</label>
-                <input type="text" th:name="${type +'-name-' + cost.id}" class="form-control form-finances-subcontracting-company" th:id="${'cost-subcontracting-'+cost.id+'-companyName'}" th:value="${cost.name}" th:readonly="${complete == 'complete'}"   />
+                <input type="text"
+                       th:name="${type +'-name-' + question.id + '-' +cost.id}"
+                       class="form-control form-finances-subcontracting-company"
+                       th:id="${'cost-subcontracting-'+cost.id+'-companyName'}"
+                       th:value="${cost.name}"
+                       th:readonly="${complete == 'complete'}"   />
             </div>
             <div class="form-group">
                 <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-country'}">Country where the subcontractor will work</label>

@@ -396,7 +396,7 @@ public abstract class AbstractApplicationController extends BaseController {
                 .collect(Collectors.toCollection(supplier));
     }
 
-    public TreeSet<Organisation> getAcademicOrganisations(SortedSet<Organisation> organisations) {
+    public SortedSet<Organisation> getAcademicOrganisations(SortedSet<Organisation> organisations) {
         Comparator<Organisation> compareById =
                 Comparator.comparingLong(Organisation::getId);
         Supplier<TreeSet<Organisation>> supplier = () -> new TreeSet<>(compareById);

@@ -71,7 +71,7 @@ public class User {
     	// no-arg constructor
     }
 
-    public User(String firstName, String lastName, String email, String password, String imageUrl,
+    public User(String firstName, String lastName, String email, String imageUrl,
                 List<ProcessRole> processRoles, String uid) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -81,9 +81,9 @@ public class User {
         this.uid = uid;
     }
 
-    public User(Long id, String firstName, String lastName, String email, String password, String imageUrl,
+    public User(Long id, String firstName, String lastName, String email, String imageUrl,
                 List<ProcessRole> processRoles, String uid) {
-        this(firstName, lastName, email, password, imageUrl, processRoles, uid);
+        this(firstName, lastName, email, imageUrl, processRoles, uid);
         this.id = id;
     }
 

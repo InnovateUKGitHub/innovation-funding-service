@@ -7,6 +7,8 @@ Documentation     INFUND-1005: As a collaborator I want to select my organisatio
 ...
 ...
 ...               INFUND-1166: As a collaborator registering my company as Research organisation type, I need to inform Innovate UK what type of research organisation I am so that this can inform how I provide my finances
+...
+...               INFUND-917: As an academic partner i want to input my finances according to the JES field headings, so that i enter my figures into the correct sections
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Create new application    collaboration
@@ -131,7 +133,7 @@ Business organisation (accept invitation flow)
     [Documentation]    INFUND-1005
     ...
     ...    INFUND-1779
-    [Tags]    HappyPath    Pending   FailingForLocal
+    [Tags]    HappyPath    Pending    FailingForLocal
     Given the user navigates to the page    ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    organisationType    1
@@ -173,10 +175,9 @@ The collaborator who accepted the invite should be visible in the assign list
 Academic organisation (accept invitation flow)
     [Documentation]    INFUND-1166
     ...
-    ...    This test case checks if the academic's finance form is visible for the academic organisations
-    [Tags]    Pending    HappyPath    FailingForLocal
+    ...    INFUND-917
+    [Tags]    HappyPath    FailingForLocal
     [Setup]    The guest user opens the browser
-    # Pending the academics finances
     Given the user navigates to the page    ${INVITE_LINK_2}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    organisationType    2
@@ -203,7 +204,7 @@ Academic organisation (accept invitation flow)
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=A novel solution to an old problem
     and the user clicks the button/link    link=Your finances
-    Then the user should see the text in the page    TSB Contribution
+    Then the user should see the text in the page    TSB reference
     and the user should not see the text in the page    Labour
 
 *** Keywords ***

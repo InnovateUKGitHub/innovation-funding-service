@@ -119,8 +119,8 @@ public class AssessmentController extends AbstractApplicationController {
                                                HttpServletRequest req) {
 
         Long userId = getLoggedUser(req).getId();
-        form.bindingResult = bindingResult;
-        form.objectErrors = bindingResult.getAllErrors();
+        form.setBindingResult(bindingResult);
+        form.setObjectErrors(bindingResult.getAllErrors());
         model.addAttribute("form", form);
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
         return solvePageForApplicationAssessment(model, competitionId, applicationId, empty(), userId, userApplicationRoles);
@@ -133,16 +133,15 @@ public class AssessmentController extends AbstractApplicationController {
                                                HttpServletRequest req) {
 
         Long userId = getLoggedUser(req).getId();
-        form.bindingResult = bindingResult;
-        form.objectErrors = bindingResult.getAllErrors();
+        form.setBindingResult(bindingResult);
+        form.setObjectErrors(bindingResult.getAllErrors());
         model.addAttribute("form", form);
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
         return solvePageForApplicationAssessment(model, competitionId, applicationId, Optional.of(sectionId), userId, userApplicationRoles);
     }
 
     @RequestMapping(value = "/competitions/{competitionId}/applications/{applicationId}/response/{responseId}", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<Void> updateQuestionAssessmentFeedback(@PathVariable("competitionId") String competitionId,
-                                                              @PathVariable("responseId") final Long responseId,
+    public ResponseEntity<Void> updateQuestionAssessmentFeedback(@PathVariable("responseId") final Long responseId,
                                                               @RequestParam("feedbackValue") final Optional<String> feedbackValueParam,
                                                               @RequestParam("feedbackText") final Optional<String> feedbackTextParam,
                                                               HttpServletRequest request) {

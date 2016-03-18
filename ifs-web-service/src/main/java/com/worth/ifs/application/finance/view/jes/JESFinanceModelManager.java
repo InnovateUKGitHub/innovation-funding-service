@@ -37,7 +37,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
         ProcessRole processRole = processRoleService.findProcessRole(userId, applicationId);
         String organisationName = processRole.getOrganisation().getName();
         Map<CostType, CostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
-        AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails, model);
+        AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
         financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).andOnSuccessReturn(
                 fileEntry -> {
                     model.addAttribute("filename", fileEntry.getName());
@@ -65,7 +65,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
         return applicationFinanceResource;
     }
 
-    protected AcademicFinance mapFinancesToFields(Map<CostType, CostCategory> organisationFinanceDetails, Model model) {
+    protected AcademicFinance mapFinancesToFields(Map<CostType, CostCategory> organisationFinanceDetails) {
         AcademicFinance academicFinance = new AcademicFinance();
         organisationFinanceDetails.values()
                 .stream()
