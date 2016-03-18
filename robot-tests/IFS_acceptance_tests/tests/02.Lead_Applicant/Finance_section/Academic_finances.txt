@@ -1,5 +1,8 @@
 *** Settings ***
 Documentation     INFUND-917: As an academic partner i want to input my finances according to the JES field headings, so that i enter my figures into the correct sections
+...
+...
+...               INFUND-918: As an academic partner i want to be able to mark my finances as complete, so that the lead partner can have confidence in my finances
 Suite Setup       Guest user log-in    &{collaborator2_credentials}
 Suite Teardown    User closes the browser
 Force Tags        Finances    HappyPath
@@ -11,6 +14,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
+${text_file}      testing.txt
 
 *** Test Cases ***
 Academic finance calculations
@@ -18,6 +22,11 @@ Academic finance calculations
     Given the user navigates to the page    ${YOUR_FINANCES_URL}
     When the academic partner fills the finances
     Then the calculations should be correct
+
+Academic invalid upload
+    When the academic partner uploads a file    ${text_file}
+    Then the user should see the element    css=.error-summary
+    And the user should see the text in the page    No file currently uploaded
 
 Academics upload
     [Documentation]    INFUND-917
@@ -27,9 +36,10 @@ Academics upload
 
 Mark all as complete
     [Documentation]    INFUND-918
-    When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
+    When the academic partner clicks the mark as complete
+    Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
     And the user navigates to the page    ${FINANCES_OVERVIEW_URL}
-    Then the user should see the element    css=.finance-summary tr:nth-of-type(3) img[src="/images/field/tick-icon.png
+    And the user should see the element    css=.finance-summary tr:nth-of-type(3) img[src="/images/field/tick-icon.png
 
 Academic finance overview
     [Documentation]    INFUND-917
@@ -71,3 +81,7 @@ the finance table should be correct
     #Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £60,000
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(7)    £1,000
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(8)    £3,000
+
+the academic partner clicks the mark as complete
+    focus     jQuery=.button:contains("Mark all as complete")
+    click button    jQuery=.button:contains("Mark all as complete")
