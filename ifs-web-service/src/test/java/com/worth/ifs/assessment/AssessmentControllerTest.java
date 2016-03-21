@@ -81,6 +81,7 @@ public class AssessmentControllerTest extends BaseUnitTest {
         this.setupApplicationResponses();
         this.setupFinances();
         this.setupAssessment();
+        this.setupInvites();
     }
 
     @Test

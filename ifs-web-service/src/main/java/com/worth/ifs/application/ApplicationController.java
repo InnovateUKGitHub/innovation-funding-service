@@ -274,7 +274,7 @@ public class ApplicationController extends AbstractApplicationController {
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<Organisation> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
 
-        addOrganisationDetails(model, userOrganisation, userApplicationRoles);
+        addOrganisationDetails(model, application, userOrganisation, userApplicationRoles);
         addQuestionsDetails(model, application, null);
         addUserDetails(model, application, user.getId());
         addApplicationInputs(application, model);
