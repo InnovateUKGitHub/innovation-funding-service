@@ -5,7 +5,7 @@
 </head>
 <body class="app-summary">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
-<div th:include="fragments/modals ::modal-confirm-submit
+<div th:include="fragments/modals ::modal-confirm-submit-application
     (messageTitle='This is your final chance to make changes to the application.',
      message='You will not be able to access the application after this point. Are you sure you want to submit?',
      submitLink='/application/'+${currentApplication.getId()}+'/submit',
@@ -65,12 +65,17 @@
         </form>
     <hr/>
     <div>
-        <span class="icon icon-information"></span>
-        <span> You will not be able to make changes to your application or resubmit after this point. By submitting this application you are agreeing to Innovate UK's <a href="">terms and conditions</a>.</span>
-    </div>
+	    <span class="icon icon-information"></span>
+	    <span> You will not be able to make changes to your application or resubmit after this point.</span>
+	</div>
+	
+	<div id="agree-to-terms-container" style="display: none;">
+		<div th:include="fragments/elements :: application-agree-to-terms" th:remove="tag" />
+	</div>
 
     <div class="alignright-button" th:unless="${!currentApplication.isOpen()}">
-        <a role="button" tabindex="0" class="button large" data-js-modal="modal-confirm-submit" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${applicationReadyForSubmit}">Submit application</a>
+        <a id="disabled-submit-application-button" role="button" tabindex="0" class="button large disabled" style="display: none" th:if="${applicationReadyForSubmit}">Submit application</a>
+        <a id="submit-application-button" role="button" tabindex="0" class="button large" data-js-modal="modal-confirm-submit-application" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${applicationReadyForSubmit}">Submit application</a>
         <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
     </div>
 
