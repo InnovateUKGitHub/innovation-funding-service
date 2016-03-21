@@ -44,7 +44,6 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     }
 
     public static void addLogoutLink(ModelAndView modelAndView, String logoutUrl) {
-        modelAndView.addObject("logoutUrl", logoutUrl);
     }
 
     private String  getRoleName(HttpServletRequest request) {

@@ -4,7 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
@@ -146,7 +146,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void testVerifyEmailInvalid() throws Exception {
         mockMvc.perform(get("/registration/verify-email/"+INVALID_VERIFY_HASH))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name(ErrorController.URL_HASH_INVALID_TEMPLATE))
+                .andExpect(view().name(ErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE))
         ;
     }
 

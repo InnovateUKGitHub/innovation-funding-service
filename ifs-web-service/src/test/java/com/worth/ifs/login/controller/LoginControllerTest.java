@@ -4,7 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.login.LoginController;
 import com.worth.ifs.token.domain.Token;
 import org.junit.After;
@@ -101,7 +101,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         mockMvc.perform(get("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash))
                 .andExpect(status().isAlreadyReported())
-                .andExpect(view().name(ErrorController.URL_HASH_INVALID_TEMPLATE));
+                .andExpect(view().name(ErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE));
     }
 
     @Test
@@ -175,7 +175,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
                         .param("retypedPassword", password)
         )
                 .andExpect(status().isAlreadyReported())
-                .andExpect(view().name(ErrorController.URL_HASH_INVALID_TEMPLATE));
+                .andExpect(view().name(ErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE));
 
     }
 }
