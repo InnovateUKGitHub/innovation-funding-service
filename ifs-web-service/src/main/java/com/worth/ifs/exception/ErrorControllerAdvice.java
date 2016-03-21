@@ -24,7 +24,7 @@ import java.util.Collections;
  * NOTE: Make sure every (non json) response uses createExceptionModelAndView as it also sets login and dashboard links
  */
 @ControllerAdvice
-public class ErrorControllerAdvice extends BaseErrorController{
+public class ErrorControllerAdvice extends BaseErrorControllerAdvice {
     private final Log log = LogFactory.getLog(getClass());
     public static final String URL_HASH_INVALID_TEMPLATE = "url-hash-invalid";
 
