@@ -84,10 +84,11 @@
 
 			jQuery('#pm-name').text(pmContact + ' (Pending)')
 			jQuery("#pm-name-invite").attr('checked', 'checked');
-			//jQuery('#pm-table').hide();
+			jQuery('#pm-table').hide();
 			jQuery('#invited-pm').show();
 			jQuery('#pm-cta').text('Send invitation');
 			jQuery('#pm-cta').show();
+			jQuery('#add-pm').text('Change team member');
 		});
 
 		jQuery('input').on('click',function(e){ 
