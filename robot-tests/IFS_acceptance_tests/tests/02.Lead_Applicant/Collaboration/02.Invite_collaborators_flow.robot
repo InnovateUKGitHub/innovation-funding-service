@@ -34,8 +34,21 @@ Valid invitation submit
     When the applicant enters valid inputs
     And the user verifies their email   ${verify_link_3}
     And the user logs back in
-    Then The user should see the text in the page    Your dashboard
+    Then the user should see the text in the page    Your dashboard
     And the lead applicant logs back in
+
+
+Collaborator can change the name of their company and this updates throughout the application
+    [Documentation]     INFUND-2083
+    [Tags]      Pending
+    # note - opnly pending because it isn't working yet!
+    Given the lead applicant logs out
+    And the invited user verifies their email
+    When the user changes their company name
+    Then the new company name should be shown throughout the application
+    And the lead applicant logs back in
+    And the new company name should be shown throughout the application
+
 
 Lead applicant can access the Application team page(Link in the overview page)
     [Documentation]    INFUND-928
@@ -157,6 +170,20 @@ the status of the people should be correct in the Manage contributors page
 
 the user logs back in
     guest user log-in       ewan+1@hiveit.co.uk     Passw0rd
+
+
+the lead applicant logs out
+    Logout as user
+
+the invited user verifies their email
+    the user navigates to the page          ${verify_link_4}
+
+the user changes their company name
+    (still to implement)
+
+the new company name should be shown throughout the application
+    {still to implement}
+
 
 the lead applicant logs back in
     guest user log-in        &{lead_applicant_credentials}

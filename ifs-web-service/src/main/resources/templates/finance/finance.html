@@ -207,8 +207,7 @@
                 <fieldset>
                     <legend class="visuallyhidden">Overhead costs</legend>
                     <div class="form-group">
-
-                        label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}" data-target="overhead-none">
+                        <label class="block-label" th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}" data-target="overhead-none">
                             <input th:id="${'cost-'+ type + '-'+overheadCosts?.id+'-rateType_0'}"
                                    type="radio"
                                    th:name="${'overheads-rateType-' + question.id + '-'+ overheadCosts?.id}"

@@ -10,7 +10,7 @@ Documentation     This test has been put last (with the 1.) because the other ap
 ...               -INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
 ...
 ...               -INFUND-1137 As an applicant I want to be shown confirmation information when I submit my application submission so I can confirm this has been sent and I can be given guidance for the next stages
-Suite Setup       Guest user log-in    &{lead_applicant_credentials}
+Suite Setup       Guest user log-in    &{worth_test_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant    Submit
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -46,7 +46,7 @@ Submit button disabled when the application is incomplete
 
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
-    [Tags]    Summary
+    [Tags]    Summary       Pending
     Given the user navigates to the page    ${FINANCE_SECTION_7}
     # When the applicant marks the finance section as incomplete
     And the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
