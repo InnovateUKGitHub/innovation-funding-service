@@ -303,17 +303,17 @@ public abstract class AbstractApplicationController extends BaseController {
     }
 
 	private List<InviteResource> pendingInvitations(ApplicationResource application) {
-		List<InviteResource> pendingAssignableUsers;
         RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(application.getId());
-        if(pendingAssignableUsersResult.isSuccess()) {
-        	pendingAssignableUsers = pendingAssignableUsersResult.getSuccessObject().stream()
-        			.flatMap(item -> item.getInviteResources().stream())
-        			.filter(item -> !InviteStatusConstants.ACCEPTED.equals(item.getStatus()))
-        			.collect(Collectors.toList());
-        } else {
-        	pendingAssignableUsers = new ArrayList<>(0);
-        }
-		return pendingAssignableUsers;
+        
+        List<InviteResource> pendingAssignableUsers = pendingAssignableUsersResult.handleSuccessOrFailure(
+        		failure -> new ArrayList<InviteResource>(0),
+        		success -> {
+		        	return success.stream().flatMap(item -> item.getInviteResources().stream())
+		    			.filter(item -> !InviteStatusConstants.ACCEPTED.equals(item.getStatus()))
+		    			.collect(Collectors.toList());
+		        	});
+
+        return pendingAssignableUsers;
 	}
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
