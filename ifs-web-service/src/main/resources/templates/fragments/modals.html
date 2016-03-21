@@ -24,6 +24,23 @@
     </div>
 </div>
 
+<!-- confirm submit application modal -->
+
+<div th:fragment="modal-confirm-submit-application (messageTitle, message, submitLink, submitText, cancelText)">
+	<form method="post" th:action="${submitLink}">
+	    <div class="modal-confirm-submit-application" role="dialog" aria-hidden="true">
+	        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+	        <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
+	        <p th:text="${message}"></p>
+	        <input id="agree-terms" name="agreeTerms" type="hidden" value="yes"/>
+	        <div>
+	      		<input type="submit" tabindex="0" class="button large" th:value="${submitText}" />
+	            <button type="button" tabindex="1" class="js-close button buttonlink large" th:text="${cancelText}"></button>
+	        </div>
+	    </div>
+	</form>
+</div>
+
 <!-- confirm submit modal -->
 
 <div th:fragment="modal-confirm-submit-post (messageTitle, message, submitName, submitText, cancelText)">

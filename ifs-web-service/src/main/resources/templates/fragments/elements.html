@@ -149,3 +149,13 @@
                   th:text="${#temporals.format(date, 'dd MMMM hh:mma')}"/>
     </span>
 </div>
+
+<!--  ========================== Element: Agree to application terms =============== -->
+<div th:fragment="application-agree-to-terms">
+	<div class="form-block">
+		<label class="block-label" for="agree-terms">
+			<input id="agree-terms" name="agreeTerms" type="checkbox" value="yes"/>
+			The members of this consortium agree to the <a target="_blank" th:href="@{/application/terms-and-conditions}">terms and conditions</a> of applying for funding through Innovate UK.
+		</label>
+	</div>
+</div>

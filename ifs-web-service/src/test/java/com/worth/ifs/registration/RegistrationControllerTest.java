@@ -23,8 +23,6 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -122,7 +120,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void testSuccessUrl() throws Exception {
-        mockMvc.perform(get("/registration/success"))
+        mockMvc.perform(get("/registration/success").header("referer", "https://localhost/registration/register?organisationId=14"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("registration/successful"))
         ;
@@ -130,7 +128,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void testVerifiedUrl() throws Exception {
-        mockMvc.perform(get("/registration/verified"))
+        mockMvc.perform(get("/registration/verified").flashAttr("redirectedFrom", "verifyEmailAddress"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("registration/verified"))
         ;
@@ -185,8 +183,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void validButAlreadyExistingEmailInputShouldReturnErrorOnEmailField() throws Exception {
         Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
-        List<UserResource> userResourceList = new ArrayList<>();
-        userResourceList.add(newUserResource().build());
 
         String email = "alreadyexistingemail@test.test";
 
