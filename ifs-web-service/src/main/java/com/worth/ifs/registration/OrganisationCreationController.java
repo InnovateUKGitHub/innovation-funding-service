@@ -479,7 +479,7 @@ public class OrganisationCreationController {
         }
 
         organisationResource = saveNewOrganisation(organisationResource, request);
-        if (address != null) {
+        if (address != null && !organisationForm.isUseSearchResultAddress()) {
             organisationService.addAddress(organisationResource, address, AddressType.OPERATING);
         }
         if (selectedOrganisation != null && selectedOrganisation.getOrganisationAddress() != null) {

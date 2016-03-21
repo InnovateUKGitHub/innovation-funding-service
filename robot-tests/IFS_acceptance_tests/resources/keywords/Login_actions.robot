@@ -18,7 +18,7 @@ Guest user log-in
     Page should not contain    Error
     Page Should Not Contain    something went wrong
     Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You are not authorised to perform the requested action
+    Page Should Not Contain    You do not have the necessary permissions for your request
 
 
 Log in as user
