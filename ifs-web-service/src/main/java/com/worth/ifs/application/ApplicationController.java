@@ -101,10 +101,14 @@ public class ApplicationController extends AbstractApplicationController {
         return "application-confirm-submit";
     }
 
-    @RequestMapping("/{applicationId}/submit")
-    public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
-                                    HttpServletRequest request){
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+    @RequestMapping(value = "/{applicationId}/submit", method = RequestMethod.POST)
+    public String applicationSubmit(ApplicationForm form, Model model, @RequestParam(value = "agreeTerms", required = false) boolean agreeTerms, @PathVariable("applicationId") final Long applicationId,
+                                    HttpServletRequest request, HttpServletResponse response){ 
+    	if(!agreeTerms) {
+    		cookieFlashMessageFilter.setFlashMessage(response, "agreeToTerms");
+    		return "redirect:/application/" + applicationId + "/confirm-submit";
+    	}
+    	User user = userAuthenticationService.getAuthenticatedUser(request);
         applicationService.updateStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -153,7 +157,10 @@ public class ApplicationController extends AbstractApplicationController {
         return "application-create-confirm-competition";
     }
 
-
+    @RequestMapping(value = "/terms-and-conditions")
+    public String termsAndConditions(){
+        return "application-terms-and-conditions";
+    }
 
     /**
      * This method is for the post request when the users clicks the input[type=submit] button.
