@@ -602,6 +602,9 @@
         jQuery(window).scroll(function(event) {
           return _this.setPosition();
         });
+        jQuery(window).on('updateWysiwygPosition', function() {
+          return _this.setPosition();
+        });
         if (this.options.parentElement === 'body') {
           el = jQuery(this.element);
           widthToAdd = parseFloat(el.css('padding-left'));
