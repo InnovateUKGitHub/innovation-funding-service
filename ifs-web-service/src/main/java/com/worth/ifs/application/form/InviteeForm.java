@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import java.io.Serializable;
 
 public class InviteeForm implements Serializable {
+    private static final long serialVersionUID = 8494848676778443648L;
 
     private Long userId;
     @NotEmpty

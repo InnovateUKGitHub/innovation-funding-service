@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class OrganisationInviteForm implements Serializable, Cloneable {
+    private static final long serialVersionUID = -8151722876772666785L;
 
     @NotEmpty
     String organisationName;

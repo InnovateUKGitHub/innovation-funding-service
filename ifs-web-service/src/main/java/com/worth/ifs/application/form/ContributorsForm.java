@@ -13,6 +13,7 @@ import java.util.Optional;
 
 public class ContributorsForm implements Serializable {
     private static final Log LOG = LogFactory.getLog(ContributorsForm.class);
+    private static final long serialVersionUID = -2887644741634451825L;
 
     private boolean triedToSave = false;
     private Long applicationId;

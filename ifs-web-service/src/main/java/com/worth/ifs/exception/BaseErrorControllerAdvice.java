@@ -15,7 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-public class BaseErrorController {
+public class BaseErrorControllerAdvice {
     @Autowired
     protected MessageSource messageSource;
 
