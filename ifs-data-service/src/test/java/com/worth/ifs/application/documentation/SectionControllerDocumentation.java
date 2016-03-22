@@ -7,8 +7,10 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.controller.SectionController;
 import com.worth.ifs.application.transactional.SectionService;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.SectionResourceDocs.sectionResourceBuilder;
@@ -19,6 +21,8 @@ import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -27,6 +31,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 public class SectionControllerDocumentation extends BaseControllerMockMVCTest<SectionController> {
     private static final String baseURI = "/section";
     private static final String docBase = "section/";
+    private RestDocumentationResultHandler document;
 
     @Override
     protected SectionController supplyControllerUnderTest() {
@@ -36,14 +41,20 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
     @Mock
     SectionService sectionService;
 
+    @Before
+    public void setup(){
+        this.document = document("section/{method-name}",
+                preprocessResponse(prettyPrint()));
+    }
+
     @Test
-    public void documentFindOne() throws Exception {
+    public void findOne() throws Exception {
         final Long id = 1L;
 
         when(sectionService.getById(id)).thenReturn(serviceSuccess(sectionResourceBuilder.build()));
 
         mockMvc.perform(get(baseURI + "/{id}", id))
-                .andDo(document("section/find-one",
+                .andDo(this.document.snippets(
                         pathParameters(
                             parameterWithName("id").description("Id of the section to be retrieved")
                         ),
@@ -52,7 +63,7 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
     }
 
     @Test
-    public void documentGetCompletedSectionsByOrganisation() throws Exception {
+    public void getCompletedSectionsByOrganisation() throws Exception {
         final Long id = 1L;
 
         final Map<Long, Set<Long>> result = asMap(1L, asSet(2L, 3L));
@@ -60,7 +71,7 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
         when (sectionService.getCompletedSections(id)).thenReturn(serviceSuccess(result));
 
         mockMvc.perform(get(baseURI + "/getCompletedSectionsByOrganisation/{applicationId}", id))
-                .andDo(document("section/get-completed-by-organisation",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of an application")
                         ),
@@ -71,7 +82,7 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
     }
 
     @Test
-    public void documentGetCompletedSectionsByApplicationAndOrganisation() throws Exception {
+    public void getCompletedSectionsByApplicationAndOrganisation() throws Exception {
         final Long organisationId = 1L;
 
         final Long applicationId = 2L;
@@ -81,7 +92,7 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
         when (sectionService.getCompletedSections(applicationId, organisationId)).thenReturn(serviceSuccess(result));
 
         mockMvc.perform(get(baseURI + "/getCompletedSections/{applicationId}/{organisationId}", applicationId, organisationId))
-                .andDo(document("section/get-completed-by-application-and-organisation",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of an application"),
                                 parameterWithName("organisationId").description("Id of an organisation")
@@ -93,12 +104,12 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
     }
 
     @Test
-    public void documentAllSectionsMarkedAsComplete() throws Exception {
+    public void allSectionsMarkedAsComplete() throws Exception {
         final Long id = 1L;
 
         when(sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null)).thenReturn(serviceSuccess(true));
         mockMvc.perform(get(baseURI + "/allSectionsMarkedAsComplete/{applicationId}", id))
-                .andDo(document("section/all-sections-complete",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("applicationId").description("id of the application")
                         )
@@ -106,13 +117,13 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
     }
 
     @Test
-    public void documentGetIncompleteSections() throws Exception {
+    public void getIncompleteSections() throws Exception {
         final Long applicationId = 1L;
 
         when(sectionService.getIncompleteSections(applicationId)).thenReturn(serviceSuccess(asList(1L,2L)));
 
         mockMvc.perform(get(baseURI + "/getIncompleteSections/{applicationId}", applicationId))
-                .andDo(document("section/get-incomplete",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("applicationId").description("id of the application")
                         ),
@@ -123,13 +134,13 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
     }
 
     @Test
-    public void documentFindByName() throws Exception {
+    public void findByName() throws Exception {
         final String name = "SectionName";
 
         when(sectionService.findByName(name)).thenReturn(serviceSuccess(sectionResourceBuilder.build()));
 
         mockMvc.perform(get(baseURI + "/findByName/{name}", name))
-                .andDo(document("section/find-by-name",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("name").description("name of the Section to be retrieved")
                         ),
@@ -138,12 +149,12 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
     }
 
     @Test
-    public void documentgetNextSection() throws Exception {
+    public void getNextSection() throws Exception {
         final Long sectionId = 1L;
 
         when(sectionService.getNextSection(sectionId)).thenReturn(serviceSuccess(sectionResourceBuilder.build()));
         mockMvc.perform(get(baseURI + "/getNextSection/{sectionId}", sectionId))
-                .andDo(document("section/get-next-section",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("sectionId").description("id of current section")
                         ),
@@ -152,13 +163,13 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
     }
 
     @Test
-    public void documentgetPreviousSection() throws Exception {
+    public void getPreviousSection() throws Exception {
         final Long sectionId = 2L;
 
         when(sectionService.getPreviousSection(sectionId)).thenReturn(serviceSuccess(sectionResourceBuilder.build()));
 
         mockMvc.perform(get(baseURI + "/getPreviousSection/{sectionId}", sectionId))
-                .andDo(document("section/get-previous-section",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("sectionId").description("id of current application")
                         ),
@@ -167,13 +178,13 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
     }
 
     @Test
-    public void documentGetSectionByQuestionId() throws Exception {
+    public void getSectionByQuestionId() throws Exception {
         final Long questionId = 1L;
 
         when(sectionService.getSectionByQuestionId(questionId)).thenReturn(serviceSuccess(sectionResourceBuilder.build()));
 
         mockMvc.perform(get(baseURI + "/getSectionByQuestionId/{questionId}", questionId))
-                .andDo(document("section/get-by-question",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("questionId").description("id of question for which to retrieve the section")
                         ),
@@ -182,13 +193,13 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
     }
 
     @Test
-    public void documentGetQuestionsForSectionAndSubsections() throws Exception {
+    public void getQuestionsForSectionAndSubsections() throws Exception {
         final Long sectionId = 1L;
 
         when(sectionService.getQuestionsForSectionAndSubsections(sectionId)).thenReturn(serviceSuccess(asSet(1L, 2L, 3L)));
 
         mockMvc.perform(get(baseURI + "/getQuestionsForSectionAndSubsections/{sectionId}", sectionId))
-                .andDo(document(docBase + "get-questions-for-section-and-subsections",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("sectionId").description("id of the parent section")
                         ),
