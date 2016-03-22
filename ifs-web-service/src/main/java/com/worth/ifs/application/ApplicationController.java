@@ -82,7 +82,7 @@ public class ApplicationController extends AbstractApplicationController {
     }
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)
-    public String applicationSummarySubmit(@RequestParam("mark_as_complete") Long markQuestionCompleteId, @PathVariable("applicationId") final Long applicationId,
+    public String applicationSummarySubmit(@RequestParam(MARK_AS_COMPLETE) Long markQuestionCompleteId, @PathVariable("applicationId") final Long applicationId,
                                            HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         if(markQuestionCompleteId!=null) {

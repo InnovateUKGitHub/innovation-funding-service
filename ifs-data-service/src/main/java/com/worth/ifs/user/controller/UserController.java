@@ -38,6 +38,7 @@ public class UserController {
     public static final String URL_CHECK_PASSWORD_RESET_HASH = "checkPasswordResetHash";
     public static final String URL_PASSWORD_RESET = "passwordReset";
     public static final String URL_SEND_PASSWORD_RESET_NOTIFICATION = "sendPasswordResetNotification";
+    public static final String URL_VERIFY_EMAIL = "verifyEmail";
 
     @Autowired
     private UserService userService;
@@ -100,7 +101,7 @@ public class UserController {
                 .toPutResponse();
     }
 
-    @RequestMapping("/verifyEmail/{hash}")
+    @RequestMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
     public RestResult<Void> verifyEmail(@PathVariable("hash") final String hash) {
         Optional<Token> optionalToken = tokenService.getTokenByHash(hash);
 

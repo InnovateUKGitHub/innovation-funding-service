@@ -11,7 +11,7 @@ import javax.validation.Valid;
 public class ApplicationForm extends Form {
 
     @Valid
-    public ApplicationResource application;
+    private ApplicationResource application;
 
     public ApplicationForm() {
         super();

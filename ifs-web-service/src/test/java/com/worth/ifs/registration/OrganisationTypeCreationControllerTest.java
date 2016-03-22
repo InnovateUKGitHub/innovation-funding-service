@@ -2,7 +2,7 @@ package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.AcceptInviteController;
-import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -43,7 +43,7 @@ public class OrganisationTypeCreationControllerTest extends BaseUnitTest {
         CookieLocaleResolver localeResolver = new CookieLocaleResolver();
         localeResolver.setCookieDomain("domain");
 
-        mockMvc = MockMvcBuilders.standaloneSetup(organisationTypeCreationController, new ErrorController())
+        mockMvc = MockMvcBuilders.standaloneSetup(organisationTypeCreationController, new ErrorControllerAdvice())
                 .setViewResolvers(viewResolver())
                 .setLocaleResolver(localeResolver)
                 .addFilters(new CookieFlashMessageFilter())

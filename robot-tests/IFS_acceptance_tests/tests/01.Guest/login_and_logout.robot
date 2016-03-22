@@ -15,9 +15,6 @@ Log-out
     [Tags]    Guest    HappyPath
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the Applicant is logged-in
-    # TODO DW - INFUND-936 - reinstate expectations
-    # When user clicks the button/link    link=Logout
-    # Then user should be redirected to the correct page    ${LOGIN_URL}    ${LOGIN_URL}
     Logout as user
 
 Invalid Login
@@ -56,6 +53,34 @@ Valid login as Assessor
     And the user should be logged-in as an Assessor
     [Teardown]    Logout as user
 
+Reset password
+    [Documentation]    INFUND-1889
+    [Tags]    HappyPath    FailingForLocal
+    [Setup]    The guest user opens the browser
+    Given the user navigates to the page    ${LOGIN_URL}
+    When the user clicks the button/link    link=Forgot your password?
+    And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
+    And the user clicks the button/link    css=input.button
+    Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
+    And the user open the mailbox and clicks the reset link
+    And the user should see the text in the page    Password reset
+    And the user enters text to a text field    id=id_password    Passw0rdnew
+    And the user enters text to a text field    id=id_retypedPassword    OtherPass2aa
+    And the user clicks the button/link    css=input.button
+    And the user should see an error    Passwords must match
+    And the user enters text to a text field    id=id_password    Passw0rdnew
+    And the user enters text to a text field    id=id_retypedPassword    Passw0rdnew
+    And the user clicks the button/link    css=input.button
+    And the user should see the text in the page    Your password is updated, you can now sign in with your new password
+    And the user clicks the button/link    jQuery=.button:contains("Sign in")
+    When the guest user enters the log in credentials    worth.email.test+changepsw@gmail.com    Passw0rd
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Then the guest user should get an error message
+    When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rdnew
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Then the Applicant is logged-in
+    And the user should be redirected to the correct page    ${applicant_dashboard_url}
+
 *** Keywords ***
 the user is not logged-in
     Element Should Not Be Visible    link=My dashboard
@@ -73,7 +98,21 @@ The Applicant clicks the log-out button
     Click Element    link=Logout
 
 the Applicant is logged-in
-    Wait Until Element Is Visible       link=Logout
+    Wait Until Element Is Visible    link=Logout
 
 the user should be logged-in as an Assessor
     Title Should Be    Innovation Funding Service - Assessor Dashboard
+
+the user open the mailbox and clicks the reset link
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    ${LATEST} =    wait for email    fromEmail=noresponse@innovateuk.gov.uk
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox

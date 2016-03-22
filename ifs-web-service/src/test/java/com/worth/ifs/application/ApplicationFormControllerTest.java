@@ -4,7 +4,7 @@ import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
@@ -78,7 +78,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(applicationFormController, new ErrorController())
+        mockMvc = MockMvcBuilders.standaloneSetup(applicationFormController, new ErrorControllerAdvice())
 //                .setHandlerExceptionResolvers(withExceptionControllerAdvice())
                 .setViewResolvers(viewResolver())
                 .addFilter(new CookieFlashMessageFilter())
@@ -207,7 +207,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         Long userId = loggedInUser.getId();
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param("mark_as_complete", "12")
+                        .param(ApplicationFormController.MARK_AS_COMPLETE, "12")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId+"**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
@@ -220,7 +220,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
-                        .param("mark_as_incomplete", "3")
+                        .param(ApplicationFormController.MARK_AS_INCOMPLETE, "3")
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/" + sectionId +"**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
@@ -269,7 +269,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         MvcResult result = mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
                         .param("formInput[1]", "")
-                        .param("mark_as_complete", "1")
+                        .param(ApplicationFormController.MARK_AS_COMPLETE, "1")
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
