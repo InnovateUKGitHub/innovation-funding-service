@@ -10,7 +10,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" th:remove="tag" />
         <h1 class="heading-large">Create your account</h1>
 
         <form th:action="${registrationForm.getActionUrl()}" method="post" th:object="${registrationForm}">

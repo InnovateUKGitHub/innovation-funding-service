@@ -6,6 +6,7 @@ import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -48,6 +49,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     private static String INVALID_VERIFY_HASH;
     @InjectMocks
     private RegistrationController registrationController;
+
+    @Mock
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Mock
     Validator validator;
@@ -127,16 +131,14 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     }
 
     @Test
-    public void testVerifiedUrl() throws Exception {
-        mockMvc.perform(get("/registration/verified").flashAttr("redirectedFrom", "verifyEmailAddress"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("registration/verified"))
-        ;
+    public void testVerifiedUrlNotFoundOnDirectAccess() throws Exception {
+        mockMvc.perform(get("/registration/verified"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     public void testVerifyEmail() throws Exception {
-        mockMvc.perform(get("/registration/verify-email/"+VERIFY_HASH))
+        mockMvc.perform(get("/registration/verify-email/" + VERIFY_HASH))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/registration/verified"))
         ;

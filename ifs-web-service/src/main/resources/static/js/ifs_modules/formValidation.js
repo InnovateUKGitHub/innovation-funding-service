@@ -63,7 +63,6 @@ IFS.formValidation = (function(){
             jQuery('body').on('change',s.minlength.fields,function(){ IFS.formValidation.checkMinLength(jQuery(this)); });
             jQuery('body').on('change',s.maxlength.fields,function(){ IFS.formValidation.checkMaxLength(jQuery(this)); });
             jQuery('body').on('change',s.tel.fields,function(){ IFS.formValidation.checkTel(jQuery(this)); });
-
         },
         checkPasswords : function(){
             var pw1 = jQuery(s.password.field1);
@@ -236,7 +235,7 @@ IFS.formValidation = (function(){
                 jQuery('.error-summary-list').append('<li>'+message+'</li>');
             }
             jQuery('.error-summary').attr('aria-hidden',false);
-
+            jQuery(window).trigger('updateWysiwygPosition');
         },
         setValid : function(field,message){
             var formGroup = field.closest('.form-group.error');
@@ -257,6 +256,7 @@ IFS.formValidation = (function(){
             if(jQuery('.error-summary-list li').length === 0){
               jQuery('.error-summary').attr('aria-hidden',true);
             }
+            jQuery(window).trigger('updateWysiwygPosition');
 
         }
     };

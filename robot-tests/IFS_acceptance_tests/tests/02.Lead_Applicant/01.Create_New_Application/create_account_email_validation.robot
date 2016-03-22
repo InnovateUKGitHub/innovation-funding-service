@@ -48,14 +48,14 @@ Invalid email no @ symbol
 Invalid Email Check
     [Arguments]    ${invalid_email}
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
-    When The user enters text to a text field    id=firstName    John
-    And The user enters text to a text field    id=lastName    Smith
-    And The user enters text to a text field    id=phoneNumber    01141234567
-    And The user enters text to a text field    id=email    ${invalid_email}
-    And The user enters text to a text field    id=password    password
-    And The user enters text to a text field    id=retypedPassword    password
+    When the user enters text to a text field    id=firstName    John
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    ${invalid_email}
+    And the user enters text to a text field    id=password    password
+    And the user enters text to a text field    id=retypedPassword    password
     And the user submits their information
-    Then The user should see an error    We were unable to create your account
+    Then the user should see an error    We were unable to create your account
     And the user cannot login with the invalid email    ${invalid_email}
 
 the user submits their information

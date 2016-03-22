@@ -1,7 +1,7 @@
 //If there is javascript it becomes a modal, if there is not a links to the original page.
 IFS.modal = (function(){
     "use strict";
-    var s; // private alias to settings 
+    var s; // private alias to settings
 
     return {
         settings : {
@@ -9,10 +9,8 @@ IFS.modal = (function(){
         },
         init : function(){
             s = this.settings;
-            if(jQuery(s.element).length) {
-                IFS.modal.initModals();
-                IFS.modal.modalCloseLink();
-            }
+            IFS.modal.initModals();
+            IFS.modal.modalCloseLink();
         },
         initModals : function(){
             jQuery('body').on('click',s.element,function(e){
@@ -36,7 +34,7 @@ IFS.modal = (function(){
         disableTabPage : function(){
             jQuery(":tabbable").each(function(){
                 var el = jQuery(this);
-               
+
                 if(el.closest('[role="dialog"]').length === 0){
                     var tabindex = 0;
                     if(el.prop('tabindex')){
@@ -59,6 +57,6 @@ IFS.modal = (function(){
                 jQuery('[role="dialog"],.modal-overlay').attr('aria-hidden','true');
 
             });
-        }   
+        }
     };
 })();
