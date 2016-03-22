@@ -1,5 +1,30 @@
 package com.worth.ifs.application;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.form.ContributorsForm;
 import com.worth.ifs.application.form.InviteeForm;
@@ -20,19 +45,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.util.CookieUtil;
 import com.worth.ifs.util.JsonUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 // TODO DW - INFUND-1555 - handle rest results
 @Controller
@@ -71,7 +83,7 @@ public class ApplicationContributorController{
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
         if(savedInvites.stream().noneMatch(i -> i.getOrganisation() != null && i.getOrganisation().equals(leadOrganisation.getId()))){
             // Lead organisation has no invites, add it to the list
-            savedInvites.add(0, new InviteOrganisationResource(0L, leadOrganisation.getName(), leadOrganisation, new ArrayList())); // make sure the lead organisation is also part of this list.
+            savedInvites.add(0, new InviteOrganisationResource(0L, leadOrganisation.getName(), leadOrganisation, new ArrayList<InviteResource>())); // make sure the lead organisation is also part of this list.
         }else{
             // lead organisation has invites, make sure its the first in the list.
             Optional<InviteOrganisationResource> leadOrg = savedInvites.stream().filter(i -> i.getOrganisation() != null && i.getOrganisation().equals(leadOrganisation.getId())).findAny();
@@ -105,10 +117,12 @@ public class ApplicationContributorController{
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
         Map<Long, InviteOrganisationResource> organisationInvites = savedInvites.stream().collect(Collectors.toMap(InviteOrganisationResource::getId, Function.identity()));
 
+        Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(user, savedInvites);
         addSavedInvitesToForm(contributorsForm, leadOrganisation, savedInvites);
         mergeAndValidateCookieData(request, response, bindingResult, contributorsForm, applicationId, application, leadApplicant);
 
         model.addAttribute("authenticatedUser", user);
+        model.addAttribute("authenticatedUserOrganisation", authenticatedUserOrganisationId);
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("leadApplicant", leadApplicant);
@@ -117,7 +131,15 @@ public class ApplicationContributorController{
         return APPLICATION_CONTRIBUTORS_INVITE;
     }
 
-    /**
+    private Long getAuthenticatedUserOrganisationId(User user, List<InviteOrganisationResource> savedInvites) {
+		Optional<InviteOrganisationResource> matchingOrganisationResource = savedInvites.stream()
+				.filter(inviteOrg -> inviteOrg.getInviteResources().stream()
+						.anyMatch(inv -> user.getEmail().equals(inv.getEmail())))
+				.findFirst();
+		return matchingOrganisationResource.map((invOrgRes -> invOrgRes.getOrganisation())).orElse(null);
+	}
+
+	/**
      * Add the invites from the database, to the ContributorsForm object.
      */
     private void addSavedInvitesToForm(ContributorsForm contributorsForm, Organisation leadOrganisation, List<InviteOrganisationResource> savedInvites) {
@@ -179,6 +201,7 @@ public class ApplicationContributorController{
                                      @RequestParam(name = "newApplication", required = false) String newApplication,
                                      @ModelAttribute ContributorsForm contributorsForm,
                                      BindingResult bindingResult,
+                                     HttpServletRequest request,
                                      HttpServletResponse response) {
         ApplicationResource application = applicationService.getById(applicationId);
         ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
@@ -201,7 +224,8 @@ public class ApplicationContributorController{
             validator.validate(contributorsForm, bindingResult);
             User leadApplicant = leadApplicantProcessRole.getUser();
             validateUniqueEmails(contributorsForm, bindingResult, application, leadApplicant);
-
+            validatePermissionToInvite(contributorsForm, bindingResult, application, leadApplicant, request);
+            
             if (!bindingResult.hasErrors()) {
                 saveContributors(applicationId, contributorsForm, response);
                 // empty cookie, since the invites are saved.
@@ -225,6 +249,25 @@ public class ApplicationContributorController{
         }
         return String.format("redirect:/application/%d/contributors/invite", applicationId);
     }
+
+    private void validatePermissionToInvite(ContributorsForm contributorsForm, BindingResult bindingResult,
+			ApplicationResource application, User leadApplicant, HttpServletRequest request) {
+
+    	User authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
+    	
+    	if(leadApplicant.equals(authenticatedUser)){
+    		return;
+    	}
+    	Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(authenticatedUser, getSavedInviteOrganisations(application));
+		
+    	contributorsForm.getOrganisations().forEach(invite -> {
+    		if(invite.getInvites() != null && !invite.getInvites().isEmpty() && (invite.getOrganisationId() == null || !invite.getOrganisationId().equals(authenticatedUserOrganisationId))) {
+    			// Could not add the element, so its a duplicate.
+                FieldError fieldError = new FieldError("contributorsForm", String.format("organisations[%d].organisationName", contributorsForm.getOrganisations().indexOf(invite), 0), null, false, new String[]{"CannotInviteOrganisation"}, null, "As you are not the lead applicant, you cannot invite people from organisations other than your own.");
+                bindingResult.addError(fieldError);
+    		}
+    	});
+	}
 
     private void saveContributors(@PathVariable("applicationId") Long applicationId, @ModelAttribute ContributorsForm contributorsForm, HttpServletResponse response) {
         contributorsForm.getOrganisations().forEach((invite) -> saveContributor(invite, applicationId, response));

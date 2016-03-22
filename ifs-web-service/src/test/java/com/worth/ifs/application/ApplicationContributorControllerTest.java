@@ -1,9 +1,21 @@
 package com.worth.ifs.application;
 
-import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.form.ContributorsForm;
-import com.worth.ifs.exception.ErrorController;
-import com.worth.ifs.security.CookieFlashMessageFilter;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.Arrays;
+
+import javax.servlet.http.Cookie;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,13 +28,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 
-import javax.servlet.http.Cookie;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.application.form.ContributorsForm;
+import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.invite.resource.InviteOrganisationResource;
+import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.security.CookieFlashMessageFilter;
+import com.worth.ifs.user.domain.User;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -34,11 +46,9 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
     @Mock
     private Validator validator;
     @Mock
-    CookieFlashMessageFilter cookieFlashMessageFilter;
-
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
     private Long applicationId;
     private Long alternativeApplicationId;
-    private ContributorsForm contributorsForm;
     private String redirectUrl;
     private String viewName;
     private String inviteUrl;
@@ -84,7 +94,6 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
     public void testInviteContributorsCookie() throws Exception {
         Cookie cookie = new Cookie("contributor_invite_state", "{\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":3,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}}");
 
-//        contributorsForm.getOrganisationMap()
         MvcResult mockResult = mockMvc.perform(get(inviteUrl).cookie(cookie))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(viewName))
@@ -173,6 +182,72 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
     }
     
     @Test
+    public void testLeadCanInviteToOtherOrganisation() throws Exception {
+        mockMvc.perform(
+                post(inviteUrl)
+                        .param("organisations[0].organisationName", "Empire Ltd")
+                        .param("organisations[0].organisationId", "1")
+                        .param("organisations[1].organisationName", "Some Other Org Ltd")
+                        .param("organisations[1].organisationId", "2")
+                        .param("organisations[1].invites[0].personName", "Jim Kirk")
+                        .param("organisations[1].invites[0].email", "j.kirk@starfleet.org")
+                        .param("save_contributors", "")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(cookie().exists("contributor_invite_state"))
+                .andExpect(cookie().value("contributor_invite_state", ""))
+                .andExpect(view().name(inviteOverviewRedirectUrl));
+    }
+    
+    @Test
+    public void testNonLeadCannotInviteToOtherOrganisation() throws Exception {
+    	
+    	this.setupUserInvite("user@email.com", 3L);
+    	this.loginNonLeadUser("user@email.com");
+    	
+        mockMvc.perform(
+                post(inviteUrl)
+                        .param("organisations[0].organisationName", "Empire Ltd")
+                        .param("organisations[0].organisationId", "1")
+                        .param("organisations[1].organisationName", "Some Other Org Ltd")
+                        .param("organisations[1].organisationId", "2")
+                        .param("organisations[1].invites[0].personName", "Jim Kirk")
+                        .param("organisations[1].invites[0].email", "j.kirk@starfleet.org")
+                        .param("save_contributors", "")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(cookie().exists("contributor_invite_state"))
+                .andExpect(cookie().value("contributor_invite_state", "{\"triedToSave\":true,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[]},{\"organisationName\":\"Some Other Org Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":2,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Jim Kirk\",\"email\":\"j.kirk@starfleet.org\",\"inviteStatus\":null}]}]}"))
+                .andExpect(view().name(redirectUrl));
+    }
+    
+
+
+	@Test
+    public void testNonLeadCanInviteToTheirOwnOrganisation() throws Exception {
+    	
+		this.setupUserInvite("user@email.com", 2L);
+		this.loginNonLeadUser("user@email.com");
+    	
+        mockMvc.perform(
+                post(inviteUrl)
+                        .param("organisations[0].organisationName", "Empire Ltd")
+                        .param("organisations[0].organisationId", "1")
+                        .param("organisations[1].organisationName", "Some Other Org Ltd")
+                        .param("organisations[1].organisationId", "2")
+                        .param("organisations[1].invites[0].personName", "Jim Kirk")
+                        .param("organisations[1].invites[0].email", "j.kirk@starfleet.org")
+                        .param("save_contributors", "")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(cookie().exists("contributor_invite_state"))
+                .andExpect(cookie().value("contributor_invite_state", ""))
+                .andExpect(view().name(inviteOverviewRedirectUrl));
+    }
+
+    
+    
+    @Test
     public void testInviteContributorsRemovePerson() throws Exception {
         mockMvc.perform(
                 post(inviteUrl)
@@ -206,8 +281,6 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
                 .andExpect(cookie().exists("contributor_invite_state"))
                 .andExpect(cookie().value("contributor_invite_state", "{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]}]}"))
                 .andExpect(view().name(redirectUrl));
-
-
     }
 
     /**
@@ -280,7 +353,6 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
     public void whenCookieHasDifferingApplicationIdFromGetParameterItShouldBeIgnored() throws Exception {
         Cookie cookie = new Cookie("contributor_invite_state", "{\"applicationId\":"+alternativeApplicationId+",\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":3,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}}");
 
-//        contributorsForm.getOrganisationMap()
         MvcResult mockResult = mockMvc.perform(get(inviteUrl).cookie(cookie))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(viewName))
@@ -291,6 +363,18 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
         assertNotNull(contributorsFormResult.getOrganisations().get(0));
         assertEquals(0, contributorsFormResult.getOrganisations().get(0).getInvites().size());
     }
+    
+	private void loginNonLeadUser(String email) {
+    	User user = new User(2L, "test", "name", email, null, null, null);
+    	loginUser(user);
+	}
+	
+    private void setupUserInvite(String email, Long organisationId) {
+    	InviteOrganisationResource inviteOrgResource = new InviteOrganisationResource();
+    	inviteOrgResource.setOrganisation(organisationId);
+    	inviteOrgResource.setInviteResources(Arrays.asList(new InviteResource(null, null, email, null, null, null, null)));
+    	when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(Arrays.asList(inviteOrgResource)));
+	}
 
 
 }
