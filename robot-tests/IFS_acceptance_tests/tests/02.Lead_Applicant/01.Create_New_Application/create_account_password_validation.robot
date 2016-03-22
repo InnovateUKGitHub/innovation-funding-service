@@ -13,15 +13,15 @@ Resource          ../../../resources/keywords/User_actions.robot
 ${blacklisted_password}             Password123
 ${blacklisted_password_message}     Password is too weak
 ${lower_case_password}              thisisallinlowercase1
-${lower_case_message}
-${too_short_password}               Test1
-${too_short_message}                Your password should have at least 6 characters
-${too_long_password}                Testtesttesttesttesttesttesttest1
-${too_long_message}                 Passwords must be between 6 and 30 characters
+${lower_case_message}               Passwords must contain at least one lower case letter
+${upper_case_password}              THISISALLINUPPERCASE2
+${upper_case_message}               Passwords must contain at least one lower case letter
 ${no_numbers_password}              thishasnonumbers
 ${no_numbers_message}               Password must contain at least one number
-${personal_info_password}           JohnSmith123
+${personal_info_password}           Smith123
 ${personal_info_message}
+${special_chars_password}           Pass w0rd
+${special_chars_message}            Special chars not allowed
 
 
 
@@ -35,25 +35,29 @@ Invalid password (from the blacklist)
 
 Invalid password (all lower case)
                       [Documentation]                 INFUND-1147
-                      [Tags]                          Account       Pending
-                      # Pending since the message is wrong for this option
+                      [Tags]                          Account
+                      # Note that the copy for this message is wrong - so it will start failing once that copy changes. Can be simply fixed with a change to ${lower_case_message} above
                       ${lower_case_password}        ${lower_case_message}
 
-Invalid password (too short)
+Invalid password (all upper case)
                       [Documentation]                 INFUND-1147
                       [Tags]                          Account
-                      ${too_short_password}         ${too_short_message}
+                      ${upper_case_password}        ${upper_case_message}
 
 Invalid password (no numbers)
                       [Documentation]                 INFUND-1147
                       [Tags]                          Account
                       ${no_numbers_password}        ${no_numbers_message}
 
+Invalid password (special characters)
+                      [Documentation]                 INFUND-1147
+                      [Tags]                          Account
+                      ${special_chars_password}      ${special_chars_message}
+
 
 Invalid password (personal information)
                       [Documentation]                 INFUND-1147
-                      [Tags]                          Account       Pending
-                      # Pending since the validation for ths doesn't seem to be occurring
+                      [Tags]                          Account
                       ${personal_info_password}     ${personal_info_message}
 
 

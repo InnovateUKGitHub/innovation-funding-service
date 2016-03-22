@@ -89,7 +89,7 @@ Phone number too short
     And the user submits their information
     Then the user should see an error    Input for your phone number has a minimum length of 8 characters
     And the user cannot login with their new details    ${valid_email}    ${correct_password}
-    And the user logs out if they are logged in     
+    And the user logs out if they are logged in
 
 Email left blank
     [Documentation]    -INFUND-885
