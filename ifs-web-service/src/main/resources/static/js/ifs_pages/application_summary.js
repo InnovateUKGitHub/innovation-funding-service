@@ -1,5 +1,3 @@
-// Handlers for single section refreshing when assigning questions to users on the Application Overview
-// dependency on ifs_collpasible
 IFS.application_summary = (function(){
     "use strict";
     var s;
