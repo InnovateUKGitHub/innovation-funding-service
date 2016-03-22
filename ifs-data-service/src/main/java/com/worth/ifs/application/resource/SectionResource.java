@@ -109,11 +109,8 @@ public class SectionResource {
         return this.priority;
     }
 
-    public boolean isQuestionGroup() {
-        if(this.questionGroup==null){
-            return false;
-        }
-        return this.questionGroup.booleanValue();
+    public Boolean isQuestionGroup() {
+        return this.questionGroup;
     }
 
     public Long getCompetition() {
