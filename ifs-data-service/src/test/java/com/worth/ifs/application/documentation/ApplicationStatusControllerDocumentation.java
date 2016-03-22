@@ -6,19 +6,25 @@ import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.transactional.ApplicationStatusService;
 import com.worth.ifs.commons.service.ServiceResult;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
 public class ApplicationStatusControllerDocumentation extends BaseControllerMockMVCTest<ApplicationStatusController> {
+    private RestDocumentationResultHandler document;
+
     @Override
     protected ApplicationStatusController supplyControllerUnderTest() {
         return new ApplicationStatusController();
@@ -26,6 +32,12 @@ public class ApplicationStatusControllerDocumentation extends BaseControllerMock
 
     @Mock
     ApplicationStatusService applicationStatusService;
+
+    @Before
+    public void setup(){
+        this.document = document("application-status/{method-name}",
+                preprocessResponse(prettyPrint()));
+    }
 
     @Test
     public void documentGetApplicationStatusById() throws Exception {
@@ -36,7 +48,7 @@ public class ApplicationStatusControllerDocumentation extends BaseControllerMock
         when(applicationStatusService.getById(statusId)).thenReturn(ServiceResult.serviceSuccess(status));
 
         mockMvc.perform(get("/applicationstatus/{id}", statusId))
-                .andDo(document("application-status/get-application-status",
+                .andDo(this.document.snippets(
                     pathParameters(
                             parameterWithName("id").description("applications status id that is being requested")
                     ),

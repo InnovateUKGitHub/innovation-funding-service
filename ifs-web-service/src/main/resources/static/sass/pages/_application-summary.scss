@@ -19,13 +19,11 @@
 		display: block;
 		margin-top:1em;
 	}
-	
 	.question {
 		overflow: hidden;
-		margin:20px; 
-	}
-	
-	#disabled-submit-application-button, #submit-application-button {
-		margin-right: 0;
-	}
-} 
+		margin:20px;
+	} 
+}
+.no-js .app-summary .agree-to-terms-container {
+	display:none;
+}

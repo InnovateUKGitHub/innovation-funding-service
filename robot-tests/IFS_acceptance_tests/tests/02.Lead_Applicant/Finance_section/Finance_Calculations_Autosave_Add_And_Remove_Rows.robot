@@ -22,8 +22,7 @@ Labour
     ...    Acceptance tests for the Labour section calculations
     ...    INFUND-736
     ...    INFUND-1256
-    [Tags]    Labour    Autosave    Calculations    Finance     Pending
-    # Pending due to bug INFUND-2145
+    [Tags]    Labour    Autosave    Calculations    Finance
     Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And the Applicant fills in the Labour costs
     And the calculations of the labour should be correct
@@ -40,8 +39,7 @@ Overheads
     [Documentation]    INFUND-192
     ...    Acceptance tests for the Overheads section calculations
     ...    INFUND-736
-    [Tags]    Overheads    Autosave    Calculations    Finance      Pending
-    # Pending due to bug INFUND-2145
+    [Tags]    Overheads    Autosave    Calculations    Finance
     Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And the Applicant fills in the Overheads costs
     And the calculations of the overheads should be correct
@@ -131,6 +129,15 @@ Other Funding
     And applicant selects 'No' for other funding
     And applicant can see that the 'No' radio button is selected
     And applicant cannot see the 'other funding' details
+
+Mark all section as complete
+    [Documentation]    INFUND-446
+    [Tags]    Applicant    Application    Finances
+    When Applicant clicks on "Mark all as complete"
+    Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
+    And the user clicks "Your finances"
+    And the user will be in Finance section
+
 
 *** Keywords ***
 the Applicant fills in the Labour costs
@@ -434,3 +441,17 @@ Applicant selects 'Yes' for other funding
 
 Applicant can see that the 'No' radio button is selected
     Radio Button Should Be Set To    other_funding-otherPublicFunding-35-54    No
+
+Applicant clicks on "Mark all as complete"
+    Focus    jQuery=.button:contains("Mark all as complete")
+    Click button    jQuery=.button:contains("Mark all as complete")
+
+the user clicks "Your finances"
+    Wait Until Element Is Visible    link=Your finances
+    Sleep    1s
+    Focus    link=Your finances
+    Click Element    link=Your finances
+    Location Should Be    ${YOUR_FINANCES_URL}
+
+the user will be in Finance section
+    Page Should Not Contain Element    jQuery=.button:contains("Mark all as complete")
