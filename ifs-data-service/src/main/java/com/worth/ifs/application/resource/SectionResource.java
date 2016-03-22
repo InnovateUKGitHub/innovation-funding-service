@@ -1,10 +1,10 @@
 package com.worth.ifs.application.resource;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.competition.domain.Competition;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -109,8 +109,11 @@ public class SectionResource {
         return this.priority;
     }
 
-    public Boolean isQuestionGroup() {
-        return this.questionGroup;
+    public boolean isQuestionGroup() {
+        if(this.questionGroup==null){
+            return false;
+        }
+        return this.questionGroup.booleanValue();
     }
 
     public Long getCompetition() {
