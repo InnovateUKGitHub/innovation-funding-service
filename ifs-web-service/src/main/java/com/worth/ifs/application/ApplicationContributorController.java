@@ -207,7 +207,7 @@ public class ApplicationContributorController{
                 // empty cookie, since the invites are saved.
                 CookieUtil.saveToCookie(response, CONTRIBUTORS_COOKIE, "");
 
-                if (newApplication != null) {
+                if (newApplication != null && ApplicationStatusConstants.CREATED.getId().equals(application.getApplicationStatus())) {
                     applicationService.updateStatus(application.getId(), ApplicationStatusConstants.OPEN.getId());
                     return ApplicationController.redirectToApplication(application);
                 }

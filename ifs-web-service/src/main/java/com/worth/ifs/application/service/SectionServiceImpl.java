@@ -1,24 +1,18 @@
 package com.worth.ifs.application.service;
 
-import static com.worth.ifs.application.service.Futures.adapt;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.stream.Collectors.toList;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.Future;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.concurrent.Future;
+
+import static com.worth.ifs.application.service.Futures.adapt;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.stream.Collectors.toList;
 
 /**
  * This class contains methods to retrieve and store {@link Section} related data,
@@ -59,8 +53,13 @@ public class SectionServiceImpl implements SectionService {
         return sectionRestService.allSectionsMarkedAsComplete(applicationId).getSuccessObjectOrThrowException();
     }
 
+    /**
+     * Get Sections that have no parent section.
+     * @param sectionIds
+     * @return the list of sections without a parent section.
+     */
     @Override
-    public List<SectionResource> getParentSections(List<Long> sectionIds) {
+    public List<SectionResource> filterParentSections(List<Long> sectionIds) {
         List<SectionResource> sections = simpleMap(sectionIds, this::getById);
         List<SectionResource> childSections = new ArrayList<>();
         getChildSections(sections, childSections);
@@ -108,24 +107,6 @@ public class SectionServiceImpl implements SectionService {
                                 .collect(toList())
                 )
         );
-    }
-
-    @Override
-    public List<Long> getUserAssignedSections(List<SectionResource> sections, Map<Long, QuestionStatus> questionAssignees, Long userId ) {
-        List<Long> userAssignedSections = new ArrayList<>();
-
-        for(SectionResource section : sections) {
-            boolean isUserAssignedSection = section.getQuestions().stream()
-                    .map(questionService::getById)
-                    .anyMatch(q ->
-                questionAssignees.get(q.getId())!=null &&
-                questionAssignees.get(q.getId()).getAssignee().getUser().getId().equals(userId)
-            );
-            if(isUserAssignedSection) {
-                userAssignedSections.add(section.getId());
-            }
-        }
-        return userAssignedSections;
     }
 
     @Override

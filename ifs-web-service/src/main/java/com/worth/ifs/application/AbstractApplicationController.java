@@ -323,7 +323,7 @@ public abstract class AbstractApplicationController extends BaseController {
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                             Optional<SectionResource> currentSection,
                                             Optional<Organisation> userOrganisation) {
-        List<SectionResource> sectionsList = sectionService.getParentSections(competition.getSections());
+        List<SectionResource> sectionsList = sectionService.filterParentSections(competition.getSections());
 
         Map<Long, SectionResource> sections =
                 sectionsList.stream().collect(Collectors.toMap(SectionResource::getId,
