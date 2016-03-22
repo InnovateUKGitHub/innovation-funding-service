@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static com.worth.ifs.login.HomeController.getRedirectUrlForUser;
 
@@ -283,16 +284,8 @@ public class RegistrationController {
         registrationForm.setActionUrl(BASE_URL + "?" + ORGANISATION_ID_PARAMETER_NAME + "=" + organisationId);
     }
 
-    private boolean hasVerifiedCookieSet(final HttpServletRequest request){
-        final Cookie[] cookies = request.getCookies();
-        if(cookies != null && cookies.length > 0){
-            for(Cookie cookie : request.getCookies()){
-                if(cookie.getName().equals("flashMessage") && cookie.getValue() != null){
-                    return cookie.getValue().equals("verificationSuccessful");
-                }
-            }
-        }
-
-        return false;
+    private boolean hasVerifiedCookieSet(final HttpServletRequest request) {
+        final Optional<Cookie> cookie = CookieUtil.getCookie(request, "flashMessage");
+        return cookie.isPresent() && cookie.get().getValue().equals("verificationSuccessful");
     }
 }
