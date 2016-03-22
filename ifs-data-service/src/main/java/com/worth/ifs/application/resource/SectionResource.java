@@ -1,11 +1,10 @@
 package com.worth.ifs.application.resource;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.competition.domain.Competition;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.competition.domain.Competition;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -15,19 +14,19 @@ public class SectionResource {
     private String description;
     private String assessorGuidanceDescription;
     private Integer priority;
-    private boolean questionGroup;
+    private Boolean questionGroup;
     private Long competition;
     private List<Long> questions = new ArrayList<>();
     private Long parentSection;
     private List<Long> childSections;
-    private boolean displayInAssessmentApplicationSummary = false;
+    private Boolean displayInAssessmentApplicationSummary = false;
 
-    public SectionResource(long id, Competition competition, List<Question> questions, String name, Section parentSection) {
+    public SectionResource(long id, Competition competition, List<Question> questions, String name, Long parentSection) {
         this.id = id;
         this.competition = competition.getId();
         this.questions = simpleMap(questions, Question::getId);
         this.name = name;
-        this.parentSection = parentSection.getId();
+        this.parentSection = parentSection;
     }
 
     public SectionResource() {
@@ -82,7 +81,7 @@ public class SectionResource {
         this.priority = priority;
     }
 
-    public void setQuestionGroup(boolean questionGroup) {
+    public void setQuestionGroup(Boolean questionGroup) {
         this.questionGroup = questionGroup;
     }
 
@@ -94,7 +93,7 @@ public class SectionResource {
         this.childSections = childSections;
     }
 
-    public void setDisplayInAssessmentApplicationSummary(boolean displayInAssessmentApplicationSummary) {
+    public void setDisplayInAssessmentApplicationSummary(Boolean displayInAssessmentApplicationSummary) {
         this.displayInAssessmentApplicationSummary = displayInAssessmentApplicationSummary;
     }
 
@@ -110,7 +109,7 @@ public class SectionResource {
         return this.priority;
     }
 
-    public boolean isQuestionGroup() {
+    public Boolean isQuestionGroup() {
         return this.questionGroup;
     }
 
@@ -118,7 +117,7 @@ public class SectionResource {
         return this.competition;
     }
 
-    public boolean isDisplayInAssessmentApplicationSummary() {
+    public Boolean isDisplayInAssessmentApplicationSummary() {
         return this.displayInAssessmentApplicationSummary;
     }
 }

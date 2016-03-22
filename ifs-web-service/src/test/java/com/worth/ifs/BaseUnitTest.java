@@ -24,7 +24,7 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.service.CompetitionsRestService;
-import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.CostRestService;
@@ -186,6 +186,7 @@ public class BaseUnitTest {
     public ApplicationStatusResource createdApplicationStatus;
     public ApplicationStatusResource approvedApplicationStatus;
     public ApplicationStatusResource rejectedApplicationStatus;
+    public ApplicationStatusResource openApplicationStatus;
     public List<ProcessRole> processRoles;
 
     public List<ProcessRole> application1ProcessRoles;
@@ -211,6 +212,7 @@ public class BaseUnitTest {
     public static final String INVITE_HASH_EXISTING_USER = "cccccccccc630f220325b7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
     public static final String INVALID_INVITE_HASH = "aaaaaaa7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
     public static final String ACCEPTED_INVITE_HASH = "BBBBBBBBB7a64cf3eb782759326d3cbb85e546e0d03e663ec711ec7ca65827a96";
+    ;
 
 
     public InternalResourceViewResolver viewResolver() {
@@ -405,7 +407,7 @@ public class BaseUnitTest {
 
         competition.setSections(sections);
         competitionResource.setSections(sections.stream().map(s -> s.getId()).collect(toList()));
-        when(sectionService.getParentSections(anyList())).thenReturn(sectionResources);
+        when(sectionService.filterParentSections(anyList())).thenReturn(sectionResources);
         competitions = singletonList(competition);
         when(questionService.findByCompetition(competition.getId())).thenReturn(questionList);
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competitionResource));
@@ -421,6 +423,7 @@ public class BaseUnitTest {
     }
 
     public void setupApplicationWithRoles(){
+        openApplicationStatus = newApplicationStatusResource().with(status -> status.setId(ApplicationStatusConstants.OPEN.getId())).withName(ApplicationStatusConstants.OPEN.getName()).build();
         createdApplicationStatus = newApplicationStatusResource().with(status -> status.setId(ApplicationStatusConstants.CREATED.getId())).withName(ApplicationStatusConstants.CREATED.getName()).build();
         submittedApplicationStatus = newApplicationStatusResource().with(status -> status.setId(ApplicationStatusConstants.SUBMITTED.getId())).withName(ApplicationStatusConstants.SUBMITTED.getName()).build();
         approvedApplicationStatus = newApplicationStatusResource().with(status -> status.setId(ApplicationStatusConstants.APPROVED.getId())).withName(ApplicationStatusConstants.APPROVED.getName()).build();
@@ -513,7 +516,7 @@ public class BaseUnitTest {
         users.get(0).addUserApplicationRole(processRole5);
         applications = applicationResources;
 
-        when(sectionService.getParentSections(simpleMap(competition.getSections(), Section::getId))).thenReturn(sectionResources);
+        when(sectionService.filterParentSections(simpleMap(competition.getSections(), Section::getId))).thenReturn(sectionResources);
         when(sectionService.getCompleted(applicationList.get(0).getId(), organisation1.getId())).thenReturn(asList(1L, 2L));
         when(sectionService.getInCompleted(applicationList.get(0).getId())).thenReturn(asList(3L, 4L));
         when(processRoleService.findProcessRole(applicant.getId(), applicationList.get(0).getId())).thenReturn(processRole1);
@@ -692,8 +695,8 @@ public class BaseUnitTest {
     public ExceptionHandlerExceptionResolver createExceptionResolver() {
         ExceptionHandlerExceptionResolver exceptionResolver = new ExceptionHandlerExceptionResolver() {
             protected ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod handlerMethod, Exception exception) {
-                Method method = new ExceptionHandlerMethodResolver(ErrorController.class).resolveMethod(exception);
-                return new ServletInvocableHandlerMethod(new ErrorController(env, messageSource), method);
+                Method method = new ExceptionHandlerMethodResolver(ErrorControllerAdvice.class).resolveMethod(exception);
+                return new ServletInvocableHandlerMethod(new ErrorControllerAdvice(env, messageSource), method);
             }
         };
         exceptionResolver.afterPropertiesSet();

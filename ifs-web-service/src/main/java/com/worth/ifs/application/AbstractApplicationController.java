@@ -1,31 +1,5 @@
 package com.worth.ifs.application;
 
-import static com.worth.ifs.application.service.Futures.call;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-
 import com.worth.ifs.BaseController;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
@@ -37,14 +11,7 @@ import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.application.service.ProcessRoleService;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.application.service.ResponseService;
-import com.worth.ifs.application.service.SectionService;
-import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -59,6 +26,22 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.application.service.Futures.call;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This object contains shared methods for all the Controllers related to the {@link ApplicationResource} data.
@@ -168,7 +151,7 @@ public abstract class AbstractApplicationController extends BaseController {
         if(form == null){
             form = new ApplicationForm();
         }
-        form.application = application;
+        form.setApplication(application);
 
         addOrganisationDetails(model, application, userOrganisation, userApplicationRoles);
         addQuestionsDetails(model, application, form);
@@ -323,7 +306,7 @@ public abstract class AbstractApplicationController extends BaseController {
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                             Optional<SectionResource> currentSection,
                                             Optional<Organisation> userOrganisation) {
-        List<SectionResource> sectionsList = sectionService.getParentSections(competition.getSections());
+        List<SectionResource> sectionsList = sectionService.filterParentSections(competition.getSections());
 
         Map<Long, SectionResource> sections =
                 sectionsList.stream().collect(Collectors.toMap(SectionResource::getId,

@@ -2,7 +2,7 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.form.ContributorsForm;
-import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +52,7 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(applicationContributorController, new ErrorController())
+        mockMvc = MockMvcBuilders.standaloneSetup(applicationContributorController, new ErrorControllerAdvice())
                 .setViewResolvers(viewResolver())
                 .build();
 
