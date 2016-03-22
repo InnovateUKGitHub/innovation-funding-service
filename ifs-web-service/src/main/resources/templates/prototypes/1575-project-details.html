@@ -23,7 +23,9 @@
 
 	<h2 class="heading-medium">Project details</h2>
 
-	<p>You are providing these details as the lead applicant on behalf of the overall project.</p>
+	<p th:unless="${param.user != null and param.user[0] == 'nonLead'}">You are providing these details as the lead applicant on behalf of the overall project.</p>
+
+	<p th:unless="${param.user == null}">The lead partner will provide these details on behalf of the project..</p>
 
 	<table>
 		<thead>
