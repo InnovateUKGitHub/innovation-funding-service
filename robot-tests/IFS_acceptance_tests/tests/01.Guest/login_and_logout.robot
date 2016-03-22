@@ -55,7 +55,7 @@ Valid login as Assessor
 
 Reset password (psw does not match)
     [Documentation]    INFUND-1889
-    [Tags]    HappyPath    FailingForLocal
+    [Tags]    FailingForLocal
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the button/link    link=Forgot your password?
@@ -73,6 +73,7 @@ Reset password (psw does not match)
 
 Reset password
     [Documentation]    INFUND-1889
+    [Tags]    FailingForLocal    HappyPath
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the button/link    link=Forgot your password?
