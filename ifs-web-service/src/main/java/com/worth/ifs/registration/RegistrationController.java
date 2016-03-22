@@ -13,6 +13,7 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.form.RegistrationForm;
+import com.worth.ifs.security.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -30,6 +31,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -60,6 +62,9 @@ public class RegistrationController {
     @Autowired
     protected UserAuthenticationService userAuthenticationService;
 
+    @Autowired
+    protected CookieFlashMessageFilter cookieFlashMessageFilter;
+
     private final Log log = LogFactory.getLog(getClass());
 
     public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
@@ -76,13 +81,20 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/verified", method = RequestMethod.GET)
-    public String verificationSuccessful() {
-        return "registration/verified";
+    public String verificationSuccessful(final HttpServletRequest request, final HttpServletResponse response) {
+        if(!hasVerifiedCookieSet(request)){
+            throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
+        } else {
+            cookieFlashMessageFilter.removeFlashMessage(response);
+            return "registration/verified";
+        }
     }
 
     @RequestMapping(value = "/verify-email/{hash}", method = RequestMethod.GET)
-    public String verifyEmailAddress(@PathVariable("hash") final String hash){
+    public String verifyEmailAddress(@PathVariable("hash") final String hash,
+                                     final HttpServletResponse response){
         if(userService.verifyEmail(hash).isSuccess()){
+            cookieFlashMessageFilter.setFlashMessage(response, "verificationSuccessful");
             return "redirect:/registration/verified";
         }else{
             throw new InvalidURLException();
@@ -269,5 +281,18 @@ public class RegistrationController {
     private void setFormActionURL(RegistrationForm registrationForm, HttpServletRequest request) {
         Long organisationId = getOrganisationId(request);
         registrationForm.setActionUrl(BASE_URL + "?" + ORGANISATION_ID_PARAMETER_NAME + "=" + organisationId);
+    }
+
+    private boolean hasVerifiedCookieSet(final HttpServletRequest request){
+        final Cookie[] cookies = request.getCookies();
+        if(cookies != null && cookies.length > 0){
+            for(Cookie cookie : request.getCookies()){
+                if(cookie.getName().equals("flashMessage") && cookie.getValue() != null){
+                    return cookie.getValue().equals("verificationSuccessful");
+                }
+            }
+        }
+
+        return false;
     }
 }
