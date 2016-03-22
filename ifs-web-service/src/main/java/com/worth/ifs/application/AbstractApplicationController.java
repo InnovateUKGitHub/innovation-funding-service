@@ -1,31 +1,5 @@
 package com.worth.ifs.application;
 
-import static com.worth.ifs.application.service.Futures.call;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-
 import com.worth.ifs.BaseController;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
@@ -37,14 +11,7 @@ import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.application.service.ProcessRoleService;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.application.service.ResponseService;
-import com.worth.ifs.application.service.SectionService;
-import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -59,14 +26,47 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.application.service.Futures.call;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This object contains shared methods for all the Controllers related to the {@link ApplicationResource} data.
  */
 public abstract class AbstractApplicationController extends BaseController {
+    public static final String MARK_AS_COMPLETE = "mark_as_complete";
+    public static final String MARK_SECTION_AS_COMPLETE = "mark_section_as_complete";
+    public static final String MARK_SECTION_AS_INCOMPLETE = "mark_section_as_incomplete";
+    public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
+    public static final String UPLOAD_FILE = "upload_file";
+    public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
+    public static final String ADD_COST = "add_cost";
+    public static final String REMOVE_COST = "remove_cost";
+    public static final String EDIT_QUESTION = "edit_question";
+    public static final String APPLICATION_FORM = "application-form";
+    public static final String MODEL_ATTRIBUTE_FORM = "form";
+    public static final String QUESTION_ID = "questionId";
+    public static final String APPLICATION_ID = "applicationId";
+    public static final String APPLICATION_BASE_URL = "/application/";
 
     public static final String ASSIGN_QUESTION_PARAM = "assign_question";
     public static final String FORM_MODEL_ATTRIBUTE = "form";
+    public static final String APPLICATION_START_DATE = "application.startDate";
+    public static final String QUESTION_URL = "/question/";
+    public static final String SECTION_URL = "/section/";
     private final Log log = LogFactory.getLog(getClass());
 
     @Autowired
@@ -168,7 +168,7 @@ public abstract class AbstractApplicationController extends BaseController {
         if(form == null){
             form = new ApplicationForm();
         }
-        form.application = application;
+        form.setApplication(application);
 
         addOrganisationDetails(model, application, userOrganisation, userApplicationRoles);
         addQuestionsDetails(model, application, form);

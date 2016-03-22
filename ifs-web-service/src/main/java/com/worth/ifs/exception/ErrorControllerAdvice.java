@@ -24,21 +24,21 @@ import java.util.Collections;
  * NOTE: Make sure every (non json) response uses createExceptionModelAndView as it also sets login and dashboard links
  */
 @ControllerAdvice
-public class ErrorController extends BaseErrorController{
+public class ErrorControllerAdvice extends BaseErrorControllerAdvice {
     private final Log log = LogFactory.getLog(getClass());
     public static final String URL_HASH_INVALID_TEMPLATE = "url-hash-invalid";
 
-    public ErrorController() {
+    public ErrorControllerAdvice() {
         super();
     }
 
-    public ErrorController(Environment env, MessageSource messageSource) {
+    public ErrorControllerAdvice(Environment env, MessageSource messageSource) {
         super();
         this.env = env;
         this.messageSource = messageSource;
     }
 
-    @ResponseStatus(HttpStatus.ALREADY_REPORTED)     // 400
+    @ResponseStatus(HttpStatus.ALREADY_REPORTED)     // 208
     @ExceptionHandler(value = InvalidURLException.class)
     public ModelAndView invalidUrlErrorHandler(HttpServletRequest req, InvalidURLException e) {
         log.debug("ErrorController invalidUrlErrorHandler", e);

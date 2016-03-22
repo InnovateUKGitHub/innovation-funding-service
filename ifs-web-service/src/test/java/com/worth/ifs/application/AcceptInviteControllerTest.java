@@ -1,7 +1,7 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.security.CookieFlashMessageFilter;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,12 +44,12 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
         localeResolver.setCookieDomain("domain");
 
         final StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.registerSingleton("exceptionHandler", ErrorController.class);
+        applicationContext.registerSingleton("exceptionHandler", ErrorControllerAdvice.class);
 
         final WebMvcConfigurationSupport webMvcConfigurationSupport = new WebMvcConfigurationSupport();
         webMvcConfigurationSupport.setApplicationContext(applicationContext);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(acceptInviteController, new ErrorController())
+        mockMvc = MockMvcBuilders.standaloneSetup(acceptInviteController, new ErrorControllerAdvice())
                 .setHandlerExceptionResolvers(webMvcConfigurationSupport.handlerExceptionResolver())
                 .setViewResolvers(viewResolver())
                 .setLocaleResolver(localeResolver)

@@ -28,7 +28,6 @@ Create application flow for non registered users CH route
     ...
     ...    INFUND-1920
     [Tags]    Create application    HappyPath    FailingForLocal
-    # TODO DW - INFUND-936 - failing because of auto login not working shib
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -59,7 +58,6 @@ Create application flow for non registered users non CH route
     ...
     ...    INFUND-1920
     [Tags]    Create application    HappyPath    FailingForLocal
-    # TODO DW - INFUND-936 - failing because of auto login not working shib
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -81,7 +79,7 @@ Verify the name of the new application
     ...
     ...    INFUND-1163
     [Tags]    Applicant    New application    HappyPath    FailingForLocal
-    # TODO DW - INFUND-936 - failing because of user not created as part of another test which is failing due to auto login not being functional
+    # failing because of a user not being created by failing verification email test
     When the guest user enters the log in credentials    worth.email.test+1@gmail.com    testtest1
     And the user clicks the button/link    css=input.button
     And the user edits the competition title

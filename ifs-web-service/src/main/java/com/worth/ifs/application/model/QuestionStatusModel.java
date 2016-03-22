@@ -6,10 +6,6 @@ import com.worth.ifs.user.domain.ProcessRole;
 
 import java.time.LocalDateTime;
 
-/**
- * Created by rav on 01/02/2016.
- *
- */
 public class QuestionStatusModel {
     private Long id;
 
@@ -71,14 +67,6 @@ public class QuestionStatusModel {
         return assignedDate;
     }
 
-    public void markAsComplete() {
-        this.markedAsComplete = true;
-    }
-
-    public void markAsInComplete() {
-        this.markedAsComplete = false;
-    }
-
     public void setAssignee(ProcessRole assignee, ProcessRole assignedBy, LocalDateTime assignedDate) {
         this.assignedDate = assignedDate;
         this.assignee = assignee;
@@ -104,5 +92,17 @@ public class QuestionStatusModel {
 
     public Application getApplication() {
         return this.application;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setMarkedAsComplete(Boolean markedAsComplete) {
+        this.markedAsComplete = markedAsComplete;
+    }
+
+    public void setMarkedAsCompleteBy(ProcessRole markedAsCompleteBy) {
+        this.markedAsCompleteBy = markedAsCompleteBy;
     }
 }

@@ -29,7 +29,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -77,17 +76,13 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/verified", method = RequestMethod.GET)
-    public String verificationSuccessful(@ModelAttribute("redirectedFrom") final Object redirectedFrom) {
-        if(redirectedFrom == null || !redirectedFrom.equals("verifyEmailAddress")){
-            throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
-        }
+    public String verificationSuccessful() {
         return "registration/verified";
     }
 
     @RequestMapping(value = "/verify-email/{hash}", method = RequestMethod.GET)
-    public String verifyEmailAddress(@PathVariable("hash") final String hash, final RedirectAttributes redirectAttributes){
+    public String verifyEmailAddress(@PathVariable("hash") final String hash){
         if(userService.verifyEmail(hash).isSuccess()){
-            redirectAttributes.addFlashAttribute("redirectedFrom", "verifyEmailAddress");
             return "redirect:/registration/verified";
         }else{
             throw new InvalidURLException();
