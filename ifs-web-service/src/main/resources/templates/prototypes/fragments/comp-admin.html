@@ -21,7 +21,7 @@
                 <h2 class="heading-small comp-status-label">
 
                     <div th:if="${param.status == null}" th:remove="tag">
-                        <span th:text="${subheading}" th:remove="tag"></span>
+                        <span th:text="${subheading}"></span>
                     </div>
 
                     <div th:if="${param.status != null}" th:remove="tag">
@@ -44,6 +44,10 @@
 
                         <div th:if="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
                             <span>Assessor feedback</span>
+                        </div>
+
+                        <div th:if="${param.status[0] == 'setup'}" th:remove="tag">
+                            <span>Projects in setup</span>
                         </div>
 
                     </div> 
@@ -72,7 +76,7 @@
 
     <div th:if="${status == 'closed'}" th:remove="tag">
         
-        <div th:unless="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
+        <div th:if="${param.status[0] != 'assessorFeedback' and param.status[0] != 'setup'}" th:remove="tag">
 
             <ul class="inline-nav cf">
                 <li th:class="${(page == 'dashboard' ? 'selected' : '')}">
@@ -88,19 +92,19 @@
 
         </div>
 
-        <div th:unless="${param.status[0] != 'assessorFeedback'}" th:remove="tag">
+        <div th:if="${param.status[0] == 'assessorFeedback' or param.status[0] == 'setup'}" th:remove="tag">
             
             <ul class="inline-nav cf">
                 <li th:class="${(page == 'dashboard' ? 'selected' : '')}">
                     <a href="/prototypes/1968-dashboard?closed&#38;status=assessorFeedback">Overview</a>
                 </li>
                 <li th:class="${(page == 'applications' ? 'selected' : '')}">
-                    <a href="1998-application-feedback?closed&#38;status=assessorFeedback">Applications submitted</a>
+                    <a href="/prototypes/1998-application-feedback?closed&#38;status=assessorFeedback">Applications submitted</a>
                 </li>
                 <li th:class="${(page == 'not-submitted' ? 'selected' : '')}">
                     <a th:href="${(param.status != null ? '/prototypes/1348-not-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-not-submitted-applications')}">Applications not submitted</a>
                 </li>
-                <li th:class="${(page == 'project-setup' ? 'selected' : '')}">Project setup</li>
+                <li th:class="${(page == 'project-setup' ? 'selected' : '')}"><a href="/prototypes/1627-admin-view-projects?status=setup">Projects in setup</a></li>
             </ul>
 
         </div>
@@ -266,7 +270,6 @@
                 <div th:if="${type != null}" th:unless="${type != 'notSubmittedApplications'}" th:remove="tag">
                     <h4><span class="heading-xlarge no-margin available">18</span> <strong th:text="${filterTitle}">TITLE</strong></h4>
                 </div>
-
 
             </div>
 
