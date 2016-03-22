@@ -53,7 +53,7 @@ Valid login as Assessor
     And the user should be logged-in as an Assessor
     [Teardown]    Logout as user
 
-Reset password
+Reset password (psw does not match)
     [Documentation]    INFUND-1889
     [Tags]    HappyPath    FailingForLocal
     [Setup]    The guest user opens the browser
@@ -66,17 +66,30 @@ Reset password
     And the user should see the text in the page    Password reset
     And the user enters text to a text field    id=id_password    Passw0rdnew
     And the user enters text to a text field    id=id_retypedPassword    OtherPass2aa
-    And the user clicks the button/link    css=input.button
+    And browser validations have been disabled
+    And the user clicks the button/link    jQuery=input[value*="Save password"]
     And the user should see an error    Passwords must match
+    [Teardown]    TestTeardown User closes the browser
+
+Reset password
+    [Documentation]    INFUND-1889
+    [Setup]    The guest user opens the browser
+    Given the user navigates to the page    ${LOGIN_URL}
+    When the user clicks the button/link    link=Forgot your password?
+    And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
+    And the user clicks the button/link    css=input.button
+    Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
+    And the user open the mailbox and clicks the reset link
+    And the user should see the text in the page    Password reset
     And the user enters text to a text field    id=id_password    Passw0rdnew
     And the user enters text to a text field    id=id_retypedPassword    Passw0rdnew
-    And the user clicks the button/link    css=input.button
+    And the user clicks the button/link    jQuery=input[value*="Save password"]
     And the user should see the text in the page    Your password is updated, you can now sign in with your new password
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     When the guest user enters the log in credentials    worth.email.test+changepsw@gmail.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
-    When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rdnew
+    When the guest user enters the log in credentials    worth.email.test+changepsw@gmail.com    Passw0rdnew
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the Applicant is logged-in
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
