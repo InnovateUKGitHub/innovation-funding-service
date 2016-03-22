@@ -13,9 +13,9 @@ Resource          ../../../resources/keywords/User_actions.robot
 ${blacklisted_password}             Password123
 ${blacklisted_password_message}     Password is too weak
 ${lower_case_password}              thisisallinlowercase1
-${lower_case_message}               Passwords must contain at least one lower case letter
+${lower_case_message}               Password must contain at least one lower case letter
 ${upper_case_password}              THISISALLINUPPERCASE2
-${upper_case_message}               Passwords must contain at least one lower case letter
+${upper_case_message}               Password must contain at least one lower case letter
 ${no_numbers_password}              thishasnonumbers
 ${no_numbers_message}               Password must contain at least one number
 ${personal_info_password}           Smith123
