@@ -36,18 +36,13 @@ Invalid password (from the blacklist)
 Invalid password (all lower case)
                       [Documentation]                 INFUND-1147
                       [Tags]                          Account       Pending
-                      # pending since the message is wrong
+                      # Pending since the message is wrong for this option
                       ${lower_case_password}        ${lower_case_message}
 
 Invalid password (too short)
                       [Documentation]                 INFUND-1147
                       [Tags]                          Account
                       ${too_short_password}         ${too_short_message}
-
-Invalid password (too long)
-                      [Documentation]                 INFUND-1147
-                      [Tags]                          Account
-                      ${too_long_password}          ${too_long_message}
 
 Invalid password (no numbers)
                       [Documentation]                 INFUND-1147
@@ -58,11 +53,13 @@ Invalid password (no numbers)
 Invalid password (personal information)
                       [Documentation]                 INFUND-1147
                       [Tags]                          Account       Pending
+                      # Pending since the validation for ths doesn't seem to be occurring
                       ${personal_info_password}     ${personal_info_message}
 
 
 
 *** Keywords ***
+
 Invalid Password Check
     [Arguments]    ${invalid_password}          ${password_error_message}
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
