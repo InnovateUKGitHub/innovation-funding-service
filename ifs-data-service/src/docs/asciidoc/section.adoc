@@ -1,0 +1,107 @@
+=== Find by id
+==== Request
+include::{snippets}/section/find-one/http-request.adoc[]
+include::{snippets}/section/find-one/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/section/find-one/http-response.adoc[]
+include::{snippets}/section/find-one/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/section/find-one/curl-request.adoc[]
+
+=== Find by name
+==== Request
+include::{snippets}/section/find-by-name/http-request.adoc[]
+include::{snippets}/section/find-by-name/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/section/find-by-name/http-response.adoc[]
+include::{snippets}/section/find-by-name/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/section/find-by-name/curl-request.adoc[]
+
+=== Get by question
+==== Request
+include::{snippets}/section/get-by-question/http-request.adoc[]
+include::{snippets}/section/get-by-question/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/section/get-by-question/http-response.adoc[]
+include::{snippets}/section/get-by-question/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/section/get-by-question/curl-request.adoc[]
+
+=== Get completed by application and organisation
+==== Request
+include::{snippets}/section/get-completed-by-application-and-organisation/http-request.adoc[]
+include::{snippets}/section/get-completed-by-application-and-organisation/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/section/get-completed-by-application-and-organisation/http-response.adoc[]
+include::{snippets}/section/get-completed-by-application-and-organisation/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/section/get-completed-by-application-and-organisation/curl-request.adoc[]
+
+=== Get completed by organisation
+==== Request
+include::{snippets}/section/get-completed-by-organisation/http-request.adoc[]
+include::{snippets}/section/get-completed-by-organisation/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/section/get-completed-by-organisation/http-response.adoc[]
+include::{snippets}/section/get-completed-by-organisation/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/section/get-completed-by-organisation/curl-request.adoc[]
+
+=== Get incomplete
+==== Request
+include::{snippets}/section/get-incomplete/http-request.adoc[]
+include::{snippets}/section/get-incomplete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/section/get-incomplete/http-response.adoc[]
+include::{snippets}/section/get-incomplete/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/section/get-incomplete/curl-request.adoc[]
+
+=== Get next section
+==== Request
+include::{snippets}/section/get-next-section/http-request.adoc[]
+include::{snippets}/section/get-next-section/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/section/get-next-section/http-response.adoc[]
+include::{snippets}/section/get-next-section/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/section/get-next-section/curl-request.adoc[]
+
+=== Get previous section
+==== Request
+include::{snippets}/section/get-previous-section/http-request.adoc[]
+include::{snippets}/section/get-previous-section/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/section/get-previous-section/http-response.adoc[]
+include::{snippets}/section/get-previous-section/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/section/get-previous-section/curl-request.adoc[]
+
+=== Get questions for section and subsections
+==== Request
+include::{snippets}/section/get-questions-for-section-and-subsections/http-request.adoc[]
+include::{snippets}/section/get-questions-for-section-and-subsections/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/section/get-questions-for-section-and-subsections/http-response.adoc[]
+include::{snippets}/section/get-questions-for-section-and-subsections/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/section/get-questions-for-section-and-subsections/curl-request.adoc[]

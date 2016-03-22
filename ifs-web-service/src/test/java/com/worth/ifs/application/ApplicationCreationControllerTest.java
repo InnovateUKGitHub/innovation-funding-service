@@ -3,7 +3,7 @@ package com.worth.ifs.application;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.user.domain.Organisation;
@@ -56,7 +56,7 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
         MockitoAnnotations.initMocks(this);
 
 
-        mockMvc = MockMvcBuilders.standaloneSetup(applicationCreationController, new ErrorController())
+        mockMvc = MockMvcBuilders.standaloneSetup(applicationCreationController, new ErrorControllerAdvice())
                 .setViewResolvers(viewResolver())
                 .build();
 

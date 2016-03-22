@@ -1,7 +1,7 @@
 package com.worth.ifs;
 
 import com.worth.ifs.commons.security.UserAuthentication;
-import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.user.domain.User;
 import org.junit.Before;
 import org.mockito.InjectMocks;
@@ -33,7 +33,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         BuilderAmendFunctions.clearUniqueIds();
 
         mockMvc = MockMvcBuilders
-                .standaloneSetup(controller, new ErrorController())
+                .standaloneSetup(controller, new ErrorControllerAdvice())
                 .setHandlerExceptionResolvers(createExceptionResolver())
                 .setViewResolvers(viewResolver())
                 .build();

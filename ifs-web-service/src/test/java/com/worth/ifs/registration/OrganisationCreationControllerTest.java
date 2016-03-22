@@ -6,7 +6,7 @@ import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.exception.ErrorController;
+import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.registration.form.OrganisationCreationForm;
 import com.worth.ifs.user.domain.Organisation;
@@ -72,7 +72,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(organisationCreationController, new ErrorController())
+        mockMvc = MockMvcBuilders.standaloneSetup(organisationCreationController, new ErrorControllerAdvice())
                 .setViewResolvers(viewResolver())
                 .build();
         this.setupOrganisationTypes();
