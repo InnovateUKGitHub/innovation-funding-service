@@ -41,6 +41,7 @@ public class ApplicationContributorController{
     public static final String APPLICATION_CONTRIBUTORS_DISPLAY = "application-contributors/display";
     public static final String APPLICATION_CONTRIBUTORS_INVITE = "application-contributors/invite";
     private static final String CONTRIBUTORS_COOKIE = "contributor_invite_state";
+    public static final String INVITES_SEND = "invitesSend";
     @Autowired
     private InviteRestService inviteRestService;
     @Autowired
@@ -249,15 +250,15 @@ public class ApplicationContributorController{
         if (organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))) {
             // save new invites, to InviteOrganisation that already is saved.
             inviteRestService.saveInvites(invites);
-            cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
+            cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
         } else if (existingOrganisation != null) {
             // Save invites, and link to existing organisation.
             inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
-            cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
+            cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
         } else {
             // Save invites, and create new InviteOrganisation
             inviteRestService.createInvitesByInviteOrganisation(organisationInvite.getOrganisationName(), invites);
-            cookieFlashMessageFilter.setFlashMessage(response, "invitesSend");
+            cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
         }
     }
 
