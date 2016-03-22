@@ -45,6 +45,9 @@ var IFSLoader = {
   'app-details' : {
     init : function(){ IFS.application_page.init(); }
   },
+  'app-summary' : {
+	init : function(){ IFS.application_summary.init(); }  
+  },
   'assessment-details' : {
     init : function(){ IFS.assesment_feedback_page.init(); }
   },

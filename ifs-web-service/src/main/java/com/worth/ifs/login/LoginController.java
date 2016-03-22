@@ -2,6 +2,7 @@ package com.worth.ifs.login;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
@@ -60,7 +61,7 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}", method = RequestMethod.GET)
-    public String resetPassword(@PathVariable("hash") String hash) {
+    public String resetPassword(@PathVariable("hash") String hash, @ModelAttribute ResetPasswordForm resetPasswordForm, Model model, HttpServletRequest request) {
         if (userService.checkPasswordResetHash(hash).isFailure()) {
             throw new InvalidURLException();
         }

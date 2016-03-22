@@ -1,7 +1,6 @@
 package com.worth.ifs.application.resource;
 
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.competition.domain.Competition;
 
 import java.util.ArrayList;
@@ -22,12 +21,12 @@ public class SectionResource {
     private List<Long> childSections;
     private boolean displayInAssessmentApplicationSummary = false;
 
-    public SectionResource(long id, Competition competition, List<Question> questions, String name, Section parentSection) {
+    public SectionResource(long id, Competition competition, List<Question> questions, String name, Long parentSection) {
         this.id = id;
         this.competition = competition.getId();
         this.questions = simpleMap(questions, Question::getId);
         this.name = name;
-        this.parentSection = parentSection.getId();
+        this.parentSection = parentSection;
     }
 
     public SectionResource() {

@@ -298,6 +298,9 @@
                     <div th:if="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
                          th:text="${assignableUser.getUser()?.getName()}"/>
                 </li>
+                <li th:each="pendingAssignableUser : ${pendingAssignableUsers}">
+                	<div th:text="${pendingAssignableUser.name + ' (pending)'}"/>
+                </li>
             </ul>
         </div>
     </div>
