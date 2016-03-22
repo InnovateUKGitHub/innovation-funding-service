@@ -112,7 +112,7 @@ function runTests {
 function runHappyPathTests {
     echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:http:// --include HappyPath --exclude Pending --exclude Failing --exclude FailingForLocal --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:https:// --include HappyPath --exclude Pending --exclude Failing --exclude FailingForLocal --name IFS $testDirectory
 }
 
 
