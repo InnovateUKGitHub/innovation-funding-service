@@ -59,7 +59,7 @@
             </ul>
         </section>
 
-        <section class="previous-applications">
+        <section th:if="${!applicationsFinished.isEmpty()}" class="previous-applications">
             <h2 class="heading-medium">Previous Applications</h2>
             <ul class="boxed-list">
                 <li th:each="application : ${applicationsFinished}">
