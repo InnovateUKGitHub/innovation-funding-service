@@ -63,6 +63,7 @@ import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -377,12 +378,14 @@ public class BaseUnitTest {
         SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).build();
         SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).build();
         SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your finances")).build();
+
         sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
 
 
         sections = asList(section1, section2, section3, section4, section5, section6, section7);
         sectionResources = asList(sectionResource1, sectionResource2, sectionResource3, sectionResource4, sectionResource5, sectionResource6, sectionResource7);
         sectionResources.forEach(s -> {
+                    s.setQuestionGroup(false);
                     s.setChildSections(new ArrayList<>());
                     when(sectionService.getById(s.getId())).thenReturn(s);
                     when(sectionService.getByName(s.getName())).thenReturn(s);
@@ -391,19 +394,46 @@ public class BaseUnitTest {
 
         ArrayList<Question> questionList = new ArrayList<>();
         for (Section section : sections) {
+            section.setQuestionGroup(false);
             List<Question> sectionQuestions = section.getQuestions();
+            section.setQuestionGroup(false);
             if(sectionQuestions != null){
                 Map<Long, Question> questionsMap =
                         sectionQuestions.stream().collect(toMap(Question::getId,
                                 identity()));
                 questionList.addAll(sectionQuestions);
                 questions.putAll(questionsMap);
+
+                when(sectionService.getQuestionsForSectionAndSubsections(eq(section.getId())))
+                        .thenReturn(new HashSet<>(questionList.stream().map(q -> q.getId()).collect(Collectors.toList())));
             }
         }
+
+        section7.setQuestionGroup(true);
+        sectionResource7.setQuestionGroup(true);
 
         questions.forEach((id, question) -> {
             when(questionService.getById(id)).thenReturn(question);
         });
+
+        when(questionService.getNextQuestion(eq(q01.getId()))).thenReturn(q10);
+        when(questionService.getPreviousQuestion(eq(q10.getId()))).thenReturn(q01);
+
+        when(questionService.getNextQuestion(eq(q10.getId()))).thenReturn(q20);
+        when(questionService.getPreviousQuestion(eq(q20.getId()))).thenReturn(q10);
+
+        when(questionService.getNextQuestion(eq(q20.getId()))).thenReturn(q21);
+        when(questionService.getPreviousQuestion(eq(q21.getId()))).thenReturn(q20);
+
+        when(questionService.getNextQuestion(eq(q21.getId()))).thenReturn(q22);
+        when(questionService.getPreviousQuestion(eq(q22.getId()))).thenReturn(q21);
+
+        when(sectionService.getSectionByQuestionId(eq(q01.getId()))).thenReturn(sectionResource1);
+        when(sectionService.getSectionByQuestionId(eq(q10.getId()))).thenReturn(sectionResource2);
+        when(sectionService.getSectionByQuestionId(eq(q20.getId()))).thenReturn(sectionResource3);
+        when(sectionService.getSectionByQuestionId(eq(q21.getId()))).thenReturn(sectionResource3);
+        when(sectionService.getSectionByQuestionId(eq(q22.getId()))).thenReturn(sectionResource3);
+
 
         competition.setSections(sections);
         competitionResource.setSections(sections.stream().map(s -> s.getId()).collect(toList()));

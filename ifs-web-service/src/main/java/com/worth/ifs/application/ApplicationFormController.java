@@ -73,19 +73,6 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping
-    public String applicationForm(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form, Model model, @PathVariable(APPLICATION_ID) final Long applicationId,
-                                  HttpServletRequest request) throws Exception {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        this.addFormAttributes(application, competition, Optional.empty(), user.getId(), model, form, Optional.empty(),
-                userApplicationRoles);
-        return APPLICATION_FORM;
-    }
-
-    @ProfileExecution
     @RequestMapping(value = {QUESTION_URL + "{"+QUESTION_ID+"}", QUESTION_URL + "edit/{"+QUESTION_ID+"}"}, method = RequestMethod.GET)
     public String showQuestion(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
                                BindingResult bindingResult, Model model,
@@ -166,9 +153,9 @@ public class ApplicationFormController extends AbstractApplicationController {
                                    Long userId, Model model,
                                    ApplicationForm form, Optional<Question> question,
                                    List<ProcessRole> userApplicationRoles){
-        addApplicationDetails(application, competition, userId, section, Optional.ofNullable(question.get().getId()), model, form, userApplicationRoles);
-        addNavigation(question.get(), application.getId(), model);
-        model.addAttribute("currentQuestion", question.get());
+        addApplicationDetails(application, competition, userId, section, question.map(q -> q.getId()), model, form, userApplicationRoles);
+        addNavigation(question.orElse(null), application.getId(), model);
+        model.addAttribute("currentQuestion", question.orElse(null));
         if(question.isPresent()) {
             model.addAttribute("title", question.get().getShortName());
         }
@@ -259,6 +246,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (question == null) {
             return;
         }
+
         Question previousQuestion = questionService.getPreviousQuestion(question.getId());
         addPreviousQuestionToModel(previousQuestion, applicationId, model);
         Question nextQuestion = questionService.getNextQuestion(question.getId());
