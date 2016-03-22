@@ -1,14 +1,22 @@
 /*----- Comp admin - comp status label ----*/
 
 .comp-status-label{
-	background: #6F72AF; 
-	padding: 20px; 
-	text-align: center; 
+	text-align: right; 
 	color: white;
-	margin-top: -75px;
+
+	span{
+		background: $govuk-blue; 
+		padding: 20px; 
+	}
 
 	@include media-down(mobile){
-		margin-top: 10px;
+		
+		text-align: center;
+
+		span{
+			margin-top: 10px;
+			display: block;
+		}
 	}
 }
 
@@ -104,8 +112,8 @@ table{
 
 			.boxed{
 				padding: 15px;
-				margin-bottom: 20px;
-				margin-right: 1px;
+				margin-bottom: 0;
+				margin-right: 0;
 
 				.column-half,
 				.column-third{
@@ -146,7 +154,6 @@ table{
 			box-sizing: border-box;
 			float: none;
 		}
-
 	}
 }
 
