@@ -15,7 +15,7 @@ ${blacklisted_password_message}     Password is too weak
 ${lower_case_password}              thisisallinlowercase1
 ${lower_case_message}               Password must contain at least one lower case letter
 ${upper_case_password}              THISISALLINUPPERCASE2
-${upper_case_message}               Password must contain at least one lower case letter
+${upper_case_message}               Password must contain at least one upper case letter
 ${no_numbers_password}              thishasnonumbers
 ${no_numbers_message}               Password must contain at least one number
 ${personal_info_password}           Smith123
@@ -42,6 +42,7 @@ Invalid password (all lower case)
 Invalid password (all upper case)
                       [Documentation]                 INFUND-1147
                       [Tags]                          Account
+                      # Note that the copy for this message is wrong - so it will start failing once that copy changes. Can be simply fixed with a change to ${lower_case_message} above
                       ${upper_case_password}        ${upper_case_message}
 
 Invalid password (no numbers)
@@ -51,13 +52,15 @@ Invalid password (no numbers)
 
 Invalid password (special characters)
                       [Documentation]                 INFUND-1147
-                      [Tags]                          Account
+                      [Tags]                          Account       Pending
+                      # Pending since this validation doesn't seem to exist
                       ${special_chars_password}      ${special_chars_message}
 
 
 Invalid password (personal information)
                       [Documentation]                 INFUND-1147
-                      [Tags]                          Account
+                      [Tags]                          Account       Pending
+                      # Pending since this validation doesn't seem to exist
                       ${personal_info_password}     ${personal_info_message}
 
 

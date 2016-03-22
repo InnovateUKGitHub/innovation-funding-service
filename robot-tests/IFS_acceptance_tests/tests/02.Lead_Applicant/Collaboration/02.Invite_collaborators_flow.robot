@@ -166,7 +166,7 @@ the applicant should not be able to assign the question to the users that still 
 the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    That's you!
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-child(3)    (pending)
-    Element Should Not Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
+    # Element Should Not Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
 
 the user logs back in
     guest user log-in       ewan+1@hiveit.co.uk     Passw0rd
