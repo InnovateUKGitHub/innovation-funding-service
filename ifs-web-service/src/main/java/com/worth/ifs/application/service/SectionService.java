@@ -1,10 +1,12 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionResource;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 /**
@@ -16,10 +18,9 @@ public interface SectionService {
     List<Long> getInCompleted(Long applicationId);
     Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId);
     Boolean allSectionsMarkedAsComplete(Long applicationId);
-    List<SectionResource> getParentSections(List<Long> sections);
+    List<SectionResource> filterParentSections(List<Long> sections);
     SectionResource getByName(String name);
     void removeSectionsQuestionsWithType(SectionResource section, String name);
-    List<Long> getUserAssignedSections(List<SectionResource> sections, Map<Long, QuestionStatus> questionAssignees, Long currentProcessRoleId);
     Future<SectionResource> getPreviousSection(Optional<SectionResource> sectionId);
     Future<SectionResource> getNextSection(Optional<SectionResource> sectionId);
     SectionResource getSectionByQuestionId(Long questionId);

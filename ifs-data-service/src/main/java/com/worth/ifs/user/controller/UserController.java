@@ -90,7 +90,6 @@ public class UserController {
 
     @RequestMapping("/" + URL_CHECK_PASSWORD_RESET_HASH + "/{hash}")
     public RestResult<Void> checkPasswordReset(@PathVariable("hash") final String hash) {
-        LOG.warn("checkPasswordReset "+hash);
         return userService.checkPasswordResetHashValidity(hash)
                 .toPutResponse();
     }
