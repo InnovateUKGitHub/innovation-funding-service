@@ -27,6 +27,9 @@
         @setPosition()
       jQuery(window).scroll (event) =>
         @setPosition()
+      jQuery(window).on('updateWysiwygPosition', =>
+        @setPosition()
+      )
 
       # Make sure the toolbar has not got the full width of the editable
       # element when floating is set to true
@@ -73,7 +76,7 @@
         topOffset = @options.affixTopOffset
         elementTop = offset.top - (@toolbar.height() + @options.affixTopOffset)
         elementBottom = (height - topOffset) + (offset.top - @toolbar.height())
-        
+
         if scrollTop > elementTop && scrollTop < elementBottom
           @toolbar.css('position', 'fixed')
           @toolbar.css('top', @options.affixTopOffset)

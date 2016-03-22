@@ -126,9 +126,11 @@
     <script src="/js/dest/ifs.min.js" th:src="${@mvcResourceUrlProvider.getForLookupPath('/js/dest/ifs.min.js')}" type="text/javascript"></script>
 
     <script>
-        if(window.location.hostname == 'ifs-local-dev'){
+    <!--//--><![CDATA[//><!--
+        if(window.location.hostname == 'ifs-local-dev' && window.location.pathname.indexOf('/prototypes') == -1){
            jQuery('head').append('<style>a[href="#"],a:not([href]),a[href=""],a[href*="prototypes"]{ outline:5px solid red !important; }</style>');
         }
+    //--><!]]>
     </script>
 
 </div>

@@ -1,7 +1,6 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.exception.ErrorControllerAdvice;
@@ -10,7 +9,6 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.resource.cost.Materials;
 import com.worth.ifs.security.CookieFlashMessageFilter;
-import com.worth.ifs.user.domain.ProcessRole;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,7 +31,6 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashSet;
 
-import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static java.util.Arrays.asList;
@@ -105,20 +102,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), eq(false))).thenReturn(new ArrayList<>());
     }
 
-    //@Test
-    public void testApplicationForm() throws Exception {
-        ApplicationResource app = applications.get(0);
-        ProcessRole userAppRole = new ProcessRole();
-
-        when(processRoleService.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(userAppRole);
-
-        mockMvc.perform(get("/application/1/form"))
-                .andExpect(view().name("application-form"))
-                .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentSectionId", 1L));
-
-    }
-
     @Test
     public void testApplicationFormWithOpenSection() throws Exception {
         EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
@@ -143,8 +126,62 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     }
 
     @Test
+    public void testQuestionPage() throws Exception {
+        ApplicationResource application = applications.get(0);
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
+        // just check if these pages are not throwing errors.
+        mockMvc.perform(get("/application/1/form/question/10")).andExpect(status().isOk());
+        mockMvc.perform(get("/application/1/form/question/21")).andExpect(status().isOk());
+        mockMvc.perform(get("/application/1/form/section/1")).andExpect(status().isOk());
+        mockMvc.perform(get("/application/1/form/section/2")).andExpect(status().isOk());
+        mockMvc.perform(get("/application/1/form/question/edit/1")).andExpect(status().isOk());
+        mockMvc.perform(get("/application/1/form/question/edit/21")).andExpect(status().isOk());
+    }
+
+    @Test
     public void testQuestionSubmit() throws Exception {
-        Question question = newQuestion().build();
+        ApplicationResource application = applications.get(0);
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        mockMvc.perform(
+                post("/application/1/form/question/1")
+                .param("formInput[1]", "Some Value...")
+
+        )
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    public void testQuestionSubmitAssign() throws Exception {
+        ApplicationResource application = applications.get(0);
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        mockMvc.perform(
+                post("/application/1/form/question/1")
+                    .param(ApplicationFormController.ASSIGN_QUESTION_PARAM, "1_2")
+
+        )
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    public void testQuestionSubmitMarkAsCompleteQuestion() throws Exception {
+        ApplicationResource application = applications.get(0);
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        mockMvc.perform(
+                post("/application/1/form/question/1")
+                        .param(ApplicationFormController.MARK_AS_COMPLETE, "1")
+
+        )
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    public void testQuestionSubmitSaveElement() throws Exception {
         ApplicationResource application = applications.get(0);
 
         when(applicationService.getById(application.getId())).thenReturn(application);
@@ -199,6 +236,33 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"**"))
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
 //                .andExpect(cookie().value(CookieFlashMessageFilter.COOKIE_NAME, "applicationSaved"))
+                .andReturn();
+    }
+
+    @Test
+    public void testApplicationFormSubmitMarkSectionComplete() throws Exception {
+        Long userId = loggedInUser.getId();
+
+        MvcResult result = mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
+                        .param(AbstractApplicationController.MARK_SECTION_AS_COMPLETE, String.valueOf(sectionId))
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"**"))
+                .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
+                .andReturn();
+    }
+
+    @Test
+    public void testApplicationFormSubmitMarkSectionInComplete() throws Exception {
+        Long userId = loggedInUser.getId();
+
+        MvcResult result = mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), sectionId)
+                        .param(AbstractApplicationController.MARK_SECTION_AS_INCOMPLETE, String.valueOf(sectionId))
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"/form/section/**"))
+                .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME))
                 .andReturn();
     }
 

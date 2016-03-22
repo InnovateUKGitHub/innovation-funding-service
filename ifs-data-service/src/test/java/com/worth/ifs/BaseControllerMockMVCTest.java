@@ -71,11 +71,11 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 .build();
     }
 
-    protected static ResultMatcher contentIs(final Object json) throws JsonProcessingException {
+    protected static ResultMatcher contentObject(final Object json) throws JsonProcessingException {
         return content().string(new ObjectMapper().writeValueAsString(json));
     }
 
-    protected static ResultMatcher contentIs(final Error error) throws JsonProcessingException {
-        return contentIs(new RestErrorResponse(error));
+    protected static ResultMatcher contentError(final Error error) throws JsonProcessingException {
+        return contentObject(new RestErrorResponse(error));
     }
 }

@@ -43,3 +43,15 @@ include::{snippets}/user/update-password/curl-request.adoc[]
 ==== Failure cases
 ===== Invalid token
 include::{snippets}/user/update-password-token-not-found/http-response.adoc[]
+
+== Verify email
+==== Success case
+==== Request
+include::{snippets}/user/verify-email/http-request.adoc[]
+include::{snippets}/user/verify-email/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/verify-email/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/user/verify-email/curl-request.adoc[]

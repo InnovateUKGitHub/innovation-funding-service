@@ -6,8 +6,10 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.controller.QuestionController;
 import com.worth.ifs.application.transactional.QuestionService;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.documentation.QuestionDocs.questionBuilder;
@@ -16,12 +18,16 @@ import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
 public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<QuestionController> {
+    private RestDocumentationResultHandler document;
+
     @Override
     protected QuestionController supplyControllerUnderTest() {
         return new QuestionController();
@@ -30,14 +36,20 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     @Mock
     QuestionService questionService;
 
+    @Before
+    public void setup(){
+        this.document = document("question/{method-name}",
+                preprocessResponse(prettyPrint()));
+    }
+
     @Test
-    public void documentGetById() throws Exception {
+    public void getById() throws Exception {
         Long id = 1L;
 
         when(questionService.getQuestionById(id)).thenReturn(serviceSuccess(questionBuilder.build()));
 
         mockMvc.perform(get("/question/id/{id}", id))
-                .andDo(document("question/find-one",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("id of the question to be found")
                         ),
@@ -48,7 +60,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     }
 
     @Test
-    public void documentMarkAsComplete() throws Exception {
+    public void markAsComplete() throws Exception {
         Long questionId = 1L;
         Long applicationId = 2L;
         Long markedAsCompleteById = 3L;
@@ -56,7 +68,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         when(questionService.markAsComplete(questionId, applicationId, markedAsCompleteById)).thenReturn(serviceSuccess(null));
 
         mockMvc.perform(get("/question/markAsComplete/{questionId}/{applicationId}/{markedAsCompleteById}", questionId, applicationId, markedAsCompleteById))
-                .andDo(document("question/mark-as-complete",
+                .andDo(this.document.snippets(
                             pathParameters(
                                     parameterWithName("questionId").description("Id of the question to be marked as complete"),
                                     parameterWithName("applicationId").description("Id of the application for which the question should be marked as complete"),
@@ -66,7 +78,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     }
 
     @Test
-    public void documentMarkAsIncomplete() throws Exception {
+    public void markAsIncomplete() throws Exception {
         Long questionId = 1L;
         Long applicationId = 2L;
         Long markedAsCompleteById = 3L;
@@ -75,7 +87,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
 
 
         mockMvc.perform(get("/question/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}", questionId, applicationId, markedAsCompleteById))
-                .andDo(document("question/mark-as-incomplete",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("questionId").description("Id of the question to be marked as incomplete"),
                                 parameterWithName("applicationId").description("Id of the application for which the question should be marked as incomplete"),
@@ -85,7 +97,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     }
 
     @Test
-    public void documentAssign() throws Exception {
+    public void assign() throws Exception {
         Long questionId = 1L;
         Long applicationId = 2L;
         Long assignedTo = 3L;
@@ -95,7 +107,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
 
 
         mockMvc.perform(get("/question/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}", questionId, applicationId, assignedTo, assignedBy))
-                .andDo(document("question/mark-as-incomplete",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("questionId").description("Id of the question to be reassigned"),
                                 parameterWithName("applicationId").description("Id of the application for which the question will get a new assignee"),
@@ -106,7 +118,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     }
 
     @Test
-    public void documentGetMarkedAsComplete() throws Exception {
+    public void getMarkedAsComplete() throws Exception {
         final Long applicationId = 1L;
         final Long organisationId = 2L;
 
@@ -115,7 +127,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         when(questionService.getMarkedAsComplete(applicationId, organisationId)).thenReturn(serviceSuccess(ids));
 
         mockMvc.perform(get("/question/getMarkedAsComplete/{applicationId}/{organisationId}", applicationId, organisationId))
-                .andDo(document("question/get-marked-as-complete",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application for which to get the questions that are marked as complete"),
                                 parameterWithName("organisationId").description("Id of the organisation for which to get the questions that are marked as complete")
@@ -127,14 +139,14 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     }
 
     @Test
-    public void documentUpdateNotify() throws Exception {
+    public void updateNotify() throws Exception {
         final Long questionStatusId = 1L;
         final boolean notify = true;
 
         when(questionService.updateNotification(questionStatusId, notify)).thenReturn(serviceSuccess(null));
 
         mockMvc.perform(get("/question/updateNotification/{questionStatusId}/{notify}", questionStatusId, notify))
-                .andDo(document("question/notify",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("questionStatusId").description("question status of which the notification status should be altered"),
                                 parameterWithName("notify").description("whether the notification should be shown or not")
@@ -143,13 +155,13 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     }
 
     @Test
-    public void documentFindByCompetition() throws Exception {
+    public void findByCompetition() throws Exception {
         final Long competitionId = 1L;
 
         when(questionService.findByCompetition(competitionId)).thenReturn(serviceSuccess(questionBuilder.build(2)));
 
         mockMvc.perform(get("/question/findByCompetition/{competitionId}", competitionId))
-                .andDo(document("question/find-by-competition",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition for which the questions are requested")
                         ),
@@ -160,13 +172,13 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     }
 
     @Test
-    public void documentGetNextQuestion() throws Exception {
+    public void getNextQuestion() throws Exception {
         final Long questionId = 1L;
 
         when(questionService.getNextQuestion(questionId)).thenReturn(serviceSuccess(questionBuilder.build()));
 
         mockMvc.perform(get("/question/getNextQuestion/{questionId}", questionId))
-                .andDo(document("question/get-next",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("questionId").description("Id of the current question")
                         ),
@@ -175,13 +187,13 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     }
 
     @Test
-    public void documentGetNextQuestionBySection() throws Exception {
+    public void getNextQuestionBySection() throws Exception {
         final Long sectionId = 1L;
 
         when(questionService.getNextQuestionBySection(sectionId)).thenReturn(serviceSuccess(questionBuilder.build()));
 
         mockMvc.perform(get("/question/getNextQuestionBySection/{sectionId}", sectionId))
-                .andDo(document("question/get-next-by-section",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("sectionId").description("Id of the current section")
                         ),
@@ -190,13 +202,13 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     }
 
     @Test
-    public void documentGetPreviousQuestion() throws Exception {
+    public void getPreviousQuestion() throws Exception {
         final Long questionId = 1L;
 
         when(questionService.getPreviousQuestion(questionId)).thenReturn(serviceSuccess(questionBuilder.build()));
 
         mockMvc.perform(get("/question/getPreviousQuestion/{questionId}", questionId))
-                .andDo(document("question/get-previous",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("questionId").description("Id of the current question")
                         ),
@@ -205,13 +217,13 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     }
 
     @Test
-    public void documentGetPreviousQuestionBySection() throws Exception {
+    public void getPreviousQuestionBySection() throws Exception {
         final Long sectionId = 1L;
 
         when(questionService.getPreviousQuestionBySection(sectionId)).thenReturn(serviceSuccess(questionBuilder.build()));
 
         mockMvc.perform(get("/question/getPreviousQuestionBySection/{sectionId}", sectionId))
-                .andDo(document("question/get-previous-by-section",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("sectionId").description("Id of the current section")
                         ),
@@ -220,13 +232,13 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     }
 
     @Test
-    public void documentGetQuestionByFormInputType() throws Exception {
+    public void getQuestionByFormInputType() throws Exception {
         final String formInputType = "type";
 
         when(questionService.getQuestionByFormInputType(formInputType)).thenReturn(serviceSuccess(questionBuilder.build()));
 
         mockMvc.perform(get("/question/getQuestionByFormInputType/{formInputType}", formInputType))
-                .andDo(document("question/get-by-form-input-type",
+                .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("formInputType").description("form input type")
                         ),
