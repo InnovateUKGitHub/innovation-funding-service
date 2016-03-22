@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddressForm  implements Serializable {
+    private static final long serialVersionUID = -3584886875510525322L;
     private boolean triedToSave = false;
     private boolean triedToSearch = false;
 
