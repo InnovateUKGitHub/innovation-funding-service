@@ -16,13 +16,13 @@ Guest user can't access overview page
     [Documentation]    INFUND-1683
     Given the guest user opens the browser
     When the user navigates to the page    ${APPLICATION_7_OVERVIEW_PAGE}
-    Then the user should be redirected to the correct page    ${LOGIN_URL}
+    Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 Guest user can't be able to access application form
     [Documentation]    INFUND-1683
     Given the guest user opens the browser
     When the user navigates to the page    ${APPLICATION_7_FORM}
-    Then the user should be redirected to the correct page    ${LOGIN_URL}
+    Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 Applicant who is not team member can't access overview page
     [Documentation]    INFUND-1683
