@@ -12,14 +12,11 @@
 <!-- ===================Comp admin Page title============================== -->
 <div th:fragment="prototype-comp-admin-page-title-subheading(subtitle, heading, subheading)">
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <div class="column-two-thirds">
-            <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>    
-            <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>  
-        </div> 
-        <div class="grid-row constrain-width">
+        <div class="grid-row">
             <div class="column-two-thirds">
-                &nbsp;
-            </div>
+                <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>    
+                <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>  
+            </div> 
             <div class="column-third">
                 <h2 class="heading-small comp-status-label">
 
@@ -49,11 +46,12 @@
                             <span>Assessor feedback</span>
                         </div>
 
-                    </div>
+                    </div> 
 
                 </h2>  
             </div>
         </div>
+  
 
 
     </div>
