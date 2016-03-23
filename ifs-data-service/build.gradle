@@ -215,12 +215,6 @@ processTestResources {
     }
 }
 
-sonarqube {
-    properties {
-        property "sonar.exclusions", "**/**Resource.java"
-    }
-}
-
 compileJava.dependsOn generateMainMapperClasses
 
 task cleanDeploy() {
