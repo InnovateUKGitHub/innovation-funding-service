@@ -274,7 +274,7 @@
     <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}"
             type="submit"
             name="assign_question"
-            th:value="${question.getId()}+'_'+${questionAssignee?.assignedByUserId}"
+            th:value="${question.getId()}+'_'+${questionAssignee?.assignedBy}"
             th:class="'buttonlink'">Ready for review
     </button>
   </div>
