@@ -19,7 +19,7 @@ import org.springframework.statemachine.transition.Transition;
  * an event.
  */
 public class AssessmentWorkflowEventHandler {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(AssessmentWorkflowEventHandler.class);
     private final PersistStateMachineHandler stateHandler;
     private final PersistStateChangeListener listener = new LocalStateChangeListener();
 
@@ -66,7 +66,7 @@ public class AssessmentWorkflowEventHandler {
         public void onPersist(State<String, String> state, Message<String> message,
                               Transition<String, String> transition, StateMachine<String, String> stateMachine) {
             if (message != null && message.getHeaders().containsKey("assessment")) {
-                log.info("STATE: " + state.getId() + " transition: " + transition + " message: " + message + " transition: " + transition + " stateMachine " + stateMachine.getClass().getName());
+                LOG.info("STATE: " + state.getId() + " transition: " + transition + " message: " + message + " transition: " + transition + " stateMachine " + stateMachine.getClass().getName());
             }
         }
     }

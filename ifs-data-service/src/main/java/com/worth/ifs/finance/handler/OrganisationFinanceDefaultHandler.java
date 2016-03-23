@@ -1,41 +1,26 @@
 package com.worth.ifs.finance.handler;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.finance.domain.CostField;
+import com.worth.ifs.finance.handler.item.*;
+import com.worth.ifs.finance.repository.CostFieldRepository;
+import com.worth.ifs.finance.repository.CostRepository;
+import com.worth.ifs.finance.resource.category.*;
+import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.CostType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.domain.CostField;
-import com.worth.ifs.finance.handler.item.CapitalUsageHandler;
-import com.worth.ifs.finance.handler.item.CostHandler;
-import com.worth.ifs.finance.handler.item.GrantClaimHandler;
-import com.worth.ifs.finance.handler.item.LabourCostHandler;
-import com.worth.ifs.finance.handler.item.MaterialsHandler;
-import com.worth.ifs.finance.handler.item.OtherCostHandler;
-import com.worth.ifs.finance.handler.item.OtherFundingHandler;
-import com.worth.ifs.finance.handler.item.OverheadsHandler;
-import com.worth.ifs.finance.handler.item.SubContractingCostHandler;
-import com.worth.ifs.finance.handler.item.TravelCostHandler;
-import com.worth.ifs.finance.repository.CostFieldRepository;
-import com.worth.ifs.finance.repository.CostRepository;
-import com.worth.ifs.finance.resource.category.CostCategory;
-import com.worth.ifs.finance.resource.category.DefaultCostCategory;
-import com.worth.ifs.finance.resource.category.GrantClaimCategory;
-import com.worth.ifs.finance.resource.category.LabourCostCategory;
-import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
-import com.worth.ifs.finance.resource.category.OverheadCostCategory;
-import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.CostType;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * OrganisationFinanceDefaultHandler maintains the finances from
@@ -43,7 +28,7 @@ import com.worth.ifs.finance.resource.cost.CostType;
  */
 @Component
 public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHandler {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(OrganisationFinanceDefaultHandler.class);
     EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
 
     @Autowired
@@ -72,7 +57,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
             }
 
         }catch (IllegalArgumentException e){
-            log.error(String.format("No CostHandler for type: %s", costType.getType()), e);
+            LOG.error(String.format("No CostHandler for type: %s", costType.getType()), e);
         }
         return null;
     }
@@ -183,7 +168,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
             case OTHER_FUNDING:
                 return new OtherFundingHandler();
         }
-        log.error("Not a valid FinanceType: " + costType);
+        LOG.error("Not a valid FinanceType: " + costType);
         throw new IllegalArgumentException("Not a valid FinanceType: " + costType);
     }
 

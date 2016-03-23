@@ -13,7 +13,7 @@ import javax.validation.ConstraintValidatorContext;
  */
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(FieldMatchValidator.class);
 
     private String firstFieldName;
     private String secondFieldName;
@@ -35,7 +35,7 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
 
             matches = objectsMatch(firstObject, secondObject);
         } catch(final Exception ignore) {
-            log.error(ignore);
+            LOG.error(ignore);
         }
 
         if (!matches) {

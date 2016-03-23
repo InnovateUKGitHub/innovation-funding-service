@@ -101,7 +101,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                     failure -> handleInviteError(invite, failure),
                     success -> handleInviteSuccess(invite)
             );
-            
+
             return inviteResult;
         }else{
             if(invite.getId()==null){
@@ -116,11 +116,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                     failure -> handleInviteError(invite, failure),
                     success -> handleInviteSuccess(invite)
             );
-            
+
             return inviteResult;
         }
     }
-    
+
     private boolean handleInviteSuccess(Invite i) {
         i.setStatus(InviteStatusConstants.SEND);
         inviteRepository.save(i);
@@ -154,6 +154,12 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         }
         notificationArguments.put("leadOrganisation", invite.getApplication().getLeadOrganisation().getName());
         notificationArguments.put("leadApplicant", invite.getApplication().getLeadApplicant().getName());
+
+        if(invite.getApplication().getLeadApplicant().getTitle() != null){
+          notificationArguments.put("leadApplicantTitle", invite.getApplication().getLeadApplicant().getTitle());
+        } else {
+          notificationArguments.put("leadApplicantTitle","");
+        }
         notificationArguments.put("leadApplicantEmail", invite.getApplication().getLeadApplicant().getEmail());
 
         Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_COLLABORATOR, notificationArguments);
