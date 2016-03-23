@@ -146,11 +146,14 @@
                 </li>
             </ul>
         </div>
-
-        <p>
-            <div th:if="${readonly}" th:unless="${appIsClosed}" th:include="question-type/form-elements :: form-edit-question-button" th:remove="tag"/>
-            <div th:unless="${appIsClosed}" th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
-        </p>
+        
+        <div th:unless="${(currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
+		 					    (questionAssignee?.assignee==null and !userIsLeadApplicant)}" th:remove="tag">
+	        <p>
+	            <div th:if="${readonly}" th:unless="${appIsClosed}" th:include="question-type/form-elements :: form-edit-question-button" th:remove="tag"/>
+	            <div th:unless="${appIsClosed}" th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+	        </p>
+        </div>
     </div>
 
     <!-- ===========================Form: empty / no question =========================== -->
