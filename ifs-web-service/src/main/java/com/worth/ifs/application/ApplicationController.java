@@ -37,7 +37,7 @@ public class ApplicationController extends AbstractApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping("/{applicationId}")
+    @RequestMapping(value= "/{applicationId}", method = RequestMethod.GET)
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
@@ -45,6 +45,16 @@ public class ApplicationController extends AbstractApplicationController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         return "application-details";
+    }
+
+    @ProfileExecution
+    @RequestMapping(value= "/{applicationId}", method = RequestMethod.POST)
+    public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
+                                     HttpServletResponse response, HttpServletRequest request) {
+        User user = userAuthenticationService.getAuthenticatedUser(request);
+        assignQuestion(request, applicationId);
+
+        return "redirect:/application/"+applicationId;
     }
 
     @ProfileExecution

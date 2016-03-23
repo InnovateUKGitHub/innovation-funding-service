@@ -5,7 +5,7 @@ ${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${RUNNING_ON_DEV}    ${EMPTY}
 ${LOGIN_URL}      ${SERVER}/
-${LOGGED_OUT_URL}    ${LOGIN_URL}idp/profile/SAML2/Redirect/SSO
+${LOGGED_OUT_URL_FRAGMENT}    idp/profile/SAML2/Redirect/SSO
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/1/summary
 ${QUESTION11_URL}    ${SERVER}/application-form/1/section/1/#question-11
