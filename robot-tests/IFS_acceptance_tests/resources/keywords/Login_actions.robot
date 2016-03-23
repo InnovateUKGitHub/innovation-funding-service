@@ -52,7 +52,7 @@ User closes the browser
 Logout as user
     Click Element    link=Logout
     Sleep    1s
-    Location Should contain    ${LOGGED_OUT_URL}
+    Location Should contain    ${LOGGED_OUT_URL_FRAGMENT}
 
     
 

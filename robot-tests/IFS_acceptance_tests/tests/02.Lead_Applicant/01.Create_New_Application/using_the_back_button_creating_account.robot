@@ -16,7 +16,7 @@ The user presses the back button while on the create account page
     Given the user navigates to the page    ${LOGIN_URL}
     When the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     And the user goes back to the previous page
-    Then the user should be redirected to the correct page    ${LOGIN_URL}
+    Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 The user logs in and visits the create account page
     [Documentation]    INFUND-1423

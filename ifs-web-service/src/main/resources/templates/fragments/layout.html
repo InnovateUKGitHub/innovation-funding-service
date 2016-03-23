@@ -127,7 +127,7 @@
 
     <script>
     <!--//--><![CDATA[//><!--
-        if(window.location.hostname == 'ifs-local-dev' && window.location.pathname != '/prototypes'){
+        if(window.location.hostname == 'ifs-local-dev' && window.location.pathname.indexOf('/prototypes') == -1){
            jQuery('head').append('<style>a[href="#"],a:not([href]),a[href=""],a[href*="prototypes"]{ outline:5px solid red !important; }</style>');
         }
     //--><!]]>

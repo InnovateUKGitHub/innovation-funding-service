@@ -137,6 +137,7 @@ Mark all section as complete
     Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
     And the user clicks "Your finances"
     And the user will be in Finance section
+    And the user can mark the sections as editable again
 
 
 *** Keywords ***
@@ -455,3 +456,7 @@ the user clicks "Your finances"
 
 the user will be in Finance section
     Page Should Not Contain Element    jQuery=.button:contains("Mark all as complete")
+
+the user can mark the sections as editable again
+    Element Should Be Visible           name=mark_section_as_incomplete
+    The user clicks the button/link     name=mark_section_as_incomplete
