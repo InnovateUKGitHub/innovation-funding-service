@@ -1,5 +1,6 @@
 package com.worth.ifs.configuration;
 
+import com.worth.ifs.interceptors.GoogleAnalyticsHandlerInterceptor;
 import com.worth.ifs.interceptors.MenuLinksHandlerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,7 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         super.addInterceptors(registry);
         registry.addInterceptor(getMenuLinksHandlerInterceptor());
+        registry.addInterceptor(getGoogleAnalyticsHandlerInterceptor());
     }
 
     @Override
@@ -47,6 +49,10 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public HandlerInterceptor getMenuLinksHandlerInterceptor() {
         return new MenuLinksHandlerInterceptor();
+    }
+    @Bean
+    public HandlerInterceptor getGoogleAnalyticsHandlerInterceptor() {
+        return new GoogleAnalyticsHandlerInterceptor();
     }
 
     @Bean

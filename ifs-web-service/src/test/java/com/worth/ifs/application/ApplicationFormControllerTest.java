@@ -2,7 +2,6 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
@@ -106,13 +105,11 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
     public void testApplicationFormWithOpenSection() throws Exception {
         EnumMap<CostType, CostCategory> costCategories = new EnumMap<>(CostType.class);
 
-        Long currentSectionId = 1L;
-
-        SectionResource currentSection = newSectionResource().with(s -> s.setId(currentSectionId)).build();
+        Long currentSectionId = sectionResources.get(2).getId();
 
         //when(applicationService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(applications);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-        mockMvc.perform(get("/application/1/form/section/1"))
+        mockMvc.perform(get("/application/1/form/section/"+currentSectionId))
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attribute("currentApplication", application))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))

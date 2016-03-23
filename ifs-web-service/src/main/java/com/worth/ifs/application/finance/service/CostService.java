@@ -11,7 +11,7 @@ import java.util.List;
 public interface CostService {
     CostItem getById(Long costId);
     List<CostFieldResource> getCostFields();
-    public void update(CostItem costItem);
-    public void delete(Long costId);
-    public CostItem add(Long applicationFinanceId, Long questionId, CostItem costItem);
+    void update(CostItem costItem);
+    void delete(Long costId);
+    CostItem add(Long applicationFinanceId, Long questionId, CostItem costItem);
 }

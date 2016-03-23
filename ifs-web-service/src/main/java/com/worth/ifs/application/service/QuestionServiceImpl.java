@@ -85,23 +85,23 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question getNextQuestion(Long questionId) {
-        return questionRestService.getNextQuestion(questionId).getSuccessObjectOrThrowException();
+    public Optional<Question> getNextQuestion(Long questionId) {
+        return questionRestService.getNextQuestion(questionId).getOptionalSuccessObject();
     }
 
     @Override
-    public Question getPreviousQuestion(Long questionId) {
-        return questionRestService.getPreviousQuestion(questionId).getSuccessObjectOrNull();
+    public Optional<Question> getPreviousQuestion(Long questionId) {
+        return questionRestService.getPreviousQuestion(questionId).getOptionalSuccessObject();
     }
 
     @Override
-    public Question getPreviousQuestionBySection(Long sectionId) {
-        return questionRestService.getPreviousQuestionBySection(sectionId).getSuccessObjectOrThrowException();
+    public Optional<Question> getPreviousQuestionBySection(Long sectionId) {
+        return questionRestService.getPreviousQuestionBySection(sectionId).getOptionalSuccessObject();
     }
 
     @Override
-    public Question getNextQuestionBySection(Long sectionId) {
-        return questionRestService.getNextQuestionBySection(sectionId).getSuccessObjectOrNull();
+    public Optional<Question> getNextQuestionBySection(Long sectionId) {
+        return questionRestService.getNextQuestionBySection(sectionId).getOptionalSuccessObject();
     }
 
     @Override
