@@ -95,6 +95,12 @@ processResources {
     }
 }
 
+sonarqube {
+    properties {
+        property "sonar.exclusions", "**/domain/**.java"
+    }
+}
+
 task cleanDeploy() {
     build.mustRunAfter clean
     deployToTomcat.mustRunAfter build
