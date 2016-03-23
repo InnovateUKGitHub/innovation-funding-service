@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
@@ -145,42 +146,46 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         });
     }
 
-    // TODO DW - INFUND-1555 - in situation where next / prev question not found, should this be a 404?
     @Override
     public ServiceResult<Question> getPreviousQuestionBySection(final Long sectionId) {
-        return sectionService.getById(sectionId).andOnSuccessReturn(section -> {
+        return sectionService.getById(sectionId).andOnSuccess(section -> {
 
             if (section.getParentSection() != null) {
-                SectionResource previousSection = sectionService.getPreviousSection(section).getSuccessObjectOrThrowException();
+                Optional<SectionResource> previousSection = sectionService.getPreviousSection(section).getOptionalSuccessObject();
                 if (previousSection != null) {
-                    Optional<Question> lastQuestionInSection = previousSection.getQuestions()
+                    Optional<Question> lastQuestionInSection = previousSection.get().getQuestions()
                             .stream()
                             .map(questionRepository::findOne)
                             .max(comparing(Question::getPriority));
-                    return lastQuestionInSection.orElse(null);
+                    if(lastQuestionInSection.isPresent()){
+                        return serviceSuccess(lastQuestionInSection.get());
+                    }
                 }
             }
-            return null;
+            return serviceFailure(notFoundError(Question.class, "getPreviousQuestionBySection", sectionId));
         });
     }
 
-    // TODO DW - INFUND-1555 - in situation where next / prev question not found, should this be a 404?
     @Override
     public ServiceResult<Question> getNextQuestionBySection(final Long sectionId) {
 
-        return sectionService.getById(sectionId).andOnSuccessReturn(section -> {
+        return sectionService.getById(sectionId)
+                .andOnSuccess(section -> {
 
             if (section.getParentSection() != null) {
-                SectionResource nextSection = sectionService.getNextSection(section).getSuccessObjectOrThrowException();
-                if(nextSection!=null) {
-                    Optional<Question> firstQuestionInSection = nextSection.getQuestions()
+                Optional<SectionResource> nextSection = sectionService.getNextSection(section).getOptionalSuccessObject();
+                if(nextSection.isPresent()) {
+                    Optional<Question> firstQuestionInSection = nextSection.get().getQuestions()
                             .stream()
                             .map(questionRepository::findOne)
                             .min(comparing(Question::getPriority));
-                    return firstQuestionInSection.orElse(null);
+
+                    if(firstQuestionInSection.isPresent()){
+                        return serviceSuccess(firstQuestionInSection.get());
+                    }
                 }
             }
-            return null;
+            return serviceFailure(notFoundError(Question.class, "getNextQuestionBySection", sectionId));
         });
     }
 
@@ -201,6 +206,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
             return serviceSuccess(previousQuestion);
         });
+
     }
 
     @Override

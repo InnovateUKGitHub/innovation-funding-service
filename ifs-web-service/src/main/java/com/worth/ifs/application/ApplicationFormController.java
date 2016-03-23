@@ -88,6 +88,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
                 Optional.ofNullable(question), userApplicationRoles);
+        this.addUserDetails(model, application, user.getId());
+        model.addAttribute("currentUser", user);
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
         return APPLICATION_FORM;
@@ -236,9 +238,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (section == null) {
             return;
         }
-        Question previousQuestion = questionService.getPreviousQuestionBySection(section.getId());
+        Optional<Question> previousQuestion = questionService.getPreviousQuestionBySection(section.getId());
         addPreviousQuestionToModel(previousQuestion, applicationId, model);
-        Question nextQuestion = questionService.getNextQuestionBySection(section.getId());
+        Optional<Question> nextQuestion = questionService.getNextQuestionBySection(section.getId());
         addNextQuestionToModel(nextQuestion, applicationId, model);
     }
 
@@ -247,17 +249,18 @@ public class ApplicationFormController extends AbstractApplicationController {
             return;
         }
 
-        Question previousQuestion = questionService.getPreviousQuestion(question.getId());
+        Optional<Question> previousQuestion = questionService.getPreviousQuestion(question.getId());
         addPreviousQuestionToModel(previousQuestion, applicationId, model);
-        Question nextQuestion = questionService.getNextQuestion(question.getId());
+        Optional<Question> nextQuestion = questionService.getNextQuestion(question.getId());
         addNextQuestionToModel(nextQuestion, applicationId, model);
     }
 
-    private void addPreviousQuestionToModel(Question previousQuestion, Long applicationId, Model model) {
+    private void addPreviousQuestionToModel(Optional<Question> previousQuestionOptional, Long applicationId, Model model) {
         String previousUrl;
         String previousText;
 
-        if (previousQuestion != null) {
+        if (previousQuestionOptional.isPresent()) {
+            Question previousQuestion = previousQuestionOptional.get();
             SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
             if (previousSection.isQuestionGroup()) {
                 previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + previousSection.getId();
@@ -271,11 +274,12 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private void addNextQuestionToModel(Question nextQuestion, Long applicationId, Model model) {
+    private void addNextQuestionToModel(Optional<Question> nextQuestionOptional, Long applicationId, Model model) {
         String nextUrl;
         String nextText;
 
-        if (nextQuestion != null) {
+        if (nextQuestionOptional.isPresent()) {
+            Question nextQuestion = nextQuestionOptional.get();
             SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
 
             if (nextSection.isQuestionGroup()) {

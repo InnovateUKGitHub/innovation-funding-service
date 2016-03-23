@@ -4,6 +4,8 @@ import com.worth.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.Optional;
+
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a FailureType, and a
  * success will result in a T.  Additionally, these can be mapped to produce new ServiceResults that either fail or succeed.
@@ -55,6 +57,11 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
     @Override
     public T getSuccessObject() {
         return getRight();
+    }
+
+    @Override
+    public Optional<T> getOptionalSuccessObject() {
+        return isRight() ? Optional.ofNullable(getRight()) : Optional.empty();
     }
 
     // TODO DW - INFUND-1555 - remove "BACKWARDS COMPATIBILITY" method here (for "not found" nulls)
