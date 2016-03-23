@@ -416,17 +416,22 @@ public class BaseUnitTest {
             when(questionService.getById(id)).thenReturn(question);
         });
 
-        when(questionService.getNextQuestion(eq(q01.getId()))).thenReturn(q10);
-        when(questionService.getPreviousQuestion(eq(q10.getId()))).thenReturn(q01);
+        when(questionService.getPreviousQuestionBySection(any())).thenReturn(Optional.empty());
+        when(questionService.getNextQuestionBySection(any())).thenReturn(Optional.empty());
+        when(questionService.getNextQuestion(any())).thenReturn(Optional.empty());
+        when(questionService.getPreviousQuestion(any())).thenReturn(Optional.empty());
 
-        when(questionService.getNextQuestion(eq(q10.getId()))).thenReturn(q20);
-        when(questionService.getPreviousQuestion(eq(q20.getId()))).thenReturn(q10);
+        when(questionService.getNextQuestion(eq(q01.getId()))).thenReturn(Optional.of(q10));
+        when(questionService.getPreviousQuestion(eq(q10.getId()))).thenReturn(Optional.of(q01));
 
-        when(questionService.getNextQuestion(eq(q20.getId()))).thenReturn(q21);
-        when(questionService.getPreviousQuestion(eq(q21.getId()))).thenReturn(q20);
+        when(questionService.getNextQuestion(eq(q10.getId()))).thenReturn(Optional.of(q20));
+        when(questionService.getPreviousQuestion(eq(q20.getId()))).thenReturn(Optional.of(q10));
 
-        when(questionService.getNextQuestion(eq(q21.getId()))).thenReturn(q22);
-        when(questionService.getPreviousQuestion(eq(q22.getId()))).thenReturn(q21);
+        when(questionService.getNextQuestion(eq(q20.getId()))).thenReturn(Optional.of(q21));
+        when(questionService.getPreviousQuestion(eq(q21.getId()))).thenReturn(Optional.of(q20));
+
+        when(questionService.getNextQuestion(eq(q21.getId()))).thenReturn(Optional.of(q22));
+        when(questionService.getPreviousQuestion(eq(q22.getId()))).thenReturn(Optional.of(q21));
 
         when(sectionService.getSectionByQuestionId(eq(q01.getId()))).thenReturn(sectionResource1);
         when(sectionService.getSectionByQuestionId(eq(q10.getId()))).thenReturn(sectionResource2);
