@@ -115,8 +115,7 @@ Other costs
 
 Other Funding
     [Documentation]    INFUND-438
-    [Tags]    Applicant    Application    Finances    Other funding     Pending
-    # Pending due to bug INFUND-1943
+    [Tags]    Applicant    Application    Finances    Other funding
     Given the user navigates to the page    ${YOUR_FINANCES_URL}
     And Applicant selects 'Yes' for other funding
     And Applicant chooses to add another source of funding

@@ -42,7 +42,7 @@ Invalid password (all lower case)
 Invalid password (all upper case)
                       [Documentation]                 INFUND-1147
                       [Tags]                          Account
-                      # Note that the copy for this message is wrong - so it will start failing once that copy changes. Can be simply fixed with a change to ${lower_case_message} above
+                      # Note that the copy for this message is wrong - so it will start failing once that copy changes. Can be simply fixed with a change to ${upper_case_message} above
                       ${upper_case_password}        ${upper_case_message}
 
 Invalid password (no numbers)
