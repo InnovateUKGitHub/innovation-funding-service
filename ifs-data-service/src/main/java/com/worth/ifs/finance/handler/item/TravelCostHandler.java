@@ -12,13 +12,14 @@ import org.apache.commons.logging.LogFactory;
  * or for sending it over.
  */
 public class TravelCostHandler extends CostHandler {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(TravelCostHandler.class);
+
     public static final String COST_KEY = "travel";
 
     @Override
     public Cost toCost(CostItem costItem) {
         Cost cost = null;
-        log.info("COST TRAVEL UPDATE");
+        LOG.info("COST TRAVEL UPDATE");
         if (costItem.getCostType().equals(CostType.TRAVEL)) {
             TravelCost travel = (TravelCost) costItem;
             cost = new Cost(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);

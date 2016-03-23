@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/prototypes")
 public class PrototypeController {
 
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(PrototypeController.class);
 
     @RequestMapping
     public String getPrototypeIndex() {
-        log.debug("Serving up prototype index page");
+        LOG.debug("Serving up prototype index page");
         return "/prototypes/index";
     }
 
     @RequestMapping("/{templateName}")
     public String getPrototypePage(@PathVariable("templateName") String templateName) {
-        log.debug("Serving up prototype template " + templateName);
+        LOG.debug("Serving up prototype template " + templateName);
         return "/prototypes/" + templateName;
     }
 }

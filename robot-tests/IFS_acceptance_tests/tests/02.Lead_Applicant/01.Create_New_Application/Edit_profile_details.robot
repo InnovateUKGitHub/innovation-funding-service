@@ -35,8 +35,7 @@ Edit the profile and verify if the changes are saved
 
 Verify that the applicant's name has been changed on other parts of the site
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
-    [Tags]    Pending
-    # Pending due to bug INFUND-1967
+    [Tags]
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     Then the user should see the text in the page    Chris Brown
     And other contributors should see the Applicant's updated name for the assignation options
@@ -49,7 +48,9 @@ Display errors for invalid inputs of the First name
     When the Applicant fills the First name    ${EMPTY}
     Then the user should see an error    Please enter a first name
     Given browser validations have been disabled
+    And browser validations have been disabled
     And the Applicant fills the First name    testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
+    And the user clicks the button/link    css=[name="create-account"]
     Then the user should see an error    Your first name cannot have more than 70 characters
     Given browser validations have been disabled
     And the Applicant fills the First name    A
@@ -62,7 +63,9 @@ Display errors for invalid inputs of the Last name
     When the Applicant fills the last name    ${EMPTY}
     Then the user should see an error    Please enter a last name
     Given browser validations have been disabled
+    And browser validations have been disabled
     And the Applicant fills the last name    testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttes
+    And the user clicks the button/link    css=[name="create-account"]
     Then the user should see an error    Your last name cannot have more than 70 characters
     Given browser validations have been disabled
     And the Applicant fills the last name    B
@@ -76,6 +79,7 @@ Display errors for invalid inputs of the Phone field
     Then the user should see an error    Please enter a phone number
     Given browser validations have been disabled
     When the Applicant fills the Phone field    121212121212121212121
+    And the user clicks the button/link    css=[name="create-account"]
     Then the user should see an error    Input for your phone number has a maximum length of 20 characters
     Given browser validations have been disabled
     When the Applicant fills the Phone field    12
@@ -128,4 +132,4 @@ other contributors should see the Applicant's updated name for the assignation o
     Logout as user
     Guest user log-in    &{collaborator1_credentials}
     go to    ${APPLICATION_OVERVIEW_URL}
-    page should contain    chris brown
+    page should contain    Chris Brown

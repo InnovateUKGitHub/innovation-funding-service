@@ -1,15 +1,15 @@
 package com.worth.ifs.application.finance.view;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
-
+import com.worth.ifs.application.finance.model.FinanceFormField;
+import com.worth.ifs.application.finance.service.CostService;
+import com.worth.ifs.application.finance.service.FinanceService;
+import com.worth.ifs.application.finance.view.item.*;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.CostType;
+import com.worth.ifs.finance.service.ApplicationFinanceRestService;
+import com.worth.ifs.user.domain.OrganisationSize;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,26 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
 
-import com.worth.ifs.application.finance.model.FinanceFormField;
-import com.worth.ifs.application.finance.service.CostService;
-import com.worth.ifs.application.finance.service.FinanceService;
-import com.worth.ifs.application.finance.view.item.CapitalUsageHandler;
-import com.worth.ifs.application.finance.view.item.CostHandler;
-import com.worth.ifs.application.finance.view.item.GrantClaimHandler;
-import com.worth.ifs.application.finance.view.item.LabourCostHandler;
-import com.worth.ifs.application.finance.view.item.MaterialsHandler;
-import com.worth.ifs.application.finance.view.item.OtherCostHandler;
-import com.worth.ifs.application.finance.view.item.OtherFundingHandler;
-import com.worth.ifs.application.finance.view.item.OverheadsHandler;
-import com.worth.ifs.application.finance.view.item.SubContractingCostHandler;
-import com.worth.ifs.application.finance.view.item.TravelCostHandler;
-import com.worth.ifs.application.finance.view.item.YourFinanceHandler;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.resource.cost.CostType;
-import com.worth.ifs.finance.service.ApplicationFinanceRestService;
-import com.worth.ifs.user.domain.OrganisationSize;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * {@code DefaultFinanceFormHandler} retrieves the costs and handles the finance data retrieved from the request, so it can be
@@ -45,7 +29,7 @@ import com.worth.ifs.user.domain.OrganisationSize;
  */
 @Component
 public class DefaultFinanceFormHandler implements FinanceFormHandler {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(DefaultFinanceFormHandler.class);
 
     @Autowired
     private CostService costService;
@@ -80,7 +64,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
             } else if (fieldName.startsWith("formInput[")) {
                 cleanedFieldName = fieldName.replace("formInput[", "").replace("]", "");
             }
-            log.info("store field: " + cleanedFieldName + " val: " + value);
+            LOG.info("store field: " + cleanedFieldName + " val: " + value);
             storeField(cleanedFieldName, value, userId, applicationId);
         }
     }
@@ -112,7 +96,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
 
             financePositionKeys.stream().forEach(k -> {
                 String values = request.getParameterValues(k)[0];
-                log.debug(String.format("finance position k : %s value: %s ", k, values));
+                LOG.debug(String.format("finance position k : %s value: %s ", k, values));
                 updateFinancePosition(applicationFinance, k, values);
             });
             applicationFinanceRestService.update(applicationFinance.getId(), applicationFinance);
@@ -134,7 +118,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
                 applicationFinance.setOrganisationSize(OrganisationSize.valueOf(value));
                 break;
             default:
-                log.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
+                LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
         }
     }
 
@@ -243,7 +227,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
             case YOUR_FINANCE:
                 return new YourFinanceHandler();
             default:
-                log.error("getCostItem, unsupported type: " + costType);
+                LOG.error("getCostItem, unsupported type: " + costType);
                 return null;
         }
     }
