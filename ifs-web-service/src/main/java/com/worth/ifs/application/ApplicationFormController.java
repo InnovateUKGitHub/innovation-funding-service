@@ -88,6 +88,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
                 Optional.ofNullable(question), userApplicationRoles);
+        this.addUserDetails(model, application, user.getId());
+        model.addAttribute("currentUser", user);
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
         return APPLICATION_FORM;

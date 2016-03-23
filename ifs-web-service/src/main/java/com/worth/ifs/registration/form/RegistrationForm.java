@@ -18,6 +18,8 @@ import javax.validation.constraints.Size;
 
 @FieldMatch(first = "password", second = "retypedPassword", message = "Passwords must match")
 public class RegistrationForm {
+    private static final String PASSWORD_LENGTH_MESSAGE = "Your password must be between 8 and 30 characters";
+
     @Email(regexp = FormUtil.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "Please enter a valid email address")
     @NotEmpty(message = "Please enter your email")
     @Size(max = 256, message = "Your email address has a maximum length of 256 characters")
@@ -25,15 +27,15 @@ public class RegistrationForm {
 
     @NotEmpty(message = "Please enter your password")
     @Size.List ({
-        @Size(min=6, message="Your password should have at least 6 characters"),
-        @Size(max=30, message="Your password cannot have more than 30 characters"),
+        @Size(min=8, message=PASSWORD_LENGTH_MESSAGE),
+        @Size(max=30, message=PASSWORD_LENGTH_MESSAGE),
     })
     private String password;
 
     @NotEmpty(message = "Please re-type your password")
     @Size.List ({
-        @Size(min=6, message="Your password should have at least 6 characters"),
-        @Size(max=30, message="Your password cannot have more than 30 characters"),
+        @Size(min=8, message=PASSWORD_LENGTH_MESSAGE),
+        @Size(max=30, message=PASSWORD_LENGTH_MESSAGE),
     })
     private String retypedPassword;
 
