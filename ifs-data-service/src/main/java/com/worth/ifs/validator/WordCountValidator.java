@@ -11,16 +11,15 @@ import org.springframework.validation.Errors;
  */
 @Component
 public class WordCountValidator extends BaseValidator {
-    private final Log log = LogFactory.getLog(getClass());
-
+    private static final Log LOG = LogFactory.getLog(WordCountValidator.class);
 
     @Override
     public void validate(Object target, Errors errors) {
-        log.debug("do WordCount validation ");
+        LOG.debug("do WordCount validation ");
         FormInputResponse response = (FormInputResponse) target;
 
         if (response.getWordCount() > response.getFormInput().getWordCount()) {
-            log.debug("NotEmpty validation message for: " + response.getId());
+            LOG.debug("NotEmpty validation message for: " + response.getId());
             errors.rejectValue("value", "response.wordCount", "Maximum word count exceeded");
         }
     }

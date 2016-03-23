@@ -66,7 +66,7 @@ public class RegistrationController {
     @Autowired
     protected CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(RegistrationController.class);
 
     public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
     public final static String EMAIL_FIELD_NAME = "email";
@@ -152,7 +152,7 @@ public class RegistrationController {
                 model.addAttribute("invitee", true);
                 return true;
             }else{
-                log.debug("Invite already accepted.");
+                LOG.debug("Invite already accepted.");
             }
         }
         return false;
@@ -169,9 +169,9 @@ public class RegistrationController {
                                      HttpServletRequest request,
                                      Model model) {
 
-        log.warn("registerFormSubmit");
+        LOG.warn("registerFormSubmit");
         if(setInviteeEmailAddress(registrationForm, request, model)){
-            log.warn("setInviteeEmailAddress"+ registrationForm.getEmail());
+            LOG.warn("setInviteeEmailAddress"+ registrationForm.getEmail());
             // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
             bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
             validator.validate(registrationForm, bindingResult);
@@ -273,7 +273,7 @@ public class RegistrationController {
                 organisationId = Long.parseLong(organisationParameter);
             }
         } catch (NumberFormatException e) {
-            log.info("Invalid organisationId number format:" + e);
+            LOG.info("Invalid organisationId number format:" + e);
         }
 
         return organisationId;

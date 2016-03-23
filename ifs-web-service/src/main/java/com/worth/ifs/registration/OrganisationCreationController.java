@@ -55,7 +55,7 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 @RequestMapping("/organisation/create")
 public class OrganisationCreationController {
     public static final String ORGANISATION_ID = "organisationId";
-    private final Log log = LogFactory.getLog(this.getClass());
+    private static final Log LOG = LogFactory.getLog(OrganisationCreationController.class);
     public static final String ORGANISATION_FORM = "organisationForm";
     public static final String TEMPLATE_PATH = "registration/organisation";
     public static final String CONFIRM_SELECTED_ORGANISATION = "confirm-selected-organisation";
@@ -140,7 +140,7 @@ public class OrganisationCreationController {
         try{
             searchLabel = messageSource.getMessage(String.format("registration.%s.%s", orgTypeEnum.toString(), textKey), null, locale);
         }catch(NoSuchMessageException e){
-        	log.error(e);
+        	LOG.error(e);
             searchLabel = messageSource.getMessage(String.format("registration.DEFAULT.%s", textKey), null, locale);
         }
         return searchLabel;
