@@ -11,7 +11,14 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
+*** Variables ***
+
+${invitee_name}         michael
+
+
 *** Test Cases ***
+
+
 Verify the applicant can assign a question
     [Documentation]    INFUND-275, INFUND-280
     [Tags]    Collaboration    HappyPath
@@ -25,7 +32,8 @@ Verify the applicant can assign a question
 
 
 Lead applicant can see pending invitees in the assign list, but cannot assign questions to them
-    [Tags]      Pending
+    [Documentation]     INFUND-1962
+    [Tags]      Collaboration       Invites
     [Setup]     Guest user log-in       &{lead_applicant_credentials}
     When the user navigates to the page            ${SCOPE_URL}
     Then the user can see the pending invitee but can't assign to them
@@ -145,5 +153,9 @@ the user can't see the option to upload a file
     the user should not see the text in the page        Upload
 
 
-Then the user can see the pending invitee but can't assign to them
-    
+the user can see the pending invitee but can't assign to them
+    The user should see the text in the page        ${invitee_name}
+    Run Keyword And Expect Error        *       Attempt to assign to a pending invitee
+
+Attempt to assign to a pending invitee
+    the applicant assigns the question to the collaborator    css=#form-input-13 .editor    test1233    ${invitee_name}
