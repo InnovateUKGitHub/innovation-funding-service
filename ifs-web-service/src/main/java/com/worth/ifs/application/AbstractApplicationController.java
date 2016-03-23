@@ -430,10 +430,11 @@ public abstract class AbstractApplicationController extends BaseController {
         return application;
     }
 
-    protected void addOrganisationAndUserFinanceDetails(Long applicationId, Long userId,
+    protected void addOrganisationAndUserFinanceDetails(Long applicationId, User user,
                                                         Model model, ApplicationForm form) {
-        String organisationType = organisationService.getOrganisationType(userId, applicationId);
-        financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, userId, form);
+        model.addAttribute("currentUser", user);
+        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+        financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, user.getId(), form);
         financeOverviewModelManager.addFinanceDetails(model, applicationId);
     }
 

@@ -131,13 +131,13 @@ Other Funding
 
 Mark all section as complete
     [Documentation]    INFUND-446
-    [Tags]    Applicant    Application    Finances
-    When Applicant clicks on "Mark all as complete"
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
+    When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
-    And the user clicks "Your finances"
-    And the user will be in Finance section
+    And the user navigates to the page    ${FINANCES_OVERVIEW_URL}
+    And the user should see the element    css=.finance-summary tr:nth-of-type(1) img[src="/images/field/tick-icon.png"]
+    And the user navigates to the page    ${YOUR_FINANCES_URL}
     And the user can mark the sections as editable again
-
 
 *** Keywords ***
 the Applicant fills in the Labour costs
@@ -442,20 +442,6 @@ Applicant selects 'Yes' for other funding
 Applicant can see that the 'No' radio button is selected
     Radio Button Should Be Set To    other_funding-otherPublicFunding-35-54    No
 
-Applicant clicks on "Mark all as complete"
-    Focus    jQuery=.button:contains("Mark all as complete")
-    Click button    jQuery=.button:contains("Mark all as complete")
-
-the user clicks "Your finances"
-    Wait Until Element Is Visible    link=Your finances
-    Sleep    1s
-    Focus    link=Your finances
-    Click Element    link=Your finances
-    Location Should Be    ${YOUR_FINANCES_URL}
-
-the user will be in Finance section
-    Page Should Not Contain Element    jQuery=.button:contains("Mark all as complete")
-
 the user can mark the sections as editable again
-    Element Should Be Visible           name=mark_section_as_incomplete
-    The user clicks the button/link     name=mark_section_as_incomplete
+    Wait Until Element Is Visible    name=mark_section_as_incomplete
+    The user clicks the button/link    name=mark_section_as_incomplete

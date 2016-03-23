@@ -4,7 +4,6 @@ import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
-import junit.framework.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -74,7 +73,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         String email = "";
         RestResult<UserResource> restResult = service.findUserByEmail(email);
         assertTrue(restResult.isFailure());
-        Assert.assertEquals(restResult.getStatusCode(), HttpStatus.NOT_FOUND);
+        assertEquals(restResult.getStatusCode(), HttpStatus.NOT_FOUND);
     }
 
     @Test
