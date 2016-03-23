@@ -1,1 +1,1 @@
-Application submitted "${applicationName}"
+Successful submission of application
