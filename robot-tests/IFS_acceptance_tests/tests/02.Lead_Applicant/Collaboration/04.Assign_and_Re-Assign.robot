@@ -155,7 +155,7 @@ the user can't see the option to upload a file
 
 the user can see the pending invitee but can't assign to them
     The user should see the text in the page        ${invitee_name}
-    Run Keyword And Expect Error        Attempt to assign to pending invitee            ValueError: Element locator 'jQuery=button:contains("michael")' did not match any elements.
+    Run Keyword And Expect Error        *       Attempt to assign to a pending invitee
 
-Attempt to assign a pending invitee
+Attempt to assign to a pending invitee
     the applicant assigns the question to the collaborator    css=#form-input-13 .editor    test1233    ${invitee_name}
