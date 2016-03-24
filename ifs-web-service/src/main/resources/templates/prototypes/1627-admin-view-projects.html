@@ -54,10 +54,10 @@
 				
 				<div class="grid-row">
 				 	<div class="column-half">
-					 	<p><span class="heading-medium">8</span> <br />Projects in setup</p>
+					 	<p><span class="heading-medium">4</span> <br />Projects in setup</p>
 					</div>
 					<div class="column-half">
-					 	<p><span class="heading-medium">7</span> <br />Live projects</p>
+					 	<p><span class="heading-medium">4</span> <br />Live projects</p>
 					</div>
 				</div>
 
@@ -84,9 +84,9 @@
 							<th scope="col" style="width: 30%">Project title</th>
 							<th scope="col" style="width: 20%">Lead</th>
 							<th scope="col" style="width: 15%">Area</th>
-							<th scope="col" class="alignright" style="width: 15%">No. of partners</th>
+							<th scope="col" class="alignright" style="width: 10%">No. of partners</th>
 							<th scope="col" class="alignright" style="width: 5%">Stage</th>
-							<th scope="col" class="alignright" style="width: 5%">Status</th>
+							<th scope="col" class="alignright" style="width: 10%">Status</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -97,7 +97,7 @@
 							<td>HVM</td>
 							<td class="alignright">3</td>
 							<td class="alignright">2</td>
-							<td class="alignright">Red</td>
+							<td class="alignright"><span class="status-project-warning">Warning</span></td>
 						</tr>
 						<tr class="filtered-result">
 							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194732</a></td>
@@ -106,7 +106,7 @@
 							<td>HVM</td>
 							<td class="alignright">2</td>
 							<td class="alignright">4</td>
-							<td class="alignright">Red</td>
+							<td class="alignright"><span class="status-project-warning">Warning</span></td>
 						</tr>
 						<tr class="filtered-result">
 							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194733</a></td>
@@ -144,47 +144,47 @@
 							<th scope="col" style="width: 30%">Project title</th>
 							<th scope="col" style="width: 20%">Lead</th>
 							<th scope="col" style="width: 15%">Area</th>
-							<th scope="col" class="alignright" style="width: 15%">No. of partners</th>
+							<th scope="col" class="alignright" style="width: 10%">No. of partners</th>
 							<th scope="col" class="alignright" style="width: 5%">Stage</th>
-							<th scope="col" class="alignright" style="width: 5%">Status</th>
+							<th scope="col" class="alignright" style="width: 10%">Status</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194731</a></td>
+							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194735</a></td>
 							<td>Example project 5</td>
 							<td>PWC</td>
 							<td>HVM</td>
 							<td class="alignright">3</td>
 							<td class="alignright">2</td>
-							<td class="alignright">OK</td>
+							<td class="alignright"><span class="status-project-ok">OK</span></td>
 						</tr>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194732</a></td>
+							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194736</a></td>
 							<td>Example project 6</td>
 							<td>Max Digital</td>
 							<td>HVM</td>
 							<td class="alignright">2</td>
 							<td class="alignright">4</td>
-							<td class="alignright">OK</td>
+							<td class="alignright"><span class="status-project-ok">OK</span></td>
 						</tr>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194733</a></td>
+							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194737</a></td>
 							<td>Example project 7</td>
 							<td>BBC</td>
 							<td>HVM</td>
 							<td class="alignright">5</td>
 							<td class="alignright">1</td>
-							<td class="alignright">OK</td>
+							<td class="alignright"><span class="status-project-ok">OK</span></td>
 						</tr>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194734</a></td>
+							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194738</a></td>
 							<td>Example project 8</td>
 							<td>Kingfisher</td>
 							<td>HVM</td>
 							<td class="alignright">4</td>
 							<td class="alignright">4</td>
-							<td class="alignright">OK</td>
+							<td class="alignright"><span class="status-project-ok">OK</span></td>
 						</tr>
 					</tbody>
 				</table>
