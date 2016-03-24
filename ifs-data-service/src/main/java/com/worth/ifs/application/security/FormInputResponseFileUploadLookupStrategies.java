@@ -1,8 +1,6 @@
 package com.worth.ifs.application.security;
 
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.file.resource.FileEntryResource;
@@ -29,9 +27,6 @@ public class FormInputResponseFileUploadLookupStrategies {
     private FormInputResponseRepository formInputResponseRepository;
 
     @Autowired
-    private QuestionStatusRepository questionStatusRepository;
-
-    @Autowired
     private FormInputRepository formInputRepository;
 
     @PermissionEntityLookupStrategy
@@ -45,12 +40,10 @@ public class FormInputResponseFileUploadLookupStrategies {
             formInputResponse =
                     formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(id.getApplicationId(), id.getProcessRoleId(), id.getFormInputId());
         } else {                            // If question has single status then whoever has question assinged to them can edit/read files associated with the question
-            QuestionStatus status = questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(formInput.getQuestion().getId(), id.getApplicationId(), id.getProcessRoleId());
-            if(status.getAssignee() != null && status.getAssignee().getId().equals(id.getProcessRoleId())){
-                List<FormInputResponse> formInputResponses = formInputResponseRepository.findByApplicationIdAndFormInputId(id.getApplicationId(), id.getFormInputId());
-                if(formInputResponses != null && !formInputResponses.isEmpty()){ // Question with single status will only have one form input response
-                    formInputResponse = formInputResponses.get(0);
-                }
+            // TODO: Secure this by checking it is the assinged user when editing
+            List<FormInputResponse> formInputResponses = formInputResponseRepository.findByApplicationIdAndFormInputId(id.getApplicationId(), id.getFormInputId());
+            if(formInputResponses != null && !formInputResponses.isEmpty()){ // Question with single status will only have one form input response
+                formInputResponse = formInputResponses.get(0);
             }
         }
 
