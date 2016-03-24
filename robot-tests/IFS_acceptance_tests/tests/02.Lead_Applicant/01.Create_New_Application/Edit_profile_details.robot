@@ -36,7 +36,11 @@ Edit the profile and verify if the changes are saved
 Verify that the applicant's name has been changed on other parts of the site
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
     [Tags]
-    Given the user navigates to the page    ${APPLICATION_TEAM_URL}
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=View and edit your profile details
+    And the user clicks the button/link    link=Edit your details
+    When the Applicant enters the profile details
+    And the user navigates to the page    ${APPLICATION_TEAM_URL}
     Then the user should see the text in the page    Chris Brown
     And other contributors should see the Applicant's updated name for the assignation options
     And the Applicant can change their details back again
