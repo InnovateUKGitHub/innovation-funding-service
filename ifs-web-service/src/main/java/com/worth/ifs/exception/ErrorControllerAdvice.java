@@ -148,7 +148,7 @@ public class ErrorControllerAdvice extends BaseErrorControllerAdvice {
 
     @ResponseStatus(value= HttpStatus.INTERNAL_SERVER_ERROR)    //500
     @ExceptionHandler(value = {GeneralUnexpectedErrorException.class, Exception.class})
-    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) {
         LOG.debug("ErrorController  defaultErrorHandler", e);
         return createExceptionModelAndView(e, "error", req, Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -221,10 +221,8 @@ public abstract class AbstractApplicationController extends BaseController {
         List<String> pendingOrganisationNames = pendingInvitations(application).stream()
         		.map(InviteResource::getInviteOrganisationName)
         		.distinct()
-        		.filter(orgName -> {
-        			return StringUtils.hasText(orgName) 
-        					&& activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName));
-        		}).collect(Collectors.toList());
+        		.filter(orgName -> StringUtils.hasText(orgName)
+                        && activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName))).collect(Collectors.toList());
 
         model.addAttribute("pendingOrganisationNames", pendingOrganisationNames);
         
@@ -444,7 +442,8 @@ public abstract class AbstractApplicationController extends BaseController {
         Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
 
         return userApplicationRoles.stream()
-                .filter(uar -> (uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName())))
+                .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
+                            || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
                 .map(ProcessRole::getOrganisation)
                 .collect(Collectors.toCollection(supplier));
     }

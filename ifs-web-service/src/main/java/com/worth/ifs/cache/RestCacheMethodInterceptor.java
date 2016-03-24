@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Arrays.asList;
@@ -24,7 +25,28 @@ public class RestCacheMethodInterceptor implements MethodInterceptor {
     private static final Logger LOG = LoggerFactory.getLogger(RestCacheMethodInterceptor.class);
     private final Cache<String, Map<Method, Map<List<Object>, Object>>> cache
             = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).build();
+    @Autowired
+    private UidSupplier uidSupplier;
 
+    protected static void put(final Object value, final String uid, final Method method, final List<Object> parameters, final Cache<String, Map<Method, Map<List<Object>, Object>>> cache) throws ExecutionException {
+        final Map<Method, Map<List<Object>, Object>> methodMap = cache.get(uid, HashMap::new);
+        methodMap.putIfAbsent(method, new HashMap<>());
+        final Map<List<Object>, Object> argsMap = methodMap.get(method);
+        argsMap.put(parameters, value);
+    }
+
+    protected static Optional<Object> get(final String uid, final Method method, final List<Object> parameters, final Cache<String, Map<Method, Map<List<Object>, Object>>> cache) throws ExecutionException {
+        final Map<Method, Map<List<Object>, Object>> methodMap = cache.get(uid, HashMap::new);
+        final Map<List<Object>, Object> argsMap = methodMap.get(method);
+        if (argsMap != null) {
+            final Object value = argsMap.get(parameters);
+            if (value != null) {
+                return Optional.of(value);
+
+            }
+        }
+        return Optional.empty();
+    }
 
     public UidSupplier getUidSupplier() {
         return uidSupplier;
@@ -34,9 +56,6 @@ public class RestCacheMethodInterceptor implements MethodInterceptor {
         this.uidSupplier = uidSupplier;
         return this;
     }
-
-    @Autowired
-    private UidSupplier uidSupplier;
 
     public void invalidate() {
         final String uid = uidSupplier.get();
@@ -60,26 +79,4 @@ public class RestCacheMethodInterceptor implements MethodInterceptor {
             return toCache;
         }
     }
-
-    protected static void put(final Object value, final String uid, final Method method, final List<Object> parameters, final Cache<String, Map<Method, Map<List<Object>, Object>>> cache) throws Exception {
-        final Map<Method, Map<List<Object>, Object>> methodMap = cache.get(uid, HashMap::new);
-        methodMap.putIfAbsent(method, new HashMap<>());
-        final Map<List<Object>, Object> argsMap = methodMap.get(method);
-        argsMap.put(parameters, value);
-    }
-
-    protected static Optional<Object> get(final String uid, final Method method, final List<Object> parameters, final Cache<String, Map<Method, Map<List<Object>, Object>>> cache) throws Exception {
-        final Map<Method, Map<List<Object>, Object>> methodMap = cache.get(uid, HashMap::new);
-        final Map<List<Object>, Object> argsMap = methodMap.get(method);
-        if (argsMap != null) {
-            final Object value = argsMap.get(parameters);
-            if (value != null) {
-                return Optional.of(value);
-
-            }
-        }
-        return Optional.empty();
-    }
-
-
 }
