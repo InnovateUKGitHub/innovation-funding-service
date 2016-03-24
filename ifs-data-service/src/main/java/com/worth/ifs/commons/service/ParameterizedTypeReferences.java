@@ -2,7 +2,6 @@ package com.worth.ifs.commons.service;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
@@ -73,10 +72,6 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<CompetitionResource>> competitionResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionResource>>() {};
-    }
-
-    public static ParameterizedTypeReference<List<QuestionStatus>> questionStatusListType() {
-        return new ParameterizedTypeReference<List<QuestionStatus>>() {};
     }
 
     public static ParameterizedTypeReference<List<QuestionStatusResource>> questionStatusResourceListType() {
