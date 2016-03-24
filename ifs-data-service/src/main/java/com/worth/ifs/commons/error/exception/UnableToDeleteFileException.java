@@ -2,9 +2,6 @@ package com.worth.ifs.commons.error.exception;
 
 import java.util.List;
 
-/**
- * Created by rav on 18/02/2016.
- */
 public class UnableToDeleteFileException extends IFSRuntimeException {
     public UnableToDeleteFileException() {
     	// no-arg constructor

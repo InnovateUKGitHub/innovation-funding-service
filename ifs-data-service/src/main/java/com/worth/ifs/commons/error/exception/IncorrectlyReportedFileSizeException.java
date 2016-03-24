@@ -2,9 +2,6 @@ package com.worth.ifs.commons.error.exception;
 
 import java.util.List;
 
-/**
- * Created by rav on 18/02/2016.
- */
 public class IncorrectlyReportedFileSizeException extends IFSRuntimeException {
     public IncorrectlyReportedFileSizeException() {
     	// no-arg constructor
