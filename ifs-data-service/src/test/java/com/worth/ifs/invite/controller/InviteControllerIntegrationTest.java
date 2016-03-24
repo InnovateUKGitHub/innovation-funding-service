@@ -49,7 +49,7 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
         List<ProcessRole> proccessRoles = new ArrayList<>();
@@ -84,7 +84,7 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         swapOutForUser(null);
     }
 

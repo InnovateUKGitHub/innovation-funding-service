@@ -4,10 +4,6 @@ import com.worth.ifs.commons.error.exception.IFSRuntimeException;
 
 import java.util.List;
 
-/**
- * Created by rav on 01/03/2016.
- *
- */
 public class UnableToReadUploadedFile extends IFSRuntimeException {
 
     public UnableToReadUploadedFile() {

@@ -1,10 +1,9 @@
 package com.worth.ifs.login;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.exception.InvalidURLException;
+import com.worth.ifs.commons.rest.RestResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.worth.ifs.application.service.UserService;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.error.exception.InvalidURLException;
-import com.worth.ifs.commons.rest.RestResult;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * This controller handles user login, logout and authentication / authorization.
@@ -36,7 +34,7 @@ public class LoginController {
     public static final String RESET_PASSWORD_NOTIFICATION_SEND = "reset-password-notification-send";
     public static final String PASSWORD_CHANGED = "password-changed";
 
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(LoginController.class);
 
     @Autowired
     private UserService userService;
@@ -54,7 +52,7 @@ public class LoginController {
             model.addAttribute("resetPasswordRequestForm", resetPasswordRequestForm);
             return LOGIN_BASE + "/" + RESET_PASSWORD;
         } else {
-            log.warn("Reset password for: " + resetPasswordRequestForm.getEmail());
+            LOG.warn("Reset password for: " + resetPasswordRequestForm.getEmail());
             userService.sendPasswordResetNotification(resetPasswordRequestForm.getEmail());
             return LOGIN_BASE + "/" + RESET_PASSWORD_NOTIFICATION_SEND;
         }

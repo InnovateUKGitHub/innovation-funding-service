@@ -1,9 +1,5 @@
 package com.worth.ifs.assessment.viewmodel;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
@@ -13,19 +9,17 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.competition.resource.CompetitionResource;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import static com.worth.ifs.assessment.domain.AssessmentOutcomes.RECOMMEND;
-import static com.worth.ifs.util.CollectionFunctions.mapEntryValue;
-import static com.worth.ifs.util.CollectionFunctions.pairsToMap;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
-import static com.worth.ifs.util.PairFunctions.leftPair;
-import static com.worth.ifs.util.PairFunctions.presentRightPair;
-import static com.worth.ifs.util.PairFunctions.rightPairIsPresent;
+import static com.worth.ifs.util.CollectionFunctions.*;
+import static com.worth.ifs.util.PairFunctions.*;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -38,7 +32,7 @@ import static java.util.stream.Collectors.toMap;
 public class AssessmentSubmitReviewModel {
 
     @SuppressWarnings("unused")
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(AssessmentSubmitReviewModel.class);
 
     private final Assessment assessment;
     private final ApplicationResource application;

@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/organisation/create/type/")
 public class OrganisationTypeCreationController {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(OrganisationTypeCreationController.class);
     Validator validator;
     @Autowired
     public void setValidator(Validator validator) {
@@ -102,17 +102,17 @@ public class OrganisationTypeCreationController {
         CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
         Long organisationTypeId = organisationTypeForm.getOrganisationType();
         if (bindingResult.hasErrors()) {
-            log.debug("redirect because validation errors");
+            LOG.debug("redirect because validation errors");
             return "redirect:/organisation/create/type/new-account-organisation-type?invalid";
         } else if (OrganisationTypeEnum.getFromId(organisationTypeId).hasChildren()) {
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
             CookieUtil.saveToCookie(response, AcceptInviteController.ORGANISATION_TYPE, orgTypeForm);
-            log.debug("redirect for organisation subtype");
+            LOG.debug("redirect for organisation subtype");
             return "redirect:/organisation/create/type/new-account-organisation-type/?" + AcceptInviteController.ORGANISATION_TYPE + '=' + organisationTypeForm.getOrganisationType();
         } else {
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
             CookieUtil.saveToCookie(response, AcceptInviteController.ORGANISATION_TYPE, orgTypeForm);
-            log.debug("redirect for organisation creation");
+            LOG.debug("redirect for organisation creation");
             return "redirect:/organisation/create/find-organisation";
         }
     }

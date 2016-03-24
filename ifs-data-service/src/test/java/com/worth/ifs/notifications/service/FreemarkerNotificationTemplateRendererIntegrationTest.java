@@ -42,6 +42,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
                 "inviteOrganisationName", "Nomensa",
                 "leadOrganisation", "Empire Ltd",
                 "leadApplicant", "Steve Smith",
+                "leadApplicantTitle","Mr",
                 "leadApplicantEmail", "steve@empire.com"
         );
 

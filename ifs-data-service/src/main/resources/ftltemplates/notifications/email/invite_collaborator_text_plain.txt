@@ -1,22 +1,14 @@
 Dear ${notificationTarget.name},
 
-You have been invited to join a collaborative application for the competition '${competitionName}'.
+${leadApplicantTitle} ${leadApplicant} at ${leadOrganisation} has invited you/${inviteOrganisationName} to participate in their project for the ${competitionName} competition.
 
-Lead organisation: ${leadOrganisation}
-Lead applicant: ${leadApplicant}
+To accept the invitation to collaborate please sign in or register using the link below.
 
-The lead applicant has invited you to join this application on behalf of the following organisation: ${inviteOrganisationName}
-
-If this is not the correct organisation, email the application lead: ${leadApplicantEmail}
-
-Please paste the link below into a browser to accept the invitation:
 ${inviteUrl}
 
-Many thanks,
-
-The Innovate UK team
-
+Competitions Team,
 Innovate UK
+
 North Star House
 North Star Avenue
 Swindon

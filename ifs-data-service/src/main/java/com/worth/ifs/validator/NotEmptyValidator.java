@@ -12,16 +12,16 @@ import org.springframework.validation.Errors;
  */
 @Component
 public class NotEmptyValidator extends BaseValidator {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(NotEmptyValidator.class);
 
 
     @Override
     public void validate(Object target, Errors errors) {
-        log.debug("do NotEmpty validation ");
+        LOG.debug("do NotEmpty validation ");
         FormInputResponse response = (FormInputResponse) target;
 
         if (StringUtils.isEmpty(response.getValue()) || "".equals(response.getValue().trim())) {
-            log.debug("NotEmpty validation message for: " + response.getId());
+            LOG.debug("NotEmpty validation message for: " + response.getId());
             errors.rejectValue("value", "response.emptyResponse", "Please enter some text");
         }
     }

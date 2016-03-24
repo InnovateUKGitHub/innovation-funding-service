@@ -13,7 +13,7 @@ import java.util.List;
  * Default representation for costs and defaults to summing up the costs.
  */
 public class GrantClaimCategory implements CostCategory {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(GrantClaimCategory.class);
 
     List<CostItem> costs = new ArrayList<>();
     BigDecimal total = BigDecimal.ZERO;

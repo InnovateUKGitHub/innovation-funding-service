@@ -15,11 +15,11 @@ import org.springframework.validation.Errors;
  */
 @Component
 public class EmailValidator extends BaseValidator {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(EmailValidator.class);
 
     @Override
     public void validate(Object target, Errors errors) {
-        log.debug("do Email validation ");
+        LOG.debug("do Email validation ");
         FormInputResponse response = (FormInputResponse) target;
         CharSequence responseValue = response.getValue();
 

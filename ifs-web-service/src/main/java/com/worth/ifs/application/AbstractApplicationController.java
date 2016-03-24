@@ -67,7 +67,7 @@ public abstract class AbstractApplicationController extends BaseController {
     public static final String APPLICATION_START_DATE = "application.startDate";
     public static final String QUESTION_URL = "/question/";
     public static final String SECTION_URL = "/section/";
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(AbstractApplicationController.class);
 
     @Autowired
     protected MessageSource messageSource;
@@ -221,10 +221,8 @@ public abstract class AbstractApplicationController extends BaseController {
         List<String> pendingOrganisationNames = pendingInvitations(application).stream()
         		.map(InviteResource::getInviteOrganisationName)
         		.distinct()
-        		.filter(orgName -> {
-        			return StringUtils.hasText(orgName) 
-        					&& activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName));
-        		}).collect(Collectors.toList());
+        		.filter(orgName -> StringUtils.hasText(orgName)
+                        && activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName))).collect(Collectors.toList());
 
         model.addAttribute("pendingOrganisationNames", pendingOrganisationNames);
         
@@ -235,8 +233,8 @@ public abstract class AbstractApplicationController extends BaseController {
     }
 
     protected void addQuestionsDetails(Model model, ApplicationResource application, Form form) {
-        log.info("*********************");
-        log.info(application.getId());
+        LOG.info("*********************");
+        LOG.info(application.getId());
         List<FormInputResponse> responses = getFormInputResponses(application);
         Map<Long, FormInputResponse> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
         model.addAttribute("responses",mappedResponses);
@@ -444,7 +442,8 @@ public abstract class AbstractApplicationController extends BaseController {
         Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
 
         return userApplicationRoles.stream()
-                .filter(uar -> (uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName())))
+                .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
+                            || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
                 .map(ProcessRole::getOrganisation)
                 .collect(Collectors.toCollection(supplier));
     }

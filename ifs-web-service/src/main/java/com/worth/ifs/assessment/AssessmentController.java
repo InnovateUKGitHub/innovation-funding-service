@@ -1,38 +1,5 @@
 package com.worth.ifs.assessment;
 
-import static com.worth.ifs.application.service.Futures.call;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Optional.empty;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.OK;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
@@ -53,6 +20,29 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.application.service.Futures.call;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Optional.empty;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 
 /**
  * This controller will handle requests related to the current applicant. So pages that are relative to that user,
@@ -61,7 +51,7 @@ import com.worth.ifs.workflow.domain.ProcessOutcome;
 @Controller
 @RequestMapping("/assessor")
 public class AssessmentController extends AbstractApplicationController {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(AssessmentController.class);
 
     /* pages */
     private static final String competitionAssessments = "assessor-competition-applications";
@@ -166,12 +156,12 @@ public class AssessmentController extends AbstractApplicationController {
         ProcessRole assessorProcessRole = processRoleService.findProcessRole(userId, applicationId);
         boolean invalidAssessor = assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName());
         if (invalidAssessor) {
-            log.warn("User is not an Assessor on this application");
+            LOG.warn("User is not an Assessor on this application");
             return showInvalidAssessmentView(model, competitionId, null);
         }
         Assessment assessment = assessmentRestService.getOneByProcessRole(assessorProcessRole.getId()).getSuccessObjectOrThrowException();
         if (assessment == null) {
-            log.warn("No assessment could be found for the User " + userId + " and the Application " + applicationId);
+            LOG.warn("No assessment could be found for the User " + userId + " and the Application " + applicationId);
             return showInvalidAssessmentView(model, competitionId, null);
         }
 
