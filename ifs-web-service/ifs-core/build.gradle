@@ -1,0 +1,29 @@
+
+jar {
+    baseName = 'ifs-core'
+    version = '0.0.1-SNAPSHOT'
+}
+
+
+dependencies {
+    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
+    compile "org.thymeleaf.extras:thymeleaf-extras-java8time:2.1.0.RELEASE"
+    compile "javax.servlet:javax.servlet-api:3.1.0"
+    compile "com.jayway.jsonpath:json-path"
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'org.apache.commons:commons-collections4:4.1'
+    compile 'commons-beanutils:commons-beanutils:1.8.3'
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    compile "org.apache.httpcomponents:httpclient:4.5.1"
+    compile "org.apache.httpcomponents:httpasyncclient:4.1.1"
+
+    // Use this for including the api lib from the data-service.
+    compile files('../libs/ifs-data-service-api-1.0-SNAPSHOT.jar')
+    testCompile "com.openpojo:openpojo:0.8.3"
+}
+
+task cleanDeploy() {
+    build.mustRunAfter clean
+    dependsOn clean
+    dependsOn build
+}
