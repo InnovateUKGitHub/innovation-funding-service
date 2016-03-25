@@ -13,8 +13,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Verify that the user can't mark as complete empty text areas
     [Documentation]    -INFUND-406
-    [Tags]    Applicant    Validations    Pending
-    # pending NFUND-2017
+    [Tags]    Applicant
     Given the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the "Project Summary" question is empty
     And the applicant marks the public description question as complete
@@ -23,7 +22,7 @@ Verify that the user can't mark as complete empty text areas
 
 Verify that the user doesn't get the error when the text area is not empty anymore
     [Documentation]    -INFUND-406
-    [Tags]    Applicant    Validations
+    [Tags]    Applicant
     Given the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the "Project Summary" question is empty
     And the applicant inserts some text again in the "Project Summary" question

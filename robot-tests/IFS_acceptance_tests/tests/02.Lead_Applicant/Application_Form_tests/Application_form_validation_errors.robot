@@ -11,14 +11,14 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Verify the validation error when the Project title field is empty
     [Documentation]    -INFUND-43
-    [Tags]    Applicant    Validations
+    [Tags]    Applicant
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     When the applicant clears the application title field
     Then The applicant should get a validation error message    Please enter the full title of the project.
 
 Verify the validation error for an invalid date (Year)
     [Documentation]    -INFUND-43
-    [Tags]    Applicant    Validations    HappyPath
+    [Tags]    Applicant    HappyPath
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an invalid date "18-11-2015"
     Then the applicant should get a validation error message    Please enter a future date
@@ -29,7 +29,7 @@ Verify the validation error for an invalid date (Year)
 
 Verify the validation error for an invalid date (day)
     [Documentation]    -INFUND-43
-    [Tags]    Applicant    Validations
+    [Tags]    Applicant
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an input    id=application_details-startdate_day    32
     And the applicant should get a validation error message    Please enter a valid date
@@ -44,7 +44,7 @@ Verify the validation error for an invalid date (day)
 
 Verify the validation error for an invalid date (month)
     [Documentation]    -INFUND-43
-    [Tags]    Applicant    Validations
+    [Tags]    Applicant
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an input    id=application_details-startdate_month    0
     And the applicant should get a validation error message    Please enter a valid date
@@ -59,7 +59,7 @@ Verify the validation error for an invalid date (month)
 
 Verify the validation error for the duration field
     [Documentation]    -INFUND-43
-    [Tags]    Applicant    Validations
+    [Tags]    Applicant
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     And the applicant inserts an input    id=application_details-duration    0
     And the applicant should get a validation error message    Please enter a valid duration
@@ -72,7 +72,7 @@ Verify the validation error for the duration field
 
 Verify the validation error when the text area is empty
     [Documentation]    -INFUND-43
-    [Tags]    Applicant    Validations
+    [Tags]    Applicant
     Given the user navigates to the page    ${PROJECT_SUMMARY_URL}
     When the applicant clears the text area of the "Project Summary"
     Then the applicant should get a validation error message    Please enter some text
@@ -119,6 +119,6 @@ the applicant clears the application title field
 The applicant should get a validation error message
     [Arguments]    ${validation error}
     focus    jQuery=button:contains("Save and")
-    sleep   5s
-    Run Keyword and ignore error        Wait Until Page Contains    ${validation_error}
+    sleep    5s
+    Run Keyword and ignore error    Wait Until Page Contains    ${validation_error}
     #Element Should Be Visible    css=.error-message

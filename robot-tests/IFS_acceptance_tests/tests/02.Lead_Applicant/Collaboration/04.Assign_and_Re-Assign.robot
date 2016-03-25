@@ -12,13 +12,9 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
-
-${invitee_name}         michael
-
+${invitee_name}    michael
 
 *** Test Cases ***
-
-
 Verify the applicant can assign a question
     [Documentation]    INFUND-275, INFUND-280
     [Tags]    Collaboration    HappyPath
@@ -30,16 +26,13 @@ Verify the applicant can assign a question
     And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    Jessica Doe
     [Teardown]    User closes the browser
 
-
 Lead applicant can see pending invitees in the assign list, but cannot assign questions to them
-    [Documentation]     INFUND-1962
-    [Tags]      Collaboration       Invites
-    [Setup]     Guest user log-in       &{lead_applicant_credentials}
-    When the user navigates to the page            ${SCOPE_URL}
+    [Documentation]    INFUND-1962
+    [Tags]    Collaboration    Invites
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    When the user navigates to the page    ${SCOPE_URL}
     Then the user can see the pending invitee but can't assign to them
-    [Teardown]      User closes the browser
-
-
+    [Teardown]    User closes the browser
 
 Verify the field is disabled for other collaborators
     [Documentation]    INFUND-275
@@ -68,11 +61,10 @@ Verify the ' Last update message'
     Then the question should contain the correct status/name    css=#form-input-12 .textarea-footer    Last updated: Today by you
 
 Verify the collaborator cannot assign the question
-    [Documentation]     INFUND-839
-    [Tags]      Collaboration
+    [Documentation]    INFUND-839
+    [Tags]    Collaboration
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    Then The user should not see the text in the page       Assign to
-
+    Then The user should not see the text in the page    Assign to
 
 Verify collaborator can mark as ready for review
     [Documentation]    INFUND-877
@@ -101,22 +93,19 @@ Verify that the field has been reassigned to the lead applicant
     And the question should contain the correct status/name    css=#form-input-12 .assign-container    You
     [Teardown]    User closes the browser
 
-
 Verify that the appendices are assigned along with the question
-    [Documentation]     INFUND-409
-    [Tags]      Collaboration
-    [Setup]     Guest user log-in   &{lead_applicant_credentials}
-    Given the user navigates to the page     ${PROJECT_TEAM_URL}
+    [Documentation]    INFUND-409
+    [Tags]    Collaboration
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    Given the user navigates to the page    ${PROJECT_TEAM_URL}
     And the user can see the option to upload a file
     When the user assigns the question to Jessica Doe
     And the user can log out
     And the user can log in as Jessica Doe
-    Then the user navigates to the page     ${PROJECT_TEAM_URL}
+    Then the user navigates to the page    ${PROJECT_TEAM_URL}
     And the user can see the option to upload a file
     And the user assigns the question to Steve Smith
     And the user can't see the option to upload a file
-
-
 
 *** Keywords ***
 the collaborator edits public description question
@@ -132,10 +121,10 @@ the question should contain the correct status/name
     Element Should Contain    ${ELEMENT}    ${STATUS}
 
 the user can see the option to upload a file
-    the user should see the text in the page       Upload
+    the user should see the text in the page    Upload
 
 the user assigns the question to Jessica Doe
-    the applicant assigns the question to the collaborator      css=#form-input-8 .editor   testtest    Jessica Doe
+    the applicant assigns the question to the collaborator    css=#form-input-8 .editor    testtest    Jessica Doe
     reload page
 
 the user can log out
@@ -143,19 +132,18 @@ the user can log out
 
 the user assigns the question to Steve Smith
     reload page
-    And The user clicks the button/link         name=assign_question
+    And The user clicks the button/link    name=assign_question
     reload page
 
 the user can log in as Jessica Doe
-    guest user log-in   &{collaborator1_credentials}
+    guest user log-in    &{collaborator1_credentials}
 
 the user can't see the option to upload a file
-    the user should not see the text in the page        Upload
-
+    the user should not see the text in the page    Upload
 
 the user can see the pending invitee but can't assign to them
-    The user should see the text in the page        ${invitee_name}
-    Run Keyword And Expect Error        *       Attempt to assign to a pending invitee
+    The user should see the text in the page    ${invitee_name}
+    Run Keyword And Expect Error    *    Attempt to assign to a pending invitee
 
 Attempt to assign to a pending invitee
     the applicant assigns the question to the collaborator    css=#form-input-13 .editor    test1233    ${invitee_name}

@@ -129,16 +129,6 @@ Other Funding
     And applicant can see that the 'No' radio button is selected
     And applicant cannot see the 'other funding' details
 
-Mark all section as complete
-    [Documentation]    INFUND-446
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
-    When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
-    Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
-    And the user navigates to the page    ${FINANCES_OVERVIEW_URL}
-    And the user should see the element    css=.finance-summary tr:nth-of-type(1) img[src="/images/field/tick-icon.png"]
-    And the user navigates to the page    ${YOUR_FINANCES_URL}
-    And the user can mark the sections as editable again
-
 *** Keywords ***
 the Applicant fills in the Labour costs
     Click Element    css=[aria-controls="collapsible-1"]

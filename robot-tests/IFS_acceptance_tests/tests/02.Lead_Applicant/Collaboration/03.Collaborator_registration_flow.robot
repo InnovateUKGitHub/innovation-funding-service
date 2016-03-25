@@ -133,7 +133,7 @@ Business organisation (accept invitation flow)
     [Documentation]    INFUND-1005
     ...
     ...    INFUND-1779
-    [Tags]    HappyPath    Pending    FailingForLocal
+    [Tags]    HappyPath    FailingForLocal
     Given the user navigates to the page    ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    organisationType    1
