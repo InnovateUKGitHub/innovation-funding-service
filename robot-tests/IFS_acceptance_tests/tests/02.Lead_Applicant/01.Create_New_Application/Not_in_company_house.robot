@@ -36,12 +36,12 @@ Manually add the address and this persists on refresh
 Manually can enter and see details pass to the confirmation page
     [Documentation]    INFUND-888
     [Tags]    Applicant    Company    Companies House
-    When the user enters text to a text field    id=street    The East Wing
-    And the user enters text to a text field    id=street-2    Popple Manor
-    And the user enters text to a text field    id=street-3    1, Popple Boulevard
-    And the user enters text to a text field    id=town    Poppleton
-    And the user enters text to a text field    id=county    Poppleshire
-    And the user enters text to a text field    id=postcode    POPPS123
+    When the user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    The East Wing
+    And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine2    Popple Manor
+    And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine3    1, Popple Boulevard
+    And the user enters text to a text field    id=addressForm.selectedPostcode.town    Poppleton
+    And the user enters text to a text field    id=addressForm.selectedPostcode.county    Poppleshire
+    And the user enters text to a text field    id=addressForm.selectedPostcode.postcode    POPPS123
     And the user enters text to a text field    name=organisationName    Top of the Popps
     And the user clicks the button/link    jQuery=button:contains("Continue")
     Then the user should see the text in the page    The East Wing
