@@ -11,7 +11,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Variables ***
 
 *** Test Cases ***
-Verify that the user can't mark as complete empty text areas
+User can't mark as complete empty text areas
     [Documentation]    -INFUND-406
     [Tags]    Applicant
     Given the user navigates to the page    ${PROJECT_SUMMARY_URL}
@@ -20,7 +20,7 @@ Verify that the user can't mark as complete empty text areas
     Then the applicant should get a warning to enter data in the "Project Summary" question
     And the applicant should get an alert with the description of the error
 
-Verify that the user doesn't get the error when the text area is not empty anymore
+User doesn't get the error when the text area is not empty
     [Documentation]    -INFUND-406
     [Tags]    Applicant
     Given the user navigates to the page    ${PROJECT_SUMMARY_URL}

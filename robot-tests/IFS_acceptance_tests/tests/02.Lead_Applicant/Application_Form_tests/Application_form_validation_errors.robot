@@ -9,14 +9,14 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
-Verify the validation error when the Project title field is empty
+Empty project title field
     [Documentation]    -INFUND-43
     [Tags]    Applicant
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
     When the applicant clears the application title field
     Then The applicant should get a validation error message    Please enter the full title of the project.
 
-Verify the validation error for an invalid date (Year)
+Invalid date (Year)
     [Documentation]    -INFUND-43
     [Tags]    Applicant    HappyPath
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
@@ -27,7 +27,7 @@ Verify the validation error for an invalid date (Year)
     And the applicant inserts "2016" in the Year field(valid date)
     And the applicant should not see the validation error any more
 
-Verify the validation error for an invalid date (day)
+Invalid date (day)
     [Documentation]    -INFUND-43
     [Tags]    Applicant
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
@@ -42,7 +42,7 @@ Verify the validation error for an invalid date (day)
     And the applicant inserts an input    id=application_details-startdate_day    15
     And the applicant should not see the validation error any more
 
-Verify the validation error for an invalid date (month)
+Invalid date (month)
     [Documentation]    -INFUND-43
     [Tags]    Applicant
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
@@ -57,7 +57,7 @@ Verify the validation error for an invalid date (month)
     And the applicant inserts an input    id=application_details-startdate_month    09
     And the applicant should not see the validation error any more
 
-Verify the validation error for the duration field
+Invalid duration field
     [Documentation]    -INFUND-43
     [Tags]    Applicant
     Given the user navigates to the page    ${APPLICATION_DETAILS_URL}
@@ -70,7 +70,7 @@ Verify the validation error for the duration field
     And the applicant inserts an input    id=application_details-duration    15
     And the applicant should not see the validation error any more
 
-Verify the validation error when the text area is empty
+Empty text area
     [Documentation]    -INFUND-43
     [Tags]    Applicant
     Given the user navigates to the page    ${PROJECT_SUMMARY_URL}

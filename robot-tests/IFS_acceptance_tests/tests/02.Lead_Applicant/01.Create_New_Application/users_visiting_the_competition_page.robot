@@ -9,14 +9,14 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
-The user is not logged in and later enters correct login
+Non logged in users see the Apply now button
     [Documentation]    INFUND-921
     [Tags]    Applicant
     Given the user navigates to the page    ${LOG_OUT}
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     Then the user should see the element    jQuery=.column-third .button:contains('Apply now')
 
-The user is not logged in and later enters incorrect login
+Logged in users should see a warning
     [Documentation]    INFUND-921
     [Tags]    Applicant
     Guest user log-in    &{lead_applicant_credentials}

@@ -21,7 +21,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 ${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9
 
 *** Test Cases ***
-Create application flow for non registered users CH route
+Non registered users CH route
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1904
@@ -52,7 +52,7 @@ Create application flow for non registered users CH route
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user should see the text in the page    Application overview
 
-Create application flow for non registered users non CH route
+Non registered users non CH route
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1904

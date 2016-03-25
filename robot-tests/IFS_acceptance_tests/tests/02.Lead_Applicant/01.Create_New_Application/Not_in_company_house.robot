@@ -13,7 +13,7 @@ ${find_org_on_company_house_url}    ${SERVER}/organisation/create/find-business
 ${organisation_name}    Top of the Popps
 
 *** Test Cases ***
-Applicant can see the Not in Companies House company link
+Not in Companies House company link
     [Documentation]    INFUND-888
     [Tags]    Applicant    Company    Companies House    HappyPath
     Given the user navigates to the page    ${find_org_on_company_house_url}
@@ -22,7 +22,7 @@ Applicant can see the Not in Companies House company link
     Then the user should see the text in the page    Organisation name
     And the user should see the text in the page    Postcode
 
-Applicant can manually add the address and this persists on refresh
+Manually add the address and this persists on refresh
     [Documentation]    INFUND-888
     [Tags]    Applicant    Company    Companies House
     When the user clicks the button/link    name=manual-address
@@ -33,10 +33,9 @@ Applicant can manually add the address and this persists on refresh
     And the applicant can reload the page
     And the user should see the text in the page    Street
 
-Applicant can manually can enter and see details pass to the confirmation page
+Manually can enter and see details pass to the confirmation page
     [Documentation]    INFUND-888
     [Tags]    Applicant    Company    Companies House
-    # Pending because of the INFUND-1816 (This ticket is assigned for sprint 7 but the test passes, so removed the pending tag)
     When the user enters text to a text field    id=street    The East Wing
     And the user enters text to a text field    id=street-2    Popple Manor
     And the user enters text to a text field    id=street-3    1, Popple Boulevard
