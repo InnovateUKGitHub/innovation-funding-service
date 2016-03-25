@@ -1,6 +1,6 @@
 *** Variables ***
 ${BROWSER}        Firefox
-${SERVER_BASE}    ifs.dev.innovateuk.org
+${SERVER_BASE}    ifs-local-dev
 ${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${RUNNING_ON_DEV}    ${EMPTY}
