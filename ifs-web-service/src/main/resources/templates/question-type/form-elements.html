@@ -146,7 +146,7 @@
 <!-- ========================= textarea  =========================== -->
 
 <div th:fragment="form-textarea (id, name, value,readonly)">
-		<textarea th:id="'form-input-'+${id}"
+		<textarea th:id="'form-textarea-'+${id}"
               th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
               th:field="*{formInput[__${id}__]}"
               th:readonly="${readonly}"

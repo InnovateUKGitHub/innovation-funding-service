@@ -30,9 +30,9 @@
     <!-- =========================== Form: Textarea =========================== -->
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
 
-    <div th:fragment="textarea"  class="form-group"  th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
+    <div th:fragment="textarea"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
 
-      <label class="form-label form-label-bold" th:for="'form-input-'+${formInput.getId()}" th:id="'label-'+${formInput.getId()}">
+      <label class="form-label form-label-bold" th:for="'form-textarea-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
         <span th:if="${readonly} and ${question.getName()}" th:text="${question.name}" />
         <span th:unless="${readonly}" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag"  />
