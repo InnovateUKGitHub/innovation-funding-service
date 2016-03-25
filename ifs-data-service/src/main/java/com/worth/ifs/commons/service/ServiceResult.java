@@ -1,15 +1,16 @@
 package com.worth.ifs.commons.service;
 
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.ErrorTemplate;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.util.Either;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;

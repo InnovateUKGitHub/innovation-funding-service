@@ -264,7 +264,8 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/find-organisation"))
                 .andReturn();
 
-        Cookie cookie = result.getResponse().getCookie("companyHouseForm");
+        Cookie cookie = result.getResponse().getCookie("organisationForm");
+        assertNotNull(cookie);
 
         result = mockMvc.perform(MockMvcRequestBuilders.get("/organisation/create/find-organisation")
                 .cookie(organisationTypeBusiness)

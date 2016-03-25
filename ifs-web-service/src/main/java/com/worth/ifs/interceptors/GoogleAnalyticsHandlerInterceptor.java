@@ -21,7 +21,7 @@ public class GoogleAnalyticsHandlerInterceptor extends HandlerInterceptorAdapter
     private String googleAnalyticsKeys;
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         if (modelAndView != null && !(modelAndView.getView() instanceof RedirectView || modelAndView.getViewName().startsWith("redirect:"))) {
             addGoogleAnalytics(request, modelAndView);
         }

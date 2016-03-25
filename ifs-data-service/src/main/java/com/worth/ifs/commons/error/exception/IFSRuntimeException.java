@@ -1,19 +1,15 @@
 package com.worth.ifs.commons.error.exception;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by rav on 24/02/2016.
- *
- */
 public class IFSRuntimeException extends RuntimeException {
     // Arguments returned by data api.  Useful for composing error messages with details from request.
     private List<Object> arguments;
 
     public IFSRuntimeException() {
         super();
-        this.arguments = Collections.emptyList();
+        this.arguments = new ArrayList<>();
     }
 
     public IFSRuntimeException(List<Object> arguments) {

@@ -30,5 +30,11 @@ sudo apt-get -y install gnome-terminal
 echo "# Installing firefox"
 sudo apt-get -y install firefox
 
+echo "# Installing xvfb library"
+pip install robotframework-xvfb
+
+echo "# Installing ImapLibrary"
+pip install robotframework-imaplibrary
+
 #fi
 

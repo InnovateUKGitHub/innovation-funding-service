@@ -9,6 +9,9 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...
 ...               INFUND-894 As a lead partner I want to easily see whether or not my partner's finances are marked as complete, so that i can have the right level of confidence in the figures
+...
+...
+...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
 Suite Teardown    User closes the browser
 Test Teardown     Log out as user
 Force Tags        Finance    Applicant    # these tests have been tagged as failing since the numbers no longer match up to the database - find out why!
@@ -25,31 +28,32 @@ ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/2/fo
 ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/2/form/section/8
 ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}    ${SERVER}/application/7/form/section/8
 ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}    ${SERVER}/application/7/form/section/7
+${OVERVIEW_MARK_AS_COMPLETE}    ${SERVER}/application/7
 
 *** Test Cases ***
 Finance summary page calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]    Collaboration     Pending
-    # Pending until the academic finances db update comes through
+    [Tags]    Collaboration    Pending
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    # Pending until the academic finances db update comes through
     When the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
 
 Finance summary calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]    Collaboration     Pending
-     # Pending until the academic finances db update comes through
+    [Tags]    Collaboration    Pending
     [Setup]    Guest user log-in    &{collaborator1_credentials}
+    # Pending until the academic finances db update comes through
     When the user goes to the finance summary of the Providing sustainable childcare application
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
 
 Finance summary calculations for the second collaborator
     [Documentation]    INFUND-524
-    [Tags]    HappyPath     Pending
-     # Pending until the academic finances db update comes through
+    [Tags]    HappyPath    Pending
     [Setup]    Guest user log-in    &{collaborator2_credentials}
+    # Pending until the academic finances db update comes through
     And the user goes to the finance summary of the Providing sustainable childcare application
     When the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
@@ -60,26 +64,30 @@ Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927
     ...
     ...    INFUND-894
-    [Tags]    HappyPath    Failing
-    [Setup]    Guest user log-in    &{collaborator1_credentials}
-    When the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
-    And the user clicks the button/link    css=[aria-controls="collapsible-1"]
-    And the user clicks the button/link    jQuery=#collapsible-1 button:contains("Edit")
+    ...
+    ...    INFUND-446
+    [Tags]    HappyPath
+    [Setup]    Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
+    Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
+    When the user clicks the button/link    jQuery=button:contains("Edit")
     Then the red warnng should be visible
     And the user should see the element    css=.warning-alert
-    And the user should see the text in the page    The following organisations have not maked their finances as complete:
+    And the user should see the text in the page    The following organisations have not marked their finances as complete:
     [Teardown]
 
-Green check should show when the applicant marks the finance as complete
+Green check should show when the finances are complete
     [Documentation]    INFUND-927
     ...
     ...    INFUND-894
-    [Tags]    HappyPath    Failing
-    [Setup]    Guest user log-in    &{collaborator1_credentials}
-    When the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
-    And the user clicks the button/link    css=[aria-controls="collapsible-1"]
-    And the user clicks the button/link    jQuery=#collapsible-1 button:contains("Mark as complete")
-    Then both green checks should be visible
+    ...
+    ...    INFUND-446
+    [Tags]    HappyPath
+    [Setup]    Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
+    Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
+    When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
+    Then the user should be redirected to the correct page    ${OVERVIEW_MARK_AS_COMPLETE}
+    And the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
+    And both green checks should be visible
 
 *** Keywords ***
 the user goes to the finance summary of the Providing sustainable childcare application
@@ -116,7 +124,6 @@ the contribution to project and funding sought should be 0 and not a negative nu
     Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(5)    £0
 
 both green checks should be visible
-    the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src="/images/field/tick-icon.png"]
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img[src="/images/field/tick-icon.png"]
 

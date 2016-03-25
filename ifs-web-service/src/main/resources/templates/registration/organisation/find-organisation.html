@@ -31,10 +31,9 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
                         </span>
                     </label>
-                    <input th:errorclass="field-error" class="form-control" id="org-name" th:field="*{organisationSearchName}" type="text" value="" />
+                    <input  class="form-control" th:field="*{organisationSearchName}" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'field-error'" type="text" value="" />
                     <button type="submit" id="org-search" name="search-organisation" class="button">Search</button>
                 </div>
-
                 <ul id="org-results" class="results-list panel-indent" th:if="${organisationForm.organisationSearching}"
                     th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                     <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">

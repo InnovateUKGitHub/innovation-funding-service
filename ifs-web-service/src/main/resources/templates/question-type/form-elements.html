@@ -243,7 +243,7 @@
                  th:include="question-type/form-elements :: assign-buttons" th:remove="tag"/>
 
             <!-- if  readonly we show the edit form button-->
-            <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button"
+            <div th:if="${readonly and userIsLeadApplicant}" th:include="question-type/form-elements :: form-edit-question-button"
                  th:remove="tag"/>
             <!--  we show mark as complete buttons and the question should be assigned to you or-->
             <div th:if="${userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons"

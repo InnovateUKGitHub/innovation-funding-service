@@ -78,7 +78,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                BindingResult bindingResult, Model model,
                                @PathVariable(APPLICATION_ID) final Long applicationId,
                                @PathVariable(QUESTION_ID) final Long questionId,
-                               HttpServletRequest request) throws Exception {
+                               HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         SectionResource section = sectionService.getSectionByQuestionId(questionId);
@@ -101,7 +101,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                 @PathVariable(APPLICATION_ID) final Long applicationId,
                                 @PathVariable(QUESTION_ID) final Long questionId,
                                 @PathVariable("formInputId") final Long formInputId,
-                                HttpServletRequest request) throws Exception {
+                                HttpServletRequest request) {
         final User user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
@@ -112,7 +112,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable(APPLICATION_ID) final Long applicationId,
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
-            HttpServletRequest request) throws Exception {
+            HttpServletRequest request) {
         final User user = userAuthenticationService.getAuthenticatedUser(request);
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
 
@@ -132,7 +132,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     public String applicationFormWithOpenSection(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable(APPLICATION_ID) final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
-                                                 HttpServletRequest request) throws Exception {
+                                                 HttpServletRequest request) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         SectionResource section = sectionService.getById(sectionId);
 
@@ -171,7 +171,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                      @PathVariable(APPLICATION_ID) final Long applicationId,
                                      @PathVariable(QUESTION_ID) final Long questionId,
                                      HttpServletRequest request,
-                                     HttpServletResponse response) throws Exception {
+                                     HttpServletResponse response) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
 
         Map<String, String[]> params = request.getParameterMap();
@@ -193,7 +193,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
             /* Start save action */
-            bindingResult = saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
+            saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
 
             if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
                 assignQuestion(applicationId, request);
@@ -314,8 +314,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/remove_cost/{costId}")
-    public @ResponseBody String removeCostRow(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
-                                              @PathVariable("costId") final Long costId) throws JsonProcessingException {
+    public @ResponseBody String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
         costService.delete(costId);
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
@@ -328,7 +327,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return financeHandler.getFinanceFormHandler(organisationType).addCost(applicationId, user.getId(), questionId);
     }
 
-    private BindingResult saveApplicationForm(ApplicationResource application,
+    private void saveApplicationForm(ApplicationResource application,
                                               CompetitionResource competition,
                                               ApplicationForm form,
                                               Long applicationId, Long sectionId, Question question,
@@ -372,8 +371,6 @@ public class ApplicationFormController extends AbstractApplicationController {
                 errorsList.forEach(e -> bindingResult.rejectValue(k, e, e)));
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
-
-        return bindingResult;
     }
 
     private void markAllQuestionsInSection(ApplicationResource application,
@@ -450,16 +447,16 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         @PathVariable(APPLICATION_ID) final Long applicationId,
                                         @PathVariable("sectionId") final Long sectionId,
                                         HttpServletRequest request,
-                                        HttpServletResponse response) throws Exception {
+                                        HttpServletResponse response) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
         Map<String, String[]> params = request.getParameterMap();
 
-        bindingResult.getAllErrors().forEach((e) -> log.info("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
-        bindingResult = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
-        bindingResult.getAllErrors().forEach((e) -> log.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
+        bindingResult.getAllErrors().forEach(e -> log.info("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
+        saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
+        bindingResult.getAllErrors().forEach(e -> log.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             assignQuestion(applicationId, request);
@@ -660,7 +657,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) throws Exception {
+    private List<String> storeField(Long applicationId, Long userId, String fieldName, String inputIdentifier, String value) {
         List<String> errors = new ArrayList<>();
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
 

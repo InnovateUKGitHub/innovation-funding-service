@@ -13,7 +13,7 @@ Valid company name
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house    HappyPath
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When the user enters text to a text field    id=org-name    innovate
+    When the user enters text to a text field    id=organisationSearchName    innovate
     And the user clicks the button/link    id=org-search
     Then the valid company names matching the search criteria should be displayed
 
@@ -21,7 +21,7 @@ Invalid company name
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When the user enters text to a text field    id=org-name    innoavte
+    When the user enters text to a text field    id=organisationSearchName    innoavte
     And the user clicks the button/link    id=org-search
     Then the user should see the text in the page    Sorry we couldn't find any results
 
@@ -29,7 +29,7 @@ Valid registration number
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house    HappyPath
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When the user enters text to a text field    id=org-name    05493105
+    When the user enters text to a text field    id=organisationSearchName    05493105
     And the user clicks the button/link    id=org-search
     Then the valid company names matching the search criteria should be displayed
 
@@ -37,18 +37,18 @@ Invalid registration number
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When The user enters text to a text field    id=org-name    64536
+    When The user enters text to a text field    id=organisationSearchName    64536
     And The user clicks the button/link    id=org-search
     Then The user should see the text in the page    Sorry we couldn't find any results
 
 Company with spaces in the name
     [Documentation]    INFUND-1757
-    [Tags]    Create application        FailingForLocal
+    [Tags]    Create application    FailingForLocal
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
     And the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user enters text to a text field    id=org-name    Hive IT
+    And the user enters text to a text field    id=organisationSearchName    Hive IT
     And the user clicks the button/link    id=org-search
     Then The user should see the element    Link=HIVE IT LIMITED
 
@@ -57,7 +57,7 @@ Invalid characters
     [Tags]    Applicant    Company house    Pending
     # Pending INFUND-1493
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When the user enters text to a text field    id=org-name    {}{}
+    When the user enters text to a text field    id=organisationSearchName    {}{}
     And the user clicks the button/link    id=org-search
     Then the applicant should get a validation error for the company house
 

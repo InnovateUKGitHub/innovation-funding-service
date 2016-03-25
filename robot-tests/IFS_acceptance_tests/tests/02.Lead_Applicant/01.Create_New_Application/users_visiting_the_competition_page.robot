@@ -9,28 +9,17 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
-The user is not logged in and later enters correct login
+Non logged in users see the Apply now button
     [Documentation]    INFUND-921
-    [Tags]    Applicant    Details page  Pending
-    # pending due to login changes INFUND-1859 shib
+    [Tags]    Applicant
     Given the user navigates to the page    ${LOG_OUT}
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    Then the user should see the element    jQuery=.column-third .button:contains('Sign in')
-    And the user clicks the button/link    jQuery=.column-third .button:contains('Sign in')
-    And the guest user enters the login credentials    steve.smith@empire.com    test
-    And the user clicks the button/link    css=input.button
-    Then the user should be redirected to the correct page    ${YOUR_DETAILS}
+    Then the user should see the element    jQuery=.column-third .button:contains('Apply now')
 
-The user is not logged in and later enters incorrect login
+Logged in users should see a warning
     [Documentation]    INFUND-921
-    [Tags]    Applicant    Details page  Pending
-    # pending due to login changes INFUND-1859 shib
-    Given the user navigates to the page    ${LOG_OUT}
+    [Tags]    Applicant
+    Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    And the user should see the element    jQuery=.column-third .button:contains('Sign in')
-    And the user clicks the button/link    jQuery=.column-third .button:contains('Sign in')
-    And the guest user enters the login credentials    steve.smith@empire.com    testpsw123
-    And the user clicks the button/link    css=input.button
-    Then the user should see an error    Your username/password combination doesn't seem to work
-
-*** Keywords ***
+    Then the user should see the element    css=.warning-alert
+    And the user should see the text in the page    You are already logged in. You can only create one application per account. If you want to apply to another competition please logout and create a new account.
