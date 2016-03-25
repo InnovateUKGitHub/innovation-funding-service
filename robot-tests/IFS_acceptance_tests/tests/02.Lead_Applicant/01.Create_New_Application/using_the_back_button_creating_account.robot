@@ -10,7 +10,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
-The user presses the back button while on the create account page
+Click the back button while on the create account page
     [Documentation]    INFUND-1423
     [Tags]    Create account    Back button
     Given the user navigates to the page    ${LOGIN_URL}

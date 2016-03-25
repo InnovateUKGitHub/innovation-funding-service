@@ -1,5 +1,1 @@
-<#if applicationName??>
-Invitation to join the application "${applicationName}" for competition "${competitionName}" as a collaborator
-<#else>
-Invitation to join a application for competition "${competitionName}" as a collaborator
-</#if>
+Invitation to collaborate in ${competitionName}

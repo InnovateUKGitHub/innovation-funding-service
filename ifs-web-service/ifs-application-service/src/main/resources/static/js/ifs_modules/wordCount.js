@@ -37,7 +37,7 @@ IFS.wordCount = (function(){
               }
               var delta = field.attr('data-max_words') - count;
               var countDownEl = field.parents(".word-count").find(".count-down");
-              countDownEl.html(delta);
+              countDownEl.html('Words remaining: '+delta);
               if(delta < 0){
                   countDownEl.removeClass("positive").addClass("negative");
               }else{

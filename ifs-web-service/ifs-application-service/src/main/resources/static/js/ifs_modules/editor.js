@@ -32,13 +32,19 @@ IFS.editor = (function(){
         },
         prepareEditor : function(textarea){
             var el = jQuery(textarea);
+            var labelledby = '';
+            if(jQuery('[for="'+el.attr('id')+'"]').length) {
+              labelledby = jQuery('[for="'+el.attr('id')+'"]').attr('id');
+            }
+
             if(el.attr('readonly')){
                 //don't add the editor but do render the html on page load
-                el.before('<div class="readonly"></div>');
+               el.before('<div class="readonly"></div>');
             }
             else {
-                el.before('<div class="editor" spellcheck="true"></div>');
+                el.before('<div class="editor" spellcheck="true" aria-multiline="true" tabindex="0" '+labelledby+' visirole="textbox"></div>');
             }
+
             el.attr('aria-hidden','true');
             IFS.editor.processMarkdownToHtml(el,el.prev());
         },

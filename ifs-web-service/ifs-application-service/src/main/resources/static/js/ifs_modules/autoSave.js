@@ -30,9 +30,8 @@ IFS.autoSave = (function(){
         fieldChanged : function (element){
             var field = jQuery(element);
             var name = field.attr('name');
-            var fieldId = field.attr('id');
+            var fieldId = field.attr('id').replace('form-textarea-','');
             var applicationId = jQuery("#application_id").val();
-
 
             if((typeof(applicationId) !== 'undefined') && (typeof(name) !== 'undefined')) {
               var jsonObj = {

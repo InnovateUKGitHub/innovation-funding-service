@@ -3,29 +3,29 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Summary'"  th:remove="tag" />
 </head>
-<body class="app-summary">
+<body class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
-<div th:include="fragments/modals ::modal-confirm-submit-application
+<div th:if="${currentApplication.isOpen()}" th:include="fragments/modals ::modal-confirm-submit-application
     (messageTitle='This is your final chance to make changes to the application.',
      message='You will not be able to access the application after this point. Are you sure you want to submit?',
      submitLink='/application/'+${currentApplication.getId()}+'/submit',
      submitText='Yes, I want to submit my application',
      cancelText='Cancel')"
      th:remove="tag" />
-
-
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}" th:remove="tag" />
+    <div th:if="${currentApplication.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}" th:remove="tag" />
 
      <div class="page-title">
          <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
-         <h1 class="heading-xlarge">Application Summary</h1>
+         <h1 th:if="${currentApplication.isOpen()}" class="heading-xlarge">Application Summary</h1>
+         <h1 th:unless="${currentApplication.isOpen()}" class="heading-xlarge">Application Overview</h1>
+
     </div>
-    <p class="subtitle extra-margin">
+    <p class="subtitle extra-margin" th:if="${currentApplication.isOpen()}">
         Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
     </p>
 
@@ -35,8 +35,10 @@
                 <div class="collapsible" th:each="question : ${sectionQuestions.get(section.id)}">
                     <h3>
                         <div th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" th:remove="tag" />
-                        <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Complete</div>
-                        <div class="section-status section-incomplete" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Incomplete</div>
+                        <div th:remove="tag" th:if="${currentApplication.isOpen()}">
+                          <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Complete</div>
+                          <div class="section-status section-incomplete" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Incomplete</div>
+                        </div>
                     </h3>
                     <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}' th:with="formInputIndex=(${status.index}), readonly=true, appIsClosed=${!currentApplication.isOpen()}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.get(question.getId())})" th:id="'form-input-'+${formInput.getId()}" >
                         <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' />
@@ -47,8 +49,10 @@
                 <h2 class="heading-medium">Finance</h2>
                 <div class="collapsible">
                     <h3>Finances Summary
+                      <div th:remove="tag" th:if="${currentApplication.isOpen()}">
                         <div class="section-status section-complete" th:if="${sectionsMarkedAsComplete.contains(7L)}">Complete</div>
                         <div class="section-status section-incomplete" th:unless="${sectionsMarkedAsComplete.contains(7L)}">Incomplete</div>
+                      </div>
                     </h3>
                     <div class="question">
                         <p>This is the overview of the finances provided by all partners in this project.</p>
@@ -63,13 +67,14 @@
                 </div>
             </section>
         </form>
-    <hr/>
-    <div>
+
+    <div th:if="${currentApplication.isOpen()}">
+          <hr/>
 	    <span class="icon icon-information"></span>
 	    <span> You will not be able to make changes to your application or resubmit after this point.</span>
 	</div>
 
-		<div th:unless="${!currentApplication.isOpen()}" th:include="fragments/elements :: application-agree-to-terms" class="agree-to-terms-container"/>
+		<div th:if="${currentApplication.isOpen()}" th:include="fragments/elements :: application-agree-to-terms" class="agree-to-terms-container"/>
 
     <div class="alignright-button" th:unless="${!currentApplication.isOpen()}">
         <a id="submit-application-button" class="button large no-margin-right" data-js-modal="modal-confirm-submit-application" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${applicationReadyForSubmit}">Submit application</a>
