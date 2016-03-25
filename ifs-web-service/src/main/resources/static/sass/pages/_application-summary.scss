@@ -22,8 +22,20 @@
 	.question {
 		overflow: hidden;
 		margin:20px;
-	} 
+	}
 }
 .no-js .app-summary .agree-to-terms-container {
 	display:none;
+}
+
+.app-summary.is-closed [readonly],
+.app-summary.is-closed .readonly {
+	border:none;
+	padding:0;
+	background:transparent;
+}
+.app-summary.is-closed .textarea-footer {
+	display: none;
+	min-height:0;
+	resize:none;
 }

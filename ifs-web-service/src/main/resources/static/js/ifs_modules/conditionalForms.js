@@ -19,7 +19,7 @@ IFS.conditionalForms = (function(){
                 }
                 if(inputEl && dataTarget){
                     var groupName = inputEl.attr('name');
-                    inputEl.attr('aria-controls',dataTarget);
+                    // inputEl.attr('aria-controls',dataTarget);
                     //execute on pageload
                     IFS.conditionalForms.toggleVisibility(inputEl,'#'+dataTarget,isInverted);
 
@@ -38,11 +38,11 @@ IFS.conditionalForms = (function(){
             }
 
             if(radioStatus){
-              input.attr('aria-expanded','true');
+              // input.attr('aria-expanded','true');
               target.attr('aria-hidden','false').removeClass('js-hidden');
             }
             else {
-              input.attr('aria-expanded','false');
+              // input.attr('aria-expanded','false');
               target.attr('aria-hidden','true');
             }
         }

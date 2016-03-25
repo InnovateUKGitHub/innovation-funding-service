@@ -146,7 +146,7 @@
 <!-- ========================= textarea  =========================== -->
 
 <div th:fragment="form-textarea (id, name, value,readonly)">
-		<textarea th:id="${id}"
+		<textarea th:id="'form-input-'+${id}"
               th:name="${name != null} ? ${name} : 'formInput['+${id}+']'"
               th:field="*{formInput[__${id}__]}"
               th:readonly="${readonly}"
@@ -198,7 +198,7 @@
 
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
 
-         <div th:unless="${readonly}" class="textarea-header" th:id="${validationId}">
+         <div th:unless="${readonly}" class="textarea-header">
            <img th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
                  src="/images/field/field-done.png"
                 th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done.png')}"
@@ -395,9 +395,8 @@
 <div th:fragment="form-word-count (maxWords, currentWordsLeft)">
     <div th:unless="${maxWords == 0}" th:remove="tag">
 		<span class="count-label">
-				<span class="count-message">Words remaining:</span>
-				<span class="count-down" aria-live="polite" th:if="${currentWordsLeft}" th:text="${currentWordsLeft}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive" >0</span>
-				<span class="count-down" aria-live="polite" th:unless="${currentWordsLeft}" th:text="${maxWords}" th:classappend="${maxWords &lt; 0}? negative : positive" >0</span>
+				<span class="count-down" aria-live="polite" th:if="${currentWordsLeft}" th:classappend="${currentWordsLeft &lt; 0}? negative : positive">Words remaining: <div th:text="${currentWordsLeft}" th:remove="tag" /> </span>
+				<span class="count-down" aria-live="polite" th:unless="${currentWordsLeft}" th:classappend="${maxWords &lt; 0}? negative : positive" >Words remaining: <div th:text="${maxWords}" th:remove="tag" /> </span>
 		</span>
     </div>
 </div>
