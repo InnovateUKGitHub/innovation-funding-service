@@ -74,7 +74,8 @@ public class RegistrationController {
     @RequestMapping(value = "/success", method = RequestMethod.GET)
     public String registrationSuccessful(
             @RequestHeader(value = "referer", required = false) final String referer,
-            final HttpServletRequest request) {
+            final HttpServletRequest request, HttpServletResponse response) {
+        CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
         if(referer == null || !referer.contains(request.getServerName() + "/registration/register")){
             throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
         }
