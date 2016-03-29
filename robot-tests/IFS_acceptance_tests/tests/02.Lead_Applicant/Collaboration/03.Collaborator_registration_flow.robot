@@ -116,13 +116,13 @@ Academic organisations search (empty, invalid & valid inputs)
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see an error    This field cannot be left blank
-    When the user enters text to a text field    id=org-name    abcd
+    When the user enters text to a text field    id=organisationSearchName    abcd
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    Sorry we couldn't find any results.
-    When the user enters text to a text field    id=org-name    !!
+    When the user enters text to a text field    id=organisationSearchName    !!
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    Please enter valid characters
-    When the user enters text to a text field    id=org-name    Liv
+    When the user enters text to a text field    id=organisationSearchName    Liv
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    University of Liverpool
     When the user clicks the button/link    link= University of Liverpool
@@ -133,12 +133,12 @@ Business organisation (accept invitation flow)
     [Documentation]    INFUND-1005
     ...
     ...    INFUND-1779
-    [Tags]    HappyPath    Pending    FailingForLocal
+    [Tags]    HappyPath    FailingForLocal
     Given the user navigates to the page    ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user enters text to a text field    id=org-name    Empire
+    And the user enters text to a text field    id=organisationSearchName    Empire
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=EMPIRE LTD
     and the user enters text to a text field    css=#postcode-check    postcode
@@ -186,7 +186,7 @@ Academic organisation (accept invitation flow)
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see an error    This field cannot be left blank
-    When the user enters text to a text field    id=org-name    Liverpool
+    When the user enters text to a text field    id=organisationSearchName    Liverpool
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    University of Liverpool
     When the user clicks the button/link    link= University of Liverpool

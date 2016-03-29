@@ -38,7 +38,7 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
     }
 
     @Test
-    public void validatePostcode() throws Exception {
+    public void validate() throws Exception {
         String postCode = "BA12LN";
 
         when(addressLookupServiceMock.validatePostcode(postCode)).thenReturn(serviceSuccess(true));
@@ -52,7 +52,7 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
     }
 
     @Test
-    public void findById() throws Exception {
+    public void findOne() throws Exception {
         Long addressId = 1L;
 
         when(addressServiceMock.findOne(addressId)).thenReturn(serviceSuccess(addressResourceBuilder.build()));
@@ -67,7 +67,7 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
     }
 
     @Test
-    public void lookupAddress() throws Exception {
+    public void lookup() throws Exception {
         int numberOfAddresses = 2;
         String postCode = "BS348XU";
         List<AddressResource> addressResources = addressResourceBuilder.build(numberOfAddresses);

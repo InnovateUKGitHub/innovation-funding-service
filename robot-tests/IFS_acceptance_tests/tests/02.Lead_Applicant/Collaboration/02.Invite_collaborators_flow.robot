@@ -28,19 +28,18 @@ ${YOUR_FINANCES_URL}    ${SERVER}/application/1/form/section/7
 *** Test Cases ***
 Valid invitation submit
     [Documentation]    INFUND-901
-    [Tags]    HappyPath     FailingForDev
+    [Tags]    HappyPath    FailingForDev
     # note - this is failing due to email failing on the dev server because of a firewall issue - this will be fixed soon!
     Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     When the applicant enters valid inputs
-    And the user verifies their email   ${verify_link_3}
+    And the user verifies their email    ${verify_link_3}
     And the user logs back in
     Then the user should see the text in the page    Your dashboard
     And the lead applicant logs back in
 
-
 Collaborator can change the name of their company and this updates throughout the application
-    [Documentation]     INFUND-2083
-    [Tags]      Pending
+    [Documentation]    INFUND-2083
+    [Tags]    Pending
     # note - opnly pending because it isn't working yet!
     Given the lead applicant logs out
     And the invited user verifies their email
@@ -48,7 +47,7 @@ Collaborator can change the name of their company and this updates throughout th
     Then the new company name should be shown throughout the application
     And the lead applicant logs back in
     And the new company name should be shown throughout the application
-
+    [Teardown]    TestTeardown User closes the browser
 
 Lead applicant can access the Application team page(Link in the overview page)
     [Documentation]    INFUND-928
@@ -76,7 +75,7 @@ Status of the invited people(Manage contributors page)
 
 The Lead Applicant can add new collaborators
     [Documentation]    INFUND-928
-    [Tags]    HappyPath     FailingForDev
+    [Tags]    HappyPath    FailingForDev
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     When The user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then The user should see the text in the page    Manage Contributors
@@ -88,7 +87,7 @@ The Lead Applicant can add new collaborators
 
 Verify the invited collaborators are not editable
     [Documentation]    INFUND-929
-    [Tags]  FailingForDev
+    [Tags]    FailingForDev
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     When The user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then The user should see the text in the page    Manage Contributors
@@ -108,14 +107,14 @@ the applicant enters valid inputs
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[3].organisationName    Fannie May
     #Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
-    Input Text      name=organisations[3].invites[0].personName                     Collaborator 2
+    Input Text    name=organisations[3].invites[0].personName    Collaborator 2
     #Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(3) input    ewan+10@hiveit.co.uk
-    Input Text      name=organisations[3].invites[0].email                          ewan+10@hiveit.co.uk
+    Input Text    name=organisations[3].invites[0].email    ewan+10@hiveit.co.uk
     Click Element    jquery=li:nth-child(4) button:contains('Add person')
     #Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
-    Input Text      name=organisations[3].invites[1].personName                     Collaborator 3
+    Input Text    name=organisations[3].invites[1].personName    Collaborator 3
     #Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
-    Input Text      name=organisations[3].invites[1].email                        ewan+11@hiveit.co.uk
+    Input Text    name=organisations[3].invites[1].email    ewan+11@hiveit.co.uk
     focus    jquery=li:nth-child(3) button:contains('Add person')
     Sleep    1s
     Click Element    jquery=button:contains("Begin application")
@@ -169,14 +168,13 @@ the status of the people should be correct in the Manage contributors page
     # Element Should Not Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
 
 the user logs back in
-    guest user log-in       ewan+1@hiveit.co.uk     Passw0rd
-
+    guest user log-in    ewan+1@hiveit.co.uk    Passw0rd
 
 the lead applicant logs out
     Logout as user
 
 the invited user verifies their email
-    the user navigates to the page          ${verify_link_4}
+    the user navigates to the page    ${verify_link_4}
 
 the user changes their company name
     (still to implement)
@@ -184,6 +182,5 @@ the user changes their company name
 the new company name should be shown throughout the application
     {still to implement}
 
-
 the lead applicant logs back in
-    guest user log-in        &{lead_applicant_credentials}
+    guest user log-in    &{lead_applicant_credentials}

@@ -21,7 +21,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 ${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9
 
 *** Test Cases ***
-Create application flow for non registered users CH route
+Non registered users CH route
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1904
@@ -32,10 +32,10 @@ Create application flow for non registered users CH route
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
     And the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user enters text to a text field    id=org-name    Innovate
+    And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    LINK=INNOVATE LTD
-    And the user enters text to a text field    css=#postcode-check    2234
+    And the user enters text to a text field    id=addressForm.postcodeInput    2234
     And the user clicks the button/link    id=postcode-lookup
     And the user clicks the button/link    css=#select-address-block > button
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
@@ -52,7 +52,7 @@ Create application flow for non registered users CH route
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user should see the text in the page    Application overview
 
-Create application flow for non registered users non CH route
+Non registered users non CH route
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1904
@@ -83,8 +83,7 @@ Verify the name of the new application
     ...    INFUND-1163
     [Tags]    Applicant    New application    HappyPath    FailingForLocal
     # failing because of a user not being created by failing verification email test
-    When the guest user enters the log in credentials    worth.email.test+1@gmail.com    Passw0rd2
-    And the user clicks the button/link    css=input.button
+    When guest user log-in    worth.email.test+1@gmail.com    Passw0rd2
     And the user edits the competition title
     Then the user should see the text in the page    test title
     And the progress indicator should show 0
@@ -116,15 +115,12 @@ the user enters the details and clicks the create account
 the user clicks the Not on company house link
     Click Element    name=not-in-company-house
     Click Element    name=manual-address
-    Input Text    id=street    street
-    Input Text    id=street-2    street
-    Input Text    id=street-3    street3
-    Input Text    id=town    town
-    Input Text    id=county    country
-    Input Text    id=postcode    post code
+    Input Text    id=addressForm.selectedPostcode.addressLine1    street
+    Input Text    id=addressForm.selectedPostcode.town    town
+    Input Text    id=addressForm.selectedPostcode.county    country
+    Input Text    id=addressForm.selectedPostcode.postcode    post code
     #Input Text    id=org-name    org1
     Input Text    name=organisationName    org2
-    Input Text    id=postcode-check    2323
     Click Element    jQuery=.button:contains("Continue")
 
 the user edits the competition title

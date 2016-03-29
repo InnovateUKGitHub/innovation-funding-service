@@ -1,14 +1,14 @@
 === Retrieve address by id
 ==== Request
-include::{snippets}/address/findOne/http-request.adoc[]
-include::{snippets}/address/findOne/path-parameters.adoc[]
+include::{snippets}/address/find-one/http-request.adoc[]
+include::{snippets}/address/find-one/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/address/findOne/http-response.adoc[]
-include::{snippets}/address/findOne/response-fields.adoc[]
+include::{snippets}/address/find-one/http-response.adoc[]
+include::{snippets}/address/find-one/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/address/findOne/curl-request.adoc[]
+include::{snippets}/address/find-one/curl-request.adoc[]
 
 === Lookup address by postcode
 ==== Request
