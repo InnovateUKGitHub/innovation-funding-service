@@ -16,7 +16,7 @@ Status changes when we assign a question to the collaborator
     [Tags]    Applicant    Overview    HappyPath
     Given the user navigates to the page    ${project_summary_url}
     When the Applicant edits the "Project summary" question
-    And the applicant assigns the "Project Summary" question to Jessica Doe    Jessica Doe
+    And the applicant assigns the "Project Summary" question    Jessica Doe
     Then the "assign to" should be correct for the "Project summary" question
     And the blue flag should not be visible
 
@@ -24,9 +24,9 @@ The applicant can assign re-assign a question from the overview page
     [Documentation]    INFUND-39
     [Tags]    Applicant    Overview
     Given the user navigates to the page    ${application_overview_url}
-    When the applicant assigns the "Project summary" question to "Steve Smith"    Steve Smith
-    Then the applicant should see a blue flag in the Public description (overview page)
-    And the assign button should say Assign to:You
+    When the applicant assigns the "Project Summary" question      Steve Smith
+    Then the applicant should see a blue flag for the Project Summary question (overview page)
+    And the assign button should say Assigned to:You
 
 *** Keywords ***
 the Applicant edits the "Project summary" question
@@ -35,29 +35,22 @@ the Applicant edits the "Project summary" question
     Focus    css=.app-submit-btn
     Sleep    2s
 
-the applicant assigns the "Project Summary" question to Jessica Doe
-    [Arguments]    ${assignee_name}
-    Click Element    css=#form-input-11 .assign-button button
-    # Click Element    xpath=//*[@id="0"]//button[contains(text(),"${assignee_name}")]
-    Click Element     jQuery=button:contains("${assignee_name}")
-
-the "assign to" should be correct for the "Project summary" question
+the "assign to" should be correct for the "Project Summary" question
     Go To    ${APPLICATION_OVERVIEW_URL}
     Page Should Contain Element    css=#form-input-11 .column-third button strong
     Element Should Contain    css=#form-input-11 .column-third button strong    Jessica Doe
 
-the applicant assigns the "Project summary" question to "Steve Smith"
+the applicant assigns the "Project Summary" question
     [Arguments]    ${assignee_name}
     Click Element    css=#form-input-11 .assign-button button
-    # Click Element    xpath=//*[@id="collapsible-1"]//button[contains(text(),"${assignee_name}")]
     Click Element     jQuery=button:contains("${assignee_name}")
 
-the applicant should see a blue flag in the Public description (overview page)
+the applicant should see a blue flag for the Project Summary question (overview page)
     #Reload Page
     Wait Until Page Contains Element    css=#form-input-11 .assigned
 
 the blue flag should not be visible
     Element Should Not Be Visible    css=#form-input-11 .assigned
 
-the assign button should say Assign to:You
+the assign button should say Assigned to:You
     Element Should Contain    css=#form-input-11 .column-third button strong    You
