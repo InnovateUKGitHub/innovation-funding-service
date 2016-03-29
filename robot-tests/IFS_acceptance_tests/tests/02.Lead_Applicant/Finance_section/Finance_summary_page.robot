@@ -81,7 +81,8 @@ Green check should show when the finances are complete
     ...    INFUND-894
     ...
     ...    INFUND-446
-    [Tags]    HappyPath
+    [Tags]    HappyPath     Pending
+    # pending until the webtest db is updated
     [Setup]    Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
     Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
