@@ -1,4 +1,4 @@
-package com.worth.ifs.application.finance.model;
+package com.worth.ifs.finance.model;
 
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.category.DefaultCostCategory;

@@ -1,4 +1,4 @@
-package com.worth.ifs.application.model;
+package com.worth.ifs.application.finance.model;
 /**
  * This {@code UserRole} enumeration defines the available global user roles.
  */

@@ -38,6 +38,7 @@ task cleanDeploy() {
     dependsOn build
 
     compileTestJava.dependsOn compileJava
+    build.dependsOn compileTestJava
     compileJava.mustRunAfter clean
     compileTestJava.mustRunAfter compileJava
 }

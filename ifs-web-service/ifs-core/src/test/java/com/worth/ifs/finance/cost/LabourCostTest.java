@@ -1,4 +1,4 @@
-package com.worth.ifs.application.finance.cost;
+package com.worth.ifs.finance.cost;
 
 import com.worth.ifs.finance.resource.cost.LabourCost;
 import org.junit.Assert;

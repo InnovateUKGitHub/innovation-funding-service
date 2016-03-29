@@ -1,4 +1,4 @@
-package com.worth.ifs.application.finance;
+package com.worth.ifs.finance;
 
 import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.junit.Assert;

@@ -1,19 +1,15 @@
 package com.worth.ifs.application;
 
-import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.form.ContributorsForm;
-import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.Cookie;
@@ -26,10 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationContributorControllerTest extends BaseUnitTest {
-
-    @InjectMocks
-    private ApplicationContributorController applicationContributorController;
+public class ApplicationContributorControllerTest extends BaseControllerMockMVCTest<ApplicationContributorController> {
 
     @Mock
     private Validator validator;
@@ -38,7 +31,6 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
 
     private Long applicationId;
     private Long alternativeApplicationId;
-    private ContributorsForm contributorsForm;
     private String redirectUrl;
     private String viewName;
     private String inviteUrl;
@@ -46,16 +38,14 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
     private String inviteOverviewRedirectUrl;
 
 
+    @Override
+    protected ApplicationContributorController supplyControllerUnderTest() {
+        return new ApplicationContributorController();
+    }
+
     @Before
     public void setUp() {
-        super.setup();
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
-
-        mockMvc = MockMvcBuilders.standaloneSetup(applicationContributorController, new ErrorControllerAdvice())
-                .setViewResolvers(viewResolver())
-                .build();
-
+        super.setUp();
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
