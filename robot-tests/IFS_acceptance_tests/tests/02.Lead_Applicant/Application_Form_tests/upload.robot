@@ -133,6 +133,6 @@ the user cannot see the option to upload a file on the page
 
 
 the user can re-assign the question back to the lead applicant
-    reload page
+    the user reloads the page
     click element       name=assign_question
-    Reload Page
+    the user reloads the page

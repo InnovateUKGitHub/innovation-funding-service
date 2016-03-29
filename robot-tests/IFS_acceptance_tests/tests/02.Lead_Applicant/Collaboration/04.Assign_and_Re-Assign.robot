@@ -96,7 +96,7 @@ Verify that the appendices are assigned along with the question
     And the user can log in as Jessica Doe
     Then the user navigates to the page    ${PROJECT_TEAM_URL}
     And the user can see the option to upload a file
-    And the user assigns the question to Steve Smith
+    And the user assigns the question to the lead applicant
     And the user can't see the option to upload a file
 
 *** Keywords ***
@@ -122,10 +122,10 @@ the user assigns the question to Jessica Doe
 the user can log out
     Logout as user
 
-the user assigns the question to Steve Smith
-    reload page
-    And The user clicks the button/link    name=assign_question
-    reload page
+the user assigns the question to the lead applicant
+    the user reloads the page
+    the user clicks the button/link    name=assign_question
+    the user reloads the page
 
 the user can log in as Jessica Doe
     guest user log-in    &{collaborator1_credentials}
