@@ -1,4 +1,4 @@
-package com.worth.ifs.application.service;
+package com.worth.ifs.user.service;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;

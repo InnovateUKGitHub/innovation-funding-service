@@ -1,6 +1,6 @@
 package com.worth.ifs.application;
 
-import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;

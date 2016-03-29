@@ -1,8 +1,7 @@
-package com.worth.ifs.application.service;
+package com.worth.ifs.user.service;
 
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

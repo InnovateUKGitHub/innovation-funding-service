@@ -3,7 +3,7 @@ package com.worth.ifs.registration;
 import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.application.ApplicationCreationController;
 import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;

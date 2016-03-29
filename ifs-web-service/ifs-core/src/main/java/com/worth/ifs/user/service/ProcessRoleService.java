@@ -1,4 +1,4 @@
-package com.worth.ifs.application.service;
+package com.worth.ifs.user.service;
 
 import com.worth.ifs.user.domain.ProcessRole;
 
