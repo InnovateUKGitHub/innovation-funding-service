@@ -22,13 +22,15 @@ public class CompetitionControllerTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        super.setup();
+
         MockitoAnnotations.initMocks(this);
 
         mockMvc = MockMvcBuilders.standaloneSetup(competitionController)
                 .setViewResolvers(viewResolver())
                 .setHandlerExceptionResolvers(createExceptionResolver())
                 .build();
+
+        super.setup();
     }
 
     @Test

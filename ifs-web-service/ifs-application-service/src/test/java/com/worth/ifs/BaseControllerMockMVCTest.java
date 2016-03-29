@@ -26,12 +26,14 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     @Before
     public void setUp() {
-        super.setup();
+
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
         // start with fresh ids when using builders
         BuilderAmendFunctions.clearUniqueIds();
+
+        super.setup();
 
         mockMvc = MockMvcBuilders
                 .standaloneSetup(controller, new ErrorControllerAdvice())

@@ -5,7 +5,6 @@ import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
-import com.worth.ifs.user.mapper.OrganisationMapper;
 import org.mapstruct.Mapper;
 
 @Mapper(

@@ -91,7 +91,7 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
     @Test
     public void testAddCost() {
 
-        Organisation organisation = newOrganisation().withTypes(new OrganisationType("Business", null)).build();
+        Organisation organisation = newOrganisation().withOrganisationType(new OrganisationType("Business", null)).build();
         Application application = newApplication().build();
 
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);

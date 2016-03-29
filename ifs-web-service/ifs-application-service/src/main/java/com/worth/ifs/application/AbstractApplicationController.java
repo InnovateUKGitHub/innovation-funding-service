@@ -22,10 +22,11 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.security.CookieFlashMessageFilter;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.service.OrganisationRestService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +101,9 @@ public abstract class AbstractApplicationController extends BaseController {
     protected OrganisationService organisationService;
 
     @Autowired
+    protected OrganisationRestService organisationRestService;
+
+    @Autowired
     protected CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
@@ -163,7 +167,7 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
 
-        Optional<Organisation> userOrganisation = getUserOrganisation(userId, userApplicationRoles);
+        Optional<OrganisationResource> userOrganisation = getUserOrganisation(userId, userApplicationRoles);
 
         if(form == null){
             form = new ApplicationForm();
@@ -206,17 +210,17 @@ public abstract class AbstractApplicationController extends BaseController {
         }
     }
 
-    protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation,
+    protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation,
                                           List<ProcessRole> userApplicationRoles) {
 
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
-        SortedSet<Organisation> organisations = getApplicationOrganisations(userApplicationRoles);
+        SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
         model.addAttribute("applicationOrganisations", organisations);
         model.addAttribute("academicOrganisations", getAcademicOrganisations(organisations));
         
         model.addAttribute("applicationOrganisations", organisations);
         
-        List<String> activeApplicationOrganisationNames = organisations.stream().map(Organisation::getName).collect(Collectors.toList());
+        List<String> activeApplicationOrganisationNames = organisations.stream().map(OrganisationResource::getName).collect(Collectors.toList());
         
         List<String> pendingOrganisationNames = pendingInvitations(application).stream()
         		.map(InviteResource::getInviteOrganisationName)
@@ -226,7 +230,7 @@ public abstract class AbstractApplicationController extends BaseController {
 
         model.addAttribute("pendingOrganisationNames", pendingOrganisationNames);
         
-        Optional<Organisation> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
+        Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
         leadOrganisation.ifPresent(org ->
                         model.addAttribute("leadOrganisation", org)
         );
@@ -264,7 +268,7 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("leadApplicant", userService.getLeadApplicantProcessRoleOrNull(application));
     }
 
-    protected Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<Organisation> userOrganisation) {
+    protected Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Long organisationId=0L;
         if(userOrganisation.isPresent()) {
             organisationId = userOrganisation.get().getId();
@@ -272,7 +276,7 @@ public abstract class AbstractApplicationController extends BaseController {
         return questionService.getMarkedAsComplete(application.getId(), organisationId);
     }
 
-    protected void addAssignableDetails(Model model, ApplicationResource application, Organisation userOrganisation,
+    protected void addAssignableDetails(Model model, ApplicationResource application, OrganisationResource userOrganisation,
                                          Long userId, Optional<SectionResource> currentSection, Optional<Long> currentQuestionId) {
         Map<Long, QuestionStatusResource> questionAssignees;
         if(currentQuestionId.isPresent()){
@@ -316,7 +320,7 @@ public abstract class AbstractApplicationController extends BaseController {
 
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                             Optional<SectionResource> currentSection,
-                                            Optional<Organisation> userOrganisation) {
+                                            Optional<OrganisationResource> userOrganisation) {
         List<SectionResource> sectionsList = sectionService.filterParentSections(competition.getSections());
 
         Map<Long, SectionResource> sections =
@@ -358,11 +362,11 @@ public abstract class AbstractApplicationController extends BaseController {
 
     }
 
-    private void addCompletedDetails(Model model, ApplicationResource application, Optional<Organisation> userOrganisation, List<ProcessRole> userApplicationRoles) {
+    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, List<ProcessRole> userApplicationRoles) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
 
-        SortedSet<Organisation> organisations = getApplicationOrganisations(userApplicationRoles);
+        SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
         Set<Long> questionsCompletedByAllOrganisation = new TreeSet<>(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(organisations.first()))));
         // only keep the questionIDs of questions that are complete by all organisations
         organisations.forEach(o -> questionsCompletedByAllOrganisation.retainAll(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(o)))));
@@ -436,40 +440,48 @@ public abstract class AbstractApplicationController extends BaseController {
         financeOverviewModelManager.addFinanceDetails(model, applicationId);
     }
 
-    public SortedSet<Organisation> getApplicationOrganisations(List<ProcessRole> userApplicationRoles) {
-        Comparator<Organisation> compareById =
-                Comparator.comparingLong(Organisation::getId);
-        Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
+    public SortedSet<OrganisationResource> getApplicationOrganisations(List<ProcessRole> userApplicationRoles) {
+        Comparator<OrganisationResource> compareById =
+                Comparator.comparingLong(OrganisationResource::getId);
+        Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
 
+        // TODO DW - INFUND-1604 - remove organisation rest service call when ProcessRoles converted to DTOs
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
                             || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
                 .map(ProcessRole::getOrganisation)
+                .map(organisation -> organisationRestService.getOrganisationById(organisation.getId()).getSuccessObjectOrThrowException())
                 .collect(Collectors.toCollection(supplier));
     }
 
-    public SortedSet<Organisation> getAcademicOrganisations(SortedSet<Organisation> organisations) {
-        Comparator<Organisation> compareById =
-                Comparator.comparingLong(Organisation::getId);
-        Supplier<TreeSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
-        ArrayList<Organisation> organisationList = new ArrayList<>(organisations);
+    public SortedSet<OrganisationResource> getAcademicOrganisations(SortedSet<OrganisationResource> organisations) {
+        Comparator<OrganisationResource> compareById =
+                Comparator.comparingLong(OrganisationResource::getId);
+        Supplier<TreeSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
+        ArrayList<OrganisationResource> organisationList = new ArrayList<>(organisations);
 
         return organisationList.stream()
-                .filter(o -> OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId().equals(o.getOrganisationType().getId()))
+                .filter(o -> OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId().equals(o.getOrganisationType()))
                 .collect(Collectors.toCollection(supplier));
     }
 
-    public Optional<Organisation> getApplicationLeadOrganisation(List<ProcessRole> userApplicationRoles) {
+    public Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRole> userApplicationRoles) {
+
+        // TODO DW - INFUND-1604 - remove organisation rest service call when ProcessRoles converted to DTOs
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
                 .map(ProcessRole::getOrganisation)
+                .map(organisation -> organisationRestService.getOrganisationById(organisation.getId()).getSuccessObjectOrThrowException())
                 .findFirst();
     }
 
-    public Optional<Organisation> getUserOrganisation(Long userId, List<ProcessRole> userApplicationRoles) {
+    public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRole> userApplicationRoles) {
+
+        // TODO DW - INFUND-1604 - remove organisation rest service call when ProcessRoles converted to DTOs
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().getId().equals(userId))
                 .map(ProcessRole::getOrganisation)
+                .map(organisation -> organisationRestService.getOrganisationById(organisation.getId()).getSuccessObjectOrThrowException())
                 .findFirst();
     }
 

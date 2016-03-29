@@ -41,7 +41,12 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
     public OrganisationResourceBuilder withName(String... names) {
         return withArray((name, organisation) -> setField("name", name, organisation), names);
     }
+
     public OrganisationResourceBuilder withCompanyHouseNumber(String... numbers) {
         return withArray((number, organisation) -> setField("companyHouseNumber", number, organisation), numbers);
+    }
+
+    public OrganisationResourceBuilder withOrganisationType(Long... organisationTypeIds) {
+        return withArray((organisationTypeId, organisation) -> setField("organisationType", organisationTypeId, organisation), organisationTypeIds);
     }
 }

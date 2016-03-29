@@ -69,16 +69,17 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
     @Before
     public void setUp(){
-        super.setup();
 
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
         mockMvc = MockMvcBuilders.standaloneSetup(applicationFormController, new ErrorControllerAdvice())
-//                .setHandlerExceptionResolvers(withExceptionControllerAdvice())
+        //                .setHandlerExceptionResolvers(withExceptionControllerAdvice())
                 .setViewResolvers(viewResolver())
                 .addFilter(new CookieFlashMessageFilter())
                 .build();
+
+        super.setup();
 
         this.setupCompetition();
         this.setupApplicationWithRoles();

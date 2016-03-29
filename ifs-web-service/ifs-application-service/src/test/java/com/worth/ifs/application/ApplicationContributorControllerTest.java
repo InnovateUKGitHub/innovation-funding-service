@@ -48,9 +48,11 @@ public class ApplicationContributorControllerTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        super.setup();
+
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
+
+        super.setup();
 
         mockMvc = MockMvcBuilders.standaloneSetup(applicationContributorController, new ErrorControllerAdvice())
                 .setViewResolvers(viewResolver())

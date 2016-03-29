@@ -7,8 +7,8 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.security.CookieFlashMessageFilter;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +30,7 @@ import java.util.UUID;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -87,7 +87,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void onGetRequestRegistrationViewIsReturned() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(get("/registration/register?organisationId=1")
@@ -100,7 +100,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void onGetRequestRegistrationViewIsReturnedWithInviteEmail() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(get("/registration/register?organisationId=1")
@@ -184,7 +184,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void validButAlreadyExistingEmailInputShouldReturnErrorOnEmailField() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
 
         String email = "alreadyexistingemail@test.test";
 
@@ -203,7 +203,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void emptyFormInputsShouldReturnError() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -232,7 +232,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void invalidEmailFormatShouldReturnError() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -247,7 +247,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     
     @Test
     public void invalidCharactersInEmailShouldReturnError() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -266,7 +266,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void incorrectPasswordSizeShouldReturnError() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -283,7 +283,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void unmatchedPasswordAndRetypePasswordShouldReturnError() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -299,7 +299,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void uncheckedTermsAndConditionsCheckboxShouldReturnError() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -313,7 +313,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void validRegisterPost() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
 
         UserResource userResource = newUserResource()
                 .withPassword("password")
@@ -355,7 +355,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void validRegisterPostWithInvite() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
 
         UserResource userResource = newUserResource()
                 .withPassword("password")
@@ -399,7 +399,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void correctOrganisationNameIsAddedToModel() throws Exception {
-        Organisation organisation = newOrganisation().withId(4L).withName("uniqueOrganisationName").build();
+        OrganisationResource organisation = newOrganisationResource().withId(4L).withName("uniqueOrganisationName").build();
 
         when(organisationService.getOrganisationById(4L)).thenReturn(organisation);
         mockMvc.perform(post("/registration/register?organisationId=4")
@@ -439,7 +439,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void errorsReturnedInEnvelopeAreAddedToTheModel() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         UserResource userResource = newUserResource()
                 .withPassword("password")
                 .withFirstName("firstName")

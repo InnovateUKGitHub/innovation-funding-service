@@ -16,6 +16,7 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.core.ParameterizedTypeReference;
@@ -120,5 +121,9 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<AddressResource>> addressResourceListType() {
         return new ParameterizedTypeReference<List<AddressResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<OrganisationResource>> organisationResourceListType() {
+        return new ParameterizedTypeReference<List<OrganisationResource>>() {};
     }
 }

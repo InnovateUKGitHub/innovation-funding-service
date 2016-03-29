@@ -14,8 +14,8 @@ import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.form.RegistrationForm;
 import com.worth.ifs.security.CookieFlashMessageFilter;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.CookieUtil;
 import org.apache.commons.logging.Log;
@@ -123,7 +123,7 @@ public class RegistrationController {
     private boolean processOrganisation(HttpServletRequest request, Model model) {
         boolean success = true;
 
-        Organisation organisation = getOrganisation(request);
+        OrganisationResource organisation = getOrganisation(request);
         if (organisation != null) {
             addOrganisationNameToModel(model, organisation);
         } else {
@@ -159,7 +159,7 @@ public class RegistrationController {
         return false;
     }
 
-    private Organisation getOrganisation(HttpServletRequest request) {
+    private OrganisationResource getOrganisation(HttpServletRequest request) {
         return organisationService.getOrganisationById(getOrganisationId(request));
     }
 
@@ -261,7 +261,7 @@ public class RegistrationController {
                 competitionId);
     }
 
-    private void addOrganisationNameToModel(Model model, Organisation organisation) {
+    private void addOrganisationNameToModel(Model model, OrganisationResource organisation) {
         model.addAttribute("organisationName", organisation.getName());
     }
 

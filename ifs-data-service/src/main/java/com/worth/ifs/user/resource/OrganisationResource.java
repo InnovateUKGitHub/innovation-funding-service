@@ -1,10 +1,12 @@
 package com.worth.ifs.user.resource;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrganisationResource {
     private Long id;
@@ -87,5 +89,15 @@ public class OrganisationResource {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return EqualsBuilder.reflectionEquals(this, o, false);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 }

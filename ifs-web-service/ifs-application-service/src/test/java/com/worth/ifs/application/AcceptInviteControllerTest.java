@@ -36,9 +36,10 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
     @Before
     public void setUp() throws Exception {
 
-        super.setup();
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
+
+        super.setup();
 
         CookieLocaleResolver localeResolver = new CookieLocaleResolver();
         localeResolver.setCookieDomain("domain");
@@ -63,7 +64,6 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
         this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
-        this.setupOrganisationTypes();
 
         applicationId = applications.get(0).getId();
     }

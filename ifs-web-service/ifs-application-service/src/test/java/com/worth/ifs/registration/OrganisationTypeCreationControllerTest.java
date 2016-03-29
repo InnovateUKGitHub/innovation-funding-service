@@ -36,12 +36,11 @@ public class OrganisationTypeCreationControllerTest extends BaseUnitTest {
     @Before
     public void setUp() throws Exception {
 
-        super.setup();
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
-
         CookieLocaleResolver localeResolver = new CookieLocaleResolver();
         localeResolver.setCookieDomain("domain");
+
+        // Process mock annotations
+        MockitoAnnotations.initMocks(this);
 
         mockMvc = MockMvcBuilders.standaloneSetup(organisationTypeCreationController, new ErrorControllerAdvice())
                 .setViewResolvers(viewResolver())
@@ -49,13 +48,15 @@ public class OrganisationTypeCreationControllerTest extends BaseUnitTest {
                 .addFilters(new CookieFlashMessageFilter())
                 .build();
 
+
+        super.setup();
+
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
         this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
-        this.setupOrganisationTypes();
     }
 
     @Test

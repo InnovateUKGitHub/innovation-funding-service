@@ -52,13 +52,14 @@ public class ApplicationControllerTest extends BaseUnitTest {
 
     @Before
     public void setUp(){
-        super.setup();
         MockitoAnnotations.initMocks(this);
 
         mockMvc = MockMvcBuilders.standaloneSetup(applicationController)
                 .setViewResolvers(viewResolver())
                 .setHandlerExceptionResolvers(createExceptionResolver())
                 .build();
+
+        super.setup();
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
