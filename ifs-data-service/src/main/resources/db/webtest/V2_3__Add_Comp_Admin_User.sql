@@ -8,7 +8,7 @@ INSERT  IGNORE INTO `user` (`id`, `email`, `image_url`, `first_name`, `invite_na
 INSERT  IGNORE INTO `user_role` (`user_id`, `role_id`) VALUES (15,5);
 INSERT  IGNORE INTO `user_role` (`user_id`, `role_id`) VALUES (16,5);
 
-INSERT  IGNORE INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (11,'Innovate UK',NULL,NULL,3);
+INSERT  IGNORE INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (11,'Innovate UK',NULL,NULL,1);
 
 INSERT  IGNORE INTO `user_organisation` (`user_id`, `organisation_id`) VALUES (15,11);
 INSERT  IGNORE INTO `user_organisation` (`user_id`, `organisation_id`) VALUES (16,11);
