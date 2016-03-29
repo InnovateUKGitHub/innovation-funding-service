@@ -195,8 +195,7 @@ Valid account creation
     And the user verifies their email    ${verify_link_1}
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Log")
-    #Then the user should be redirected to the correct page    ${LOGIN_URL}
-    And the user can login with their new details
+    Then the user can login with their new details
     And the user should see the element    link=Logout
     And the user clicks the button/link    link=Logout
 
@@ -222,7 +221,7 @@ the user submits their information
 
 the user cannot login with their new details
     [Arguments]    ${email}    ${password}
-    go to    ${LOGIN_URL}
+    The user navigates to the page    ${LOGIN_URL}
     Input Text    id=username    ${email}
     Input Password    id=password    ${password}
     Click Button    css=button[name="_eventId_proceed"]
@@ -230,7 +229,7 @@ the user cannot login with their new details
     Page Should Contain    Your username/password combination doesn't seem to work
 
 the user cannot login with either password
-    go to    ${LOGIN_URL}
+    The user navigates to the page    ${LOGIN_URL}
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${correct_password}
     Click Button    css=button[name="_eventId_proceed"]
@@ -244,14 +243,14 @@ the user cannot login with either password
     Page Should Contain    Your username/password combination doesn't seem to work
 
 the user can login with their new details
-    go to    ${LOGIN_URL}
+    The user navigates to the page    ${LOGIN_URL}
     Input Text    id=username    ${email_already_in_db}
     Input Password    id=password    ${correct_password}
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Not Contain    something has gone wrong
 
 the user follows the standard path to the account creation page for non registered users
-    go to    ${COMPETITION_DETAILS_URL}
+    The user navigates to the page     ${COMPETITION_DETAILS_URL}
     click element    jQuery=.column-third .button:contains("Sign in to apply")
     Click Element    jQuery=.button:contains("Create")
     Input Text    id=org-name    Innovate

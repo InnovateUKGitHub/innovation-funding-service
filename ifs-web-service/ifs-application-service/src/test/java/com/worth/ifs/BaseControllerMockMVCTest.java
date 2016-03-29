@@ -2,7 +2,7 @@ package com.worth.ifs;
 
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.exception.ErrorControllerAdvice;
-import com.worth.ifs.security.CookieFlashMessageFilter;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.User;
 import org.junit.Before;
 import org.mockito.InjectMocks;

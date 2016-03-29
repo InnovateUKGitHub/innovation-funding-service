@@ -15,7 +15,6 @@ subprojects {
     apply plugin: 'spring-boot'
     apply plugin: 'com.bluepapa32.watch'
     apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'war'
     apply plugin: "jacoco"
 
     jacocoTestReport {

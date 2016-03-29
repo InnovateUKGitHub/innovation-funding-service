@@ -3,7 +3,7 @@ package com.worth.ifs.application;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.form.ContributorsForm;
 import com.worth.ifs.exception.ErrorControllerAdvice;
-import com.worth.ifs.security.CookieFlashMessageFilter;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,12 +1,12 @@
-package com.worth.ifs.application.service;
+package com.worth.ifs.user.service;
 
-import com.worth.ifs.application.model.UserApplicationRole;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.service.Futures;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.application.UserApplicationRole;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Set<User> getAssignableUsers(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
+        List<ProcessRole> userApplicationRoles = Futures.call(application.getProcessRoles().stream()
                 .map(id -> processRoleService.getById(id))
                 .collect(Collectors.toList()));
         return userApplicationRoles.stream()
@@ -68,9 +68,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Set<User> getApplicationUsers(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
+        List<ProcessRole> userApplicationRoles = Futures.call(application.getProcessRoles().stream()
             .map(id -> processRoleService.getById(id))
-            .collect(Collectors.toList()));
+            .collect(Collectors.toList())); 
         return userApplicationRoles.stream()
                 .map(ProcessRole::getUser)
                 .collect(Collectors.toSet());

@@ -24,14 +24,11 @@ Labour
     ...    INFUND-1256
     [Tags]    Labour    Autosave    Calculations    Finance
     Given the user navigates to the page    ${YOUR_FINANCES_URL}
-    And the Applicant fills in the Labour costs
-    And the calculations of the labour should be correct
-    When the applicant fills a second row in the labour costs
+    And the Applicant fills in the Labour costs for two rows
     And the total labour cost calculation should be correct
     And the applicant removes one labour row
-    Then the labour total should be correct again
     And the user reloads the page
-    And the labour total should be correct again
+    Then the labour total should be correct again
     And the applicant edits the working days field
     And the labour total should have been updated
 
@@ -130,19 +127,23 @@ Other Funding
     And applicant cannot see the 'other funding' details
 
 *** Keywords ***
-the Applicant fills in the Labour costs
+the Applicant fills in the Labour costs for two rows
     Click Element    css=[aria-controls="collapsible-1"]
     Click Element    jQuery=button:contains('Add another role')
-    Sleep    1s
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     Clear Element Text    css=#cost-labour-1-workingDays
     Input Text    css=#cost-labour-1-workingDays    230
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
+    Click Element    jQuery=button:contains('Add another role')
+    Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
+    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
+    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
+    Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
 
 the calculations of the labour should be correct
-    Sleep    1s
+    #Sleep    1s
     Textfield Value Should Be    css=.labour-costs-table tbody td:nth-of-type(3) input    £ 522
     Textfield Value Should Be    jQuery=#collapsible-1 td:contains("Total costs") input    £ 52,174
 
@@ -150,12 +151,10 @@ the applicant removes one labour row
     Click Element    name=remove_cost
 
 the labour total should be correct again
-    sleep    1s
     Textfield Value Should Be    css=#section-total-9    £ 52,174
     Element Should Contain    css=[data-mirror="#section-total-9"]    £ 52,174
 
 the total labour cost calculation should be correct
-    Sleep    1s
     Textfield Value Should Be    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(3) input    £ 522
     Textfield Value Should Be    css=.labour-costs-table tr:nth-of-type(2) input    £ 52,174
     Textfield Value Should Be    css=#section-total-9    £ 104,348
@@ -163,12 +162,12 @@ the total labour cost calculation should be correct
 
 the applicant fills a second row in the labour costs
     Click Element    jQuery=button:contains('Add another role')
-    Sleep    1s
+    #Sleep    1s
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
-    Sleep    1s
+    #Sleep    1s
 
 the applicant edits the working days field
     Click Element    css=[aria-controls="collapsible-1"]
@@ -176,7 +175,7 @@ the applicant edits the working days field
     Clear Element Text    css=#cost-labour-1-workingDays
     Input Text    css=#cost-labour-1-workingDays    250
     Focus    css=.app-submit-btn
-    Sleep    1s
+    Sleep    100ms
 
 the labour total should have been updated
     Textfield Value Should Be    css=#section-total-9    £ 48,000
@@ -230,9 +229,9 @@ the Applicant fills the Materials fields
 
 the applicant removes the material rows
     click Element    css=#material-costs-table tbody tr:nth-child(1) button
-    sleep    1s
+    #sleep    1s
     click Element    css=#material-costs-table tbody tr:nth-child(1) button
-    sleep    1s
+    #sleep    1s
 
 the applicant fills a second row in the materials section
     Click Element    jQuery=button:contains('Add another materials cost')
@@ -240,7 +239,7 @@ the applicant fills a second row in the materials section
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
-    sleep    1s
+    #sleep    1s
 
 the calculations of the Materials should be correct again
     Textfield Value Should Be    css=#section-total-11    £ 0
@@ -364,6 +363,7 @@ the other costs total should be correct
 
 the user reloads the page
     Reload page
+    sleep    800ms
 
 the calculations of the Materials should be correct
     Textfield Value Should Be    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input    £ 1,000

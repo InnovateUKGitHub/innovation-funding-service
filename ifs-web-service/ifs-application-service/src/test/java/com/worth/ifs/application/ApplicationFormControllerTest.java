@@ -7,7 +7,7 @@ import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.resource.cost.Materials;
-import com.worth.ifs.security.CookieFlashMessageFilter;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;

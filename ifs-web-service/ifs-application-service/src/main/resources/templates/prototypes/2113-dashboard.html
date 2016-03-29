@@ -112,6 +112,34 @@
 		            </div>
 		        </div>
 		    </li>
+			
+			<div th:if="${param.status != null and param.status[0] == 'notSubmitted'}" th:remove="tag">
+				<li>
+			        <div class="grid-row">
+			            <div class="column-assessment-details">
+			                <h2 class="heading-medium"><a href="/prototypes/2111-submitted-application-overview?status=unsuccessful">10294856: Machine learning in robots</a></h2>
+			            </div>
+			            <div class="column-assessment-status navigation-right">
+			                <div class="no application-status assessed">
+			                    <h3 class="results-status">Unsuccessful</h3>
+			                </div>
+			            </div>
+			        </div>
+		   		</li>
+				<li>
+					<div class="grid-row">
+			            <div class="column-assessment-details">
+			                <h2 class="heading-medium"><a href="/prototypes/2111-submitted-application-overview?status=notSubmitted">10295748: Additive manufacturing</a></h2>
+			            </div>
+			            <div class="column-assessment-status navigation-right">
+			                <div class="application-status not-submitted">
+			                    <h3 class="results-status">Not submitted</h3>
+			                </div>
+			            </div>
+			        </div>
+				</li>
+			</div>
+
 		</ul>
 	</div>
 
