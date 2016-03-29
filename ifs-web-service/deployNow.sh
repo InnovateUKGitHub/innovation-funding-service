@@ -1,1 +1,1 @@
-./gradlew clean build war deployToTomcat
+./gradlew cleanDeploy

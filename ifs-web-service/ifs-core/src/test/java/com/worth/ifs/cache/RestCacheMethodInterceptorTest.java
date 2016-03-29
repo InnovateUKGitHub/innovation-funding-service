@@ -3,14 +3,13 @@ package com.worth.ifs.cache;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-
-import static org.junit.Assert.assertEquals;
 
 public class RestCacheMethodInterceptorTest {
 
@@ -25,18 +24,18 @@ public class RestCacheMethodInterceptorTest {
         proxy.method1();
         proxy.method1();
         proxy.method1();
-        assertEquals(1, base.numberTimesMethod1Called);
+        Assert.assertEquals(1, base.numberTimesMethod1Called);
         // Call method2 repeatedly with the same args
         proxy.method2(1);
         proxy.method2(1);
         proxy.method2(1);
-        assertEquals(1, base.numberTimesMethod2Called);
+        Assert.assertEquals(1, base.numberTimesMethod2Called);
         // Call method2 again with different args and check that the number of calls goes up by 1
         proxy.method2(2);
-        assertEquals(2, base.numberTimesMethod2Called);
+        Assert.assertEquals(2, base.numberTimesMethod2Called);
         // Call method2 again with the first arg sent and check that we are still cached
         proxy.method2(1);
-        assertEquals(2, base.numberTimesMethod2Called);
+        Assert.assertEquals(2, base.numberTimesMethod2Called);
     }
 
     @Test
@@ -51,13 +50,13 @@ public class RestCacheMethodInterceptorTest {
         proxy.method1();
         proxy.method1();
         proxy.method1();
-        assertEquals(1, base.numberTimesMethod1Called);
+        Assert.assertEquals(1, base.numberTimesMethod1Called);
         // Now use a different uid and call method1 again and check that the base is called again, but only one more time
         uidSupplier.setUid("b");
         uidSupplier.setUid("b");
         uidSupplier.setUid("b");
         proxy.method1();
-        assertEquals(2, base.numberTimesMethod1Called);
+        Assert.assertEquals(2, base.numberTimesMethod1Called);
     }
 
     @Test
@@ -72,27 +71,27 @@ public class RestCacheMethodInterceptorTest {
         // First cache some results.
         proxy.method1();
         proxy.method1();
-        assertEquals(1, base.numberTimesMethod1Called);
+        Assert.assertEquals(1, base.numberTimesMethod1Called);
         // Now invalidate and call again a few times, there should only be one more call to the base.
         cachingInterceptor.invalidate();
         proxy.method1();
         proxy.method1();
-        assertEquals(2, base.numberTimesMethod1Called);
+        Assert.assertEquals(2, base.numberTimesMethod1Called);
         // Change the uid and cache some results
         uidSupplier.setUid("b");
         proxy.method1();
         proxy.method1();
-        assertEquals(3, base.numberTimesMethod1Called);
+        Assert.assertEquals(3, base.numberTimesMethod1Called);
         // Invalidate and call again
         cachingInterceptor.invalidate();
         proxy.method1();
         proxy.method1();
-        assertEquals(4, base.numberTimesMethod1Called);
+        Assert.assertEquals(4, base.numberTimesMethod1Called);
         // Change the uid and call again, the cached result should still be present from before.
         uidSupplier.setUid("a");
         proxy.method1();
         proxy.method1();
-        assertEquals(4, base.numberTimesMethod1Called);
+        Assert.assertEquals(4, base.numberTimesMethod1Called);
     }
 
     private final InvocationHandler forBaseWithInterceptor(final Object base, final MethodInterceptor interceptor) {

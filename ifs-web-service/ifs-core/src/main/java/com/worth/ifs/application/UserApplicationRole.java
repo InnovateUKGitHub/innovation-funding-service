@@ -1,4 +1,4 @@
-package com.worth.ifs.application.model;
+package com.worth.ifs.application;
 
 /**
  * This enumerations defines the available UserApplicationRoles.
