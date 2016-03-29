@@ -43,6 +43,7 @@ Academics upload
 
 Mark all as complete
     [Documentation]    INFUND-918
+    Given the user reloads the page
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
     And the user navigates to the page    ${FINANCES_OVERVIEW_URL}
@@ -102,3 +103,6 @@ Lead applicant marks the finances as incomplete
     And the user clicks the button/link    jQuery=button:contains("Edit")
     And Close Browser
     And Switch to the first browser
+
+the user reloads the page
+    Reload Page
