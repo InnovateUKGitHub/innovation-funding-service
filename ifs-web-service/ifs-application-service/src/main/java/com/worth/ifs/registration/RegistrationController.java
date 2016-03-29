@@ -1,23 +1,16 @@
 package com.worth.ifs.registration;
 
-import com.worth.ifs.application.AcceptInviteController;
-import com.worth.ifs.application.ApplicationCreationController;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.application.service.UserService;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.error.exception.InvalidURLException;
-import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.invite.constant.InviteStatusConstants;
-import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.registration.form.RegistrationForm;
-import com.worth.ifs.security.CookieFlashMessageFilter;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.util.CookieUtil;
+import static com.worth.ifs.login.HomeController.getRedirectUrlForUser;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +22,31 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static com.worth.ifs.login.HomeController.getRedirectUrlForUser;
+import com.worth.ifs.application.AcceptInviteController;
+import com.worth.ifs.application.ApplicationCreationController;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.application.service.UserService;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.error.exception.InvalidURLException;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.exception.InviteAlreadyAcceptedException;
+import com.worth.ifs.invite.constant.InviteStatusConstants;
+import com.worth.ifs.invite.resource.InviteResource;
+import com.worth.ifs.invite.service.InviteRestService;
+import com.worth.ifs.registration.form.RegistrationForm;
+import com.worth.ifs.security.CookieFlashMessageFilter;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.util.CookieUtil;
 
 @Controller
 @RequestMapping("/registration")
@@ -104,19 +111,26 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String registerForm(Model model, HttpServletRequest request) {
+    public String registerForm(Model model, HttpServletRequest request, HttpServletResponse response) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
             return getRedirectUrlForUser(user);
         }
 
+        try {
+        	addRegistrationFormToModel(model, request);
+        }
+        catch (InviteAlreadyAcceptedException e) {
+        	cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
+        	return "redirect:/login";
+        }
+        
         String destination = "registration-register";
 
         if (!processOrganisation(request, model)) {
             destination = "redirect:/";
         }
 
-        addRegistrationFormToModel(model, request);
         return destination;
     }
 
@@ -154,6 +168,7 @@ public class RegistrationController {
                 return true;
             }else{
                 LOG.debug("Invite already accepted.");
+                throw new InviteAlreadyAcceptedException();
             }
         }
         return false;
@@ -171,7 +186,17 @@ public class RegistrationController {
                                      Model model) {
 
         LOG.warn("registerFormSubmit");
-        if(setInviteeEmailAddress(registrationForm, request, model)){
+        
+        boolean setInviteEmailAddress;
+        
+        try {
+        	setInviteEmailAddress = setInviteeEmailAddress(registrationForm, request, model);
+        } catch (InviteAlreadyAcceptedException e) {
+            cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
+            return "redirect:/login";
+        }
+        
+        if(setInviteEmailAddress){
             LOG.warn("setInviteeEmailAddress"+ registrationForm.getEmail());
             // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
             bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
@@ -228,7 +253,6 @@ public class RegistrationController {
                 inviteRestService.acceptInvite(inviteHash, userResource.getId()).getStatusCode();
                 return i;
             });
-            CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
             return restResult.isSuccess();
         }
         return false;
@@ -236,7 +260,7 @@ public class RegistrationController {
 
     private void checkForExistingEmail(String email, BindingResult bindingResult) {
         if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME) && StringUtils.hasText(email)) {
-            RestResult existingUserSearch = userService.findUserByEmail(email);
+            RestResult<UserResource> existingUserSearch = userService.findUserByEmail(email);
             if (!HttpStatus.NOT_FOUND.equals(existingUserSearch.getStatusCode())) {
                 bindingResult.addError(new FieldError(EMAIL_FIELD_NAME, EMAIL_FIELD_NAME, email, false, null, null, "Email address is already in use"));
             }

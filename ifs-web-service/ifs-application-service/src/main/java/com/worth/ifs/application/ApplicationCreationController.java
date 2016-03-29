@@ -43,6 +43,7 @@ public class ApplicationCreationController extends AbstractApplicationController
                                    HttpServletResponse response) {
         model.addAttribute(COMPETITION_ID, competitionId);
         CookieUtil.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
+        CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
         return "create-application/check-eligibility";
     }
 
