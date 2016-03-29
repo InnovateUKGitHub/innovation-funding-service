@@ -13,7 +13,7 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.form.RegistrationForm;
-import com.worth.ifs.security.CookieFlashMessageFilter;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;

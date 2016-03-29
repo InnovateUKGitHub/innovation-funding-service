@@ -26,14 +26,6 @@ Verify the applicant can assign a question
     And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    Jessica Doe
     [Teardown]    User closes the browser
 
-Lead applicant can see pending invitees in the assign list, but cannot assign questions to them
-    [Documentation]    INFUND-1962
-    [Tags]    Collaboration    Invites
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    When the user navigates to the page    ${SCOPE_URL}
-    Then the user can see the pending invitee but can't assign to them
-    [Teardown]    User closes the browser
-
 Verify the field is disabled for other collaborators
     [Documentation]    INFUND-275
     [Tags]    Collaboration    HappyPath
@@ -140,10 +132,6 @@ the user can log in as Jessica Doe
 
 the user can't see the option to upload a file
     the user should not see the text in the page    Upload
-
-the user can see the pending invitee but can't assign to them
-    The user should see the text in the page    ${invitee_name}
-    Run Keyword And Expect Error    *    Attempt to assign to a pending invitee
 
 Attempt to assign to a pending invitee
     the applicant assigns the question to the collaborator    css=#form-input-13 .editor    test1233    ${invitee_name}

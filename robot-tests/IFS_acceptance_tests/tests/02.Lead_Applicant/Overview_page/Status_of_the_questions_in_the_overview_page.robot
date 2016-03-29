@@ -38,7 +38,8 @@ the Applicant edits the "Project summary" question
 the applicant assigns the "Project Summary" question to Jessica Doe
     [Arguments]    ${assignee_name}
     Click Element    css=#form-input-11 .assign-button button
-    Click Element    xpath=//*[@id="0"]//button[contains(text(),"${assignee_name}")]
+    # Click Element    xpath=//*[@id="0"]//button[contains(text(),"${assignee_name}")]
+    Click Element     jQuery=button:contains("${assignee_name}")
 
 the "assign to" should be correct for the "Project summary" question
     Go To    ${APPLICATION_OVERVIEW_URL}
@@ -48,7 +49,8 @@ the "assign to" should be correct for the "Project summary" question
 the applicant assigns the "Project summary" question to "Steve Smith"
     [Arguments]    ${assignee_name}
     Click Element    css=#form-input-11 .assign-button button
-    Click Element    xpath=//*[@id="collapsible-1"]//button[contains(text(),"${assignee_name}")]
+    # Click Element    xpath=//*[@id="collapsible-1"]//button[contains(text(),"${assignee_name}")]
+    Click Element     jQuery=button:contains("${assignee_name}")
 
 the applicant should see a blue flag in the Public description (overview page)
     #Reload Page

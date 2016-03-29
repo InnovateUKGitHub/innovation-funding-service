@@ -6,7 +6,7 @@ import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.invite.domain.Invite;
-import com.worth.ifs.security.CookieFlashMessageFilter;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;

@@ -93,11 +93,14 @@ Verify the invited collaborators are not editable
     Then The user should see the text in the page    Manage Contributors
     And the invited collaborators are not editable
 
-Pending collaborators should not be available in the assign list
+Pending users are visible in the assign list but not clickable
     [Documentation]    INFUND-928
+    ...
+    ...    INFUND-1962
     [Tags]
     Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    Then the applicant should not be able to assign the question to the users that still pending the invite    tester
+    Then the applicant should not be able to assign the question to the users that still pending the invite
+    And the user should see the text in the page    Roger Axe (pending)
 
 *** Keywords ***
 the applicant enters valid inputs
@@ -158,9 +161,8 @@ the invited collaborators are not editable
     page should contain element    jQuery=li:nth-child(3) tr:nth-of-type(1) td:nth-child(1) [readonly]
 
 the applicant should not be able to assign the question to the users that still pending the invite
-    [Arguments]    ${assignee_name}
-    Click Element    css=#form-input-12 .assign-button button
-    Page Should Not Contain Element    xpath=//div[@id="form-input-12"]//button[contains(text(),"${assignee_name}")]
+    Click Element    jQuery=button:contains("Assigned to")
+    Page Should not Contain Element    jQuery=button:contains("tester")
 
 the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    That's you!
