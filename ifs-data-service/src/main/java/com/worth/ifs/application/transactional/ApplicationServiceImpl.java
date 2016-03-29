@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
+import com.worth.ifs.form.mapper.FormInputMapper;
+import com.worth.ifs.form.resource.FormInputResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -104,6 +106,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private NotificationService notificationService;
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+    @Autowired
+    private FormInputMapper formInputMapper;
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
