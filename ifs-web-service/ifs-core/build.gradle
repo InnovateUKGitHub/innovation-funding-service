@@ -8,6 +8,7 @@ jar {
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
+    compile "org.springframework.boot:spring-boot-starter-aop"
     compile "org.thymeleaf.extras:thymeleaf-extras-java8time:2.1.0.RELEASE"
     compile "javax.servlet:javax.servlet-api:3.1.0"
     compile "com.jayway.jsonpath:json-path"
@@ -22,10 +23,21 @@ dependencies {
     // Use this for including the api lib from the data-service.
     compile files('../libs/ifs-data-service-api-1.0-SNAPSHOT.jar')
 
+
+
+
+    testCompile 'junit:junit:4.10'
+    testCompile "com.openpojo:openpojo:0.8.3"
+    testCompile files('../libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
 }
+
 
 task cleanDeploy() {
     build.mustRunAfter clean
     dependsOn clean
     dependsOn build
+
+    compileTestJava.dependsOn compileJava
+    compileJava.mustRunAfter clean
+    compileTestJava.mustRunAfter compileJava
 }

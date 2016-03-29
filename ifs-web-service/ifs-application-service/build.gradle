@@ -20,7 +20,6 @@ dependencies {
     providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
     compile "org.springframework.plugin:spring-plugin-core"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-    compile "org.springframework.boot:spring-boot-starter-aop"
     compile "com.google.guava:guava:16.0.1"
     compile project(':ifs-web-service:ifs-core')
 
@@ -28,6 +27,7 @@ dependencies {
 //    compile files('../libs/ifs-data-service-api-1.0-SNAPSHOT.jar')
     testCompile files('../libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
     testCompile "com.openpojo:openpojo:0.8.3"
+    testCompile project(':ifs-web-service:ifs-core')
 }
 
 task deployToTomcat(type: Copy) {

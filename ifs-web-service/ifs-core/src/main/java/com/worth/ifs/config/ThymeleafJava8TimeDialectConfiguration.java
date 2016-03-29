@@ -1,4 +1,4 @@
-package com.worth.ifs.configuration;
+package com.worth.ifs.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
