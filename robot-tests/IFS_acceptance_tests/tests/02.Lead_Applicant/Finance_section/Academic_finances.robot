@@ -26,7 +26,6 @@ Academic finances should be editable when lead marks finances as complete
 
 Academic finance calculations
     [Documentation]    INFUND-917
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     When the academic partner fills the finances
     Then the calculations should be correct
 
