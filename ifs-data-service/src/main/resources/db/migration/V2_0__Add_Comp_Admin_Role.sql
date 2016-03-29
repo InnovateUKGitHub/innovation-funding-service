@@ -1,5 +1,1 @@
-LOCK TABLES `role` WRITE;
-/*!40000 ALTER TABLE `role` DISABLE KEYS */;
 INSERT  IGNORE INTO `role` (`id`, `name`) VALUES (5,'comp_admin');
-/*!40000 ALTER TABLE `role` ENABLE KEYS */;
-UNLOCK TABLES;
