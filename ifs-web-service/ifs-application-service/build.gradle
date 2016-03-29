@@ -17,24 +17,11 @@ war {
 
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
-    compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
-    compile "org.thymeleaf.extras:thymeleaf-extras-java8time:2.1.0.RELEASE"
-    compile "javax.servlet:javax.servlet-api:3.1.0"
     providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
-    compile "org.projectlombok:lombok:1.16.2"
     compile "org.springframework.plugin:spring-plugin-core"
-    compile "com.jayway.jsonpath:json-path"
-    compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'org.apache.commons:commons-collections4:4.1'
-    compile 'commons-beanutils:commons-beanutils:1.8.3'
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.springframework.boot:spring-boot-starter-aop"
     compile "com.google.guava:guava:16.0.1"
-    compile "org.apache.httpcomponents:httpclient:4.5.1"
-    compile "org.apache.httpcomponents:httpasyncclient:4.1.1"
-    compile "javax.inject:javax.inject:1"
-
     compile project(':ifs-web-service:ifs-core')
 
 //    // Use this for including the api lib from the data-service.
