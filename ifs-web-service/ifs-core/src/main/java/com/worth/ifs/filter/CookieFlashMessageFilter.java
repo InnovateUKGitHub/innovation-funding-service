@@ -1,4 +1,4 @@
-package com.worth.ifs.security;
+package com.worth.ifs.filter;
 
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;

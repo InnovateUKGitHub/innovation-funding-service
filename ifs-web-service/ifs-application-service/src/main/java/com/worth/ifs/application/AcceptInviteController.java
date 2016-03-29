@@ -7,7 +7,7 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.OrganisationCreationController;
-import com.worth.ifs.security.CookieFlashMessageFilter;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
 import com.worth.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
