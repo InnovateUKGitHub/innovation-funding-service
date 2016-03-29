@@ -10,27 +10,25 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
-
 *** Test Cases ***
 Finance sub-sections
     [Documentation]    INFUND-192
     [Tags]    Applicant    Finance
-    When the user navigates to the page      ${YOUR_FINANCES_URL}
+    When the user navigates to the page    ${YOUR_FINANCES_URL}
     Then the Applicant should see all the "Your Finance" Sections
 
 Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]    Applicant    Finance
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
-    Then the Organisation name should be seen in the Finance section
+    Then the user should see the text in the page    Provide the project costs for 'Empire Ltd'
+    And the user should see the text in the page    'Empire Ltd' Total project costs
 
 Guidance in the 'Your Finances' section
     [Documentation]    INFUND-192
     [Tags]    Applicant    Finance
-    Given the user navigates to the page      ${YOUR_FINANCES_URL}
-    When the Applicant opens the Labour sub-section
-    And the Applicant clicks the "Labour costs guidance"
-    Then the guidance text should be visible
+    When the user clicks the button/link    jQuery=button:contains("Labour")
+    And the user clicks the button/link    css=#collapsible-1 summary
+    Then the user should see the element    css=#details-content-0 p
 
 *** Keywords ***
 the Applicant should see all the "Your Finance" Sections
@@ -41,16 +39,3 @@ the Applicant should see all the "Your Finance" Sections
     Page Should Contain Element    css=.question section:nth-of-type(5) button
     Page Should Contain Element    css=.question section:nth-of-type(6) button
     Page Should Contain Element    css=.question section:nth-of-type(7) button
-
-the Applicant opens the Labour sub-section
-    Click Element    css=.question section:nth-of-type(1) button
-
-the Applicant clicks the "Labour costs guidance"
-    Click Element    css=#collapsible-1 summary
-
-the guidance text should be visible
-    Element Should Be Visible    css=#details-content-0 p
-
-the Organisation name should be seen in the Finance section
-    page should contain    Provide the project costs for 'Empire Ltd'
-    page should contain    'Empire Ltd' Total project costs
