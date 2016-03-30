@@ -4,22 +4,18 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * This controller will handle requests related to the current applicant. So pages that are relative to that user,
- * are implemented here. For example the my-applications page.
- */
 @Controller
 @RequestMapping("/competition")
 public class CompetitionManagementController {
-
+    private static final Log LOG = LogFactory.getLog(CompetitionManagementController.class);
     @Autowired
     CompetitionService competitionService;
 
@@ -34,12 +30,9 @@ public class CompetitionManagementController {
         return userAuthenticationService.getAuthenticatedUser(req);
     }
 
-    @RequestMapping(value="/dashboard", method= RequestMethod.GET)
-    public String dashboard(Model model, HttpServletRequest request) {
-
-
-        return "redirect:/competition/1";
+    @RequestMapping("/competition/{competitionId}")
+    public String displayCompetitionInfo(){
+        LOG.warn("Show competition info ");
+        return "test-comp-mgt";
     }
-
-
 }
