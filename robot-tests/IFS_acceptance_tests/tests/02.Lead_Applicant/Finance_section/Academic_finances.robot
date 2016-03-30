@@ -17,9 +17,15 @@ ${valid_pdf}      testing.pdf
 ${text_file}      testing.txt
 
 *** Test Cases ***
+Academic finances should be editable when lead marks finances as complete
+    [Documentation]    INFUND-2314
+    [Setup]    Lead applicant marks the finances as complete
+    When the user navigates to the page    ${YOUR_FINANCES_URL}
+    Then the user should not see the element    css=#incurred-staff[readonly]
+    [Teardown]    Lead applicant marks the finances as incomplete
+
 Academic finance calculations
     [Documentation]    INFUND-917
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     When the academic partner fills the finances
     Then the calculations should be correct
 
@@ -30,19 +36,24 @@ Academic invalid upload
 
 Academics upload
     [Documentation]    INFUND-917
+    [Tags]      PendingForDev
+    # pending until we have access to the dev server's IFS file repository
     When the academic partner uploads a file    ${valid_pdf}
     Then the user should not see the text in the page    No file currently uploaded
     And the user should see the element    link=testing.pdf
 
 Mark all as complete
     [Documentation]    INFUND-918
-    When the academic partner clicks the mark as complete
+    Given the user reloads the page
+    When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
     And the user navigates to the page    ${FINANCES_OVERVIEW_URL}
     And the user should see the element    css=.finance-summary tr:nth-of-type(3) img[src="/images/field/tick-icon.png
 
 Academic finance overview
     [Documentation]    INFUND-917
+    [Tags]      PendingForDev
+    # pending until we have access to the dev server's IFS file repository
     Given the user navigates to the page    ${FINANCES_OVERVIEW_URL}
     Then the finance table should be correct
     When the user clicks the button/link    link=testing.pdf
@@ -82,6 +93,19 @@ the finance table should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(7)    £1,000
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(8)    £3,000
 
-the academic partner clicks the mark as complete
-    focus     jQuery=.button:contains("Mark all as complete")
-    click button    jQuery=.button:contains("Mark all as complete")
+Lead applicant marks the finances as complete
+    Given guest user log-in    steve.smith@empire.com    Passw0rd
+    And the user navigates to the page    ${YOUR_FINANCES_URL}
+    When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
+    And close browser
+    And Switch to the first browser
+
+Lead applicant marks the finances as incomplete
+    Given guest user log-in    steve.smith@empire.com    Passw0rd
+    And the user navigates to the page    ${YOUR_FINANCES_URL}
+    And the user clicks the button/link    jQuery=button:contains("Edit")
+    And Close Browser
+    And Switch to the first browser
+
+the user reloads the page
+    Reload Page

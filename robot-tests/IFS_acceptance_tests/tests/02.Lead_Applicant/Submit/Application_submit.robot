@@ -58,7 +58,8 @@ Submit flow (complete application)
     [Documentation]    INFUND-205
     ...
     ...    INFUND-1887
-    [Tags]    Summary    HappyPath
+    [Tags]    Summary    HappyPath      Pending
+    # pending until the webtest db is updated
     Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
     When the user clicks the button/link    link=Review & submit
     And the user should be redirected to the correct page    ${SUMMARY_PAGE_APPLICATION_7}
@@ -75,7 +76,8 @@ The applicant should get a confirmation email
 
 Submitted application is read only
     [Documentation]    INFUND-1938
-    [Tags]
+    [Tags]  Pending
+    # pedning until the webtest db is updated
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    Link=Marking it as complete
     When the user clicks the button/link    Link=View application
@@ -84,7 +86,8 @@ Submitted application is read only
 
 Status of the submitted application
     [Documentation]    INFUND-1137
-    [Tags]
+    [Tags]      Pending
+    # pending until the webtest db is updated
     When the user navigates to the page    ${DASHBOARD_URL}
     Then the user should see the text in the page    Application submitted
     And the user clicks the button/link    Link=Marking it as complete

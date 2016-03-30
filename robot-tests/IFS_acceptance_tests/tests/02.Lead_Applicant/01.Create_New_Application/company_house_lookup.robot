@@ -37,9 +37,9 @@ Invalid registration number
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When The user enters text to a text field    id=organisationSearchName    64536
-    And The user clicks the button/link    id=org-search
-    Then The user should see the text in the page    Sorry we couldn't find any results
+    When the user enters text to a text field    id=organisationSearchName    64536
+    And the user clicks the button/link    id=org-search
+    Then the user should see the text in the page    Sorry we couldn't find any results
 
 Company with spaces in the name
     [Documentation]    INFUND-1757
@@ -50,7 +50,7 @@ Company with spaces in the name
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=organisationSearchName    Hive IT
     And the user clicks the button/link    id=org-search
-    Then The user should see the element    Link=HIVE IT LIMITED
+    Then the user should see the element    Link=HIVE IT LIMITED
 
 Invalid characters
     [Documentation]    INFUND-887

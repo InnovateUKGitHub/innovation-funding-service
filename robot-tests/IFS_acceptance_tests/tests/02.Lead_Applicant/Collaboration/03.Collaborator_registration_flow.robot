@@ -33,7 +33,7 @@ Lead applicant details should show in the invite page
     And the user should see the element    link=Technology Inspired
     And the user should see the text in the page    Worth Internet Systems
 
-User can not continue if an organisation type is not selected
+User cannot continue if an organisation type is not selected
     [Documentation]    INFUND-1005
     ...
     ...    INFUND-1780
@@ -141,7 +141,7 @@ Business organisation (accept invitation flow)
     And the user enters text to a text field    id=organisationSearchName    Empire
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=EMPIRE LTD
-    and the user enters text to a text field    css=#postcode-check    postcode
+    and the user enters text to a text field    id=addressForm.postcodeInput    2233
     And the user clicks the button/link    id=postcode-lookup
     And the user clicks the button/link    css=#select-address-block > button
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and")
@@ -149,15 +149,15 @@ Business organisation (accept invitation flow)
     And the user fills the create account form    Rogier    De Regt
     And the user verifies the email
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    And the user clicks the button/link    jQuery=.button:contains("Sign")
-    And guest user log-in    worth.email.test+invite1@gmail.com    testtest
+    And the user clicks the button/link    jQuery=.button:contains("Log in")
+    And guest user log-in    worth.email.test+invite1@gmail.com    Passw0rd
     #And the user verifies their email    ${verify_link_4}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
 
 User who accepted the invite should be able to log-in
     [Tags]    FailingForLocal
     Given the user navigates to the page    ${INVITE_LINK}
-    When the guest user enters the login credentials    rogier@worth.systems    Passw0rd2
+    When the guest user enters the login credentials    worth.email.test+invite1@gmail.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user should see the text in the page    A novel solution to an old problem
@@ -166,9 +166,9 @@ User who accepted the invite should be able to log-in
 The collaborator who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
     [Tags]    HappyPath    FailingForLocal
-    Guest user log-in    steve.smith@empire.com    test
-    And the user navigates to the page    ${PROJECT_SUMMARY_URL}
-    When the user clicks the button/link    css=.assign-button
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    When the user navigates to the page    ${PROJECT_SUMMARY_URL}
+    And the user clicks the button/link    css=.assign-button
     Then the user should see the element    jQuery=button:contains("Rogier De Regt")
     [Teardown]    TestTeardown User closes the browser
 
@@ -190,7 +190,7 @@ Academic organisation (accept invitation flow)
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    University of Liverpool
     When the user clicks the button/link    link= University of Liverpool
-    and the user enters text to a text field    css=#postcode-check    postcode
+    and the user enters text to a text field    id=addressForm.postcodeInput    postcode
     And the user clicks the button/link    id=postcode-lookup
     And the user clicks the button/link    css=#select-address-block > button
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and")
@@ -198,7 +198,7 @@ Academic organisation (accept invitation flow)
     And the user fills the create account form    Steven    Gerrard
     And the user verifies the email
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    And the user clicks the button/link    jQuery=.button:contains("Sign")
+    And the user clicks the button/link    jQuery=.button:contains("Log in")
     And guest user log-in    worth.email.test+invite2@gmail.com    testtest
     #And the user verifies their email    ${verify_link_5}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}

@@ -40,6 +40,19 @@ The user is on the page
     Page Should Contain             BETA
 
 
+the user reloads the page
+    Reload Page
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible       id=global-header
+    Page Should Contain             BETA
+
+
+
 Applicant edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
@@ -84,6 +97,7 @@ Create new application
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
+    Sleep       2s
     Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found

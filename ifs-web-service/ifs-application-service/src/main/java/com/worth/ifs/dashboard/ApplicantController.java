@@ -5,7 +5,7 @@ import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ApplicationStatusRestService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.ProcessRoleService;
+import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.ProcessRole;

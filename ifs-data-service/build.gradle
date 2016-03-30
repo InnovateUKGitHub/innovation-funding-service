@@ -4,6 +4,7 @@ if (project.hasProperty("profile")) {
     apply from: "dev-build.gradle"
 }
 
+apply plugin: 'war'
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'org.asciidoctor.convert'
 
