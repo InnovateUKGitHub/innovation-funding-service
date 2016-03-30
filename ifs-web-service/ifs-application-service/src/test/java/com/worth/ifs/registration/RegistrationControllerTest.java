@@ -411,7 +411,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
                 newUser().withRolesGlobal(
-                        newRole().withName("testrolename").build()
+                        newRole().withName("testrolename").withUrl("testrolename/dashboard").build()
                 ).build()
         );
 
@@ -426,7 +426,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void postingRegistrationWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
                 newUser().withRolesGlobal(
-                        newRole().withName("testrolename").build()
+                        newRole().withName("testrolename").withUrl("testrolename/dashboard").build()
                 ).build()
         );
 

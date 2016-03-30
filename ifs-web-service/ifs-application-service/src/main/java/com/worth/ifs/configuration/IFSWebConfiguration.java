@@ -61,5 +61,4 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
         slr.setDefaultLocale(Locale.UK);
         return slr;
     }
-
 }

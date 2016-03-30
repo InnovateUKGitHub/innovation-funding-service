@@ -30,7 +30,7 @@ public class CompetitionManagementController {
         return userAuthenticationService.getAuthenticatedUser(req);
     }
 
-    @RequestMapping("/competition/{competitionId}")
+    @RequestMapping("/{competitionId}")
     public String displayCompetitionInfo(){
         LOG.warn("Show competition info ");
         return "test-comp-mgt";

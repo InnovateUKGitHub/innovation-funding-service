@@ -448,7 +448,9 @@ public class BaseUnitTest {
 
     public void setupUserRoles() {
         Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
+        assessorRole.setUrl("assessor/dashboard");
         Role applicantRole = new Role(4L, UserRole.APPLICANT.getRoleName(), null);
+        applicantRole.setUrl("applicant/dashboard");
         applicant.setRoles(singletonList(applicantRole));
         assessor.setRoles(singletonList(assessorRole));
     }
