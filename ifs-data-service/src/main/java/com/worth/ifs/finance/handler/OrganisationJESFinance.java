@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.finance.resource.category.GrantClaimCategory;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -81,7 +82,15 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
 
     private void createCostCategories() {
         for(CostType costType : CostType.values()) {
-            CostCategory costCategory = new DefaultCostCategory();
+            CostCategory costCategory;
+            switch (costType) {
+                case FINANCE:
+                    costCategory = new GrantClaimCategory();
+                    break;
+                default:
+                    costCategory = new DefaultCostCategory();
+
+            }
             costCategories.put(costType, costCategory);
         }
     }
