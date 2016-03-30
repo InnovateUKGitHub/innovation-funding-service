@@ -33,7 +33,7 @@ IFS.unsavedChanges = (function(){
                  else {
                      acceptanceTest = false;
                  }
-                var serializedState =  jQuery('.form-serialize-js').serialize()!=jQuery('.form-serialize-js').data('serializedFormState');
+                var serializedState =  jQuery('.form-serialize-js').serialize()==jQuery('.form-serialize-js').data('serializedFormState');
                 if(formSubmit === false && serializedState === false  && acceptanceTest === false){
                     return "Are you sure you want to leave this page? There are some unsaved changes...";
                 } else{
