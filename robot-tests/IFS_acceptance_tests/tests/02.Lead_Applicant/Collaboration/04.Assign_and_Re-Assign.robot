@@ -15,7 +15,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 ${invitee_name}    michael
 
 *** Test Cases ***
-Verify the applicant can assign a question
+Lead applicant can assign a question
     [Documentation]    INFUND-275, INFUND-280
     [Tags]    Collaboration    HappyPath
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
@@ -26,7 +26,7 @@ Verify the applicant can assign a question
     And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    Jessica Doe
     [Teardown]    User closes the browser
 
-Verify the field is disabled for other collaborators
+The question is disabled for other collaborators
     [Documentation]    INFUND-275
     [Tags]    Collaboration    HappyPath
     [Setup]    Guest user log-in    &{collaborator2_credentials}
@@ -34,7 +34,18 @@ Verify the field is disabled for other collaborators
     Then The user should see the element    css=#form-input-12 .readonly
     [Teardown]    User closes the browser
 
-Verify the field is enabled for the collaborator/assignee
+
+The question is disabled on the summary page for other collaborators
+    [Documentation]     INFUND-2302
+    [Tags]      Collaboration    Summary
+    [Setup]     Guest user log-in   &{collaborator2_credentials}
+    Given the user navigates to the page        ${SUMMARY_URL}
+    When the user opens the 'public description' collapsible
+    Then the user should see the element    css=#form-input-12 .readonly
+    And the user should not see the element     jQuery=button:contains("Ready for review")
+    [Teardown]  User closes the browser
+
+The question is enabled for the assignee
     [Documentation]    INFUND-275
     [Tags]    Collaboration    Overview    HappyPath
     [Setup]    Guest user log-in    &{collaborator1_credentials}
@@ -45,20 +56,37 @@ Verify the field is enabled for the collaborator/assignee
     And the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
     And the question should contain the correct status/name    css=#form-input-12 .assign-container    You
 
-Verify the ' Last update message'
+The question is enabled on the summary page for the assignee
+    [Documentation]     INFUND-2302
+    [Tags]      Collaboration    Summary
+    [Setup]     Guest user log-in   &{collaborator1_credentials}
+    Given the user navigates to the page        ${SUMMARY_URL}
+    When the user opens the 'public description' collapsible
+    And the user should see the element     jQuery=button:contains("Ready for review")
+
+
+
+'Last update' message is correctly updating
     [Documentation]    INFUND-280
     [Tags]    Collaboration
     Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     When the collaborator edits public description question
     Then the question should contain the correct status/name    css=#form-input-12 .textarea-footer    Last updated: Today by you
 
-Verify the collaborator cannot assign the question
+Collaborators cannot assign a question
     [Documentation]    INFUND-839
     [Tags]    Collaboration
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then The user should not see the text in the page    Assign to
 
-Verify collaborator can mark as ready for review
+Collaborators should not be able to edit application details
+    [Documentation]    INFUND-2298
+    When the user navigates to the page    ${APPLICATION_DETAILS_URL}
+    Then the user should see the element    css=#application_details-title[readonly]
+    And the user should see the element    css=#application_details-startdate_day[readonly]
+    And the user should not see the element    jQuery=button:contains("Mark as complete")
+
+Collaborators can mark as ready for review
     [Documentation]    INFUND-877
     [Tags]    Collaboration    HappyPath
     Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
@@ -66,14 +94,14 @@ Verify collaborator can mark as ready for review
     Then the user should see the notification    Question assigned successfully
     And the user should see the text in the page    You have reassigned this question to
 
-Verify the field is disabled for the collaborator
+Collaborator cannot edit after marking ready for review
     [Documentation]    INFUND-275
     [Tags]    Collaboration
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then the user should see the element    css=#form-input-12 .readonly
     [Teardown]    User closes the browser
 
-Verify that the field has been reassigned to the lead applicant
+The question can be reassigned to the lead applicant
     [Documentation]    INFUND-275
     [Tags]    Collaboration
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
@@ -85,7 +113,7 @@ Verify that the field has been reassigned to the lead applicant
     And the question should contain the correct status/name    css=#form-input-12 .assign-container    You
     [Teardown]    User closes the browser
 
-Verify that the appendices are assigned along with the question
+Appendices are assigned along with the question
     [Documentation]    INFUND-409
     [Tags]    Collaboration
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
@@ -105,7 +133,7 @@ the collaborator edits public description question
     Focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    collaborator's text
     Focus    css=.app-submit-btn
-    Sleep    2s
+    Sleep    500ms
     Reload Page
 
 the question should contain the correct status/name
@@ -135,3 +163,6 @@ the user can't see the option to upload a file
 
 Attempt to assign to a pending invitee
     the applicant assigns the question to the collaborator    css=#form-input-13 .editor    test1233    ${invitee_name}
+
+The user opens the 'public description' collapsible
+    The user clicks the button/link         xpath=//*[@aria-controls="collapsible-2"]

@@ -7,7 +7,18 @@ var concat = require('gulp-concat');
 gulp.task('default',['js']);
 
 //build all js
-gulp.task('js',['ifs-js','govuk-js','editor-js']);
+gulp.task('js',['vendor','ifs-js','govuk-js','editor-js']);
+
+//concat and minify all the ifs files
+gulp.task('vendor', function () {
+   return gulp.src([
+      'js/vendor/cookie/*.js',
+      'js/vendor/jquery/jquery-ui.min.js',
+   		])
+  	  .pipe(concat('vendor.min.js'))
+      .pipe(uglify())
+      .pipe(gulp.dest('js/dest'))
+});
 
 //concat and minify all the ifs files
 gulp.task('ifs-js', function () {
