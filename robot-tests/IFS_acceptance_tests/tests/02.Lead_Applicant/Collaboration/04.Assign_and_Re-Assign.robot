@@ -34,6 +34,17 @@ The question is disabled for other collaborators
     Then The user should see the element    css=#form-input-12 .readonly
     [Teardown]    User closes the browser
 
+
+The question is disabled on the summary page for other collaborators
+    [Documentation]     INFUND-2302
+    [Tags]      Collaboration    Summary
+    [Setup]     Guest user log-in   &{collaborator2_credentials}
+    Given the user navigates to the page        ${SUMMARY_URL}
+    When the user opens the 'public description' collapsible
+    Then the user should see the element    css=#form-input-12 .readonly
+    And the user should not see the element     jQuery=button:contains("Ready for review")
+    [Teardown]  User closes the browser
+
 The question is enabled for the assignee
     [Documentation]    INFUND-275
     [Tags]    Collaboration    Overview    HappyPath
@@ -44,6 +55,16 @@ The question is enabled for the assignee
     And the user should not see the element    css=#form-input-12 .readonly
     And the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
     And the question should contain the correct status/name    css=#form-input-12 .assign-container    You
+
+The question is enabled on the summary page for the assignee
+    [Documentation]     INFUND-2302
+    [Tags]      Collaboration    Summary
+    [Setup]     Guest user log-in   &{collaborator1_credentials}
+    Given the user navigates to the page        ${SUMMARY_URL}
+    When the user opens the 'public description' collapsible
+    And the user should see the element     jQuery=button:contains("Ready for review")
+
+
 
 'Last update' message is correctly updating
     [Documentation]    INFUND-280
@@ -57,6 +78,13 @@ Collaborators cannot assign a question
     [Tags]    Collaboration
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then The user should not see the text in the page    Assign to
+
+Collaborators should not be able to edit application details
+    [Documentation]    INFUND-2298
+    When the user navigates to the page    ${APPLICATION_DETAILS_URL}
+    Then the user should see the element    css=#application_details-title[readonly]
+    And the user should see the element    css=#application_details-startdate_day[readonly]
+    And the user should not see the element    jQuery=button:contains("Mark as complete")
 
 Collaborators can mark as ready for review
     [Documentation]    INFUND-877
@@ -135,3 +163,6 @@ the user can't see the option to upload a file
 
 Attempt to assign to a pending invitee
     the applicant assigns the question to the collaborator    css=#form-input-13 .editor    test1233    ${invitee_name}
+
+The user opens the 'public description' collapsible
+    The user clicks the button/link         xpath=//*[@aria-controls="collapsible-2"]

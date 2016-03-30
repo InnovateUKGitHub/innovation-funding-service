@@ -59,13 +59,13 @@
 
 				<div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'}" th:remove="tag">
 
-					<a href="#" class="button" data-js-modal="modal-publish-funding-decision">Publish funding decision</a>
+					<a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
 
 					<div class="modal-publish-funding-decision" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 				        <button class="js-close close" aria-label="Close Popup">X</button>
 				        <div>
 							
-							<h2 class="heading-medium no-margin">Publish funding decision</h2>
+							<h2 class="heading-medium no-margin">Notify applicants</h2>
 
 							<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
 
@@ -78,7 +78,7 @@
 				            		<a href="#">Cancel</a>
 				            	</div>
 				            	<div class="column-half alignright-button">
-				            		<a href="#" class="button">Inform applicants</a>
+				            		<a href="/prototypes/1998-application-feedback?closed&#38;status=assessorFeedback" class="button">Notify applicants</a>
 				            	</div>
 				            </div>
 
@@ -115,7 +115,7 @@
 							<th scope="col" class="alignright">Grant requested (&#163;)</th>
 							<th scope="col" class="alignright">Total project cost (&#163;)</th>
 							<th scope="col" class="alignright">Duration (months)</th>
-							<th scope="col" class="alignright" id="fund-project-label" th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" >Fund project?</th>
+							<th scope="col" class="alignright" id="fund-project-label" th:unless="${param.status == null} or ${param.status[0] != 'fundingPanel'}" style="width: 120px">Fund project?</th>
 						</tr>
 					</thead>
 					<tbody>

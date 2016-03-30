@@ -5,8 +5,8 @@ package com.worth.ifs.user.domain;
  */
 public enum UserRoleType {
 
-    APPLICANT("applicant"), COLLABORATOR("collaborator"), ASSESSOR("assessor"),LEADAPPLICANT("leadapplicant");
-
+    APPLICANT("applicant"), COLLABORATOR("collaborator"), ASSESSOR("assessor"),LEADAPPLICANT("leadapplicant"),
+    COMP_ADMIN("comp_admin");
 
     private final String name;
 
