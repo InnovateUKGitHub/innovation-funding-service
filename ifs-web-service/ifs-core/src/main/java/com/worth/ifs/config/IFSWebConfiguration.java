@@ -1,4 +1,4 @@
-package com.worth.ifs.configuration;
+package com.worth.ifs.config;
 
 import com.worth.ifs.interceptors.GoogleAnalyticsHandlerInterceptor;
 import com.worth.ifs.interceptors.MenuLinksHandlerInterceptor;
@@ -38,10 +38,22 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
                     .addVersionStrategy(new ContentVersionStrategy(), "/**");
 
             registry.addResourceHandler("/js/**", "/css/**", "/images/**")
-                    .addResourceLocations("classpath:static/js/", "classpath:static/css/", "classpath:static/images/")
+                    .addResourceLocations(
+                            "classpath:static/js/", "static/js/",
+                            "classpath:static/css/", "static/css/",
+                            "classpath:static/images/", "static/images/"
+                    )
                     .setCachePeriod(CACHE_PERIOD)
                     .resourceChain(true)
                     .addResolver(versionResourceResolver);
+        }else{
+            registry.addResourceHandler("/js/**", "/css/**", "/images/**")
+                    .addResourceLocations(
+                            "classpath:static/js/", "static/js/",
+                            "classpath:static/css/", "static/css/",
+                            "classpath:static/images/", "static/images/"
+                    )
+                    .resourceChain(true);
         }
         super.addResourceHandlers(registry);
     }
