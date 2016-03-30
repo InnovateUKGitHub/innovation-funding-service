@@ -16,7 +16,7 @@ import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.ApplicationSummaryResource;
 import com.worth.ifs.application.transactional.ApplicationSummaryService;
 
-public class ApplicationSummaryControllerTest  extends BaseControllerMockMVCTest<ApplicationSummaryController> {
+public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<ApplicationSummaryController> {
 
     @Mock
     protected ApplicationSummaryService applicationSummaryService;
@@ -43,13 +43,26 @@ public class ApplicationSummaryControllerTest  extends BaseControllerMockMVCTest
     public void searchByCompetitionId() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getApplicationSummariesByCompetitionId(Long.valueOf(3), 6)).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getApplicationSummariesByCompetitionId(Long.valueOf(3), 6, null)).thenReturn(serviceSuccess(resource));
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3?page=6"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getApplicationSummariesByCompetitionId(Long.valueOf(3), 6);
+    	verify(applicationSummaryService).getApplicationSummariesByCompetitionId(Long.valueOf(3), 6, null);
+    }
+    
+    @Test
+    public void searchByCompetitionIdWithSortField() throws Exception {
+    	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+
+    	when(applicationSummaryService.getApplicationSummariesByCompetitionId(Long.valueOf(3), 6, "id")).thenReturn(serviceSuccess(resource));
+        
+    	mockMvc.perform(get("/applicationSummary/findByCompetition/3?page=6&sort=id"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
+    	
+    	verify(applicationSummaryService).getApplicationSummariesByCompetitionId(Long.valueOf(3), 6, "id");
     }
 
 }

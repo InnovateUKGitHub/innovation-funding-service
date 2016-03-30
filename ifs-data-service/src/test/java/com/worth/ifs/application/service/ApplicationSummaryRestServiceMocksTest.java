@@ -33,11 +33,22 @@ public class ApplicationSummaryRestServiceMocksTest  extends BaseRestServiceUnit
     }
     
     @Test
-    public void testFindByCompetition() {
+    public void testFindByCompetitionWithoutSortField() {
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?page=6", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.findByCompetitionId(Long.valueOf(123L), 6);
+        RestResult<ApplicationSummaryPageResource> result = service.findByCompetitionId(Long.valueOf(123L), 6, null);
+
+        assertTrue(result.isSuccess());
+        assertEquals(responseBody, result.getSuccessObject());
+    }
+    
+    @Test
+    public void testFindByCompetitionWithSortField() {
+    	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?page=6&sort=id", ApplicationSummaryPageResource.class, responseBody);
+
+        RestResult<ApplicationSummaryPageResource> result = service.findByCompetitionId(Long.valueOf(123L), 6, "id");
 
         assertTrue(result.isSuccess());
         assertEquals(responseBody, result.getSuccessObject());

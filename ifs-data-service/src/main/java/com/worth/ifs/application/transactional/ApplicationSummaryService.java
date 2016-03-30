@@ -11,6 +11,6 @@ public interface ApplicationSummaryService {
     ServiceResult<ApplicationSummaryResource> getApplicationSummaryById(Long id);
 
 	@NotSecured("TODO")
-	ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, int pageIndex);
+	ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, int pageIndex, String sortBy);
 
 }

@@ -23,8 +23,8 @@ public class ApplicationSummaryController {
 	private ApplicationSummaryService applicationSummaryService;
 
     @RequestMapping("/findByCompetition/{competitionId}")
-    public RestResult<ApplicationSummaryPageResource> getApplicationSummaryByCompetitionId(@PathVariable("competitionId") Long competitionId, @RequestParam(value="page", defaultValue="0") int pageIndex) {
-        return applicationSummaryService.getApplicationSummariesByCompetitionId(competitionId, pageIndex).toGetResponse();
+    public RestResult<ApplicationSummaryPageResource> getApplicationSummaryByCompetitionId(@PathVariable("competitionId") Long competitionId, @RequestParam(value="page", defaultValue="0") int pageIndex, @RequestParam(value="sort", required=false) String sortBy) {
+        return applicationSummaryService.getApplicationSummariesByCompetitionId(competitionId, pageIndex, sortBy).toGetResponse();
     }
 
     @RequestMapping("/{id}")

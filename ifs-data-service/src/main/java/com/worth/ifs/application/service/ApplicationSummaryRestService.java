@@ -6,7 +6,7 @@ import com.worth.ifs.commons.rest.RestResult;
 
 public interface ApplicationSummaryRestService {
 
-    public RestResult<ApplicationSummaryPageResource> findByCompetitionId(Long competitionId, int pageNumber);
+    public RestResult<ApplicationSummaryPageResource> findByCompetitionId(Long competitionId, int pageNumber, String sortField);
 
     public RestResult<ApplicationSummaryResource> getApplicationSummary(Long id);
 }

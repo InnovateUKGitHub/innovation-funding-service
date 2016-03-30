@@ -21,4 +21,6 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     List<Application> findAll();
     
     Page<Application> findByCompetitionId(Long competitionId, Pageable pageable);
+    
+    List<Application> findByCompetitionId(Long competitionId);
 }

@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.ApplicationSummaryResource;
@@ -15,8 +16,14 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
     private String applicationSummaryRestUrl;
 
 	@Override
-	public RestResult<ApplicationSummaryPageResource> findByCompetitionId(Long competitionId, int pageNumber) {
-		String url = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "?page=" + Integer.toString(pageNumber);
+	public RestResult<ApplicationSummaryPageResource> findByCompetitionId(Long competitionId, int pageNumber, String sortField) {
+		String urlWithoutSortField = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "?page=" + Integer.toString(pageNumber);
+		String url;
+		if(StringUtils.isEmpty(sortField)){
+			url = urlWithoutSortField;
+		} else {
+			url = urlWithoutSortField + "&sort=" + sortField;
+		}
 		return getWithRestResult(url, ApplicationSummaryPageResource.class);
 	}
 
