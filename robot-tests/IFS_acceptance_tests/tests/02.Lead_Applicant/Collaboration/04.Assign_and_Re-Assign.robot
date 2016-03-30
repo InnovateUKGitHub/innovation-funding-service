@@ -79,6 +79,13 @@ Collaborators cannot assign a question
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then The user should not see the text in the page    Assign to
 
+Collaborators should not be able to edit application details
+    [Documentation]    INFUND-2298
+    When the user navigates to the page    ${APPLICATION_DETAILS_URL}
+    Then the user should see the element    css=#application_details-title[readonly]
+    And the user should see the element    css=#application_details-startdate_day[readonly]
+    And the user should not see the element    jQuery=button:contains("Mark as complete")
+
 Collaborators can mark as ready for review
     [Documentation]    INFUND-877
     [Tags]    Collaboration    HappyPath
