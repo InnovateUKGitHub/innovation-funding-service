@@ -237,6 +237,7 @@
             <div th:include="question-type/form-elements :: last-update-info" th:remove="tag"/>
             <div th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" th:remove="tag"/>
           </p>
+
             <div th:if="${!userIsLeadApplicant}"
                th:include="question-type/form-elements :: ready-for-review" th:remove="tag"/>
             <div th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"
@@ -280,28 +281,30 @@
   </div>
 </div>
 <div th:fragment="assign-buttons">
-    <div class="assign-container collapsible js-close-others" th:if="${question.isAssignEnabled()}">
-
+    <div class="assign-container" th:if="${question.isAssignEnabled()}">
         <div class="assign-button">
               <div th:include="question-type/form-elements :: assigned-to" th:remove="tag"/>
         </div>
         <div class="assign-team">
-            Reassign question
-            <ul class="list-bullet">
-                <li th:each="assignableUser : ${assignableUsers}">
-                    <button type="submit" name="assign_question"
-                            th:value="${question.getId()}+'_'+${assignableUser.getId()}"
-                            th:unless="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
-                            th:text="${assignableUser.getUser()?.getName()}"
-                            th:attrappend="formaction='&#35;question-'+${question.getId()}"
-                            class="buttonlink"/>
-                    <div th:if="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
-                         th:text="${assignableUser.getUser()?.getName()}"/>
-                </li>
-                <li th:each="pendingAssignableUser : ${pendingAssignableUsers}">
-                	<div th:text="${pendingAssignableUser.name + ' (pending)'}"/>
-                </li>
-            </ul>
+            <!--/* Reassign question */-->
+              <select name="assign_question" class="prog-menu">
+                  <div th:remove="tag" th:each="assignableUser : ${assignableUsers}">
+                      <option th:value="${question.getId()}+'_'+${assignableUser.getId()}"
+                              th:unless="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
+                              th:text="${assignableUser.getUser()?.getName()}"
+                              th:class="${(questionAssignee?.assigneeUserId == currentUser.getId()) ? 'current-user' : ''}"
+                              />
+                      <option th:if="${(questionAssignee?.assignee == assignableUser.getId()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getId()))}"
+                              th:text="${assignableUser.getUser()?.getName()}"
+                              selected="selected"
+                              th:class="${(questionAssignee?.assigneeUserId == currentUser.getId()) ? 'current-user' : ''}"
+                              disabled="disabled"/>
+                  </div>
+                  <div th:remove="tag" th:each="pendingAssignableUser : ${pendingAssignableUsers}">
+                  	<option th:text="${pendingAssignableUser.name + ' (pending)'}"  disabled="disabled"/>
+                  </div>
+              </select>
+              <button type="submit">Reassign</button>
         </div>
     </div>
 </div>
