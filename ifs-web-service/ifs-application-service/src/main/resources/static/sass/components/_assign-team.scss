@@ -21,7 +21,7 @@
 .assign-container {
     position:relative;
     @include inline-block;
-    
+
     .assign-team {
         @include border-radius(2px);
         border: 1px solid $grey-3;
@@ -55,13 +55,14 @@
     padding:0;
     margin: 0 5px 0 0;
     text-align: left;
-    vertical-align:top;    
+    vertical-align:top;
 }
 
 .no-js .assign-container .assign-team {
     position:relative;
     border:none;
     margin: 0;
+    padding-left: 0;
     padding-top:0;
     padding-bottom:2px;
 }

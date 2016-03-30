@@ -132,7 +132,7 @@ the user fills the name and email field and reloads the page
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+9@hiveit.co.uk
     sleep    1s
     focus    jquery=li:nth-child(1) button:contains('Add person')
-    reload page
+    the user reloads the page
 
 the user's inputs should still be visible
     [Arguments]    ${group_number}
@@ -165,7 +165,7 @@ the applicant can enter Organisation name, Name and E-mail
     Input Text    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
     focus    jquery=li:nth-child(2) button:contains('Add person')
     Sleep    1s
-    reload page
+    the user reloads the page
 
 the applicant's inputs should be visible
     Textfield Value Should Be    name=organisations[1].organisationName    Fannie May

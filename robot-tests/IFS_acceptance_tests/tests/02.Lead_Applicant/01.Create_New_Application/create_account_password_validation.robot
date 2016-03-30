@@ -74,7 +74,7 @@ the user submits their information
 
 the user cannot login with the invalid password
     [Arguments]    ${invalid_password}
-    go to    ${LOGIN_URL}
+    The user navigates to the page      ${LOGIN_URL}
     Input Text    id=username    ewan+40@hiveit.co.uk
     Input Password    id=password    ${invalid_password}
     Click Button    css=button[name="_eventId_proceed"]

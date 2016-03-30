@@ -18,7 +18,7 @@ Enter Valid Postcode and see the results in the dropdown
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    LINK=INNOVATE LTD
+    And the user clicks the button/link    link=INNOVATE LTD
     When the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    id=postcode-lookup
     Then the user should see the element    css=#select-address-block

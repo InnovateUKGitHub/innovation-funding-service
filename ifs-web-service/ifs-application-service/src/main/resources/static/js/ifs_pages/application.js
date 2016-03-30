@@ -10,32 +10,36 @@ IFS.application_page = (function(){
             var button = jQuery(this);
             var form = button.closest('form.application-overview');
             var sectionToUpdate = button.closest('li.section');
+            var questionId = sectionToUpdate.attr('id');
             var sectionId;
-            if(sectionToUpdate.closest('section').prop('id').indexOf('section-') !== -1){
-                sectionId = sectionToUpdate.closest('section').attr('id').replace('section-','');
+            if(sectionToUpdate.closest('section[id^="section-"]').length){
+                sectionId = sectionToUpdate.closest('section[id^="section-"]').attr('id').replace('section-','');
             }
-            var handleFormPost = function (data) {
-                var htmlReplacement = jQuery('<div>' + data + '</div>');
-                var questionId = sectionToUpdate.data('question-id');
-                var replacement = htmlReplacement.find('[data-question-id=' + questionId+']');
-                sectionToUpdate.replaceWith(replacement);
-            IFS.collapsible.collapsibleWithinScope(replacement);
-            };
-            if(sectionToUpdate.length && sectionId){
+            if(sectionToUpdate.length && sectionId && questionId){
               jQuery.ajax({
                     type: "POST",
-                    // TODO DW - shouldn't have to pass the sectionId via a request parameter - it should instead be made available by the "name" and "value" params on the clicked button, as per the questionId
+                    beforeSend : function(){
+                        if(typeof(IFS.progressiveSelect.hideAll) == 'function'){ IFS.progressiveSelect.hideAll();  }
+                        sectionToUpdate.find('.assign-button').html('Assigning to <strong>'+button.text()+'</strong>...');
+                        sectionToUpdate.find('img.section-status').remove();
+                    },
                     url: '?singleFragment=true&sectionId=' + sectionId,
                     data: form.serialize() + '&' + button.attr('name') + '=' + button.attr('value'),
                     success: function(data) {
-                        handleFormPost(data);
+                      var htmlReplacement = jQuery('<div>' + data + '</div>');
+                      var replacement = htmlReplacement.find('#' + questionId);
+                      sectionToUpdate.replaceWith(replacement);
+                      if(typeof(IFS.progressiveSelect.initDropDownHTML) == 'function'){
+                        var dropdown = replacement.find(".assign-button");
+                        var select =  replacement.find('select.prog-menu');
+                        IFS.progressiveSelect.initDropDownHTML(dropdown);
+                        IFS.progressiveSelect.selectToListHTML(select);
+                      }
                     }
-                });  
+                });
+                e.preventDefault();
+                return false;
             }
-            e.preventDefault();
-            return false;
         }
     };
 })();
-
-
