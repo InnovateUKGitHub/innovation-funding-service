@@ -3,8 +3,13 @@ package com.worth.ifs.application.service;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
+import com.worth.ifs.application.service.ApplicationRestService;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.ApplicationServiceImpl;
+import com.worth.ifs.application.service.ApplicationStatusRestService;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -122,7 +127,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void testGetCompleteQuestionsPercentage() throws Exception {
         // somehow the progress is rounded, because we use a long as the return type.
-        assertEquals(20, service.getCompleteQuestionsPercentage(applications.get(0).getId()).get().intValue());
+        Assert.assertEquals(20, service.getCompleteQuestionsPercentage(applications.get(0).getId()).get().intValue());
     }
 
     @Test

@@ -1,4 +1,4 @@
-package com.worth.ifs.application.finance.builder;
+package com.worth.ifs.finance.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.finance.view.OrganisationFinanceOverview;

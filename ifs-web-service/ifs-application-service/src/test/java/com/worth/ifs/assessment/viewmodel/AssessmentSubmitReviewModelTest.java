@@ -1,5 +1,6 @@
 package com.worth.ifs.assessment.viewmodel;
 
+import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.application.builder.AssessorFeedbackBuilder;
 import com.worth.ifs.application.builder.ResponseBuilder;
 import com.worth.ifs.application.builder.SectionBuilder;
@@ -61,10 +62,14 @@ public class AssessmentSubmitReviewModelTest {
         questions.addAll(section2Questions);
 
         List<Section> sections = newSection()
+                .withId(501L, 502L)
+                .with(BuilderAmendFunctions.idBasedNames("Section "))
                 .withQuestionSets(asList(section1Questions, section2Questions))
                 .build(2);
 
         List<SectionResource> sectionResources = newSectionResource()
+                .withId(501L, 502L)
+                .with(BuilderAmendFunctions.idBasedNames("Section "))
                 .withQuestionSets(asList(simpleMap(section1Questions, Question::getId), simpleMap(section2Questions,Question::getId)))
                 .build(2);
 
@@ -186,13 +191,23 @@ public class AssessmentSubmitReviewModelTest {
         List<Question> questions = newQuestion().build(3);
 
         Section section1 = sectionBuilder.withQuestions(singletonList(questions.get(0))).build();
-        Section section2ToBeIncluded = sectionBuilder.withDisplayInAssessmentApplicationSummary(true).withQuestions(singletonList(questions.get(1))).build();
+        Section section2ToBeIncluded = sectionBuilder
+                .with(BuilderAmendFunctions.idBasedNames("Section "))
+                .withDisplayInAssessmentApplicationSummary(true)
+                .withQuestions(singletonList(questions.get(1))).build();
         Section section3 = sectionBuilder.withQuestions(singletonList(questions.get(2))).build();
         List<Section> sections = asList(section1, section2ToBeIncluded, section3);
 
-        SectionResource sectionResource1 = sectionResourceBuilder.withQuestions(singletonList(questions.get(0).getId())).build();
-        SectionResource sectionResource2ToBeIncluded = sectionResourceBuilder.withDisplayInAssessmentApplicationSummary(true).withQuestions(singletonList(questions.get(1).getId())).build();
-        SectionResource sectionResource3 = sectionResourceBuilder.withQuestions(singletonList(questions.get(2).getId())).build();
+        SectionResource sectionResource1 = sectionResourceBuilder
+                .withId(section1.getId())
+                .withQuestions(singletonList(questions.get(0).getId())).build();
+        SectionResource sectionResource2ToBeIncluded = sectionResourceBuilder
+                .withId(section2ToBeIncluded.getId())
+                .with(BuilderAmendFunctions.idBasedNames("Section "))
+                .withDisplayInAssessmentApplicationSummary(true).withQuestions(singletonList(questions.get(1).getId())).build();
+        SectionResource sectionResource3 = sectionResourceBuilder
+                .withId(section3.getId())
+                .withQuestions(singletonList(questions.get(2).getId())).build();
         List<SectionResource> sectionResources = asList(sectionResource1, sectionResource2ToBeIncluded, sectionResource3);
 
         Competition competition = newCompetition().withSections(sections).build();

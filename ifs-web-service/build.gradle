@@ -6,3 +6,10 @@ if (project.hasProperty("profile")) {
     apply from: "dev-build.gradle"
 }
 
+
+task deployToTomcat() {
+    println "Interface for deployToTomcat task"
+}
+
+
+

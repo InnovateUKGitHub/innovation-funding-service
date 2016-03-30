@@ -1,4 +1,4 @@
-package com.worth.ifs.application.model;
+package com.worth.ifs.application.finance.model;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;

@@ -1,29 +1,26 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.Application;
-import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.User;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
@@ -43,22 +40,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicationControllerTest extends BaseUnitTest {
-    @InjectMocks
-    private ApplicationController applicationController;
-
+public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
+    @Override
+    protected ApplicationController supplyControllerUnderTest() {
+        return new ApplicationController();
+    }
+
     @Before
     public void setUp(){
-        super.setup();
-        MockitoAnnotations.initMocks(this);
-
-        mockMvc = MockMvcBuilders.standaloneSetup(applicationController)
-                .setViewResolvers(viewResolver())
-                .setHandlerExceptionResolvers(createExceptionResolver())
-                .build();
+        super.setUp();
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -76,7 +69,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        log.debug("Show dashboard for application: " + app.getId());
+        LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-details"))
@@ -96,7 +89,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        log.debug("Show dashboard for application: " + app.getId());
+        LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(post("/application/" + app.getId()).param(AbstractApplicationController.ASSIGN_QUESTION_PARAM, "1_2"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/"+app.getId()));
@@ -123,7 +116,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
        
        when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
        
-       log.debug("Show dashboard for application: " + app.getId());
+       LOG.debug("Show dashboard for application: " + app.getId());
        mockMvc.perform(get("/application/" + app.getId()))
                .andExpect(status().isOk())
                .andExpect(view().name("application-details"))
@@ -159,7 +152,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
        
        when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
        
-       log.debug("Show dashboard for application: " + app.getId());
+       LOG.debug("Show dashboard for application: " + app.getId());
        mockMvc.perform(get("/application/" + app.getId()))
                .andExpect(status().isOk())
                .andExpect(view().name("application-details"))
@@ -195,7 +188,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
        
        when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
        
-       log.debug("Show dashboard for application: " + app.getId());
+       LOG.debug("Show dashboard for application: " + app.getId());
        mockMvc.perform(get("/application/" + app.getId()))
                .andExpect(status().isOk())
                .andExpect(view().name("application-details"))
@@ -259,7 +252,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
         arguments.add(Application.class.getName());
         arguments.add(1234l);
 
-        log.debug("Show dashboard for application: " + app.getId());
+        LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/1234"))
                 .andExpect(view().name("404"))
                 .andExpect(model().attribute("url", "http://localhost/application/1234"))
@@ -281,7 +274,7 @@ public class ApplicationControllerTest extends BaseUnitTest {
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        log.debug("Show dashboard for application: " + app.getId());
+        LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId() +"/section/"+ section.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-details"))
