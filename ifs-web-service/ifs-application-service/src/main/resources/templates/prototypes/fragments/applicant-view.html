@@ -76,7 +76,21 @@
 <!-- ===================Assessor Page title============================== -->
 <div th:fragment="prototype-project-page-title(subtitle, heading)">
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <p class="subtitle no-margin" th:text="${subtitle}">Subtitle here</p>
+        <div th:if="${subtitle == 'successful'}" th:remove="tag">
+            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+        </div>
+        <div th:if="${subtitle == 'successfulFeedback'}" th:remove="tag">
+            <p class="subtitle no-margin">10294855: Mobile Phone Data for Logistics Analytics</p>
+        </div>
+        <div th:if="${subtitle == 'unsuccessful'}" th:remove="tag">
+            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+        </div>
+        <div th:if="${subtitle == 'unsuccessfulFeedback'}" th:remove="tag">
+            <p class="subtitle no-margin">10294855: Mobile Phone Data for Logistics Analytics</p>
+        </div>
+        <div th:if="${subtitle == 'noStatus'}" th:remove="tag">
+            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+        </div>
         <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
     </div>
 </div>
@@ -157,7 +171,9 @@
         <div class="grid-row">
             <div class="column-half">
                 <h3 class="heading-small">Project title</h3>
-                <p>Using natural gas to heat homes</p>
+                <p th:if="${param.status == null or param.status[0] == 'successful' or param.status[0] == 'unsuccessful'}">Machine learning in robots</p>
+
+                <p th:if="${param.status == null or param.status[0] == 'successfulFeedback' or param.status[0] == 'unsuccessfulFeedback'}">Mobile Phone Data for Logistics Analytics</p>
 
                 <h3 class="heading-small">Lead organisation</h3>
                 <p>Empire Ltd</p>
@@ -549,6 +565,15 @@
 
     </div>
 
+    <div th:if="${param.status != null} and ${param.status[0] == 'successfulFeedback'} or ${param.status != null} and ${param.status[0] == 'unsuccessfulFeedback'}" th:remove="tag">
+
+        <div class="form-group download extra-margin">
+            <h3 class="heading-small no-margin">View your application feedback:</h3>
+            <a href="#">10294856feedback.pdf (161.96 KB)</a>
+        </div>
+
+    </div>
+
     <h2 class="heading-medium">Details</h2>
 
     <div class="collapsible section-overview">
@@ -671,7 +696,7 @@
 
         <div id="collapsible-7" aria-hidden="false">
             <div class="question" id="question-3">
-                <div class="form-group">
+                <div class="form-group" th:unless="${param.status != null and param.status[0] == 'notSubmitted'}">
 
                     <h2 class="heading-small">How will you exploit and market your project?</h2>
 
@@ -734,7 +759,7 @@
 </h3>
                     <p>The project is based on Manchester?s novel IP that, for the first time, allows SLM to be conducted without any need for anchors/supports. A search of the literature has established that the advances proposed in this project on which RAMP are based are not available via any commercially available process. In addition, the development and supply of tailored materials by Empire and a dedicated high temperature rig by Ludlow will involve further, critical degrees of innovation that will help to build a portfolio of IP to enhance commercial exploitation. NB. RAMP does not simply reduce stresses by working at higher temperatures; it involves a novel step based on manufacturing engineering and material science that completely eliminates stresses.</p>
 
-                     <div class="form-group download">
+                    <div class="form-group download">
                         <h3 class="heading-small no-margin">View innovation appendix:</h3>
                         <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
                     </div>
@@ -748,7 +773,7 @@
 
         <div id="collapsible-11" aria-hidden="false">
             <div class="question">
-                <div class="form-group">
+                <div class="form-group" th:unless="${param.status != null and param.status[0] == 'notSubmitted'}">
 
                     <h3 class="heading-small">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h3>
 

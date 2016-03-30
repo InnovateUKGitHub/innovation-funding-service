@@ -13,7 +13,7 @@ import com.worth.ifs.application.finance.form.AcademicFinance;
 import com.worth.ifs.application.finance.model.AcademicFinanceFormField;
 import com.worth.ifs.application.finance.model.FinanceFormField;
 import com.worth.ifs.application.form.*;
-import com.worth.ifs.application.model.QuestionStatusModel;
+import com.worth.ifs.application.finance.model.QuestionStatusModel;
 import com.worth.ifs.login.ResetPasswordForm;
 import com.worth.ifs.login.ResetPasswordRequestForm;
 import com.worth.ifs.profile.UserDetailsForm;

@@ -13,6 +13,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public class RoleResource {
     private Long id;
     private String name;
+    private String url;
     private List<Long> processRoles = new ArrayList<>();
     private List<User> users = new ArrayList<>();
 
@@ -90,5 +91,13 @@ public class RoleResource {
             .append(processRoles)
             .append(users)
             .toHashCode();
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

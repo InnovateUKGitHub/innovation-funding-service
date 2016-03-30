@@ -23,6 +23,10 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    /**
+     * This URL is the url that is used after login, to redirect the user to his dashboard.
+     */
+    private String url;
 
     @OneToMany(mappedBy = "role")
     private List<ProcessRole> processRoles = new ArrayList<>();
@@ -99,5 +103,13 @@ public class Role {
             .append(processRoles)
             .append(users)
             .toHashCode();
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

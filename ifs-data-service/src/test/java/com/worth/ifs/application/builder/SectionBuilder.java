@@ -27,8 +27,12 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
     public static SectionBuilder newSection() {
         return new SectionBuilder(emptyList())
                 .with(uniqueIds())
-                .with(idBasedNames("Question "))
+                .with(idBasedNames("Section "))
                 .withDisplayInAssessmentApplicationSummary(true);
+    }
+
+    public SectionBuilder withId(Long... ids) {
+        return withArray((id, object) -> setField("id", id, object), ids);
     }
 
     public SectionBuilder withQuestions(List<Question> questions) {
