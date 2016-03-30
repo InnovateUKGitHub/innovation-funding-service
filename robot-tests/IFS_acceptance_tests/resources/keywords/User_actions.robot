@@ -97,6 +97,7 @@ Create new application
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
+    Sleep       2s
     Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found

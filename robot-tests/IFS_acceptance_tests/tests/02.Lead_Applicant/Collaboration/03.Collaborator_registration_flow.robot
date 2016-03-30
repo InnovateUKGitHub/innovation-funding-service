@@ -33,7 +33,7 @@ Lead applicant details should show in the invite page
     And the user should see the element    link=Technology Inspired
     And the user should see the text in the page    Worth Internet Systems
 
-User can not continue if an organisation type is not selected
+User cannot continue if an organisation type is not selected
     [Documentation]    INFUND-1005
     ...
     ...    INFUND-1780
