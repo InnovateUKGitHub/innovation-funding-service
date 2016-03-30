@@ -37,4 +37,8 @@ public class RoleBuilder extends BaseBuilder<Role, RoleBuilder> {
     public RoleBuilder withName(String... names) {
         return withArray((name, role) -> role.setName(name), names);
     }
+
+    public RoleBuilder withUrl(String... urls) {
+        return withArray((name, role) -> role.setUrl(name), urls);
+    }
 }

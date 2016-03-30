@@ -1,14 +1,12 @@
 package com.worth.ifs.application.builder;
 
-import java.util.List;
-import java.util.function.BiConsumer;
-
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.application.resource.SectionResource;
 
-import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import java.util.List;
+import java.util.function.BiConsumer;
+
+import static com.worth.ifs.BuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
 
 public class SectionResourceBuilder extends BaseBuilder<SectionResource, SectionResourceBuilder> {
@@ -25,7 +23,7 @@ public class SectionResourceBuilder extends BaseBuilder<SectionResource, Section
     public static SectionResourceBuilder newSectionResource() {
         return new SectionResourceBuilder(emptyList())
                 .with(uniqueIds())
-                .with(idBasedNames("Question "))
+                .with(idBasedNames("Section "))
                 .withDisplayInAssessmentApplicationSummary(true);
     }
 

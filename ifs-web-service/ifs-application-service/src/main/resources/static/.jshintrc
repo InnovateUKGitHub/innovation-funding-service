@@ -1,7 +1,0 @@
-{
-  "undef": true,
-  "strict" : true,
-  "unused": true,
-  "predef": [ "jQuery","setTimeout","clearTimeout","window","document","IFS","Modernizr","showdown","md"],
-  "es3" : true
-} 

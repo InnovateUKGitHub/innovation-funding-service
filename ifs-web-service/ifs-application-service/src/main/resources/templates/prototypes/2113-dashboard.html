@@ -20,7 +20,7 @@
 
 	<div th:unless="${param.action != null and param.action[0] == 'accVerified'}" th:remove="tag">
 	
-		<div th:if="${param.status != null and param.status[0] == 'successful' or param.status[0] == 'successfulFeedback'}" th:remove="tag">
+		<div th:if="${param.status != null and param.status[0] == 'successful' or param.status != null and param.status[0] == 'successfulFeedback'}" th:remove="tag">
 		
 			<h2 class="heading-large">Projects in setup</h2>
 
@@ -62,7 +62,7 @@
 		<h2 class="heading-large">Previous applications</h2>
 
 		<ul class="boxed-list">
-			 <li th:unless="${param.status[0] != 'unsuccessful'}">
+			 <li th:unless="${param.status != null and param.status[0] != 'unsuccessful'}">
 		        <div class="grid-row">
 		            <div class="column-assessment-details">
 		                <h2 class="heading-medium"><a href="/prototypes/2111-submitted-application-overview?status=unsuccessful">10294856: Machine learning in robots</a></h2>
@@ -74,7 +74,7 @@
 		            </div>
 		        </div>
 		    </li>
-		    <li th:unless="${param.status[0] != 'successful'}">
+		    <li th:unless="${param.status != null and param.status[0] != 'successful'}">
 		        <div class="grid-row">
 		            <div class="column-assessment-details">
 		                <h2 class="heading-medium"><a href="/prototypes/2111-submitted-application-overview?status=successful">10294856: Machine learning in robots</a></h2>
@@ -88,10 +88,10 @@
 		            </div>
 		        </div>
 		    </li>
-		    <li th:unless="${param.status[0] != 'successfulFeedback'}">
+		    <li th:unless="${param.status != null and param.status[0] != 'successfulFeedback'}">
 		        <div class="grid-row">
 		            <div class="column-assessment-details">
-		                <h2 class="heading-medium"><a href="/prototypes/545-application-feedback">10294855: Mobile Phone Data for Logistics Analytics</a></h2>
+		                <h2 class="heading-medium"><a href="/prototypes/2111-submitted-application-overview?status=successfulFeedback">10294855: Mobile Phone Data for Logistics Analytics</a></h2>
 		            </div>
 		            <div class="column-assessment-status navigation-right">
 		                <div class="yes application-status assessed">
@@ -100,10 +100,10 @@
 		            </div>
 		        </div>
 		    </li>
-		    <li th:unless="${param.status[0] != 'unsuccessfulFeedback'}">
+		    <li th:unless="${param.status != null and param.status[0] != 'unsuccessfulFeedback'}">
 		        <div class="grid-row">
 		            <div class="column-assessment-details">
-		                <h2 class="heading-medium"><a href="/prototypes/545-application-feedback?unsuccessful">10294855: Mobile Phone Data for Logistics Analytics</a></h2>
+		                <h2 class="heading-medium"><a href="/prototypes/2111-submitted-application-overview?status=unsuccessfulFeedback">10294855: Mobile Phone Data for Logistics Analytics</a></h2>
 		            </div>
 		            <div class="column-assessment-status navigation-right">
 		                <div class="no application-status assessed">
