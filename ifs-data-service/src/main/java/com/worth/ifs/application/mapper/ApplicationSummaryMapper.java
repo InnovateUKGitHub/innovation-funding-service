@@ -1,36 +1,36 @@
 package com.worth.ifs.application.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationSummaryResource;
-import com.worth.ifs.commons.mapper.BaseMapper;
+import com.worth.ifs.application.resource.CompletedPercentageResource;
+import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
+import com.worth.ifs.commons.service.ServiceResult;
 
-@Mapper(
-	    config = GlobalMapperConfig.class,
-		uses = {
-	        ApplicationStatusMapper.class
-	    }
-	)
-public abstract class ApplicationSummaryMapper extends BaseMapper<Application, ApplicationSummaryResource, Long>{
+@Mapper(config = GlobalMapperConfig.class)
+public abstract class ApplicationSummaryMapper {
 
-    @Mappings({
-        @Mapping(source = "applicationStatus.name", target = "applicationStatusName"),
-        @Mapping(target="lead", ignore=true),
-        @Mapping(target="completedPercentage", ignore=true)
-	})
-	@Override
-	public abstract ApplicationSummaryResource mapToResource(Application domain);
+	@Autowired
+	private ApplicationService applicationService;
+	
+	public ApplicationSummaryResource mapToResource(Application source){
+		
+		ApplicationSummaryResource result = new ApplicationSummaryResource();
+		
+		ServiceResult<CompletedPercentageResource> percentageResult = applicationService.getProgressPercentageByApplicationId(source.getId());
+		if(percentageResult.isSuccess()){
+			result.setCompletedPercentage(percentageResult.getSuccessObject().getCompletedPercentage());
+		}
+		
+		result.setApplicationStatus(source.getApplicationStatus().getId());
+		result.setApplicationStatusName(source.getApplicationStatus().getName());
+		result.setId(source.getId());
+		result.setLead(source.getLeadApplicant().getName());
+		result.setName(source.getName());
+		return result;
+	}
     
-    @Override
-    public Application mapToDomain(ApplicationSummaryResource resource){
-    	return null;
-    }
-    @Override
-    public Iterable<Application> mapToDomain(Iterable<ApplicationSummaryResource> resource){
-    	return null;
-    }
 }
