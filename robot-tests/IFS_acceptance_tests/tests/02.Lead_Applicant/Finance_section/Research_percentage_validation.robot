@@ -42,7 +42,7 @@ There is an error message on the finances form
 
 There is an error message on the summary page
     Go To    ${APPLICATION_2_SUMMARY_URL}
-    Click Button    css=[aria-controls="collapsible-15"]
+    Click Button    css=[aria-controls="collapsible-14"]
     Page Should Contain    The participation levels of this project are not within the required range
 
 The applicant can log out
