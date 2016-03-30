@@ -32,7 +32,8 @@ Verify that the applicant can upload pdf files
 Questions can be assigned with appendices to the collaborator
     [Documentation]     INFUND-832
     ...                 INFUND-409
-    [Tags]      Collaboration       Upload
+    [Tags]      Collaboration       Upload      PendingForDev
+    # pending until we have access to the dev server's IFS file repository
     [Setup]     Guest user log-in   &{lead_applicant_credentials}
     Given the user navigates to the page     ${project_team_url}
     And the user can see the uploaded file  ${valid_pdf}
