@@ -32,19 +32,19 @@ import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Testing the permissions around the secured methods in OrganisationService
+ * Testing the permission rules applied to the secured methods in OrganisationService.  This set of tests tests for the
+ * individual rules that are called whenever an OrganisationService method is called.  They do not however test the logic
+ * within those rules
  */
 public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<OrganisationService> {
 
     private OrganisationRules organisationRules;
-
-    @Mock
-    private static Supplier<Set<OrganisationResource>> organisationResourceSupplier;
 
     @Before
     public void lookupPermissionRules() {
@@ -62,17 +62,13 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     @Test
     public void testFindByApplicationId() {
 
-        OrganisationResource organisation = newOrganisationResource().build();
-
-        when(organisationResourceSupplier.get()).thenReturn(asLinkedSet(organisation));
-
-        when(organisationRules.memberOfOrganisationCanViewOwnOrganisation(organisation, getLoggedInUser())).thenReturn(false);
-        when(organisationRules.usersCanViewOrganisationsOnTheirOwnApplications(organisation, getLoggedInUser())).thenReturn(false);
+        when(organisationRules.memberOfOrganisationCanViewOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()))).thenReturn(false);
+        when(organisationRules.usersCanViewOrganisationsOnTheirOwnApplications(isA(OrganisationResource.class), eq(getLoggedInUser()))).thenReturn(false);
 
         service.findByApplicationId(1L);
 
-        verify(organisationRules).memberOfOrganisationCanViewOwnOrganisation(organisation, getLoggedInUser());
-        verify(organisationRules).usersCanViewOrganisationsOnTheirOwnApplications(organisation, getLoggedInUser());
+        verify(organisationRules).memberOfOrganisationCanViewOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
+        verify(organisationRules).usersCanViewOrganisationsOnTheirOwnApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
     }
 
     /**
@@ -83,7 +79,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
 
         @Override
         public ServiceResult<Set<OrganisationResource>> findByApplicationId(Long applicationId) {
-            return serviceSuccess(organisationResourceSupplier.get());
+            return serviceSuccess(asLinkedSet(newOrganisationResource().build()));
         }
 
         @Override
