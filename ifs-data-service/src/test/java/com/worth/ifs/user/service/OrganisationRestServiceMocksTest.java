@@ -1,14 +1,14 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.organisationResourceListType;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
@@ -30,12 +30,12 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
      public void test_getOrganisationsByApplicationId() {
 
         String expectedUrl = dataServicesUrl + organisationsUrl + "/findByApplicationId/123";
-        List<Organisation> returnedResponse = newOrganisation().build(3);
-        ResponseEntity<List<Organisation>> responseEntity = new ResponseEntity<>(returnedResponse, OK);
+        List<OrganisationResource> returnedResponse = newOrganisationResource().build(3);
+        ResponseEntity<List<OrganisationResource>> responseEntity = new ResponseEntity<>(returnedResponse, OK);
 
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), new ParameterizedTypeReference<List<Organisation>>() {})).thenReturn(responseEntity);
+        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), organisationResourceListType())).thenReturn(responseEntity);
 
-        List<Organisation> response = service.getOrganisationsByApplicationId(123L).getSuccessObject();
+        List<OrganisationResource> response = service.getOrganisationsByApplicationId(123L).getSuccessObject();
         assertEquals(3, response.size());
         assertEquals(returnedResponse, response);
     }
@@ -44,12 +44,12 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
     public void test_getOrganisationById() {
 
         String expectedUrl = dataServicesUrl + organisationsUrl + "/findById/123";
-        Organisation returnedResponse = newOrganisation().build();
-        ResponseEntity<Organisation> responseEntity = new ResponseEntity<>(returnedResponse, OK);
+        OrganisationResource returnedResponse = newOrganisationResource().build();
+        ResponseEntity<OrganisationResource> responseEntity = new ResponseEntity<>(returnedResponse, OK);
 
-        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), Organisation.class)).thenReturn(responseEntity);
+        when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), OrganisationResource.class)).thenReturn(responseEntity);
 
-        Organisation response = service.getOrganisationById(123L).getSuccessObject();
+        OrganisationResource response = service.getOrganisationById(123L).getSuccessObject();
         assertEquals(returnedResponse, response);
     }
 }

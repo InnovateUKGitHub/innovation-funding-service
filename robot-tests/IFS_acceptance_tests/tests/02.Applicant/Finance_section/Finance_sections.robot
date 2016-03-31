@@ -27,7 +27,7 @@ Guidance in the 'Your Finances' section
     [Documentation]    INFUND-192
     [Tags]    Applicant    Finance
     When the user clicks the button/link    jQuery=button:contains("Labour")
-    And the user clicks the button/link    css=#collapsible-1 summary
+    And the user clicks the button/link    css=#collapsible-0 summary
     Then the user should see the element    css=#details-content-0 p
 
 *** Keywords ***

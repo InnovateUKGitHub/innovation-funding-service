@@ -1,28 +1,33 @@
 package com.worth.ifs.application.controller;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.BaseControllerIntegrationTest;
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.ApplicationStatus;
-import com.worth.ifs.application.mapper.ApplicationStatusMapper;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
+import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
-import static org.junit.Assert.*;
+import com.worth.ifs.BaseControllerIntegrationTest;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.mapper.ApplicationStatusMapper;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.CompletedPercentageResource;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.UserRoleType;
 
 @Rollback
 public class ApplicationControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationController> {
@@ -106,16 +111,16 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
      */
     @Test
     public void testGetProgressPercentageByApplicationId() throws Exception {
-        ObjectNode response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccessObject();
-        double completedPercentage = response.get("completedPercentage").asDouble();
+        CompletedPercentageResource response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccessObject();
+        BigDecimal completedPercentage = response.getCompletedPercentage();
         double delta = 0.10;
-        assertEquals(36.206896551, completedPercentage, delta); //Changed after enabling mark as complete on some more questions for INFUND-446
+        assertEquals(36.206896551, completedPercentage.doubleValue(), delta); //Changed after enabling mark as complete on some more questions for INFUND-446
 
         questionController.markAsInComplete(28L, APPLICATION_ID, leadApplicantProcessRole);
 
         response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccessObject();
-        completedPercentage = response.get("completedPercentage").asDouble();
-        assertEquals(34.48275862, completedPercentage, delta); //Changed after enabling mark as complete on some more questions for INFUND-446
+        completedPercentage = response.getCompletedPercentage();
+        assertEquals(34.48275862, completedPercentage.doubleValue(), delta); //Changed after enabling mark as complete on some more questions for INFUND-446
     }
 
     @Test

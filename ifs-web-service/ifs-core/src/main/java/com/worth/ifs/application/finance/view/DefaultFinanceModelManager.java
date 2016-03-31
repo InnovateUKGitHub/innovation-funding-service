@@ -2,13 +2,13 @@ package com.worth.ifs.application.finance.view;
 
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.Form;
-import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
-import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.resource.OrganisationTypeResource;
+import com.worth.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -20,21 +20,21 @@ import org.springframework.ui.Model;
 public class DefaultFinanceModelManager implements FinanceModelManager {
 
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
 
     @Autowired
-    FinanceService financeService;
+    private FinanceService financeService;
 
     @Autowired
-    OrganisationService organisationService;
+    private OrganisationTypeRestService organisationTypeService;
 
     @Override
     public void addOrganisationFinanceDetails(Model model, Long applicationId, Long userId, Form form) {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
-        Organisation organisation = organisationService.getOrganisationById(applicationFinanceResource.getOrganisation());
+        OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
         model.addAttribute("organisationFinance", applicationFinanceResource.getFinanceOrganisationDetails());
         model.addAttribute("organisationFinanceSize", applicationFinanceResource.getOrganisationSize());
-        model.addAttribute("organisationType", organisation.getOrganisationType());
+        model.addAttribute("organisationType", organisationType);
         model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
         model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
         model.addAttribute("financeView", "finance");

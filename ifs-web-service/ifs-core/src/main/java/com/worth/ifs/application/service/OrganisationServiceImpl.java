@@ -36,41 +36,51 @@ public class OrganisationServiceImpl implements OrganisationService {
     private ProcessRoleService processRoleService;
 
     @Override
-    public SortedSet<Organisation> getApplicationOrganisations(ApplicationResource application) {
+    public SortedSet<OrganisationResource> getApplicationOrganisations(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
                 .map(id -> processRoleService.getById(id))
                 .collect(Collectors.toList()));
 
-        Comparator<Organisation> compareById =
-                Comparator.comparingLong(Organisation::getId);
-        Supplier<SortedSet<Organisation>> supplier = () -> new TreeSet<>(compareById);
+        Comparator<OrganisationResource> compareById =
+                Comparator.comparingLong(OrganisationResource::getId);
+        Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
 
+        // TODO DW - INFUND-1604 - remove the step of mapping organisations to OrganisationResources below when ProcessRoles
+        // are converted to ProcessRoleResources
         return userApplicationRoles.stream()
                 .filter(uar -> (uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName())))
                 .map(ProcessRole::getOrganisation)
+                .map(organisation -> organisationRestService.getOrganisationById(organisation.getId()).getSuccessObjectOrThrowException())
                 .collect(Collectors.toCollection(supplier));
     }
 
     @Override
-    public Optional<Organisation> getApplicationLeadOrganisation(ApplicationResource application) {
+    public Optional<OrganisationResource> getApplicationLeadOrganisation(ApplicationResource application) {
         List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
                 .map(id -> processRoleService.getById(id))
                 .collect(Collectors.toList()));
 
+        // TODO DW - INFUND-1604 - remove the step of mapping organisations to OrganisationResources below when ProcessRoles
+        // are converted to ProcessRoleResources
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
                 .map(ProcessRole::getOrganisation)
+                .map(organisation -> organisationRestService.getOrganisationById(organisation.getId()).getSuccessObjectOrThrowException())
                 .findFirst();
     }
 
     @Override
-    public Optional<Organisation> getUserOrganisation(ApplicationResource application, Long userId) {
+    public Optional<OrganisationResource> getUserOrganisation(ApplicationResource application, Long userId) {
         List<ProcessRole> userApplicationRoles = call(application.getProcessRoles().stream()
                 .map(id -> processRoleService.getById(id))
                 .collect(Collectors.toList()));
+
+        // TODO DW - INFUND-1604 - remove the step of mapping organisations to OrganisationResources below when ProcessRoles
+        // are converted to ProcessRoleResources
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().getId().equals(userId))
                 .map(ProcessRole::getOrganisation)
+                .map(organisation -> organisationRestService.getOrganisationById(organisation.getId()).getSuccessObjectOrThrowException())
                 .findFirst();
     }
 
@@ -80,30 +90,21 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public List<OrganisationSearchResult> searchCompanyHouseOrganisations(String searchText) {
-        return companyHouseRestService.searchOrganisations(searchText);
-    }
-
-    @Override
-    // TODO DW - INFUND-1555 - get below methods to return the RestResults
-    public Organisation getOrganisationById(Long organisationId) {
+    public OrganisationResource getOrganisationById(Long organisationId) {
         return organisationRestService.getOrganisationById(organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    // TODO DW - INFUND-1555 - get below methods to return the RestResults
     public OrganisationResource save(Organisation organisation) {
         return organisationRestService.save(organisation).getSuccessObjectOrThrowException();
     }
 
     @Override
-    // TODO DW - INFUND-1555 - get below methods to return the RestResults
     public OrganisationResource save(OrganisationResource organisation) {
         return organisationRestService.save(organisation).getSuccessObjectOrThrowException();
     }
 
     @Override
-    // TODO DW - INFUND-1555 - get below methods to return the RestResults
     public OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, AddressType addressType) {
         return organisationRestService.addAddress(organisation, address, addressType).getSuccessObjectOrThrowException();
     }

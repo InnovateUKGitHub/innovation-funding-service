@@ -1,10 +1,14 @@
 package com.worth.ifs.user.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
-import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.repository.AddressRepository;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.domain.OrganisationType;
+import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +16,20 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.Set;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class OrganisationControllerIntegrationTest  extends BaseControllerIntegrationTest<OrganisationController> {
 
-    String companyHouseId = "0123456789";
-    String companyName = "CompanyName1";
+    @Autowired
+    private OrganisationTypeRepository organisationTypeRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    private static final String companyHouseId = "0123456789";
+    private static final String companyName = "CompanyName1";
 
     @Override
     @Autowired
@@ -29,7 +40,7 @@ public class OrganisationControllerIntegrationTest  extends BaseControllerIntegr
     @Rollback
     @Test
     public void findByIdShouldReturnOrganisation() throws Exception {
-        Organisation org = controller.findById(1L).getSuccessObject();
+        OrganisationResource org = controller.findById(1L).getSuccessObject();
         assertEquals("Nomensa", org.getName());
 
         org = controller.findById(2L).getSuccessObject();
@@ -42,34 +53,36 @@ public class OrganisationControllerIntegrationTest  extends BaseControllerIntegr
     @Rollback
     @Test
     public void testOrganisationType() throws Exception {
-        Organisation org = controller.findById(1L).getSuccessObject();
-        assertEquals("Business", org.getOrganisationType().getName());
+        OrganisationResource org = controller.findById(1L).getSuccessObject();
+        OrganisationType organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
+
+        assertEquals("Business", organisationType.getName());
 
         org = controller.findById(2L).getSuccessObject();
-        assertEquals("Business", org.getOrganisationType().getName());
+        organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
+        assertEquals("Business", organisationType.getName());
 
         org = controller.findById(5L).getSuccessObject();
-        assertEquals("University (HEI)", org.getOrganisationType().getName());
-        assertEquals("Research", org.getOrganisationType().getParentOrganisationType().getName());
+        organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
+        assertEquals("University (HEI)", organisationType.getName());
+        assertEquals("Research", organisationType.getParentOrganisationType().getName());
     }
 
     @Rollback
     @Test
     public void testFindByApplicationId() throws Exception {
-        Set<Organisation> organisations = controller.findByApplicationId(1L).getSuccessObject();
+        Set<OrganisationResource> organisations = controller.findByApplicationId(1L).getSuccessObject();
         assertEquals("There should be 5 organisation in this application", 5, organisations.size());
 
-        Organisation organisation = controller.findById(2L).getSuccessObject();
-        assertTrue("One of the organisations should be Worth Internet Systems", organisations.contains(organisation));
+        OrganisationResource organisation = controller.findById(2L).getSuccessObject();
+        assertTrue("One of the organisations should be Worth Internet Systems", simpleMap(organisations, OrganisationResource::getId).contains(organisation.getId()));
     }
 
     private OrganisationResource createOrganisation(){
         Organisation organisation = new Organisation();
         organisation.setName(companyName);
         organisation.setCompanyHouseNumber(companyHouseId);
-
-        OrganisationResource organisationResource = controller.create(organisation).getSuccessObject();
-        return organisationResource;
+        return controller.create(organisation).getSuccessObject();
     }
 
     @Rollback
@@ -81,7 +94,7 @@ public class OrganisationControllerIntegrationTest  extends BaseControllerIntegr
         assertEquals(companyHouseId, organisationResource.getCompanyHouseNumber());
         assertEquals(companyName, organisationResource.getName());
 
-        Organisation org = controller.findById(organisationResource.getId()).getSuccessObject();
+        OrganisationResource org = controller.findById(organisationResource.getId()).getSuccessObject();
         assertEquals(companyHouseId, org.getCompanyHouseNumber());
         assertEquals(companyName, org.getName());
     }
@@ -97,7 +110,7 @@ public class OrganisationControllerIntegrationTest  extends BaseControllerIntegr
         assertEquals(companyName, organisationResource.getName());
         assertEquals(OrganisationSize.LARGE, organisationResource.getOrganisationSize());
 
-        Organisation org = controller.findById(organisationResource.getId()).getSuccessObject();
+        OrganisationResource org = controller.findById(organisationResource.getId()).getSuccessObject();
         assertEquals(companyHouseId, org.getCompanyHouseNumber());
         assertEquals(companyName, org.getName());
         assertEquals(OrganisationSize.LARGE, org.getOrganisationSize());
@@ -110,13 +123,18 @@ public class OrganisationControllerIntegrationTest  extends BaseControllerIntegr
         AddressResource addressResource = new AddressResource("Line1", "Line2",  "Line3", "town", "county", "postcode");
         controller.addAddress(organisationResource.getId(), AddressType.OPERATING, addressResource);
 
-        Organisation cleanOrganisation = controller.findById(organisationResource.getId()).getSuccessObject();
+        flushAndClearSession();
+
+        OrganisationResource cleanOrganisation = controller.findById(organisationResource.getId()).getSuccessObject();
         assertEquals(1, cleanOrganisation.getAddresses().size());
-        assertEquals("Line1", cleanOrganisation.getAddresses().get(0).getAddress().getAddressLine1());
-        assertEquals("Line2", cleanOrganisation.getAddresses().get(0).getAddress().getAddressLine2());
-        assertEquals("Line3", cleanOrganisation.getAddresses().get(0).getAddress().getAddressLine3());
-        assertEquals("town", cleanOrganisation.getAddresses().get(0).getAddress().getTown());
-        assertEquals("postcode", cleanOrganisation.getAddresses().get(0).getAddress().getPostcode());
-        assertEquals("county", cleanOrganisation.getAddresses().get(0).getAddress().getCounty());
+        Long addressId = cleanOrganisation.getAddresses().get(0);
+        Address address = addressRepository.findOne(addressId);
+
+        assertEquals("Line1", address.getAddressLine1());
+        assertEquals("Line2", address.getAddressLine2());
+        assertEquals("Line3", address.getAddressLine3());
+        assertEquals("town", address.getTown());
+        assertEquals("postcode", address.getPostcode());
+        assertEquals("county", address.getCounty());
     }
 }

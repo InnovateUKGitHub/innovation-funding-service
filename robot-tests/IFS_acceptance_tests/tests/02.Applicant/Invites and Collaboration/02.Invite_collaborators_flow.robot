@@ -53,44 +53,44 @@ Lead applicant can access the Application team page(Link in the overview page)
     [Documentation]    INFUND-928
     [Tags]    HappyPath
     Given the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
-    And The user should see the text in the page    View team members and add collaborators
-    When The user clicks the button/link    link=View team members and add collaborators
-    Then The user should see the text in the page    Application team
-    And The user should see the text in the page    View and manage your contributors and partners in the application.
-    And Lead Applicant should have the correct status
+    And the user should see the text in the page    View team members and add collaborators
+    When the user clicks the button/link    link=View team members and add collaborators
+    Then the user should see the text in the page    Application team
+    And the user should see the text in the page    View and manage your contributors and partners in the application.
+    And the lead applicant should have the correct status
 
-Status of the invited people(Application team page)
+Status of the invited people (Application team page)
     [Documentation]    INFUND-929
     [Tags]    HappyPath
     Given the user navigates to the page    ${APPLICATION_TEAM_PAGE}
-    Then The status of the Invited people should be correct in the application team page
+    Then the status of the invited people should be correct in the application team page
 
-Status of the invited people(Manage contributors page)
+Status of the invited people (Manage contributors page)
     [Documentation]    INFUND-928
     [Tags]    HappyPath
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
-    When The user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then The user should see the text in the page    Manage Contributors
+    When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    Then the user should see the text in the page    Manage Contributors
     And the status of the people should be correct in the Manage contributors page
 
-The Lead Applicant can add new collaborators
+The lead applicant can add new collaborators
     [Documentation]    INFUND-928
     [Tags]    HappyPath    FailingForDev
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
-    When The user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then The user should see the text in the page    Manage Contributors
-    And The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
+    When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    Then the user should see the text in the page    Manage Contributors
+    And the user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
     When the user adds new collaborator
     And the applicant can enter Organisation name, Name and E-mail
-    And The user clicks the button/link    jquery=button:contains("Save Changes")
+    And the user clicks the button/link    jquery=button:contains("Save Changes")
     Then the user should be redirected to the correct page    ${APPLICATION_TEAM_URL}
 
-Verify the invited collaborators are not editable
+Invited collaborators are not editable
     [Documentation]    INFUND-929
     [Tags]    FailingForDev
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
-    When The user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then The user should see the text in the page    Manage Contributors
+    When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    Then the user should see the text in the page    Manage Contributors
     And the invited collaborators are not editable
 
 Pending users are visible in the assign list but not clickable
@@ -99,7 +99,7 @@ Pending users are visible in the assign list but not clickable
     ...    INFUND-1962
     [Tags]
     Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    Then the applicant should not be able to assign the question to the users that still pending the invite
+    Then the applicant cannot assign to pending invitees
     And the user should see the text in the page    Roger Axe (pending)
 
 *** Keywords ***
@@ -122,7 +122,7 @@ the applicant enters valid inputs
     Sleep    1s
     Click Element    jquery=button:contains("Begin application")
 
-Lead Applicant should have the correct status
+The lead applicant should have the correct status
     page should contain element    css=#content h2.heading-medium
     ${input_value} =    get text    css=#content h2.heading-medium
     Should Be Equal As Strings    ${input_value}    Empire Ltd (Lead organisation)
@@ -145,7 +145,7 @@ the applicant can enter Organisation name, Name and E-mail
     focus    jquery=li:nth-child(2) button:contains('Add person')
     Sleep    2s
 
-The status of the Invited people should be correct in the application team page
+The status of the invited people should be correct in the application team page
     Element Should Contain    css=#content ul li:nth-child(1)    (Lead Applicant)
     Element Should Contain    css=#content ul li:nth-child(2)    (pending)
     Element Should Contain    css=p+ div .heading-medium small    (Lead organisation)
@@ -160,7 +160,7 @@ the invited collaborators are not editable
     page should contain element    jQuery=li:nth-child(3) tr:nth-of-type(1) td:nth-child(2) [readonly]
     page should contain element    jQuery=li:nth-child(3) tr:nth-of-type(1) td:nth-child(1) [readonly]
 
-the applicant should not be able to assign the question to the users that still pending the invite
+the applicant cannot assign to pending invitees
     Click Element    jQuery=button:contains("Assigned to")
     Page Should not Contain Element    jQuery=button:contains("tester")
 

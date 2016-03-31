@@ -17,10 +17,10 @@ import java.util.Set;
 public interface OrganisationService {
 
     @NotSecured("TODO DW - implement security when permissions matrix known")
-    ServiceResult<Set<Organisation>> findByApplicationId(Long applicationId);
+    ServiceResult<Set<OrganisationResource>> findByApplicationId(Long applicationId);
 
     @NotSecured("TODO DW - implement security when permissions matrix known")
-    ServiceResult<Organisation> findById(Long organisationId);
+    ServiceResult<OrganisationResource> findById(Long organisationId);
 
     @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
     ServiceResult<OrganisationResource> create(Organisation organisation);

@@ -2,7 +2,6 @@ package com.worth.ifs.commons.service;
 
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
@@ -17,6 +16,7 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.core.ParameterizedTypeReference;
@@ -75,10 +75,6 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<CompetitionResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<QuestionStatus>> questionStatusListType() {
-        return new ParameterizedTypeReference<List<QuestionStatus>>() {};
-    }
-
     public static ParameterizedTypeReference<List<QuestionStatusResource>> questionStatusResourceListType() {
         return new ParameterizedTypeReference<List<QuestionStatusResource>>() {};
     }
@@ -125,5 +121,9 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<AddressResource>> addressResourceListType() {
         return new ParameterizedTypeReference<List<AddressResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<OrganisationResource>> organisationResourceListType() {
+        return new ParameterizedTypeReference<List<OrganisationResource>>() {};
     }
 }

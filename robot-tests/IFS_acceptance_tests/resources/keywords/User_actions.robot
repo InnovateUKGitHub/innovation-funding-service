@@ -183,3 +183,21 @@ The user verifies their email
     [Arguments]    ${verify_link}
     Go To    ${verify_link}
     Page Should Contain    Account verified
+
+
+the user can see the uploaded file
+    [Arguments]         ${file_name}
+    Page Should Contain         ${file_name}
+
+
+the user can remove the uploaded file
+    [Arguments]     ${file_name}
+    Reload Page
+    Click Button        name=remove_uploaded_file
+    Wait Until Page Does Not Contain        Remove
+    Page Should Contain         Upload
+    Page Should Not Contain     ${file_name}
+
+the user cannot remove the uploaded file
+    [Arguments]     ${file_name}
+    Page Should Not Contain         Remove

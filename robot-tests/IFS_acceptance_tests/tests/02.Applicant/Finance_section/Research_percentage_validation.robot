@@ -42,7 +42,7 @@ There is an error message on the finances form
 
 There is an error message on the summary page
     Go To    ${APPLICATION_2_SUMMARY_URL}
-    Click Button    css=[aria-controls="collapsible-15"]
+    Click Button    css=[aria-controls="collapsible-14"]
     Page Should Contain    The participation levels of this project are not within the required range
 
 The applicant can log out
@@ -53,7 +53,7 @@ The first collaborator logs in
 
 The first collaborator edits financial details to bring down the research participation level
     Go To    ${your_finances_url_application_2}
-    Click Element    css=[aria-controls="collapsible-1"]
+    Click Element    css=[aria-controls="collapsible-0"]
     Wait Until Element Is Visible    name=add_cost
     Click Element    name=add_cost
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
@@ -69,8 +69,8 @@ There is no error message on the finances form
 
 There is no error message on the summary page
     Go To    ${APPLICATION_2_SUMMARY_URL}
-    Wait Until Element Is Visible    css=[aria-controls="collapsible-15"]
-    Click Button    css=[aria-controls="collapsible-15"]
+    Wait Until Element Is Visible    css=[aria-controls="collapsible-14"]
+    Click Button    css=[aria-controls="collapsible-14"]
     Sleep    3s
     Page Should Not Contain    The participation levels of this project are not within the required range
 

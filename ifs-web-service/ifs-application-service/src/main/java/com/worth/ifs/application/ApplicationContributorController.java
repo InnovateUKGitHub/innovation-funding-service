@@ -18,6 +18,7 @@ import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.util.CookieUtil;
 import com.worth.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -233,7 +234,7 @@ public class ApplicationContributorController{
     
     private void saveContributor(OrganisationInviteForm organisationInvite, Long applicationId, HttpServletResponse response) {
     	List<InviteResource> invites = new ArrayList<>();
-        Organisation existingOrganisation = null;
+        OrganisationResource existingOrganisation = null;
         if (organisationInvite.getOrganisationId() != null) {
             // check if there is a organisation with this ID, just to make sure the user has not entered a non-existing organisation id.
             existingOrganisation = organisationService.getOrganisationById(organisationInvite.getOrganisationId());

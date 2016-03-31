@@ -17,9 +17,6 @@ ${valid_pdf}            testing.pdf
 ${too_large_pdf}        large.pdf
 ${text_file}            testing.txt
 
-# ${JSFUNCTION}   window.document.getElementById("18").onChange();
-
-
 *** Test Cases ***
 
 Verify that the applicant can upload pdf files
@@ -27,13 +24,23 @@ Verify that the applicant can upload pdf files
     [Tags]      Collaboration       Upload
     [Setup]     Guest user log-in   &{lead_applicant_credentials}
     Given the user can see the option to upload a file on the page      ${project_team_url}
-    And the user uploads the file to the project team page        ${valid_pdf}
+    And the user uploads the file to the 'project team' question       ${valid_pdf}
+
+Collaborators can view files but not remove them
+    [Documentation]         INFUND-2306
+    [Tags]   Collaboration   Upload
+    [Setup]     Guest user log-in   &{collaborator2_credentials}
+    When the user cannot see the option to upload a file on the page      ${project_team_url}
+    Then the user can see the uploaded file         ${valid_pdf}
+    And the user cannot remove the uploaded file        ${valid_pdf}
+
+
 
 Questions can be assigned with appendices to the collaborator
     [Documentation]     INFUND-832
     ...                 INFUND-409
     [Tags]      Collaboration       Upload      PendingForDev
-    # pending until we have access to the dev server's IFS file repository
+    # pending for dev until we have access to the dev server's IFS file repository
     [Setup]     Guest user log-in   &{lead_applicant_credentials}
     Given the user navigates to the page     ${project_team_url}
     And the user can see the uploaded file  ${valid_pdf}
@@ -67,7 +74,7 @@ Large pdf uploads not allowed
     [Documentation]        INFUND-832
     [Tags]      Collaboration       Upload
     Given the user can see the option to upload a file on the page      ${project_team_url}
-    When the user uploads the file to the project team page       ${too_large_pdf}
+    When the user uploads the file to the 'project team' question       ${too_large_pdf}
     Then the user should get an error page      ${too_large_pdf_validation_error}
 
 
@@ -75,7 +82,7 @@ Non pdf uploads not allowed
     [Documentation]     INFUND-832
     [Tags]      Collaboration       Upload
     Given the user can see the option to upload a file on the page      ${PROJECT_TEAM_URL}
-    When the user uploads the file to the project team page     ${text_file}
+    When the user uploads the file to the 'project team' question     ${text_file}
     Then the user should get an error page      ${wrong_filetype_validation_error}
 
 
@@ -84,26 +91,6 @@ Non pdf uploads not allowed
 
 *** Keywords ***
 
-
-the user can see the uploaded file
-    [Arguments]         ${file_name}
-    Page Should Contain         ${file_name}
-
-
-the user can remove the uploaded file
-    [Arguments]     ${file_name}
-    Reload Page
-    Click Button        name=remove_uploaded_file
-    Wait Until Page Does Not Contain        Remove
-    Page Should Contain         Upload
-    Page Should Not Contain     ${file_name}
-
-the user cannot remove the uploaded file
-    [Arguments]     ${file_name}
-    Page Should Not Contain         Remove
-    Page Should Contain         ${file_name}
-
-
 the user logs out
     logout as user
 
@@ -111,25 +98,21 @@ the collaborator logs in
     log in as user   &{collaborator1_credentials}
 
 
-the user uploads the file to the project team page
+the user uploads the file to the 'project team' question
     [Arguments]     ${file_name}
     Choose File    name=formInput[18]    ${UPLOAD_FOLDER}/${file_name}
     Sleep   500ms
 
 
-
-
 the user can see the option to upload a file on the page
     [Arguments]     ${url}
     The user navigates to the page      ${url}
-    Wait Until Element Is Visible       name=mark_as_complete
     Page Should Contain                 Upload
 
 
 the user cannot see the option to upload a file on the page
     [Arguments]     ${url}
     The user navigates to the page      ${url}
-    Wait Until Element Is Visible       name=mark_as_complete
     Page Should Not Contain             Upload
 
 

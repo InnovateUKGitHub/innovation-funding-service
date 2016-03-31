@@ -1,13 +1,13 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.resource.QuestionStatusResource;
 import org.junit.Test;
 
 import java.util.List;
 
-import static com.worth.ifs.application.builder.QuestionStatusBuilder.newQuestionStatus;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionStatusListType;
+import static com.worth.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionStatusResourceListType;
 import static org.junit.Assert.assertEquals;
 
 public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<QuestionStatusRestServiceImpl> {
@@ -23,10 +23,10 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
     @Test
     public void findQuestionStatusesByQuestionAndApplicationIdTest() {
 
-        List<QuestionStatus> questionStatuses = newQuestionStatus().build(3);
-        setupGetWithRestResultExpectations(questionStatusRestURL + "/findByQuestionAndApplication/1/2", questionStatusListType(), questionStatuses);
+        List<QuestionStatusResource> questionStatuses = newQuestionStatusResource().build(3);
+        setupGetWithRestResultExpectations(questionStatusRestURL + "/findByQuestionAndApplication/1/2", questionStatusResourceListType(), questionStatuses);
 
-        List<QuestionStatus> returnedQuestionStatuses = service.findQuestionStatusesByQuestionAndApplicationId(1L, 2L).getSuccessObject();
+        List<QuestionStatusResource> returnedQuestionStatuses = service.findQuestionStatusesByQuestionAndApplicationId(1L, 2L).getSuccessObject();
         assertEquals(questionStatuses, returnedQuestionStatuses);
     }
 }

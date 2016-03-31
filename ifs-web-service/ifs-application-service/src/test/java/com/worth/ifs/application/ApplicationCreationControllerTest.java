@@ -51,7 +51,7 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        super.setup();
+
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
@@ -59,6 +59,8 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
         mockMvc = MockMvcBuilders.standaloneSetup(applicationCreationController, new ErrorControllerAdvice())
                 .setViewResolvers(viewResolver())
                 .build();
+
+        super.setup();
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
         address = new AddressResource("line1", "line2", "line3", "locality", "region", "postcode");

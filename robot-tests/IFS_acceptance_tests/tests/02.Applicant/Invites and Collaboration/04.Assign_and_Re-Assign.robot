@@ -64,13 +64,11 @@ The question is enabled on the summary page for the assignee
     When the user opens the 'public description' collapsible
     And the user should see the element     jQuery=button:contains("Ready for review")
 
-
-
 'Last update' message is correctly updating
     [Documentation]    INFUND-280
     [Tags]    Collaboration
     Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    When the collaborator edits public description question
+    When the collaborator edits the 'public description' question
     Then the question should contain the correct status/name    css=#form-input-12 .textarea-footer    Last updated: Today by you
 
 Collaborators cannot assign a question
@@ -128,12 +126,13 @@ Appendices are assigned along with the question
     And the user can't see the option to upload a file
 
 *** Keywords ***
-the collaborator edits public description question
+
+the collaborator edits the 'public description' question
     Clear Element Text    css=#form-input-12 .editor
     Focus    css=#form-input-12 .editor
     Input Text    css=#form-input-12 .editor    collaborator's text
     Focus    css=.app-submit-btn
-    Sleep    500ms
+    Sleep    2s
     Reload Page
 
 the question should contain the correct status/name

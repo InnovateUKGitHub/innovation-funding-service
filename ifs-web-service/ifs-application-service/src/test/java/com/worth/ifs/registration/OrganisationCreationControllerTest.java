@@ -68,14 +68,16 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        super.setup();
+
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
         mockMvc = MockMvcBuilders.standaloneSetup(organisationCreationController, new ErrorControllerAdvice())
                 .setViewResolvers(viewResolver())
                 .build();
-        this.setupOrganisationTypes();
+
+        super.setup();
+
         this.setupInvites();
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
@@ -86,7 +88,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
         when(organisationService.save(any(Organisation.class))).thenReturn(organisationResource);
         when(organisationService.save(any(OrganisationResource.class))).thenReturn(organisationResource);
         when(applicationService.createApplication(anyLong(), anyLong(), anyString())).thenReturn(applicationResource);
-        when(organisationSearchRestService.getOrganisation(organisationTypeResource.getId(), COMPANY_ID)).thenReturn(RestResult.restSuccess(organisationSearchResult));
+        when(organisationSearchRestService.getOrganisation(businessOrganisationTypeResource.getId(), COMPANY_ID)).thenReturn(RestResult.restSuccess(organisationSearchResult));
         when(organisationSearchRestService.searchOrganisation(anyLong(), anyString())).thenReturn(RestResult.restSuccess(new ArrayList<>()));
         when(addressRestService.validatePostcode("CH64 3RU")).thenReturn(RestResult.restSuccess(true));
 

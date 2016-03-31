@@ -4,7 +4,7 @@ import com.worth.ifs.commons.mapper.BaseMapper;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.user.mapper.OrganisationMapper;
+import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
