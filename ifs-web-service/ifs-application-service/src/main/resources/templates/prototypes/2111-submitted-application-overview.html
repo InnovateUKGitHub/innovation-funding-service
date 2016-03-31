@@ -29,7 +29,7 @@
 
 	</div>
 
-	<div th:if="${param.status != null and param.status[0] == 'unsuccessful'}" th:remove="tag">
+	<div th:if="${param.status != null and param.status[0] == 'unsuccessful' or param.status[0] == 'unsuccessfulFeedback'}" th:remove="tag">
 
 		<div class="warning-alert">
 	        <h2 class="heading-small no-margin">Your application has not been successful in this competition</h2>

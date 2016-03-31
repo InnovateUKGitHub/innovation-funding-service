@@ -9,6 +9,7 @@ import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.exception.InviteAlreadyAcceptedException;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
@@ -104,19 +105,26 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String registerForm(Model model, HttpServletRequest request) {
+    public String registerForm(Model model, HttpServletRequest request, HttpServletResponse response) {
         User user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
             return getRedirectUrlForUser(user);
         }
 
+        try {
+        	addRegistrationFormToModel(model, request);
+        }
+        catch (InviteAlreadyAcceptedException e) {
+        	cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
+        	return "redirect:/login";
+        }
+        
         String destination = "registration-register";
 
         if (!processOrganisation(request, model)) {
             destination = "redirect:/";
         }
 
-        addRegistrationFormToModel(model, request);
         return destination;
     }
 
@@ -154,6 +162,7 @@ public class RegistrationController {
                 return true;
             }else{
                 LOG.debug("Invite already accepted.");
+                throw new InviteAlreadyAcceptedException();
             }
         }
         return false;
@@ -171,7 +180,17 @@ public class RegistrationController {
                                      Model model) {
 
         LOG.warn("registerFormSubmit");
-        if(setInviteeEmailAddress(registrationForm, request, model)){
+        
+        boolean setInviteEmailAddress;
+        
+        try {
+        	setInviteEmailAddress = setInviteeEmailAddress(registrationForm, request, model);
+        } catch (InviteAlreadyAcceptedException e) {
+            cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
+            return "redirect:/login";
+        }
+        
+        if(setInviteEmailAddress){
             LOG.warn("setInviteeEmailAddress"+ registrationForm.getEmail());
             // re-validate since we did set the emailaddress in the meantime. @Valid annotation is needed for unit tests.
             bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
@@ -228,7 +247,6 @@ public class RegistrationController {
                 inviteRestService.acceptInvite(inviteHash, userResource.getId()).getStatusCode();
                 return i;
             });
-            CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
             return restResult.isSuccess();
         }
         return false;
@@ -236,7 +254,7 @@ public class RegistrationController {
 
     private void checkForExistingEmail(String email, BindingResult bindingResult) {
         if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME) && StringUtils.hasText(email)) {
-            RestResult existingUserSearch = userService.findUserByEmail(email);
+            RestResult<UserResource> existingUserSearch = userService.findUserByEmail(email);
             if (!HttpStatus.NOT_FOUND.equals(existingUserSearch.getStatusCode())) {
                 bindingResult.addError(new FieldError(EMAIL_FIELD_NAME, EMAIL_FIELD_NAME, email, false, null, null, "Email address is already in use"));
             }

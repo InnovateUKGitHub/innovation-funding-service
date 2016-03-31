@@ -4,6 +4,14 @@
 	margin: 0 auto;
 }
 
+/*--- Inline lists ---*/
+
+.list-inline{
+	li{
+		display: inline;
+	}
+}
+
 
 /*--- Table overflows for small screens ---*/
 .total-cost{

@@ -28,8 +28,7 @@ ${YOUR_FINANCES_URL}    ${SERVER}/application/1/form/section/7
 *** Test Cases ***
 Valid invitation submit
     [Documentation]    INFUND-901
-    [Tags]    HappyPath    FailingForDev
-    # note - this is failing due to email failing on the dev server because of a firewall issue - this will be fixed soon!
+    [Tags]    HappyPath
     Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     When the applicant enters valid inputs
     And the user verifies their email    ${verify_link_3}
@@ -40,7 +39,7 @@ Valid invitation submit
 Collaborator can change the name of their company and this updates throughout the application
     [Documentation]    INFUND-2083
     [Tags]    Pending
-    # note - opnly pending because it isn't working yet!
+    # note - only pending because it isn't working yet!
     Given the lead applicant logs out
     And the invited user verifies their email
     When the user changes their company name
