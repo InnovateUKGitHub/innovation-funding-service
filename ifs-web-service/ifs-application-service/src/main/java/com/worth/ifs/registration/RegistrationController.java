@@ -3,20 +3,21 @@ package com.worth.ifs.registration;
 import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.application.ApplicationCreationController;
 import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.form.RegistrationForm;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.CompAdminEmailService;
+import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.util.CookieUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,6 +55,9 @@ public class RegistrationController {
     Validator validator;
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CompAdminEmailService compAdminEmailService;
 
     @Autowired
     private OrganisationService organisationService;
@@ -187,6 +191,12 @@ public class RegistrationController {
 
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
 
+        if(isUserCompAdmin(registrationForm.getEmail())){
+            LOG.info("User is comp admin");
+        } else {
+            LOG.info("User is not comp admin");
+        }
+
         if(!bindingResult.hasErrors()) {
             RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request), getCompetitionId(request));
 
@@ -241,6 +251,16 @@ public class RegistrationController {
                 bindingResult.addError(new FieldError(EMAIL_FIELD_NAME, EMAIL_FIELD_NAME, email, false, null, null, "Email address is already in use"));
             }
         }
+    }
+
+    private boolean isUserCompAdmin(final String email) {
+        if(StringUtils.hasText(email)) {
+            RestResult existingUserSearch = compAdminEmailService.findByEmail(email);
+            if (HttpStatus.FOUND.equals(existingUserSearch.getStatusCode())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {

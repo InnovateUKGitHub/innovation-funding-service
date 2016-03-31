@@ -40,6 +40,7 @@ import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.CompAdminEmailService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
@@ -123,6 +124,8 @@ public class BaseUnitTest {
     public ProcessRoleService processRoleService;
     @Mock
     public UserService userService;
+    @Mock
+    public CompAdminEmailService compAdminEmailService;
     @Mock
     public FinanceService financeService;
     @Mock
