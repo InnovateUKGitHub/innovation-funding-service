@@ -163,6 +163,24 @@ User who accepted the invite should be able to log-in
     And the user should see the text in the page    A novel solution to an old problem
     [Teardown]    User closes the browser
 
+
+User who accepted the invite can invite others to their own organisation
+    [Documentation]     INFUND-2335
+    [Tags]      FailingForLocal         Pending
+    # pending as the build is broken so I can't keep working on it! Hopefully tomorrow I will be able to fix
+    Given guest user log-in             worth.email.test+invite1@gmail.com      Passw0rd
+    When the user navigates to the page     ${MANAGE_CONTRIBUTORS_URL}
+    # Then the user should be able to invite to their own org
+
+
+User who accepted the invite cannot invite others to other organisations
+    [Documentation]     INFUND-2335
+    [Tags]      FailingForLocal     Pending
+    # pending as the build is broken so I can't keep working on it! Hopefully tomorrow I will be able to fix
+    Given guest user log-in             worth.email.test+invite1@gmail.com      Passw0rd
+    When the user navigates to the page     ${MANAGE_CONTRIBUTORS_URL}
+    # Then the user should not be able to invite to other orgs
+
 The collaborator who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
     [Tags]    HappyPath    FailingForLocal
@@ -171,6 +189,7 @@ The collaborator who accepted the invite should be visible in the assign list
     And the user clicks the button/link    css=.assign-button
     Then the user should see the element    jQuery=button:contains("Rogier De Regt")
     [Teardown]    TestTeardown User closes the browser
+
 
 Academic organisation (accept invitation flow)
     [Documentation]    INFUND-1166
