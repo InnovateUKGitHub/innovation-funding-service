@@ -2,7 +2,8 @@
 Documentation     INFUND-736: As an applicant I want to be able to add all the finance details for all the sections so I can sent in all the info necessary to apply
 ...
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
-Suite Setup       Guest user log-in    &{lead_applicant_credentials}
+Suite Setup       Run Keywords    Guest user log-in    &{lead_applicant_credentials}
+...               AND    Given the user navigates to the page    ${YOUR_FINANCES_URL}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        HappyPath
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -26,7 +27,6 @@ Labour
     ...
     ...    INFUND-1256
     [Tags]    Finances
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
@@ -34,6 +34,7 @@ Labour
     Then Totals should be correct    css=#section-total-9    £ 52,174    css=[data-mirror="#section-total-9"]    £ 52,174
     And the applicant edits the working days field
     Then Totals should be correct    css=#section-total-9    £ 48,000    css=[data-mirror="#section-total-9"]    £ 48,000
+    [Teardown]    Click Element    jQuery=button:contains("Labour")
 
 Administration support costs
     [Documentation]    INFUND-192
@@ -42,8 +43,7 @@ Administration support costs
     ...
     ...    INFUND-736
     [Tags]    Finances
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
-    When the user clicks the button/link    css=[aria-controls="collapsible-2"]
+    When the user clicks the button/link    jQuery=button:contains("Administration support costs")
     And user selects the admin costs    overheads-rateType-29-51    DEFAULT_PERCENTAGE
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
     And user selects the admin costs    overheads-rateType-29-51    CUSTOM_RATE
@@ -53,65 +53,64 @@ Administration support costs
     And the user enters text to a text field    id=cost-overheads-51-agreedRate    40
     Then admin costs total should be correct    id=section-total-10-special    £ 19,200
     And the user reloads the page
-    And the user clicks the button/link    css=[aria-controls="collapsible-2"]
     Then admin costs total should be correct    id=section-total-10-special    £ 19,200
+    [Teardown]    Click Element    jQuery=button:contains("Administration support costs")
 
 Materials
     [Documentation]    INFUND-192
     ...
     ...    INFUND-736
     [Tags]    Finances
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     When the Applicant fills the Materials fields
     Then Totals should be correct    css=#section-total-11    £ 2,000    css=[data-mirror="#section-total-11"]    £ 2,000
     And the user clicks the button/link    css=#material-costs-table tbody tr:nth-child(1) button
     And the user reloads the page
     Then Totals should be correct    css=#section-total-11    £ 1,000    css=[data-mirror="#section-total-11"]    £ 1,000
+    [Teardown]    Click Element    jQuery=button:contains("Materials")
 
 Capital usage
     [Documentation]    INFUND-736
     [Tags]    Finances
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     When the applicant fills the 'capital usage' field
     Then Totals should be correct    css=#section-total-12    £ 200    css=[data-mirror="#section-total-12"]    £ 200
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
     Then Totals should be correct    css=#section-total-12    £ 100    css=[data-mirror="#section-total-12"]    £ 100
+    [Teardown]    Click Element    jQuery=button:contains("Capital usage")
 
 Subcontracting costs
     [Documentation]    INFUND-192
     ...    INFUND-736
     [Tags]    Finances
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
-    And the applicant edits the Subcontracting costs section
-    Then Totals should be correct    css=#section-total-13    £ 200    css=[aria-controls="collapsible-5"] [data-mirror]    £ 200
+    When the applicant edits the Subcontracting costs section
+    Then Totals should be correct    css=#section-total-13    £ 200    css=[aria-controls="collapsible-4"] [data-mirror]    £ 200
     And the user clicks the button/link    css=#subcontracting_costs [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
-    Then Totals should be correct    css=#section-total-13    £ 100    css=[aria-controls="collapsible-5"] [data-mirror]    £ 100
+    Then Totals should be correct    css=#section-total-13    £ 100    css=[aria-controls="collapsible-4"] [data-mirror]    £ 100
+    [Teardown]    Click Element    jQuery=button:contains("Subcontracting costs")
 
 Travel and subsistence
     [Documentation]    INFUND-736
     [Tags]    Finances
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
-    And the Applicant fills the Travel fields
+    When the Applicant fills the Travel fields
     Then Totals should be correct    css=#section-total-14    £ 2,000    css=[data-mirror="#section-total-14"]    £ 2,000
     And the user clicks the button/link    css=#travel-costs-table [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
     Then Totals should be correct    css=#section-total-14    £ 1,000    css=[data-mirror="#section-total-14"]    £ 1,000
+    [Teardown]    Click Element    jQuery=button:contains("Travel and subsistence")
 
 Other costs
     [Documentation]    INFUND-736
     [Tags]    Finances
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
-    And the applicant adds one row for the other costs
+    When the applicant adds one row for the other costs
     Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
     Then the user reloads the page
     Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
+    [Teardown]    Click Element    jQuery=button:contains("Other Costs")
 
 Other Funding
     [Documentation]    INFUND-438
     [Tags]    Finances
-    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     When Applicant selects 'Yes' and fills two rows
     Then the total of the other funding should be correct
     And Applicant can leave the 'Your finances' page but the details are still saved
@@ -120,7 +119,7 @@ Other Funding
 
 *** Keywords ***
 the Applicant fills in the Labour costs for two rows
-    Click Element    css=[aria-controls="collapsible-1"]
+    Click Element    jQuery=button:contains("Labour")
     Click Element    jQuery=button:contains('Add another role')
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     Clear Element Text    css=#cost-labour-1-workingDays
@@ -135,7 +134,7 @@ the Applicant fills in the Labour costs for two rows
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
 
 the applicant edits the working days field
-    Click Element    css=[aria-controls="collapsible-1"]
+    #Click Element    css=[aria-controls="collapsible-1"]
     Wait Until Element Is Visible    css=#cost-labour-1-workingDays
     Clear Element Text    css=#cost-labour-1-workingDays
     Input Text    css=#cost-labour-1-workingDays    250
@@ -143,7 +142,7 @@ the applicant edits the working days field
     Sleep    200ms
 
 the Applicant fills the Materials fields
-    Click Element    xpath=//*[@aria-controls="collapsible-3"]
+    Click Element    jQuery=button:contains("Materials")
     Click Element    jQuery=button:contains('Add another materials cost')
     Wait Until Page Contains Element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
@@ -156,19 +155,19 @@ the Applicant fills the Materials fields
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
 
 the applicant edits the Subcontracting costs section
-    Click Element    css=[aria-controls="collapsible-5"]
+    Click Element    jQuery=button:contains("Subcontracting costs")
     Click Element    jQuery=button:contains('Add another subcontractor')
-    Wait Until Page Contains Element    css=#collapsible-5 .form-row:nth-child(1)
-    Input Text    css=#collapsible-5 .form-row:nth-child(1) input[id$=subcontractingCost]    100
-    input text    css=#collapsible-5 .form-row:nth-child(1) input[id$=companyName]    test
+    Wait Until Page Contains    Subcontractor name
+    Input Text    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    100
+    input text    css=#collapsible-4 .form-row:nth-child(1) input[id$=companyName]    test
     Click Element    jQuery=button:contains('Add another subcontractor')
-    Wait Until Page Contains Element    css=#collapsible-5 .form-row:nth-child(2)
-    Input Text    css=#collapsible-5 .form-row:nth-child(2) input[id$=subcontractingCost]    100
-    input text    css=#collapsible-5 .form-row:nth-child(2) input[id$=companyName]    test
+    Wait Until Page Contains Element    css=#collapsible-4 .form-row:nth-child(2)
+    Input Text    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    100
+    input text    css=#collapsible-4 .form-row:nth-child(2) input[id$=companyName]    test
     focus    css=.app-submit-btn
 
 the applicant fills the 'capital usage' field
-    Click Element    css=[aria-controls="collapsible-4"]
+    Click Element    jQuery=button:contains("Capital usage")
     Click Element    jQuery=button:contains('Add another asset')
     Wait Until Element Is Visible    css=#capital_usage [name="remove_cost"]
     Input Text    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
@@ -186,7 +185,7 @@ the applicant fills the 'capital usage' field
     focus    css=.app-submit-btn
 
 the Applicant fills the Travel fields
-    Click Element    css=[aria-controls="collapsible-6"]
+    Click Element    jQuery=button:contains("Travel and subsistence")
     Click Element    jQuery=button:contains('Add another travel cost')
     Wait Until Page Contains Element    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
@@ -202,7 +201,7 @@ the Applicant fills the Travel fields
     #focus    css=.app-submit-btn
 
 the applicant adds one row for the other costs
-    Click Element    css=[aria-controls="collapsible-7"]
+    Click Element    jQuery=button:contains("Other Costs")
     click Element    jQuery=button:contains('Add another cost')
     Wait Until Element Is Visible    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     Input Text    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    100
@@ -213,6 +212,7 @@ the applicant adds one row for the other costs
     focus    css=.app-submit-btn
 
 the user reloads the page
+    Execute Javascript    jQuery('form').attr('data-test','true');
     Reload page
     sleep    800ms
 
@@ -226,6 +226,7 @@ Applicant cannot see the 'other funding' details
     Radio Button Should Be Set To    other_funding-otherPublicFunding-35-54    No
 
 Applicant can leave the 'Your finances' page but the details are still saved
+    Execute Javascript    jQuery('form').attr('data-test','true');
     Reload Page
     #Alert Should Be Present
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
@@ -267,4 +268,4 @@ Admin costs total should be correct
     focus    css=.app-submit-btn
     Wait Until Element Is Visible    ${ADMIN_TOTAL}
     Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    Element Should Contain    css=[aria-controls="collapsible-2"] [data-mirror]    ${ADMIN_VALUE}
+    Element Should Contain    jQuery=button:contains("Administration support costs")    ${ADMIN_VALUE}
