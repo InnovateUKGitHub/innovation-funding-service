@@ -5,8 +5,6 @@ import com.worth.ifs.file.domain.FileEntry;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.EntityManager;
-
 import static org.junit.Assert.*;
 import static org.springframework.http.MediaType.parseMediaType;
 
@@ -17,9 +15,6 @@ public class FileEntryRepositoryIntegrationTest extends BaseRepositoryIntegratio
 
     @Autowired
     private FileEntryRepository repository;
-
-    @Autowired
-    private EntityManager em;
 
     @Override
     @Autowired
@@ -37,8 +32,7 @@ public class FileEntryRepositoryIntegrationTest extends BaseRepositoryIntegratio
         FileEntry saved = repository.save(fileEntry);
         assertTrue(saved == fileEntry);
         assertNotNull(saved.getId());
-        em.flush();
-        em.clear();
+        flushAndClearSession();
 
         //
         // Read
@@ -57,8 +51,7 @@ public class FileEntryRepositoryIntegrationTest extends BaseRepositoryIntegratio
         retrieved.setMediaType("image/png");
         retrieved.setFilesizeBytes(4321L);
         repository.save(retrieved);
-        em.flush();
-        em.clear();
+        flushAndClearSession();
 
         FileEntry retrievedAgain = repository.findOne(fileEntry.getId());
         assertEquals(retrieved.getId(), retrievedAgain.getId());
@@ -70,8 +63,7 @@ public class FileEntryRepositoryIntegrationTest extends BaseRepositoryIntegratio
         // Delete
         //
         repository.delete(retrievedAgain);
-        em.flush();
-        em.clear();
+        flushAndClearSession();
 
         assertNull(repository.findOne(fileEntry.getId()));
     }

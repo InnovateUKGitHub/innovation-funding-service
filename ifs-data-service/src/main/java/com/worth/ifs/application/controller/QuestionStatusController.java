@@ -1,6 +1,5 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.rest.RestResult;
@@ -23,7 +22,7 @@ public class QuestionStatusController {
     private QuestionService questionService;
 
     @RequestMapping("/findByQuestionAndApplication/{questionId}/{applicationId}")
-    public RestResult<List<QuestionStatus>> getQuestionStatusByApplicationIdAndAssigneeId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId) {
+    public RestResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeId(@PathVariable("questionId") Long questionId, @PathVariable("applicationId") Long applicationId) {
         return questionService.getQuestionStatusByApplicationIdAndAssigneeId(questionId, applicationId).toGetResponse();
     }
 
@@ -43,7 +42,7 @@ public class QuestionStatusController {
     }
 
     @RequestMapping("/{id}")
-    public RestResult<QuestionStatus> getQuestionStatusResourceById(@PathVariable("id") Long id){
+    public RestResult<QuestionStatusResource> getQuestionStatusResourceById(@PathVariable("id") Long id){
         return questionService.getQuestionStatusResourceById(id).toGetResponse();
     }
 

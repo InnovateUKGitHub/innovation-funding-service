@@ -1,21 +1,38 @@
 package com.worth.ifs.registration;
 
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.AcceptInviteController;
-import com.worth.ifs.commons.error.CommonErrors;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.exception.ErrorControllerAdvice;
-import com.worth.ifs.invite.domain.Invite;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.UserResource;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static com.worth.ifs.user.builder.RoleBuilder.newRole;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.UUID;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
@@ -23,23 +40,16 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import java.util.UUID;
-
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static com.worth.ifs.user.builder.RoleBuilder.newRole;
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.AcceptInviteController;
+import com.worth.ifs.commons.error.CommonErrors;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.exception.ErrorControllerAdvice;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -57,6 +67,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     Validator validator;
     private Cookie inviteHashCookie;
 
+    private Cookie usedInviteHashCookie;
+    
     @Override
     protected RegistrationController supplyControllerUnderTest() {
         return new RegistrationController();
@@ -82,12 +94,13 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(userService.verifyEmail(eq(INVALID_VERIFY_HASH))).thenReturn(restFailure(CommonErrors.notFoundError(Invite.class, INVALID_VERIFY_HASH)));
 
         inviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH);
+        usedInviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, ACCEPTED_INVITE_HASH);
 
     }
 
     @Test
     public void onGetRequestRegistrationViewIsReturned() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(get("/registration/register?organisationId=1")
@@ -100,7 +113,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void onGetRequestRegistrationViewIsReturnedWithInviteEmail() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(get("/registration/register?organisationId=1")
@@ -110,6 +123,19 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(view().name("registration-register"))
                 .andExpect(model().attribute("invitee", true))
         ;
+    }
+    
+    @Test
+    public void onGetRequestRegistrationViewIsReturnedWithUsedInviteEmail() throws Exception {
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
+        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+
+        mockMvc.perform(get("/registration/register?organisationId=1")
+                .cookie(usedInviteHashCookie)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+        verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("inviteAlreadyAccepted"));
     }
 
     @Test
@@ -184,7 +210,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void validButAlreadyExistingEmailInputShouldReturnErrorOnEmailField() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
 
         String email = "alreadyexistingemail@test.test";
 
@@ -203,7 +229,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void emptyFormInputsShouldReturnError() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -232,7 +258,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void invalidEmailFormatShouldReturnError() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -247,7 +273,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     
     @Test
     public void invalidCharactersInEmailShouldReturnError() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -259,14 +285,14 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
         ;
         
-        Mockito.verifyNoMoreInteractions(userService);
+        verifyNoMoreInteractions(userService);
     }
 
 
 
     @Test
     public void incorrectPasswordSizeShouldReturnError() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -283,7 +309,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void unmatchedPasswordAndRetypePasswordShouldReturnError() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -299,7 +325,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void uncheckedTermsAndConditionsCheckboxShouldReturnError() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -313,7 +339,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void validRegisterPost() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
 
         UserResource userResource = newUserResource()
                 .withPassword("password")
@@ -355,7 +381,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void validRegisterPostWithInvite() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
 
         UserResource userResource = newUserResource()
                 .withPassword("password")
@@ -383,7 +409,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         mockMvc.perform(post("/registration/register?organisationId=1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .cookie(inviteHashCookie)
-//                .param("email", userResource.getEmail())
                 .param("password", userResource.getPassword())
                 .param("retypedPassword", userResource.getPassword())
                 .param("title", userResource.getTitle())
@@ -399,7 +424,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void correctOrganisationNameIsAddedToModel() throws Exception {
-        Organisation organisation = newOrganisation().withId(4L).withName("uniqueOrganisationName").build();
+        OrganisationResource organisation = newOrganisationResource().withId(4L).withName("uniqueOrganisationName").build();
 
         when(organisationService.getOrganisationById(4L)).thenReturn(organisation);
         mockMvc.perform(post("/registration/register?organisationId=4")
@@ -411,7 +436,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
                 newUser().withRolesGlobal(
-                        newRole().withName("testrolename").build()
+                        newRole().withName("testrolename").withUrl("testrolename/dashboard").build()
                 ).build()
         );
 
@@ -426,7 +451,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void postingRegistrationWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
                 newUser().withRolesGlobal(
-                        newRole().withName("testrolename").build()
+                        newRole().withName("testrolename").withUrl("testrolename/dashboard").build()
                 ).build()
         );
 
@@ -439,7 +464,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
     @Test
     public void errorsReturnedInEnvelopeAreAddedToTheModel() throws Exception {
-        Organisation organisation = newOrganisation().withId(1L).withName("Organisation 1").build();
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         UserResource userResource = newUserResource()
                 .withPassword("password")
                 .withFirstName("firstName")

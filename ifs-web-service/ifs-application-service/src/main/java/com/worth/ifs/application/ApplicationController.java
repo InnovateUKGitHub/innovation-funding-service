@@ -8,9 +8,9 @@ import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.profiling.ProfileExecution;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -292,7 +292,7 @@ public class ApplicationController extends AbstractApplicationController {
         model.addAttribute("currentCompetition", competition);
 
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        Optional<Organisation> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
+        Optional<OrganisationResource> userOrganisation = getUserOrganisation(user.getId(), userApplicationRoles);
 
         addOrganisationDetails(model, application, userOrganisation, userApplicationRoles);
         addQuestionsDetails(model, application, null);

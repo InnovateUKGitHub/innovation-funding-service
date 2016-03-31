@@ -23,11 +23,9 @@ dependencies {
     compile "com.google.guava:guava:16.0.1"
     compile project(':ifs-web-service:ifs-core')
 
-//    // Use this for including the api lib from the data-service.
-//    compile files('../libs/ifs-data-service-api-1.0-SNAPSHOT.jar')
     testCompile files('../libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
     testCompile "com.openpojo:openpojo:0.8.3"
-    testCompile project(':ifs-web-service:ifs-core')
+    testCompile project(':ifs-web-service:ifs-core').sourceSets.test.output
 }
 
 task deployToTomcat(type: Copy) {
@@ -80,6 +78,7 @@ processResources {
         exclude '**/application.properties'
     }
 }
+
 
 task cleanDeploy() {
     build.mustRunAfter clean

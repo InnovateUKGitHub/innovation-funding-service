@@ -1,19 +1,19 @@
 package com.worth.ifs.organisation.transactional;
 
 import com.worth.ifs.address.domain.Address;
+import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.Academic;
+import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.organisation.repository.AcademicRepository;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
-import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.mapper.OrganisationMapper;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleMapSet;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.stream.Collectors.toCollection;
 
@@ -47,16 +48,16 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     private AddressMapper addressMapper;
 
     @Override
-    public ServiceResult<Set<Organisation>> findByApplicationId(final Long applicationId) {
+    public ServiceResult<Set<OrganisationResource>> findByApplicationId(final Long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
         Set<Organisation> organisations = roles.stream().map(role -> organisationRepository.findByProcessRoles(role)).collect(toCollection(LinkedHashSet::new));
-        return serviceSuccess(organisations);
+        return serviceSuccess(simpleMapSet(organisations, organisationMapper::mapToResource));
     }
 
     @Override
-    public ServiceResult<Organisation> findById(final Long organisationId) {
-        return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
+    public ServiceResult<OrganisationResource> findById(final Long organisationId) {
+        return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId)).andOnSuccessReturn(organisationMapper::mapToResource);
     }
 
     @Override

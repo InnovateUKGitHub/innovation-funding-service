@@ -219,8 +219,10 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public ServiceResult<List<QuestionStatus>> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId) {
-        return serviceSuccess(questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId));
+    public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId) {
+        List<QuestionStatus> statuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
+        List<QuestionStatusResource> resources = simpleMap(statuses, questionStatusMapper::mapToResource);
+        return serviceSuccess(resources);
     }
 
     @Override
@@ -242,8 +244,8 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public ServiceResult<QuestionStatus> getQuestionStatusResourceById(Long id) {
-        return find(questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id));
+    public ServiceResult<QuestionStatusResource> getQuestionStatusResourceById(Long id) {
+        return find(questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id)).andOnSuccessReturn(questionStatusMapper::mapToResource);
     }
 
     @Override

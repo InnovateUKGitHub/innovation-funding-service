@@ -36,21 +36,22 @@ public class HomeController {
 
     public static String getRedirectUrlForUser(User user) {
 
-        String roleName = "";
+        String roleUrl = "";
 
         if (!user.getRoles().isEmpty()) {
-            roleName = user.getRoles().get(0).getName();
+            roleUrl = user.getRoles().get(0).getUrl();
         }
 
         StringBuilder stringBuilder = new StringBuilder()
                 .append("redirect:");
 
-        if (StringUtils.hasText(roleName)) {
-            stringBuilder.append("/" + roleName);
+        if (StringUtils.hasText(roleUrl)) {
+            stringBuilder.append("/" + roleUrl);
+        }else{
+            stringBuilder.append("/dashboard");
         }
 
         return stringBuilder
-                .append("/dashboard")
                 .toString();
     }
 

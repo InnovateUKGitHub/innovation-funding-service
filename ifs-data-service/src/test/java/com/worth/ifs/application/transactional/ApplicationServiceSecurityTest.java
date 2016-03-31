@@ -3,6 +3,7 @@ package com.worth.ifs.application.transactional;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.CompletedPercentageResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.application.security.FormInputResponseFileUploadLookupStrategies;
@@ -322,7 +323,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<ObjectNode> getProgressPercentageNodeByApplicationId(Long applicationId) {
+        public ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(Long applicationId) {
             return null;
         }
 

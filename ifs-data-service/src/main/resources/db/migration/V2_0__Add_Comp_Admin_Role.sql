@@ -1,0 +1,1 @@
+INSERT  IGNORE INTO `role` (`id`, `name`) VALUES (5,'comp_admin');

@@ -9,4 +9,6 @@ public interface OrganisationTypeRestService {
 
     RestResult<OrganisationTypeResource> findOne(Long id);
     RestResult<List<OrganisationTypeResource>> getAll();
+
+    RestResult<OrganisationTypeResource> getForOrganisationId(Long organisationId);
 }

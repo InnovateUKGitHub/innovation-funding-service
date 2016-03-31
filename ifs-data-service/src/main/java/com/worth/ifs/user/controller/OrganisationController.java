@@ -24,12 +24,12 @@ public class OrganisationController {
     private OrganisationService organisationService;
 
     @RequestMapping("/findByApplicationId/{applicationId}")
-    public RestResult<Set<Organisation>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
+    public RestResult<Set<OrganisationResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         return organisationService.findByApplicationId(applicationId).toGetResponse();
     }
 
     @RequestMapping("/findById/{organisationId}")
-    public RestResult<Organisation> findById(@PathVariable("organisationId") final Long organisationId) {
+    public RestResult<OrganisationResource> findById(@PathVariable("organisationId") final Long organisationId) {
         return organisationService.findById(organisationId).toGetResponse();
     }
 

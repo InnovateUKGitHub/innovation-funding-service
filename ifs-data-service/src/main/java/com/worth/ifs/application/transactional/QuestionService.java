@@ -1,7 +1,6 @@
 package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
@@ -64,7 +63,7 @@ public interface QuestionService {
     ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle);
 
     @NotSecured("TODO DW - implement when permissions available")
-    ServiceResult<List<QuestionStatus>> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId);
+    ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId);
 
     @NotSecured("TODO DW - implement when permissions available")
     ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId);
@@ -76,7 +75,7 @@ public interface QuestionService {
     ServiceResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(Long applicationId, Long organisationId);
 
     @NotSecured("TODO DW - implement when permissions available")
-    ServiceResult<QuestionStatus> getQuestionStatusResourceById(Long id);
+    ServiceResult<QuestionStatusResource> getQuestionStatusResourceById(Long id);
 
     @NotSecured("TODO")
     ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(Long applicationId, Long assigneeId);
