@@ -5,11 +5,13 @@ import javax.persistence.*;
 @Entity
 @Table(name = "comp_admin_emails")
 public class CompAdminEmail {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    @Column(unique=true)
     private String email;
 
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public long getId() {
         return id;
     }
@@ -18,8 +20,6 @@ public class CompAdminEmail {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "email", nullable = false, insertable = true, updatable = true, length = 255)
     public String getEmail() {
         return email;
     }
