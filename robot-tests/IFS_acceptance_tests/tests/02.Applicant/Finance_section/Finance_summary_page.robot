@@ -31,31 +31,20 @@ ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}    ${SERVER}/application/7/form/sectio
 ${OVERVIEW_MARK_AS_COMPLETE}    ${SERVER}/application/7
 
 *** Test Cases ***
-Finance summary page calculations for Lead applicant
+Calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]    Collaboration    Pending
+    [Tags]    Collaboration
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    # Pending until the academic finances db update comes through
-    When the user goes to the finance summary of the Providing sustainable childcare application
+    When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
 
-Finance summary calculations for the first collaborator
+Calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]    Collaboration    Pending
+    [Tags]    Collaboration
     [Setup]    Guest user log-in    &{collaborator1_credentials}
-    # Pending until the academic finances db update comes through
-    When the user goes to the finance summary of the Providing sustainable childcare application
+    When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
-    And the finance Project cost breakdown calculations should be correct
-
-Finance summary calculations for the second collaborator
-    [Documentation]    INFUND-524
-    [Tags]    HappyPath    Pending
-    [Setup]    Guest user log-in    &{collaborator2_credentials}
-    # Pending until the academic finances db update comes through
-    And the user goes to the finance summary of the Providing sustainable childcare application
-    When the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
     And the applicant enters a bigger funding amount
     Then the contribution to project and funding sought should be 0 and not a negative number
@@ -81,9 +70,9 @@ Green check should show when the finances are complete
     ...    INFUND-894
     ...
     ...    INFUND-446
-    [Tags]    HappyPath     Pending
-    # pending until the webtest db is updated
+    [Tags]    HappyPath    Pending
     [Setup]    Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
+    # pending until the webtest db is updated
     Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user should be redirected to the correct page    ${OVERVIEW_MARK_AS_COMPLETE}
@@ -91,25 +80,21 @@ Green check should show when the finances are complete
     And both green checks should be visible
 
 *** Keywords ***
-the user goes to the finance summary of the Providing sustainable childcare application
-    the user navigates to the page    ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}
-    click element    link=Finances overview
-
 the finance Project cost breakdown calculations should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £0
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £180,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £129,000
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(1)    £60,000
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £60,000
-    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £60,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
 
 the finance summary calculations should be correct
-    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £180,000
+    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £129,000
     Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    50%
     Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    70%
-    Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    70%
-    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £84,000
-    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(4)    £30,000
-    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £66,000
+    Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    100%
+    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £61,000
+    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(4)    £20,000
+    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £48,000
 
 the applicant enters a bigger funding amount
     [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
@@ -117,7 +102,7 @@ the applicant enters a bigger funding amount
     #Select Radio button    other_funding-otherPublicFunding-35-null    Yes
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    80000
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test2
-    Sleep    1s
+    Sleep    300ms
 
 the contribution to project and funding sought should be 0 and not a negative number
     go to    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
