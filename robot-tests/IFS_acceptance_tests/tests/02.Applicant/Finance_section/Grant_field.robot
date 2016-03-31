@@ -13,26 +13,26 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Auto-save test for the "Grant" field
     [Tags]    Applicant    Autosave    Finance    HappyPath
-    Given the user navigates to the page      ${YOUR_FINANCES_URL}
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     Then auto-save should work for the "Grant" field
     And the grant value should be correct in the finance summary page
 
 *** Keywords ***
 the grant value should be correct in the finance summary page
-    The user navigates to the page      ${FINANCES_OVERVIEW_URL}
+    The user navigates to the page    ${FINANCES_OVERVIEW_URL}
     Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
 
 auto-save should work for the "Grant" field
     Clear Element Text    id=cost-financegrantclaim
     focus    jQuery= button:contains('complete')
-    Sleep    1s
+    Sleep    500ms
     Reload Page
     ${input_value} =    Get Value    id=cost-financegrantclaim
     Should Be Equal As Strings    ${input_value}    0
     Clear Element Text    id=cost-financegrantclaim
     Input Text    id=cost-financegrantclaim    25
     focus    jQuery= button:contains('complete')
-    Sleep    1s
+    Sleep    300ms
     Reload Page
     focus    jQuery= button:contains('complete')
     ${input_value} =    Get Value    id=cost-financegrantclaim

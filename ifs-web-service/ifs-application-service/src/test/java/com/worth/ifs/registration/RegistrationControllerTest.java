@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
@@ -26,6 +25,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -35,8 +35,11 @@ import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisa
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -58,6 +61,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     Validator validator;
     private Cookie inviteHashCookie;
 
+    private Cookie usedInviteHashCookie;
+    
     @Override
     protected RegistrationController supplyControllerUnderTest() {
         return new RegistrationController();
@@ -83,6 +88,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(userService.verifyEmail(eq(INVALID_VERIFY_HASH))).thenReturn(restFailure(CommonErrors.notFoundError(Invite.class, INVALID_VERIFY_HASH)));
 
         inviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH);
+        usedInviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, ACCEPTED_INVITE_HASH);
 
     }
 
@@ -111,6 +117,19 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(view().name("registration-register"))
                 .andExpect(model().attribute("invitee", true))
         ;
+    }
+    
+    @Test
+    public void onGetRequestRegistrationViewIsReturnedWithUsedInviteEmail() throws Exception {
+        OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
+        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+
+        mockMvc.perform(get("/registration/register?organisationId=1")
+                .cookie(usedInviteHashCookie)
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+        verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("inviteAlreadyAccepted"));
     }
 
     @Test
@@ -262,7 +281,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
         ;
         
-        Mockito.verifyNoMoreInteractions(userService);
+        verifyNoMoreInteractions(userService);
     }
 
 
@@ -386,7 +405,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         mockMvc.perform(post("/registration/register?organisationId=1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .cookie(inviteHashCookie)
-//                .param("email", userResource.getEmail())
                 .param("password", userResource.getPassword())
                 .param("retypedPassword", userResource.getPassword())
                 .param("title", userResource.getTitle())

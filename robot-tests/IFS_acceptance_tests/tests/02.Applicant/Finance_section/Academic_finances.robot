@@ -36,7 +36,7 @@ Academic invalid upload
 
 Academics upload
     [Documentation]    INFUND-917
-    [Tags]      PendingForDev
+    [Tags]    PendingForDev
     # pending until we have access to the dev server's IFS file repository
     When the academic partner uploads a file    ${valid_pdf}
     Then the user should not see the text in the page    No file currently uploaded
@@ -52,7 +52,7 @@ Mark all as complete
 
 Academic finance overview
     [Documentation]    INFUND-917
-    [Tags]      PendingForDev
+    [Tags]    PendingForDev
     # pending until we have access to the dev server's IFS file repository
     Given the user navigates to the page    ${FINANCES_OVERVIEW_URL}
     Then the finance table should be correct
@@ -83,13 +83,11 @@ the academic partner uploads a file
     Sleep    500ms
 
 the finance table should be correct
-    #pending the reset of the database from Rogier
-    #Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £0
-    #Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(2)    £180,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(2)    £3,000
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(3)    £1,000
-    #Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(4)    £60,000
-    #Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(5)    £60,000
-    #Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £60,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(4)    £1,000
+    Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £0
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(7)    £1,000
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(8)    £3,000
 

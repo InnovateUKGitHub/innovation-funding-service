@@ -1,10 +1,8 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.exception.ErrorControllerAdvice;
-import com.worth.ifs.organisation.resource.CompanyHouseBusiness;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -43,9 +41,6 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
 
     private String COMPANY_ID = "08241216";
     private String COMPANY_NAME = "NETWORTHNET LTD";
-    private String POSTCODE_LOOKUP = "CH64 3RU";
-    private AddressResource address;
-    private CompanyHouseBusiness companyHouseBusiness;
     private OrganisationResource organisationResource;
     private ApplicationResource applicationResource;
 
@@ -63,8 +58,6 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
         super.setup();
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
-        address = new AddressResource("line1", "line2", "line3", "locality", "region", "postcode");
-        companyHouseBusiness = new CompanyHouseBusiness(COMPANY_ID, COMPANY_NAME, null, null, null, address);
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
         when(organisationService.getCompanyHouseOrganisation(COMPANY_ID)).thenReturn(organisationSearchResult);
@@ -78,7 +71,8 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
         mockMvc.perform(get("/application/create/check-eligibility/1"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("create-application/check-eligibility"))
-                .andExpect(cookie().value("competitionId", "1"));
+                .andExpect(cookie().value("competitionId", "1"))
+                .andExpect(cookie().value("invite_hash", ""));
     }
 
 
