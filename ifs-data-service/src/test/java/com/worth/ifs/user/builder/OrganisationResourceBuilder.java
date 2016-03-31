@@ -1,6 +1,7 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 
 import java.util.List;
@@ -48,5 +49,9 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
 
     public OrganisationResourceBuilder withOrganisationType(Long... organisationTypeIds) {
         return withArray((organisationTypeId, organisation) -> setField("organisationType", organisationTypeId, organisation), organisationTypeIds);
+    }
+
+    public OrganisationResourceBuilder withUsers(List<User>... users) {
+        return withArray((user, organisation) -> addToList("users", user, organisation), users);
     }
 }
