@@ -12,9 +12,9 @@ Resource          ../../../resources/keywords/Application_question_edit_actions.
 *** Variables ***
 
 *** Test Cases ***
-Check that status is updated on the summary page after marking a section as complete
+Status is updated after mark as complete
     [Documentation]    INFUND-544
-    [Tags]    Applicant    Summary    Application    HappyPath
+    [Tags]    Applicant    HappyPath
     Given the user navigates to the page    ${APPLICATION_2_SUMMARY_URL}
     And the user should not see the text in the page    Complete
     When the user navigates to the page    ${ECONOMIC_BENEFIT_URL_APPLICATION_2}
@@ -22,9 +22,9 @@ Check that status is updated on the summary page after marking a section as comp
     And the user navigates to the page    ${APPLICATION_2_SUMMARY_URL}
     Then the user should see the text in the page    Complete
 
-Check that status is updated on the summary page after editing a section so it is no longer complete
+Status is updated after editing a section
     [Documentation]    INFUND-544
-    [Tags]    Applicant    Summary    Application
+    [Tags]
     Given the user navigates to the page    ${APPLICATION_2_SUMMARY_URL}
     And the user should see the text in the page    Complete
     When the user navigates to the page    ${ECONOMIC_BENEFIT_URL_APPLICATION_2}
