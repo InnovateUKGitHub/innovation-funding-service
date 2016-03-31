@@ -1,12 +1,16 @@
 package com.worth.ifs.application.transactional;
 
+import java.util.List;
+import java.util.Set;
+
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 
-import java.util.List;
-import java.util.Set;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * Transactional and secure service for Question processing work
@@ -62,21 +66,21 @@ public interface QuestionService {
     @NotSecured("TODO")
     ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle);
 
-    @NotSecured("TODO DW - implement when permissions available")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeId(Long questionId, Long applicationId);
 
-    @NotSecured("TODO DW - implement when permissions available")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId);
 
-    @NotSecured("TODO DW - implement when permissions available")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(Long[] questionIds, Long applicationId, Long organisationId);
 
-    @NotSecured("TODO DW - implement when permissions available")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(Long applicationId, Long organisationId);
 
-    @NotSecured("TODO DW - implement when permissions available")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<QuestionStatusResource> getQuestionStatusResourceById(Long id);
 
-    @NotSecured("TODO")
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(Long applicationId, Long assigneeId);
 }
