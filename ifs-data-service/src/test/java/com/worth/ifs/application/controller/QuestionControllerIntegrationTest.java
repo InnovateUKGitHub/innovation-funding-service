@@ -1,25 +1,20 @@
 package com.worth.ifs.application.controller;
 
-import java.util.List;
-import java.util.Set;
-
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.transactional.QuestionService;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import static com.worth.ifs.security.SecuritySetter.useBasicLeadApplicant;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.*;
 
 @Rollback
 public class QuestionControllerIntegrationTest extends BaseControllerIntegrationTest<QuestionController> {
@@ -46,7 +41,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     @Before
     public void setup(){
         question = controller.getQuestionById(questionId).getSuccessObject();
-        useBasicLeadApplicant();
     }
 
 
