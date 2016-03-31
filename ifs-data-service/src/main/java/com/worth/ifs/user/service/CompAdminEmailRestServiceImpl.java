@@ -30,7 +30,7 @@ public class CompAdminEmailRestServiceImpl extends BaseRestService implements Co
 
         final String encodedEmail = encode(email);
 
-        return getWithRestResult(compAdminEmailRestURL + "/email/" + encodedEmail, CompAdminEmail.class);
+        return getWithRestResult(compAdminEmailRestURL + "/email?email=" + encodedEmail, CompAdminEmail.class);
     }
 
     private String encode(String input){

@@ -1,9 +1,12 @@
 package com.worth.ifs.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "comp_admin_emails")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CompAdminEmail {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
