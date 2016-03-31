@@ -1,7 +1,20 @@
 package com.worth.ifs.application.transactional;
 
+import java.io.File;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.function.Supplier;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.CompletedPercentageResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -9,17 +22,6 @@ import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.UserRoleType;
-import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
-import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.io.File;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Transactional and secure service for Application processing work
@@ -61,7 +63,7 @@ public interface ApplicationService {
     ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(@P("applicationId") final Long id, LocalDateTime date);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<ObjectNode> getProgressPercentageNodeByApplicationId(@P("applicationId") final Long applicationId);
+    ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(@P("applicationId") final Long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'UPDATE')")
     ServiceResult<ApplicationResource> updateApplicationStatus(@P("applicationId") final Long id,

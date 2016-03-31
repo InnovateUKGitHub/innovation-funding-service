@@ -43,6 +43,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.CompletedPercentageResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.commons.error.Error;
@@ -347,17 +348,13 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
 
-
-    // TODO DW - INFUND-1555 - try to remove ObjectNode usage
     @Override
-    public ServiceResult<ObjectNode> getProgressPercentageNodeByApplicationId(final Long applicationId) {
+    public ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(final Long applicationId) {
 
-        return getProgressPercentageByApplicationId(applicationId).andOnSuccessReturn(percentage -> {
-
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode node = mapper.createObjectNode();
-            node.put("completedPercentage", percentage);
-            return node;
+        return getProgressPercentageBigDecimalByApplicationId(applicationId).andOnSuccessReturn(percentage -> {
+        	CompletedPercentageResource resource = new CompletedPercentageResource();
+        	resource.setCompletedPercentage(percentage);
+            return resource;
         });
     }
 
@@ -465,7 +462,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     // TODO DW - INFUND-1555 - try to remove the usage of ObjectNode
     @Override
     public ServiceResult<ObjectNode> applicationReadyForSubmit(Long id) {
-        return find(application(id), () -> getProgressPercentageByApplicationId(id)).andOnSuccess((application, progressPercentage) ->
+        return find(application(id), () -> getProgressPercentageBigDecimalByApplicationId(id)).andOnSuccess((application, progressPercentage) ->
             sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
                 Competition competition = application.getCompetition();
                 BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
@@ -490,7 +487,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     // TODO DW - INFUND-1555 - deal with rest results
-    private ServiceResult<BigDecimal> getProgressPercentageByApplicationId(final Long applicationId) {
+    private ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
     }
 

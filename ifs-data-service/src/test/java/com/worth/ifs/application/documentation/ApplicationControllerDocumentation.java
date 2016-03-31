@@ -1,19 +1,5 @@
 package com.worth.ifs.application.documentation;
 
-import java.util.List;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.controller.ApplicationController;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.ALL_SECTION_COMPLETE;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.PROGRESS;
 import static com.worth.ifs.application.transactional.ApplicationServiceImpl.READY_FOR_SUBMIT;
@@ -29,16 +15,30 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.removeHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.controller.ApplicationController;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.CompletedPercentageResource;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.UserRoleType;
 
 public class ApplicationControllerDocumentation extends BaseControllerMockMVCTest<ApplicationController> {
 
@@ -130,11 +130,10 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     public void documentGetProgressPercentageByApplicationId() throws Exception{
         Long applicationId = 1L;
 
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-        node.put("completedPercentage", 10);
+        CompletedPercentageResource resource = new CompletedPercentageResource();
+        resource.setCompletedPercentage(new BigDecimal("10"));
 
-        when(applicationService.getProgressPercentageNodeByApplicationId(applicationId)).thenReturn(serviceSuccess(node));
+        when(applicationService.getProgressPercentageByApplicationId(applicationId)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/application/getProgressPercentageByApplicationId/{applicationId}", applicationId))
                 .andDo(this.document.snippets(

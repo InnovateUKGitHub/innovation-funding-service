@@ -1,13 +1,10 @@
 package com.worth.ifs.competition;
 
-import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -16,21 +13,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CompetitionControllerTest extends BaseUnitTest {
-    @InjectMocks
-    private CompetitionController competitionController;
+public class CompetitionControllerTest extends BaseControllerMockMVCTest<CompetitionController> {
+
+    @Override
+    protected CompetitionController supplyControllerUnderTest() {
+        return new CompetitionController();
+    }
 
     @Before
     public void setUp() {
-
-        MockitoAnnotations.initMocks(this);
-
-        mockMvc = MockMvcBuilders.standaloneSetup(competitionController)
-                .setViewResolvers(viewResolver())
-                .setHandlerExceptionResolvers(createExceptionResolver())
-                .build();
-
-        super.setup();
+        super.setUp();
     }
 
     @Test

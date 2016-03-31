@@ -1,21 +1,16 @@
 package com.worth.ifs.registration;
 
-import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.AcceptInviteController;
-import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
-import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 
 import javax.servlet.http.Cookie;
 
@@ -25,38 +20,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class OrganisationTypeCreationControllerTest extends BaseUnitTest {
-    @InjectMocks
-    private OrganisationTypeCreationController organisationTypeCreationController;
+public class OrganisationTypeCreationControllerTest extends BaseControllerMockMVCTest<OrganisationTypeCreationController> {
     @Mock
     private Validator validator;
     @Mock
     CookieFlashMessageFilter cookieFlashMessageFilter;
 
+    @Override
+    protected OrganisationTypeCreationController supplyControllerUnderTest() {
+        return new OrganisationTypeCreationController();
+    }
+
     @Before
-    public void setUp() throws Exception {
-
-        CookieLocaleResolver localeResolver = new CookieLocaleResolver();
-        localeResolver.setCookieDomain("domain");
-
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
-
-        mockMvc = MockMvcBuilders.standaloneSetup(organisationTypeCreationController, new ErrorControllerAdvice())
-                .setViewResolvers(viewResolver())
-                .setLocaleResolver(localeResolver)
-                .addFilters(new CookieFlashMessageFilter())
-                .build();
-
-
-        super.setup();
-
+    public void setUp() {
+        super.setUp();
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
         this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
+        this.setupOrganisationTypes();
     }
 
     @Test

@@ -33,11 +33,9 @@ dependencies {
 
 
 task cleanDeploy() {
+    dependsOn ':ifs-data-service:client'
+    dependsOn ':ifs-data-service:clientCopy'
     build.mustRunAfter clean
     dependsOn clean
     dependsOn build
-
-    compileTestJava.dependsOn compileJava
-    compileJava.mustRunAfter clean
-    compileTestJava.mustRunAfter compileJava
 }
