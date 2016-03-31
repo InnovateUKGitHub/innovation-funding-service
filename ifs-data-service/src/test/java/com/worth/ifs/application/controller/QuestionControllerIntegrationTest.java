@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import static com.worth.ifs.security.SecuritySetter.useBasicLeadApplicant;
+import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -46,7 +46,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     @Before
     public void setup(){
         question = controller.getQuestionById(questionId).getSuccessObject();
-        useBasicLeadApplicant();
+        addBasicSecurityUser();
     }
 
 
