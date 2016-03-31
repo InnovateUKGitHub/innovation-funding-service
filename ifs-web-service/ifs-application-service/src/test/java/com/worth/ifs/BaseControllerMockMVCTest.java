@@ -4,6 +4,8 @@ import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.User;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
@@ -15,6 +17,7 @@ import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
+import com.worth.ifs.BaseUnitTest;
 
 import java.lang.reflect.Method;
 
@@ -34,7 +37,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     @Before
     public void setUp() {
-        super.setup();
+
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
@@ -51,6 +54,8 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 .setHandlerExceptionResolvers(createExceptionResolver())
                 .setViewResolvers(viewResolver())
                 .build();
+        
+        super.setup();
     }
 
     public ExceptionHandlerExceptionResolver createExceptionResolver() {
