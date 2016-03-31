@@ -28,6 +28,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.util.CollectionFunctions.asLinkedSet;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.junit.Assert.assertEquals;
@@ -61,18 +62,17 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     @Test
     public void testFindByApplicationId() {
 
-        OrganisationResource organisation1 = newOrganisationResource().build();
-        OrganisationResource organisation2 = newOrganisationResource().build();
-        OrganisationResource organisation3 = newOrganisationResource().build();
+        OrganisationResource organisation = newOrganisationResource().build();
 
-        when(organisationResourceSupplier.get()).thenReturn(asLinkedSet(organisation1, organisation2, organisation3));
+        when(organisationResourceSupplier.get()).thenReturn(asLinkedSet(organisation));
 
-        when(organisationRules.memberOfOrganisationCanViewOwnOrganisation(organisation1, getLoggedInUser())).thenReturn(true);
-        when(organisationRules.memberOfOrganisationCanViewOwnOrganisation(organisation2, getLoggedInUser())).thenReturn(true);
-        when(organisationRules.memberOfOrganisationCanViewOwnOrganisation(organisation3, getLoggedInUser())).thenReturn(false);
+        when(organisationRules.memberOfOrganisationCanViewOwnOrganisation(organisation, getLoggedInUser())).thenReturn(false);
+        when(organisationRules.usersCanViewOrganisationsOnTheirOwnApplications(organisation, getLoggedInUser())).thenReturn(false);
 
-        ServiceResult<Set<OrganisationResource>> filteredOrganisations = service.findByApplicationId(1L);
-        assertEquals(asLinkedSet(organisation1, organisation2), filteredOrganisations.getSuccessObject());
+        service.findByApplicationId(1L);
+
+        verify(organisationRules).memberOfOrganisationCanViewOwnOrganisation(organisation, getLoggedInUser());
+        verify(organisationRules).usersCanViewOrganisationsOnTheirOwnApplications(organisation, getLoggedInUser());
     }
 
     /**
