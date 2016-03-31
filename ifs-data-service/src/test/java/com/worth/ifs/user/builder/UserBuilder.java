@@ -1,14 +1,12 @@
 package com.worth.ifs.user.builder;
 
-import java.util.List;
-import java.util.function.BiConsumer;
-
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserStatus;
+
+import java.util.List;
+import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
@@ -60,26 +58,6 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
 
     public UserBuilder withTitle(String... titles) {
         return withArray((title, user) -> setField("title", title, user), titles);
-    }
-
-    public UserBuilder withid(Long... ids) {
-        return withArray((id, object) -> setField("id", id, object), ids);
-    }
-
-    public UserBuilder withinviteName(String... inviteNames) {
-        return withArray((inviteName, object) -> setField("inviteName", inviteName, object), inviteNames);
-    }
-
-    public UserBuilder withUserStatus(UserStatus... userStatuss) {
-        return withArray((userStatus, object) -> setField("userStatus", userStatus, object), userStatuss);
-    }
-
-    public UserBuilder withProcessRole(ProcessRole... processRoles) {
-        return withArray((processRole, object) -> setField("processRole", processRole, object), processRoles);
-    }
-
-    public UserBuilder withUid(String... uids) {
-        return withArray((uid, object) -> setField("uid", uid, object), uids);
     }
 
     @Override
