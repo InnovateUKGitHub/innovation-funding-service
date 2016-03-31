@@ -137,3 +137,12 @@ the applicant accepts the terms and conditions
 The user marks the finances as complete
     Given the user navigates to the page    ${FINANCE_SECTION_7}
     When the user clicks the button/link    jQuery=button:contains("Mark all as complete")
+
+the applicant marks the first question as complete
+    The user navigates to the page    ${PROJECT_SUMMARY_APPLICATION_7}
+    focus    css=#form-input-11 .editor
+    Clear Element Text    css=#form-input-11 .editor
+    Press Key    css=#form-input-11 .editor    \\8
+    focus    css=#form-input-11 .editor
+    Input Text    css=#form-input-11 .editor    Inputting text...
+    The user clicks the button/link    jQuery=button:contains("Mark as complete")
