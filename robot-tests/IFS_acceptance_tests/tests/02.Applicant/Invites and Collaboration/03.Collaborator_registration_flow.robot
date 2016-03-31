@@ -131,7 +131,7 @@ Academic organisations search (empty, invalid & valid inputs)
 
 Business organisation (accept invitation flow)
     [Documentation]    INFUND-1005
-    ...
+    ...    INFUND-2286
     ...    INFUND-1779
     [Tags]    HappyPath    FailingForLocal
     Given the user navigates to the page    ${INVITE_LINK}
@@ -147,11 +147,11 @@ Business organisation (accept invitation flow)
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Rogier    De Regt
+    And the user tries to go back, but can't modify their details
     And the user verifies the email
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Log in")
     And guest user log-in    worth.email.test+invite1@gmail.com    Passw0rd
-    #And the user verifies their email    ${verify_link_4}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
 
 User who accepted the invite should be able to log-in
@@ -200,7 +200,6 @@ Academic organisation (accept invitation flow)
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Log in")
     And guest user log-in    worth.email.test+invite2@gmail.com    testtest
-    #And the user verifies their email    ${verify_link_5}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=A novel solution to an old problem
     and the user clicks the button/link    link=Your finances
@@ -239,3 +238,9 @@ the user verifies the email
     Capture Page Screenshot
     Delete All Emails
     close mailbox
+
+
+the user tries to go back, but can't modify their details
+    Go Back
+    the user should not see the text in the page        Create your account
+    the user should see the text in the page            Sign in
