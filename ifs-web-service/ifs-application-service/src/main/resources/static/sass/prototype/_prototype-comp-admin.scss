@@ -23,31 +23,33 @@
 /*----- Comp admin - project status warnings ----*/
 
 %status-marker{
-	content: '';
+	background: black;
+	width: 2em;
+	height: 2em;
+	color: white;
 	display: inline-block;
-	width: 16px;
-	height: 16px;
-	background: red;
+	text-align: center;
+	font-weight: bold;
+	line-height: 2.2em;
 	border-radius: 50%;
-	margin-left: 5px;
+
 }
 
 .status-project-warning{
-	&:after{
-		@extend %status-marker;
-		background: $red
-	}
+	@extend %status-marker;
+	background: $red
+}
+
+.status-project-progress{
+	@extend %status-marker;
+	background: $yellow;
+	color: $black;
 }
 
 .status-project-ok{
-	&:after{
-		@extend %status-marker;
-		background: $green;
-	}
+	@extend %status-marker;
+	background: $green;
 }
-
-
-
 
 
 /*----- Comp admin tables styles----*/
@@ -94,6 +96,14 @@ table{
 .show-applications{
 	.hide-allocate-assessor{
 		display: none;
+	}
+}
+
+/*----- Projects by stage tables styles----*/
+
+#projects-by-stage{
+	td{
+		height: 40px;
 	}
 }
 
