@@ -13,7 +13,6 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
 Suite Teardown    User closes the browser
-Test Teardown     Log out as user
 Force Tags        Finance    Applicant    # these tests have been tagged as failing since the numbers no longer match up to the database - find out why!
 Default Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -38,6 +37,7 @@ Calculations for Lead applicant
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
+    [Teardown]    Log out as user
 
 Calculations for the first collaborator
     [Documentation]    INFUND-524
@@ -48,6 +48,7 @@ Calculations for the first collaborator
     And the finance Project cost breakdown calculations should be correct
     And the applicant enters a bigger funding amount
     Then the contribution to project and funding sought should be 0 and not a negative number
+    [Teardown]    Log out as user
 
 Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927
@@ -70,9 +71,7 @@ Green check should show when the finances are complete
     ...    INFUND-894
     ...
     ...    INFUND-446
-    [Tags]    HappyPath    Pending
-    [Setup]    Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
-    # pending until the webtest db is updated
+    [Tags]    HappyPath
     Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user should be redirected to the correct page    ${OVERVIEW_MARK_AS_COMPLETE}
@@ -102,12 +101,13 @@ the applicant enters a bigger funding amount
     #Select Radio button    other_funding-otherPublicFunding-35-null    Yes
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    80000
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test2
-    Sleep    300ms
+    #Sleep    300ms
+    Execute Javascript    jQuery('form').attr('data-test','true');
 
 the contribution to project and funding sought should be 0 and not a negative number
     go to    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
-    Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(3)    £0
-    Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(5)    £0
+    Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(3)    £0
+    Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(5)    £0
 
 both green checks should be visible
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src="/images/field/tick-icon.png"]
@@ -115,4 +115,4 @@ both green checks should be visible
 
 the red warnng should be visible
     go to    ${MARKING_IT_AS_COMPLETE_FINANCE_SUMMARY}
-    Page Should Contain Image    css=.finance-summary tr:nth-of-type(2) img[src="/images/warning-icon.png"]
+    Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src="/images/warning-icon.png"]

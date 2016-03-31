@@ -105,12 +105,6 @@ the guest user should get an error message
     Page Should Contain    Your username/password combination doesn't seem to work
     Page Should Not Contain Element    link=Logout
 
-the guest user clicks the log-in button
-    Click Button    css=button[name="_eventId_proceed"]
-
-The Applicant clicks the log-out button
-    Click Element    link=Logout
-
 the Applicant is logged-in
     Wait Until Element Is Visible    link=Logout
 
