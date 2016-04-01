@@ -22,7 +22,7 @@ public abstract class ApplicationSummaryMapper {
 		
 		ServiceResult<CompletedPercentageResource> percentageResult = applicationService.getProgressPercentageByApplicationId(source.getId());
 		if(percentageResult.isSuccess()){
-			result.setCompletedPercentage(percentageResult.getSuccessObject().getCompletedPercentage());
+			result.setCompletedPercentage(percentageResult.getSuccessObject().getCompletedPercentage().intValue());
 		}
 		
 		result.setApplicationStatus(source.getApplicationStatus().getId());

@@ -268,8 +268,8 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		Application app2 = mock(Application.class);
 		List<Application> applications = Arrays.asList(app1, app2);
 		
-		ApplicationSummaryResource sum1 = sumPercentage(new BigDecimal("50"));
-		ApplicationSummaryResource sum2 = sumPercentage(new BigDecimal("25"));
+		ApplicationSummaryResource sum1 = sumPercentage(50);
+		ApplicationSummaryResource sum2 = sumPercentage(25);
 		when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
 		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 		
@@ -294,8 +294,8 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		Application app2 = mock(Application.class);
 		List<Application> applications = Arrays.asList(app1, app2);
 		
-		ApplicationSummaryResource sum1 = sumPercentage(new BigDecimal("50"), 2L);
-		ApplicationSummaryResource sum2 = sumPercentage(new BigDecimal("50"), 1L);
+		ApplicationSummaryResource sum1 = sumPercentage(50, 2L);
+		ApplicationSummaryResource sum2 = sumPercentage(50, 1L);
 		when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
 		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 		
@@ -320,7 +320,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		for(int i = 0; i < 22; i++) {
 			Application app = mock(Application.class);
 			applications.add(app);
-			ApplicationSummaryResource sum = sumPercentage(new BigDecimal(i));
+			ApplicationSummaryResource sum = sumPercentage(i);
 			when(applicationSummaryMapper.mapToResource(app)).thenReturn(sum);
 		}
 		
@@ -333,8 +333,8 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		assertTrue(result.isSuccess());
 		assertEquals(1, result.getSuccessObject().getNumber());
 		assertEquals(2, result.getSuccessObject().getContent().size());
-		assertEquals(new BigDecimal(20), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
-		assertEquals(new BigDecimal(21), result.getSuccessObject().getContent().get(1).getCompletedPercentage());
+		assertEquals(Integer.valueOf(20), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
+		assertEquals(Integer.valueOf(21), result.getSuccessObject().getContent().get(1).getCompletedPercentage());
 		assertEquals(20, result.getSuccessObject().getSize());
 		assertEquals(22, result.getSuccessObject().getTotalElements());
 		assertEquals(2, result.getSuccessObject().getTotalPages());
@@ -370,7 +370,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		List<Application> applications = Arrays.asList(app1, app2, app3);
 		
 		ApplicationSummaryResource sum1 = sumPercentage(null);
-		ApplicationSummaryResource sum2 = sumPercentage(new BigDecimal("50"));
+		ApplicationSummaryResource sum2 = sumPercentage(50);
 		ApplicationSummaryResource sum3 = sumPercentage(null);
 		when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
 		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
@@ -398,13 +398,13 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		return res;
 	}
 	
-	private ApplicationSummaryResource sumPercentage(BigDecimal percentage) {
+	private ApplicationSummaryResource sumPercentage(Integer percentage) {
 		ApplicationSummaryResource res = new ApplicationSummaryResource();
 		res.setCompletedPercentage(percentage);
 		return res;
 	}
 	
-	private ApplicationSummaryResource sumPercentage(BigDecimal percentage, Long id) {
+	private ApplicationSummaryResource sumPercentage(Integer percentage, Long id) {
 		ApplicationSummaryResource res = sumPercentage(percentage);
 		res.setId(id);
 		return res;

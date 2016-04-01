@@ -40,6 +40,12 @@ public class ApplicationSummaryPageResource {
 	public void setSize(int size) {
 		this.size = size;
 	}
+
+	public boolean hasPrevious() {
+		return number > 0;
+	}
 	
-	
+	public boolean hasNext() {
+		return totalPages > (number + 1);
+	}
 }

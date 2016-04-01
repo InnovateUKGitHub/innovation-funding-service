@@ -90,7 +90,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(ApplicationStatusConstants.OPEN.getName(), result.getSuccessObject().getApplicationStatusName());
         assertEquals("A novel solution to an old problem", result.getSuccessObject().getName());
         assertEquals("Steve Smith", result.getSuccessObject().getLead());
-        assertEquals(new BigDecimal("36.2068965510"), result.getSuccessObject().getCompletedPercentage());
+        assertEquals(Integer.valueOf(36), result.getSuccessObject().getCompletedPercentage());
     }
     
     @Test
@@ -106,7 +106,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(ApplicationStatusConstants.OPEN.getName(), result.getSuccessObject().getContent().get(0).getApplicationStatusName());
         assertEquals("A novel solution to an old problem", result.getSuccessObject().getContent().get(0).getName());
         assertEquals("Steve Smith", result.getSuccessObject().getContent().get(0).getLead());
-        assertEquals(new BigDecimal("36.2068965510"), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
+        assertEquals(Integer.valueOf(36), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
     }
 
 }

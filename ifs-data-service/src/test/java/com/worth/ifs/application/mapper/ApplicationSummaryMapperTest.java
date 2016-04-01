@@ -53,7 +53,7 @@ public class ApplicationSummaryMapperTest {
 		assertEquals("appname", result.getName());
 		assertEquals(Long.valueOf(6L), result.getApplicationStatus());
 		assertEquals("statusname", result.getApplicationStatusName());
-		assertEquals(new BigDecimal("66.6"), result.getCompletedPercentage());
+		assertEquals(Integer.valueOf(66), result.getCompletedPercentage());
 		assertEquals("jim kirk", result.getLead());
 	}
 
