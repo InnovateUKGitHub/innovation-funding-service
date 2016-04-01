@@ -1,24 +1,40 @@
-/*
-
-###Event alert
-
+/* SG
+# IFS/Alert - warning
 
 ```
-<div class="event-alert event-alert-warning is-open">
-    <p>
-         <span>Steve Smith (Lead Applicant) is editing a field</span>
-    </p>
-</div>
+<script>
+function showWarning(){
+  var html = '\
+  <div class="event-alert">\
+      <p><span>This is a warning</span></p>\
+  </div>';
+  jQuery('body').append(html)
+}
+</script>
+
+<button class="button" onclick="showWarning()">show the warning alert</button>
+
+```
+*/
+
+/* SG
+# IFS/Alert - alert
+
+Don't use the javascript underneath which is just for demo, just add the html fragment
 ```
 
-##Information alert
+<script>
+function showAlert(){
+  var html = '\
+  <div class="event-alert-error">\
+      <p><span>This is a alert</span></p>\
+  </div>';
+  jQuery('body').append(html)
+}
+</script>
 
-```
-<div class="event-alert">
-    <p>
-         <span>Steve Smith (Lead Applicant) is editing a field</span>
-    </p>
-</div>
+<button class="button" onclick="showAlert()">show the alert</button>
+
 ```
 */
 @include keyframes(slideup) {

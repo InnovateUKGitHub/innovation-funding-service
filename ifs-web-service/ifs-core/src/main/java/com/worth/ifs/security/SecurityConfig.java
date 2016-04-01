@@ -39,10 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
             .and()
                 .headers()
-                    .frameOptions().sameOrigin()
                     .cacheControl().disable();
-
-
     }
 
 }

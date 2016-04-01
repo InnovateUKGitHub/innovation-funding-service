@@ -1,6 +1,6 @@
-/*
+/* SG
 
-###Message Alert Dialog
+# IFS/Message Alert Dialog
 Large message panel
 
 ```
@@ -10,7 +10,7 @@ Large message panel
     </h1>
 
     <p>
-      You have been requested to act as an assessor on a new competition: <strong>Solving urban problems with data</strong> 
+      You have been requested to act as an assessor on a new competition: <strong>Solving urban problems with data</strong>
     </p>
 
     <ul class="message-summary-list">
@@ -20,7 +20,7 @@ Large message panel
 
  ```
 */
- 
+
 
 .message-alert{
 	background: #e4eff6 url(../images/message-alert.png) 25px 25px no-repeat;
@@ -31,7 +31,7 @@ Large message panel
 		font-size: 16px;
 		margin-bottom: 0.6em;
 	}
-	
+
 	.heading-small{
 		margin-top: 10px;
 	}

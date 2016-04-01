@@ -1,8 +1,9 @@
-/*
+/* SG
+
+# IFS/Pie chart basic
 
 SVG based pie charts, won't show without javascript or svg
 
-###Basic pie-chart
 
 ```
 <div class="pie">92%</div>
@@ -10,8 +11,10 @@ SVG based pie charts, won't show without javascript or svg
 <div class="pie">22%</div>
 
 ```
+*/
 
-###Pie-chart counting down the days
+/* SG
+# IFS/Pie chart counting down the days
 
  ```
 <div class="pie-container">
@@ -40,10 +43,8 @@ SVG based pie charts, won't show without javascript or svg
 	</div>
 </div>
 
-```
-You can add `.small` to `.pie` for a smaller version of both
+<!-- You can add `.small` to `.pie` for a smaller version of both -->
 
-```
 <div class="pie-container">
 	<div class="pie small">10%</div>
 	<div class="pie-overlay">
@@ -53,7 +54,6 @@ You can add `.small` to `.pie` for a smaller version of both
 </div>
 
 <div class="pie small">10%</div>
-
 ```
 
 */
