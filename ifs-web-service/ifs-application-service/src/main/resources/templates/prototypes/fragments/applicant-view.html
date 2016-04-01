@@ -88,6 +88,9 @@
         <div th:if="${subtitle == 'unsuccessfulFeedback'}" th:remove="tag">
             <p class="subtitle no-margin">10294855: Mobile Phone Data for Logistics Analytics</p>
         </div>
+        <div th:if="${subtitle == 'notSubmitted'}" th:remove="tag">
+            <p class="subtitle no-margin">10295748: Additive manufacturing</p>
+        </div>
         <div th:if="${subtitle == 'noStatus'}" th:remove="tag">
             <p class="subtitle no-margin">10294856: Machine learning in robots</p>
         </div>
@@ -173,7 +176,9 @@
                 <h3 class="heading-small">Project title</h3>
                 <p th:if="${param.status == null or param.status[0] == 'successful' or param.status[0] == 'unsuccessful'}">Machine learning in robots</p>
 
-                <p th:if="${param.status == null or param.status[0] == 'successfulFeedback' or param.status[0] == 'unsuccessfulFeedback'}">Mobile Phone Data for Logistics Analytics</p>
+                <p th:if="${param.status != null and param.status[0] == 'successfulFeedback' or param.status != null and param.status[0] == 'unsuccessfulFeedback'}">Mobile Phone Data for Logistics Analytics</p>
+
+                <p th:if="${param.status != null and param.status[0] == 'notSubmitted'}">Not submitted</p>
 
                 <h3 class="heading-small">Lead organisation</h3>
                 <p>Empire Ltd</p>
