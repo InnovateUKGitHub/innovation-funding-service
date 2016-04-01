@@ -181,7 +181,7 @@ public abstract class AbstractApplicationController extends BaseController {
         addApplicationFormDetailInputs(application, form);
         addMappedSectionsDetails(model, application, competition, section, userOrganisation);
 
-        if(!form.isAdminMode()){
+        if(application.isOpen()){
             userOrganisation.ifPresent(org ->
                     addAssignableDetails(model, application, org, userId, section, currentQuestionId)
             );

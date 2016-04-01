@@ -147,11 +147,11 @@
             </ul>
         </div>
 
-        <div th:unless="${form.isAdminMode() or (currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
+        <div th:unless="${appIsClosed or (currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
 		 					    (questionAssignee?.assignee==null and !userIsLeadApplicant)}" th:remove="tag">
 	        <p>
-	            <div th:if="${readonly}" th:unless="${appIsClosed}" th:include="question-type/form-elements :: form-edit-question-button" th:remove="tag"/>
-	            <div th:unless="${appIsClosed}" th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+	            <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" th:remove="tag"/>
+	            <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
 	        </p>
         </div>
     </div>

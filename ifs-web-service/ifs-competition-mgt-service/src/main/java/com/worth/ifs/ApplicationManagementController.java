@@ -1,6 +1,7 @@
 package com.worth.ifs;
 
 import com.worth.ifs.application.AbstractApplicationController;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationSummaryRestService;
@@ -52,13 +53,14 @@ public class ApplicationManagementController extends AbstractApplicationControll
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
 
         ApplicationResource application = applicationService.getById(applicationId);
+        if(form.isAdminMode()){
+            // so the mode is viewonly
+            application.setApplicationStatus(ApplicationStatusConstants.SUBMITTED.getId());
+        }
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         addOrganisationAndUserFinanceDetails(applicationId, user, model, form);
         model.addAttribute("applicationReadyForSubmit", false);
-
-
-
         return "application/summary";
     }
 }
