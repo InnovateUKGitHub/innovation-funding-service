@@ -3,7 +3,7 @@ package com.worth.ifs.user.security;
 import com.worth.ifs.security.PermissionEntityLookupStrategies;
 import com.worth.ifs.security.PermissionEntityLookupStrategy;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.mapper.OrganisationMapper;
+import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
 
