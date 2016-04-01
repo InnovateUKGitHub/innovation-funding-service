@@ -35,12 +35,12 @@
                 <div class="collapsible" th:each="question : ${sectionQuestions.get(section.id)}">
                     <h3>
                         <div th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" th:remove="tag" />
-                        <div th:remove="tag" th:if="${currentApplication.isOpen()}">
+                        <div th:remove="tag" th:if="${currentApplication.isOpen() and !form.isAdminMode()}">
                           <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Complete</div>
                           <div class="section-status section-incomplete" th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Incomplete</div>
                         </div>
                     </h3>
-                    <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}' th:with="formInputIndex=(${status.index}), readonly=true, appIsClosed=${!currentApplication.isOpen()}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.get(question.getId())})" th:id="'form-input-'+${formInput.getId()}" >
+                    <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:if='${formInput.isIncludedInApplicationSummary()}' th:with="formInputIndex=(${status.index}), readonly=true, appIsClosed=${!currentApplication.isOpen()}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})" th:id="'form-input-'+${formInput.getId()}" >
                         <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" th:unless='${formInput.getFormInputType().getTitle().equals("finance"}' />
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                 <h2 class="heading-medium">Finance</h2>
                 <div class="collapsible">
                     <h3>Finances Summary
-                      <div th:remove="tag" th:if="${currentApplication.isOpen()}">
+                      <div th:remove="tag" th:if="${currentApplication.isOpen() and !form.isAdminMode()}">
                         <div class="section-status section-complete" th:if="${sectionsMarkedAsComplete.contains(7L)}">Complete</div>
                         <div class="section-status section-incomplete" th:unless="${sectionsMarkedAsComplete.contains(7L)}">Incomplete</div>
                       </div>
@@ -67,18 +67,19 @@
                 </div>
             </section>
         </form>
+    <div th:unless="${form.isAdminMode()}">
+        <div th:if="${currentApplication.isOpen()}">
+              <hr/>
+            <span class="icon icon-information"></span>
+            <span> You will not be able to make changes to your application or resubmit after this point.</span>
+        </div>
 
-    <div th:if="${currentApplication.isOpen()}">
-          <hr/>
-	    <span class="icon icon-information"></span>
-	    <span> You will not be able to make changes to your application or resubmit after this point.</span>
-	</div>
+            <div th:if="${currentApplication.isOpen()}" th:include="fragments/elements :: application-agree-to-terms" class="agree-to-terms-container"/>
 
-		<div th:if="${currentApplication.isOpen()}" th:include="fragments/elements :: application-agree-to-terms" class="agree-to-terms-container"/>
-
-    <div class="alignright-button" th:unless="${!currentApplication.isOpen()}">
-        <a id="submit-application-button" class="button large no-margin-right" data-js-modal="modal-confirm-submit-application" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${applicationReadyForSubmit}">Submit application</a>
-        <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
+        <div class="alignright-button" th:unless="${!currentApplication.isOpen()}">
+            <a id="submit-application-button" class="button large no-margin-right" data-js-modal="modal-confirm-submit-application" th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${applicationReadyForSubmit}">Submit application</a>
+            <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
+        </div>
     </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

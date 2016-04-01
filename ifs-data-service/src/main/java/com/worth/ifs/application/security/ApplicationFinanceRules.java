@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
@@ -28,6 +29,6 @@ public class ApplicationFinanceRules {
     @PermissionRule(value = "READ", description = "An applicant can only see the totals of their finance ")
     public boolean applicantCanSeeTheOrganisationFinanceTotals(Application application, User user) {
         List<ProcessRole> processRole = processRoleRepository.findByUserAndApplication(user, application);
-        return !processRole.isEmpty();
+        return SecurityRuleUtil.isCompAdmin(user) || !processRole.isEmpty();
     }
 }
