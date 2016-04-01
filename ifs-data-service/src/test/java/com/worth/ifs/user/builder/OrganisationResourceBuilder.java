@@ -1,6 +1,8 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 
 import java.util.List;
@@ -48,5 +50,26 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
 
     public OrganisationResourceBuilder withOrganisationType(Long... organisationTypeIds) {
         return withArray((organisationTypeId, organisation) -> setField("organisationType", organisationTypeId, organisation), organisationTypeIds);
+    }
+
+    public OrganisationResourceBuilder withUsers(List<User>... users) {
+        return withArray((user, organisation) -> setField("users", user, organisation), users);
+    }
+
+    @Override
+    public List<OrganisationResource> build(int numberToBuild) {
+        List<OrganisationResource> built = super.build(numberToBuild);
+
+        // now add back-refs where appropriate
+        built.forEach(organisation -> {
+            List<User> users = organisation.getUsers();
+            users.forEach(user -> {
+                // TODO DW - INFUND-1556 - when OrganisationResource users are refactored to just be userIds, remove the code below that is creating a shell Organisation
+                // based on the OrganisationResource
+                user.addUserOrganisation(new Organisation(organisation.getId(), organisation.getName(), organisation.getCompanyHouseNumber(), organisation.getOrganisationSize()));
+            });
+        });
+
+        return built;
     }
 }

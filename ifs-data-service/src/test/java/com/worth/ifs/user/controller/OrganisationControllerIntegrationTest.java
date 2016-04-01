@@ -9,7 +9,9 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.domain.OrganisationType;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
+import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -20,7 +22,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class OrganisationControllerIntegrationTest  extends BaseControllerIntegrationTest<OrganisationController> {
+public class OrganisationControllerIntegrationTest extends BaseControllerIntegrationTest<OrganisationController> {
 
     @Autowired
     private OrganisationTypeRepository organisationTypeRepository;
@@ -28,8 +30,16 @@ public class OrganisationControllerIntegrationTest  extends BaseControllerIntegr
     @Autowired
     private AddressRepository addressRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private static final String companyHouseId = "0123456789";
     private static final String companyName = "CompanyName1";
+
+    @Before
+    public void setLoggedInUserOnThread() {
+        setLoggedInUser(userRepository.findByEmail("steve.smith@empire.com").get());
+    }
 
     @Override
     @Autowired
