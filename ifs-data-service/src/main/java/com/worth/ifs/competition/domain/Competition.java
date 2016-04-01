@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -19,6 +20,21 @@ import java.util.List;
  */
 @Entity
 public class Competition {
+
+
+    public CompetitionResource.Status getCompetitionStatus() {
+        LocalDate today = LocalDate.now();
+        if(getStartDate().isAfter(today)){
+            return CompetitionResource.Status.NOT_STARTED;
+        }else if(getEndDate().isAfter(today)){
+            return CompetitionResource.Status.OPEN;
+        }else if(getAssessmentEndDate().isAfter(today)){
+            return CompetitionResource.Status.IN_ASSESSMENT;
+        }
+
+        return null;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -208,5 +224,7 @@ public class Competition {
     public void setId(Long id) {
         this.id = id;
     }
+
+
 }
 

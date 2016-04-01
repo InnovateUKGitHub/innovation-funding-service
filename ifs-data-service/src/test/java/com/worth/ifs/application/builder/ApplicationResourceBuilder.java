@@ -1,12 +1,13 @@
 package com.worth.ifs.application.builder;
 
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.resource.ApplicationResource;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
-
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.resource.ApplicationResource;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
@@ -40,6 +41,9 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return with(application -> application.setCompetition(competition));
     }
 
+    public ApplicationResourceBuilder withApplicationStatus(ApplicationStatusConstants... applicationStatus) {
+        return withArray((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
+    }
     public ApplicationResourceBuilder withApplicationStatus(Long... applicationStatus) {
         return withArray((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
     }
@@ -66,10 +70,6 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
 
     public ApplicationResourceBuilder withApplicationFinance(List<Long>... applicationFinances) {
         return withArray((applicationFinance, address) -> setField("applicationFinances", applicationFinance, address), applicationFinances);
-    }
-
-    public ApplicationResourceBuilder withApplicationStatusName(String... applicationStatusNames) {
-        return withArray((applicationStatusName, address) -> setField("applicationStatusName", applicationStatusName, address), applicationStatusNames);
     }
 
     public ApplicationResourceBuilder withCompetitionName(String... competitionNames) {

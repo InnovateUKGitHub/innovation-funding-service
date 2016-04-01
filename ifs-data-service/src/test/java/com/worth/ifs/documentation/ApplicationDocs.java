@@ -1,11 +1,11 @@
 package com.worth.ifs.documentation;
 
+import com.worth.ifs.application.builder.ApplicationResourceBuilder;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import org.springframework.restdocs.payload.FieldDescriptor;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import com.worth.ifs.application.builder.ApplicationResourceBuilder;
-
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static java.util.Arrays.asList;
@@ -34,8 +34,7 @@ public class ApplicationDocs {
             .withDuration(1L)
             .withProcessRoles(asList(1L,2L,3L))
             .withApplicationFinance(asList(1L,2L,3L))
-            .withApplicationStatus(1L)
-            .withApplicationStatusName("OPEN")
+            .withApplicationStatus(ApplicationStatusConstants.OPEN)
             .withCompetition(1L)
             .withCompetitionName("competition name")
             .withInviteList(asList(1L,2L,3L));
