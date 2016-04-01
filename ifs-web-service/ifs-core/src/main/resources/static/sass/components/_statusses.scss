@@ -155,9 +155,8 @@ Status is displayed in the collapsible header area.
 }
 
 
-/*
-###Wrapped text areas
-Complete
+/* SG
+# IFS/Wrapped textareas : Complete
 ```
 <div class="textarea-wrapped marked-as-complete">
 	<div class="textarea-header">
@@ -168,8 +167,10 @@ Complete
 	</textarea>
 </div>
 ```
+*/
 
-Assigned to me
+/* SG
+# IFS/Wrapped textareas : Assigned to me
 ```
 <div class="textarea-wrapped assigned-to-me">
 	<div class="textarea-header">
@@ -222,8 +223,9 @@ Assigned to me
 }
 
 
-/*
-###Application sidebar statuses
+/* SG
+
+# IFS/Application sidebar statuses
 ```
 <nav role="navigation" class="app-sidebar">
 	<ul>
