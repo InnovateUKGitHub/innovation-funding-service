@@ -91,7 +91,7 @@ public class ApplicationController extends AbstractApplicationController {
         addOrganisationAndUserFinanceDetails(applicationId, user, model, form);
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
-        return "application-summary";
+        return "application/summary";
     }
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)

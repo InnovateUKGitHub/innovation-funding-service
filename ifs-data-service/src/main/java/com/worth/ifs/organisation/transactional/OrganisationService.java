@@ -7,6 +7,9 @@ import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 
 import java.util.List;
 import java.util.Set;
@@ -16,7 +19,7 @@ import java.util.Set;
  */
 public interface OrganisationService {
 
-    @NotSecured("TODO DW - implement security when permissions matrix known")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<Set<OrganisationResource>> findByApplicationId(Long applicationId);
 
     @NotSecured("TODO DW - implement security when permissions matrix known")

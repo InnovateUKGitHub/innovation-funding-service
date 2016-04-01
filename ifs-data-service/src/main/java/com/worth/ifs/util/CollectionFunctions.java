@@ -365,4 +365,10 @@ public final class CollectionFunctions {
         }
         return null;
     }
+
+    public static <T> Set<T> asLinkedSet(T... items) {
+        LinkedHashSet<T> set = new LinkedHashSet<>();
+        asList(items).forEach(set::add);
+        return set;
+    }
 }

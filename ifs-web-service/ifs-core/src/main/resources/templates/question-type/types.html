@@ -147,7 +147,7 @@
             </ul>
         </div>
 
-        <div th:unless="${(currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
+        <div th:unless="${form.isAdminMode() or (currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
 		 					    (questionAssignee?.assignee==null and !userIsLeadApplicant)}" th:remove="tag">
 	        <p>
 	            <div th:if="${readonly}" th:unless="${appIsClosed}" th:include="question-type/form-elements :: form-edit-question-button" th:remove="tag"/>

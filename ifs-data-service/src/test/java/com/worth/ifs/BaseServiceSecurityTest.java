@@ -163,22 +163,6 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
     }
 
     /**
-     * Set a user on the Spring Security ThreadLocals
-     *
-     * @param user
-     */
-    protected void setLoggedInUser(User user) {
-        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
-    }
-
-    /**
-     * Get the user on the Spring Security ThreadLocals
-     */
-    protected User getLoggedInUser() {
-        return ((UserAuthentication) SecurityContextHolder.getContext().getAuthentication()).getDetails();
-    }
-
-    /**
      * Given the rulesMap from the CustomPermissionEvaluator, this method replaces all of the original @PermissionRules-annotated beans
      * with Mockito mocks, and all of the @PermissionRule-annotated methods on those beans with the equivalent methods from the mocks.
      * <p>

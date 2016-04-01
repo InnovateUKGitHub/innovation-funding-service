@@ -7,7 +7,6 @@ import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.domain.Invite;
-import com.worth.ifs.user.domain.CompAdminEmail;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -210,7 +209,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
         when(userService.findUserByEmail(email)).thenReturn(restSuccess(new UserResource()));
-        when(compAdminEmailService.findByEmail(email)).thenReturn(restFailure(notFoundError(CompAdminEmail.class, email)));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -255,7 +253,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void invalidEmailFormatShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
-        when(compAdminEmailService.findByEmail("invalid email format")).thenReturn(restFailure(notFoundError(CompAdminEmail.class, "invalid email format")));
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", "invalid email format")
@@ -270,7 +267,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void invalidCharactersInEmailShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
-        when(compAdminEmailService.findByEmail("{a|b}@test.test")).thenReturn(restFailure(notFoundError(CompAdminEmail.class, "{a|b}@test.test")));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -358,7 +354,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 1L,
                 null)).thenReturn(restSuccess(userResource));
         when(userService.findUserByEmail("test@test.test")).thenReturn(restFailure(notFoundError(User.class, "test@test.test")));
-        when(compAdminEmailService.findByEmail("test@test.test")).thenReturn(restFailure(notFoundError(CompAdminEmail.class, "test@test.test")));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -401,7 +396,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 null)).thenReturn(restSuccess(userResource));
         when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(restFailure(notFoundError(User.class, "invited@email.com")));
         when(inviteRestService.acceptInvite(eq(INVITE_HASH),anyLong())).thenReturn(restSuccess());
-        when(compAdminEmailService.findByEmail("invited@email.com")).thenReturn(restFailure(notFoundError(CompAdminEmail.class, "invited@email.com")));
         mockMvc.perform(post("/registration/register?organisationId=1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .cookie(inviteHashCookie)
@@ -481,7 +475,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
                 1L, null)).thenReturn(restFailure(error));
-        when(compAdminEmailService.findByEmail(userResource.getEmail())).thenReturn(restFailure(notFoundError(CompAdminEmail.class, userResource.getEmail())));
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", userResource.getEmail())
