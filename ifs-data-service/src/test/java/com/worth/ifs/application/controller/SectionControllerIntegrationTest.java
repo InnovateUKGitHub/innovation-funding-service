@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
+import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -63,6 +64,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
 
         sectionIdYourFinances = 7L;
         sectionIdLabour = 9L;
+        addBasicSecurityUser();
     }
 
     @Autowired
