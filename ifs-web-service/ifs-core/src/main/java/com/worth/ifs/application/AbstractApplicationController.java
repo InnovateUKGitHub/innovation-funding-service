@@ -181,13 +181,9 @@ public abstract class AbstractApplicationController extends BaseController {
         addApplicationFormDetailInputs(application, form);
         addMappedSectionsDetails(model, application, competition, section, userOrganisation);
 
-        if(application.isOpen()){
-            userOrganisation.ifPresent(org ->
-                    addAssignableDetails(model, application, org, userId, section, currentQuestionId)
-            );
-        }else{
-            model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
-        }
+        userOrganisation.ifPresent(org ->
+                addAssignableDetails(model, application, org, userId, section, currentQuestionId)
+        );
         addCompletedDetails(model, application, userOrganisation, userApplicationRoles);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
