@@ -1,6 +1,5 @@
 package com.worth.ifs.application.resource;
 
-import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 
@@ -23,7 +21,7 @@ public class ApplicationResourceTest {
     Competition competition;
     String name;
     List<ProcessRole> processRoles;
-    ApplicationStatusResource applicationStatus;
+    ApplicationStatusConstants applicationStatus;
     Long id;
     List<ApplicationFinance> applicationFinances;
 
@@ -31,7 +29,7 @@ public class ApplicationResourceTest {
     public void setUp() throws Exception {
         id =0L;
         name = "testApplicationName";
-        applicationStatus = newApplicationStatusResource().with(BuilderAmendFunctions.id(id)).withName("status").build();
+        applicationStatus = ApplicationStatusConstants.OPEN;
         competition = new Competition();
         competition.setId(1L);
 
@@ -51,7 +49,7 @@ public class ApplicationResourceTest {
             .withProcessRoles(
                 asList(1L,2L,3L)
             )
-            .withApplicationStatus(ApplicationStatusConstants.getFromId(applicationStatus.getId()))
+            .withApplicationStatus(applicationStatus)
             .withId(id)
             .build();
         applicationResource.setApplicationFinances(simpleMap(applicationFinances,ApplicationFinance::getId));
