@@ -39,45 +39,20 @@
 
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" />
 
-	<div id="sticky-zone">
-
-		<div class="info-area">
-			
-
-			<section class="boxed">
-				
-				<div class="grid-row">
-					<div class="column-one">
-				 		<p><span class="heading-medium">15</span> <br />Projects funded</p>
-				 	</div>
-				 </div>
-				
-				<div class="grid-row">
-				 	<div class="column-half">
-					 	<p><span class="heading-medium">4</span> <br />Projects in setup</p>
-					</div>
-					<div class="column-half">
-					 	<p><span class="heading-medium">4</span> <br />Live projects</p>
-					</div>
-				</div>
-
-			</section>
-
-		</div>
-		
-		
+	<div class="grid-row constrain-width">
+	
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 		
 	
-		<div class="data-area">
+		<div class="column-one">
 
-			<h2 class="heading-large" id="current-assessors">Applications submitted</h2>
+			<h2 class="heading-large" id="current-assessors">Projects in setup</h2>
 			
 			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'projects in setup'}, type='submittedApplications'" th:remove="tag" />
 
 			
 			<div class="table-overflow">
-				<table id="application-list">
+				<table>
 					<thead>
 						<tr>
 							<th scope="col" style="width: 10%">Application no</th>
@@ -86,7 +61,7 @@
 							<th scope="col" style="width: 15%">Area</th>
 							<th scope="col" class="alignright" style="width: 10%">No. of partners</th>
 							<th scope="col" class="alignright" style="width: 5%">Stage</th>
-							<th scope="col" class="alignright" style="width: 10%">Status</th>
+							<th scope="col" style="width: 10%">Status</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -97,7 +72,7 @@
 							<td>HVM</td>
 							<td class="alignright">3</td>
 							<td class="alignright">2</td>
-							<td class="alignright"><span class="status-project-warning">Warning</span></td>
+							<td><span class="status-project-warning">*</span></td>
 						</tr>
 						<tr class="filtered-result">
 							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194732</a></td>
@@ -106,7 +81,7 @@
 							<td>HVM</td>
 							<td class="alignright">2</td>
 							<td class="alignright">4</td>
-							<td class="alignright"><span class="status-project-warning">Warning</span></td>
+							<td><span class="status-project-warning">*</span></td>
 						</tr>
 						<tr class="filtered-result">
 							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194733</a></td>
@@ -115,7 +90,7 @@
 							<td>HVM</td>
 							<td class="alignright">5</td>
 							<td class="alignright">1</td>
-							<td class="alignright">&nbsp;</td>
+							<td>&nbsp;</td>
 						</tr>
 						<tr class="filtered-result">
 							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194734</a></td>
@@ -124,7 +99,7 @@
 							<td>HVM</td>
 							<td class="alignright">4</td>
 							<td class="alignright">4</td>
-							<td class="alignright">&nbsp;</td>
+							<td>&nbsp;</td>
 						</tr>
 					</tbody>
 				</table>
@@ -137,7 +112,7 @@
 			</div>
 
 			<div class="table-overflow">
-				<table id="application-list">
+				<table>
 					<thead>
 						<tr>
 							<th scope="col" style="width: 10%">Application no</th>
@@ -146,7 +121,7 @@
 							<th scope="col" style="width: 15%">Area</th>
 							<th scope="col" class="alignright" style="width: 10%">No. of partners</th>
 							<th scope="col" class="alignright" style="width: 5%">Stage</th>
-							<th scope="col" class="alignright" style="width: 10%">Status</th>
+							<th scope="col" style="width: 10%">Status</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -157,7 +132,7 @@
 							<td>HVM</td>
 							<td class="alignright">3</td>
 							<td class="alignright">2</td>
-							<td class="alignright"><span class="status-project-ok">OK</span></td>
+							<td><span class="status-project-ok">OK</span></td>
 						</tr>
 						<tr class="filtered-result">
 							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194736</a></td>
@@ -166,7 +141,7 @@
 							<td>HVM</td>
 							<td class="alignright">2</td>
 							<td class="alignright">4</td>
-							<td class="alignright"><span class="status-project-ok">OK</span></td>
+							<td><span class="status-project-ok">OK</span></td>
 						</tr>
 						<tr class="filtered-result">
 							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194737</a></td>
@@ -175,7 +150,7 @@
 							<td>HVM</td>
 							<td class="alignright">5</td>
 							<td class="alignright">1</td>
-							<td class="alignright"><span class="status-project-ok">OK</span></td>
+							<td><span class="status-project-ok">OK</span></td>
 						</tr>
 						<tr class="filtered-result">
 							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194738</a></td>
@@ -184,7 +159,7 @@
 							<td>HVM</td>
 							<td class="alignright">4</td>
 							<td class="alignright">4</td>
-							<td class="alignright"><span class="status-project-ok">OK</span></td>
+							<td><span class="status-project-ok">OK</span></td>
 						</tr>
 					</tbody>
 				</table>

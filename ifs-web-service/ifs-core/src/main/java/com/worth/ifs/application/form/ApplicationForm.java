@@ -13,6 +13,8 @@ public class ApplicationForm extends Form {
     @Valid
     private ApplicationResource application;
 
+    private boolean adminMode = false;
+
     public ApplicationForm() {
         super();
     }
@@ -23,5 +25,13 @@ public class ApplicationForm extends Form {
 
     public void setApplication(ApplicationResource application) {
         this.application = application;
+    }
+
+    public boolean isAdminMode() {
+        return adminMode;
+    }
+
+    public void setAdminMode(boolean adminMode) {
+        this.adminMode = adminMode;
     }
 }

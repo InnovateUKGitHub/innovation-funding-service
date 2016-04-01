@@ -133,10 +133,10 @@
                 </table>
 
                 <div class="alignright">
-                    <button class="add-another-row buttonlink" type="submit" name="add_person" th:value="${organisationStats.index}">Add person</button>
+                    <button th:if="${leadApplicant.id == authenticatedUser.id || organisationInviteForm.organisationId == authenticatedUserOrganisation}" class="add-another-row buttonlink" type="submit" name="add_person" th:value="${organisationStats.index}">Add person</button>
                 </div>
             </li>
-            <li>
+            <li th:if="${leadApplicant.id == authenticatedUser.id}">
                 <button class="buttonlink" type="submit" name="add_partner" value="">Add additional partner organisation</button>
                 <p>Add any partner organisations collaborating with you on this project. Partners are responsible for creating their own account and submitting their finances.</p>
             </li>

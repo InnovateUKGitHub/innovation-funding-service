@@ -13,8 +13,8 @@ import java.util.List;
  */
 public interface OrganisationRestService {
 
-    RestResult<List<Organisation>> getOrganisationsByApplicationId(Long applicationId);
-    RestResult<Organisation> getOrganisationById(Long organisationId);
+    RestResult<List<OrganisationResource>> getOrganisationsByApplicationId(Long applicationId);
+    RestResult<OrganisationResource> getOrganisationById(Long organisationId);
     RestResult<OrganisationResource> save(Organisation organisation);
     RestResult<OrganisationResource> save(OrganisationResource organisation);
     RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, AddressType type);

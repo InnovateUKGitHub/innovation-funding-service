@@ -34,13 +34,14 @@ public class ApplicantControllerTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        super.setup();
+
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(applicantController)
                 .setViewResolvers(viewResolver())
                 .build();
 
+        super.setup();
 
         this.setupCompetition();
         this.setupApplicationWithRoles();

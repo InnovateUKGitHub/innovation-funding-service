@@ -4,7 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import org.junit.Test;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -20,7 +20,7 @@ public class OrganisationControllerTest extends BaseControllerMockMVCTest<Organi
 
     @Test
     public void findByIdShouldReturnOrganisation() throws Exception {
-        when(organisationServiceMock.findById(1L)).thenReturn(serviceSuccess(newOrganisation().withId(1L).withName("uniqueOrganisationName").build()));
+        when(organisationServiceMock.findById(1L)).thenReturn(serviceSuccess(newOrganisationResource().withId(1L).withName("uniqueOrganisationName").build()));
 
         mockMvc.perform(get("/organisation/findById/1"))
                 .andExpect(status().isOk())

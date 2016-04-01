@@ -1,15 +1,17 @@
 package com.worth.ifs;
 
-import org.junit.Before;
+import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.user.domain.User;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.worth.ifs.BuilderAmendFunctions.clearUniqueIds;
 
 /**
  * This is the base class for all integration tests against a configured Spring application.  Subclasses of this base can be
@@ -24,4 +26,29 @@ public abstract class BaseIntegrationTest extends BaseTest {
 
     public static final int USER_COUNT  = 11;
     public static final List<String> ALL_USERS_EMAIL = Arrays.asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com", "felix.wilson@gmail.com", "ewan+1@hiveit.co.uk", "ewan+2@hiveit.co.uk", "ewan+12@hiveit.co.uk");
+
+    @Autowired
+    private EntityManager em;
+
+    protected void flushAndClearSession() {
+        em.flush();
+        em.clear();
+    }
+
+    /**
+     * Set a user on the Spring Security ThreadLocals
+     *
+     * @param user
+     */
+    protected void setLoggedInUser(User user) {
+        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
+    }
+
+    /**
+     * Get the user on the Spring Security ThreadLocals
+     */
+    protected User getLoggedInUser() {
+        return ((UserAuthentication) SecurityContextHolder.getContext().getAuthentication()).getDetails();
+    }
+
 }

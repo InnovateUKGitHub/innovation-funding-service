@@ -56,7 +56,6 @@ public class AssessmentControllerTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        super.setup();
 
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
@@ -64,6 +63,8 @@ public class AssessmentControllerTest extends BaseUnitTest {
         mockMvc = MockMvcBuilders.standaloneSetup(assessmentController)
                 .setViewResolvers(viewResolver())
                 .build();
+
+        super.setup();
 
         this.setupCompetition();
         this.setupUserRoles();

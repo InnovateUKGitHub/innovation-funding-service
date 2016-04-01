@@ -220,12 +220,6 @@ public class AssessmentController extends AbstractApplicationController {
         return applicationReview;
     }
 
-
-    @ModelAttribute
-    private User getLoggedUser(HttpServletRequest request) {
-        return getUserAuthenticationService().getAuthenticatedUser(request);
-    }
-
     private Long getLoggedUserId( HttpServletRequest request) {
         return getLoggedUser(request).getId();
     }

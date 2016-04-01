@@ -11,11 +11,13 @@ import com.worth.ifs.token.domain.TokenType;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.repository.CompAdminEmailRepository;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -50,6 +52,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private TokenRepository tokenRepository;
 
     @Autowired
+    private CompAdminEmailRepository compAdminEmailRepository;
+
+    @Autowired
     private NotificationService notificationService;
     
     @Autowired
@@ -63,14 +68,28 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return createApplicantUser(organisationId, Optional.empty(), userResource);
     }
 
+    private boolean isUserCompAdmin(final String email) {
+        if(StringUtils.hasText(email)) {
+            CompAdminEmail existingUserSearch = compAdminEmailRepository.findOneByEmail(email);
+            if(existingUserSearch != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public ServiceResult<UserResource> createApplicantUser(Long organisationId, Optional<Long> competitionId, UserResource userResource) {
-
+        String roleName;
+        if(isUserCompAdmin(userResource.getEmail())){
+            roleName = UserRoleType.COMP_ADMIN.getName();
+        } else {
+            roleName = UserRoleType.APPLICANT.getName();
+        }
         User newUser = assembleUserFromResource(userResource);
-
         return addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
-               addRoleToUser(user, UserRoleType.APPLICANT.getName())).andOnSuccess(user ->
-               createUserWithUid(newUser, userResource.getPassword(), competitionId)).andOnSuccessReturn(UserResource::new);
+                addRoleToUser(user, roleName)).andOnSuccess(user ->
+                createUserWithUid(newUser, userResource.getPassword(), competitionId)).andOnSuccessReturn(UserResource::new);
     }
 
     @Override
@@ -148,8 +167,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         notificationArguments.put("verificationLink", verificationLink);
 
         Notification notification = new Notification(from, singletonList(to), Notifications.VERIFY_EMAIL_ADDRESS, notificationArguments);
-        ServiceResult<Notification> result = notificationService.sendNotification(notification, EMAIL);
-        return result;
+        return notificationService.sendNotification(notification, EMAIL);
     }
 
     private String getVerificationLink(User user, Optional<Long> competitionId) {

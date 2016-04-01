@@ -1,7 +1,5 @@
 package com.worth.ifs.user.domain;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,12 +17,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.util.StringUtils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import static java.util.stream.Collectors.toList;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
@@ -52,7 +52,7 @@ public class User {
     @Column(unique=true)
     private String email;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -87,6 +87,9 @@ public class User {
         this.id = id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;

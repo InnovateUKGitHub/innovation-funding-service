@@ -1,7 +1,5 @@
 package com.worth.ifs.application.resource;
 
-import java.math.BigDecimal;
-
 /**
  * Represents a high-level overview of an application.
  */
@@ -11,7 +9,7 @@ public class ApplicationSummaryResource {
     private String lead;
     private Long applicationStatus;
     private String applicationStatusName;
-    private BigDecimal completedPercentage;
+    private Integer completedPercentage;
 	public Long getId() {
 		return id;
 	}
@@ -42,10 +40,10 @@ public class ApplicationSummaryResource {
 	public void setApplicationStatusName(String applicationStatusName) {
 		this.applicationStatusName = applicationStatusName;
 	}
-	public BigDecimal getCompletedPercentage() {
+	public Integer getCompletedPercentage() {
 		return completedPercentage;
 	}
-	public void setCompletedPercentage(BigDecimal completedPercentage) {
+	public void setCompletedPercentage(Integer completedPercentage) {
 		this.completedPercentage = completedPercentage;
 	}
 	

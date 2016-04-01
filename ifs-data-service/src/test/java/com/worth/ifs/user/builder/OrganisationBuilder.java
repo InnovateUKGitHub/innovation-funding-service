@@ -42,10 +42,12 @@ public class OrganisationBuilder extends BaseBuilder<Organisation, OrganisationB
     public OrganisationBuilder withName(String... names) {
         return withArray((name, organisation) -> setField("name", name, organisation), names);
     }
+
     public OrganisationBuilder withCompanyHouseNumber(String... numbers) {
         return withArray((number, organisation) -> setField("companyHouseNumber", number, organisation), numbers);
     }
-    public OrganisationBuilder withTypes(OrganisationType... organisationTypes) {
+
+    public OrganisationBuilder withOrganisationType(OrganisationType... organisationTypes) {
         return withArray((organisationType, organisation) -> setField("organisationType", organisationType, organisation), organisationTypes);
     }
 }

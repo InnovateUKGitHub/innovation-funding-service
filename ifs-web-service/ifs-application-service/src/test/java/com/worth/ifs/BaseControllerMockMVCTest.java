@@ -17,6 +17,7 @@ import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
+import com.worth.ifs.BaseUnitTest;
 
 import java.lang.reflect.Method;
 
@@ -36,7 +37,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     @Before
     public void setUp() {
-        super.setup();
+
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
 
@@ -53,6 +54,8 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 .setHandlerExceptionResolvers(createExceptionResolver())
                 .setViewResolvers(viewResolver())
                 .build();
+        
+        super.setup();
     }
 
     public ExceptionHandlerExceptionResolver createExceptionResolver() {

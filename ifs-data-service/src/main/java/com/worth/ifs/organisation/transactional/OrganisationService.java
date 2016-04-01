@@ -7,6 +7,9 @@ import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 
 import java.util.List;
 import java.util.Set;
@@ -16,11 +19,11 @@ import java.util.Set;
  */
 public interface OrganisationService {
 
-    @NotSecured("TODO DW - implement security when permissions matrix known")
-    ServiceResult<Set<Organisation>> findByApplicationId(Long applicationId);
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<Set<OrganisationResource>> findByApplicationId(Long applicationId);
 
     @NotSecured("TODO DW - implement security when permissions matrix known")
-    ServiceResult<Organisation> findById(Long organisationId);
+    ServiceResult<OrganisationResource> findById(Long organisationId);
 
     @NotSecured("When creating a application, this methods is called before creating a user account, so there his no way to authenticate.")
     ServiceResult<OrganisationResource> create(Organisation organisation);

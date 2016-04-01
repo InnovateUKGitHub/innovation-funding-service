@@ -27,13 +27,14 @@ public class AssessorControllerTest  extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        super.setup();
+
         // Process mock annotations
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(assessorController)
                 .setViewResolvers(viewResolver())
                 .build();
 
+        super.setup();
 
         this.setupCompetition();
         this.setupUserRoles();

@@ -2,10 +2,11 @@ package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.security.NotSecured;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ApplicationStatusService {
 
-    @NotSecured("TODO")
+    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.application.resource.ApplicationStatusResource', 'READ')" )
     ServiceResult<ApplicationStatusResource> getById(Long id);
 }

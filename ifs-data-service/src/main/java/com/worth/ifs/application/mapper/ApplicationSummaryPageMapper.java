@@ -1,16 +1,15 @@
 package com.worth.ifs.application.mapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.ApplicationSummaryResource;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
+import org.mapstruct.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(
     config = GlobalMapperConfig.class

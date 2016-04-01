@@ -1,9 +1,10 @@
 package com.worth.ifs.application.repository;
 
-import com.worth.ifs.application.domain.Question;
-import org.springframework.data.repository.PagingAndSortingRepository;
-
 import java.util.List;
+
+import com.worth.ifs.application.domain.Question;
+
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  * This interface is used to generate Spring Data Repositories.

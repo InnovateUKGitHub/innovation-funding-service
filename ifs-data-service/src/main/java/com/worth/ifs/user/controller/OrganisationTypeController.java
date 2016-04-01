@@ -1,6 +1,7 @@
 package com.worth.ifs.user.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.transactional.OrganisationTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,10 @@ public class OrganisationTypeController {
     @Autowired
     private OrganisationTypeService service;
 
+    @Autowired
+    private OrganisationService organisationService;
+
+
     @RequestMapping("/{id}")
     public RestResult<OrganisationTypeResource> findById(@PathVariable("id") final Long id) {
         return service.findOne(id).toGetResponse();
@@ -25,5 +30,13 @@ public class OrganisationTypeController {
     @RequestMapping("/getAll")
     public RestResult<List<OrganisationTypeResource>> findAll() {
         return service.findAll().toGetResponse();
+    }
+
+
+    @RequestMapping("/getTypeForOrganisation/{organisationId}")
+    public RestResult<OrganisationTypeResource> findTypeForOrganisation(@PathVariable Long organisationId) {
+        return organisationService.findById(organisationId).
+                andOnSuccess(organisation -> service.findOne(organisation.getOrganisationType())).
+                toGetResponse();
     }
 }

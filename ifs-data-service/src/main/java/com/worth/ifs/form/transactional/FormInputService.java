@@ -3,6 +3,7 @@ package com.worth.ifs.form.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import com.worth.ifs.security.NotSecured;
 
@@ -14,7 +15,7 @@ public interface FormInputService {
     ServiceResult<FormInputTypeResource> findFormInputType(Long id);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<FormInput> findFormInput(Long id);
+    ServiceResult<FormInputResource> findFormInput(Long id);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<List<FormInputResponse>> findResponsesByApplication(Long applicationId);

@@ -6,7 +6,7 @@ import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.file.mapper.FileEntryMapper;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.user.mapper.OrganisationMapper;
+import com.worth.ifs.organisation.mapper.OrganisationMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

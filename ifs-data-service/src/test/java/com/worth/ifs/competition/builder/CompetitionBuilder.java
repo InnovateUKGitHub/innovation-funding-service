@@ -1,13 +1,13 @@
 package com.worth.ifs.competition.builder;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.competition.domain.Competition;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
+
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.competition.domain.Competition;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
@@ -55,4 +55,9 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     protected Competition createInitial() {
         return new Competition();
     }
+
+    public CompetitionBuilder withId(Long... ids) {
+        return withArray((id, object) -> setField("id", id, object), ids);
+    }
+
 }
