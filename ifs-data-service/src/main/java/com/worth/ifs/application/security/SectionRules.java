@@ -5,6 +5,7 @@ import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 
@@ -16,7 +17,7 @@ public class SectionRules {
 
     @PermissionRule(value = "READ", description = "user can read section")
     public boolean userCanReadSection(SectionResource section, User user){
-        return userIsConnectedToSection(section, user);
+        return SecurityRuleUtil.isCompAdmin(user) || userIsConnectedToSection(section, user);
     }
 
     @PermissionRule(value = "UPDATE", description ="no one can update sections yet")
