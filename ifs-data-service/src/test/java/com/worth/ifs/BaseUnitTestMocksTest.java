@@ -22,10 +22,7 @@ import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
-import com.worth.ifs.user.repository.OrganisationRepository;
-import com.worth.ifs.user.repository.ProcessRoleRepository;
-import com.worth.ifs.user.repository.RoleRepository;
-import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
 import org.junit.Before;
@@ -60,6 +57,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected UserRepository userRepositoryMock;
+
+    @Mock
+    protected CompAdminEmailRepository compAdminEmailRepositoryMock;
 
     @Mock
     protected RoleRepository roleRepositoryMock;

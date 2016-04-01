@@ -8,8 +8,8 @@ import com.worth.ifs.commons.error.exception.InvalidURLException;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.exception.InviteAlreadyAcceptedException;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
@@ -211,7 +211,7 @@ public class RegistrationController {
 
             if (createUserResult.isSuccess()) {
                 removeCompetitionIdCookie(response);
-                acceptInvite(request, response, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
+                acceptInvite(request, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
                 destination = "redirect:/registration/success";
             } else {
                 if (!processOrganisation(request, model)) {
@@ -240,7 +240,7 @@ public class RegistrationController {
         return competitionId;
     }
 
-    private boolean acceptInvite(HttpServletRequest request, HttpServletResponse response, UserResource userResource) {
+    private boolean acceptInvite(HttpServletRequest request, UserResource userResource) {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
             RestResult<InviteResource> restResult = inviteRestService.getInviteByHash(inviteHash).andOnSuccessReturn(i -> {

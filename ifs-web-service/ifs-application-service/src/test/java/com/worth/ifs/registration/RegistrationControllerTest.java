@@ -1,33 +1,15 @@
 package com.worth.ifs.registration;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static com.worth.ifs.user.builder.RoleBuilder.newRole;
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import java.util.UUID;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.AcceptInviteController;
+import com.worth.ifs.commons.error.CommonErrors;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.exception.ErrorControllerAdvice;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,16 +22,27 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.AcceptInviteController;
-import com.worth.ifs.commons.error.CommonErrors;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.exception.ErrorControllerAdvice;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.domain.Invite;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.UserResource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
+
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static com.worth.ifs.user.builder.RoleBuilder.newRole;
+import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -260,7 +253,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void invalidEmailFormatShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
-
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", "invalid email format")
@@ -393,7 +385,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .withId(1L)
                 .build();
 
-
         when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
         when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
                 userResource.getLastName(),
@@ -405,7 +396,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 null)).thenReturn(restSuccess(userResource));
         when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(restFailure(notFoundError(User.class, "invited@email.com")));
         when(inviteRestService.acceptInvite(eq(INVITE_HASH),anyLong())).thenReturn(restSuccess());
-
         mockMvc.perform(post("/registration/register?organisationId=1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .cookie(inviteHashCookie)
@@ -485,7 +475,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getTitle(),
                 userResource.getPhoneNumber(),
                 1L, null)).thenReturn(restFailure(error));
-        
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", userResource.getEmail())

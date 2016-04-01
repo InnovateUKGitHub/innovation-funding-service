@@ -14,21 +14,20 @@ import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.service.ProcessRoleService;
-import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationRestService;
+import com.worth.ifs.user.service.ProcessRoleService;
+import com.worth.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,10 +179,15 @@ public abstract class AbstractApplicationController extends BaseController {
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
-        userOrganisation.ifPresent(org ->
-            addAssignableDetails(model, application, org, userId, section, currentQuestionId)
-        );
         addMappedSectionsDetails(model, application, competition, section, userOrganisation);
+
+        if(application.isOpen()){
+            userOrganisation.ifPresent(org ->
+                    addAssignableDetails(model, application, org, userId, section, currentQuestionId)
+            );
+        }else{
+            model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
+        }
         addCompletedDetails(model, application, userOrganisation, userApplicationRoles);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
@@ -437,9 +441,11 @@ public abstract class AbstractApplicationController extends BaseController {
     protected void addOrganisationAndUserFinanceDetails(Long applicationId, User user,
                                                         Model model, ApplicationForm form) {
         model.addAttribute("currentUser", user);
-        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, user.getId(), form);
         financeOverviewModelManager.addFinanceDetails(model, applicationId);
+        if(!form.isAdminMode()){
+            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+            financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, user.getId(), form);
+        }
     }
 
     public SortedSet<OrganisationResource> getApplicationOrganisations(List<ProcessRole> userApplicationRoles) {

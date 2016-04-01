@@ -5,6 +5,7 @@ import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
@@ -49,7 +50,7 @@ public class FormInputResponseFileUploadRules {
 
     @PermissionRule(value = "READ", description = "An Applicant can download a file for an answer to one of their own Applications")
     public boolean applicantCanDownloadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, User user) {
-        return userIsApplicantOnThisApplication(fileEntry, user);
+        return SecurityRuleUtil.isCompAdmin(user) || userIsApplicantOnThisApplication(fileEntry, user);
     }
 
     private boolean userIsApplicantOnThisApplication(FormInputResponseFileEntryResource fileEntry, User user) {
