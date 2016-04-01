@@ -1,4 +1,4 @@
-package com.worth.ifs.user.security;
+package com.worth.ifs.organisation.security;
 
 import com.worth.ifs.security.PermissionEntityLookupStrategies;
 import com.worth.ifs.security.PermissionEntityLookupStrategy;

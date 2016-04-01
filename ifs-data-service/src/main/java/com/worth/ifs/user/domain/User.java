@@ -52,7 +52,7 @@ public class User {
     @Column(unique=true)
     private String email;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)

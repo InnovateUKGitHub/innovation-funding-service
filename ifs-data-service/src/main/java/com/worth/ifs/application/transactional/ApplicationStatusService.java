@@ -7,6 +7,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ApplicationStatusService {
 
-    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.application.resource.ApplicationStatus', 'READ')" )
+    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.application.resource.ApplicationStatusResource', 'READ')" )
     ServiceResult<ApplicationStatusResource> getById(Long id);
 }

@@ -1,10 +1,15 @@
 package com.worth.ifs.security;
 
+import java.util.List;
 
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

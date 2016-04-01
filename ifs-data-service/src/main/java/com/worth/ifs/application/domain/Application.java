@@ -31,7 +31,7 @@ public class Application {
     @Min(0)
     private Long durationInMonths; // in months
 
-    @OneToMany(mappedBy="application")
+    @OneToMany(mappedBy="application", fetch = FetchType.EAGER)
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @OneToMany(mappedBy="application")
