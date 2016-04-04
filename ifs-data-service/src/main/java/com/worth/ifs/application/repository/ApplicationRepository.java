@@ -19,11 +19,20 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     @Override
     List<Application> findAll();
     
-    Page<Application> findByCompetitionId(Long competitionId, Pageable pageable);
-    
-    List<Application> findByCompetitionId(Long competitionId);
+	List<Application> findByCompetitionId(Long competitionId);
+
+	Page<Application> findByCompetitionId(Long competitionId, Pageable pageable);
+	
+	Page<Application> findByCompetitionIdAndSubmittedDateIsNotNull(Long competitionId, Pageable pageable);
+
+	Page<Application> findByCompetitionIdAndSubmittedDateIsNull(Long competitionId, Pageable pageable);
+
+	List<Application> findByCompetitionIdAndSubmittedDateIsNotNull(Long competitionId);
+
+	List<Application> findByCompetitionIdAndSubmittedDateIsNull(Long competitionId);
 
     Long countByCompetitionId(Long competitionId);
 
     Long countByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);
+
 }

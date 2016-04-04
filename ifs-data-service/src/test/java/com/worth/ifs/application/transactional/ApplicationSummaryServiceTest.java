@@ -7,7 +7,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,21 +40,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 	@Mock
 	private ApplicationSummaryPageMapper applicationSummaryPageMapper;
 
-	@Test
-	public void getById() throws Exception {
-
-		Application application = mock(Application.class);
-		when(applicationRepositoryMock.findOne(5L)).thenReturn(application);
-
-		ApplicationSummaryResource resource = mock(ApplicationSummaryResource.class);
-		when(applicationSummaryMapper.mapToResource(application)).thenReturn(resource);
-		
-		ServiceResult<ApplicationSummaryResource> result = applicationSummaryService.getApplicationSummaryById(Long.valueOf(5L));
-		
-		assertTrue(result.isSuccess());
-		assertEquals(resource, result.getSuccessObject());
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void findByCompetitionNoSort() throws Exception {
