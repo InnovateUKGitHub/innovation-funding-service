@@ -152,7 +152,7 @@ echo "mysqlUser:         ${mysqlUser}"
 mysqlPassword=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsDatasourcePassword'  | cut -d "=" -f2 | sed 's/"//g'`
 postcodeLookupKey=`sed '/^\#/d' dev-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "Postcode Lookup: 		${postcodeLookupKey}"
-if postcodeLookupKey==''
+if [ "$postcodeLookupKey" = '' ]
 then
     echo "Postcode lookup not implemented"
     unset postcodeLookupImplemented
