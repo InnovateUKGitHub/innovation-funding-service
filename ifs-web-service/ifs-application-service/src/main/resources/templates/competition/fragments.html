@@ -2,13 +2,19 @@
 <html lang="en">
 
 <div th:fragment="apply-button">
-    <div th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" th:remove="tag">
+    <div th:unless="${currentCompetition.isOpen()}">
+        <div class="warning-alert">
+            This competition has now closed.
+        </div>
+        <button class="button disabled" disabled="disabled">Apply now</button>
+    </div>
+    <div th:if="${currentCompetition.isOpen()} and ${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" th:remove="tag">
         <div class="warning-alert">
             You are already logged in. You can only create one application per account. If you want to apply to another competition please logout and create a new account.
         </div>
         <button class="button disabled" disabled="disabled">Apply now</button>
     </div>
-    <div th:unless="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" th:remove="tag">
+    <div th:if="${currentCompetition.isOpen()}" th:unless="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" th:remove="tag">
         <a role="button" tabindex="0" class="button"
            th:href="@{/competition/{competitionId}/info/eligibility(competitionId=${competitionId})}">Apply now</a>
     </div>

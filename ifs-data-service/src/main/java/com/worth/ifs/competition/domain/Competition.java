@@ -8,7 +8,6 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class Competition {
 
 
     public CompetitionResource.Status getCompetitionStatus() {
-        LocalDate today = LocalDate.now();
+        LocalDateTime today = LocalDateTime.now();
         if(getStartDate().isAfter(today)){
             return CompetitionResource.Status.NOT_STARTED;
         }else if(getEndDate().isAfter(today)){
@@ -54,10 +53,10 @@ public class Competition {
     @Column( length = 5000 )
     private String description;
     @DateTimeFormat
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private LocalDate assessmentStartDate;
-    private LocalDate assessmentEndDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private LocalDateTime assessmentStartDate;
+    private LocalDateTime assessmentEndDate;
     private Integer maxResearchRatio;
     private Integer academicGrantPercentage;
 
@@ -71,15 +70,15 @@ public class Competition {
         this.sections = sections;
         this.name = name;
         this.description = description;
-        this.startDate = startDate.toLocalDate();
-        this.endDate = endDate.toLocalDate();
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
     public Competition(long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.startDate = startDate.toLocalDate(); //TO DO change back
-        this.endDate = endDate.toLocalDate();
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
 
@@ -108,19 +107,19 @@ public class Competition {
         return name;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public LocalDate getAssessmentEndDate() {
+    public LocalDateTime getAssessmentEndDate() {
         return assessmentEndDate;
     }
 
-    public LocalDate getAssessmentStartDate() {
+    public LocalDateTime getAssessmentStartDate() {
         return assessmentStartDate;
     }
 
@@ -139,11 +138,11 @@ public class Competition {
 
     @JsonIgnore
     public long getDaysLeft(){
-        return getDaysBetween(LocalDate.now(), this.endDate);
+        return getDaysBetween(LocalDateTime.now(), this.endDate);
     }
     @JsonIgnore
     public long getAssessmentDaysLeft(){
-        return getDaysBetween(LocalDate.now(), this.assessmentEndDate);
+        return getDaysBetween(LocalDateTime.now(), this.assessmentEndDate);
     }
     @JsonIgnore
     public long getTotalDays(){
@@ -176,15 +175,15 @@ public class Competition {
         this.description = description;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
-    private long getDaysBetween(LocalDate dateA, LocalDate dateB) {
+    private long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {
         return ChronoUnit.DAYS.between(dateA, dateB);
     }
 
@@ -197,11 +196,11 @@ public class Competition {
         return startDateToEndDatePercentage;
     }
 
-    public void setAssessmentEndDate(LocalDate assessmentEndDate) {
+    public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
         this.assessmentEndDate = assessmentEndDate;
     }
 
-    public void setAssessmentStartDate(LocalDate assessmentStartDate){
+    public void setAssessmentStartDate(LocalDateTime assessmentStartDate){
         this.assessmentStartDate = assessmentStartDate;
     }
 
