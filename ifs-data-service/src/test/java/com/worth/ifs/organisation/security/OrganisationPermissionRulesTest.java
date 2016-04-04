@@ -14,10 +14,10 @@ import static org.junit.Assert.assertTrue;
 /**
  * Tests the logic within the individual OrganisationRules methods that secures basic Organisation details
  */
-public class OrganisationRulesTest {
+public class OrganisationPermissionRulesTest {
 
     @InjectMocks
-    private OrganisationRules rules = new OrganisationRules();
+    private OrganisationPermissionRules rules = new OrganisationPermissionRules();
 
     @Test
     public void testMemberOfOrganisationCanViewOwnOrganisation() {

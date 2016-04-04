@@ -3,34 +3,21 @@ package com.worth.ifs.organisation.security;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.application.security.FormInputResponseFileUploadLookupStrategies;
-import com.worth.ifs.application.security.FormInputResponseFileUploadRules;
-import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.util.CollectionFunctions.asLinkedSet;
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -44,12 +31,12 @@ import static org.mockito.Mockito.when;
  */
 public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<OrganisationService> {
 
-    private OrganisationRules organisationRules;
+    private OrganisationPermissionRules organisationRules;
 
     @Before
     public void lookupPermissionRules() {
 
-        organisationRules = getMockPermissionRulesBean(OrganisationRules.class);
+        organisationRules = getMockPermissionRulesBean(OrganisationPermissionRules.class);
 
         MockitoAnnotations.initMocks(this);
     }

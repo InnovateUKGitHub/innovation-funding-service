@@ -1,24 +1,18 @@
 package com.worth.ifs.organisation.security;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.OrganisationResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
-import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.flattenLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -27,10 +21,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
  */
 @Component
 @PermissionRules
-public class OrganisationRules {
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
+public class OrganisationPermissionRules {
 
     @PermissionRule(value = "READ", description = "A member of an Organisation can view their own Organisation")
     public boolean memberOfOrganisationCanViewOwnOrganisation(OrganisationResource organisation, User user) {

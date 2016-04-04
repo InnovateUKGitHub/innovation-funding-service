@@ -9,7 +9,6 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.domain.OrganisationType;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
-import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,15 +29,12 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Autowired
     private AddressRepository addressRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     private static final String companyHouseId = "0123456789";
     private static final String companyName = "CompanyName1";
 
     @Before
     public void setLoggedInUserOnThread() {
-        setLoggedInUser(userRepository.findByEmail("steve.smith@empire.com").get());
+        loginSteveSmith();
     }
 
     @Override
@@ -50,29 +46,26 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Rollback
     @Test
     public void findByIdShouldReturnOrganisation() throws Exception {
-        OrganisationResource org = controller.findById(1L).getSuccessObject();
-        assertEquals("Nomensa", org.getName());
 
-        org = controller.findById(2L).getSuccessObject();
+        OrganisationResource org = controller.findById(2L).getSuccessObject();
         assertEquals("Worth Internet Systems", org.getName());
 
-        org = controller.findById(5L).getSuccessObject();
-        assertEquals("Manchester University", org.getName());
+        loginPeteTom();
+        org = controller.findById(6L).getSuccessObject();
+        assertEquals("EGGS", org.getName());
     }
 
     @Rollback
     @Test
     public void testOrganisationType() throws Exception {
-        OrganisationResource org = controller.findById(1L).getSuccessObject();
+
+        OrganisationResource org = controller.findById(2L).getSuccessObject();
         OrganisationType organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
 
         assertEquals("Business", organisationType.getName());
 
-        org = controller.findById(2L).getSuccessObject();
-        organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
-        assertEquals("Business", organisationType.getName());
-
-        org = controller.findById(5L).getSuccessObject();
+        loginPeteTom();
+        org = controller.findById(6L).getSuccessObject();
         organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
         assertEquals("University (HEI)", organisationType.getName());
         assertEquals("Research", organisationType.getParentOrganisationType().getName());
