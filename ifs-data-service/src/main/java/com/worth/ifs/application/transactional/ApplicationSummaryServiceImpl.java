@@ -1,11 +1,15 @@
 package com.worth.ifs.application.transactional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ApplicationSummaryResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.resource.CompletedPercentageResource;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,13 +19,12 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ApplicationSummaryResource;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.transactional.BaseTransactionalService;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
@@ -33,6 +36,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	
 	@Autowired
 	private ApplicationSummaryPageMapper applicationSummaryPageMapper;
+
+	@Autowired
+	private ApplicationService applicationService;
 	
 	@Override
 	public ServiceResult<ApplicationSummaryResource> getApplicationSummaryById(Long id) {
@@ -52,6 +58,33 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		
 		List<Application> resultsList = applicationRepository.findByCompetitionId(competitionId);
 		return pageFromUnsortedApplicationResults(resultsList, pageable, sortBy);
+	}
+
+	@Override
+	public ServiceResult<CompetitionSummaryResource> getCompetitionSummaryByCompetitionId(Long competitionId){
+		CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
+		competitionSummaryResource.setTotalNumberOfApplications(applicationRepository.countByCompetitionId(competitionId));
+		competitionSummaryResource.setApplicationsStarted(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId()));
+		competitionSummaryResource.setApplicationsInProgress(getApplicationInProgressCountByCompetitionId(competitionId));
+		competitionSummaryResource.setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId()));
+		competitionSummaryResource.setApplicationDeadline(competitionRepository.findById(competitionId).getEndDate());
+		return serviceSuccess(competitionSummaryResource);
+	}
+
+	private Long getApplicationInProgressCountByCompetitionId(Long competitionId) {
+
+		final List<Application> applications = applicationRepository.findByCompetitionId(competitionId);
+
+		Long inProgressCount = 0l;
+
+		for(Application application : applications){
+			final CompletedPercentageResource completedPercentageResource = applicationService.getProgressPercentageByApplicationId(application.getId()).getSuccessObject();
+			if(completedPercentageResource.getCompletedPercentage().intValue() > 50){
+				inProgressCount++;
+			}
+		}
+
+		return inProgressCount;
 	}
 
 	private ServiceResult<ApplicationSummaryPageResource> pageFromUnsortedApplicationResults(List<Application> resultsList, Pageable pageable, String sortBy) {
