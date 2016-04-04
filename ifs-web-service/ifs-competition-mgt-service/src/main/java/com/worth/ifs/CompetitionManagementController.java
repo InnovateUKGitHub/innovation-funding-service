@@ -1,6 +1,7 @@
 package com.worth.ifs;
 
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationSummaryRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.assessment.service.AssessmentRestService;
@@ -55,7 +56,7 @@ public class CompetitionManagementController {
             return "redirect:/login";
     	}
 
-        RestResult<CompetitionSummaryResource> competitionSummaryResourceRestResult = applicationSummaryRestService.getApplicationSummary(competitionId);
+        RestResult<CompetitionSummaryResource> competitionSummaryResourceRestResult = applicationSummaryRestService.getCompetitionSummaryByCompetitionId(competitionId);
         if(competitionSummaryResourceRestResult.isSuccess()){
             model.addAttribute("competitionSummary", competitionSummaryResourceRestResult);
         }

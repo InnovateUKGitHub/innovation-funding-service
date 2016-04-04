@@ -1,13 +1,13 @@
 package com.worth.ifs.application.resource;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Represents a high-level overview of an application.
  */
 public class CompetitionSummaryResource {
     private Long id;
-	private LocalDate applicationDeadline;
+	private LocalDateTime applicationDeadline;
 	private Long totalNumberOfApplications;
 	private Long applicationsStarted;
 	private Long applicationsInProgress;
@@ -20,11 +20,11 @@ public class CompetitionSummaryResource {
 		this.id = id;
 	}
 
-	public LocalDate getApplicationDeadline() {
+	public LocalDateTime getApplicationDeadline() {
 		return applicationDeadline;
 	}
 
-	public void setApplicationDeadline(LocalDate applicationDeadline) {
+	public void setApplicationDeadline(LocalDateTime applicationDeadline) {
 		this.applicationDeadline = applicationDeadline;
 	}
 

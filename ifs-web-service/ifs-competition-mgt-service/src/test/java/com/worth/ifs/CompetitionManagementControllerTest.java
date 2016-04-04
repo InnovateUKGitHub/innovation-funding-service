@@ -1,14 +1,9 @@
 
 package com.worth.ifs;
 
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.service.ApplicationSummaryRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +13,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.service.ApplicationSummaryRestService;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionManagementControllerTest  {
@@ -40,9 +38,11 @@ public class CompetitionManagementControllerTest  {
     @Test
     public void getByCompetitionId() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+        CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
 
     	when(applicationSummaryRestService.findByCompetitionId(Long.valueOf(123L), 0, null)).thenReturn(restSuccess(resource));
-        
+        when(applicationSummaryRestService.getCompetitionSummaryByCompetitionId(123L)).thenReturn(restSuccess(competitionSummaryResource));
+
     	mockMvc.perform(get("/competition/123"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
@@ -54,9 +54,11 @@ public class CompetitionManagementControllerTest  {
     @Test
     public void getByCompetitionIdProvidingPage() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+        CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
 
     	when(applicationSummaryRestService.findByCompetitionId(Long.valueOf(123L), 2, null)).thenReturn(restSuccess(resource));
-        
+        when(applicationSummaryRestService.getCompetitionSummaryByCompetitionId(123L)).thenReturn(restSuccess(competitionSummaryResource));
+
     	mockMvc.perform(get("/competition/123?page=3"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
@@ -68,9 +70,11 @@ public class CompetitionManagementControllerTest  {
     @Test
     public void getByCompetitionIdProvidingSort() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+        CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
 
     	when(applicationSummaryRestService.findByCompetitionId(Long.valueOf(123L), 0, "lead")).thenReturn(restSuccess(resource));
-        
+        when(applicationSummaryRestService.getCompetitionSummaryByCompetitionId(123L)).thenReturn(restSuccess(competitionSummaryResource));
+
     	mockMvc.perform(get("/competition/123?sort=lead"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
