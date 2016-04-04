@@ -86,7 +86,7 @@ IFS.autoSave = (function(){
                 }else{
                     setTimeout(function(){
                         IFS.autoSave.clearServerSideValidationErrors(field);
-                        formTextareaSaveInfo.html("Invalid input, but saved anyway.");
+                        formTextareaSaveInfo.html('Saved!');
                         jQuery.each(data.validation_errors, function(index, value){
                             IFS.formValidation.setInvalid(field,value);
                             serverSideValidationErrors.push(value);
