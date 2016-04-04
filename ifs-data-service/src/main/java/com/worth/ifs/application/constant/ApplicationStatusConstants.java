@@ -1,6 +1,9 @@
 package com.worth.ifs.application.constant;
 
 
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  * Java enumeration of the current available Application workflow statuses.
  * The value of these entries are used when saving to the database.
@@ -14,6 +17,17 @@ public enum ApplicationStatusConstants {
 
     private final Long id;
     private final String name;
+
+    private static final Map<Long, ApplicationStatusConstants> lookup = new TreeMap<>();
+
+    static {
+        for (ApplicationStatusConstants d : ApplicationStatusConstants.values()) {
+            lookup.put(d.getId(), d);
+        }
+    }
+    public static ApplicationStatusConstants getFromId(Long applicationStatusId){
+        return lookup.get(applicationStatusId);
+    }
 
     ApplicationStatusConstants(Long id, String name){
         this.id = id;

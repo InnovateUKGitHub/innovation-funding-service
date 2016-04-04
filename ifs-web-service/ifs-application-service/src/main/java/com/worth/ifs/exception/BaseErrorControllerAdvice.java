@@ -4,6 +4,8 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.interceptors.MenuLinksHandlerInterceptor;
 import com.worth.ifs.util.MessageUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -16,6 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public class BaseErrorControllerAdvice {
+
+    private static final Log LOG = LogFactory.getLog(BaseErrorControllerAdvice.class);
+
     @Autowired
     protected MessageSource messageSource;
 
@@ -47,6 +52,8 @@ public class BaseErrorControllerAdvice {
             addUserDashboardLink(mav);
             MenuLinksHandlerInterceptor.addLogoutLink(mav, logoutUrl);
         }
+
+        LOG.error("Error caught and returning error page.  Original error:", e);
 
         return mav;
     }
