@@ -14,6 +14,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.authentication.resource.CreateUserResource;
 import com.worth.ifs.authentication.resource.UpdateUserResource;
 import com.worth.ifs.competition.domain.Competition;
@@ -47,25 +48,26 @@ public class POJOTest {
     private List<PojoClass> classes;
     private Validator validator;
     private List<Class<?>> classesToTest = Arrays.asList(
-        Invite.class,
-        Address.class,
-        OrganisationType.class,
-        Application.class,
-        ApplicationStatus.class,
-        FileEntry.class,
-        CostField.class,
-        FormValidator.class,
-        FormInputType.class,
-        OrganisationAddress.class,
-        CostValue.class,
-        Token.class,
-        AssessorFeedback.class,
-        InviteOrganisation.class,
-        Section.class,
-        ApplicationFinance.class,
-        Competition.class,
-        CreateUserResource.class,
-        UpdateUserResource.class
+            Invite.class,
+            Address.class,
+            OrganisationType.class,
+            Application.class,
+            ApplicationStatus.class,
+            FileEntry.class,
+            CostField.class,
+            FormValidator.class,
+            FormInputType.class,
+            OrganisationAddress.class,
+            CostValue.class,
+            Token.class,
+            AssessorFeedback.class,
+            InviteOrganisation.class,
+            Section.class,
+            ApplicationFinance.class,
+            Competition.class,
+            CreateUserResource.class,
+            UpdateUserResource.class,
+            CompetitionSummaryResource.class
     );
 
     @Before

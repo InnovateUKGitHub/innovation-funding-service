@@ -476,7 +476,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
     }
 
-    public BigDecimal progressPercentageForApplication(Application application) {
+    private BigDecimal progressPercentageForApplication(Application application) {
         List<Section> sections = application.getCompetition().getSections();
 
         List<Question> questions = sections.stream()

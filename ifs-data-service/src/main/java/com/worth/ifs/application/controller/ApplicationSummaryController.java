@@ -1,5 +1,6 @@
 package com.worth.ifs.application.controller;
 
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,5 +31,10 @@ public class ApplicationSummaryController {
     @RequestMapping("/{id}")
     public RestResult<ApplicationSummaryResource> getApplicationSummaryById(@PathVariable("id") Long id){
         return applicationSummaryService.getApplicationSummaryById(id).toGetResponse();
+    }
+
+    @RequestMapping("/getCompetitionSummary/{id}")
+    public RestResult<CompetitionSummaryResource> getCompetitionSummary(@PathVariable("id") Long id){
+        return applicationSummaryService.getCompetitionSummaryByCompetitionId(id).toGetResponse();
     }
 }

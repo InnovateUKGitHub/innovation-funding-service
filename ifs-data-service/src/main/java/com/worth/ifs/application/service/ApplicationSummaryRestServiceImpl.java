@@ -1,5 +1,6 @@
 package com.worth.ifs.application.service;
 
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -31,7 +32,12 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	public RestResult<ApplicationSummaryResource> getApplicationSummary(Long id) {
 		return getWithRestResult(applicationSummaryRestUrl + "/" + id, ApplicationSummaryResource.class);
 	}
-	
+
+	@Override
+	public RestResult<CompetitionSummaryResource> getCompetitionSummaryByCompetitionId(Long competitionId) {
+		return getWithRestResult(applicationSummaryRestUrl + "/getCompetitionSummary/" + competitionId, CompetitionSummaryResource.class);
+	}
+
 	public void setApplicationSummaryRestUrl(String applicationSummaryRestUrl) {
 		this.applicationSummaryRestUrl = applicationSummaryRestUrl;
 	}
