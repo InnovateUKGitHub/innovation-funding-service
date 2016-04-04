@@ -42,7 +42,7 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     }
 
     public ApplicationResourceBuilder withApplicationStatus(ApplicationStatusConstants... applicationStatus) {
-        return withArray((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
+        return withArray((applicationState, application) -> application.setApplicationStatusConstant(applicationState), applicationStatus);
     }
     public ApplicationResourceBuilder withApplicationStatus(Long... applicationStatus) {
         return withArray((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);

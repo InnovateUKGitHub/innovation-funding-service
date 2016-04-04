@@ -87,7 +87,8 @@ public class ApplicationResource {
         return applicationStatus;
     }
 
-    public void setApplicationStatus(ApplicationStatusConstants applicationStatus) {
+    @JsonIgnore
+    public void setApplicationStatusConstant(ApplicationStatusConstants applicationStatus) {
         this.applicationStatus = applicationStatus.getId();
         this.applicationStatusName = applicationStatus.getName();
     }
