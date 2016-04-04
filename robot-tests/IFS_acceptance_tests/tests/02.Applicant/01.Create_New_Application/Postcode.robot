@@ -51,9 +51,9 @@ the user unselects the checkbox "The registered test is the same as the operatin
     Unselect Checkbox    id=address-same
 
 the address fields should be filled
-    # postcode lookup implemented on dev but not on our local machines, so check which is running:
-    Run Keyword If    '${RUNNING_ON_DEV}' != ''    the address fields should be filled with valid data
-    #Run Keyword If    '${RUNNING_ON_DEV}' == ''    the address fields should be filled with dummy data
+    # postcode lookup implemented on some machines but not others, so check which is running:
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' != ''    the address fields should be filled with valid data
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' == ''    the address fields should be filled with dummy data
 
 the address fields should be filled with valid data
     Textfield Should Contain    id=addressForm.selectedPostcode.addressLine1    Am Reprographics

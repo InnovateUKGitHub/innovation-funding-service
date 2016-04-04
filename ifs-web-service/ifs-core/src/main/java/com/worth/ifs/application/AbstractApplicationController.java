@@ -181,9 +181,7 @@ public abstract class AbstractApplicationController extends BaseController {
         addApplicationFormDetailInputs(application, form);
         addMappedSectionsDetails(model, application, competition, section, userOrganisation);
 
-        userOrganisation.ifPresent(org ->
-                addAssignableDetails(model, application, org, userId, section, currentQuestionId)
-        );
+        addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section, currentQuestionId);
         addCompletedDetails(model, application, userOrganisation, userApplicationRoles);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
@@ -280,6 +278,16 @@ public abstract class AbstractApplicationController extends BaseController {
 
     protected void addAssignableDetails(Model model, ApplicationResource application, OrganisationResource userOrganisation,
                                          Long userId, Optional<SectionResource> currentSection, Optional<Long> currentQuestionId) {
+
+        if(!application.isOpen() || userOrganisation == null){
+            //Application Not open, so add empty lists
+            model.addAttribute("assignableUsers", new ArrayList<ProcessRole>());
+            model.addAttribute("pendingAssignableUsers", new ArrayList<InviteResource>());
+            model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
+            model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
+            return;
+        }
+
         Map<Long, QuestionStatusResource> questionAssignees;
         if(currentQuestionId.isPresent()){
             QuestionStatusResource questionStatusResource = questionService.getByQuestionIdAndApplicationIdAndOrganisationId(currentQuestionId.get(), application.getId(), userOrganisation.getId());

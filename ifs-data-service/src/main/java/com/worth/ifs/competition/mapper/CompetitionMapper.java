@@ -8,6 +8,8 @@ import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -18,6 +20,12 @@ import org.mapstruct.Mapper;
     }
 )
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {
+
+    @Mappings({
+            @Mapping(source = "competitionStatus", target = "competitionStatus"),
+    })
+    @Override
+    public abstract CompetitionResource mapToResource(Competition domain);
 
     public Long mapCompetitionToId(Competition object) {
         if (object == null) {

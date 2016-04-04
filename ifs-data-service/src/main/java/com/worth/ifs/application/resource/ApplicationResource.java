@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ApplicationResource {
 
@@ -88,6 +87,12 @@ public class ApplicationResource {
         return applicationStatus;
     }
 
+    @JsonIgnore
+    public void setApplicationStatusConstant(ApplicationStatusConstants applicationStatus) {
+        this.applicationStatus = applicationStatus.getId();
+        this.applicationStatusName = applicationStatus.getName();
+    }
+
     public void setApplicationStatus(Long applicationStatus) {
         this.applicationStatus = applicationStatus;
     }
@@ -111,7 +116,7 @@ public class ApplicationResource {
 
     @JsonIgnore
     public boolean isOpen(){
-        return Objects.equals(applicationStatus, ApplicationStatusConstants.OPEN.getId());
+        return ApplicationStatusConstants.OPEN.getId().equals(applicationStatus) || ApplicationStatusConstants.CREATED.getId().equals(applicationStatus);
     }
 
     @Override
