@@ -1,11 +1,15 @@
 package com.worth.ifs.application.transactional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryPageMapper;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.resource.comparators.*;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,24 +19,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
-import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryPageMapper;
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ApplicationSummaryResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryResource;
-import com.worth.ifs.application.resource.PageResource;
-import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceLeadComparator;
-import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourcePercentageCompleteComparator;
-import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryGrantRequestedComparator;
-import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryLeadComparator;
-import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryNumberOfPartnersComparator;
-import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryTotalProjectCostComparator;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.transactional.BaseTransactionalService;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,7 +63,6 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		result.setContent(sortAndRestrictSummaryResults(resultsList, pageable, sortBy));
 		
 		return pageFromUnsortedApplicationResults(result, resultsList, pageable, sortBy, ApplicationSummaryPageResource.class);
-		return pageFromUnsortedApplicationResults(resultsList, pageable, sortBy);
 	}
 
 	@Override
