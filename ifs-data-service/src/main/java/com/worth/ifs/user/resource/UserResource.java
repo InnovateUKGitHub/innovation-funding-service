@@ -34,22 +34,6 @@ public class UserResource {
     	// no-arg constructor
     }
 
-    public UserResource(User user) {
-        id = user.getId();
-        title = user.getTitle();
-        firstName = user.getFirstName();
-        lastName = user.getLastName();
-        inviteName = user.getInviteName();
-        phoneNumber = user.getPhoneNumber();
-        imageUrl = user.getImageUrl();
-        email = user.getEmail();
-        password = "";
-        status = user.getStatus();
-        organisations = simpleMap(user.getOrganisations(), Organisation::getId);
-        processRoles = simpleMap(user.getProcessRoles(), ProcessRole::getId);
-        roles = user.getRoles(), Role);
-    }
-
     public Long getId() {
         return id;
     }

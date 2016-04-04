@@ -25,7 +25,6 @@ public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {
     @Mappings({
         @Mapping(target = "password", ignore = true )
     })
-
     @Override
     public abstract UserResource mapToResource(User domain);
 
