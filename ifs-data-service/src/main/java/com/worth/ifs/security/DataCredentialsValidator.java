@@ -3,6 +3,7 @@ package com.worth.ifs.security;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.CredentialsValidator;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

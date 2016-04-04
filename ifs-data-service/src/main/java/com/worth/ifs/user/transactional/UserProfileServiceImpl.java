@@ -21,8 +21,8 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<UserResource> updateProfile(UserResource userResource) {
-        return getUserByEmailAddress(userResource).andOnSuccess(existingUser -> updateUser(existingUser, userResource)).andOnSuccessReturn(UserResource::new);
+    public ServiceResult<Void> updateProfile(UserResource userResource) {
+        return getUserByEmailAddress(userResource).andOnSuccess(existingUser -> updateUser(existingUser, userResource)).andOnSuccessReturnVoid();
     }
 
     private ServiceResult<User> updateUser(User existingUser, UserResource updatedUserResource){

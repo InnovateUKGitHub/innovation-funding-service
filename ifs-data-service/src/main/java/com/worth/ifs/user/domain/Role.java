@@ -13,12 +13,6 @@ import java.util.List;
  */
 @Entity
 public class Role {
-    public Role(Long id, String name, List<ProcessRole> processRoles) {
-        this.id = id;
-        this.name = name;
-        this.processRoles = processRoles;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -36,6 +30,12 @@ public class Role {
 
     public Role() {
     	// no-arg constructor
+    }
+
+    public Role(Long id, String name, List<ProcessRole> processRoles) {
+        this.id = id;
+        this.name = name;
+        this.processRoles = processRoles;
     }
 
     protected Boolean canEqual(Object other) {

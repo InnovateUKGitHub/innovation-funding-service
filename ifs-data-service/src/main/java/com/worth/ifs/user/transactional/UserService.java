@@ -3,6 +3,7 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.Set;
@@ -15,23 +16,26 @@ public interface UserService {
     @NotSecured("Need to keep open to all to allow login")
     ServiceResult<User> getUserByUid(final String uid);
 
-    @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<User> getUserById(final Long id);
+    @NotSecured("Need to keep open to all to allow login")
+    ServiceResult<UserResource> getUserResourceByUid(final String uid);
 
     @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<List<User>> findAll();
+    ServiceResult<UserResource> getUserById(final Long id);
 
     @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<User> findByEmail(final String email);
+    ServiceResult<List<UserResource>> findAll();
 
     @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<Set<User>> findAssignableUsers(final Long applicationId);
+    ServiceResult<UserResource> findByEmail(final String email);
 
     @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<Set<User>> findRelatedUsers(final Long applicationId);
+    ServiceResult<Set<UserResource>> findAssignableUsers(final Long applicationId);
 
     @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<Void> sendPasswordResetNotification(User user);
+    ServiceResult<Set<UserResource>> findRelatedUsers(final Long applicationId);
+
+    @NotSecured("TODO - implement when permissions matrix in place")
+    ServiceResult<Void> sendPasswordResetNotification(UserResource user);
 
     @NotSecured("Need to keep open to allow password reset")
     ServiceResult<Void> checkPasswordResetHashValidity(String hash);
