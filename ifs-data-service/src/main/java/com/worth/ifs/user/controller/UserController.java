@@ -68,8 +68,8 @@ public class UserController {
     }
 
     @RequestMapping("/findByEmail/{email}/")
-    public RestResult<Void> findByEmail(@PathVariable("email") final String email) {
-        return userService.findByEmail(email).andOnSuccessReturnVoid().toGetResponse();
+    public RestResult<UserResource> findByEmail(@PathVariable("email") final String email) {
+        return userService.findByEmail(email).toGetResponse();
     }
 
     @RequestMapping("/findAssignableUsers/{applicationId}")
