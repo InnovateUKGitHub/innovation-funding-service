@@ -3,6 +3,7 @@ package com.worth.ifs.application.resource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Represents a high-level overview of an application.
@@ -39,6 +40,13 @@ public class CompetitionSummaryResource {
 
 	public void setApplicationDeadline(LocalDateTime applicationDeadline) {
 		this.applicationDeadline = applicationDeadline;
+	}
+
+	public String getFormattedApplicationDeadline(){
+		if(applicationDeadline == null){
+			return "";
+		}
+		return applicationDeadline.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm"));
 	}
 
 	public Long getTotalNumberOfApplications() {
