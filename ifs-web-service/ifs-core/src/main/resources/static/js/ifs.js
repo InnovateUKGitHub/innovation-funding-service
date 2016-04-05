@@ -30,6 +30,7 @@ var IFSLoader = {
       IFS.pieChart.init();
       IFS.modal.init();
       IFS.upload.init();
+      IFS.autoSubmitForm.init();
 
     }
   },
