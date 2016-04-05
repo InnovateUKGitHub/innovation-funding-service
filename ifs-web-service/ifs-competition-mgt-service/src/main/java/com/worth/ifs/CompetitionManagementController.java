@@ -59,7 +59,7 @@ public class CompetitionManagementController {
 		CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId);
         model.addAttribute("competitionSummary", competitionSummary);
     	
-    	model.addAttribute("competitionId", competitionId);
+        model.addAttribute("currentCompetition", competitionService.getById(competitionId));
     	
         LOG.warn("Show in assessment competition info");
         return "comp-mgt-in-assessment";
@@ -74,9 +74,9 @@ public class CompetitionManagementController {
 
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId);
         model.addAttribute("competitionSummary", competitionSummary);
-    	
-    	model.addAttribute("competitionId", competitionId);
-    	
+
+        model.addAttribute("currentCompetition", competitionService.getById(competitionId));
+
         LOG.warn("Show open competition info ");
         return "comp-mgt";
 	}

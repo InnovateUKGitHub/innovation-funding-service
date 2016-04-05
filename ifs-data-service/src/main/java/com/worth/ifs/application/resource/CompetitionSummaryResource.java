@@ -1,5 +1,7 @@
 package com.worth.ifs.application.resource;
 
+import com.worth.ifs.competition.resource.CompetitionResource;
+
 import java.time.LocalDateTime;
 
 /**
@@ -7,6 +9,7 @@ import java.time.LocalDateTime;
  */
 public class CompetitionSummaryResource {
     private Long id;
+	private CompetitionResource.Status competitionStatus;
 	private LocalDateTime applicationDeadline;
 	private Long totalNumberOfApplications;
 	private Long applicationsStarted;
@@ -16,6 +19,7 @@ public class CompetitionSummaryResource {
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -60,4 +64,11 @@ public class CompetitionSummaryResource {
 		this.applicationsSubmitted = applicationsSubmitted;
 	}
 
+	public CompetitionResource.Status getCompetitionStatus() {
+		return competitionStatus;
+	}
+
+	public void setCompetitionStatus(CompetitionResource.Status competitionStatus) {
+		this.competitionStatus = competitionStatus;
+	}
 }

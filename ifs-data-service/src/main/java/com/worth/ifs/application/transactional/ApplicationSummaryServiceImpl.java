@@ -9,6 +9,7 @@ import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryPageM
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.resource.comparators.*;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -67,12 +68,17 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
 	@Override
 	public ServiceResult<CompetitionSummaryResource> getCompetitionSummaryByCompetitionId(Long competitionId){
+		Competition competition = competitionRepository.findById(competitionId);
+
 		CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
+		competitionSummaryResource.setId(competitionId);
+		competitionSummaryResource.setCompetitionStatus(competition.getCompetitionStatus());
 		competitionSummaryResource.setTotalNumberOfApplications(applicationRepository.countByCompetitionId(competitionId));
 		competitionSummaryResource.setApplicationsStarted(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId()));
 		competitionSummaryResource.setApplicationsInProgress(getApplicationInProgressCountByCompetitionId(competitionId));
 		competitionSummaryResource.setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId()));
-		competitionSummaryResource.setApplicationDeadline(competitionRepository.findById(competitionId).getEndDate());
+		competitionSummaryResource.setApplicationDeadline(competition.getEndDate());
+
 		return serviceSuccess(competitionSummaryResource);
 	}
 
