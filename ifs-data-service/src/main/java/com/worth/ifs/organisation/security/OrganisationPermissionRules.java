@@ -42,10 +42,9 @@ public class OrganisationPermissionRules {
         List<ProcessRole> applicationRoles = user.getProcessRoles();
         List<Application> applicationsThatThisUserIsLinkedTo = simpleMap(applicationRoles, ProcessRole::getApplication);
         List<ProcessRole> processRolesForAllApplications = flattenLists(simpleMap(applicationsThatThisUserIsLinkedTo, Application::getProcessRoles));
-        Set<ProcessRole> uniqueProcessRoles = new HashSet<>(processRolesForAllApplications);
-        Set<Organisation> uniqueOrganisations = new HashSet<>(simpleMap(uniqueProcessRoles, ProcessRole::getOrganisation));
+        List<Organisation> allOrganisationsLinkedToAnyOfUsersApplications = simpleMap(processRolesForAllApplications, ProcessRole::getOrganisation);
 
-        return simpleMap(uniqueOrganisations, Organisation::getId).contains(organisation.getId());
+        return simpleMap(allOrganisationsLinkedToAnyOfUsersApplications, Organisation::getId).contains(organisation.getId());
     }
 
     @PermissionRule(value = "CREATE", description = "Anyone should be able to create Organisations, " +

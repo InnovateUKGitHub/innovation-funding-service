@@ -1,6 +1,7 @@
 package com.worth.ifs.organisation.security;
 
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -8,6 +9,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
+import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
@@ -68,13 +70,15 @@ public class OrganisationPermissionRulesTest {
     @Test
     public void testUsersCanViewOrganisationsOnTheirOwnApplications() {
 
+        Organisation organisation = newOrganisation().withId(123L).build();
         User user = newUser().build();
         Application application = newApplication().build();
-        ProcessRole processRole = newProcessRole().withUser(user).withApplication(application).build();
+        ProcessRole processRole = newProcessRole().withUser(user).withApplication(application).withOrganisation(organisation).build();
 
-        OrganisationResource organisation = newOrganisationResource().withProcessRoles(singletonList(processRole.getId())).build();
+        OrganisationResource organisationResource =
+                newOrganisationResource().withId(organisation.getId()).withProcessRoles(singletonList(processRole.getId())).build();
 
-        assertTrue(rules.usersCanViewOrganisationsOnTheirOwnApplications(organisation, user));
+        assertTrue(rules.usersCanViewOrganisationsOnTheirOwnApplications(organisationResource, user));
     }
 
 }
