@@ -1,9 +1,7 @@
 package com.worth.ifs;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -79,6 +77,11 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
             amendActions.forEach(a -> a.accept(i, newElement));
             return newElement;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Set<T> buildSet(int numberToBuild) {
+        return new LinkedHashSet<>(build(numberToBuild));
     }
 
     @Override
