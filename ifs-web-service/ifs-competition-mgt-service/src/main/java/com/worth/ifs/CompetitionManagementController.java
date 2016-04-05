@@ -58,7 +58,7 @@ public class CompetitionManagementController {
 
         RestResult<CompetitionSummaryResource> competitionSummaryResourceRestResult = applicationSummaryRestService.getCompetitionSummaryByCompetitionId(competitionId);
         if(competitionSummaryResourceRestResult.isSuccess()){
-            model.addAttribute("competitionSummary", competitionSummaryResourceRestResult);
+            model.addAttribute("competitionSummary", competitionSummaryResourceRestResult.getSuccessObject());
         }
     	
     	model.addAttribute("competitionId", competitionId);
