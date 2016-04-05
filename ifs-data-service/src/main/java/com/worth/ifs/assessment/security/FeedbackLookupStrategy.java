@@ -20,8 +20,8 @@ import static com.worth.ifs.util.CollectionFunctions.onlyElementOrNull;
 import static java.util.Optional.ofNullable;
 
 @Component
-@PermissionEntityLookupStrategies()
-public class FeedbackLookup {
+@PermissionEntityLookupStrategies
+public class FeedbackLookupStrategy {
 
     @Autowired
     private ResponseRepository responseRepository;
