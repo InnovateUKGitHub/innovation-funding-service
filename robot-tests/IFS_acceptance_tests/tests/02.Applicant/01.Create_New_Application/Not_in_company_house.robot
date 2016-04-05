@@ -54,6 +54,3 @@ Manually can enter and see details pass to the confirmation page
 the applicant can reload the page
     Reload Page
     #Alert Should Be Present
-
-user selects the checkbox
-    Select Checkbox    name=manual-address

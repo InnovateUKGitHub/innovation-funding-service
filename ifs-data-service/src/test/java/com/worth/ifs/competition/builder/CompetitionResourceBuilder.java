@@ -1,12 +1,11 @@
 package com.worth.ifs.competition.builder;
 
-import java.time.LocalDate;
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.competition.resource.CompetitionResource;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
-
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.competition.resource.CompetitionResource;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
@@ -27,18 +26,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     }
 
     public CompetitionResourceBuilder withStartDate(LocalDateTime startDate) {
-        return withStartDate(startDate.toLocalDate());
-    }
-
-    public CompetitionResourceBuilder withEndDate(LocalDateTime endDate) {
-        return withEndDate(endDate.toLocalDate());
-    }
-
-    public CompetitionResourceBuilder withStartDate(LocalDate startDate) {
         return with(competition -> setField("startDate", startDate, competition));
     }
 
-    public CompetitionResourceBuilder withEndDate(LocalDate endDate) {
+    public CompetitionResourceBuilder withEndDate(LocalDateTime endDate) {
         return with(competition -> setField("endDate", endDate, competition));
     }
 
@@ -54,11 +45,11 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((description, object) -> setField("description", description, object), descriptions);
     }
 
-    public CompetitionResourceBuilder withAssessmentStartDate(LocalDate... assessmentStartDates) {
+    public CompetitionResourceBuilder withAssessmentStartDate(LocalDateTime... assessmentStartDates) {
         return withArray((assessmentStartDate, object) -> setField("assessmentStartDate", assessmentStartDate, object), assessmentStartDates);
     }
 
-    public CompetitionResourceBuilder withAssessmentEndDate(LocalDate... assessmentEndDates) {
+    public CompetitionResourceBuilder withAssessmentEndDate(LocalDateTime... assessmentEndDates) {
         return withArray((assessmentEndDate, object) -> setField("assessmentEndDate", assessmentEndDate, object), assessmentEndDates);
     }
 

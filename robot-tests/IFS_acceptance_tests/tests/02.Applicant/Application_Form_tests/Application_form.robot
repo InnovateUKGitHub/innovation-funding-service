@@ -183,9 +183,6 @@ the Applicant clicks a section then the Applicant navigates to the correct secti
     Page Should Not Contain Element    css=body.error
     Click Element    link=Application Overview
 
-the word count should be available in the text area
-    Page Should Contain Element    css=#form-input-11 .count-down
-
 the Applicant edits the Public description
     Clear Element Text    css=#form-input-12 .editor
     Press Key    css=#form-input-12 .editor    \\8

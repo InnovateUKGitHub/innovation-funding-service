@@ -4,6 +4,7 @@ import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static com.google.common.primitives.Longs.asList;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -29,10 +30,10 @@ public class CompetitionResourceDocs {
             .withSections(asList(1L, 2L, 3L))
             .withName("competition name")
             .withDescription("competition description")
-            .withStartDate(LocalDate.now())
-            .withEndDate(LocalDate.now().plusDays(30))
-            .withAssessmentStartDate(LocalDate.now().plusDays(32))
-            .withAssessmentEndDate(LocalDate.now().plusDays(44))
+            .withStartDate(LocalDateTime.now())
+            .withEndDate(LocalDateTime.now().plusDays(30))
+            .withAssessmentStartDate(LocalDateTime.now().plusDays(32))
+            .withAssessmentEndDate(LocalDateTime.now().plusDays(44))
             .withMaxResearchRatio(20)
             .withAcademicGrantClaimPercentage(100);
 }

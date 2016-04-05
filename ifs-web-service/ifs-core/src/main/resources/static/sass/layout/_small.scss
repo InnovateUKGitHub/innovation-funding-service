@@ -7,6 +7,8 @@
 <p>Be mean or be <span class="greentext">Green</span></p>
 
 Hello world <small>(just testing smalltext)</small>
+
+<div class="blue-block">test</div>
 ```
 */
 .greentext {
@@ -31,6 +33,20 @@ small {
 	@extend .form-hint;
 	display: inline;
 	font-size: 16px;
+}
+.blue-block {
+	background: $govuk-blue;
+	color:#fff;
+	text-align: center;
+	@include inline-block;
+	padding:20px;
+
+	@include media-down(mobile){
+		display:block;
+	}
+}
+.bordered {
+	border:1px solid $border-colour;
 }
 
 /*

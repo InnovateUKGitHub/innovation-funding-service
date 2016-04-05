@@ -249,17 +249,5 @@ the user can login with their new details
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Not Contain    something has gone wrong
 
-the user follows the standard path to the account creation page for non registered users
-    The user navigates to the page     ${COMPETITION_DETAILS_URL}
-    click element    jQuery=.column-third .button:contains("Sign in to apply")
-    Click Element    jQuery=.button:contains("Create")
-    Input Text    id=org-name    Innovate
-    Click Element    id=org-search
-    Click element    LINK=INNOVATE LTD
-    Input Text    css=#postcode-check    postcode
-    Click Element    id=postcode-lookup
-    Click Element    css=#select-address-block > button
-    click element    jQuery=.button:contains("Save organisation and")
-
 the user logs out if they are logged in
     run keyword and ignore error    log out as user

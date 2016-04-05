@@ -2,9 +2,9 @@ package com.worth.ifs.application.controller;
 
 import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +19,7 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ApplicationSummaryResource;
+import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
@@ -82,18 +82,6 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     }
 
     @Test
-    public void testApplicationSummaryById() throws Exception {
-        RestResult<ApplicationSummaryResource> result = controller.getApplicationSummaryById(APPLICATION_ID);
-        
-        assertTrue(result.isSuccess());
-        assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getId());
-        assertEquals(ApplicationStatusConstants.OPEN.getName(), result.getSuccessObject().getApplicationStatusName());
-        assertEquals("A novel solution to an old problem", result.getSuccessObject().getName());
-        assertEquals("Steve Smith", result.getSuccessObject().getLead());
-        assertEquals(Integer.valueOf(36), result.getSuccessObject().getCompletedPercentage());
-    }
-    
-    @Test
     public void testApplicationSummariesByCompetitionId() throws Exception {
         RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, 0, null);
         
@@ -107,6 +95,33 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals("A novel solution to an old problem", result.getSuccessObject().getContent().get(0).getName());
         assertEquals("Steve Smith", result.getSuccessObject().getContent().get(0).getLead());
         assertEquals(Integer.valueOf(36), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
+    }
+    
+    @Test
+    public void testApplicationSummariesByClosedCompetitionId() throws Exception {
+        RestResult<ClosedCompetitionApplicationSummaryPageResource> result = controller.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null);
+        
+        assertTrue(result.isSuccess());
+        assertEquals(0, result.getSuccessObject().getNumber());
+        assertEquals(20, result.getSuccessObject().getSize());
+        assertEquals(0, result.getSuccessObject().getTotalElements());
+        assertEquals(0, result.getSuccessObject().getTotalPages());
+    }
+    
+    @Test
+    public void testNotSubmittedApplicationSummariesByClosedCompetitionId() throws Exception {
+        RestResult<ClosedCompetitionApplicationSummaryPageResource> result = controller.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null);
+        
+        assertTrue(result.isSuccess());
+        assertEquals(0, result.getSuccessObject().getNumber());
+        assertEquals(20, result.getSuccessObject().getSize());
+        assertEquals(6, result.getSuccessObject().getTotalElements());
+        assertEquals(1, result.getSuccessObject().getTotalPages());
+        assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getContent().get(0).getId());
+        assertNull(result.getSuccessObject().getContent().get(0).getTotalProjectCost());
+        assertNull(result.getSuccessObject().getContent().get(0).getGrantRequested());
+        assertEquals("Steve Smith", result.getSuccessObject().getContent().get(0).getLead());
+        assertEquals(Integer.valueOf(3), result.getSuccessObject().getContent().get(0).getNumberOfPartners());
     }
 
 }

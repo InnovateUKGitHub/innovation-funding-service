@@ -35,31 +35,24 @@
 	<div class="collapsible section-overview">
         
        	<h2>Labour
-			<span style="" data-subsection-id="1" class="section-status place-in-header">
-	            <span data-binding-output="subsection-total-91">£ 126,207</span>
-	        </span>
+	        <span data-mirror="#section-total-1">&pound; 126,207</span>
        	</h2>
 
-		<div id="collapsible-1" aria-hidden="false">
-			<div th:include="prototypes/fragments/finance-questions :: finance-question-labour" th:remove="tag" />
-		</div>
+		
+		<div th:include="prototypes/fragments/finance-questions :: finance-question-labour" th:remove="tag" />
+		
 
 
     	<h2>Administration support costs
-			<span style="" data-subsection-id="2" class="section-status place-in-header">
-	            <span data-binding-output="subsection-total-91">£ 0</span>
-	        </span>
+    		<span data-mirror="#section-total-2">&pound; 0</span>
        	</h2>
 
-		<div id="collapsible-2" aria-hidden="false">
-			<div th:include="prototypes/fragments/finance-questions :: finance-question-admin-support" th:remove="tag" />
-    	</div>
+		<div th:include="prototypes/fragments/finance-questions :: finance-question-admin-support" th:remove="tag" />
+
 
 
 		<h2>Materials
-			<span style="" data-subsection-id="3" class="section-status place-in-header">
-	            <span data-binding-output="subsection-total-91">£ 10,076</span>
-	        </span>
+	        <span data-mirror="#section-total-3">&pound; 10,076</span>
        	</h2>
 
 		<div id="collapsible-3" aria-hidden="false">
@@ -68,59 +61,42 @@
 
 
     	<h2>Capital usage
-			<span style="" data-subsection-id="4" class="section-status place-in-header">
-	            <span data-binding-output="subsection-total-91">£ 0</span>
-	        </span>
+	        <span data-mirror="#section-total-4">&pound; 0</span>
        	</h2>
 
-		<div id="collapsible-4" aria-hidden="false">
-			<div th:include="prototypes/fragments/finance-questions :: finance-question-capital" th:remove="tag" />
-    	</div>
-
+		<div th:include="prototypes/fragments/finance-questions :: finance-question-capital" th:remove="tag" />
+    	
 
     	<h2>Subcontracting costs
-			<span style="" data-subsection-id="5" class="section-status place-in-header">
-	            <span data-binding-output="subsection-total-91">£ 150,000</span>
-	        </span>
+	        <span data-mirror="#section-total-5">&pound; 150,000</span>
        	</h2>
 
-		<div id="collapsible-5" aria-hidden="false">
-			<div th:include="prototypes/fragments/finance-questions :: finance-question-subcontracting" th:remove="tag" />
-    	</div>
-
-
+		<div th:include="prototypes/fragments/finance-questions :: finance-question-subcontracting" th:remove="tag" />
+    
     	<h2>Travel &amp; subsistence
-			<span style="" data-subsection-id="6" class="section-status place-in-header">
-	            <span data-binding-output="subsection-total-91">£ 0</span>
-	        </span>
+	        <span data-mirror="#section-total-6">&pound; 0</span>
        	</h2>
-
-		<div id="collapsible-6" aria-hidden="false">
-			<div th:include="prototypes/fragments/finance-questions :: finance-question-travel" th:remove="tag" />
-    	</div>
+		
+		<div th:include="prototypes/fragments/finance-questions :: finance-question-travel" th:remove="tag" />
 
 
     	<h2>Other costs
-			<span style="" data-subsection-id="7" class="section-status place-in-header">
-	            <span data-binding-output="subsection-total-91">£ 0</span>
-	        </span>
+			<span data-mirror="#section-total-3">&pound; 0</span>
        	</h2>
 
-		<div id="collapsible-7" aria-hidden="false">
-			<div th:include="prototypes/fragments/finance-questions :: finance-question-other" th:remove="tag" />
-    	</div>
+
+		<div th:include="prototypes/fragments/finance-questions :: finance-question-other" th:remove="tag" />
 
 
     </div>
 
-    <hr />
 
     <div class="grid-row total-cost">
         <div class="column-half">
-            <p class="heading-medium">Total project costs</p>
+            <span class="heading-medium">Total project costs</span>
         </div>
         <div class="column-half alignright">
-            <input type="text" readonly="readonly" class="heading-medium width-medium" data-calculation-fields="[id*=total]" data-calculation-operations="+" value="£ 286,283" />
+            <input type="text" readonly="readonly" class="heading-medium width-full alignright" data-calculation-fields="[id*=total]" data-calculation-operations="+" value="£ 286,283" />
         </div>
     </div>
 
@@ -151,7 +127,7 @@
 			<details>
 			    <summary><span class="summary">What funding level should I enter?</span></summary>
 			    <div class="panel-indent">
-			    	Help text required
+			    	You can apply for any funding percentage between 0% and the maximum allowable for your organisation size, as shown above. The amount you apply for must reflect other funding you may have received and be within participation levels which you can review on the Finances Overview page.
 			    </div>
 			</details>
 			<input class="form-control width-small" type="text" id="other-funding" name="other-funding" value="" /> %

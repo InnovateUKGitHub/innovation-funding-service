@@ -1,8 +1,11 @@
 *** Settings ***
-Documentation     -INFUND-399: As a client, I would like to demo the system with real-like logins per user role
+Documentation     INFUND-399: As a client, I would like to demo the system with real-like logins per user role
 ...
 ...
-...               -INFUND-171: As a user, I am able to sign in providing a emailaddress and password, so I have access to my data
+...               INFUND-171: As a user, I am able to sign in providing a emailaddress and password, so I have access to my data
+...
+...
+...               INFUND-2130: As a competition administrator I want to be able to log into IFS so that I can access the system with appropriate permissions for my role
 Suite Teardown    TestTeardown User closes the browser
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
@@ -51,6 +54,15 @@ Valid login as Assessor
     Then the Applicant is logged-in
     And the user should be redirected to the correct page    ${assessor_dashboard_url}
     And the user should be logged-in as an Assessor
+    [Teardown]    Logout as user
+
+Valid login as Comp Admin
+    [Documentation]    INFUND-2130
+    Given the user is not logged-in
+    When the guest user enters the log in credentials    john.doe@innovateuk.test    Passw0rd
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Then the Applicant is logged-in
+    And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR}
     [Teardown]    Logout as user
 
 Reset password (psw does not match)
