@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor Dashboard'" th:remove="tag" />
 </head>
-<body class="competition-overview">
+<body class="competition-management application-overview">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
@@ -27,14 +27,14 @@
     <li class="selected"><a th:href="@{/competition/{id}(id=${currentCompetition.id})}">Application overview</a></li>
   </ul>
 
-    <div class="grid-row">
+    <div class="grid-row competition-data">
         <div class="column-fifth">
-          <div th:include="fragments/competition-management :: info-area" th:remove="tag" />
+              <div th:include="fragments/competition-management :: info-area" th:remove="tag" />
         </div>
         <div class="column-four-fifth">
               <h2 class="bold-large">Application list</h2>
               <form method="get">
-                <div class="grid-row">
+                <div class="grid-row sort-by">
                     <div class="column-two-thirds">
                       <h3>
                         <span class="heading-large" th:text="${results.totalElements}" /> applications
