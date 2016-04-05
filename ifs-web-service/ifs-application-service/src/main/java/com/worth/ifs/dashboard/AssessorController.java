@@ -5,6 +5,7 @@ import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +35,7 @@ public class AssessorController {
     UserAuthenticationService userAuthenticationService;
 
 
-    private User getLoggedUser(HttpServletRequest req) {
+    private UserResource getLoggedUser(HttpServletRequest req) {
         return userAuthenticationService.getAuthenticatedUser(req);
     }
 

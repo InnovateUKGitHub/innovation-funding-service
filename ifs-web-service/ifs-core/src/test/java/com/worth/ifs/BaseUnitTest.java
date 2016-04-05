@@ -104,6 +104,9 @@ public class BaseUnitTest {
     public UserResource assessor;
     public UserResource applicant;
 
+    public User assessorUser;
+    public User applicantUser;
+
     public UserAuthentication loggedInUserAuthentication;
 
     protected final Log log = LogFactory.getLog(getClass());
@@ -272,6 +275,9 @@ public class BaseUnitTest {
                 .withEmail("clark.baker@email.co.uk")
                 .withUID("2522-34y34ah-hrt4420").build();
         users = asList(loggedInUser, user2);
+
+        applicantUser = new User(1L, "James","Watts","james.watts@email.co.uk", "image", new ArrayList(), "6573ag-aeg32aeb-23aerr");
+        assessorUser = new User(3L, "Clark", "Baker", "clark.baker@email.co.uk", "image", new ArrayList<>(), "2522-34y34ah-hrt4420");
 
         loggedInUserAuthentication = new UserAuthentication(loggedInUser);
     }
@@ -537,16 +543,16 @@ public class BaseUnitTest {
         Organisation temporaryOrganisation1 = newOrganisation().withId(organisation1.getId()).withName("Empire Ltd").withOrganisationType(businessOrganisationType).build();
         Organisation temporaryOrganisation2 = newOrganisation().withId(organisation2.getId()).withName("Ludlow").withOrganisationType(researchOrganisationType).build();
 
-        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(applicationList.get(0)).withUser(loggedInUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole2 = newProcessRole().with(id(2L)).withApplication(applicationList.get(0)).withUser(loggedInUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole3 = newProcessRole().with(id(3L)).withApplication(applicationList.get(2)).withUser(loggedInUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole4 = newProcessRole().with(id(4L)).withApplication(applicationList.get(3)).withUser(loggedInUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole5 = newProcessRole().with(id(5L)).withApplication(applicationList.get(0)).withUser(loggedInUser).withRole(role2).withOrganisation(temporaryOrganisation2).build();
-        ProcessRole processRole6 = newProcessRole().with(id(6L)).withApplication(applicationList.get(1)).withUser(assessor).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole7 = newProcessRole().with(id(7L)).withApplication(applicationList.get(2)).withUser(assessor).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole8 = newProcessRole().with(id(8L)).withApplication(applicationList.get(0)).withUser(assessor).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole9 = newProcessRole().with(id(9L)).withApplication(applicationList.get(3)).withUser(assessor).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole10 = newProcessRole().with(id(10L)).withApplication(applicationList.get(1)).withUser(loggedInUser).withRole(role1).withOrganisation(temporaryOrganisation2).build();
+        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(applicationList.get(0)).withUser(applicantUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole2 = newProcessRole().with(id(2L)).withApplication(applicationList.get(0)).withUser(applicantUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole3 = newProcessRole().with(id(3L)).withApplication(applicationList.get(2)).withUser(applicantUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole4 = newProcessRole().with(id(4L)).withApplication(applicationList.get(3)).withUser(applicantUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole5 = newProcessRole().with(id(5L)).withApplication(applicationList.get(0)).withUser(applicantUser).withRole(role2).withOrganisation(temporaryOrganisation2).build();
+        ProcessRole processRole6 = newProcessRole().with(id(6L)).withApplication(applicationList.get(1)).withUser(assessorUser).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole7 = newProcessRole().with(id(7L)).withApplication(applicationList.get(2)).withUser(assessorUser).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole8 = newProcessRole().with(id(8L)).withApplication(applicationList.get(0)).withUser(assessorUser).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole9 = newProcessRole().with(id(9L)).withApplication(applicationList.get(3)).withUser(assessorUser).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole10 = newProcessRole().with(id(10L)).withApplication(applicationList.get(1)).withUser(applicantUser).withRole(role1).withOrganisation(temporaryOrganisation2).build();
 
         assessorProcessRoles = asList(processRole6, processRole7, processRole8, processRole9);
         processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8, processRole9);

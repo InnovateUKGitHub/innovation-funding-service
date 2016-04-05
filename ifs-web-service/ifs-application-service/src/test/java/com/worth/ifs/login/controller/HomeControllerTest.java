@@ -4,6 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.login.HomeController;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -74,7 +75,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     @Test
     public void testHomeLoggedInWithoutRoles() throws Exception {
         this.setup();
-        setLoggedInUser(new User());
+        setLoggedInUser(new UserResource());
 
         mockMvc.perform(get("/"))
                 .andExpect(status().is3xxRedirection())

@@ -11,6 +11,7 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -348,8 +350,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationResource application = new ApplicationResource();
         application.setName("application");
 
-        User user = new User(1L, "test", "name", null, null, null, null);
-
+        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
 
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
@@ -364,7 +365,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationResource application = new ApplicationResource();
         application.setName("application");
 
-        User user = new User(1L, "test", "name", null, null, null, null);
+        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
 
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
@@ -379,7 +380,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         application.setName("application");
         application.setId(1L);
 
-        User user = new User(1L, "test", "name", null, null, null, null);
+        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
 
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);

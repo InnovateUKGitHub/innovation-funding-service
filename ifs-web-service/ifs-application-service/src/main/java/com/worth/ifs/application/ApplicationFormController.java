@@ -20,6 +20,7 @@ import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.AjaxResult;
 import com.worth.ifs.util.MessageUtil;
 import org.apache.commons.logging.Log;
@@ -79,7 +80,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable(APPLICATION_ID) final Long applicationId,
                                @PathVariable(QUESTION_ID) final Long questionId,
                                HttpServletRequest request) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         Question question = questionService.getById(questionId);
         SectionResource section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
@@ -102,7 +103,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                 @PathVariable(QUESTION_ID) final Long questionId,
                                 @PathVariable("formInputId") final Long formInputId,
                                 HttpServletRequest request) {
-        final User user = userAuthenticationService.getAuthenticatedUser(request);
+        final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
         return getPdfFile(resource);
@@ -113,7 +114,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             @PathVariable(APPLICATION_ID) final Long applicationId,
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             HttpServletRequest request) {
-        final User user = userAuthenticationService.getAuthenticatedUser(request);
+        final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
 
         final ByteArrayResource resource = financeHandler.getFinanceFormHandler(organisationType).getFile(applicationFinanceId).getSuccessObjectOrThrowException();
@@ -133,7 +134,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                  @PathVariable(APPLICATION_ID) final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
                                                  HttpServletRequest request) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         SectionResource section = sectionService.getById(sectionId);
 
         ApplicationResource application = applicationService.getById(applicationId);
@@ -172,7 +173,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                      @PathVariable(QUESTION_ID) final Long questionId,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
         Map<String, String[]> params = request.getParameterMap();
 
@@ -302,7 +303,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                              HttpServletRequest request) {
         CostItem costItem = addCost(applicationId, questionId, request);
         String type = costItem.getCostType().getType();
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
@@ -322,7 +323,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private CostItem addCost(Long applicationId, Long questionId, HttpServletRequest request) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         return financeHandler.getFinanceFormHandler(organisationType).addCost(applicationId, user.getId(), questionId);
     }
@@ -334,7 +335,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                               HttpServletRequest request,
                                               HttpServletResponse response,
                                               BindingResult bindingResult ) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
 
         // Check if action is mark as complete.  Check empty values if so, ignore otherwise. (INFUND-1222)
@@ -448,7 +449,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                         @PathVariable("sectionId") final Long sectionId,
                                         HttpServletRequest request,
                                         HttpServletResponse response) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
@@ -642,7 +643,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             String fieldName = request.getParameter("fieldName");
             log.info(String.format("saveFormElement: %s / %s", fieldName, value));
 
-            User user = userAuthenticationService.getAuthenticatedUser(request);
+            UserResource user = userAuthenticationService.getAuthenticatedUser(request);
             errors = storeField(applicationId, user.getId(), fieldName, inputIdentifier, value);
 
             if (!errors.isEmpty()) {

@@ -5,6 +5,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.dashboard.ApplicantController;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,7 +90,7 @@ public class ApplicantControllerTest extends BaseUnitTest {
      */
     @Test
     public void testDashboardCollaborator() throws Exception {
-        User collabUsers = this.users.get(1);
+        UserResource collabUsers = this.users.get(1);
         this.loginUser(collabUsers);
 
         List<ApplicationResource> progressMap = applications.subList(0,1);

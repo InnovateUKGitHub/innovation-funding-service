@@ -32,6 +32,7 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.anyLong;
@@ -425,8 +426,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
-                newUser().withRolesGlobal(
-                        newRole().withName("testrolename").withUrl("testrolename/dashboard").build()
+                newUserResource().withRolesGlobal(
+                        newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
                 ).build()
         );
 
@@ -440,8 +441,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void postingRegistrationWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
-                newUser().withRolesGlobal(
-                        newRole().withName("testrolename").withUrl("testrolename/dashboard").build()
+                newUserResource().withRolesGlobal(
+                        newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
                 ).build()
         );
 

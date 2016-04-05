@@ -2,6 +2,7 @@ package com.worth.ifs;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class CompetitionManagementController {
     private ApplicationSummaryRestService applicationSummaryRestService;
 
 
-    private User getLoggedUser(HttpServletRequest req) {
+    private UserResource getLoggedUser(HttpServletRequest req) {
         return userAuthenticationService.getAuthenticatedUser(req);
     }
 

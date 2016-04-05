@@ -2,6 +2,7 @@ package com.worth.ifs.login;
 
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,12 +30,12 @@ public class HomeController {
             return "redirect:/";
         }
 
-        User user = (User) authentication.getDetails();
+        UserResource user = (UserResource) authentication.getDetails();
 
         return getRedirectUrlForUser(user);
     }
 
-    public static String getRedirectUrlForUser(User user) {
+    public static String getRedirectUrlForUser(UserResource user) {
 
         String roleUrl = "";
 

@@ -3,11 +3,13 @@ package com.worth.ifs.competition;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -27,7 +29,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
     @Test
     public void testCompetitionDetailsCompetitionId() throws Exception {
-        User user = new User(1L, "test", "name", null, null, null, null);
+        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();;
         loginUser(user);
 
         Long compId = 20L;
