@@ -2,6 +2,7 @@
 package com.worth.ifs;
 
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationSummaryRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -49,9 +50,12 @@ public class CompetitionManagementControllerTest  {
     @Test
     public void getByCompetitionId() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+        CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
 
     	when(applicationSummaryRestService.findByCompetitionId(Long.valueOf(COMPETITION_ID), 0, null)).thenReturn(restSuccess(resource));
-        
+    	when(applicationSummaryRestService.findByCompetitionId(Long.valueOf(123L), 0, null)).thenReturn(restSuccess(resource));
+        when(applicationSummaryRestService.getCompetitionSummaryByCompetitionId(123L)).thenReturn(restSuccess(competitionSummaryResource));
+
     	mockMvc.perform(get("/competition/123"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
@@ -64,9 +68,13 @@ public class CompetitionManagementControllerTest  {
     @Test
     public void getByCompetitionIdProvidingPage() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+        CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
 
     	when(applicationSummaryRestService.findByCompetitionId(Long.valueOf(COMPETITION_ID), 2, null)).thenReturn(restSuccess(resource));
         
+    	when(applicationSummaryRestService.findByCompetitionId(Long.valueOf(123L), 2, null)).thenReturn(restSuccess(resource));
+        when(applicationSummaryRestService.getCompetitionSummaryByCompetitionId(123L)).thenReturn(restSuccess(competitionSummaryResource));
+
     	mockMvc.perform(get("/competition/123?page=3"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
@@ -79,9 +87,13 @@ public class CompetitionManagementControllerTest  {
     @Test
     public void getByCompetitionIdProvidingSort() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+        CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
 
     	when(applicationSummaryRestService.findByCompetitionId(Long.valueOf(COMPETITION_ID), 0, "lead")).thenReturn(restSuccess(resource));
         
+    	when(applicationSummaryRestService.findByCompetitionId(Long.valueOf(123L), 0, "lead")).thenReturn(restSuccess(resource));
+        when(applicationSummaryRestService.getCompetitionSummaryByCompetitionId(123L)).thenReturn(restSuccess(competitionSummaryResource));
+
     	mockMvc.perform(get("/competition/123?sort=lead"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
