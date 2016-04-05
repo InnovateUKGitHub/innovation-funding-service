@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -14,6 +15,9 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 
     @Value("${ifs.data.service.rest.applicationSummary}")
     private String applicationSummaryRestUrl;
+
+	@Value("${ifs.data.service.rest.application}")
+	private String applicationRestUrl;
 
 	@Override
 	public RestResult<ApplicationSummaryPageResource> findByCompetitionId(Long competitionId, int pageNumber, String sortField) {
@@ -31,6 +35,13 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	public RestResult<ApplicationSummaryResource> getApplicationSummary(Long id) {
 		return getWithRestResult(applicationSummaryRestUrl + "/" + id, ApplicationSummaryResource.class);
 	}
+
+	@Override
+	public RestResult<ByteArrayResource> downloadByCompetition(long competitionId) {
+		String url = applicationRestUrl + "/download/downloadByCompetition/" + competitionId;
+		return getWithRestResult(url, ByteArrayResource.class);
+	}
+
 	
 	public void setApplicationSummaryRestUrl(String applicationSummaryRestUrl) {
 		this.applicationSummaryRestUrl = applicationSummaryRestUrl;

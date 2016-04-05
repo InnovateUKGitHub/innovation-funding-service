@@ -1,22 +1,22 @@
 package com.worth.ifs.application.transactional;
 
+import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ApplicationSummaryResource;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.user.domain.UserRoleType;
+import org.junit.Test;
+import org.springframework.security.access.AccessDeniedException;
+
+import java.util.List;
+
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.fail;
-
-import java.util.List;
-
-import org.junit.Test;
-import org.springframework.security.access.AccessDeniedException;
-
-import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ApplicationSummaryResource;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.domain.UserRoleType;
 
 public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTest<ApplicationSummaryService> {
 
@@ -133,6 +133,11 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 		@Override
 		public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId,
 				int pageIndex, String sortBy) {
+			return null;
+		}
+
+		@Override
+		public List<Application> getApplicationSummariesByCompetitionIdAndStatus(Long competitionId, Long applicationStatusId) {
 			return null;
 		}
 
