@@ -1,5 +1,5 @@
 ext.tomcatWebAppsDir=""
-ext.activeProfile="rest-urls,automated"
+ext.activeProfile="automated"
 
 ext.ifsDatasourceUrl="jdbc:mysql://127.0.0.1:3306/ifs"
 ext.ifsDatasourceUsername="ifs"
