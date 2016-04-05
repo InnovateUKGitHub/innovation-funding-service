@@ -8,6 +8,8 @@ import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.user.domain.ProcessRole;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -33,7 +35,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/application/download")
 public class ApplicationDownloadController {
+    private static final Log LOG = LogFactory.getLog(ApplicationDownloadController.class);
     private static final Long APPLICATION_SUMMARY_FORM_INPUT_ID = 11L;
+    public static final int PROJECT_SUMMARY_COLUMN_WITH = 50; // the width in amount of letters.
     @Autowired
     ApplicationSummaryService applicationSummaryService;
     @Autowired
@@ -113,6 +117,8 @@ public class ApplicationDownloadController {
         for (int i = 0; i < headerCount; i++) {
             sheet.autoSizeColumn(i);
         }
+        // This column contains the project summary, so might be very long because of autoSize..
+        sheet.setColumnWidth(8, PROJECT_SUMMARY_COLUMN_WITH * 256);
 
         return wb;
     }

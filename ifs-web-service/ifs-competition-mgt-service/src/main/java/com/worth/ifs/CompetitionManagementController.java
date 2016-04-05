@@ -1,10 +1,11 @@
 package com.worth.ifs;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.service.ApplicationSummaryService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -16,13 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.service.ApplicationSummaryService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
 
 @Controller
 @RequestMapping("/competition")
@@ -92,12 +86,17 @@ public class CompetitionManagementController {
 
     @RequestMapping("/{competitionId}/download")
     public void downloadApplications(@PathVariable("competitionId") Long competitionId, HttpServletResponse response) throws IOException {
-        response.setContentType("application/force-download");
-        response.setHeader("Content-Transfer-Encoding", "binary");
-        response.setHeader("Content-Disposition", String.format("attachment; filename=\"Submitted_Applications_Competition_%s_%s_%s.xls\"", competitionId, "CompName", LocalDateTime.now()));
-        final ByteArrayResource resource = applicationSummaryService.downloadByCompetition(competitionId);
+        CompetitionResource competition = competitionService.getById(competitionId);
+        if(competition!= null){
+            String filename = String.format("Submitted_Applications_Competition_%s_%s_%s.xls", competitionId, competition.getName(), LocalDateTime.now());
+            response.setContentType("application/force-download");
+            response.setHeader("Content-Transfer-Encoding", "binary");
+            response.setHeader("Content-Disposition", "attachment; filename=\""+filename+"\"");
+            final ByteArrayResource resource = applicationSummaryRestService.downloadByCompetition(competitionId).getSuccessObject();
 
-        IOUtils.copy(resource.getInputStream(), response.getOutputStream());
-        response.flushBuffer();
+            IOUtils.copy(resource.getInputStream(), response.getOutputStream());
+            response.flushBuffer();
+        }
+
     }
 }
