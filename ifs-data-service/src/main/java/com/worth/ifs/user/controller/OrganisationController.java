@@ -33,14 +33,14 @@ public class OrganisationController {
         return organisationService.findById(organisationId).toGetResponse();
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public RestResult<OrganisationResource> create(@RequestBody Organisation organisation) {
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public RestResult<OrganisationResource> create(@RequestBody OrganisationResource organisation) {
         return organisationService.create(organisation).toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/saveResource", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public RestResult<OrganisationResource> saveResource(@RequestBody OrganisationResource organisationResource) {
-        return organisationService.saveResource(organisationResource).toPostCreateResponse();
+        return organisationService.update(organisationResource).toPutWithBodyResponse();
     }
 
     // TODO DW - INFUND-1555 - do we want to be returning an OrganisationResource from this call?

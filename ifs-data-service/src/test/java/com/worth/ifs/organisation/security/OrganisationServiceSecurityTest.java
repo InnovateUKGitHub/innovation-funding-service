@@ -75,12 +75,12 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
         }
 
         @Override
-        public ServiceResult<OrganisationResource> create(Organisation organisation) {
+        public ServiceResult<OrganisationResource> create(OrganisationResource organisation) {
             return null;
         }
 
         @Override
-        public ServiceResult<OrganisationResource> saveResource(OrganisationResource organisationResource) {
+        public ServiceResult<OrganisationResource> update(OrganisationResource organisationResource) {
             return null;
         }
 

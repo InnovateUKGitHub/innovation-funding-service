@@ -35,13 +35,13 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     }
 
     @Override
-    public RestResult<OrganisationResource> save(Organisation organisation) {
-        return postWithRestResult(organisationRestURL + "/save", organisation, OrganisationResource.class);
+    public RestResult<OrganisationResource> create(OrganisationResource organisation) {
+        return postWithRestResult(organisationRestURL + "/create", organisation, OrganisationResource.class);
     }
 
     @Override
-    public RestResult<OrganisationResource> save(OrganisationResource organisation) {
-        return postWithRestResult(organisationRestURL + "/saveResource", organisation, OrganisationResource.class);
+    public RestResult<OrganisationResource> update(OrganisationResource organisation) {
+        return putWithRestResult(organisationRestURL + "/update", organisation, OrganisationResource.class);
     }
 
     @Override

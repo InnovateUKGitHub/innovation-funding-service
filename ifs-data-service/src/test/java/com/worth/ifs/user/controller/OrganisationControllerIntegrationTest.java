@@ -15,9 +15,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
+import java.util.Collections;
 import java.util.Set;
 
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -82,9 +85,8 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     }
 
     private OrganisationResource createOrganisation(){
-        Organisation organisation = new Organisation();
-        organisation.setName(companyName);
-        organisation.setCompanyHouseNumber(companyHouseId);
+        OrganisationResource organisation = newOrganisationResource().
+                withName(companyName).withCompanyHouseNumber(companyHouseId).build();
         return controller.create(organisation).getSuccessObject();
     }
 
@@ -105,9 +107,13 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Rollback
     @Test
     public void testCreateSecondConstructor() throws Exception {
-        Organisation organisation = new Organisation(null, companyName, companyHouseId, OrganisationSize.LARGE);
+        OrganisationResource organisation = newOrganisationResource().
+                withName(companyName).withCompanyHouseNumber(companyHouseId).withOrganisationSize(OrganisationSize.LARGE).
+                withUsers(singletonList(getSteveSmith())).build();
+
         OrganisationResource organisationResource = controller.create(organisation).getSuccessObject();
 
+        flushAndClearSession();
 
         assertEquals(companyHouseId, organisationResource.getCompanyHouseNumber());
         assertEquals(companyName, organisationResource.getName());

@@ -6,8 +6,11 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.organisation.domain.OrganisationAddress;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +37,8 @@ public class Organisation {
     @OneToMany(mappedBy="organisation")
     private List<ApplicationFinance> applicationFinances = new ArrayList<>();
 
-    @ManyToMany(mappedBy="organisations")
+    @ManyToMany(mappedBy="organisations",
+            cascade = CascadeType.ALL)
     private List<User> users = new ArrayList<>();
 
     @OneToMany(mappedBy = "organisation",

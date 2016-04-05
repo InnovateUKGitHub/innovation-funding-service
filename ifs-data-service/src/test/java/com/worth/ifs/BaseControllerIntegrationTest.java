@@ -1,5 +1,6 @@
 package com.worth.ifs;
 
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,11 +28,19 @@ public abstract class BaseControllerIntegrationTest<ControllerType> extends Base
     @Autowired
     protected abstract void setControllerUnderTest(ControllerType controller);
 
+    protected User getSteveSmith() {
+        return userRepository.findByEmail("steve.smith@empire.com").get();
+    }
+
+    protected User getPeteTom() {
+        return userRepository.findByEmail("pete.tom@egg.com").get();
+    }
+
     protected void loginSteveSmith() {
-        setLoggedInUser(userRepository.findByEmail("steve.smith@empire.com").get());
+        setLoggedInUser(getSteveSmith());
     }
 
     protected void loginPeteTom() {
-        setLoggedInUser(userRepository.findByEmail("pete.tom@egg.com").get());
+        setLoggedInUser(getPeteTom());
     }
 }

@@ -40,4 +40,9 @@ public class OrganisationPermissionRules {
 
         return simpleMap(uniqueOrganisations, Organisation::getId).contains(organisation.getId());
     }
+
+    @PermissionRule(value = "CREATE", description = "Anyone should be able to create Organisations")
+    public boolean anyoneCanCreateOrganisations(OrganisationResource organisation, User user) {
+        return true;
+    }
 }

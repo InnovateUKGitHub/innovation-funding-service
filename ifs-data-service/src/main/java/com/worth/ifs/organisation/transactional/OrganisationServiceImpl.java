@@ -12,6 +12,7 @@ import com.worth.ifs.organisation.repository.AcademicRepository;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.OrganisationType;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
@@ -61,18 +62,12 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<OrganisationResource> create(final Organisation organisation) {
-
-        if (organisation.getOrganisationType() == null) {
-            organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
-        }
-        Organisation savedOrganisation = organisationRepository.save(organisation);
-        return serviceSuccess(organisationMapper.mapToResource(savedOrganisation));
+    public ServiceResult<OrganisationResource> create(final OrganisationResource organisationToCreate) {
+        return update(organisationToCreate);
     }
 
-    // TODO DW - INFUND-1555 - lot of duplication between create() and saveResource()
     @Override
-    public ServiceResult<OrganisationResource> saveResource(final OrganisationResource organisationResource) {
+    public ServiceResult<OrganisationResource> update(final OrganisationResource organisationResource) {
         Organisation organisation = organisationMapper.mapToDomain(organisationResource);
 
         if (organisation.getOrganisationType() == null) {
