@@ -78,6 +78,8 @@ public class CompetitionManagementController {
         return "comp-mgt";
 	}
 
+
+
     @RequestMapping("/{competitionId}/download")
     public void downloadApplications(@PathVariable("competitionId") Long competitionId, HttpServletResponse response) throws IOException {
         CompetitionResource competition = competitionService.getById(competitionId);
