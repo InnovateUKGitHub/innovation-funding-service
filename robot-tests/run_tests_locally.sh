@@ -105,20 +105,20 @@ function startServers {
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v UPLOAD_FOLDER:$uploadFileDir -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v LOCAL_MAIL_SENDING_IMPLEMENTED:$localMailSendingImplemented -v UPLOAD_FOLDER:$uploadFileDir -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --name IFS $testDirectory
 }
 
 
 function runHappyPathTests {
     echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:https:// --include HappyPath --exclude Pending --exclude Failing --exclude FailingForLocal --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v LOCAL_MAIL_SENDING_IMPLEMENTED:$localMailSendingImplemented -v UPLOAD_FOLDER:$uploadFileDir -v VIRTUAL_DISPLAY:$useXvfb --include HappyPath --exclude Pending --exclude Failing --exclude FailingForLocal --name IFS $testDirectory
 }
 
 function runTestsRemotely {
     echo "***********RUNNING AGAINST THE IFS DEV SERVER...**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_AUTH:ifs:Fund1ng -v SERVER_BASE:ifs.dev.innovateuk.org -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:'YES' -v UPLOAD_FOLDER:$uploadFileDir -v RUNNING_ON_DEV:yes --exclude Failing --exclude Pending --exclude FailingForDev --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_AUTH:ifs:Fund1ng -v SERVER_BASE:ifs.dev.innovateuk.org -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:'YES' -v LOCAL_MAIL_SENDING_IMPLEMENTED:'YES' -v UPLOAD_FOLDER:$uploadFileDir -v RUNNING_ON_DEV:yes --exclude Failing --exclude Pending --exclude FailingForDev --name IFS $testDirectory
 }
 
 
@@ -152,13 +152,22 @@ echo "mysqlUser:         ${mysqlUser}"
 mysqlPassword=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsDatasourcePassword'  | cut -d "=" -f2 | sed 's/"//g'`
 postcodeLookupKey=`sed '/^\#/d' dev-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "Postcode Lookup: 		${postcodeLookupKey}"
-if postcodeLookupKey==''
+if [ "$postcodeLookupKey" = '' ]
 then
     echo "Postcode lookup not implemented"
     unset postcodeLookupImplemented
 else
     echo "Postcode lookup implemented. The tests will expect proper data from the SuT."
     postcodeLookUpImplemented='YES'
+fi
+sendMailLocally=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsSendMailLocally'  | cut -d "=" -f2 | sed 's/"//g'`
+if [ $sendMailLocally = 'false' ]
+then
+    echo "Sending mail locally not implemented"
+    unset localMailSendingImplemented
+else
+    echo "Sending mail locally is implemented. The tests will expect emails to be sent out to all whitelisted recipients. Please take care not to spam anyone!"
+    localMailSendingImplemented='YES'
 fi
 cd ../ifs-web-service
 webServiceCodeDir=`pwd`

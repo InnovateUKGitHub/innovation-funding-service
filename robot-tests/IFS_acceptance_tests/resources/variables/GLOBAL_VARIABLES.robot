@@ -59,4 +59,6 @@ ${verify_link_3}    ${SERVER}/registration/verify-email/8223991f065abb7ed909c8c7
 ${REGISTRATION_VERIFIED}    ${SERVER}/registration/verified
 ${UPLOAD_FOLDER}    uploaded_files
 ${VIRTUAL_DISPLAY}    ${EMPTY}
-${POSTCODE_LOOKUP_IMPLEMENTED}      ${EMPTY}
+${POSTCODE_LOOKUP_IMPLEMENTED}    ${EMPTY}
+${LOCAL_MAIL_SENDING_IMPLEMENTED}       ${EMPTY}
+${COMP_ADMINISTRATOR}    ${SERVER}/management/competition/1

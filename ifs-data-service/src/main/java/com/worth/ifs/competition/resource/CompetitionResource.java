@@ -6,7 +6,6 @@ import com.worth.ifs.application.domain.Application;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -21,10 +20,10 @@ public class CompetitionResource {
     private List<Long> sections = new ArrayList<>();
     private String name;
     private String description;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private LocalDate assessmentStartDate;
-    private LocalDate assessmentEndDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private LocalDateTime assessmentStartDate;
+    private LocalDateTime assessmentEndDate;
     private Status competitionStatus;
     @Min(0)
     @Max(100)
@@ -43,16 +42,21 @@ public class CompetitionResource {
         this.sections = sections;
         this.name = name;
         this.description = description;
-        this.startDate = startDate.toLocalDate();
-        this.endDate = endDate.toLocalDate();
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public CompetitionResource(long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.startDate = startDate.toLocalDate(); //TO DO change back
-        this.endDate = endDate.toLocalDate();
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    @JsonIgnore
+    public boolean isOpen(){
+        return Status.OPEN.equals(competitionStatus);
     }
 
     public Status getCompetitionStatus() {
@@ -102,46 +106,46 @@ public class CompetitionResource {
         this.name = name;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getAssessmentEndDate() {
+    public LocalDateTime getAssessmentEndDate() {
         return assessmentEndDate;
     }
 
-    public void setAssessmentEndDate(LocalDate assessmentEndDate) {
+    public void setAssessmentEndDate(LocalDateTime assessmentEndDate) {
         this.assessmentEndDate = assessmentEndDate;
     }
 
-    public LocalDate getAssessmentStartDate() {
+    public LocalDateTime getAssessmentStartDate() {
         return assessmentStartDate;
     }
 
-    public void setAssessmentStartDate(LocalDate assessmentStartDate) {
+    public void setAssessmentStartDate(LocalDateTime assessmentStartDate) {
         this.assessmentStartDate = assessmentStartDate;
     }
 
     @JsonIgnore
     public long getDaysLeft() {
-        return getDaysBetween(LocalDate.now(), this.endDate);
+        return getDaysBetween(LocalDateTime.now(), this.endDate);
     }
 
     @JsonIgnore
     public long getAssessmentDaysLeft() {
-        return getDaysBetween(LocalDate.now(), this.assessmentEndDate);
+        return getDaysBetween(LocalDateTime.now(), this.assessmentEndDate);
     }
 
     @JsonIgnore
@@ -186,7 +190,7 @@ public class CompetitionResource {
         this.questions = questions;
     }
 
-    private long getDaysBetween(LocalDate dateA, LocalDate dateB) {
+    private long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {
         return ChronoUnit.DAYS.between(dateA, dateB);
 
     }
