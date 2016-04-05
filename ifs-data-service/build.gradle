@@ -156,8 +156,6 @@ task client(type: Jar) {
         exclude "com/worth/ifs/authentication/**"
         exclude "com/worth/ifs/sil/**"
         exclude "com/worth/ifs/email/**"
-
-        include '**/application-rest-urls.properties'
     }
 }
 task clientCopy(type: Copy){
@@ -212,7 +210,6 @@ processResources {
     }
     if (project.hasProperty("profile") && project.profile == "automated") {
         exclude '**/application.properties'
-        include '**/application-rest-urls.properties'
     }
 }
 
