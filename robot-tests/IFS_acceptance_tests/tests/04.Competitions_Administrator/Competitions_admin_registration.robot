@@ -9,6 +9,13 @@ Resource          ../../resources/keywords/Login_actions.robot
 Resource          ../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
+When user from the list is not registered shouldn't be able to login
+    [Documentation]    INFUND-2129
+    Given the user navigates to the page    ${LOGIN_URL}
+    When the guest user enters the log in credentials    worth.email.test+admin2@gmail.com    Passw0rd
+    And the user clicks the button/link    css=button[name="_eventId_proceed"]
+    Then the user should see the text in the page    Your username/password combination doesn't seem to work
+
 Registration for a user who is in the list
     [Documentation]    INFUND-2129
     [Tags]    HappyPath    FailingForLocal
