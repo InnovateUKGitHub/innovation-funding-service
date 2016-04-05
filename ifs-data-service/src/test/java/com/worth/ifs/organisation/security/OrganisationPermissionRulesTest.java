@@ -81,4 +81,24 @@ public class OrganisationPermissionRulesTest {
         assertTrue(rules.usersCanViewOrganisationsOnTheirOwnApplications(organisationResource, user));
     }
 
+    @Test
+    public void testUsersCanViewOrganisationsOnTheirOwnApplicationsButUserIsNotOnAnyApplicationsWithThisOrganisation() {
+
+        Organisation organisation = newOrganisation().withId(123L).build();
+        User user = newUser().build();
+        Application application = newApplication().build();
+        newProcessRole().withUser(user).withApplication(application).withOrganisation(organisation).build();
+
+        Organisation anotherOrganisation = newOrganisation().withId(456L).build();
+        User anotherUser = newUser().build();
+        Application anotherApplication = newApplication().build();
+        ProcessRole anotherProcessRole = newProcessRole().withUser(anotherUser).withApplication(anotherApplication).withOrganisation(anotherOrganisation).build();
+
+        OrganisationResource anotherOrganisationResource =
+                newOrganisationResource().withId(anotherOrganisation.getId()).withProcessRoles(singletonList(anotherProcessRole.getId())).build();
+
+        assertFalse(rules.usersCanViewOrganisationsOnTheirOwnApplications(anotherOrganisationResource, user));
+    }
+
+
 }
