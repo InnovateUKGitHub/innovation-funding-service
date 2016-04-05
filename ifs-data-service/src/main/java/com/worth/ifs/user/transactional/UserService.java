@@ -14,9 +14,6 @@ import java.util.Set;
 public interface UserService {
 
     @NotSecured("Need to keep open to all to allow login")
-    ServiceResult<User> getUserByUid(final String uid);
-
-    @NotSecured("Need to keep open to all to allow login")
     ServiceResult<UserResource> getUserResourceByUid(final String uid);
 
     @NotSecured("TODO - implement when permissions matrix in place")

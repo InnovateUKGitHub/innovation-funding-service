@@ -76,7 +76,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 	@Test
 	public void test_submittedApplicationSummariesByClosedCompetitionId_allowedIfGlobalCompAdminRole() {
 
-		setLoggedInUser(newUser().withRolesGlobal(newRole().withType(COMP_ADMIN).build()).build());
+		setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(COMP_ADMIN).build()).build());
 		service.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(123L, 0, null);
 	}
 
@@ -124,7 +124,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 	@Test
 	public void test_notSubmittedApplicationSummariesByClosedCompetitionId_allowedIfGlobalCompAdminRole() {
 
-		setLoggedInUser(newUser().withRolesGlobal(newRole().withType(COMP_ADMIN).build()).build());
+		setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(COMP_ADMIN).build()).build());
 		service.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(123L, 0, null);
 	}
 
@@ -159,7 +159,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 
 		nonCompAdminRoles.forEach(role -> {
 
-			setLoggedInUser(newUser().withRolesGlobal(newRole().withType(role).build()).build());
+			setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(role).build()).build());
 
 			try {
 				service.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(123L, 0, null);

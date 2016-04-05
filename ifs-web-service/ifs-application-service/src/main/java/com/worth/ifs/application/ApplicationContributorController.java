@@ -245,10 +245,11 @@ public class ApplicationContributorController{
 			ApplicationResource application, User leadApplicant, HttpServletRequest request) {
 
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
-    	
-    	if(leadApplicant.equals(authenticatedUser)){
+
+    	if(leadApplicant!=null && leadApplicant.getId().equals(authenticatedUser.getId())){
     		return;
     	}
+
     	Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(authenticatedUser, getSavedInviteOrganisations(application));
 		
     	contributorsForm.getOrganisations().forEach(invite -> {

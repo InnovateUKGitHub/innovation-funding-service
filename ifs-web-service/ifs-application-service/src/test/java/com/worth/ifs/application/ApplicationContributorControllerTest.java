@@ -363,7 +363,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     }
     
 	private void loginNonLeadUser(String email) {
-    	UserResource user = newUserResource().withId(2L).withFirstName("test").withLastName("name").build();
+    	UserResource user = newUserResource().withId(2L).withFirstName("test").withLastName("name").withEmail(email).build();
     	loginUser(user);
 	}
 	

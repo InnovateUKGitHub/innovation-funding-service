@@ -64,11 +64,6 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     private UserMapper userMapper;
 
     @Override
-    public ServiceResult<User> getUserByUid(final String uid) {
-        return find(repository.findOneByUid(uid), notFoundError(UserResource.class, uid));
-    }
-
-    @Override
     public ServiceResult<UserResource> getUserResourceByUid(final String uid) {
         return find(repository.findOneByUid(uid), notFoundError(UserResource.class, uid)).andOnSuccessReturn(userMapper::mapToResource);
     }
