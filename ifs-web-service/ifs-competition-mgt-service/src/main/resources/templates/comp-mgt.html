@@ -29,14 +29,12 @@
 
     <div class="grid-row competition-data">
         <div class="column-fifth">
-            <div class="boxed">
               <div th:include="fragments/competition-management :: info-area" th:remove="tag" />
-            </div>
         </div>
         <div class="column-four-fifth">
               <h2 class="bold-large">Application list</h2>
               <form method="get">
-                <div class="grid-row sort">
+                <div class="grid-row sort-by">
                     <div class="column-two-thirds">
                       <h3>
                         <span class="heading-large" th:text="${results.totalElements}" /> applications

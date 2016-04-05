@@ -17,11 +17,8 @@
     </div>
 
     <!-- Box with summary about competition on left hand side -->
-    <div class="info-area" th:fragment="info-area">
-
-
-
-
+    <div th:remove="tag" th:fragment="info-area">
+      <div class="info-area boxed">
         <p>
             <span class="bold-medium">
               <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
@@ -33,4 +30,6 @@
         <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress}" /> Applications in progress (Beyond 50%)</p>
         <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
     </div>
+
+  </div>
 </html>
