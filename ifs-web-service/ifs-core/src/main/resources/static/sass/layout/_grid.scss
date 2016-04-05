@@ -1,0 +1,15 @@
+.column-fifth {
+  @include grid-column(1/5);
+}
+.column-two-fifth {
+  @include grid-column(2/5);
+}
+.column-three-fifth {
+  @include grid-column(3/5);
+}
+.column-four-fifth {
+  @include grid-column(4/5);
+}
+#content.full-width {
+  max-width:95%;
+}
