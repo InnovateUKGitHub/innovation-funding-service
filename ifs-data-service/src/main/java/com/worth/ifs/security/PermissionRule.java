@@ -10,5 +10,4 @@ import java.lang.annotation.Target;
 public @interface PermissionRule {
     String value();
     String description() default "(no description)";
-    String concerns() default "No concerns";
 }

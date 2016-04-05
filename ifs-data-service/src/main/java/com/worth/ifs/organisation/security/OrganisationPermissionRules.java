@@ -25,11 +25,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 public class OrganisationPermissionRules {
 
     @PermissionRule(value = "READ", description = "Organisations that are not yet a part of any Applications are visible to anyone, " +
-            "because this needs to be possible to create them during registration where there is not yet a logged-in user",
-            concerns = "Because the creation of Organisations during the registration process needs to allow creation and " +
-                    "update before the user is a real User in the system, we need to open creation and update of " +
-                    "Organisations to anyone prior to becoming a User.  This seems too open and would possibly be better " +
-                    "to have a StagingOrganisation until the User has verified their email address and their account created.")
+            "because this needs to be possible to create them during registration where there is not yet a logged-in user")
     public boolean anyoneCanSeeOrganisationsNotYetConnectedToApplications(OrganisationResource organisation, User user) {
         return organisationNotYetLinkedToAnApplication(organisation);
     }
@@ -52,24 +48,15 @@ public class OrganisationPermissionRules {
         return simpleMap(uniqueOrganisations, Organisation::getId).contains(organisation.getId());
     }
 
-    @PermissionRule(value = "CREATE", description = "Anyone should be able to create Organisations",
-            concerns = "Because the creation of Organisations during the registration process needs to allow creation and " +
-                    "update before the user is a real User in the system, we need to open creation and update of " +
-                    "Organisations to anyone prior to becoming a User.  This seems too open and would possibly be better " +
-                    "to have a StagingOrganisation until the User has verified their email address and their account created.")
+    @PermissionRule(value = "CREATE", description = "Anyone should be able to create Organisations, " +
+            "because this needs to be possible to create them during registration where there is not yet a logged-in user")
     public boolean anyoneCanCreateOrganisations(OrganisationResource organisation, User user) {
         return true;
     }
 
-    @PermissionRule(
-            value = "UPDATE",
-            description = "Organisations that are not yet a part of any Applications are updatable by anyone, " +
-                          "because this needs to be possible to update them during registration where there is not " +
-                          "yet a logged-in user",
-            concerns = "Because the creation of Organisations during the registration process needs to allow creation and " +
-                       "update before the user is a real User in the system, we need to open creation and update of " +
-                       "Organisations to anyone prior to becoming a User.  This seems too open and would possibly be better " +
-                       "to have a StagingOrganisation until the User has verified their email address and their account created.")
+    @PermissionRule(value = "UPDATE", description = "Organisations that are not yet a part of any Applications are " +
+            "updatable by anyone, because this needs to be possible to update them during registration where there is " +
+            "not yet a logged-in user")
     public boolean anyoneCanUpdateOrganisationsNotYetConnectedToApplications(OrganisationResource organisation, User user) {
         return organisationNotYetLinkedToAnApplication(organisation);
     }
