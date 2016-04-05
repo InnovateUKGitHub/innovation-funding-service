@@ -96,7 +96,7 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     @Override
     public OrganisationResource save(OrganisationResource organisation) {
-        return organisationRestService.save(organisation).getSuccessObjectOrThrowException();
+        return organisationRestService.update(organisation).getSuccessObjectOrThrowException();
     }
 
     @Override

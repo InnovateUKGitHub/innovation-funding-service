@@ -9,7 +9,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.registration.form.OrganisationCreationForm;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.service.OrganisationSearchRestService;
 import org.hamcrest.Matchers;
@@ -85,7 +84,6 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
         when(organisationService.getCompanyHouseOrganisation(COMPANY_ID)).thenReturn(organisationSearchResult);
-        when(organisationService.save(any(Organisation.class))).thenReturn(organisationResource);
         when(organisationService.save(any(OrganisationResource.class))).thenReturn(organisationResource);
         when(applicationService.createApplication(anyLong(), anyLong(), anyString())).thenReturn(applicationResource);
         when(organisationSearchRestService.getOrganisation(businessOrganisationTypeResource.getId(), COMPANY_ID)).thenReturn(RestResult.restSuccess(organisationSearchResult));

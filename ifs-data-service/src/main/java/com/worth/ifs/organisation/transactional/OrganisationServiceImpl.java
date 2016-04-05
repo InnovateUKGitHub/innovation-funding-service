@@ -4,7 +4,6 @@ import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.Academic;
 import com.worth.ifs.organisation.mapper.OrganisationMapper;
@@ -12,7 +11,6 @@ import com.worth.ifs.organisation.repository.AcademicRepository;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.OrganisationType;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
@@ -98,7 +96,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
         ServiceResult organisationResults;
         if (organisations.isEmpty()) {
-            organisationResults = serviceFailure(CommonErrors.notFoundError(Academic.class, organisationName));
+            organisationResults = serviceFailure(notFoundError(Academic.class, organisationName));
         } else {
             organisationResults = serviceSuccess(organisations);
         }
@@ -111,7 +109,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
         ServiceResult organisationResults;
         if (academic == null) {
-            organisationResults = serviceFailure(CommonErrors.notFoundError(Academic.class, searchOrganisationId));
+            organisationResults = serviceFailure(notFoundError(Academic.class, searchOrganisationId));
         } else {
             organisationResults = serviceSuccess(new OrganisationSearchResult(academic.getId().toString(), academic.getName()));
         }

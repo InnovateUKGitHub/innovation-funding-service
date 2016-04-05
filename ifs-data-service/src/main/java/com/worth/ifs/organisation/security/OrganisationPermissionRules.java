@@ -1,6 +1,7 @@
 package com.worth.ifs.organisation.security;
 
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.domain.Organisation;
@@ -23,9 +24,15 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 @PermissionRules
 public class OrganisationPermissionRules {
 
+    @PermissionRule(value = "READ", description = "Organisations that are not yet a part of any Applications are visible to anyone, " +
+            "because this needs to be possible to create them during registration where there is not yet a logged-in user")
+    public boolean anyoneCanSeeOrganisationsNotYetConnectedToApplications(OrganisationResource organisation, User user) {
+        return organisationNotYetLinkedToAnApplication(organisation);
+    }
+
     @PermissionRule(value = "READ", description = "A member of an Organisation can view their own Organisation")
     public boolean memberOfOrganisationCanViewOwnOrganisation(OrganisationResource organisation, User user) {
-        return simpleMap(organisation.getUsers(), User::getId).contains(user.getId());
+        return isMemberOfOrganisation(organisation, user);
     }
 
     @PermissionRule(value = "READ", description = "Users linked to Applications can view the basic details of the other Organisations on their own Applications")
@@ -44,5 +51,29 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "CREATE", description = "Anyone should be able to create Organisations")
     public boolean anyoneCanCreateOrganisations(OrganisationResource organisation, User user) {
         return true;
+    }
+
+    @PermissionRule(value = "UPDATE", description = "Organisations that are not yet a part of any Applications are updatable by anyone, " +
+            "because this needs to be possible to update them during registration where there is not yet a logged-in user")
+    public boolean anyoneCanUpdateOrganisationsNotYetConnectedToApplications(OrganisationResource organisation, User user) {
+        return organisationNotYetLinkedToAnApplication(organisation);
+    }
+
+    @PermissionRule(value = "UPDATE", description = "A member of an Organisation can update their own Organisation")
+    public boolean memberOfOrganisationCanUpdateOwnOrganisation(OrganisationResource organisation, User user) {
+        return isMemberOfOrganisation(organisation, user);
+    }
+
+    @PermissionRule(value = "READ", description = "Anyone can search for and see all search results for Organisations")
+    public boolean anyoneCanSeeOrganisationSearchResults(OrganisationSearchResult organisation, User user) {
+        return true;
+    }
+
+    private boolean isMemberOfOrganisation(OrganisationResource organisation, User user) {
+        return simpleMap(organisation.getUsers(), User::getId).contains(user.getId());
+    }
+
+    private boolean organisationNotYetLinkedToAnApplication(OrganisationResource organisation) {
+        return organisation.getProcessRoles().isEmpty();
     }
 }

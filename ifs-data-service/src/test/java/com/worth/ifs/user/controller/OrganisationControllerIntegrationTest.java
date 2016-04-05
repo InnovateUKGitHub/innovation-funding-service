@@ -5,22 +5,21 @@ import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.domain.OrganisationType;
+import com.worth.ifs.user.repository.OrganisationRepository;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
+import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import java.util.Collections;
 import java.util.Set;
 
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -31,6 +30,12 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private static final String companyHouseId = "0123456789";
     private static final String companyName = "CompanyName1";
@@ -109,7 +114,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     public void testCreateSecondConstructor() throws Exception {
         OrganisationResource organisation = newOrganisationResource().
                 withName(companyName).withCompanyHouseNumber(companyHouseId).withOrganisationSize(OrganisationSize.LARGE).
-                withUsers(singletonList(getSteveSmith())).build();
+                build();
 
         OrganisationResource organisationResource = controller.create(organisation).getSuccessObject();
 
@@ -129,6 +134,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Test
     public void testAddAddress() throws Exception {
         OrganisationResource organisationResource = createOrganisation();
+
         AddressResource addressResource = new AddressResource("Line1", "Line2",  "Line3", "town", "county", "postcode");
         controller.addAddress(organisationResource.getId(), AddressType.OPERATING, addressResource);
 

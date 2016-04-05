@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,7 @@ import java.util.Map.Entry;
 
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -31,11 +33,12 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     private static final Log LOG = LogFactory.getLog(CustomPermissionEvaluator.class);
 
+    private static final User ANONYMOUS_USER = new User("Anonymous", "Anonymous", "anonymous@example.com", "", emptyList(), "");
+
     @Autowired
     private ApplicationContext applicationContext;
 
     private DtoClassToPermissionsToPermissionsMethods rulesMap;
-
 
     private DtoClassToLookupMethod lookupStrategyMap;
 
@@ -218,19 +221,27 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
         final Object finalAuthentication;
 
-        Class<?> secondParameter = methodAndBean.getRight().getParameterTypes()[1];
+        Method method = methodAndBean.getValue();
+        Class<?> secondParameter = method.getParameterTypes()[1];
 
-        if (secondParameter.equals(User.class) && authentication instanceof UserAuthentication) {
-            finalAuthentication = ((UserAuthentication) authentication).getDetails();
+        if (secondParameter.equals(User.class)) {
+            if (authentication instanceof UserAuthentication) {
+                finalAuthentication = ((UserAuthentication) authentication).getDetails();
+            } else if (authentication instanceof AnonymousAuthenticationToken) {
+                finalAuthentication = ANONYMOUS_USER;
+            } else {
+                throw new IllegalArgumentException("Unable to determine the authentication token for Spring Security");
+            }
         } else if (Authentication.class.isAssignableFrom(secondParameter)) {
             finalAuthentication = authentication;
         } else {
-            throw new IllegalArgumentException("Second parameter of @PermissionRule-annotated methods should be " +
-                    "either a User or an org.springframework.security.core.Authentication implementation");
+            throw new IllegalArgumentException("Second parameter of @PermissionRule-annotated method " + method.getName() + " should be " +
+                    "either an instance of " + User.class.getName() + " or an org.springframework.security.core.Authentication implementation, " +
+                    "but was " + secondParameter.getName());
         }
 
         try {
-            return (Boolean) methodAndBean.getRight().invoke(methodAndBean.getLeft(), dto, finalAuthentication);
+            return (Boolean) method.invoke(methodAndBean.getLeft(), dto, finalAuthentication);
         } catch (Exception e) {
             LOG.error("Error whilst processing a permissions method", e);
             throw new RuntimeException(e);
