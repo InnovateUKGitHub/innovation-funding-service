@@ -29,10 +29,10 @@
 
     <div class="grid-row">
         <div class="column-fifth">
-            &nbsp;
+          <div th:include="fragments/competition-management :: info-area" th:remove="tag" />
         </div>
         <div class="column-four-fifth">
-              <h2 class="heading-large">Application list</h2>
+              <h2 class="bold-large">Application list</h2>
               <form method="get">
                 <div class="grid-row">
                     <div class="column-two-thirds">
