@@ -86,7 +86,7 @@ Invalid password (no numbers)
 Invalid password (personal information)
     [Documentation]    INFUND-1147
     [Tags]    Account    Pending
-    # Pending since this validation doesn't seem to exist
+    # Pending since this validation doesn't seem to exist INFUND-2366
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
