@@ -1,11 +1,10 @@
 package com.worth.ifs;
 
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.service.ApplicationSummaryService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import java.io.IOException;
+import java.time.LocalDateTime;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -17,6 +16,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.service.ApplicationSummaryService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource;
 
 @Controller
 @RequestMapping("/competition")
@@ -32,14 +38,16 @@ public class CompetitionManagementController {
 
     @RequestMapping("/{competitionId}")
     public String displayCompetitionInfo(Model model, @PathVariable("competitionId") Long competitionId, @ModelAttribute ApplicationSummaryQueryForm queryForm, BindingResult bindingResult){
-    	
+
     	if(bindingResult.hasErrors()) {
     		return "redirect:/management/competition/1";
     	}
     	
-    	CompetitionResource competition = competitionService.getById(competitionId);
+    	CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId);
     	
-    	switch(competition.getCompetitionStatus()) {
+    	model.addAttribute("currentCompetition", competitionSummary);
+    	 
+    	switch(competitionSummary.getCompetitionStatus()) {
 	    	case OPEN:
 	    		return openCompetition(model, competitionId, queryForm, bindingResult);
 	    	case IN_ASSESSMENT:
@@ -57,11 +65,6 @@ public class CompetitionManagementController {
 		model.addAttribute("notSubmittedResults", notSubmittedApplicationSummary);
 		model.addAttribute("submittedResults", submittedApplicationSummary);
 		
-		CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId);
-        model.addAttribute("competitionSummary", competitionSummary);
-    	
-        model.addAttribute("currentCompetition", competitionService.getById(competitionId));
-    	
         LOG.warn("Show in assessment competition info");
         return "comp-mgt-in-assessment";
 	}
@@ -73,16 +76,9 @@ public class CompetitionManagementController {
 		ApplicationSummaryPageResource applicationSummary = applicationSummaryService.findByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
 		model.addAttribute("results", applicationSummary);
 
-        CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId);
-        model.addAttribute("competitionSummary", competitionSummary);
-
-        model.addAttribute("currentCompetition", competitionService.getById(competitionId));
-
-        LOG.warn("Show open competition info ");
+        LOG.warn("Show open competition info");
         return "comp-mgt";
 	}
-
-
 
     @RequestMapping("/{competitionId}/download")
     public void downloadApplications(@PathVariable("competitionId") Long competitionId, HttpServletResponse response) throws IOException {
@@ -92,7 +88,7 @@ public class CompetitionManagementController {
             response.setContentType("application/force-download");
             response.setHeader("Content-Transfer-Encoding", "binary");
             response.setHeader("Content-Disposition", "attachment; filename=\""+filename+"\"");
-            final ByteArrayResource resource = applicationSummaryRestService.downloadByCompetition(competitionId).getSuccessObject();
+            final ByteArrayResource resource = applicationSummaryService.downloadByCompetition(competitionId);
 
             IOUtils.copy(resource.getInputStream(), response.getOutputStream());
             response.flushBuffer();
