@@ -1,0 +1,32 @@
+
+<div class="info-area" th:fragment="info-area">
+    <section class="boxed">
+
+        <div class="grid-row">
+            <div class="column-one">
+                <p><span class="heading-medium" th:text="${competitionSummary.getApplicationDeadline()}">30th March 2016</span> <br />Application deadline</p>
+            </div>
+        </div>
+
+        <div class="grid-row">
+
+            <div class="column-quarter">
+                <p><span class="heading-medium" th:text="${competitionSummary.totalNumberOfApplications}">22</span> <br />Total number of applications</p>
+            </div>
+
+            <div class="column-quarter">
+                <p><span class="heading-medium" th:text="${competitionSummary.applicationsStarted}">12</span> <br />Applications started</p>
+            </div>
+
+            <div class="column-quarter">
+                <p><span class="heading-medium" th:text="${competitionSummary.applicationsInProgress}">6</span> <br />Applications in progress <br />(Beyond 50%)</p>
+            </div>
+
+            <div class="column-quarter">
+                <p><span class="heading-medium" th:text="${competitionSummary.applicationsSubmitted}">4</span> <br />Applications submitted</p>
+            </div>
+
+        </div>
+
+    </section>
+</div>

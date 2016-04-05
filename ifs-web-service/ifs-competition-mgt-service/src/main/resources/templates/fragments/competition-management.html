@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+    <!-- id of the competition for in the page title -->
+    <div th:fragment="competition-id(competition)" th:remove="tag">
+          <p class="subtitle"><div th:text="${#numbers.formatInteger(competition.id,8)}" th:remove="tag" /> : Innovate UK</p>
+    </div>
+    <!-- competition status with blue block -->
+    <div th:fragment="competition-status(competition)" th:remove="tag">
+        <h2 th:switch="${competition.competitionStatus.name()}" class="bold-small blue-block">
+          <div th:remove="tag" th:case="'NOT_STARTED'">Competition not yet started</div>
+          <div th:remove="tag" th:case="'OPEN'">Competition open</div>
+          <div th:remove="tag" th:case="'IN_ASSESSMENT'">In assesment</div>
+          <div th:remove="tag" th:case="'FUNDERS_PANEL'">Funders Panel</div>
+          <div th:remove="tag" th:case="'PROJECT_SETUP'">Project setup</div>
+          <div th:remove="tag" th:case="*">test2</div>
+        </h2>
+    </div>
+
+</html>
