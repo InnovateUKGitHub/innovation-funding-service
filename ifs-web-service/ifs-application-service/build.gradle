@@ -76,7 +76,6 @@ processResources {
     }
     if (project.hasProperty("profile") && project.profile == "automated") {
         exclude '**/application.properties'
-        include '**/application-rest-urls.properties'
     }
 }
 
