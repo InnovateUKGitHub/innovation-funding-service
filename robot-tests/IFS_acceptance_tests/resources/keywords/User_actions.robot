@@ -8,9 +8,8 @@ The user navigates to the page
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
-    Element Should Be Visible       id=global-header
-    Page Should Contain             BETA
-
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
 
 The user navigates to the page without the usual headers
     [Arguments]    ${TARGET_URL}
@@ -20,7 +19,6 @@ The user navigates to the page without the usual headers
     Page Should Not Contain    something went wrong
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
-
 
 The user navigates to the page and gets a custom error message
     [Arguments]    ${TARGET_URL}    ${CUSTOM_ERROR_MESSAGE}
@@ -36,9 +34,8 @@ The user is on the page
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
-    Element Should Be Visible       id=global-header
-    Page Should Contain             BETA
-
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
 
 the user reloads the page
     Reload Page
@@ -48,10 +45,8 @@ the user reloads the page
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
-    Element Should Be Visible       id=global-header
-    Page Should Contain             BETA
-
-
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
 
 Applicant edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
@@ -97,7 +92,7 @@ Create new application
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
-    Sleep       2s
+    Sleep    2s
     Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
@@ -168,7 +163,7 @@ The applicant assigns the question to the collaborator
     Then the user clicks the button/link    jQuery=button:contains("${NAME}")
 
 the user assigns the question to the collaborator
-    [Arguments]     ${name}
+    [Arguments]    ${name}
     The user clicks the button/link    css=.assign-button
     The user clicks the button/link    jQuery=button:contains("${NAME}")
     Reload Page
@@ -184,20 +179,32 @@ The user verifies their email
     Go To    ${verify_link}
     Page Should Contain    Account verified
 
-
 the user can see the uploaded file
-    [Arguments]         ${file_name}
-    Page Should Contain         ${file_name}
-
+    [Arguments]    ${file_name}
+    Page Should Contain    ${file_name}
 
 the user can remove the uploaded file
-    [Arguments]     ${file_name}
+    [Arguments]    ${file_name}
     Reload Page
-    Click Button        name=remove_uploaded_file
-    Wait Until Page Does Not Contain        Remove
-    Page Should Contain         Upload
-    Page Should Not Contain     ${file_name}
+    Click Button    name=remove_uploaded_file
+    Wait Until Page Does Not Contain    Remove
+    Page Should Contain    Upload
+    Page Should Not Contain    ${file_name}
 
 the user cannot remove the uploaded file
-    [Arguments]     ${file_name}
-    Page Should Not Contain         Remove
+    [Arguments]    ${file_name}
+    Page Should Not Contain    Remove
+
+the user opens the mailbox and verifies the email
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    ${LATEST} =    wait for email    fromEmail=noresponse@innovateuk.gov.uk
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
