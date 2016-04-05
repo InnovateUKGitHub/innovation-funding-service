@@ -18,29 +18,10 @@
 
     <!-- Box with summary about competition on left hand side -->
     <div th:remove="tag" th:fragment="info-area">
-        <section class="info-area boxed">
-
-            <div class="grid-row">
-                <div class="column-one">
-                    <p><span class="heading-medium" th:text="${competitionSummary.getApplicationDeadline()}" /> <br />Application deadline</p>
-                </div>
-            </div>
-
-            <div class="grid-down-tablet">
-                <div class="column-quarter">
-                    <p><span class="heading-medium" th:text="${competitionSummary.totalNumberOfApplications}">22</span> <br />Total number of applications</p>
-                </div>
-                <div class="column-quarter">
-                    <p><span class="heading-medium" th:text="${competitionSummary.applicationsStarted}">12</span> <br />Applications started</p>
-                </div>
-                <div class="column-quarter">
-                    <p><span class="heading-medium" th:text="${competitionSummary.applicationsInProgress}">6</span> <br />Applications in progress <br />(Beyond 50%)</p>
-                </div>
-                <div class="column-quarter">
-                    <p><span class="heading-medium" th:text="${competitionSummary.applicationsSubmitted}">4</span> <br />Applications submitted</p>
-                </div>
-            </div>
-
-        </section>
+        <p><div class="bold-medium" th:text="${competitionSummary.getApplicationDeadline()}" /> Application deadline</p>
+        <p><div class="bold-medium" th:text="${competitionSummary.totalNumberOfApplications}" /> Total number of applications</p>
+        <p><div class="bold-medium" th:text="${competitionSummary.applicationsStarted}" /> Applications started</p>
+        <p><div class="bold-medium" th:text="${competitionSummary.applicationsInProgress}" /> Applications in progress (Beyond 50%)</p>
+        <p><div class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
     </div>
 </html>
