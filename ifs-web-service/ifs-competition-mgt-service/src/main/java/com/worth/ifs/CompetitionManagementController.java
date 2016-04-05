@@ -6,6 +6,7 @@ import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.assessment.service.AssessmentRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -70,12 +71,17 @@ public class CompetitionManagementController {
 
     @RequestMapping("/{competitionId}/download")
     public void downloadApplications(@PathVariable("competitionId") Long competitionId, HttpServletResponse response) throws IOException {
-        response.setContentType("application/force-download");
-        response.setHeader("Content-Transfer-Encoding", "binary");
-        response.setHeader("Content-Disposition", String.format("attachment; filename=\"Submitted_Applications_Competition_%s_%s_%s.xls\"", competitionId, "CompName", LocalDateTime.now()));
-        final ByteArrayResource resource = applicationSummaryRestService.downloadByCompetition(competitionId).getSuccessObject();
+        CompetitionResource competition = competitionService.getById(competitionId);
+        if(competition!= null){
+            String filename = String.format("Submitted_Applications_Competition_%s_%s_%s.xls", competitionId, competition.getName(), LocalDateTime.now());
+            response.setContentType("application/force-download");
+            response.setHeader("Content-Transfer-Encoding", "binary");
+            response.setHeader("Content-Disposition", "attachment; filename=\""+filename+"\"");
+            final ByteArrayResource resource = applicationSummaryRestService.downloadByCompetition(competitionId).getSuccessObject();
 
-        IOUtils.copy(resource.getInputStream(), response.getOutputStream());
-        response.flushBuffer();
+            IOUtils.copy(resource.getInputStream(), response.getOutputStream());
+            response.flushBuffer();
+        }
+
     }
 }
