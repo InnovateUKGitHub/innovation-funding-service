@@ -16,7 +16,7 @@ public class DataCredentialsValidator implements CredentialsValidator {
     private UserService userService;
 
     @Override
-    public RestResult<User> retrieveUserByUid(String uid) {
-        return userService.getUserByUid(uid).toGetResponse();
+    public RestResult<UserResource> retrieveUserByUid(String uid) {
+        return userService.getUserResourceByUid(uid).toGetResponse();
     }
 }

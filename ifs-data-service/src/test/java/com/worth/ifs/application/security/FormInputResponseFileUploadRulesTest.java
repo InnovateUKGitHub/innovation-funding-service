@@ -10,6 +10,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
@@ -22,6 +23,7 @@ import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newF
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.domain.UserRoleType.*;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertFalse;
@@ -52,6 +54,8 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         application.setApplicationStatus(applicationStatusOpen);
 
         User user = newUser().build();
+        UserResource userResource = newUserResource().build();
+
         ProcessRole applicantProcessRole =
                 newProcessRole().withUser(user).withRole(applicantRole).withApplication(application).build();
 
@@ -63,7 +67,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         when(roleRepositoryMock.findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()))).thenReturn(Collections.singletonList(applicantRole));
         when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user.getId(), roles, applicationId)).thenReturn(Collections.singletonList(applicantProcessRole));
         
-        assertTrue(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user));
+        assertTrue(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, userResource));
 
         verify(roleRepositoryMock).findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()));
         verify(processRoleRepositoryMock).findByUserIdAndRoleInAndApplicationId(user.getId(), roles, applicationId);
@@ -72,7 +76,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
     @Test
     public void testApplicantCanUploadFilesInResponsesForOwnApplicationButNotAMemberOfApplication() {
 
-        User user = newUser().build();
+        UserResource user = newUserResource().build();
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
 
@@ -90,7 +94,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
     @Test
     public void testApplicantCanUploadFilesInResponsesForOwnApplicationButLeadApplicantRoleNotFound() {
 
-        User user = newUser().build();
+        UserResource user = newUserResource().build();
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
 

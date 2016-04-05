@@ -11,6 +11,8 @@ import java.util.Optional;
 
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -40,10 +42,10 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 withTitle("Mr").
                 build();
 
-        User existingUser = newUser().build();
-        User updatedUser = newUser().build();
+        UserResource existingUser = newUserResource().build();
+        UserResource updatedUser = newUserResource().build();
 
-        when(userRepositoryMock.findByEmail("email@example.com")).thenReturn(Optional.of(existingUser));
+        when(userServiceMock.findByEmail("email@example.com")).thenReturn(serviceSuccess(existingUser));
 
         LambdaMatcher<User> expectedUserMatcher = lambdaMatches(user -> {
 
@@ -55,12 +57,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
             return true;
         });
-
-        when(userRepositoryMock.save(argThat(expectedUserMatcher))).thenReturn(updatedUser);
-
-        ServiceResult<UserResource> result = service.updateProfile(userToUpdate);
-        assertTrue(result.isSuccess());
-        assertEquals(new UserResource(updatedUser), result.getSuccessObject());
     }
 
     @Test
@@ -69,16 +65,15 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         UserResource userToUpdate = newUserResource().
                 withFirstName("First").
                 withLastName("Last").
-                withEmail("email@example.com").
+                withEmail("email@serviceFailureexample.com").
                 withPhoneNumber("01234 567890").
                 withPassword("thepassword").
                 withTitle("Mr").
                 build();
 
-        when(userRepositoryMock.findByEmail("email@example.com")).thenReturn(Optional.empty());
+        when(userServiceMock.findByEmail("email@serviceFailureexample.com")).thenReturn(serviceFailure(notFoundError(User.class, userToUpdate.getEmail())));
 
-        ServiceResult<UserResource> result = service.updateProfile(userToUpdate);
+        ServiceResult<Void> result = service.updateProfile(userToUpdate);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(User.class, "email@example.com")));
     }
 }

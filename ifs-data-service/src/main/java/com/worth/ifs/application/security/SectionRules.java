@@ -9,27 +9,29 @@ import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 @Component
 @PermissionRules
 public class SectionRules {
 
-    @PermissionRule(value = "READ", description = "user can read section")
-    public boolean userCanReadSection(SectionResource section, User user){
-        return SecurityRuleUtil.isCompAdmin(user) || userIsConnectedToSection(section, user);
+    @PermissionRule(value = "READ", description = "everyone can read sections")
+    public boolean userCanReadSection(SectionResource section, UserResource user){
+        return true;
     }
 
     @PermissionRule(value = "UPDATE", description ="no one can update sections yet")
-    public boolean userCanUpdateSection(SectionResource section, User user){
+    public boolean userCanUpdateSection(SectionResource section, UserResource user){
         return false;
     }
 
-    private boolean userIsConnectedToSection(SectionResource sectionResource, User user){
-        return user.getProcessRoles().stream()
+    private boolean userIsConnectedToSection(SectionResource sectionResource, UserResource user){
+        /*return user.getProcessRoles().stream()
                 .map(ProcessRole::getApplication)
                 .map(Application::getCompetition)
                 .map(Competition::getId)
-                .anyMatch(competitionId -> sectionResource.getCompetition().equals(competitionId));
+                .anyMatch(competitionId -> sectionResource.getCompetition().equals(competitionId));*/
+        return false;
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
 
@@ -107,19 +108,17 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         user.setFirstName("Some");
         user.setLastName("How");
 
-        RestResult<Void> restResult = controller.createUser(user);
+        RestResult<Void> restResult = controller.updateDetails(user);
         assertTrue(restResult.isFailure());
     }
 
     @Test
     public void testUpdateUserDetails() {
-        User userOne = controller.getUserById(1L).getSuccessObject();
+        UserResource userOne = controller.getUserById(1L).getSuccessObject();
+        userOne.setFirstName("Some");
+        userOne.setLastName("How");
 
-        UserResource userResource = new UserResource(userOne);
-        userResource.setFirstName("Some");
-        userResource.setLastName("How");
-
-        RestResult<UserResource> restResult = controller.createUser(userResource);
+        RestResult<Void> restResult = controller.updateDetails(userOne);
         assertTrue(restResult.isSuccess());
     }
 
@@ -134,10 +133,10 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         userResource.setTitle("King");
         userResource.setPhoneNumber("0123335787888");
 
-        RestResult<UserResource> restResult = controller.createUser(1L, 1L, userResource);
+        RestResult<Void> restResult = controller.createUser(1L, 1L, userResource);
         assertTrue(restResult.isSuccess());
 
-        UserResource user = restResult.getSuccessObject();
+        UserResource user = controller.getUserById(1L).getSuccessObject();
         assertEquals("email@Nope.com", user.getEmail());
         assertEquals(UserStatus.INACTIVE, user.getStatus());
     }

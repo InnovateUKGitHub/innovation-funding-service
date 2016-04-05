@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
@@ -116,7 +117,7 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
         }
 
 
-        setLoggedInUser(newUser().build());
+        setLoggedInUser(newUserResource().build());
     }
 
 

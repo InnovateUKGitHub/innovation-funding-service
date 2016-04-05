@@ -7,5 +7,5 @@ import com.worth.ifs.user.resource.UserResource;
 
 public interface CredentialsValidator {
 
-    RestResult<User> retrieveUserByUid(String token);
+    RestResult<UserResource> retrieveUserByUid(String token);
 }

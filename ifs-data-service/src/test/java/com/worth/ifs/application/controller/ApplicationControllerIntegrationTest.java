@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.worth.ifs.user.mapper.UserMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +35,9 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
 
     @Autowired
     ApplicationStatusMapper applicationStatusMapper;
+
+    @Autowired
+    UserMapper userMapper;
 
     public static final long APPLICATION_ID = 1L;
     private QuestionController questionController;
@@ -63,9 +67,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         );
         User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", proccessRoles, "123abc");
         proccessRoles.get(0).setUser(user);
-        swapOutForUser(new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", proccessRoles, "123abc"));
-
-
+        swapOutForUser(userMapper.mapToResource(user));
     }
 
     @After

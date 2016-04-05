@@ -15,7 +15,7 @@ public class RoleResource {
     private String name;
     private String url;
     private List<Long> processRoles = new ArrayList<>();
-    private List<User> users = new ArrayList<>();
+    private List<Long> users = new ArrayList<>();
 
     public RoleResource() {
     	// no-arg constructor
@@ -55,11 +55,11 @@ public class RoleResource {
         this.processRoles = processRoles;
     }
 
-    public List<User> getUsers() {
+    public List<Long> getUsers() {
         return this.users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(List<Long> users) {
         this.users = users;
     }
 

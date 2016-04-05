@@ -29,10 +29,10 @@ public class UidAuthenticationService implements UserAuthenticationService {
      * Retrieve the Authenticated user by its authentication token in the request header.
      */
     @Override
-    public User getAuthenticatedUser(HttpServletRequest request) {
+    public UserResource getAuthenticatedUser(HttpServletRequest request) {
         Authentication authentication = getAuthentication(request);
         if(authentication!=null) {
-            return (User) authentication.getDetails();
+            return (UserResource) authentication.getDetails();
         }
         return null;
     }
@@ -45,7 +45,7 @@ public class UidAuthenticationService implements UserAuthenticationService {
             return null;
         }
 
-        Optional<User> user = validator.retrieveUserByUid(uid).getOptionalSuccessObject();
+        Optional<UserResource> user = validator.retrieveUserByUid(uid).getOptionalSuccessObject();
         return user.isPresent() ? new UserAuthentication(user.get()) : null;
     }
 }

@@ -85,11 +85,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
-        Optional<User> user = repository.findByEmail(email);
-        if(user.isPresent()){
-            return serviceSuccess(user.get()).andOnSuccessReturn(userMapper::mapToResource);
-        }
-        return serviceFailure(notFoundError(User.class, email));
+        return find(repository.findByEmail(email), notFoundError(User.class, email)).andOnSuccessReturn(userMapper::mapToResource);
     }
 
     @Override

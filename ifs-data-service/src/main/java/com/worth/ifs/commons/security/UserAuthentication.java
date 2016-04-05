@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 public class UserAuthentication implements Authentication {
 
 
-    private final transient User user;
+    private final transient UserResource user;
     private boolean authenticated = true;
 
-    public UserAuthentication(User user) {
+    public UserAuthentication(UserResource user) {
         this.user = user;
     }
 
@@ -46,7 +46,7 @@ public class UserAuthentication implements Authentication {
     }
 
     @Override
-    public User getDetails() {
+    public UserResource getDetails() {
         return user;
     }
 

@@ -134,7 +134,7 @@ public class UserController {
     }
 
     @RequestMapping("/updateDetails")
-    public RestResult<Void> createUser(@RequestBody UserResource userResource) {
+    public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
         return userProfileService.updateProfile(userResource).toPutResponse();
     }
 }

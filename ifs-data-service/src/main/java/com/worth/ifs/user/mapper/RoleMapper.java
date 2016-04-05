@@ -9,7 +9,8 @@ import org.mapstruct.Mapper;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-        ProcessRoleMapper.class
+        ProcessRoleMapper.class,
+        UserMapper.class
     }
 )
 public abstract class RoleMapper  extends BaseMapper<Role, RoleResource, Long> {

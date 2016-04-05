@@ -8,6 +8,7 @@ import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,8 +28,8 @@ public class ApplicationFinanceRules {
     ProcessRoleRepository processRoleRepository;
 
     @PermissionRule(value = "READ", description = "An applicant can only see the totals of their finance ")
-    public boolean applicantCanSeeTheOrganisationFinanceTotals(Application application, User user) {
-        List<ProcessRole> processRole = processRoleRepository.findByUserAndApplication(user, application);
-        return SecurityRuleUtil.isCompAdmin(user) || !processRole.isEmpty();
+    public boolean applicantCanSeeTheOrganisationFinanceTotals(Application application, UserResource user) {
+        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), application.getId());
+        return SecurityRuleUtil.isCompAdmin(user) || processRole!=null;
     }
 }

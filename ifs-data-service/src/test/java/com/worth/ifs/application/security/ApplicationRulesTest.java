@@ -10,6 +10,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -22,6 +23,7 @@ import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newAp
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -43,9 +45,9 @@ public class ApplicationRulesTest extends BaseUnitTestMocksTest {
     private Application application2;
     private ProcessRole processRole1;
     private ProcessRole processRole2;
-    private User user1;
-    private User user2;
-    private User user3;
+    private UserResource user1;
+    private UserResource user2;
+    private UserResource user3;
 
     private Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
     private Role collaboratorRole = newRole().withType(UserRoleType.COLLABORATOR).build();
@@ -55,9 +57,9 @@ public class ApplicationRulesTest extends BaseUnitTestMocksTest {
 
     @Before
     public void setup(){
-        user1 = newUser().build();
-        user2 = newUser().build();
-        user3 = newUser().build();
+        user1 = newUserResource().build();
+        user2 = newUserResource().build();
+        user3 = newUserResource().build();
 
         processRole1 = newProcessRole().withRole(leadApplicantRole).build();
         processRole2 = newProcessRole().withRole(applicantRole).build();
@@ -79,11 +81,11 @@ public class ApplicationRulesTest extends BaseUnitTestMocksTest {
         when(roleRepositoryMock.findByNameIn(anyList())).thenReturn(applicantRoles);
         when(roleRepositoryMock.findByName(leadApplicantRole.getName())).thenReturn(singletonList(leadApplicantRole));
 
-        when(processRoleRepositoryMock.findByUserAndApplicationId(user1, applicationResource1.getId())).thenReturn(singletonList(processRole1));
-        when(processRoleRepositoryMock.findByUserAndApplicationId(user1, applicationResource2.getId())).thenReturn(emptyList());
-        when(processRoleRepositoryMock.findByUserAndApplicationId(user2, applicationResource1.getId())).thenReturn(emptyList());
-        when(processRoleRepositoryMock.findByUserAndApplicationId(user2, applicationResource2.getId())).thenReturn(singletonList(processRole1));
-        when(processRoleRepositoryMock.findByUserAndApplicationId(user3, applicationResource2.getId())).thenReturn(singletonList(processRole2));
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(user1.getId(), applicationResource1.getId())).thenReturn(processRole1);
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(user1.getId(), applicationResource2.getId())).thenReturn(null);
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(user2.getId(), applicationResource1.getId())).thenReturn(null);
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(user2.getId(), applicationResource2.getId())).thenReturn(processRole1);
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(user3.getId(), applicationResource2.getId())).thenReturn(processRole2);
 
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(user1.getId(), leadApplicantRole, applicationResource1.getId())).thenReturn(singletonList(processRole1));
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(user1.getId(), leadApplicantRole, applicationResource2.getId())).thenReturn(emptyList());

@@ -2,6 +2,7 @@ package com.worth.ifs.security;
 
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -88,7 +89,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                     if (method.getParameterTypes().length == 2) {
                         Class<?> secondParameterClass = method.getParameterTypes()[1];
                         if (Authentication.class.isAssignableFrom(secondParameterClass) ||
-                                User.class.isAssignableFrom(secondParameterClass)) {
+                                UserResource.class.isAssignableFrom(secondParameterClass)) {
                             return false;
                         }
                     }
@@ -220,7 +221,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
         Class<?> secondParameter = methodAndBean.getRight().getParameterTypes()[1];
 
-        if (secondParameter.equals(User.class) && authentication instanceof UserAuthentication) {
+        if (secondParameter.equals(UserResource.class) && authentication instanceof UserAuthentication) {
             finalAuthentication = ((UserAuthentication) authentication).getDetails();
         } else if (Authentication.class.isAssignableFrom(secondParameter)) {
             finalAuthentication = authentication;

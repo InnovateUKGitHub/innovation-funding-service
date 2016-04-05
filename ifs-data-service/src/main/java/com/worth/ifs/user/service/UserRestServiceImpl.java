@@ -99,7 +99,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<List<User>> findAll() {
+    public RestResult<List<UserResource>> findAll() {
         return getWithRestResult(userRestURL + "/findAll/", userListType());
     }
 
@@ -119,7 +119,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<List<User>> findAssignableUsers(Long applicationId){
+    public RestResult<List<UserResource>> findAssignableUsers(Long applicationId){
         return getWithRestResult(userRestURL + "/findAssignableUsers/" + applicationId, userListType());
     }
 
@@ -129,7 +129,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<List<User>> findRelatedUsers(Long applicationId){
+    public RestResult<List<UserResource>> findRelatedUsers(Long applicationId){
         return getWithRestResult(userRestURL + "/findRelatedUsers/"+applicationId, userListType());
     }
 

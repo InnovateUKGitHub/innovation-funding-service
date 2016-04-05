@@ -10,7 +10,10 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.security.SecuritySetter;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,10 +53,16 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     public ApplicationRestService applicationRestService;
 
     @Autowired
+    public UserRestService userRestService;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
     public UserAuthenticationService userAuthenticationService;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Test
     public void testSuccessRestResultHandledAsTheBodyOfTheRestResult() {
@@ -93,7 +102,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
     @Test
     public void testFailureRestResultHandledAsync() throws Exception {
-        final User initial = SecuritySetter.swapOutForUser(leadApplicantUser());
+        final UserResource initial = SecuritySetter.swapOutForUser(leadApplicantUser());
         try {
             final long applicationIdThatDoesNotExist = -1L;
             final Future<RestResult<Double>> completeQuestionsPercentage = applicationRestService.getCompleteQuestionsPercentage(applicationIdThatDoesNotExist);
@@ -116,17 +125,17 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
         return getUserJSONHeaders(assessorUser());
     }
 
-    private <T> HttpEntity<T> getUserJSONHeaders(User user) {
+    private <T> HttpEntity<T> getUserJSONHeaders(UserResource user) {
         HttpHeaders headers = getJSONHeaders();
         headers.set(AUTH_TOKEN, user.getUid());
         return new HttpEntity<>(headers);
     }
 
-    private User leadApplicantUser(){
-        return userRepository.findByEmail("steve.smith@empire.com").get();
+    private UserResource leadApplicantUser(){
+        return userRestService.findUserByEmail("steve.smith@empire.com").getSuccessObject();
     }
 
-    private User assessorUser(){
-        return userRepository.findByEmail("paul.plum@gmail.com").get();
+    private UserResource assessorUser(){
+        return userRestService.findUserByEmail("paul.plum@gmail.com").getSuccessObject();
     }
 }
