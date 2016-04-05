@@ -32,7 +32,7 @@ public class CompetitionManagementController {
 
     @Autowired
     UserAuthenticationService userAuthenticationService;
-    
+
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
@@ -43,26 +43,26 @@ public class CompetitionManagementController {
 
     @RequestMapping("/{competitionId}")
     public String displayCompetitionInfo(Model model, @PathVariable("competitionId") Long competitionId, @ModelAttribute ApplicationSummaryQueryForm queryForm, BindingResult bindingResult){
-    	
-    	if(bindingResult.hasErrors()) {
-    		return "redirect:/management/competition/1";
-    	}
-    	
-    	RestResult<ApplicationSummaryPageResource> restResult = applicationSummaryRestService.findByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
-    	
-    	if(restResult.isSuccess()) {
-    		model.addAttribute("results", restResult.getSuccessObject());
-    	} else {
+
+        if(bindingResult.hasErrors()) {
+            return "redirect:/management/competition/1";
+        }
+
+        RestResult<ApplicationSummaryPageResource> restResult = applicationSummaryRestService.findByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
+
+        if(restResult.isSuccess()) {
+            model.addAttribute("results", restResult.getSuccessObject());
+        } else {
             return "redirect:/login";
-    	}
+        }
 
         RestResult<CompetitionSummaryResource> competitionSummaryResourceRestResult = applicationSummaryRestService.getCompetitionSummaryByCompetitionId(competitionId);
         if(competitionSummaryResourceRestResult.isSuccess()){
             model.addAttribute("competitionSummary", competitionSummaryResourceRestResult.getSuccessObject());
         }
-    	
-    	model.addAttribute("competitionId", competitionId);
-    	
+
+        model.addAttribute("currentCompetition", competitionService.getById(competitionId));
+
         LOG.warn("Show competition info ");
         return "comp-mgt";
     }
