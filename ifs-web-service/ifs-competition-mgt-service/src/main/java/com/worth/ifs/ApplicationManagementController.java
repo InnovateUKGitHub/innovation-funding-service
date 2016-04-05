@@ -27,6 +27,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
 public class ApplicationManagementController extends AbstractApplicationController {
+    @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(ApplicationManagementController.class);
     @Autowired
     CompetitionService competitionService;
