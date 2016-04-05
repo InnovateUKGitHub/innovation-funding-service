@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.LocalDateTime;
+
 @Controller
 @RequestMapping("/competition")
 public class CompetitionManagementController {
@@ -82,8 +86,6 @@ public class CompetitionManagementController {
         return "comp-mgt";
 	}
 
-
-
     @RequestMapping("/{competitionId}/download")
     public void downloadApplications(@PathVariable("competitionId") Long competitionId, HttpServletResponse response) throws IOException {
         CompetitionResource competition = competitionService.getById(competitionId);
@@ -92,7 +94,7 @@ public class CompetitionManagementController {
             response.setContentType("application/force-download");
             response.setHeader("Content-Transfer-Encoding", "binary");
             response.setHeader("Content-Disposition", "attachment; filename=\""+filename+"\"");
-            final ByteArrayResource resource = applicationSummaryRestService.downloadByCompetition(competitionId).getSuccessObject();
+            final ByteArrayResource resource = applicationSummaryService.downloadByCompetition(competitionId);
 
             IOUtils.copy(resource.getInputStream(), response.getOutputStream());
             response.flushBuffer();
