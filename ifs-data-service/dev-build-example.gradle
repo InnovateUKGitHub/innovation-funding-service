@@ -1,4 +1,4 @@
-ext.activeProfile="example"
+ext.activeProfile="rest-urls,example"
 
 ext.ifsDatasourceUrl="jdbc:mysql://localhost:3306/ifs"
 ext.ifsDatasourceUsername=""
