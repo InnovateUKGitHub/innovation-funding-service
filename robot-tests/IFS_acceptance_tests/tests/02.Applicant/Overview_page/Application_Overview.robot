@@ -63,9 +63,6 @@ User can print the application
     Then the user should get a new print window
 
 *** Keywords ***
-the Applicant should see the overview of the selected application
-    Location Should Be    ${APPLICATION_OVERVIEW_URL}
-
 the applicant should see three sections
     Element Should Be Visible    css=#section-1 .bold-medium
     Element Should Be Visible    css=#section-2 .heading-medium
