@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
     <!-- id of the competition for in the page title -->
     <div th:fragment="competition-id(competition)" th:remove="tag">
-          <p class="subtitle"><div th:text="${#numbers.formatInteger(competition.id,8)}" th:remove="tag" /> : Innovate UK</p>
+          <p class="subtitle"><div th:text="${#numbers.formatInteger(competition.competitionId,8)}" th:remove="tag" /> : Innovate UK</p>
     </div>
     <!-- competition status with blue block -->
     <div th:fragment="competition-status(competition)" th:remove="tag">

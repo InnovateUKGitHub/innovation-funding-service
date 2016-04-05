@@ -1,13 +1,12 @@
 
 package com.worth.ifs;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.service.ApplicationSummaryService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,12 +16,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.service.ApplicationSummaryService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionManagementControllerTest  {
@@ -58,7 +55,7 @@ public class CompetitionManagementControllerTest  {
     	mockMvc.perform(get("/competition/123"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
-                .andExpect(model().attribute("currentCompetition", competitionSummaryResource))
+                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("results", resource));
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, 0, null);
@@ -78,7 +75,7 @@ public class CompetitionManagementControllerTest  {
     	mockMvc.perform(get("/competition/123?page=3"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
-                .andExpect(model().attribute("currentCompetition", competitionSummaryResource))
+                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("results", resource));
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, 2, null);
@@ -98,7 +95,7 @@ public class CompetitionManagementControllerTest  {
     	mockMvc.perform(get("/competition/123?sort=lead"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
-                .andExpect(model().attribute("currentCompetition", competitionSummaryResource))
+                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("results", resource));
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, 0, "lead");
@@ -124,7 +121,7 @@ public class CompetitionManagementControllerTest  {
     	mockMvc.perform(get("/competition/123"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-in-assessment"))
-                .andExpect(model().attribute("currentCompetition", competitionSummaryResource))
+                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("submittedResults", summary1))
                 .andExpect(model().attribute("notSubmittedResults", summary2));
     	

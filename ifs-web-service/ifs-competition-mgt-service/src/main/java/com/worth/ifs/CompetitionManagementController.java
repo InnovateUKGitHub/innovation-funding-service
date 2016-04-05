@@ -43,7 +43,7 @@ public class CompetitionManagementController {
     	
     	CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId);
     	
-    	model.addAttribute("currentCompetition", competitionSummary);
+    	model.addAttribute("competitionSummary", competitionSummary);
     	 
     	switch(competitionSummary.getCompetitionStatus()) {
 	    	case OPEN:
