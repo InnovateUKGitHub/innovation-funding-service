@@ -1,16 +1,13 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
-import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryPageMapper;
-import com.worth.ifs.application.resource.*;
-import com.worth.ifs.application.resource.comparators.*;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.transactional.BaseTransactionalService;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,12 +17,28 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryPageMapper;
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ApplicationSummaryResource;
+import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.resource.CompletedPercentageResource;
+import com.worth.ifs.application.resource.PageResource;
+import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceLeadComparator;
+import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourcePercentageCompleteComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryGrantRequestedComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryLeadComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryNumberOfPartnersComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryTotalProjectCostComparator;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.transactional.BaseTransactionalService;
 
 @Service
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
@@ -137,6 +150,12 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		result.setContent(closedCompetitionSortAndRestrictResults(resultsList, pageable, sortBy));
 		
 		return pageFromUnsortedApplicationResults(result, resultsList, pageable, sortBy, ClosedCompetitionApplicationSummaryPageResource.class);
+	}
+
+	@Override
+	public List<Application> getApplicationSummariesByCompetitionIdAndStatus(Long competitionId, Long applicationStatusId) {
+		List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, applicationStatusId);
+		return applicationResults;
 	}
 
 	private <U, T extends PageResource<U>> ServiceResult<T> pageFromUnsortedApplicationResults(T result, List<Application> resultsList, Pageable pageable, String sortBy, Class clazz) {
