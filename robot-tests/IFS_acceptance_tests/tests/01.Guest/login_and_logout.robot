@@ -125,14 +125,5 @@ the user should be logged-in as an Assessor
 
 the user open the mailbox and clicks the reset link
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    ${LATEST} =    wait for email    fromEmail=noresponse@innovateuk.gov.uk
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
-    log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
-    log    ${VERIFY_EMAIL}
-    go to    ${VERIFY_EMAIL}
-    Capture Page Screenshot
-    Delete All Emails
-    close mailbox
+    Get email link from the correct mail server
+
