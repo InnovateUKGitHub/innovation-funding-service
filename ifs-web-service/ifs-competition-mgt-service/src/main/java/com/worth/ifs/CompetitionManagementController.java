@@ -1,10 +1,11 @@
 package com.worth.ifs;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.service.ApplicationSummaryService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -20,12 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.service.ApplicationSummaryService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
 
 @Controller
 @RequestMapping("/competition")
@@ -48,7 +43,7 @@ public class CompetitionManagementController {
     	
     	CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId);
     	
-    	model.addAttribute("currentCompetition", competitionSummary);
+    	model.addAttribute("competitionSummary", competitionSummary);
     	 
     	switch(competitionSummary.getCompetitionStatus()) {
 	    	case OPEN:
@@ -82,6 +77,8 @@ public class CompetitionManagementController {
         LOG.warn("Show open competition info");
         return "comp-mgt";
 	}
+
+
 
     @RequestMapping("/{competitionId}/download")
     public void downloadApplications(@PathVariable("competitionId") Long competitionId, HttpServletResponse response) throws IOException {
