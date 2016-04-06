@@ -4,6 +4,7 @@
 IFS.competition_management = (function(){
     "use strict";
     var calculatedValues = {};
+    var resizeTimer;
     var s;
     return {
         settings: {
@@ -17,8 +18,12 @@ IFS.competition_management = (function(){
             IFS.competition_management.getWindowWidth();
 
             jQuery(window).resize(function(){
-              IFS.competition_management.getWindowWidth();
-              IFS.competition_management.stickyScroll();
+              clearTimeout(resizeTimer);
+              resizeTimer = setTimeout(function(){
+                console.log('lalalal');
+                IFS.competition_management.getWindowWidth();
+                IFS.competition_management.stickyScroll();
+              },250);
             });
             jQuery(document).scroll(function(){
                 IFS.competition_management.stickyScroll();
