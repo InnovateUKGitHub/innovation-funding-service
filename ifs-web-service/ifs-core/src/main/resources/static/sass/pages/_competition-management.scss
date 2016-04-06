@@ -1,0 +1,35 @@
+@include media($max-width: 1200px){
+  .competition-data > [class^="column"] {
+      float:none;
+      width:100%;
+  }
+  .info-area {
+      overflow:hidden;
+      margin-bottom:30px;
+      > p:first-child {
+        clear:both;
+        width:100%;
+      }
+      > p + p {
+        padding-right: 1%;
+        width:24%;
+        float:left;
+        word-wrap:break-word;
+      }
+  }
+}
+.grid-row.sort-by {
+  border-bottom:1px solid $grey-1;
+  padding: 30px 0 5px;
+  margin: 0 0 5px;
+  > [class^="column"]{
+    padding:0;
+  }
+  h3 {
+    font-weight: bold;
+  }
+}
+
+.info-area > p > span {
+  display: block;
+}

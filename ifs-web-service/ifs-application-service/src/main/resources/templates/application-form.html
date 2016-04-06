@@ -12,6 +12,7 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}" th:remove="tag" />
 
+
 	<div class="page-title">
             <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
             <h1 class="heading-xlarge"  th:text="${title}" />
@@ -68,12 +69,9 @@
                     </a>
                 </li>
             </ul>
-
         </form>
-
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
-
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 </body>

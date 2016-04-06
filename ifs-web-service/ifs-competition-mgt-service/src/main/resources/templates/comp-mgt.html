@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor Dashboard'" th:remove="tag" />
 </head>
-<body class="competition-overview">
+<body class="competition-management application-overview">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
@@ -14,62 +14,74 @@
   <div class="grid-row">
       <div class="column-two-thirds">
             <div class="page-title">
-                <div th:include="fragments/competition-management :: competition-id(competition=${currentCompetition})" th:remove="tag" />
-                <h1 class="heading-xlarge" th:text="${currentCompetition.name}" />
+                <div th:include="fragments/competition-management :: competition-id(competition=${competitionSummary})" th:remove="tag" />
+                <h1 class="heading-xlarge" th:text="${competitionSummary.competitionName}" />
             </div>
       </div>
       <div class="column-third alignright extra-margin">
-        <div th:include="fragments/competition-management :: competition-status(competition=${currentCompetition})" th:remove="tag" />
+        <div th:include="fragments/competition-management :: competition-status(competition=${competitionSummary})" th:remove="tag" />
       </div>
   </div>
 
   <ul class="inline-nav extra-margin">
-    <li class="selected"><a th:href="@{/competition/{id}(id=${currentCompetition.id})}">Application overview</a></li>
+    <li class="selected"><a th:href="@{/competition/{id}(id=${competitionSummary.competitionId})}">Application overview</a></li>
   </ul>
 
-    <div class="grid-row">
+    <div class="grid-row competition-data">
         <div class="column-fifth">
-            &nbsp;
+              <div th:include="fragments/competition-management :: info-area" th:remove="tag" />
         </div>
         <div class="column-four-fifth">
-              <h2 class="heading-large">Application list</h2>
-
+              <h2 class="bold-large">Application list</h2>
               <form method="get">
+                <div class="grid-row sort-by">
+                    <div class="column-two-thirds">
+                      <h3>
+                        <span class="heading-large" th:text="${results.totalElements}" /> applications
+                      </h3>
+                    </div>
+                    <div class="column-third alignright">
+                      <label for="sort-by">Sort by</label>
+                      <select id="sort-by" name="sort" class="js-auto-submit form-control">
+                          <option value="id" th:selected="${(param.sort != null) and (param.sort[0] == 'id')}">Application no.</option>
+                          <option value="name" th:selected="${(param.sort != null) and (param.sort[0] == 'name')}">Project title</option>
+                          <option value="lead" th:selected="${(param.sort != null) and (param.sort[0] == 'lead')}">Lead</option>
+                          <option value="completedPercentage" th:selected="${(param.sort != null) and (param.sort[0] == 'completedPercentage')}">Percentage complete</option>
+                      </select>
+                      <button type="submit" class="button no-margin">Sort</button>
+                    </div>
+                </div>
 
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">Application no</th>
+                      <th scope="col">Project title</th>
+                      <th scope="col">Lead</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Percentage complete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="result : ${results.content}">
+                      <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}" th:text="${#numbers.formatInteger(result.id,8)}" /></td>
+                      <td th:text="${result.name}"></td>
+                      <td th:text="${result.lead}"></td>
+                      <td th:text="${result.applicationStatusName}"></td>
+                      <td th:text="${result.completedPercentage}"></td>
+                    </tr>
+                  </tbody>
+                </table>
 
-
-              <h3><span class="heading-large" th:text="${results.totalElements}" /> applications</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <th scope="col" class="numeric">Application no</th>
-                    <th scope="col">Project title</th>
-                    <th scope="col">Lead</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Percentage complete</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr th:each="result : ${results.content}">
-                    <td><a th:href="${'/management/competition/' + currentCompetition.id + '/application/' + result.id}" th:text="${result.id}"></a></td>
-                    <td th:text="${result.name}"></td>
-                    <td th:text="${result.lead}"></td>
-                    <td th:text="${result.applicationStatusName}"></td>
-                    <td th:text="${result.completedPercentage}"></td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="prev" th:if="${results.hasPrevious()}">
-                 <button type="submit" name="page" th:value="${results.number}">Prev</button>
-              </div>
-              <div class="next" th:if="${results.hasNext()}">
-                <button type="submit" name="page" th:value="${results.number + 2}">Next</button>
-              </div>
-              <div class="status">
-                Page <span th:text="${results.number + 1}"></span> of <span th:text="${results.totalPages}"></span>
-              </div>
-
+                <div class="pagination no-margin" th:if="${results.hasPrevious() or results.hasNext()}">
+                  <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">Prev</button>
+                  <div class="status">
+                    Page <span th:text="${results.number + 1}"></span> of <span th:text="${results.totalPages}"></span>
+                  </div>
+                  <button class="next" th:if="${results.hasNext()}" type="submit" name="page" th:value="${results.number + 2}">Next</button>
+                </div>
             </form>
+
         </div>
     </div>
 

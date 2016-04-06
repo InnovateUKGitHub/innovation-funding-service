@@ -34,6 +34,8 @@ Next and previous page navigation
     overflow:hidden;
     border-top: 1px solid $grey-2;
     clear: both;
+    text-align:center;
+    position: relative;
 
     li {
         float: left;
@@ -41,19 +43,31 @@ Next and previous page navigation
         width: 49%;
     }
 
-    a {
+    a,
+    button{
         color: $govuk-blue;
         display: block;
         text-decoration: none;
+        border:none;
+        background:none;
+        font-size:16px;
     }
-
+    button {
+      font-size:27px;
+      cursor: pointer;
+      position: absolute;
+      top:0;
+    }
     .prev {
+        left:0;
         float: left;
         text-align: left;
     }
-    .prev a {
-        padding: 1.2em 0px 1.2em 3em;
+    .prev a,
+    button.prev {
+        padding: 1.2em 0px 1.2em 30px;
     }
+    button.prev:before,
     .prev a:before {
         background: transparent url("../images/arrow-sprite.png") no-repeat scroll -20px -11px;
         margin: -4px 0px 0px -32px;
@@ -64,12 +78,15 @@ Next and previous page navigation
         content: " ";
     }
     .next {
+        right:0;
         float: right;
         text-align: right;
     }
+    button.next,
     .next a {
-        padding: 1.2em 3em 1.2em 0px;
+        padding: 1.2em 30px 1.2em 0px;
     }
+    button.next:before,
     .next a:before {
         background: transparent url("../images/arrow-sprite.png") no-repeat scroll -102px -11px;
         margin: -4px -32px 0px 0px;
@@ -89,5 +106,10 @@ Next and previous page navigation
 
     .pagination-part-title {
         text-decoration: underline;
+    }
+    .status {
+        text-align:center;
+        padding: 2.1em 0;
+        font-size:18px;
     }
 }

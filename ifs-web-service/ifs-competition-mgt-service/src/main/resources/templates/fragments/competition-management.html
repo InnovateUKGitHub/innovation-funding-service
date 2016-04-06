@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
     <!-- id of the competition for in the page title -->
     <div th:fragment="competition-id(competition)" th:remove="tag">
-          <p class="subtitle"><div th:text="${#numbers.formatInteger(competition.id,8)}" th:remove="tag" /> : Innovate UK</p>
+          <p class="subtitle"><div th:text="${#numbers.formatInteger(competition.competitionId,8)}" th:remove="tag" /> : Innovate UK</p>
     </div>
     <!-- competition status with blue block -->
     <div th:fragment="competition-status(competition)" th:remove="tag">
@@ -16,4 +16,19 @@
         </h2>
     </div>
 
+    <!-- Box with summary about competition on left hand side -->
+    <div th:remove="tag" th:fragment="info-area">
+      <div class="info-area boxed">
+        <p>
+            <span class="bold-medium">
+              <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
+              <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            </span> Application deadline
+        </p>
+        <p><span class="bold-medium" th:text="${competitionSummary.totalNumberOfApplications}" /> Total number of applications</p>
+        <p><span class="bold-medium" th:text="${competitionSummary.applicationsStarted}" /> Applications started</p>
+        <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress}" /> Applications in progress (Beyond 50%)</p>
+        <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
+    </div>
+  </div>
 </html>

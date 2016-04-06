@@ -47,7 +47,9 @@ public class ApplicationDownloadController {
 
     @RequestMapping("/downloadByCompetition/{competitionId}")
     public @ResponseBody ResponseEntity<ByteArrayResource> getDownloadByCompetitionId(@PathVariable("competitionId") Long competitionId) throws IOException {
-        List<Application> applications = applicationSummaryService.getApplicationSummariesByCompetitionIdAndStatus(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
+        ApplicationStatusConstants status = ApplicationStatusConstants.SUBMITTED;
+        List<Application> applications = applicationSummaryService.getApplicationSummariesByCompetitionIdAndStatus(competitionId, status.getId());
+        LOG.info(String.format("Generate download for %s applications with status %s ", applications.size(), status.getName()));
 
         XSSFWorkbook wb = getExcelWorkbook(applications);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -66,7 +68,7 @@ public class ApplicationDownloadController {
         XSSFSheet sheet = wb.createSheet("Submitted Applications");
         int rowCount = 0;
 
-        // Set header row
+        // ADD HEADER ROW
         int headerCount = 0;
         XSSFRow row = sheet.createRow(rowCount++);
         row.createCell(headerCount++).setCellValue("Application ID");
@@ -82,6 +84,7 @@ public class ApplicationDownloadController {
         row.createCell(headerCount++).setCellValue("Funding sought");
 
         for (Application a : applications) {
+            // PREPARE APPLICATION INFORMATION
             Optional<List<ApplicationFinanceResource>> financeTotalsOptional = costService.financeTotals(a.getId()).getOptionalSuccessObject();
             List<FormInputResponse> projectSummary = formInputResponseRepository.findByApplicationIdAndFormInputId(a.getId(), APPLICATION_SUMMARY_FORM_INPUT_ID);
             String projectSummaryString = "";
@@ -95,11 +98,15 @@ public class ApplicationDownloadController {
                 List<ApplicationFinanceResource> financeTotals;
                 financeTotals = financeTotalsOptional.get();
                 total = financeTotals.stream().map(t -> t.getTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
-                fundingSought = financeTotals.stream().map(t -> t.getTotalFundingSought()).reduce(BigDecimal.ZERO, BigDecimal::add);
+                fundingSought = financeTotals.stream()
+                        .filter(of -> of != null && of.getGrantClaimPercentage() != null)
+                        .map(of -> of.getTotalFundingSought())
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
             }
             String totalFormatted = NumberFormat.getCurrencyInstance(Locale.UK).format(total);
             String fundingSoughtFormatted = NumberFormat.getCurrencyInstance(Locale.UK).format(fundingSought);
 
+            // ADD APPLICATION ROW
             int cellCount = 0;
             row = sheet.createRow(rowCount++);
             row.createCell(cellCount++).setCellValue(a.getId());

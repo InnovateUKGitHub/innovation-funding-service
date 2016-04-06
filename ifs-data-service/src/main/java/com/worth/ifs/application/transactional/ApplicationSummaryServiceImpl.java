@@ -84,7 +84,8 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		Competition competition = competitionRepository.findById(competitionId);
 
 		CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
-		competitionSummaryResource.setId(competitionId);
+		competitionSummaryResource.setCompetitionId(competitionId);
+		competitionSummaryResource.setCompetitionName(competition.getName());
 		competitionSummaryResource.setCompetitionStatus(competition.getCompetitionStatus());
 		competitionSummaryResource.setTotalNumberOfApplications(applicationRepository.countByCompetitionId(competitionId));
 		competitionSummaryResource.setApplicationsStarted(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId()));

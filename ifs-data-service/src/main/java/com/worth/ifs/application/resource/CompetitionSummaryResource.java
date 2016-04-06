@@ -3,12 +3,14 @@ package com.worth.ifs.application.resource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Represents a high-level overview of an application.
  */
 public class CompetitionSummaryResource {
-    private Long id;
+    private Long competitionId;
+	private String competitionName;
 	private CompetitionResource.Status competitionStatus;
 	private LocalDateTime applicationDeadline;
 	private Long totalNumberOfApplications;
@@ -16,12 +18,20 @@ public class CompetitionSummaryResource {
 	private Long applicationsInProgress;
 	private Long applicationsSubmitted;
 
-	public Long getId() {
-		return id;
+	public Long getCompetitionId() {
+		return competitionId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setCompetitionId(Long competitionId) {
+		this.competitionId = competitionId;
+	}
+
+	public String getCompetitionName() {
+		return competitionName;
+	}
+
+	public void setCompetitionName(String competitionName) {
+		this.competitionName = competitionName;
 	}
 
 	public LocalDateTime getApplicationDeadline() {
@@ -30,6 +40,13 @@ public class CompetitionSummaryResource {
 
 	public void setApplicationDeadline(LocalDateTime applicationDeadline) {
 		this.applicationDeadline = applicationDeadline;
+	}
+
+	public String getFormattedApplicationDeadline(){
+		if(applicationDeadline == null){
+			return "";
+		}
+		return applicationDeadline.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm"));
 	}
 
 	public Long getTotalNumberOfApplications() {
