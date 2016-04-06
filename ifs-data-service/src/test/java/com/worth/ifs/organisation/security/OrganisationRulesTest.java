@@ -2,11 +2,13 @@ package com.worth.ifs.organisation.security;
 
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -22,10 +24,10 @@ public class OrganisationRulesTest {
     @Test
     public void testMemberOfOrganisationCanViewOwnOrganisation() {
 
-        User user = newUser().build();
-        User anotherUser = newUser().build();
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
 
-        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user, anotherUser)).build();
+        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user.getId(), anotherUser.getId())).build();
 
         assertTrue(rules.memberOfOrganisationCanViewOwnOrganisation(organisation, user));
     }
@@ -33,11 +35,11 @@ public class OrganisationRulesTest {
     @Test
     public void testMemberOfOrganisationCanViewOwnOrganisationButUserIsNotAMemberOfTheOrganisation() {
 
-        User user = newUser().build();
-        User anotherUser = newUser().build();
-        User unrelatedUser = newUser().build();
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        UserResource unrelatedUser = newUserResource().build();
 
-        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user, anotherUser)).build();
+        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user.getId(), anotherUser.getId())).build();
 
         assertFalse(rules.memberOfOrganisationCanViewOwnOrganisation(organisation, unrelatedUser));
     }

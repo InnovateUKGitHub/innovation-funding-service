@@ -76,6 +76,7 @@ public class RegistrationController {
     public String registrationSuccessful(
             @RequestHeader(value = "referer", required = false) final String referer,
             final HttpServletRequest request, HttpServletResponse response) {
+        CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
         CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_ID);
         if(referer == null || !referer.contains(request.getServerName() + "/registration/register")){
             throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
@@ -106,7 +107,7 @@ public class RegistrationController {
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerForm(Model model, HttpServletRequest request, HttpServletResponse response) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
             return getRedirectUrlForUser(user);
         }
@@ -197,7 +198,7 @@ public class RegistrationController {
             validator.validate(registrationForm, bindingResult);
         }
 
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
             return getRedirectUrlForUser(user);
         }

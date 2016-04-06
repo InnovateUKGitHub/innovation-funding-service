@@ -11,6 +11,7 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,16 +33,16 @@ public class FeedbackRules {
     private ProcessRoleRepository processRoleRepository;
 
     @PermissionRule(value = "READ", description = "An Assessor can read their own feedback")
-    public boolean assessorCanReadTheirOwnFeedback(Feedback dto, User user) {
+    public boolean assessorCanReadTheirOwnFeedback(Feedback dto, UserResource user) {
         return isOwnerOfFeedbackResponseAndAssessorForApplication(dto, user);
     }
 
     @PermissionRule(value = "UPDATE", description = "An Assessor can update their own feedback")
-    public boolean assessorCanUpdateTheirOwnFeedback(Feedback dto, User user){
+    public boolean assessorCanUpdateTheirOwnFeedback(Feedback dto, UserResource user){
         return isOwnerOfFeedbackResponseAndAssessorForApplication(dto, user);
     }
 
-    private boolean isOwnerOfFeedbackResponseAndAssessorForApplication(Feedback dto, User user) {
+    private boolean isOwnerOfFeedbackResponseAndAssessorForApplication(Feedback dto, UserResource user) {
 
         //
         // If the user accessing this method is not the owner of the Feedback to be accessed, they cannot access it
@@ -64,7 +65,7 @@ public class FeedbackRules {
         return assessorProcessRole != null;
     }
 
-    private boolean isOwnerOfFeedback(Feedback dto, User user) {
+    private boolean isOwnerOfFeedback(Feedback dto, UserResource user) {
         return user.getId().equals(dto.getAssessorUserId());
     }
 }

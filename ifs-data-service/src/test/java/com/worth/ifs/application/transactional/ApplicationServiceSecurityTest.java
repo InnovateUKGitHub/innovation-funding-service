@@ -27,7 +27,9 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
@@ -51,7 +53,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     @Test
     public void test_createApplicationByAppNameForUserIdAndCompetitionId_allowedIfGlobalApplicationRole() {
 
-        setLoggedInUser(newUser().withRolesGlobal(newRole().withType(APPLICANT).build()).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(APPLICANT).build()).build());
         service.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
     }
 
@@ -85,7 +87,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         nonApplicantRoles.forEach(role -> {
 
-            setLoggedInUser(newUser().withRolesGlobal(newRole().withType(role).build()).build());
+            setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(role).build()).build());
 
             try {
                 service.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);

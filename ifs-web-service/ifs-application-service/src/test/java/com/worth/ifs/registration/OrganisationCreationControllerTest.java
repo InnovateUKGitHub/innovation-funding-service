@@ -1,17 +1,22 @@
 package com.worth.ifs.registration;
 
-import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.address.service.AddressRestService;
-import com.worth.ifs.application.AcceptInviteController;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.exception.ErrorControllerAdvice;
-import com.worth.ifs.organisation.resource.OrganisationSearchResult;
-import com.worth.ifs.registration.form.OrganisationCreationForm;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.service.OrganisationSearchRestService;
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.ArrayList;
+
+import javax.servlet.http.Cookie;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,17 +33,18 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
-import java.util.ArrayList;
-
-import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.service.AddressRestService;
+import com.worth.ifs.application.AcceptInviteController;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.exception.ErrorControllerAdvice;
+import com.worth.ifs.organisation.resource.OrganisationSearchResult;
+import com.worth.ifs.registration.form.OrganisationCreationForm;
+import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.service.OrganisationSearchRestService;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -58,6 +64,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
     private String COMPANY_ID = "08241216";
     private String COMPANY_NAME = "NETWORTHNET LTD";
     private String POSTCODE_LOOKUP = "CH64 3RU";
+    private String POSTCODE_LOOKUP_URL_ENCODED = "CH64%203RU";
     private AddressResource address;
     private OrganisationResource organisationResource;
     private Cookie organisationTypeBusiness;
@@ -164,7 +171,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                         .header("referer", "/organisation/create/find-organisation/")
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name(String.format("redirect:/organisation/create/find-organisation/%s", POSTCODE_LOOKUP)));
+                .andExpect(MockMvcResultMatchers.view().name(String.format("redirect:/organisation/create/find-organisation/%s", POSTCODE_LOOKUP_URL_ENCODED)));
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(String.format("/organisation/create/find-organisation/%s", POSTCODE_LOOKUP))
                     .cookie(organisationTypeBusiness)
@@ -377,7 +384,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                         .header("referer", "/organisation/create/selected-organisation/")
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name(String.format("redirect:/organisation/create/selected-organisation/%s/%s", COMPANY_ID, POSTCODE_LOOKUP)));
+                .andExpect(MockMvcResultMatchers.view().name(String.format("redirect:/organisation/create/selected-organisation/%s/%s", COMPANY_ID, POSTCODE_LOOKUP_URL_ENCODED)));
     }
 
     @Test
@@ -391,7 +398,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .header("referer", "/organisation/create/selected-organisation/")
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name(String.format("redirect:/organisation/create/selected-organisation/%s/%s", COMPANY_ID, POSTCODE_LOOKUP)))
+                .andExpect(MockMvcResultMatchers.view().name(String.format("redirect:/organisation/create/selected-organisation/%s/%s", COMPANY_ID, POSTCODE_LOOKUP_URL_ENCODED)))
                 .andReturn().getResponse().getCookies();
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(String.format("/organisation/create/selected-organisation/%s/%s", COMPANY_ID, POSTCODE_LOOKUP))
