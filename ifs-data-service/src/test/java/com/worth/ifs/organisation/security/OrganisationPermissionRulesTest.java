@@ -1,6 +1,7 @@
 package com.worth.ifs.organisation.security;
 
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -28,20 +29,12 @@ public class OrganisationPermissionRulesTest {
 
     @Test
     public void testAnyoneCanViewAnOrganisationThatIsNotYetLinkedToAnApplication() {
-
-        User user = newUser().build();
-        OrganisationResource organisation = newOrganisationResource().build();
-
-        assertTrue(rules.anyoneCanSeeOrganisationsNotYetConnectedToApplications(organisation, user));
+        assertTrue(rules.anyoneCanSeeOrganisationsNotYetConnectedToApplications(newOrganisationResource().build(), null));
     }
 
     @Test
     public void testAnyoneCanViewAnOrganisationThatIsNotYetLinkedToAnApplicationIncludingAnonymousUsers() {
-
-        User user = newUser().build();
-        OrganisationResource organisation = newOrganisationResource().build();
-
-        assertTrue(rules.anyoneCanSeeOrganisationsNotYetConnectedToApplications(organisation, user));
+        assertTrue(rules.anyoneCanSeeOrganisationsNotYetConnectedToApplications(newOrganisationResource().build(), null));
     }
 
     @Test
@@ -65,6 +58,29 @@ public class OrganisationPermissionRulesTest {
         OrganisationResource organisation = newOrganisationResource().withUsers(asList(user, anotherUser)).build();
 
         assertFalse(rules.memberOfOrganisationCanViewOwnOrganisation(organisation, unrelatedUser));
+    }
+
+    @Test
+    public void testMemberOfOrganisationCanUpdateOwnOrganisation() {
+
+        User user = newUser().build();
+        User anotherUser = newUser().build();
+
+        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user, anotherUser)).build();
+
+        assertTrue(rules.memberOfOrganisationCanUpdateOwnOrganisation(organisation, user));
+    }
+
+    @Test
+    public void testMemberOfOrganisationCanUpdateOwnOrganisationButUserIsNotAMemberOfTheOrganisation() {
+
+        User user = newUser().build();
+        User anotherUser = newUser().build();
+        User unrelatedUser = newUser().build();
+
+        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user, anotherUser)).build();
+
+        assertFalse(rules.memberOfOrganisationCanUpdateOwnOrganisation(organisation, unrelatedUser));
     }
 
     @Test
@@ -100,5 +116,30 @@ public class OrganisationPermissionRulesTest {
         assertFalse(rules.usersCanViewOrganisationsOnTheirOwnApplications(anotherOrganisationResource, user));
     }
 
+    @Test
+    public void testAnyoneCanCreateOrganisations() {
+        assertTrue(rules.anyoneCanCreateOrganisations(newOrganisationResource().build(), null));
+    }
 
+    @Test
+    public void testAnyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers() {
+        assertTrue(rules.anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(newOrganisationResource().build(), null));
+    }
+
+    @Test
+    public void testAnyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsersButOrganisationAttachedToApplication() {
+        OrganisationResource organisation = newOrganisationResource().withProcessRoles(singletonList(123L)).build();
+        assertFalse(rules.anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, null));
+    }
+
+    @Test
+    public void testAnyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsersButOrganisationAttachedToUsers() {
+        OrganisationResource organisation = newOrganisationResource().withUsers(singletonList(newUser().build())).build();
+        assertFalse(rules.anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, null));
+    }
+
+    @Test
+    public void testAnyoneCanSeeOrganisationSearchResults() {
+        assertTrue(rules.anyoneCanSeeOrganisationSearchResults(new OrganisationSearchResult(), null));
+    }
 }

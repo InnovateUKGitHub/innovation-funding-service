@@ -85,7 +85,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
 
         service.update(newOrganisationResource().build());
 
-        verify(organisationRules).anyoneCanUpdateOrganisationsNotYetConnectedToApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
+        verify(organisationRules).anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(organisationRules);
     }
 
@@ -94,7 +94,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
 
         service.addAddress(1L, REGISTERED, newAddressResource().build());
 
-        verify(organisationRules).anyoneCanUpdateOrganisationsNotYetConnectedToApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
+        verify(organisationRules).anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(organisationRules);
     }
 

@@ -10,9 +10,7 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.worth.ifs.util.CollectionFunctions.flattenLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -56,8 +54,8 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "UPDATE", description = "Organisations that are not yet a part of any Applications are " +
             "updatable by anyone, because this needs to be possible to update them during registration where there is " +
             "not yet a logged-in user")
-    public boolean anyoneCanUpdateOrganisationsNotYetConnectedToApplications(OrganisationResource organisation, User user) {
-        return organisationNotYetLinkedToAnApplication(organisation);
+    public boolean anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(OrganisationResource organisation, User user) {
+        return organisationNotYetLinkedToAnApplication(organisation) && organisationNotYetLinkedToAnyUsers(organisation);
     }
 
     @PermissionRule(value = "UPDATE", description = "A member of an Organisation can update their own Organisation")
@@ -76,5 +74,9 @@ public class OrganisationPermissionRules {
 
     private boolean organisationNotYetLinkedToAnApplication(OrganisationResource organisation) {
         return organisation.getProcessRoles().isEmpty();
+    }
+
+    private boolean organisationNotYetLinkedToAnyUsers(OrganisationResource organisation) {
+        return organisation.getUsers().isEmpty();
     }
 }
