@@ -166,9 +166,21 @@ the user cannot remove the uploaded file
     [Arguments]    ${file_name}
     Page Should Not Contain    Remove
 
-the user opens the mailbox and verifies the email
+
+get email link from the correct mail server
+    Run keyword if      '${RUNNING_ON_DEV}' == ''       the user opens the mailbox and verifies the email sent from a developer machine
+    Run keyword if      '${RUNNING_ON_DEV}' != ''       the user opens the mailbox and verifies the official innovate email
+
+the user opens the mailbox and verifies the email sent from a developer machine
+    the user opens the mailbox and verifies the email from      dev-dwatson-liferay-portal@hiveit.co.uk
+
+the user opens the mailbox and verfies the official innovate email
+    the user opens the mailbox and verifies the email from      noresponse@innovateuk.gov.uk
+
+the user opens the mailbox and verifies the email from
+    [Arguments]     ${sender}
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    ${LATEST} =    wait for email    fromEmail=noresponse@innovateuk.gov.uk
+    ${LATEST} =    wait for email    fromEmail=${sender}
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
