@@ -73,7 +73,7 @@
                   </tbody>
                 </table>
 
-                <div class="pagination no-margin" th:if="${results.hasPrevious() or results.hasNext()}">
+                <div class="pagination" th:if="${results.hasPrevious() or results.hasNext()}">
                   <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">Prev</button>
                   <div class="status">
                     Page <span th:text="${results.number + 1}"></span> of <span th:text="${results.totalPages}"></span>

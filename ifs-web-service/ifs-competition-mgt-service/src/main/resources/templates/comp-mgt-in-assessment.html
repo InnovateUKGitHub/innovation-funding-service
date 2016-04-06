@@ -72,7 +72,7 @@
        </thead>
        <tbody>
          <tr th:each="result : ${results.content}">
-           <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}" th:text="${result.id}"></a></td>
+           <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
            <td th:text="${result.name}"></td>
            <td th:text="${result.lead}"></td>
            <td th:text="${result.numberOfPartners}"></td>
