@@ -1,10 +1,10 @@
 package com.worth.ifs.user.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
-import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.domain.OrganisationType;
@@ -137,8 +137,9 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
 
         OrganisationResource cleanOrganisation = controller.findById(organisationResource.getId()).getSuccessObject();
         assertEquals(1, cleanOrganisation.getAddresses().size());
-        Long addressId = cleanOrganisation.getAddresses().get(0);
-        Address address = addressRepository.findOne(addressId);
+        OrganisationAddressResource organisationAddressResource = cleanOrganisation.getAddresses().get(0);
+
+        AddressResource address = organisationAddressResource.getAddress();
 
         assertEquals("Line1", address.getAddressLine1());
         assertEquals("Line2", address.getAddressLine2());

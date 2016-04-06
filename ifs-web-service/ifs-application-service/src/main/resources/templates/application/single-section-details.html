@@ -4,11 +4,9 @@
 
 <ul th:fragment="sectionDetails (question, questionAssignee, questionAssignees, responses, currentUser, userIsLeadApplicant, leadApplicant , section, currentApplication)" th:remove="tag">
     <div th:each="question : ${sectionQuestions.get(section.id)}" th:remove="tag">
-
         <li class="grid-row section"
-            th:each="formInput, status : ${question.getFormInputs()}" th:if="${formInput.isIncludedInApplicationSummary()}"
-            th:with="questionAssignee=(${questionAssignees.get(question.getId())}),response=(${responses.get(formInput.getId())})"
-            th:attr="data-question-id=${question.id},data-section-id=${section.id}" th:id="'form-input-'+${formInput.getId()}">
+            th:with="questionAssignee=(${questionAssignees.get(question.getId())})"
+            th:attr="data-question-id=${question.id},data-section-id=${section.id}">
 
                 <div class="column-two-thirds">
                     <h3 class="heading-small">
