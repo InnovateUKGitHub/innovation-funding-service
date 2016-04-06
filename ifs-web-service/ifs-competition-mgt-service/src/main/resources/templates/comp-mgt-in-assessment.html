@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor Dashboard'" th:remove="tag" />
+</head>
+<body class="assessment-review">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <h1>Testing</h1>
+    
+    <div class="tabs">
+    	<div class="tab">
+    		<div th:if="${activeTab == 'submitted'}" th:remove="tag">Applications submitted</div>
+    		<div th:unless="${activeTab == 'submitted'}" th:remove="tag"><a th:href="${'/management/competition/' + competitionSummary.competitionId + '?tab=submitted'}">Applications submitted</a></div>
+    	</div>
+    	<div class="tab">
+    		<div th:if="${activeTab == 'notSubmitted'}" th:remove="tag">Applications not submitted</div>
+    		<div th:unless="${activeTab == 'notSubmitted'}" th:remove="tag"><a th:href="${'/management/competition/' + competitionSummary.competitionId + '?tab=notSubmitted'}">Applications not submitted</a></div>
+    	</div>
+    </div>
+    
+    <h2 class="bold-large" th:if="${activeTab == 'submitted'}">Applications submitted</h2>
+    <h2 class="bold-large" th:if="${activeTab == 'notSubmitted'}">Applications not submitted</h2>
+    
+    <h3>
+        <span class="heading-large" th:text="${results.totalElements}" /> applications
+    </h3>
+                    
+    <table>
+       <thead>
+         <tr>
+           <th scope="col">Application no</th>
+           <th scope="col">Project title</th>
+           <th scope="col">Lead</th>
+           <th scope="col">No. of partners</th>
+           <th scope="col">Grant requested (£)</th>
+           <th scope="col">Total project cost (£)</th>
+           <th scope="col">Duration (months)</th>
+         </tr>
+       </thead>
+       <tbody>
+         <tr th:each="result : ${results.content}">
+           <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}" th:text="${result.id}"></a></td>
+           <td th:text="${result.name}"></td>
+           <td th:text="${result.lead}"></td>
+           <td th:text="${result.numberOfPartners}"></td>
+           <td th:text="${result.grantRequested}"></td>
+           <td th:text="${result.totalProjectCost}"></td>
+           <td th:text="${result.duration}"></td>
+         </tr>
+       </tbody>
+     </table>
+     
+     <form method="get">
+	     <div class="pagination" th:if="${results.hasPrevious() or results.hasNext()}">
+	       <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">Prev</button>
+	       <div class="status">
+	         Page <span th:text="${results.number + 1}"></span> of <span th:text="${results.totalPages}"></span>
+	       </div>
+	       <button class="next" th:if="${results.hasNext()}" type="submit" name="page" th:value="${results.number + 2}">Next</button>
+	     </div>
+     </form>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>
