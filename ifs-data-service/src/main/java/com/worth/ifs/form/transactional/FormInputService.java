@@ -1,23 +1,23 @@
 package com.worth.ifs.form.transactional;
 
+import java.util.List;
+
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import com.worth.ifs.security.NotSecured;
 
-import java.util.List;
-
 public interface FormInputService {
 
-    @NotSecured("TODO")
+    @NotSecured("Anyone can see a form input type")
     ServiceResult<FormInputTypeResource> findFormInputType(Long id);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @NotSecured("anyone can see a form input")
     ServiceResult<FormInputResource> findFormInput(Long id);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    //@PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.domain.Application', 'READ')")
+    @NotSecured("")
     ServiceResult<List<FormInputResponse>> findResponsesByApplication(Long applicationId);
 
     @NotSecured("TODO DW - implement when permissions matrix available")

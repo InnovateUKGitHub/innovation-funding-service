@@ -6,6 +6,6 @@ import com.worth.ifs.security.NotSecured;
 
 public interface FormValidatorService {
 
-    @NotSecured("TODO")
+    @NotSecured("everyone is allowed to read the form validators")
     ServiceResult<FormValidatorResource> findOne(Long id);
 }
