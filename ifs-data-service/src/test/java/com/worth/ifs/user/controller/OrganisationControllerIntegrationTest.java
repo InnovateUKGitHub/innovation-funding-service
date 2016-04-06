@@ -8,6 +8,7 @@ import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.domain.OrganisationType;
+import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
@@ -33,12 +34,15 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    UserMapper userMapper;
+
     private static final String companyHouseId = "0123456789";
     private static final String companyName = "CompanyName1";
 
     @Before
     public void setLoggedInUserOnThread() {
-        setLoggedInUser(userRepository.findByEmail("steve.smith@empire.com").get());
+        setLoggedInUser(userMapper.mapToResource(userRepository.findByEmail("steve.smith@empire.com").get()));
     }
 
     @Override

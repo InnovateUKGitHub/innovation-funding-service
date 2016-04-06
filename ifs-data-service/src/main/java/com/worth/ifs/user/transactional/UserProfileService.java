@@ -10,5 +10,5 @@ import com.worth.ifs.user.resource.UserResource;
 public interface UserProfileService {
 
     @NotSecured("TODO implement when permissions matrix available")
-    ServiceResult<UserResource> updateProfile(UserResource userResource);
+    ServiceResult<Void> updateProfile(UserResource userResource);
 }

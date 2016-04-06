@@ -13,7 +13,7 @@ import java.util.Set;
  * Interface for CRUD operations on {@link User} related data.
  */
 public interface UserService {
-    List<User> getAssignable(Long applicationId);
+    List<UserResource> getAssignable(Long applicationId);
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
     ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application);
     RestResult<Void> verifyEmail(String hash);

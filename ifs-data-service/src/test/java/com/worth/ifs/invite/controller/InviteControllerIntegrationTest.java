@@ -9,6 +9,8 @@ import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -31,6 +33,9 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
     private Long leadApplicantId;
     private ApplicationController applicationController;
     private InviteOrganisationController inviteOrganisationController;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Autowired
     @Override
@@ -71,16 +76,13 @@ public class InviteControllerIntegrationTest extends BaseControllerIntegrationTe
         );
         User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", proccessRoles, "123abc");
         proccessRoles.get(0).setUser(user);
-        swapOutForUser(new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", proccessRoles, "123abc"));
-
-
+        UserResource userResource = userMapper.mapToResource(user);
+        swapOutForUser(userResource);
 
         assertTrue(applicationController.getApplicationById(APPLICATION_ID).isSuccess());
         ApplicationResource application = applicationController.getApplicationById(APPLICATION_ID).getSuccessObject();
         LOG.info(String.format("Existing application id: %s", application.getId()));
         LOG.info(String.format("Existing application name: %s", application.getName()));
-
-
     }
 
     @After

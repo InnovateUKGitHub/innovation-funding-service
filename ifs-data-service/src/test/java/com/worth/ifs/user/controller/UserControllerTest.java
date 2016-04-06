@@ -4,6 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.token.domain.TokenType.VERIFY_EMAIL_ADDRESS;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.controller.UserController.URL_PASSWORD_RESET;
 import static com.worth.ifs.user.controller.UserController.URL_VERIFY_EMAIL;
 import static java.util.Optional.of;
@@ -34,11 +36,11 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void userControllerShouldReturnAllUsers() throws Exception {
-        User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "test/image/url/1", null, "testToken123abc");
-        User testUser2 = new User(2L, "test", "User2", "email2@email.nl", "test/image/url/2", null, "testToken456def");
-        User testUser3 = new User(3L, "test", "User3", "email3@email.nl", "test/image/url/3", null, "testToken789ghi");
+        UserResource testUser1 = newUserResource().withId(1L).withFirstName("test").withLastName("User1").withEmail("email1@email.nl").build();
+        UserResource testUser2 = newUserResource().withId(2L).withFirstName("test").withLastName("User2").withEmail("email2@email.nl").build();
+        UserResource testUser3 = newUserResource().withId(3L).withFirstName("test").withLastName("User3").withEmail("email3@email.nl").build();
 
-        List<User> users = new ArrayList<>();
+        List<UserResource> users = new ArrayList<>();
         users.add(testUser1);
         users.add(testUser2);
         users.add(testUser3);
@@ -66,7 +68,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void userControllerShouldReturnUserById() throws Exception {
-        User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "test/image/url/1", null, "testToken123abc");
+        UserResource testUser1 = newUserResource().withId(1L).withFirstName("test").withLastName("User1").withEmail("email1@email.nl").build();
 
         when(userServiceMock.getUserById(testUser1.getId())).thenReturn(serviceSuccess(testUser1));
         mockMvc.perform(get("/user/id/" + testUser1.getId()))
@@ -127,9 +129,9 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void userControllerShouldReturnUserByUid() throws Exception {
-        User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "test/image/url/1", null, "testToken123abc");
+        UserResource testUser1 = newUserResource().withUID("aebr34-ab345g-234gae-agewg").withId(1L).withFirstName("test").withLastName("User1").withEmail("email1@email.nl").build();
 
-        when(userServiceMock.getUserByUid(testUser1.getUid())).thenReturn(serviceSuccess(testUser1));
+        when(userServiceMock.getUserResourceByUid(testUser1.getUid())).thenReturn(serviceSuccess(testUser1));
 
         mockMvc.perform(get("/user/uid/" + testUser1.getUid()))
                 .andExpect(status().isOk())
@@ -139,7 +141,6 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(jsonPath("imageUrl", is(testUser1.getImageUrl())))
                 .andExpect(jsonPath("uid", is(testUser1.getUid())))
                 .andDo(document("user/get-user-by-token"));
-
     }
 
     @Test

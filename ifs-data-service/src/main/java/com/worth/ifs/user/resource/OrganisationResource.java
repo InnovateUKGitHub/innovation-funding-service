@@ -17,7 +17,7 @@ public class OrganisationResource {
     private List<Long> processRoles = new ArrayList<>();
     private List<Long> applicationFinances = new ArrayList<>();
     private List<OrganisationAddressResource> addresses = new ArrayList<>();
-    private List<User> users = new ArrayList<>();
+    private List<Long> users = new ArrayList<>();
     private Long organisationType;
 
     public Long getId() {
@@ -84,11 +84,11 @@ public class OrganisationResource {
         this.organisationType = organisationType;
     }
 
-    public List<User> getUsers() {
+    public List<Long> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(List<Long> users) {
         this.users = users;
     }
 

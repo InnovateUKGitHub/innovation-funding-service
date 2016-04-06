@@ -8,6 +8,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -63,7 +64,7 @@ public class ApplicationContributorController{
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayContributors(@PathVariable("applicationId") final Long applicationId, HttpServletRequest request, Model model) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
@@ -97,7 +98,7 @@ public class ApplicationContributorController{
                                      HttpServletResponse response,
                                      HttpServletRequest request,
                                      Model model) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
@@ -121,7 +122,7 @@ public class ApplicationContributorController{
         return APPLICATION_CONTRIBUTORS_INVITE;
     }
 
-    private Long getAuthenticatedUserOrganisationId(User user, List<InviteOrganisationResource> savedInvites) {
+    private Long getAuthenticatedUserOrganisationId(UserResource user, List<InviteOrganisationResource> savedInvites) {
 		Optional<InviteOrganisationResource> matchingOrganisationResource = savedInvites.stream()
 				.filter(inviteOrg -> inviteOrg.getInviteResources().stream()
 						.anyMatch(inv -> user.getEmail().equals(inv.getEmail())))
@@ -243,11 +244,12 @@ public class ApplicationContributorController{
     private void validatePermissionToInvite(ContributorsForm contributorsForm, BindingResult bindingResult,
 			ApplicationResource application, User leadApplicant, HttpServletRequest request) {
 
-    	User authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
-    	
-    	if(leadApplicant.equals(authenticatedUser)){
+        UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
+
+    	if(leadApplicant!=null && leadApplicant.getId().equals(authenticatedUser.getId())){
     		return;
     	}
+
     	Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(authenticatedUser, getSavedInviteOrganisations(application));
 		
     	contributorsForm.getOrganisations().forEach(invite -> {

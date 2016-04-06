@@ -3,6 +3,7 @@ package com.worth.ifs.profile;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class ProfileControllerTest extends BaseUnitTest {
     @InjectMocks
     private ProfileController profileController;
 
-    User user;
+    UserResource user;
 
     @Before
     public void setUp() {
@@ -37,12 +38,12 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .setViewResolvers(viewResolver())
                 .build();
 
-        user = newUser()
+        user = newUserResource()
                 .withTitle("title")
                 .withFirstName("firstname")
                 .withLastName("lastname")
                 .withPhoneNumber("1234567890")
-                .withEmailAddress("email@provider.com")
+                .withEmail("email@provider.com")
                 .build();
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(user);
     }

@@ -6,6 +6,7 @@ import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.domain.User;
 
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 @PermissionRules
@@ -13,12 +14,12 @@ import org.springframework.stereotype.Component;
 public class ApplicationStatusRules {
 
     @PermissionRule(value = "READ", description = "for now any authenticated user can read the applicationStatusses")
-    public boolean userCanReadApplicationStatus(ApplicationStatus applicationStatus, User user){
+    public boolean userCanReadApplicationStatus(ApplicationStatus applicationStatus, UserResource user){
         return true;
     }
 
     @PermissionRule(value = "READ", description = "for now any authenticated user can read the applicationStatusses")
-    public boolean userCanReadApplicationStatusResource(ApplicationStatusResource applicationStatus, User user){
+    public boolean userCanReadApplicationStatusResource(ApplicationStatusResource applicationStatus, UserResource user){
         return true;
     }
 }

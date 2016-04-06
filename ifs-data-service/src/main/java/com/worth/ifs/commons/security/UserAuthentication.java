@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.security;
 
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,10 +16,10 @@ import java.util.stream.Collectors;
 public class UserAuthentication implements Authentication {
 
 
-    private final transient User user;
+    private final transient UserResource user;
     private boolean authenticated = true;
 
-    public UserAuthentication(User user) {
+    public UserAuthentication(UserResource user) {
         this.user = user;
     }
 
@@ -45,7 +46,7 @@ public class UserAuthentication implements Authentication {
     }
 
     @Override
-    public User getDetails() {
+    public UserResource getDetails() {
         return user;
     }
 
