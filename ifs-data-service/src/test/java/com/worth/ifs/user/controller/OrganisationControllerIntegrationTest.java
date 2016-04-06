@@ -54,7 +54,6 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Rollback
     @Test
     public void findByIdShouldReturnOrganisation() throws Exception {
-
         OrganisationResource org = controller.findById(2L).getSuccessObject();
         assertEquals("Worth Internet Systems", org.getName());
 
@@ -142,7 +141,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
 
         OrganisationResource cleanOrganisation = controller.findById(organisationResource.getId()).getSuccessObject();
         assertEquals(1, cleanOrganisation.getAddresses().size());
-        Long addressId = cleanOrganisation.getAddresses().get(0);
+        Long addressId = cleanOrganisation.getAddresses().get(0).getId();
         Address address = addressRepository.findOne(addressId);
 
         assertEquals("Line1", address.getAddressLine1());

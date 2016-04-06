@@ -34,7 +34,7 @@ The user is on the page
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
+    Wait Until Element Is Visible    id=global-header
     Page Should Contain    BETA
 
 The user should be redirected to the correct page
@@ -166,8 +166,7 @@ the user cannot remove the uploaded file
     [Arguments]    ${file_name}
     Page Should Not Contain    Remove
 
-
-get email link from the correct mail server
+the user clicks the link from the appropriate email sender
     Run keyword if      '${RUNNING_ON_DEV}' == ''       the user opens the mailbox and verifies the email sent from a developer machine
     Run keyword if      '${RUNNING_ON_DEV}' != ''       the user opens the mailbox and verifies the official innovate email
 
