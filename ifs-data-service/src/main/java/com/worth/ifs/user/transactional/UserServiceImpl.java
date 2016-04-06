@@ -75,7 +75,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Override
     public ServiceResult<List<UserResource>> findAll() {
-        return serviceSuccess(applicationsToResources(repository.findAll()));
+        return serviceSuccess(usersToResources(repository.findAll()));
     }
 
     @Override
@@ -172,8 +172,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         return String.format("%s/login/reset-password/hash/%s", webBaseUrl, hash);
     }
 
-    private List<UserResource> applicationsToResources(List<User> filtered) {
+    private List<UserResource> usersToResources(List<User> filtered) {
         return simpleMap(filtered, user -> userMapper.mapToResource(user));
     }
-
 }
