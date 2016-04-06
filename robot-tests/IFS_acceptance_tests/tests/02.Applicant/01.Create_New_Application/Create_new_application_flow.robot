@@ -42,8 +42,7 @@ Non registered users CH route
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details and clicks the create account    worth.email.test+1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    # And the user opens the mailbox and verifies the email
-    And get email link from the correct mail server
+    And the user clicks the link from the appropriate email sender
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Log in")
     And the guest user inserts user email & password    worth.email.test+1@gmail.com    Passw0rd2
@@ -68,9 +67,8 @@ Non registered users non CH route
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details and clicks the create account    worth.email.test+2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    # And the user opens the mailbox and verifies the email
-    And get email link from the correct mail server
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    And the user clicks the link from the appropriate email sender
     And the user clicks the button/link    jQuery=.button:contains("Log in")
     The guest user inserts user email & password    worth.email.test+2@gmail.com    Passw0rd2
     And the guest user clicks the log-in button
