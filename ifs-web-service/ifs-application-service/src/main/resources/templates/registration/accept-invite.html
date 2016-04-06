@@ -34,7 +34,7 @@
                     <li>set up successful projects</li>
                 </ul>
 
-                <a th:href="@{'/organisation/create/type/new-account-organisation-type'}" class="button" value="create-account" type="submit">Create</a>
+                <a th:href="@{${createAccountLink}}" class="button" value="create-account" type="submit">Create</a>
             </div>
             <div th:if="${emailAddressRegistered}">
                 <h1 class="heading-large">We found a user account with the invited email address</h1>

@@ -34,7 +34,7 @@ The user is on the page
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
+    Wait Until Element Is Visible    id=global-header
     Page Should Contain    BETA
 
 The user should be redirected to the correct page

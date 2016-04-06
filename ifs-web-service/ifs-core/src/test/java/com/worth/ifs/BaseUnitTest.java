@@ -724,6 +724,7 @@ public class BaseUnitTest {
         when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
         when(userService.findUserByEmail(eq(email))).thenReturn(restFailure(notFoundError(User.class, email)));
         when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(emptyList()));
+        when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
 
         acceptedInvite = new InviteResource();
         acceptedInvite.setStatus(InviteStatusConstants.ACCEPTED);
@@ -743,7 +744,7 @@ public class BaseUnitTest {
         when(inviteRestService.getInviteByHash(eq(INVITE_HASH_EXISTING_USER))).thenReturn(restSuccess(existingUserInvite));
 
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));
-        when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
+        when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH_EXISTING_USER)).thenReturn(restSuccess(new InviteOrganisationResource()));
 
     }
 
