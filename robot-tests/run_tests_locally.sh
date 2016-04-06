@@ -197,7 +197,7 @@ unset remoteRun
 
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :r :d: :x" opt ; do
+while getopts ":q :t :h :p :r :d: :x" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -207,6 +207,9 @@ while getopts ":q :t :h :r :d: :x" opt ; do
 	;;
 	h)
 	 happyPath=1
+	;;
+	p)
+	 happyPathTestOnly=1
 	;;
 	x)
 	 useXvfb=true
@@ -258,6 +261,10 @@ then
     clearDownFileRepository
     buildAndDeploy
     startServers
+    runHappyPathTests
+elif [ "$happyPathTestOnly" ]
+then
+    echo "run test only"
     runHappyPathTests
 elif [ "$remoteRun" ]
 then 
