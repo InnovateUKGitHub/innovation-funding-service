@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequestMapping("/competition")
@@ -84,7 +85,8 @@ public class CompetitionManagementController {
     public void downloadApplications(@PathVariable("competitionId") Long competitionId, HttpServletResponse response) throws IOException {
         CompetitionResource competition = competitionService.getById(competitionId);
         if(competition!= null){
-            String filename = String.format("Submitted_Applications_Competition_%s_%s_%s.xls", competitionId, competition.getName(), LocalDateTime.now());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+            String filename = String.format("Submitted_Applications_Competition_%s_%s_%s.xls", competitionId, competition.getName(), LocalDateTime.now().format(formatter));
             response.setContentType("application/force-download");
             response.setHeader("Content-Transfer-Encoding", "binary");
             response.setHeader("Content-Disposition", "attachment; filename=\""+filename+"\"");
