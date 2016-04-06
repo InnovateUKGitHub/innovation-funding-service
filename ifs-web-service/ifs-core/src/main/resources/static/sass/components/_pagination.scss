@@ -35,6 +35,7 @@ Next and previous page navigation
     border-top: 1px solid $grey-2;
     clear: both;
     text-align:center;
+    position: relative;
 
     li {
         float: left;
@@ -54,8 +55,11 @@ Next and previous page navigation
     button {
       font-size:27px;
       cursor: pointer;
+      position: absolute;
+      top:0;
     }
     .prev {
+        left:0;
         float: left;
         text-align: left;
     }
@@ -74,6 +78,7 @@ Next and previous page navigation
         content: " ";
     }
     .next {
+        right:0;
         float: right;
         text-align: right;
     }
@@ -103,8 +108,8 @@ Next and previous page navigation
         text-decoration: underline;
     }
     .status {
+        text-align:center;
         padding: 2.1em 0;
         font-size:18px;
-        @include inline-block;
     }
 }

@@ -10,7 +10,8 @@ public class ClosedCompetitionApplicationSummaryResource {
 	private Integer numberOfPartners;
 	private BigDecimal grantRequested;
 	private BigDecimal totalProjectCost;
-
+	private Long duration;
+	
 	public Long getId() {
 		return id;
 	}
@@ -57,5 +58,13 @@ public class ClosedCompetitionApplicationSummaryResource {
 
 	public void setTotalProjectCost(BigDecimal totalProjectCost) {
 		this.totalProjectCost = totalProjectCost;
+	}
+	
+	public Long getDuration() {
+		return duration;
+	}
+	
+	public void setDuration(Long duration) {
+		this.duration = duration;
 	}
 }

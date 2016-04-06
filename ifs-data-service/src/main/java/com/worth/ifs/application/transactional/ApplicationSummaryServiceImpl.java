@@ -1,9 +1,8 @@
 package com.worth.ifs.application.transactional;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 import java.util.List;
 import java.util.stream.Collectors;

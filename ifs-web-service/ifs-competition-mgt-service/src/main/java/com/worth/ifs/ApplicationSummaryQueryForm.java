@@ -9,6 +9,8 @@ public class ApplicationSummaryQueryForm {
 	
 	private String sort;
 	
+	private String tab;
+	
 	public Integer getPage() {
 		return page;
 	}
@@ -20,5 +22,13 @@ public class ApplicationSummaryQueryForm {
 	}
 	public void setSort(String sort) {
 		this.sort = sort;
+	}
+	
+	public String getTab() {
+		return tab;
+	}
+	
+	public void setTab(String tab) {
+		this.tab = tab;
 	}
 }
