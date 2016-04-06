@@ -67,13 +67,13 @@
         }
 
         jQuery('body').on('click','.sectionlink',function(){
-              jQuery('.sectionlink.selected').removeClass('selected');
+              jQuery('.selected').removeClass('selected');
               var section = jQuery(this);
-              section.addClass('selected');
+              section.parent().addClass('selected');
               showSection(section.data('section'));
         });
         var readySection = jQuery('.sectionlink').first();
-        readySection.addClass('selected');
+        readySection.parent().addClass('selected');
         showSection(readySection.data('section'));
       });
   /* <!]]>*/

@@ -52,7 +52,7 @@
             </p>
             <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress}" /> Applications not submitted</p>
             <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
-            <a th:href="/management/competition/${competitionSummary.competitionId}/download" class="button-secondary">Export application data (.csv)</a>
+            <a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.csv)</a>
         </div>
     </div>
 
@@ -89,7 +89,7 @@
     <div th:remove="tag" th:case="'*'">
         <p>Competition is in invalid state</p>
     </div>
-
+        &nbsp; <!--/* don't remove is for mainting layout when the info box is sticky/fixed */-->
     </div>
 
 </div>

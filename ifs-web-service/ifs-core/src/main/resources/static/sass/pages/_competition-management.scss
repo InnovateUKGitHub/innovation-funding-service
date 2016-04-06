@@ -33,3 +33,8 @@
 .info-area > p > span {
   display: block;
 }
+.info-area.sticky {
+  position: fixed;
+    top: 0;
+    width: 15.5%;
+}
