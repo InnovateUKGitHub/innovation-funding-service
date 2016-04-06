@@ -64,7 +64,7 @@
                   </thead>
                   <tbody>
                     <tr th:each="result : ${results.content}">
-                      <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}" th:text="${result.id}"></a></td>
+                      <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}" th:text="${#numbers.formatInteger(result.id,8)}" /></td>
                       <td th:text="${result.name}"></td>
                       <td th:text="${result.lead}"></td>
                       <td th:text="${result.applicationStatusName}"></td>
@@ -73,7 +73,7 @@
                   </tbody>
                 </table>
 
-                <div class="pagination" th:if="${results.hasPrevious() or results.hasNext()}">
+                <div class="pagination no-margin" th:if="${results.hasPrevious() or results.hasNext()}">
                   <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">Prev</button>
                   <div class="status">
                     Page <span th:text="${results.number + 1}"></span> of <span th:text="${results.totalPages}"></span>
