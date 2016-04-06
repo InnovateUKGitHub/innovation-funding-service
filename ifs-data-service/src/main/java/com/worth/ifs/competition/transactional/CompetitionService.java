@@ -1,18 +1,20 @@
 package com.worth.ifs.competition.transactional;
 
-import java.util.List;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.security.NotSecured;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+
+import java.util.List;
 
 /**
  * Service for operations around the usage and processing of Competitions
  */
 public interface CompetitionService {
 
-    @NotSecured("TODO DW - secure when permissions known")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CompetitionResource> getCompetitionById(final Long id);
 
-    @NotSecured("TODO DW - secure when permissions known")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();
 }
