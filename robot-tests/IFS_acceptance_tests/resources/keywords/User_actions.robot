@@ -166,8 +166,7 @@ the user cannot remove the uploaded file
     [Arguments]    ${file_name}
     Page Should Not Contain    Remove
 
-
-get email link from the correct mail server
+the user clicks the link from the appropriate email sender
     Run keyword if      '${RUNNING_ON_DEV}' == ''       the user opens the mailbox and verifies the email sent from a developer machine
     Run keyword if      '${RUNNING_ON_DEV}' != ''       the user opens the mailbox and verifies the official innovate email
 
