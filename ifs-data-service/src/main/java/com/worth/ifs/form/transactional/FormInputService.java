@@ -8,6 +8,8 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import com.worth.ifs.security.NotSecured;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 public interface FormInputService {
 
     @NotSecured("Anyone can see a form input type")
@@ -16,8 +18,7 @@ public interface FormInputService {
     @NotSecured("anyone can see a form input")
     ServiceResult<FormInputResource> findFormInput(Long id);
 
-    //@PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.domain.Application', 'READ')")
-    @NotSecured("")
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.domain.Application', 'READ')")
     ServiceResult<List<FormInputResponse>> findResponsesByApplication(Long applicationId);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
