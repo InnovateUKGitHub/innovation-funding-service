@@ -12,10 +12,10 @@ import java.util.Optional;
 public interface RegistrationService {
 
     @NotSecured("TODO - implement when permissions matrix defined")
-    ServiceResult<UserResource> createApplicantUser(Long organisationId, UserResource userResource);
+    ServiceResult<Void> createApplicantUser(Long organisationId, UserResource userResource);
 
     @NotSecured("TODO - implement when permissions matrix defined")
-    ServiceResult<UserResource> createApplicantUser(Long organisationId, Optional<Long> competitionId, UserResource userResource);
+    ServiceResult<Void> createApplicantUser(Long organisationId, Optional<Long> competitionId, UserResource userResource);
 
     @NotSecured("TODO - implement when permissions matrix defined")
     ServiceResult<Void> activateUser(Long userId);

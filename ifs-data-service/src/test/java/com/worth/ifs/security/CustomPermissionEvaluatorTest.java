@@ -6,6 +6,7 @@ import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToPermissionsMethods;
 import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
@@ -36,64 +38,64 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private CustomPermissionEvaluator permissionEvaluator = new CustomPermissionEvaluator();
 
-    private User noRightsUser = newUser().build();
-    private User readOnlyUser = newUser().build();
-    private User readWriteUser = newUser().build();
+    private UserResource noRightsUser = newUserResource().build();
+    private UserResource readOnlyUser = newUserResource().build();
+    private UserResource readWriteUser = newUserResource().build();
 
-    private List<User> readUsers = asList(readOnlyUser, readWriteUser);
-    private List<User> writeUsers = singletonList(readWriteUser);
+    private List<UserResource> readUsers = asList(readOnlyUser, readWriteUser);
+    private List<UserResource> writeUsers = singletonList(readWriteUser);
 
     private Object rulesBeans1 = new Object() {
         @PermissionRule("Read")
-        public boolean hasPermission1(String dto, User user) {
+        public boolean hasPermission1(String dto, UserResource user) {
             return readUsers.contains(user);
         }
     };
 
     private Object rulesBeans2 = new Object() {
         @PermissionRule("Read")
-        public boolean hasPermission1(String dto, User user) {
+        public boolean hasPermission1(String dto, UserResource user) {
             return readUsers.contains(user);
         }
 
         @PermissionRule("Read")
-        public boolean hasPermission2(String dto, User user) {
+        public boolean hasPermission2(String dto, UserResource user) {
             return readUsers.contains(user);
         }
 
         @PermissionRule("Write")
-        public boolean hasPermission3(String dto, User user) {
+        public boolean hasPermission3(String dto, UserResource user) {
             return writeUsers.contains(user);
         }
 
         @PermissionRule("Read")
-        public boolean hasPermission4(Integer dto, User user) {
+        public boolean hasPermission4(Integer dto, UserResource user) {
             return readUsers.contains(user);
         }
 
-        public boolean hasPermission5(String dto, User user) {
+        public boolean hasPermission5(String dto, UserResource user) {
             throw new IllegalArgumentException("Should not have called non-annotated method");
         }
     };
 
     private Object rulesBeans3 = new Object() {
         @PermissionRule("Read")
-        public boolean hasPermission1(Long dto, User user) {
+        public boolean hasPermission1(Long dto, UserResource user) {
             return false;
         }
 
         @PermissionRule("Read")
-        public boolean hasPermission2(Long dto, User user) {
+        public boolean hasPermission2(Long dto, UserResource user) {
             return false;
         }
 
         @PermissionRule("Write")
-        public boolean hasPermission3(Long dto, User user) {
+        public boolean hasPermission3(Long dto, UserResource user) {
             return false;
         }
 
         @PermissionRule("Write")
-        public boolean hasPermission4(Long dto, User user) {
+        public boolean hasPermission4(Long dto, UserResource user) {
             return false;
         }
     };
@@ -458,11 +460,11 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         assertEquals(
                 "A user can have no permissions",
                 new ArrayList<>(),
-                permissionEvaluator.getPermissions(new UserAuthentication(new User()), "A String"));
+                permissionEvaluator.getPermissions(new UserAuthentication(new UserResource()), "A String"));
         assertEquals(
                 "A domain object can have no permissions",
                 new ArrayList<>(),
-                permissionEvaluator.getPermissions(new UserAuthentication(new User()), 1.0f));
+                permissionEvaluator.getPermissions(new UserAuthentication(new UserResource()), 1.0f));
 
     }
 

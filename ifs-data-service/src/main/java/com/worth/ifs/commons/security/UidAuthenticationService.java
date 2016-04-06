@@ -1,12 +1,15 @@
 package com.worth.ifs.commons.security;
 
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.UserRestService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 /**
  * Handling the tokens used for authentication for each request
@@ -26,10 +29,10 @@ public class UidAuthenticationService implements UserAuthenticationService {
      * Retrieve the Authenticated user by its authentication token in the request header.
      */
     @Override
-    public User getAuthenticatedUser(HttpServletRequest request) {
+    public UserResource getAuthenticatedUser(HttpServletRequest request) {
         Authentication authentication = getAuthentication(request);
         if(authentication!=null) {
-            return (User) authentication.getDetails();
+            return (UserResource) authentication.getDetails();
         }
         return null;
     }
@@ -42,7 +45,7 @@ public class UidAuthenticationService implements UserAuthenticationService {
             return null;
         }
 
-        User user = validator.retrieveUserByUid(uid).getSuccessObjectOrNull();
-        return user != null ? new UserAuthentication(user) : null;
+        Optional<UserResource> user = validator.retrieveUserByUid(uid).getOptionalSuccessObject();
+        return user.isPresent() ? new UserAuthentication(user.get()) : null;
     }
 }

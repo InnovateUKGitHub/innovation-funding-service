@@ -105,20 +105,20 @@ function startServers {
 function runTests {
     echo "**********RUN THE WEB TESTS**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v LOCAL_MAIL_SENDING_IMPLEMENTED:$localMailSendingImplemented -v UPLOAD_FOLDER:$uploadFileDir -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v LOCAL_MAIL_SENDING_IMPLEMENTED:$localMailSendingImplemented -v UPLOAD_FOLDER:$uploadFileDir -v VIRTUAL_DISPLAY:$useXvfb --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
 }
 
 
 function runHappyPathTests {
     echo "*********RUN THE HAPPY PATH TESTS ONLY*********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v LOCAL_MAIL_SENDING_IMPLEMENTED:$localMailSendingImplemented -v UPLOAD_FOLDER:$uploadFileDir -v VIRTUAL_DISPLAY:$useXvfb --include HappyPath --exclude Pending --exclude Failing --exclude FailingForLocal --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_BASE:$webBase -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:$postcodeLookupImplemented -v LOCAL_MAIL_SENDING_IMPLEMENTED:$localMailSendingImplemented -v UPLOAD_FOLDER:$uploadFileDir -v VIRTUAL_DISPLAY:$useXvfb --include HappyPath --exclude Pending --exclude Failing --exclude FailingForLocal --exclude PendingForLocal --name IFS $testDirectory
 }
 
 function runTestsRemotely {
     echo "***********RUNNING AGAINST THE IFS DEV SERVER...**********"
     cd ${scriptDir}
-    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_AUTH:ifs:Fund1ng -v SERVER_BASE:ifs.dev.innovateuk.org -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:'YES' -v LOCAL_MAIL_SENDING_IMPLEMENTED:'YES' -v UPLOAD_FOLDER:$uploadFileDir -v RUNNING_ON_DEV:yes --exclude Failing --exclude Pending --exclude FailingForDev --name IFS $testDirectory
+    pybot --outputdir target --pythonpath IFS_acceptance_tests/libs -v SERVER_AUTH:ifs:Fund1ng -v SERVER_BASE:ifs.dev.innovateuk.org -v PROTOCOL:'https://' -v POSTCODE_LOOKUP_IMPLEMENTED:'YES' -v LOCAL_MAIL_SENDING_IMPLEMENTED:'YES' -v UPLOAD_FOLDER:$uploadFileDir -v RUNNING_ON_DEV:'YES' --exclude Failing --exclude Pending --exclude FailingForDev --name IFS $testDirectory
 }
 
 
@@ -197,7 +197,7 @@ unset remoteRun
 
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :r :d: :x" opt ; do
+while getopts ":q :t :h :p :r :d: :x" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -207,6 +207,9 @@ while getopts ":q :t :h :r :d: :x" opt ; do
 	;;
 	h)
 	 happyPath=1
+	;;
+	p)
+	 happyPathTestOnly=1
 	;;
 	x)
 	 useXvfb=true
@@ -258,6 +261,10 @@ then
     clearDownFileRepository
     buildAndDeploy
     startServers
+    runHappyPathTests
+elif [ "$happyPathTestOnly" ]
+then
+    echo "run test only"
     runHappyPathTests
 elif [ "$remoteRun" ]
 then 

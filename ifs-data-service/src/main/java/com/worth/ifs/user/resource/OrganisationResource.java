@@ -1,5 +1,6 @@
 package com.worth.ifs.user.resource;
 
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -15,8 +16,8 @@ public class OrganisationResource {
     private OrganisationSize organisationSize;
     private List<Long> processRoles = new ArrayList<>();
     private List<Long> applicationFinances = new ArrayList<>();
-    private List<Long> addresses = new ArrayList<>();
-    private List<User> users = new ArrayList<>();
+    private List<OrganisationAddressResource> addresses = new ArrayList<>();
+    private List<Long> users = new ArrayList<>();
     private Long organisationType;
 
     public Long getId() {
@@ -67,11 +68,11 @@ public class OrganisationResource {
         this.applicationFinances = applicationFinances;
     }
 
-    public List<Long> getAddresses() {
+    public List<OrganisationAddressResource> getAddresses() {
         return addresses;
     }
 
-    public void setAddresses(List<Long> addresses) {
+    public void setAddresses(List<OrganisationAddressResource> addresses) {
         this.addresses = addresses;
     }
 
@@ -83,11 +84,11 @@ public class OrganisationResource {
         this.organisationType = organisationType;
     }
 
-    public List<User> getUsers() {
+    public List<Long> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(List<Long> users) {
         this.users = users;
     }
 

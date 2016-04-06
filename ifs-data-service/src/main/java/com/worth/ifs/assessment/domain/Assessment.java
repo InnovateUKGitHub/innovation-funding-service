@@ -41,6 +41,4 @@ public class Assessment extends Process {
         }
         return null;
     }
-
-
 }

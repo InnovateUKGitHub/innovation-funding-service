@@ -74,7 +74,7 @@ Reset password (psw does not match)
     And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
-    And the user open the mailbox and clicks the reset link
+    And the user opens the mailbox and clicks the reset link
     And the user should see the text in the page    Password reset
     And the user enters text to a text field    id=id_password    Passw0rdnew
     And the user enters text to a text field    id=id_retypedPassword    OtherPass2aa
@@ -92,7 +92,7 @@ Reset password
     And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
-    And the user open the mailbox and clicks the reset link
+    And the user opens the mailbox and clicks the reset link
     And the user should see the text in the page    Password reset
     And the user enters text to a text field    id=id_password    Passw0rdnew
     And the user enters text to a text field    id=id_retypedPassword    Passw0rdnew
@@ -123,16 +123,7 @@ the Applicant is logged-in
 the user should be logged-in as an Assessor
     Title Should Be    Innovation Funding Service - Assessor Dashboard
 
-the user open the mailbox and clicks the reset link
+the user opens the mailbox and clicks the reset link
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    ${LATEST} =    wait for email    fromEmail=noresponse@innovateuk.gov.uk
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
-    log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    1
-    log    ${VERIFY_EMAIL}
-    go to    ${VERIFY_EMAIL}
-    Capture Page Screenshot
-    Delete All Emails
-    close mailbox
+    The user clicks the link from the appropriate email sender
+

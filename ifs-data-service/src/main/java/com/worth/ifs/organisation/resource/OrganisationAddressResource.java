@@ -1,18 +1,18 @@
 package com.worth.ifs.organisation.resource;
 
-import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.user.domain.Organisation;
 
 public class OrganisationAddressResource {
     private Long id;
     private Long organisation;
-    private Long address;
+    private AddressResource address;
     private AddressType addressType;
 
-    public OrganisationAddressResource(Organisation organisation, Address address, AddressType addressType) {
+    public OrganisationAddressResource(Organisation organisation, AddressResource address, AddressType addressType) {
         this.organisation = organisation.getId();
-        this.address = address.getId();
+        this.address = address;
         this.addressType = addressType;
     }
 
@@ -24,17 +24,12 @@ public class OrganisationAddressResource {
         return organisation;
     }
 
-    public void setOrganisation(Organisation organisation) {
-        this.organisation = organisation.getId();
-    }
-
-
-    public Long getAddress() {
+    public AddressResource getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
-        this.address = address.getId();
+    public void setAddress(AddressResource address) {
+        this.address = address;
     }
 
     public AddressType getAddressType() {
@@ -56,9 +51,5 @@ public class OrganisationAddressResource {
 
     public void setOrganisation(Long organisation) {
         this.organisation = organisation;
-    }
-
-    public void setAddress(Long address) {
-        this.address = address;
     }
 }

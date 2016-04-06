@@ -31,7 +31,7 @@
     <h2 class="heading-medium" th:unless="${organisationParentType}">Please select your organisation type</h2>
 
     <h2 class="heading-large" th:if="${organisationParentType}" th:text="${organisationParentTypeTitle} + ''"></h2>
-    <h2 class="heading-medium" th:if="${organisationParentType} and ${organisationParentType.name() == 'RESEARCH'}">Please select your type or research organisation</h2>
+    <h2 class="heading-medium" th:if="${organisationParentType} and ${organisationParentType.name() == 'RESEARCH'}">Please select your type of research organisation</h2>
 
     <form th:object="${organisationTypeForm}" th:action="@{/organisation/create/type/new-account-organisation-type/}" method="POST">
         <fieldset>

@@ -10,6 +10,9 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -51,7 +54,7 @@ public class ApplicationDownloadController {
         List<Application> applications = applicationSummaryService.getApplicationSummariesByCompetitionIdAndStatus(competitionId, status.getId());
         LOG.info(String.format("Generate download for %s applications with status %s ", applications.size(), status.getName()));
 
-        XSSFWorkbook wb = getExcelWorkbook(applications);
+        HSSFWorkbook wb = getExcelWorkbook(applications);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         wb.write(baos);
 
@@ -63,14 +66,14 @@ public class ApplicationDownloadController {
         return new ResponseEntity<>(new ByteArrayResource(baos.toByteArray()), httpHeaders, HttpStatus.OK);
     }
 
-    private XSSFWorkbook getExcelWorkbook(List<Application> applications) {
-        XSSFWorkbook wb = new XSSFWorkbook();
-        XSSFSheet sheet = wb.createSheet("Submitted Applications");
+    private HSSFWorkbook getExcelWorkbook(List<Application> applications) {
+        HSSFWorkbook wb = new HSSFWorkbook();
+        HSSFSheet sheet = wb.createSheet("Submitted Applications");
         int rowCount = 0;
 
         // ADD HEADER ROW
         int headerCount = 0;
-        XSSFRow row = sheet.createRow(rowCount++);
+        HSSFRow row = sheet.createRow(rowCount++);
         row.createCell(headerCount++).setCellValue("Application ID");
         row.createCell(headerCount++).setCellValue("Application Title");
         row.createCell(headerCount++).setCellValue("Lead Organisation");

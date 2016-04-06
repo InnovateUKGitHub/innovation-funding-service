@@ -44,13 +44,13 @@ public class ProfileController {
     }
 
     private void populateUserDetailsForm(Model model, HttpServletRequest request){
-        final User user = userAuthenticationService.getAuthenticatedUser(request);
+        final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         UserDetailsForm userDetailsForm = buildUserDetailsForm(user);
         setFormActionURL(userDetailsForm);
         model.addAttribute("userDetailsForm", userDetailsForm);
     }
 
-    private UserDetailsForm buildUserDetailsForm(final User user){
+    private UserDetailsForm buildUserDetailsForm(final UserResource user){
         UserDetailsForm form = new UserDetailsForm();
         form.setEmail(user.getEmail());
         form.setFirstName(user.getFirstName());
@@ -67,7 +67,7 @@ public class ProfileController {
 
         boolean userIsLoggedIn = userIsLoggedIn(request);
         model.addAttribute("userIsLoggedIn", userIsLoggedIn);
-        final User loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
+        final UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
 
         if(!bindingResult.hasErrors()) {
             RestResult<UserResource> updateProfileResult = updateUser(loggedInUser, userDetailsForm);
@@ -100,7 +100,7 @@ public class ProfileController {
         userDetailsForm.setActionUrl("/profile/edit");
     }
 
-    private RestResult<UserResource> updateUser(final User loggedInUser, UserDetailsForm userDetailsForm) {
+    private RestResult<UserResource> updateUser(final UserResource loggedInUser, UserDetailsForm userDetailsForm) {
         return userService.updateDetails(
                 loggedInUser.getEmail(),
                 userDetailsForm.getFirstName(),

@@ -1,22 +1,23 @@
 package com.worth.ifs.assessment.transactional;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.dto.Feedback.Id;
 import com.worth.ifs.assessment.dto.Score;
-import com.worth.ifs.assessment.security.FeedbackLookup;
+import com.worth.ifs.assessment.security.FeedbackLookupStrategy;
 import com.worth.ifs.assessment.security.FeedbackRules;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 import static java.util.Optional.empty;
 import static org.junit.Assert.fail;
@@ -29,13 +30,13 @@ import static org.mockito.Mockito.when;
 public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<AssessorService> {
 
     private FeedbackRules feedbackRules;
-    private FeedbackLookup feedbackLookup;
+    private FeedbackLookupStrategy feedbackLookup;
 
     @Before
     public void setup() {
         super.setup();
         feedbackRules = getMockPermissionRulesBean(FeedbackRules.class);
-        feedbackLookup = getMockPermissionEntityLookupStrategiesBean(FeedbackLookup.class);
+        feedbackLookup = getMockPermissionEntityLookupStrategiesBean(FeedbackLookupStrategy.class);
     }
 
     @Test

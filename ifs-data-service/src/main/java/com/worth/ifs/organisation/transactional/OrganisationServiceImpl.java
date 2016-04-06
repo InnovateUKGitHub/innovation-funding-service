@@ -1,5 +1,10 @@
 package com.worth.ifs.organisation.transactional;
 
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.mapper.AddressMapper;
@@ -16,14 +21,10 @@ import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -70,16 +71,9 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         return serviceSuccess(organisationMapper.mapToResource(savedOrganisation));
     }
 
-    // TODO DW - INFUND-1555 - lot of duplication between create() and saveResource()
     @Override
     public ServiceResult<OrganisationResource> saveResource(final OrganisationResource organisationResource) {
-        Organisation organisation = organisationMapper.mapToDomain(organisationResource);
-
-        if (organisation.getOrganisationType() == null) {
-            organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
-        }
-        Organisation savedOrganisation = organisationRepository.save(organisation);
-        return serviceSuccess(organisationMapper.mapToResource(savedOrganisation));
+        return create(organisationMapper.mapToDomain(organisationResource));
     }
 
     @Override
@@ -87,7 +81,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
             Address address = addressMapper.mapToDomain(addressResource);
             organisation.addAddress(address, addressType);
-            Organisation updatedOrganisation = organisationRepository.findOne(organisationId);
+            Organisation updatedOrganisation = organisationRepository.save(organisation);
             return serviceSuccess(organisationMapper.mapToResource(updatedOrganisation));
         });
     }
