@@ -107,7 +107,7 @@ public class RegistrationController {
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerForm(Model model, HttpServletRequest request, HttpServletResponse response) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
             return getRedirectUrlForUser(user);
         }
@@ -198,7 +198,7 @@ public class RegistrationController {
             validator.validate(registrationForm, bindingResult);
         }
 
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(user != null){
             return getRedirectUrlForUser(user);
         }

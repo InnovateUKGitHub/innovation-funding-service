@@ -12,7 +12,9 @@ import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserStatus;
+import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * A Service that covers basic operations concerning Users
@@ -53,59 +56,61 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
 
     @Autowired
     private NotificationService notificationService;
+
     @Autowired
     private IdentityProviderService identityProviderService;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
-    public ServiceResult<User> getUserByUid(final String uid) {
-        return find(repository.findOneByUid(uid), notFoundError(User.class, uid));
+    public ServiceResult<UserResource> getUserResourceByUid(final String uid) {
+        return find(repository.findOneByUid(uid), notFoundError(UserResource.class, uid)).andOnSuccessReturn(userMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<User> getUserById(final Long id) {
-        return super.getUser(id);
+    public ServiceResult<UserResource> getUserById(final Long id) {
+        return super.getUser(id).andOnSuccessReturn(userMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<List<User>> findAll() {
-        return serviceSuccess(repository.findAll());
+    public ServiceResult<List<UserResource>> findAll() {
+        return serviceSuccess(usersToResources(repository.findAll()));
     }
 
     @Override
-    public ServiceResult<User> findByEmail(final String email) {
-        Optional<User> user = repository.findByEmail(email);
-        if(user.isPresent()){
-            return serviceSuccess(user.get());
-        }
-        return serviceFailure(notFoundError(User.class, email));
+    public ServiceResult<UserResource> findByEmail(final String email) {
+        return find(repository.findByEmail(email), notFoundError(User.class, email)).andOnSuccessReturn(userMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<Set<User>> findAssignableUsers(final Long applicationId) {
+    public ServiceResult<Set<UserResource>> findAssignableUsers(final Long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
-        Set<User> assignables = roles.stream()
+        Set<UserResource> assignables = roles.stream()
                 .filter(r -> "leadapplicant".equals(r.getRole().getName()) || "collaborator".equals(r.getRole().getName()))
                 .map(ProcessRole::getUser)
+                .map(userMapper::mapToResource)
                 .collect(toSet());
 
         return serviceSuccess(assignables);
     }
 
     @Override
-    public ServiceResult<Set<User>> findRelatedUsers(final Long applicationId) {
+    public ServiceResult<Set<UserResource>> findRelatedUsers(final Long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
 
-        Set<User> related = roles.stream()
+        Set<UserResource> related = roles.stream()
                 .map(ProcessRole::getUser)
+                .map(userMapper::mapToResource)
                 .collect(toSet());
 
         return serviceSuccess(related);
     }
 
     @Override
-    public ServiceResult<Void> sendPasswordResetNotification(User user) {
+    public ServiceResult<Void> sendPasswordResetNotification(UserResource user) {
         if(UserStatus.ACTIVE.equals(user.getStatus())){
             String hash = getAndSavePasswordResetToken(user);
 
@@ -119,7 +124,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
             ServiceResult<Notification> result = notificationService.sendNotification(notification, EMAIL);
             return result.andOnSuccessReturnVoid();
         }else{
-            return serviceFailure(notFoundError(User.class, user.getEmail(), UserStatus.ACTIVE));
+            return serviceFailure(notFoundError(UserResource.class, user.getEmail(), UserStatus.ACTIVE));
         }
     }
 
@@ -132,7 +137,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         return serviceFailure(notFoundError(Token.class, hash));
     }
 
-    private String getAndSavePasswordResetToken(User user) {
+    private String getAndSavePasswordResetToken(UserResource user) {
         String hash = getRandomHash();
         Token token = new Token(TokenType.RESET_PASSWORD, User.class.getName(), user.getId(), hash, factory.objectNode());
         tokenRepository.save(token);
@@ -167,4 +172,7 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
         return String.format("%s/login/reset-password/hash/%s", webBaseUrl, hash);
     }
 
+    private List<UserResource> usersToResources(List<User> filtered) {
+        return simpleMap(filtered, user -> userMapper.mapToResource(user));
+    }
 }

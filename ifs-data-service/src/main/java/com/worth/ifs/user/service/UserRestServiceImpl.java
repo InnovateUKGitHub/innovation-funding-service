@@ -43,11 +43,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<User> retrieveUserByUid(String uid) {
+    public RestResult<UserResource> retrieveUserResourceByUid(String uid) {
         if(StringUtils.isEmpty(uid))
             return restFailure(notFoundError(User.class, uid));
 
-        return getWithRestResult(userRestURL + "/uid/" + uid, User.class);
+        return getWithRestResult(userRestURL + "/uid/" + uid, UserResource.class);
     }
 
     @Override
@@ -90,16 +90,16 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<User> retrieveUserById(Long id) {
+    public RestResult<UserResource> retrieveUserById(Long id) {
         if(id == null || id.equals(0L)) {
             return restFailure(notFoundError(User.class, id));
         }
 
-        return getWithRestResult(userRestURL + "/id/" + id, User.class);
+        return getWithRestResult(userRestURL + "/id/" + id, UserResource.class);
     }
 
     @Override
-    public RestResult<List<User>> findAll() {
+    public RestResult<List<UserResource>> findAll() {
         return getWithRestResult(userRestURL + "/findAll/", userListType());
     }
 
@@ -119,7 +119,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<List<User>> findAssignableUsers(Long applicationId){
+    public RestResult<List<UserResource>> findAssignableUsers(Long applicationId){
         return getWithRestResult(userRestURL + "/findAssignableUsers/" + applicationId, userListType());
     }
 
@@ -129,7 +129,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<List<User>> findRelatedUsers(Long applicationId){
+    public RestResult<List<UserResource>> findRelatedUsers(Long applicationId){
         return getWithRestResult(userRestURL + "/findRelatedUsers/"+applicationId, userListType());
     }
 

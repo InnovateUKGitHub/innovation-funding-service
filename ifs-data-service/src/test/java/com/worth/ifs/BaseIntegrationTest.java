@@ -2,6 +2,7 @@ package com.worth.ifs;
 
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -40,14 +41,14 @@ public abstract class BaseIntegrationTest extends BaseTest {
      *
      * @param user
      */
-    protected void setLoggedInUser(User user) {
+    protected void setLoggedInUser(UserResource user) {
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
     }
 
     /**
      * Get the user on the Spring Security ThreadLocals
      */
-    protected User getLoggedInUser() {
+    protected UserResource getLoggedInUser() {
         return ((UserAuthentication) SecurityContextHolder.getContext().getAuthentication()).getDetails();
     }
 

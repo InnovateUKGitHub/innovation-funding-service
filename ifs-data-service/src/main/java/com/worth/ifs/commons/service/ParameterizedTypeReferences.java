@@ -59,8 +59,8 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<ProcessRole>>() {};
     }
 
-    public static ParameterizedTypeReference<List<User>> userListType() {
-        return new ParameterizedTypeReference<List<User>>() {};
+    public static ParameterizedTypeReference<List<UserResource>> userListType() {
+        return new ParameterizedTypeReference<List<UserResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<UserResource>> userResourceListType() {

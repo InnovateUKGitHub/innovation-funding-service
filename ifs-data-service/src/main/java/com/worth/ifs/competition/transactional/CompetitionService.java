@@ -10,9 +10,9 @@ import com.worth.ifs.security.NotSecured;
  */
 public interface CompetitionService {
 
-    @NotSecured("TODO DW - secure when permissions known")
+    @NotSecured("Anyone can see a competition")
     ServiceResult<CompetitionResource> getCompetitionById(final Long id);
 
-    @NotSecured("TODO DW - secure when permissions known")
+    @NotSecured("Anyone can see all competitions")
     ServiceResult<List<CompetitionResource>> findAll();
 }
