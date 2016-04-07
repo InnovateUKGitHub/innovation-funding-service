@@ -9,7 +9,6 @@ import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceBuilder> {
@@ -36,8 +35,8 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
         return withArray((uid, user) -> setField("uid", uid, user), uids);
     }
 
-    public UserResourceBuilder withRolesGlobal(RoleResource... globalRoles) {
-        return with(user -> user.setRoles(asList(globalRoles)));
+    public UserResourceBuilder withRolesGlobal(List<RoleResource>... globalRoles) {
+        return withArray((roles, user) -> user.setRoles(roles), globalRoles);
     }
 
     public UserResourceBuilder withId(Long... ids) {
