@@ -169,12 +169,12 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		return resultsList.stream()
 				.map(applicationSummaryMapper::mapToResource)
 				.sorted((i1, i2) -> {
-					if("percentageComplete".equals(sortBy)) {
-						return new ApplicationSummaryResourcePercentageCompleteComparator().compare(i1, i2);
+					if("id".equals(sortBy)) {
+						return 0;
 					} else if("lead".equals(sortBy)) {
 						return new ApplicationSummaryResourceLeadComparator().compare(i1, i2);
 					}
-					return 0;
+					return new ApplicationSummaryResourcePercentageCompleteComparator().compare(i1, i2);
 				})
 				.skip(pageable.getOffset())
 				.limit(pageable.getPageSize())
@@ -182,7 +182,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	}
 
 	private boolean canUseSpringDataPaginationForSummaryResults(String sortBy) {
-		return !("percentageComplete".equals(sortBy) || "lead".equals(sortBy));
+		return "id".equals(sortBy) || "name".equals(sortBy) || "status".equals(sortBy);
 	}
 
 	private String[] getApplicationSummarySortField(String sortBy) {

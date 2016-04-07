@@ -56,7 +56,8 @@ public class CompetitionManagementControllerTest  {
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", resource));
+                .andExpect(model().attribute("results", resource))
+                .andExpect(model().attribute("activeSortField", "percentageComplete"));
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, 0, null);
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
@@ -76,7 +77,8 @@ public class CompetitionManagementControllerTest  {
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", resource));
+                .andExpect(model().attribute("results", resource))
+                .andExpect(model().attribute("activeSortField", "percentageComplete"));
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, 2, null);
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
@@ -96,7 +98,8 @@ public class CompetitionManagementControllerTest  {
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", resource));
+                .andExpect(model().attribute("results", resource))
+                .andExpect(model().attribute("activeSortField", "lead"));
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, 0, "lead");
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
