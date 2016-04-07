@@ -2,7 +2,6 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -78,6 +77,9 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
     @Test
     public void createLeadApplicantForOrganisation() {
+
+        setLoggedInUser(null);
+
         UserResource userResource = newUserResource()
                 .with(id(null))
                 .withEmail("testemail@test.test")
@@ -90,7 +92,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         Long organisationId = 1L;
 
-        setupPostWithRestResultExpectations(usersUrl + "/createLeadApplicantForOrganisation/" + organisationId, UserResource.class, userResource, userResource, OK);
+        setupPostWithRestResultAnonymousExpectations(usersUrl + "/createLeadApplicantForOrganisation/" + organisationId, UserResource.class, userResource, userResource, OK);
 
         UserResource receivedResource = service.createLeadApplicantForOrganisation(userResource.getFirstName(),
                 userResource.getLastName(),

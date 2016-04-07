@@ -20,6 +20,9 @@ public abstract class BaseRestService {
     @Autowired
     private RestTemplateAdaptor adaptor;
 
+    @Autowired
+    private AnonymousUserRestTemplateAdaptor anonymousRestTemplateAdaptor;
+
     private String dataRestServiceURL;
 
     protected String getDataRestServiceURL() {
@@ -33,6 +36,10 @@ public abstract class BaseRestService {
 
     public void setRestTemplateAdaptor(RestTemplateAdaptor adaptor) {
         this.adaptor = adaptor;
+    }
+
+    public void setAnonymousRestTemplateAdaptor(AnonymousUserRestTemplateAdaptor anonymousRestTemplateAdaptor) {
+        this.anonymousRestTemplateAdaptor = anonymousRestTemplateAdaptor;
     }
 
     // Synchronous calls
@@ -58,6 +65,10 @@ public abstract class BaseRestService {
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType) {
         return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
+    }
+
+    protected <R> RestResult<R> postWithRestResultAnonymous(String path, Object objectToSend, Class<R> returnType) {
+        return anonymousRestTemplateAdaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
     }
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, HttpHeaders additionalHeaders, Class<R> returnType) {

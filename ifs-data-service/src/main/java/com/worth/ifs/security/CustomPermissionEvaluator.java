@@ -1,7 +1,6 @@
 package com.worth.ifs.security;
 
 import com.worth.ifs.commons.security.UserAuthentication;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -24,7 +23,6 @@ import java.util.Map.Entry;
 
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -34,7 +32,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     private static final Log LOG = LogFactory.getLog(CustomPermissionEvaluator.class);
 
-    private static final User ANONYMOUS_USER = new User("Anonymous", "Anonymous", "anonymous@example.com", "", emptyList(), "");
+    private static final UserResource ANONYMOUS_USER = new UserResource();
 
     @Autowired
     private ApplicationContext applicationContext;

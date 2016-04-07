@@ -1,5 +1,6 @@
 package com.worth.ifs;
 
+import com.worth.ifs.commons.service.AnonymousUserRestTemplateAdaptor;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.commons.service.HttpHeadersUtils;
 import com.worth.ifs.commons.service.RestTemplateAdaptor;
@@ -27,8 +28,6 @@ import static org.springframework.http.HttpStatus.OK;
  * This is the base class for testing REST services with mock components.  In addition to the standard mocks provided,
  * this base class also provides a dummy dataServiceUrl and a mock restTemplate for testing and stubbing the routes
  * that the REST services use to exchange data with the "data" layer.
- *
- * Created by dwatson on 02/10/15.
  */
 public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestService> extends BaseUnitTestMocksTest {
 
@@ -46,24 +45,47 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
 
     private static final String VALID_AUTH_TOKEN = "VALID_AUTH_TOKEN";
 
+    private static final String ANONYMOUS_AUTH_TOKEN = "ANONYMOUS_AUTH_TOKEN";
+
     @Before
     public void setupServiceWithMockTemplateAndSpringSecurity() {
 
         service = registerRestServiceUnderTest();
         service.setDataRestServiceUrl(dataServicesUrl);
-        final RestTemplateAdaptor adaptor = new RestTemplateAdaptor();
-        service.setRestTemplateAdaptor(adaptor);
+
+        RestTemplateAdaptor adaptor = new RestTemplateAdaptor();
         adaptor.setRestTemplate(mockRestTemplate);
         adaptor.setAsyncRestTemplate(mockAsyncRestTemplate);
 
+        AnonymousUserRestTemplateAdaptor anonymousUserRestTemplateAdaptor = new AnonymousUserRestTemplateAdaptor(ANONYMOUS_AUTH_TOKEN);
+        anonymousUserRestTemplateAdaptor.setRestTemplate(mockRestTemplate);
+        anonymousUserRestTemplateAdaptor.setAsyncRestTemplate(mockAsyncRestTemplate);
+
+        service.setRestTemplateAdaptor(adaptor);
+        service.setAnonymousRestTemplateAdaptor(anonymousUserRestTemplateAdaptor);
+        setLoggedInUser(VALID_AUTH_TOKEN);
+    }
+
+    protected void setLoggedInUser(String authToken) {
         SecurityContextImpl securityContext = new SecurityContextImpl();
-        securityContext.setAuthentication(new TestingAuthenticationToken("A_PRINCIPAL", VALID_AUTH_TOKEN));
         SecurityContextHolder.setContext(securityContext);
+
+        if (authToken != null) {
+            securityContext.setAuthentication(new TestingAuthenticationToken("A_PRINCIPAL", authToken));
+        } else {
+            securityContext.setAuthentication(null);
+        }
     }
 
     protected <T> HttpEntity<T> httpEntityForRestCall(T body) {
         HttpHeaders headers = HttpHeadersUtils.getJSONHeaders();
         headers.set(AUTH_TOKEN, VALID_AUTH_TOKEN);
+        return new HttpEntity<>(body, headers);
+    }
+
+    protected <T> HttpEntity<T> httpEntityForRestCallAnonymous(T body) {
+        HttpHeaders headers = HttpHeadersUtils.getJSONHeaders();
+        headers.set(AUTH_TOKEN, ANONYMOUS_AUTH_TOKEN);
         return new HttpEntity<>(body, headers);
     }
 
@@ -113,6 +135,12 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
     protected <T> ResponseEntity<T> setupPostWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, Object requestBody, T responseBody, HttpStatus responseCode) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, POST, httpEntityForRestCall(requestBody), responseType)).thenReturn(response);
+        return response;
+    }
+
+    protected <T> ResponseEntity<T> setupPostWithRestResultAnonymousExpectations(String nonBaseUrl, Class<T> responseType, Object requestBody, T responseBody, HttpStatus responseCode) {
+        ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, POST, httpEntityForRestCallAnonymous(requestBody), responseType)).thenReturn(response);
         return response;
     }
 

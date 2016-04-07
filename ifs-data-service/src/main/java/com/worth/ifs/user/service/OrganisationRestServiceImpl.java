@@ -36,7 +36,7 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
 
     @Override
     public RestResult<OrganisationResource> create(OrganisationResource organisation) {
-        return postWithRestResult(organisationRestURL + "/create", organisation, OrganisationResource.class);
+        return postWithRestResultAnonymous(organisationRestURL + "/create", organisation, OrganisationResource.class);
     }
 
     @Override
@@ -46,6 +46,6 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
 
     @Override
     public RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, AddressType type) {
-        return postWithRestResult(organisationRestURL + "/addAddress/"+organisation.getId()+"?addressType="+type.name(), address, OrganisationResource.class);
+        return postWithRestResultAnonymous(organisationRestURL + "/addAddress/"+organisation.getId()+"?addressType="+type.name(), address, OrganisationResource.class);
     }
 }
