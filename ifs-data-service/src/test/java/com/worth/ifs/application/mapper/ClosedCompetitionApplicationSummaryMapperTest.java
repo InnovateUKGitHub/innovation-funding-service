@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 public class ClosedCompetitionApplicationSummaryMapperTest {
 
 	@InjectMocks
-	private ClosedCompetitionApplicationSummaryMapper mapper;
+	private ClosedCompetitionApplicationSummaryMapperImpl mapper;
 	
 	@Mock
 	private ApplicationFinanceRestService applicationFinanceRestService;
