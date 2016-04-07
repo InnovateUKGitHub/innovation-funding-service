@@ -18,6 +18,6 @@ public class ApplicationSummaryResourcePercentageCompleteComparator extends Dual
 		Long o1Id = o1.getId();
 		Long o2Id = o2.getId();
 		
-		return compare(o1Lead, o2Lead, o1Id, o2Id);
+		return compare(o2Lead, o1Lead, o1Id, o2Id);
 	}
 }

@@ -58,11 +58,17 @@ public class CompetitionManagementController {
 
 	private String inAssessmentCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
 			BindingResult bindingResult) {
-		ClosedCompetitionApplicationSummaryPageResource notSubmittedApplicationSummary = applicationSummaryService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
-		ClosedCompetitionApplicationSummaryPageResource submittedApplicationSummary = applicationSummaryService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
 		
-		model.addAttribute("notSubmittedResults", notSubmittedApplicationSummary);
-		model.addAttribute("submittedResults", submittedApplicationSummary);
+		ClosedCompetitionApplicationSummaryPageResource results;
+		if("notSubmitted".equals(queryForm.getTab())) {
+			results = applicationSummaryService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
+			model.addAttribute("activeTab", "notSubmitted");
+		} else {
+			results = applicationSummaryService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
+			model.addAttribute("activeTab", "submitted");
+		}
+		
+		model.addAttribute("results", results);
 		
         LOG.warn("Show in assessment competition info");
         return "comp-mgt-in-assessment";
@@ -74,14 +80,20 @@ public class CompetitionManagementController {
 		
 		ApplicationSummaryPageResource applicationSummary = applicationSummaryService.findByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
 		model.addAttribute("results", applicationSummary);
+		model.addAttribute("activeSortField", getActiveSortFieldForOpenCompetition(queryForm.getSort()));
 
         LOG.warn("Show open competition info");
         return "comp-mgt";
 	}
 
+    private String getActiveSortFieldForOpenCompetition(String sort) {
+		if("id".equals(sort) || "lead".equals(sort) || "name".equals(sort) || "status".equals(sort)) {
+			return sort;
+		}
+		return "percentageComplete";
+	}
 
-
-    @RequestMapping("/{competitionId}/download")
+	@RequestMapping("/{competitionId}/download")
     public void downloadApplications(@PathVariable("competitionId") Long competitionId, HttpServletResponse response) throws IOException {
         CompetitionResource competition = competitionService.getById(competitionId);
         if(competition!= null){

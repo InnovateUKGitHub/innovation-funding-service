@@ -227,7 +227,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         mockMvc.perform(get("/application/" + app.getId()+"/summary"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("application/summary"))
+                .andExpect(view().name("application-summary"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition",  competitionService.getById(app.getCompetition())))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))

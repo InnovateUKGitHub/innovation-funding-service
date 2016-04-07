@@ -23,9 +23,8 @@
       </div>
   </div>
 
-  <ul class="inline-nav extra-margin">
-    <li class="selected"><a th:href="@{/competition/{id}(id=${competitionSummary.competitionId})}">Application overview</a></li>
-  </ul>
+  <div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" th:remove="tag" />
+
 
     <div class="grid-row competition-data">
         <div class="column-fifth">
@@ -43,10 +42,11 @@
                     <div class="column-third alignright">
                       <label for="sort-by">Sort by</label>
                       <select id="sort-by" name="sort" class="js-auto-submit form-control">
-                          <option value="id" th:selected="${(param.sort != null) and (param.sort[0] == 'id')}">Application no.</option>
-                          <option value="name" th:selected="${(param.sort != null) and (param.sort[0] == 'name')}">Project title</option>
-                          <option value="lead" th:selected="${(param.sort != null) and (param.sort[0] == 'lead')}">Lead</option>
-                          <option value="completedPercentage" th:selected="${(param.sort != null) and (param.sort[0] == 'completedPercentage')}">Percentage complete</option>
+                          <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
+                          <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
+                          <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
+                          <option value="status" th:selected="${(activeSortField == 'status')}">Status</option>
+                          <option value="percentageComplete" th:selected="${(activeSortField == 'percentageComplete')}">Percentage complete</option>
                       </select>
                       <button type="submit" class="button no-margin">Sort</button>
                     </div>
@@ -73,7 +73,7 @@
                   </tbody>
                 </table>
 
-                <div class="pagination no-margin" th:if="${results.hasPrevious() or results.hasNext()}">
+                <div class="pagination" th:if="${results.hasPrevious() or results.hasNext()}">
                   <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">Prev</button>
                   <div class="status">
                     Page <span th:text="${results.number + 1}"></span> of <span th:text="${results.totalPages}"></span>

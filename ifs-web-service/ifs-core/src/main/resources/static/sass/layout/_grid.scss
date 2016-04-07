@@ -10,6 +10,14 @@
 .column-four-fifth {
   @include grid-column(4/5);
 }
-#content.full-width {
+.grid-container {
+  @extend %site-width-container;
+}
+.constrain-width {
+  max-width:1400px;
+}
+
+#content.full-width,
+.grid-container.full-width {
   max-width:95%;
 }

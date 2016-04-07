@@ -17,7 +17,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-public class BaseErrorControllerAdvice {
+public abstract class BaseErrorControllerAdvice {
 
     private static final Log LOG = LogFactory.getLog(BaseErrorControllerAdvice.class);
 

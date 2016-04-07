@@ -56,7 +56,8 @@ public class CompetitionManagementControllerTest  {
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", resource));
+                .andExpect(model().attribute("results", resource))
+                .andExpect(model().attribute("activeSortField", "percentageComplete"));
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, 0, null);
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
@@ -76,7 +77,8 @@ public class CompetitionManagementControllerTest  {
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", resource));
+                .andExpect(model().attribute("results", resource))
+                .andExpect(model().attribute("activeSortField", "percentageComplete"));
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, 2, null);
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
@@ -96,36 +98,84 @@ public class CompetitionManagementControllerTest  {
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", resource));
+                .andExpect(model().attribute("results", resource))
+                .andExpect(model().attribute("activeSortField", "lead"));
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, 0, "lead");
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
-}
+    }
     
     @Test
-    public void getByCompetitionIdForCompetitionInAssessment() throws Exception {
+    public void getByCompetitionIdForCompetitionInAssessmentSubmittedIsDefault() throws Exception {
     	
     	CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
     	competitionSummaryResource.setCompetitionStatus(Status.IN_ASSESSMENT);
     	 
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-    	ClosedCompetitionApplicationSummaryPageResource summary1 = new ClosedCompetitionApplicationSummaryPageResource();
-    	ClosedCompetitionApplicationSummaryPageResource summary2 = new ClosedCompetitionApplicationSummaryPageResource();
+    	ClosedCompetitionApplicationSummaryPageResource summary = new ClosedCompetitionApplicationSummaryPageResource();
 
     	when(applicationSummaryService.findByCompetitionId(COMPETITION_ID, 0, null)).thenReturn(resource);
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
 
-        when(applicationSummaryService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null)).thenReturn(summary1);
-        when(applicationSummaryService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null)).thenReturn(summary2);
+        when(applicationSummaryService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null)).thenReturn(summary);
 
     	mockMvc.perform(get("/competition/123"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-in-assessment"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("submittedResults", summary1))
-                .andExpect(model().attribute("notSubmittedResults", summary2));
+                .andExpect(model().attribute("results", summary))
+                .andExpect(model().attribute("activeTab", "submitted"));
     	
     	verify(applicationSummaryService).getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null);
+    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
+    }
+    
+    @Test
+    public void getByCompetitionIdForCompetitionInAssessmentSubmittedRequested() throws Exception {
+    	
+    	CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
+    	competitionSummaryResource.setCompetitionStatus(Status.IN_ASSESSMENT);
+    	 
+    	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+    	ClosedCompetitionApplicationSummaryPageResource summary = new ClosedCompetitionApplicationSummaryPageResource();
+
+    	when(applicationSummaryService.findByCompetitionId(COMPETITION_ID, 0, null)).thenReturn(resource);
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+
+        when(applicationSummaryService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null)).thenReturn(summary);
+
+    	mockMvc.perform(get("/competition/123?tab=submitted"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-in-assessment"))
+                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
+                .andExpect(model().attribute("results", summary))
+                .andExpect(model().attribute("activeTab", "submitted"));
+    	
+    	verify(applicationSummaryService).getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null);
+    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
+    }
+    
+    @Test
+    public void getByCompetitionIdForCompetitionInAssessmentNotSubmittedRequested() throws Exception {
+    	
+    	CompetitionSummaryResource competitionSummaryResource = new CompetitionSummaryResource();
+    	competitionSummaryResource.setCompetitionStatus(Status.IN_ASSESSMENT);
+    	 
+    	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+    	ClosedCompetitionApplicationSummaryPageResource summary = new ClosedCompetitionApplicationSummaryPageResource();
+
+    	when(applicationSummaryService.findByCompetitionId(COMPETITION_ID, 0, null)).thenReturn(resource);
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+
+        when(applicationSummaryService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null)).thenReturn(summary);
+
+    	mockMvc.perform(get("/competition/123?tab=notSubmitted"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-in-assessment"))
+                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
+                .andExpect(model().attribute("results", summary))
+                .andExpect(model().attribute("activeTab", "notSubmitted"));
+    	
     	verify(applicationSummaryService).getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null);
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }

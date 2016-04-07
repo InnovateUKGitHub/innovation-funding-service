@@ -1,34 +1,129 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-    <!-- id of the competition for in the page title -->
-    <div th:fragment="competition-id(competition)" th:remove="tag">
-          <p class="subtitle"><div th:text="${#numbers.formatInteger(competition.competitionId,8)}" th:remove="tag" /> : Innovate UK</p>
+<!-- id of the competition for in the page title -->
+<div th:fragment="competition-id(competition)" th:remove="tag">
+    <p class="subtitle"><div th:text="${#numbers.formatInteger(competition.competitionId,8)}" th:remove="tag" /> : Innovate UK</p>
+</div>
+<!-- competition status with blue block -->
+<div th:fragment="competition-status(competition)" th:remove="tag">
+    <h2 th:switch="${competition.competitionStatus.name()}" class="bold-small blue-block">
+        <div th:remove="tag" th:case="'NOT_STARTED'">Competition not yet started</div>
+        <div th:remove="tag" th:case="'OPEN'">Competition open</div>
+        <div th:remove="tag" th:case="'IN_ASSESSMENT'">In assesment</div>
+        <div th:remove="tag" th:case="'FUNDERS_PANEL'">Funders Panel</div>
+        <div th:remove="tag" th:case="'PROJECT_SETUP'">Project setup</div>
+        <div th:remove="tag" th:case="*">test2</div>
+    </h2>
+</div>
+
+
+<!-- competition management menu -->
+<div th:fragment="competition-mgt-menu(competitionStatus,competitionId)" th:remove="tag">
+
+    <div th:switch="${competitionStatus}" th:remove="tag">
+
+        <div th:remove="tag" th:case="'OPEN'">
+          <div th:include="fragments/competition-management :: competition-mgt-menu-open(id=${competitionId})" th:remove="tag" />
+        </div>
+
+        <div th:remove="tag" th:case="'IN_ASSESSMENT'">
+          <div th:include="fragments/competition-management :: competition-mgt-menu-assesment(id=${competitionId})" th:remove="tag" />
+        </div>
+        <!--/* future
+        <div th:remove="tag" th:case="'FUNDERS_PANEL'"></div>
+        <div th:remove="tag" th:case="'PROJECT_SETUP'"></div>
+        */-->
     </div>
-    <!-- competition status with blue block -->
-    <div th:fragment="competition-status(competition)" th:remove="tag">
-        <h2 th:switch="${competition.competitionStatus.name()}" class="bold-small blue-block">
-          <div th:remove="tag" th:case="'NOT_STARTED'">Competition not yet started</div>
-          <div th:remove="tag" th:case="'OPEN'">Competition open</div>
-          <div th:remove="tag" th:case="'IN_ASSESSMENT'">In assesment</div>
-          <div th:remove="tag" th:case="'FUNDERS_PANEL'">Funders Panel</div>
-          <div th:remove="tag" th:case="'PROJECT_SETUP'">Project setup</div>
-          <div th:remove="tag" th:case="*">test2</div>
-        </h2>
+</div>
+
+<div th:fragment="competition-mgt-menu-assesment(id)" th:remove="tag">
+  <ul class="inline-nav extra-margin">
+    <li th:class="${activeTab == 'submitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=submitted'}">Applications submitted</a></li>
+    <li th:class="${activeTab == 'notSubmitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=notSubmitted'}">Applications not submitted</a></li>
+  </ul>
+</div>
+
+<div th:fragment="competition-mgt-menu-open(id)" th:remove="tag">
+  <ul class="inline-nav extra-margin">
+    <li class="selected"><a th:href="${'/management/competition/'+id}">Application overview</a></li>
+  </ul>
+</div>
+
+<!-- Box with summary about competition on left hand side -->
+<div th:remove="tag" th:fragment="info-area" class="bold-small blue-block">
+    <div th:switch="${competitionSummary.competitionStatus.name()}">
+    <div th:remove="tag" th:case="'NOT_STARTED'">
+        <div class="info-area boxed">
+            <p>
+                This competition has not yet been started.
+            </p>
+        </div>
     </div>
 
-    <!-- Box with summary about competition on left hand side -->
-    <div th:remove="tag" th:fragment="info-area">
-      <div class="info-area boxed">
-        <p>
+    <div th:remove="tag" th:case="'OPEN'">
+        <div class="info-area boxed">
+            <p>
             <span class="bold-medium">
               <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
               <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
             </span> Application deadline
-        </p>
-        <p><span class="bold-medium" th:text="${competitionSummary.totalNumberOfApplications}" /> Total number of applications</p>
-        <p><span class="bold-medium" th:text="${competitionSummary.applicationsStarted}" /> Applications started</p>
-        <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress}" /> Applications in progress (Beyond 50%)</p>
-        <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
+            </p>
+            <p><span class="bold-medium" th:text="${competitionSummary.totalNumberOfApplications}" /> Total number of applications</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsStarted}" /> Applications started</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress}" /> Applications in progress (Beyond 50%)</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
+        </div>
     </div>
-  </div>
+
+    <div th:remove="tag" th:case="'IN_ASSESSMENT'">
+        <div class="info-area boxed">
+            <p>
+            <span class="bold-medium">
+              <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
+              <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            </span> Application deadline
+            </p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
+            <p th:if="${param.tab != null} and ${param.tab[0] == 'notSubmitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress + competitionSummary.applicationsStarted}"/> Applications not submitted</p>
+            <p th:if="${param.tab != null} and ${param.tab[0] == 'submitted'}"><a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.xls)</a></p>
+        </div>
+    </div>
+
+    <div th:remove="tag" th:case="'FUNDERS_PANEL'">
+        <div class="info-area boxed">
+            <p>
+            <span class="bold-medium">
+              <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
+              <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            </span> Assessment deadline
+            </p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress + competitionSummary.applicationsStarted}" /> Applications not submitted</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
+            <a th:href="/management/competition/${competitionSummary.competitionId}/download" class="button-secondary">Export application data (.xls)</a>
+            <a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
+        </div>
+    </div>
+
+    <div th:remove="tag" th:case="'PROJECT_SETUP'">
+        <div class="info-area boxed">
+            <p>
+            <span class="bold-medium">
+              <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
+              <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            </span> Application deadline
+            </p>
+            <p><span class="bold-medium" th:text="${competitionSummary.totalNumberOfApplications}" /> Total number of applications</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsStarted}" /> Applications started</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress}" /> Applications in progress (Beyond 50%)</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
+        </div>
+    </div>
+
+    <div th:remove="tag" th:case="'*'">
+        <p>Competition is in invalid state</p>
+    </div>
+        &nbsp; <!--/* don't remove is for mainting layout when the info box is sticky/fixed */-->
+    </div>
+
+</div>
 </html>

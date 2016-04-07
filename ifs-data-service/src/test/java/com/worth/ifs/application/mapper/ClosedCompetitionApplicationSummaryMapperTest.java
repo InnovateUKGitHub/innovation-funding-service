@@ -39,6 +39,7 @@ public class ClosedCompetitionApplicationSummaryMapperTest {
 		Application source = new Application();
 		source.setId(Long.valueOf(123L));
 		source.setName("appname");
+		source.setDurationInMonths(5L);
 		
 		ProcessRole leadProcessRole = leadProcessRole("jim", "kirk");
 		source.addUserApplicationRole(leadProcessRole);
@@ -63,6 +64,7 @@ public class ClosedCompetitionApplicationSummaryMapperTest {
 		assertEquals(Integer.valueOf(2), result.getNumberOfPartners());
 		assertEquals(new BigDecimal("12.30"), result.getGrantRequested());
 		assertEquals(new BigDecimal("66.60"), result.getTotalProjectCost());
+		assertEquals(Long.valueOf(5L), result.getDuration());
 	}
 
 	private ProcessRole collaboratorProcessRole() {

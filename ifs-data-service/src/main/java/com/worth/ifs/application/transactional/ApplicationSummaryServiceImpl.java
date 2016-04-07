@@ -1,9 +1,8 @@
 package com.worth.ifs.application.transactional;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -132,18 +131,18 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		if(canUseSpringDataPaginationForClosedCompetitionResults(sortBy)){
 			Page<Application> applicationResults;
 			if(submitted) {
-				applicationResults = applicationRepository.findByCompetitionIdAndSubmittedDateIsNotNull(competitionId, pageable);
+				applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId(), pageable);
 			} else {
-				applicationResults = applicationRepository.findByCompetitionIdAndSubmittedDateIsNull(competitionId, pageable);
+				applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId(), pageable);
 			}
 			return find(applicationResults, notFoundError(Page.class)).andOnSuccessReturn(closedCompetitionApplicationSummaryPageMapper::mapToResource);
 		}
 		
 		List<Application> resultsList;
 		if(submitted) {
-			resultsList = applicationRepository.findByCompetitionIdAndSubmittedDateIsNotNull(competitionId);
+			resultsList = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
 		} else {
-			resultsList = applicationRepository.findByCompetitionIdAndSubmittedDateIsNull(competitionId);
+			resultsList = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId());
 		}
 		
 		ClosedCompetitionApplicationSummaryPageResource result = new ClosedCompetitionApplicationSummaryPageResource();
@@ -170,12 +169,12 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		return resultsList.stream()
 				.map(applicationSummaryMapper::mapToResource)
 				.sorted((i1, i2) -> {
-					if("percentageComplete".equals(sortBy)) {
-						return new ApplicationSummaryResourcePercentageCompleteComparator().compare(i1, i2);
+					if("id".equals(sortBy)) {
+						return 0;
 					} else if("lead".equals(sortBy)) {
 						return new ApplicationSummaryResourceLeadComparator().compare(i1, i2);
 					}
-					return 0;
+					return new ApplicationSummaryResourcePercentageCompleteComparator().compare(i1, i2);
 				})
 				.skip(pageable.getOffset())
 				.limit(pageable.getPageSize())
@@ -183,7 +182,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	}
 
 	private boolean canUseSpringDataPaginationForSummaryResults(String sortBy) {
-		return !("percentageComplete".equals(sortBy) || "lead".equals(sortBy));
+		return "id".equals(sortBy) || "name".equals(sortBy) || "status".equals(sortBy);
 	}
 
 	private String[] getApplicationSummarySortField(String sortBy) {
