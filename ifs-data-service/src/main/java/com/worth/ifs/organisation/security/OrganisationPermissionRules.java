@@ -27,6 +27,11 @@ public class OrganisationPermissionRules {
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
+    @PermissionRule(value = "READ", description = "Comp Admins can see all Competitions")
+    public boolean compAdminsCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
+        return true;
+    }
+
     @PermissionRule(value = "READ", description = "Organisations that are not yet a part of any Applications are visible to anyone, " +
             "because this needs to be possible to create them during registration where there is not yet a logged-in user")
     public boolean anyoneCanSeeOrganisationsNotYetConnectedToApplications(OrganisationResource organisation, UserResource user) {
