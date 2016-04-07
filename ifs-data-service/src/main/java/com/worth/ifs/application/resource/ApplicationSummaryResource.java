@@ -16,6 +16,7 @@ public class ApplicationSummaryResource {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	public String getFormattedId(){	return ApplicationResource.formatter.format(id); }
 	public String getName() {
 		return name;
 	}

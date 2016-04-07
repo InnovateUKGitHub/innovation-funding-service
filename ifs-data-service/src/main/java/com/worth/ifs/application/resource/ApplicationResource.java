@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationResource {
-    public static final DecimalFormat formatter = new DecimalFormat("#00000000");
+    public static final String ID_PATTERN = "#00000000";
+    public static final DecimalFormat formatter = new DecimalFormat(ID_PATTERN);
 
     private Long id;
     private String name;
