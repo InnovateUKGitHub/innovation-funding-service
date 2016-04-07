@@ -33,6 +33,7 @@ public class ApplicationResource {
         return id;
     }
 
+    @JsonIgnore
     public String getFormattedId(){
         return formatter.format(id);
     }

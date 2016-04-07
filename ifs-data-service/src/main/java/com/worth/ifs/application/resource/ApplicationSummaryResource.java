@@ -1,5 +1,7 @@
 package com.worth.ifs.application.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Represents a high-level overview of an application.
  */
@@ -16,6 +18,7 @@ public class ApplicationSummaryResource {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	@JsonIgnore
 	public String getFormattedId(){	return ApplicationResource.formatter.format(id); }
 	public String getName() {
 		return name;
