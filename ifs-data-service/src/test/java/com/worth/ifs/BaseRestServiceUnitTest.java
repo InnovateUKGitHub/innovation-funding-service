@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
@@ -57,7 +58,8 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         adaptor.setRestTemplate(mockRestTemplate);
         adaptor.setAsyncRestTemplate(mockAsyncRestTemplate);
 
-        AnonymousUserRestTemplateAdaptor anonymousUserRestTemplateAdaptor = new AnonymousUserRestTemplateAdaptor(ANONYMOUS_AUTH_TOKEN);
+        AnonymousUserRestTemplateAdaptor anonymousUserRestTemplateAdaptor = new AnonymousUserRestTemplateAdaptor();
+        ReflectionTestUtils.setField(anonymousUserRestTemplateAdaptor, "ifsWebSystemUserUid", ANONYMOUS_AUTH_TOKEN);
         anonymousUserRestTemplateAdaptor.setRestTemplate(mockRestTemplate);
         anonymousUserRestTemplateAdaptor.setAsyncRestTemplate(mockAsyncRestTemplate);
 

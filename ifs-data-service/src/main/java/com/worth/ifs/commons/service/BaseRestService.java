@@ -47,8 +47,16 @@ public abstract class BaseRestService {
         return adaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
+    protected <T> RestResult<T> getWithRestResultAnonymous(String path, ParameterizedTypeReference<T> returnType) {
+        return anonymousRestTemplateAdaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
+    }
+
     protected <T> RestResult<T> getWithRestResult(String path, Class<T> returnType) {
         return adaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
+    }
+
+    protected <T> RestResult<T> getWithRestResultAnonymous(String path, Class<T> returnType) {
+        return anonymousRestTemplateAdaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
     protected <T> RestResult<T> postWithRestResult(String path, ParameterizedTypeReference<T> returnType) {

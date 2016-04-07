@@ -1,7 +1,6 @@
 package com.worth.ifs.config;
 
 import com.worth.ifs.commons.service.AbstractRestTemplateAdaptor;
-import com.worth.ifs.commons.service.AnonymousUserRestTemplateAdaptor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,9 +19,6 @@ public class RestTemplateAdaptorFactory {
 
     @Value("${ifs.data.company-house.key}")
     private String companyhouseKey = null;
-
-    @Value("${ifs.web.system.user.uid}")
-    private String ifsWebSystemUserUid = null;
 
     @Bean(autowire = Autowire.BY_TYPE)
     @Qualifier("shibboleth_adaptor")
@@ -64,11 +60,4 @@ public class RestTemplateAdaptorFactory {
             }
         };
     }
-
-    @Bean(autowire = Autowire.BY_TYPE)
-    @Qualifier("ifs_web_system_adaptor")
-    public AnonymousUserRestTemplateAdaptor ifsWebSystemAdaptor(){
-        return new AnonymousUserRestTemplateAdaptor(ifsWebSystemUserUid);
-    }
-
 }
