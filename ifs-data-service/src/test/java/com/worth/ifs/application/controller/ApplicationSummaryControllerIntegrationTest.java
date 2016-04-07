@@ -25,7 +25,6 @@ import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 
@@ -107,8 +106,8 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
         assertEquals(20, result.getSuccessObject().getSize());
-        assertEquals(0, result.getSuccessObject().getTotalElements());
-        assertEquals(0, result.getSuccessObject().getTotalPages());
+        assertEquals(3, result.getSuccessObject().getTotalElements());
+        assertEquals(1, result.getSuccessObject().getTotalPages());
     }
     
     @Test
@@ -118,7 +117,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
         assertEquals(20, result.getSuccessObject().getSize());
-        assertEquals(6, result.getSuccessObject().getTotalElements());
+        assertEquals(1, result.getSuccessObject().getTotalElements());
         assertEquals(1, result.getSuccessObject().getTotalPages());
         assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getContent().get(0).getId());
         assertNull(result.getSuccessObject().getContent().get(0).getTotalProjectCost());

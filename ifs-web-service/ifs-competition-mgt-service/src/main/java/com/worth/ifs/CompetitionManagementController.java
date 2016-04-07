@@ -80,14 +80,20 @@ public class CompetitionManagementController {
 		
 		ApplicationSummaryPageResource applicationSummary = applicationSummaryService.findByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
 		model.addAttribute("results", applicationSummary);
+		model.addAttribute("activeSortField", getActiveSortFieldForOpenCompetition(queryForm.getSort()));
 
         LOG.warn("Show open competition info");
         return "comp-mgt";
 	}
 
+    private String getActiveSortFieldForOpenCompetition(String sort) {
+		if("id".equals(sort) || "lead".equals(sort) || "name".equals(sort) || "status".equals(sort)) {
+			return sort;
+		}
+		return "percentageComplete";
+	}
 
-
-    @RequestMapping("/{competitionId}/download")
+	@RequestMapping("/{competitionId}/download")
     public void downloadApplications(@PathVariable("competitionId") Long competitionId, HttpServletResponse response) throws IOException {
         CompetitionResource competition = competitionService.getById(competitionId);
         if(competition!= null){
