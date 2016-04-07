@@ -1,22 +1,16 @@
 package com.worth.ifs.registration;
 
-import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import java.util.ArrayList;
-
-import javax.servlet.http.Cookie;
-
+import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.address.service.AddressRestService;
+import com.worth.ifs.application.AcceptInviteController;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.exception.ErrorControllerAdvice;
+import com.worth.ifs.organisation.resource.OrganisationSearchResult;
+import com.worth.ifs.registration.form.OrganisationCreationForm;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.service.OrganisationSearchRestService;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,18 +27,17 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.address.service.AddressRestService;
-import com.worth.ifs.application.AcceptInviteController;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.exception.ErrorControllerAdvice;
-import com.worth.ifs.organisation.resource.OrganisationSearchResult;
-import com.worth.ifs.registration.form.OrganisationCreationForm;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.service.OrganisationSearchRestService;
+import javax.servlet.http.Cookie;
+import java.util.ArrayList;
+
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -92,7 +85,6 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
         when(organisationService.getCompanyHouseOrganisation(COMPANY_ID)).thenReturn(organisationSearchResult);
-        when(organisationService.save(any(Organisation.class))).thenReturn(organisationResource);
         when(organisationService.save(any(OrganisationResource.class))).thenReturn(organisationResource);
         when(applicationService.createApplication(anyLong(), anyLong(), anyString())).thenReturn(applicationResource);
         when(organisationSearchRestService.getOrganisation(businessOrganisationTypeResource.getId(), COMPANY_ID)).thenReturn(RestResult.restSuccess(organisationSearchResult));

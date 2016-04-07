@@ -8,19 +8,31 @@ IFS.competition_management = (function(){
     var s;
     return {
         settings: {
-          box : '.info-area',
-          container : '.competition-data',
+          menu : jQuery('.info-area'),
+          container : '.competition-data form',
           breakpoint : 1200 //px
         },
         init: function(){
             s = this.settings;
-            IFS.competition_management.getBoxOffset();
             IFS.competition_management.getWindowWidth();
+            IFS.competition_management.getMenuHeight();
+            IFS.competition_management.getContainerHeight();
+
+            if(IFS.competition_management.stickyEnabled()){
+                IFS.competition_management.getMenuWidth();
+                IFS.competition_management.getMenuOffset();
+                IFS.competition_management.getContainerOffset();
+                IFS.competition_management.menuPxToPercentage();
+            }
 
             jQuery(window).resize(function(){
               clearTimeout(resizeTimer);
               resizeTimer = setTimeout(function(){
+                IFS.competition_management.getMenuHeight();
+                IFS.competition_management.getMenuWidth();
+                IFS.competition_management.getContainerHeight();
                 IFS.competition_management.getWindowWidth();
+                IFS.competition_management.menuPxToPercentage();
                 IFS.competition_management.stickyScroll();
               },250);
             });
@@ -31,22 +43,47 @@ IFS.competition_management = (function(){
         getWindowWidth: function(){
            calculatedValues.windowWidth = jQuery(window).width();
         },
-        getBoxOffset : function(){
-          calculatedValues.top = parseInt(jQuery(s.box).offset().top,10);
+        getMenuOffset : function(){
+          calculatedValues.menuOffsetTop = s.menu.offset().top;
+        },
+        getMenuWidth: function(){
+          calculatedValues.menuWidth = s.menu.width();
+        },
+        getMenuHeight : function(){
+          calculatedValues.menuHeight = s.menu.outerHeight();
+        },
+        getContainerHeight : function(){
+          calculatedValues.containerHeight = jQuery(s.container).outerHeight(true);
+        },
+        getContainerOffset : function(){
+          calculatedValues.containerOffsetTop = jQuery(s.container).offset().top;
+        },
+        stickyEnabled: function(){
+          //not responsively disabled or heigher menu than container
+          if((s.breakpoint < calculatedValues.windowWidth) && (calculatedValues.menuHeight < calculatedValues.containerHeight)){
+            return true;
+          }
+          return false;
+        },
+        menuPxToPercentage : function(){
+          calculatedValues.menuPercentage =  parseFloat((calculatedValues.menuWidth/calculatedValues.windowWidth)*100).toFixed(2);
         },
         stickyScroll : function(){
-          var box = jQuery(s.box);
-          if(s.breakpoint < calculatedValues.windowWidth){
+          if(IFS.competition_management.stickyEnabled()){
             var scroll = jQuery(document).scrollTop();
-            if(scroll> calculatedValues.top) {
-               box.addClass('sticky');
+            if((calculatedValues.menuHeight+scroll) > (calculatedValues.containerHeight+calculatedValues.containerOffsetTop)){
+                var top = (calculatedValues.containerHeight+calculatedValues.containerOffsetTop)-calculatedValues.menuHeight;
+                s.menu.addClass('bottom').removeClass('sticky').css({'top':top+'px','width':calculatedValues.menuPercentage+'%'});
+            }
+            else if(calculatedValues.menuOffsetTop < scroll) {
+               s.menu.addClass('sticky').css({'top':'0','width':calculatedValues.menuPercentage+'%'}).removeClass('bottom');
             }
             else {
-                box.removeClass('sticky');
+              s.menu.removeClass('sticky bottom').removeAttr('style');
             }
           }
           else {
-              box.removeClass('sticky');
+            s.menu.removeClass('sticky bottom').removeAttr('style');
           }
         }
     };

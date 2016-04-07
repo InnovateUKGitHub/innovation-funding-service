@@ -20,6 +20,9 @@ public abstract class BaseRestService {
     @Autowired
     private RestTemplateAdaptor adaptor;
 
+    @Autowired
+    private AnonymousUserRestTemplateAdaptor anonymousRestTemplateAdaptor;
+
     private String dataRestServiceURL;
 
     protected String getDataRestServiceURL() {
@@ -35,13 +38,25 @@ public abstract class BaseRestService {
         this.adaptor = adaptor;
     }
 
+    public void setAnonymousRestTemplateAdaptor(AnonymousUserRestTemplateAdaptor anonymousRestTemplateAdaptor) {
+        this.anonymousRestTemplateAdaptor = anonymousRestTemplateAdaptor;
+    }
+
     // Synchronous calls
     protected <T> RestResult<T> getWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
         return adaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
+    protected <T> RestResult<T> getWithRestResultAnonymous(String path, ParameterizedTypeReference<T> returnType) {
+        return anonymousRestTemplateAdaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
+    }
+
     protected <T> RestResult<T> getWithRestResult(String path, Class<T> returnType) {
         return adaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
+    }
+
+    protected <T> RestResult<T> getWithRestResultAnonymous(String path, Class<T> returnType) {
+        return anonymousRestTemplateAdaptor.getWithRestResult(getDataRestServiceURL() + path, returnType);
     }
 
     protected <T> RestResult<T> postWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
@@ -58,6 +73,10 @@ public abstract class BaseRestService {
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, Class<R> returnType) {
         return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
+    }
+
+    protected <R> RestResult<R> postWithRestResultAnonymous(String path, Object objectToSend, Class<R> returnType) {
+        return anonymousRestTemplateAdaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
     }
 
     protected <R> RestResult<R> postWithRestResult(String path, Object objectToSend, HttpHeaders additionalHeaders, Class<R> returnType) {

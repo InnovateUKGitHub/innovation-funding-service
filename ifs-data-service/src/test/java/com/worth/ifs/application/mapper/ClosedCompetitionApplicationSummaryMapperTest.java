@@ -1,20 +1,5 @@
 package com.worth.ifs.application.mapper;
 
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -24,6 +9,20 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ClosedCompetitionApplicationSummaryMapperTest {

@@ -24,7 +24,7 @@ The applicant can assign re-assign a question from the overview page
     [Documentation]    INFUND-39
     [Tags]    Applicant    Overview
     Given the user navigates to the page    ${application_overview_url}
-    When the applicant assigns the "Project Summary" question      Steve Smith
+    When the applicant assigns the "Project Summary" question from the overview page      Steve Smith
     Then the applicant should see a blue flag for the Project Summary question (overview page)
     And the assign button should say Assigned to:You
 
@@ -37,8 +37,13 @@ the Applicant edits the "Project summary" question
 
 the "assign to" should be correct for the "Project Summary" question
     Go To    ${APPLICATION_OVERVIEW_URL}
-    Page Should Contain Element    css=#form-input-11 .column-third button strong
-    Element Should Contain    css=#form-input-11 .column-third button strong    Jessica Doe
+    Page Should Contain Element    jQuery=#section-1 .section:nth-child(2) .column-third button strong
+    Element Should Contain   jQuery=#section-1 .section:nth-child(2) .column-third button strong    Jessica Doe
+
+the applicant assigns the "Project Summary" question from the overview page
+    [Arguments]    ${assignee_name}
+    Click Element    jQuery=#section-1 .section:nth-child(2) .assign-button button
+    Click Element     jQuery=button:contains("${assignee_name}")
 
 the applicant assigns the "Project Summary" question
     [Arguments]    ${assignee_name}
@@ -47,10 +52,10 @@ the applicant assigns the "Project Summary" question
 
 the applicant should see a blue flag for the Project Summary question (overview page)
     #Reload Page
-    Wait Until Page Contains Element    css=#form-input-11 .assigned
+    Wait Until Page Contains Element    jQuery=#section-1 .section:nth-child(2) .assigned
 
 the blue flag should not be visible
-    Element Should Not Be Visible    css=#form-input-11 .assigned
+    Element Should Not Be Visible    jQuery=#section-1 .section:nth-child(2) .assigned
 
 the assign button should say Assigned to:You
-    Element Should Contain    css=#form-input-11 .column-third button strong    You
+    Element Should Contain    jQuery=#section-1 .section:nth-child(2) .column-third button strong    You

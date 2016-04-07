@@ -36,4 +36,4 @@ none of the sections are marked as complete
     Element Should Not Be Visible    css=.complete
 
 the applicant can see that the 'economics benefit' section is marked as complete
-    Element Should Be Visible    css=.application-overview #section-2 #form-input-4 .complete
+    Element Should Be Visible    jQuery=#section-2 .section:nth-child(4) img[src="/images/field/field-done-right.png"]

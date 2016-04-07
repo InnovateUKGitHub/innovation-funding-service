@@ -1,29 +1,17 @@
 package com.worth.ifs.user.domain;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -142,6 +130,10 @@ public class User {
 
     public List<Role> getRoles() {
         return roles;
+    }
+
+    public boolean hasRole(UserRoleType type) {
+        return simpleMap(getRoles(), Role::getName).contains(type.getName());
     }
 
     public void setRoles(List<Role> roles) {
