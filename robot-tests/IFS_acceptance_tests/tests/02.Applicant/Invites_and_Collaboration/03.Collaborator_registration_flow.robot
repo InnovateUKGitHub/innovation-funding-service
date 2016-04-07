@@ -67,7 +67,7 @@ The type of organisation navigates to the correct page
     When the user goes back to the previous page
     Given user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Please select your type or research organisation
+    Then the user should see the text in the page    Please select your type of research organisation
     When the user goes back to the previous page
     Given user selects the radio button    organisationType    3
     and the user clicks the button/link    jQuery=.button:contains("Continue")
