@@ -84,8 +84,8 @@
             </span> Application deadline
             </p>
             <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
-            <p th:if="${param.tab != null} and ${param.tab[0] == 'notSubmitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress + competitionSummary.applicationsStarted}"/> Applications not submitted</p>
-            <p th:if="${param.tab != null} and ${param.tab[0] == 'submitted'}"><a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.xls)</a></p>
+            <p th:if="${param.tab != null} and ${param.tab[0] == 'notSubmitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}"/> Applications not submitted</p>
+            <p th:if="${param.tab != null} and ${param.tab[0] == 'submitted'}"><a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.csv)</a></p>
         </div>
     </div>
 
@@ -97,9 +97,9 @@
               <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
             </span> Assessment deadline
             </p>
-            <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress + competitionSummary.applicationsStarted}" /> Applications not submitted</p>
             <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
-            <a th:href="/management/competition/${competitionSummary.competitionId}/download" class="button-secondary">Export application data (.xls)</a>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}" /> Applications not submitted</p>
+            <a th:href="/management/competition/${competitionSummary.competitionId}/download" class="button-secondary">Export application data (.csv)</a>
             <a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
         </div>
     </div>
