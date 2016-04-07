@@ -11,6 +11,7 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,21 +44,21 @@ public class FormInputResponseFileUploadRules {
     private ApplicationRepository applicationRepository;
 
     @PermissionRule(value = "UPDATE", description = "An Applicant can upload a file for an answer to one of their own Applications")
-    public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, User user) {
+    public boolean applicantCanUploadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         Application application = applicationRepository.findOne(fileEntry.getCompoundId().getApplicationId());
         return userIsApplicantOnThisApplication(fileEntry, user) && application.isOpen();
     }
 
     @PermissionRule(value = "READ", description = "An Applicant can download a file for an answer to one of their own Applications")
-    public boolean applicantCanDownloadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, User user) {
+    public boolean applicantCanDownloadFilesInResponsesForOwnApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         return SecurityRuleUtil.isCompAdmin(user) || userIsApplicantOnThisApplication(fileEntry, user);
     }
 
-    private boolean userIsApplicantOnThisApplication(FormInputResponseFileEntryResource fileEntry, User user) {
+    private boolean userIsApplicantOnThisApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         return userIsApplicantOnThisApplication(fileEntry.getCompoundId().getApplicationId(), user);
     }
 
-    private boolean userIsApplicantOnThisApplication(long applicationId, User user) {
+    private boolean userIsApplicantOnThisApplication(long applicationId, UserResource user) {
         List<Role> allApplicantRoles = roleRepository.findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()));
         List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, applicationId);
         return !applicantProcessRoles.isEmpty();

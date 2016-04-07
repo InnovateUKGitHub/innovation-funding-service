@@ -1,5 +1,7 @@
 package com.worth.ifs.user.controller;
 
+import java.util.Set;
+
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.repository.AddressRepository;
@@ -8,21 +10,25 @@ import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.domain.OrganisationType;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import java.util.Set;
-
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class OrganisationControllerIntegrationTest extends BaseControllerIntegrationTest<OrganisationController> {
+
+    private User user;
 
     @Autowired
     private OrganisationTypeRepository organisationTypeRepository;
@@ -33,12 +39,16 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    UserMapper userMapper;
+
     private static final String companyHouseId = "0123456789";
     private static final String companyName = "CompanyName1";
 
     @Before
     public void setLoggedInUserOnThread() {
-        setLoggedInUser(userRepository.findByEmail("steve.smith@empire.com").get());
+        user = userRepository.findByEmail("steve.smith@empire.com").get();
+        setLoggedInUser(userMapper.mapToResource(user));
     }
 
     @Override
@@ -50,32 +60,16 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Rollback
     @Test
     public void findByIdShouldReturnOrganisation() throws Exception {
-        OrganisationResource org = controller.findById(1L).getSuccessObject();
-        assertEquals("Nomensa", org.getName());
-
-        org = controller.findById(2L).getSuccessObject();
+        final OrganisationResource org = controller.findById(2L).getSuccessObject();
         assertEquals("Worth Internet Systems", org.getName());
-
-        org = controller.findById(5L).getSuccessObject();
-        assertEquals("Manchester University", org.getName());
     }
 
     @Rollback
     @Test
     public void testOrganisationType() throws Exception {
-        OrganisationResource org = controller.findById(1L).getSuccessObject();
+        OrganisationResource org = controller.findById(2L).getSuccessObject();
         OrganisationType organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
-
         assertEquals("Business", organisationType.getName());
-
-        org = controller.findById(2L).getSuccessObject();
-        organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
-        assertEquals("Business", organisationType.getName());
-
-        org = controller.findById(5L).getSuccessObject();
-        organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
-        assertEquals("University (HEI)", organisationType.getName());
-        assertEquals("Research", organisationType.getParentOrganisationType().getName());
     }
 
     @Rollback
@@ -92,6 +86,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         Organisation organisation = new Organisation();
         organisation.setName(companyName);
         organisation.setCompanyHouseNumber(companyHouseId);
+        organisation.setUsers(singletonList(user));
         return controller.create(organisation).getSuccessObject();
     }
 
@@ -99,7 +94,6 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Test
     public void testCreate() throws Exception {
         OrganisationResource organisationResource = createOrganisation();
-
 
         assertEquals(companyHouseId, organisationResource.getCompanyHouseNumber());
         assertEquals(companyName, organisationResource.getName());
@@ -113,6 +107,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Test
     public void testCreateSecondConstructor() throws Exception {
         Organisation organisation = new Organisation(null, companyName, companyHouseId, OrganisationSize.LARGE);
+        organisation.setUsers(singletonList(user));
         OrganisationResource organisationResource = controller.create(organisation).getSuccessObject();
 
 
@@ -132,8 +127,6 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         OrganisationResource organisationResource = createOrganisation();
         AddressResource addressResource = new AddressResource("Line1", "Line2",  "Line3", "town", "county", "postcode");
         controller.addAddress(organisationResource.getId(), AddressType.OPERATING, addressResource);
-
-        flushAndClearSession();
 
         OrganisationResource cleanOrganisation = controller.findById(organisationResource.getId()).getSuccessObject();
         assertEquals(1, cleanOrganisation.getAddresses().size());

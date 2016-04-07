@@ -10,6 +10,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
                                                Model model,
                                                HttpServletRequest request
     ){
-        User user = getLoggedUser(request);
+        UserResource user = getLoggedUser(request);
         Long applicationId = Long.valueOf(applicationIdString);
         form.setAdminMode(true);
 

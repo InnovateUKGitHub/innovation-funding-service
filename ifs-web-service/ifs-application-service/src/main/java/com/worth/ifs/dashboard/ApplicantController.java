@@ -5,6 +5,7 @@ import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ApplicationStatusRestService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -48,7 +49,7 @@ public class ApplicantController {
 
     @RequestMapping(value="/dashboard", method= RequestMethod.GET)
     public String dashboard(Model model, HttpServletRequest request) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
         model.addAttribute("applicationProgress", applicationService.getProgress(user.getId()));
 
@@ -71,7 +72,7 @@ public class ApplicantController {
      * Get a list of application ids, where one of the questions is assigned to the current user. This is only for the
      * collaborators, since the leadapplicant is the default assignee.
      */
-    private List<Long> getAssignedApplications(List<ApplicationResource> inProgress, User user){
+    private List<Long> getAssignedApplications(List<ApplicationResource> inProgress, UserResource user){
         return inProgress.stream().filter(applicationResource -> {
                     ProcessRole role = processRoleService.findProcessRole(user.getId(), applicationResource.getId());
                     if(!role.getRole().getName().equals("leadapplicant")){

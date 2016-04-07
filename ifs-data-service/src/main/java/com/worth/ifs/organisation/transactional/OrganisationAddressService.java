@@ -6,6 +6,6 @@ import com.worth.ifs.security.NotSecured;
 
 public interface OrganisationAddressService {
 
-    @NotSecured("TODO")
+    @NotSecured("Anyone can see an OrganisationAddress")
     ServiceResult<OrganisationAddressResource> findOne(Long id);
 }

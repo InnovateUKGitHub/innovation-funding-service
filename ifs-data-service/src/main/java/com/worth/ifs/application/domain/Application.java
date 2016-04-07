@@ -2,6 +2,7 @@ package com.worth.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.invite.domain.Invite;
@@ -68,6 +69,10 @@ public class Application {
 
     protected boolean canEqual(Object other) {
         return other instanceof Application;
+    }
+
+    public String getFormattedId(){
+        return ApplicationResource.formatter.format(id);
     }
 
     public void setId(Long id) {

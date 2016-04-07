@@ -53,32 +53,32 @@ public class UserController {
     private UserProfileService userProfileService;
 
     @RequestMapping("/uid/{uid}")
-    public RestResult<User> getUserByUid(@PathVariable("uid") final String uid) {
-        return userService.getUserByUid(uid).toGetResponse();
+    public RestResult<UserResource> getUserByUid(@PathVariable("uid") final String uid) {
+        return userService.getUserResourceByUid(uid).toGetResponse();
     }
 
     @RequestMapping("/id/{id}")
-    public RestResult<User> getUserById(@PathVariable("id") final Long id) {
+    public RestResult<UserResource> getUserById(@PathVariable("id") final Long id) {
         return userService.getUserById(id).toGetResponse();
     }
 
     @RequestMapping("/findAll/")
-    public RestResult<List<User>> findAll() {
+    public RestResult<List<UserResource>> findAll() {
         return userService.findAll().toGetResponse();
     }
 
     @RequestMapping("/findByEmail/{email}/")
     public RestResult<UserResource> findByEmail(@PathVariable("email") final String email) {
-        return userService.findByEmail(email).andOnSuccessReturn(UserResource::new).toGetResponse();
+        return userService.findByEmail(email).toGetResponse();
     }
 
     @RequestMapping("/findAssignableUsers/{applicationId}")
-    public RestResult<Set<User>> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
+    public RestResult<Set<UserResource>> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
         return userService.findAssignableUsers(applicationId).toGetResponse();
     }
 
     @RequestMapping("/findRelatedUsers/{applicationId}")
-    public RestResult<Set<User>> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
+    public RestResult<Set<UserResource>> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
         return userService.findRelatedUsers(applicationId).toGetResponse();
     }
 
@@ -124,17 +124,17 @@ public class UserController {
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
-    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
+    public RestResult<Void> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
         return registrationService.createApplicantUser(organisationId, userResource).toPostCreateResponse();
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
-    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
+    public RestResult<Void> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
         return registrationService.createApplicantUser(organisationId, of(competitionId), userResource).toPostCreateResponse();
     }
 
     @RequestMapping("/updateDetails")
-    public RestResult<UserResource> createUser(@RequestBody UserResource userResource) {
-        return userProfileService.updateProfile(userResource).toPutWithBodyResponse();
+    public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
+        return userProfileService.updateProfile(userResource).toPutResponse();
     }
 }

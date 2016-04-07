@@ -99,6 +99,86 @@ table{
 	}
 }
 
+/*----- Forecast table ----*/
+
+#table-forecast{
+	
+	margin-bottom: 2em;
+
+	input{
+		width: 100%;
+		text-align: right;
+		min-width: 5.5em;
+	}
+
+	tbody{
+		td{
+			text-align: right;
+
+			&.aligncentre{
+				text-align: center;
+			}
+
+			&.alignleft{
+				text-align: left;
+			}
+		}
+	}
+	tfoot{
+		td{
+			text-align: right;
+
+			&.aligncentre{
+				text-align: center;
+			}
+
+			&.alignleft{
+				text-align: left;
+			}
+		}
+	}
+	thead{
+		th{
+			text-align: right;
+
+			&.aligncentre{
+				text-align: center;
+			}
+
+			&.alignleft{
+				text-align: left;
+			}
+
+			&.header-span{
+				background: $grey-4;
+				text-align: center;
+			}
+		}
+	}
+	
+	.separate-cell{
+		border-right: 12px solid $white;
+	}
+
+	.total{
+		background: $grey-3;
+		padding-left: 0.625em;
+		padding-right: 0.625em;
+		font-weight: bold;
+		border-right: 12px solid $white;
+
+		&.granted{
+			background: $grey-4;
+		}
+
+		&.claimed{
+			background: $grey-3;
+		}
+	}
+
+}
+
+
 /*----- Projects by stage tables styles----*/
 
 #projects-by-stage{

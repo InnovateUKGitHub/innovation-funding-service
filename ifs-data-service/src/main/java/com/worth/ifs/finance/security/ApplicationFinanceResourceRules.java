@@ -10,6 +10,7 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class ApplicationFinanceResourceRules {
     ProcessRoleRepository processRoleRepository;
 
     @PermissionRule(value = "READ", description = "An applicant can only see their finances of their own organisation")
-    public boolean applicationCanSeeTheirOwnOrganisationFinances(ApplicationFinanceResourceId applicationFinanceResourceId, User user) {
+    public boolean applicationCanSeeTheirOwnOrganisationFinances(ApplicationFinanceResourceId applicationFinanceResourceId, UserResource user) {
         boolean isLeadApplicant = checkRole(user, applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId(), LEADAPPLICANT);
         boolean isCollaborator = checkRole(user, applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId(), COLLABORATOR);
         boolean isAssessor = checkRole(user, applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId(), ASSESSOR);
@@ -42,7 +43,7 @@ public class ApplicationFinanceResourceRules {
         return SecurityRuleUtil.isCompAdmin(user) || isLeadApplicant || isCollaborator || isAssessor;
     }
 
-    private boolean checkRole(User user, Long applicationId, Long organisationId, UserRoleType userRoleType) {
+    private boolean checkRole(UserResource user, Long applicationId, Long organisationId, UserRoleType userRoleType) {
         List<Role> roles = roleRepository.findByName(userRoleType.getName());
 
         if (roles.isEmpty()) {
