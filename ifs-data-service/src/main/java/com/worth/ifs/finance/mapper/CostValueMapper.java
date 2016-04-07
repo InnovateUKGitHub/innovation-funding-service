@@ -10,11 +10,11 @@ import org.mapstruct.Mapper;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-        CostFieldMapper.class
+        CostFieldMapper.class,
+        CostMapper.class
     }
 )
 public abstract class CostValueMapper extends BaseMapper<CostValue, CostValueResource, CostValueId> {
-
 
     public CostValueId mapCostValueToId(CostValue object) {
         if (object == null) {

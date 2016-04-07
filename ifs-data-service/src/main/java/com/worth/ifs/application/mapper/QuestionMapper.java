@@ -32,5 +32,4 @@ public abstract class QuestionMapper extends BaseMapper<Question, QuestionResour
         return question.getId();
     }
 
-
 }
