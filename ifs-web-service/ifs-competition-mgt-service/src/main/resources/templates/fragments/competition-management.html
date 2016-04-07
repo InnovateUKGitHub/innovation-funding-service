@@ -83,9 +83,13 @@
               <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
             </span> Application deadline
             </p>
-            <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress}" /> Applications not submitted</p>
             <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
+<<<<<<< HEAD
             <a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.xls)</a>
+=======
+            <p th:if="${param.tab != null} and ${param.tab[0] == 'notSubmitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress + competitionSummary.applicationsStarted}"/> Applications not submitted</p>
+            <p th:if="${param.tab != null} and ${param.tab[0] == 'submitted'}"><a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.csv)</a></p>
+>>>>>>> b9c5fd3c9cc8917359b2ec11b62bf941083e5d1b
         </div>
     </div>
 
@@ -97,7 +101,7 @@
               <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
             </span> Assessment deadline
             </p>
-            <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress}" /> Applications not submitted</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress + competitionSummary.applicationsStarted}" /> Applications not submitted</p>
             <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
             <a th:href="/management/competition/${competitionSummary.competitionId}/download" class="button-secondary">Export application data (.xls)</a>
             <a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
