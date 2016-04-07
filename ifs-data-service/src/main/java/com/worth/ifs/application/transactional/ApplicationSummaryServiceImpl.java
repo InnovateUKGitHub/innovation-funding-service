@@ -1,12 +1,16 @@
 package com.worth.ifs.application.transactional;
 
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryPageMapper;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.resource.comparators.*;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,28 +20,12 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
-import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryPageMapper;
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ApplicationSummaryResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.resource.CompletedPercentageResource;
-import com.worth.ifs.application.resource.PageResource;
-import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceLeadComparator;
-import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourcePercentageCompleteComparator;
-import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryGrantRequestedComparator;
-import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryLeadComparator;
-import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryNumberOfPartnersComparator;
-import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryTotalProjectCostComparator;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.transactional.BaseTransactionalService;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
@@ -90,6 +78,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		competitionSummaryResource.setApplicationsStarted(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId()));
 		competitionSummaryResource.setApplicationsInProgress(getApplicationInProgressCountByCompetitionId(competitionId));
 		competitionSummaryResource.setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId()));
+		competitionSummaryResource.setApplicationsNotSubmitted(competitionSummaryResource.getTotalNumberOfApplications() - competitionSummaryResource.getApplicationsSubmitted());
 		competitionSummaryResource.setApplicationDeadline(competition.getEndDate());
 
 		return serviceSuccess(competitionSummaryResource);
@@ -103,7 +92,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
 		for(Application application : applications){
 			final CompletedPercentageResource completedPercentageResource = applicationService.getProgressPercentageByApplicationId(application.getId()).getSuccessObject();
-			if(completedPercentageResource.getCompletedPercentage().intValue() > 50){
+			if(completedPercentageResource.getCompletedPercentage().intValue() > 50 && !(application.getApplicationStatus().equals(ApplicationStatusConstants.SUBMITTED))){
 				inProgressCount++;
 			}
 		}
