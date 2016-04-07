@@ -45,6 +45,7 @@
                           <option value="id" th:selected="${(param.sort != null) and (param.sort[0] == 'id')}">Application no.</option>
                           <option value="name" th:selected="${(param.sort != null) and (param.sort[0] == 'name')}">Project title</option>
                           <option value="lead" th:selected="${(param.sort != null) and (param.sort[0] == 'lead')}">Lead</option>
+                          <option value="status" th:selected="${(param.sort != null) and (param.sort[0] == 'status')}">Status</option>
                           <option value="percentageComplete" th:selected="${(param.sort != null) and (param.sort[0] == 'percentageComplete')}">Percentage complete</option>
                       </select>
                       <button type="submit" class="button no-margin">Sort</button>
