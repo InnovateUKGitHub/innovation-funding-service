@@ -6,6 +6,7 @@ import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.domain.TokenType;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserProfileService;
@@ -42,6 +43,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private RegistrationService registrationService;
@@ -124,13 +127,13 @@ public class UserController {
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
-    public RestResult<Void> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
-        return registrationService.createApplicantUser(organisationId, userResource).toPostCreateResponse();
+    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
+        return registrationService.createApplicantUser(organisationId, userResource).andOnSuccessReturn(userMapper::mapToResource).toGetResponse();
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
-    public RestResult<Void> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
-        return registrationService.createApplicantUser(organisationId, of(competitionId), userResource).toPostCreateResponse();
+    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
+        return registrationService.createApplicantUser(organisationId, of(competitionId), userResource).andOnSuccessReturn(userMapper::mapToResource).toGetResponse();
     }
 
     @RequestMapping("/updateDetails")

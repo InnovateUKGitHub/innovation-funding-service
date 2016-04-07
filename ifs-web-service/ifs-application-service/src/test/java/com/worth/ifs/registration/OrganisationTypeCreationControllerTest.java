@@ -1,7 +1,6 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import org.hamcrest.Matchers;
 import org.junit.Before;
