@@ -1,19 +1,30 @@
 package com.worth.ifs.user.security;
 
+import com.worth.ifs.BasePermissionRulesTest;
 import org.junit.Test;
-import org.mockito.InjectMocks;
+
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests around the permissions for UserService and related services
  */
-public class UserPermissionRulesTest {
-
-    @InjectMocks
-    private UserPermissionRules rules = new UserPermissionRules();
+public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermissionRules> {
 
     @Test
-    public void testAnyoneCanViewACompetition() {
-//        UserResource compAdminUser = newUserResource().withRolesGlobal(compAdminRole).build();
-//        assertTrue(rules.systemUserCanCreateUsers(), null);
+    public void testSystemUserCanCreateUsers() {
+        allRoleUsers.forEach(user -> {
+            if (user.equals(systemRegistrationUser())) {
+                assertTrue(rules.systemUserCanCreateUsers(newUserResource().build(), user));
+            } else {
+                assertFalse(rules.systemUserCanCreateUsers(newUserResource().build(), user));
+            }
+        });
+    }
+
+    @Override
+    protected UserPermissionRules supplyPermissionRulesUnderTest() {
+        return new UserPermissionRules();
     }
 }

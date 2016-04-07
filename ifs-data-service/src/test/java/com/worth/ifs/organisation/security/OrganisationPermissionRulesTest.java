@@ -6,9 +6,7 @@ import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -16,10 +14,8 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertFalse;
@@ -43,16 +39,13 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     @Test
     public void testCompAdminsCanViewAnyOrganisation() {
-
-        for (UserRoleType roleType : UserRoleType.values()) {
-            RoleResource role = newRoleResource().withType(roleType).build();
-            UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
-            if (roleType == COMP_ADMIN) {
+        allRoleUsers.forEach(user -> {
+            if (user.equals(compAdminUser())) {
                 assertTrue(rules.compAdminsCanSeeAllOrganisations(newOrganisationResource().build(), user));
             } else {
                 assertFalse(rules.compAdminsCanSeeAllOrganisations(newOrganisationResource().build(), user));
             }
-        }
+        });
     }
 
     @Test
