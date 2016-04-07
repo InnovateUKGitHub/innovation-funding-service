@@ -53,6 +53,10 @@
               <option value="id" th:selected="${(param.sort != null) and (param.sort[0] == 'id')}">Application no.</option>
               <option value="name" th:selected="${(param.sort != null) and (param.sort[0] == 'name')}">Project title</option>
               <option value="lead" th:selected="${(param.sort != null) and (param.sort[0] == 'lead')}">Lead</option>
+              <option value="numberOfPartners" th:selected="${(param.sort != null) and (param.sort[0] == 'numberOfPartners')}">No. of partners</option>
+              <option value="grantRequested" th:selected="${(param.sort != null) and (param.sort[0] == 'grantRequested')}">Grant requested</option>
+              <option value="totalProjectCost" th:selected="${(param.sort != null) and (param.sort[0] == 'totalProjectCost')}">Total project cost</option>
+              <option value="duration" th:selected="${(param.sort != null) and (param.sort[0] == 'duration')}">Duration</option>
           </select>
           <button type="submit" class="button no-margin">Sort</button>
         </div>
