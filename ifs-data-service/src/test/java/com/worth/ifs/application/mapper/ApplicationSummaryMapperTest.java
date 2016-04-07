@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 public class ApplicationSummaryMapperTest {
 
 	@InjectMocks
-	private ApplicationSummaryMapper mapper;
+	private ApplicationSummaryMapperImpl mapper;
 	
 	@Mock
 	private ApplicationService applicationService;
