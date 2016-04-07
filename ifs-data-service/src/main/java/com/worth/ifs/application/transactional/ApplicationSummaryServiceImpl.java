@@ -131,18 +131,18 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		if(canUseSpringDataPaginationForClosedCompetitionResults(sortBy)){
 			Page<Application> applicationResults;
 			if(submitted) {
-				applicationResults = applicationRepository.findByCompetitionIdAndSubmittedDateIsNotNull(competitionId, pageable);
+				applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId(), pageable);
 			} else {
-				applicationResults = applicationRepository.findByCompetitionIdAndSubmittedDateIsNull(competitionId, pageable);
+				applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId(), pageable);
 			}
 			return find(applicationResults, notFoundError(Page.class)).andOnSuccessReturn(closedCompetitionApplicationSummaryPageMapper::mapToResource);
 		}
 		
 		List<Application> resultsList;
 		if(submitted) {
-			resultsList = applicationRepository.findByCompetitionIdAndSubmittedDateIsNotNull(competitionId);
+			resultsList = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
 		} else {
-			resultsList = applicationRepository.findByCompetitionIdAndSubmittedDateIsNull(competitionId);
+			resultsList = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId());
 		}
 		
 		ClosedCompetitionApplicationSummaryPageResource result = new ClosedCompetitionApplicationSummaryPageResource();

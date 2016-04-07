@@ -23,17 +23,12 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     List<Application> findByCompetitionId(Long competitionId);
 
-	Page<Application> findByCompetitionIdAndSubmittedDateIsNotNull(Long competitionId, Pageable pageable);
+	Page<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId, Pageable pageable);
 
-	Page<Application> findByCompetitionIdAndSubmittedDateIsNull(Long competitionId, Pageable pageable);
-
-	List<Application> findByCompetitionIdAndSubmittedDateIsNotNull(Long competitionId);
-
-	List<Application> findByCompetitionIdAndSubmittedDateIsNull(Long competitionId);
+	List<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);
 
     Long countByCompetitionId(Long competitionId);
 
     Long countByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);
 
-    List<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);
 }
