@@ -22,11 +22,14 @@
             <div th:include="fragments/competition-management :: competition-status(competition=${currentCompetition})" th:remove="tag" />
           </div>
       </div>
-      <ul class="inline-nav extra-margin">
-        <li class="selected"><a th:href="@{/competition/{id}(id=${currentCompetition.id})}">Application overview</a></li>
-      </ul>
+
+      <div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${currentCompetition.competitionStatus.name()},competitionId=${currentCompetition.id})" th:remove="tag" />
   </div>
-  <div class="grid-container">
+  <div class="grid-container constrain-width">
+    <div class="page-title">
+        <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag"/>
+        <h1 class="heading-xlarge no-margin">Application Overview</h1>
+    </div>
     <form action="#" method="post" th:object="${form}" class="form-serialize-js section-overview">
       <div th:include="fragments/application :: application-summary" th:remove="tag"/>
     </form>

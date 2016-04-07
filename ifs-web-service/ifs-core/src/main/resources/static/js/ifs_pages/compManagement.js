@@ -20,7 +20,6 @@ IFS.competition_management = (function(){
             jQuery(window).resize(function(){
               clearTimeout(resizeTimer);
               resizeTimer = setTimeout(function(){
-                console.log('lalalal');
                 IFS.competition_management.getWindowWidth();
                 IFS.competition_management.stickyScroll();
               },250);

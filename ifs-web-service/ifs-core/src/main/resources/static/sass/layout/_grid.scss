@@ -13,6 +13,9 @@
 .grid-container {
   @extend %site-width-container;
 }
+.constrain-width {
+  max-width:1400px;
+}
 
 #content.full-width,
 .grid-container.full-width {
