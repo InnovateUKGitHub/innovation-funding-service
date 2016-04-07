@@ -58,11 +58,17 @@ public class CompetitionManagementController {
 
 	private String inAssessmentCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
 			BindingResult bindingResult) {
-		ClosedCompetitionApplicationSummaryPageResource notSubmittedApplicationSummary = applicationSummaryService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
-		ClosedCompetitionApplicationSummaryPageResource submittedApplicationSummary = applicationSummaryService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
 		
-		model.addAttribute("notSubmittedResults", notSubmittedApplicationSummary);
-		model.addAttribute("submittedResults", submittedApplicationSummary);
+		ClosedCompetitionApplicationSummaryPageResource results;
+		if("notSubmitted".equals(queryForm.getTab())) {
+			results = applicationSummaryService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
+			model.addAttribute("activeTab", "notSubmitted");
+		} else {
+			results = applicationSummaryService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
+			model.addAttribute("activeTab", "submitted");
+		}
+		
+		model.addAttribute("results", results);
 		
         LOG.warn("Show in assessment competition info");
         return "comp-mgt-in-assessment";

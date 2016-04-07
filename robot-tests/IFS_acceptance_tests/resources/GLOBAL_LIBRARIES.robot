@@ -4,3 +4,6 @@ Library           XvfbRobot
 Library           IFS_Selenium_Extension
 Library           ImapLibrary
 Library           Collections
+Library           ExcelLibrary
+Library           FtpLibrary
+Library           OperatingSystem

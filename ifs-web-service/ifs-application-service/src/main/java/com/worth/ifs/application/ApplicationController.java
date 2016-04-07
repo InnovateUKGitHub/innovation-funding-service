@@ -92,7 +92,7 @@ public class ApplicationController extends AbstractApplicationController {
         addOrganisationAndUserFinanceDetails(applicationId, user, model, form);
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
-        return "application/summary";
+        return "application-summary";
     }
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)
@@ -117,7 +117,7 @@ public class ApplicationController extends AbstractApplicationController {
 
     @RequestMapping(value = "/{applicationId}/submit", method = RequestMethod.POST)
     public String applicationSubmit(ApplicationForm form, Model model, @RequestParam(value = "agreeTerms", required = false) boolean agreeTerms, @PathVariable("applicationId") final Long applicationId,
-                                    HttpServletRequest request, HttpServletResponse response){ 
+                                    HttpServletRequest request, HttpServletResponse response){
     	if(!agreeTerms) {
     		cookieFlashMessageFilter.setFlashMessage(response, "agreeToTerms");
     		return "redirect:/application/" + applicationId + "/confirm-submit";

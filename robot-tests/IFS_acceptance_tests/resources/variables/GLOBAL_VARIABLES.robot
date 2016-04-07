@@ -48,6 +48,7 @@ ${POSTCODE_LOOKUP_URL}    ${SERVER}/organisation/create/selected-organisation/05
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
 ${APPLICATION_TEAM_URL}    ${SERVER}/application/1/contributors
 ${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/1/contributors/invite
+${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/1
 ${404_error_message}    Page Not Found
 ${403_error_message}    You do not have the necessary permissions for your request
 ${wrong_filetype_validation_error}    Please upload a file in .pdf format only

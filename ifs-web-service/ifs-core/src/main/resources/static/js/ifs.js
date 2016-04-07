@@ -58,6 +58,10 @@ var IFSLoader = {
   },
   'app-invite': {
     init : function(){ IFS.invites.init(); }
+  },
+  'competition-management': {
+    init : function(){ IFS.competition_management.init(); }
+
   }
 };
 
