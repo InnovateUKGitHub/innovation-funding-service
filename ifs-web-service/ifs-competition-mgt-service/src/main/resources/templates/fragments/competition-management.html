@@ -52,7 +52,7 @@
             </p>
             <p th:if="${param.tab != null} and ${param.tab[0] == 'notSubmitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress}"/> Applications not submitted</p>
             <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
-            <a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.csv)</a>
+            <p th:if="${param.tab != null} and ${param.tab[0] == 'submitted'}"><a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.csv)</a></p>
         </div>
     </div>
 
