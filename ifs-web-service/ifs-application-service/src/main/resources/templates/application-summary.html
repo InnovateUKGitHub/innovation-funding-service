@@ -16,7 +16,6 @@
 <div th:include="fragments/layout :: global-header" th:remove="tag"/>
 
 <main id="content">
-  TEST
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
 
     <div th:if="${currentApplication.isOpen()}" th:include="fragments/layout :: header-sub"
@@ -25,8 +24,8 @@
 
     <div class="page-title">
         <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag"/>
-        <h1 th:if="${currentApplication.isOpen()}" class="heading-xlarge">Application Summary</h1>
-        <h1 th:unless="${currentApplication.isOpen()}" class="heading-xlarge">Application Overview</h1>
+        <h1 th:if="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application Summary</h1>
+        <h1 th:unless="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application Overview</h1>
 
     </div>
     <p class="subtitle extra-margin" th:if="${currentApplication.isOpen()}">

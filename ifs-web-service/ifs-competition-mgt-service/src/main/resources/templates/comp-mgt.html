@@ -23,9 +23,8 @@
       </div>
   </div>
 
-  <ul class="inline-nav extra-margin">
-    <li class="selected"><a th:href="@{/competition/{id}(id=${competitionSummary.competitionId})}">Application overview</a></li>
-  </ul>
+  <div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" th:remove="tag" />
+
 
     <div class="grid-row competition-data">
         <div class="column-fifth">
@@ -46,7 +45,7 @@
                           <option value="id" th:selected="${(param.sort != null) and (param.sort[0] == 'id')}">Application no.</option>
                           <option value="name" th:selected="${(param.sort != null) and (param.sort[0] == 'name')}">Project title</option>
                           <option value="lead" th:selected="${(param.sort != null) and (param.sort[0] == 'lead')}">Lead</option>
-                          <option value="completedPercentage" th:selected="${(param.sort != null) and (param.sort[0] == 'completedPercentage')}">Percentage complete</option>
+                          <option value="percentageComplete" th:selected="${(param.sort != null) and (param.sort[0] == 'percentageComplete')}">Percentage complete</option>
                       </select>
                       <button type="submit" class="button no-margin">Sort</button>
                     </div>
