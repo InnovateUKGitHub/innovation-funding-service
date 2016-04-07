@@ -40,6 +40,7 @@ import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
+import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
@@ -57,6 +58,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import javax.management.relation.RoleResult;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -84,6 +86,7 @@ import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisa
 import static com.worth.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static com.worth.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -97,9 +100,12 @@ import static org.mockito.Mockito.when;
 public class BaseUnitTest {
 
     public MockMvc mockMvc;
-    public User loggedInUser;
-    public User assessor;
-    public User applicant;
+    public UserResource loggedInUser;
+    public UserResource assessor;
+    public UserResource applicant;
+
+    public User assessorUser;
+    public User applicantUser;
 
     public UserAuthentication loggedInUserAuthentication;
 
@@ -179,7 +185,7 @@ public class BaseUnitTest {
     public Competition competition;
     public List<CompetitionResource> competitionResources;
     public CompetitionResource competitionResource;
-    public List<User> users;
+    public List<UserResource> users;
     public List<OrganisationResource> organisations;
     TreeSet<OrganisationResource> organisationSet;
     public List<Assessment> assessments;
@@ -238,23 +244,42 @@ public class BaseUnitTest {
     }
 
     public void setup(){
-        applicant = new User(1L, "Nico", "Bijl", "email@email.nl", "image", new ArrayList(), "my-uid");
-        loggedInUser = applicant;
-        User user2 = new User(2L, "Brent", "de Kok", "email@email.nl", "image", new ArrayList(), "my-uid2");
-        assessor = new User(3L, "Assessor", "LastName", "email@assessor.nl", "image", new ArrayList<>(), "my-uid3");
-        users = asList(loggedInUser, user2);
-
-        loggedInUserAuthentication = new UserAuthentication(loggedInUser);
-
         applications = new ArrayList<>();
         sections = new ArrayList<>();
         questions = new HashMap<>();
         organisations = new ArrayList<>();
         randomGenerator = new Random();
 
-
+        setupUsers();
         setupOrganisationTypes();
         setupUserRoles();
+    }
+
+    private void setupUsers() {
+        applicant = newUserResource().withId(1L)
+                .withFirstName("James")
+                .withLastName("Watts")
+                .withEmail("james.watts@email.co.uk")
+                .withUID("2aerg234-aegaeb-23aer").build();
+        loggedInUser = applicant;
+
+        UserResource user2 = newUserResource().withId(2L)
+                .withFirstName("John")
+                .withLastName("Patricks")
+                .withEmail("john.patricks@email.co.uk")
+                .withUID("6573ag-aeg32aeb-23aerr").build();
+
+        assessor = newUserResource().withId(3L)
+                .withFirstName("Clark")
+                .withLastName("Baker")
+                .withEmail("clark.baker@email.co.uk")
+                .withUID("2522-34y34ah-hrt4420").build();
+        users = asList(loggedInUser, user2);
+
+        applicantUser = new User(1L, "James","Watts","james.watts@email.co.uk", "image", new ArrayList(), "6573ag-aeg32aeb-23aerr");
+        assessorUser = new User(3L, "Clark", "Baker", "clark.baker@email.co.uk", "image", new ArrayList<>(), "2522-34y34ah-hrt4420");
+
+        loggedInUserAuthentication = new UserAuthentication(loggedInUser);
     }
 
     public void setupOrganisationTypes() {
@@ -288,7 +313,7 @@ public class BaseUnitTest {
         when(userAuthenticationService.getAuthentication(any(HttpServletRequest.class))).thenReturn(loggedInUserAuthentication);
         when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(loggedInUser);
     }
-    public void loginUser(User user){
+    public void loginUser(UserResource user){
         UserAuthentication userAuthentication = new UserAuthentication(user);
         when(userAuthenticationService.getAuthentication(any(HttpServletRequest.class))).thenReturn(userAuthentication);
         when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class))).thenReturn(user);
@@ -465,9 +490,9 @@ public class BaseUnitTest {
     }
 
     public void setupUserRoles() {
-        Role assessorRole = new Role(3L, UserRole.ASSESSOR.getRoleName(), null);
+        RoleResource assessorRole = new RoleResource(3L, UserRole.ASSESSOR.getRoleName(), null);
         assessorRole.setUrl("assessor/dashboard");
-        Role applicantRole = new Role(4L, UserRole.APPLICANT.getRoleName(), null);
+        RoleResource applicantRole = new RoleResource(4L, UserRole.APPLICANT.getRoleName(), null);
         applicantRole.setUrl("applicant/dashboard");
         applicant.setRoles(singletonList(applicantRole));
         assessor.setRoles(singletonList(assessorRole));
@@ -518,16 +543,16 @@ public class BaseUnitTest {
         Organisation temporaryOrganisation1 = newOrganisation().withId(organisation1.getId()).withName("Empire Ltd").withOrganisationType(businessOrganisationType).build();
         Organisation temporaryOrganisation2 = newOrganisation().withId(organisation2.getId()).withName("Ludlow").withOrganisationType(researchOrganisationType).build();
 
-        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(applicationList.get(0)).withUser(loggedInUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole2 = newProcessRole().with(id(2L)).withApplication(applicationList.get(0)).withUser(loggedInUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole3 = newProcessRole().with(id(3L)).withApplication(applicationList.get(2)).withUser(loggedInUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole4 = newProcessRole().with(id(4L)).withApplication(applicationList.get(3)).withUser(loggedInUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole5 = newProcessRole().with(id(5L)).withApplication(applicationList.get(0)).withUser(loggedInUser).withRole(role2).withOrganisation(temporaryOrganisation2).build();
-        ProcessRole processRole6 = newProcessRole().with(id(6L)).withApplication(applicationList.get(1)).withUser(assessor).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole7 = newProcessRole().with(id(7L)).withApplication(applicationList.get(2)).withUser(assessor).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole8 = newProcessRole().with(id(8L)).withApplication(applicationList.get(0)).withUser(assessor).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole9 = newProcessRole().with(id(9L)).withApplication(applicationList.get(3)).withUser(assessor).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
-        ProcessRole processRole10 = newProcessRole().with(id(10L)).withApplication(applicationList.get(1)).withUser(loggedInUser).withRole(role1).withOrganisation(temporaryOrganisation2).build();
+        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(applicationList.get(0)).withUser(applicantUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole2 = newProcessRole().with(id(2L)).withApplication(applicationList.get(0)).withUser(applicantUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole3 = newProcessRole().with(id(3L)).withApplication(applicationList.get(2)).withUser(applicantUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole4 = newProcessRole().with(id(4L)).withApplication(applicationList.get(3)).withUser(applicantUser).withRole(role1).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole5 = newProcessRole().with(id(5L)).withApplication(applicationList.get(0)).withUser(applicantUser).withRole(role2).withOrganisation(temporaryOrganisation2).build();
+        ProcessRole processRole6 = newProcessRole().with(id(6L)).withApplication(applicationList.get(1)).withUser(assessorUser).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole7 = newProcessRole().with(id(7L)).withApplication(applicationList.get(2)).withUser(assessorUser).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole8 = newProcessRole().with(id(8L)).withApplication(applicationList.get(0)).withUser(assessorUser).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole9 = newProcessRole().with(id(9L)).withApplication(applicationList.get(3)).withUser(assessorUser).withRole(assessorRole).withOrganisation(temporaryOrganisation1).build();
+        ProcessRole processRole10 = newProcessRole().with(id(10L)).withApplication(applicationList.get(1)).withUser(applicantUser).withRole(role1).withOrganisation(temporaryOrganisation2).build();
 
         assessorProcessRoles = asList(processRole6, processRole7, processRole8, processRole9);
         processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8, processRole9);
@@ -565,8 +590,8 @@ public class BaseUnitTest {
         applicationResources.get(3).setCompetition(competition.getId());
         applicationResources.get(3).setProcessRoles(singletonList(processRole4.getId()));
 
-        loggedInUser.addUserApplicationRole(processRole1, processRole2, processRole3, processRole4);
-        users.get(0).addUserApplicationRole(processRole5);
+        loggedInUser.setProcessRoles(asList(processRole1.getId(), processRole2.getId(),processRole3.getId(), processRole4.getId()));
+        users.get(0).setProcessRoles(asList(processRole5.getId()));
         applications = applicationResources;
 
         when(sectionService.filterParentSections(simpleMap(competition.getSections(), Section::getId))).thenReturn(sectionResources);
@@ -630,8 +655,8 @@ public class BaseUnitTest {
         ApplicationResource application = applications.get(0);
         Application app = newApplication().build();
 
-        ProcessRole userApplicationRole = loggedInUser.getProcessRoles().get(0);
-
+        Long userApplicationRoleId = loggedInUser.getProcessRoles().get(0);
+        ProcessRole userApplicationRole = processRoles.stream().filter(p -> p.getId().equals(userApplicationRoleId)).findFirst().get();
         Response response = new Response(1L, LocalDateTime.now(), userApplicationRole, questions.get(20L), app);
         Response response2 = new Response(2L, LocalDateTime.now(), userApplicationRole, questions.get(21L), app);
 

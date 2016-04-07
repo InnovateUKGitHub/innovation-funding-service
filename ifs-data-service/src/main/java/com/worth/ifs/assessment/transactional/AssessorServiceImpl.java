@@ -12,7 +12,7 @@ import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
-import com.worth.ifs.assessment.security.FeedbackLookup;
+import com.worth.ifs.assessment.security.FeedbackLookupStrategy;
 import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
@@ -56,7 +56,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     private static ToIntFunction<String> stringToInteger = score -> StringUtils.isNumeric(score) ? Integer.parseInt(score) : 0;
 
     @Autowired
-    private FeedbackLookup feedbackLookup;
+    private FeedbackLookupStrategy feedbackLookupStrategy;
 
     @Autowired
     private AssessmentRepository assessmentRepository;
@@ -95,7 +95,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
 
     @Override
     public ServiceResult<Feedback> getFeedback(Feedback.Id id) {
-        return serviceSuccess(feedbackLookup.getFeedback(id));
+        return serviceSuccess(feedbackLookupStrategy.getFeedback(id));
     }
 
     @Override

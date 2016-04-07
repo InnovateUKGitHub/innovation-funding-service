@@ -1,6 +1,7 @@
 package com.worth.ifs.application;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.isA;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 
 import javax.servlet.http.Cookie;
 
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -361,7 +363,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     }
     
 	private void loginNonLeadUser(String email) {
-    	User user = new User(2L, "test", "name", email, null, null, null);
+    	UserResource user = newUserResource().withId(2L).withFirstName("test").withLastName("name").withEmail(email).build();
     	loginUser(user);
 	}
 	

@@ -3,7 +3,7 @@ package com.worth.ifs.competition.security;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,7 +17,7 @@ public class CompetitionPermissionRules {
             additionalComments =
                     "This seems too powerful a permission that would allow an anonymous user of the API to view the entire " +
                     "CompetitionResource.  CompetitionResource should be broken into public- and non-public-facing parts")
-    public boolean anyoneCanViewCompetitions(CompetitionResource competition, User user) {
+    public boolean anyoneCanViewCompetitions(CompetitionResource competition, UserResource user) {
         return true;
     }
 }

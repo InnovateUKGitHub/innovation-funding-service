@@ -2,6 +2,7 @@ package com.worth.ifs.security;
 
 import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -91,7 +92,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                     if (method.getParameterTypes().length == 2) {
                         Class<?> secondParameterClass = method.getParameterTypes()[1];
                         if (Authentication.class.isAssignableFrom(secondParameterClass) ||
-                                User.class.isAssignableFrom(secondParameterClass)) {
+                                UserResource.class.isAssignableFrom(secondParameterClass)) {
                             return false;
                         }
                     }
@@ -224,7 +225,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         Method method = methodAndBean.getValue();
         Class<?> secondParameter = method.getParameterTypes()[1];
 
-        if (secondParameter.equals(User.class)) {
+        if (secondParameter.equals(UserResource.class)) {
             if (authentication instanceof UserAuthentication) {
                 finalAuthentication = ((UserAuthentication) authentication).getDetails();
             } else if (authentication instanceof AnonymousAuthenticationToken) {
@@ -236,7 +237,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             finalAuthentication = authentication;
         } else {
             throw new IllegalArgumentException("Second parameter of @PermissionRule-annotated method " + method.getName() + " should be " +
-                    "either an instance of " + User.class.getName() + " or an org.springframework.security.core.Authentication implementation, " +
+                    "either an instance of " + UserResource.class.getName() + " or an org.springframework.security.core.Authentication implementation, " +
                     "but was " + secondParameter.getName());
         }
 

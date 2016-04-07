@@ -1,8 +1,7 @@
 package com.worth.ifs.user.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.domain.UserStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -18,6 +17,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleMap;
  */
 public class UserResource {
     private Long id;
+    private String uid;
     private String title;
     private String firstName;
     private String lastName;
@@ -25,26 +25,14 @@ public class UserResource {
     private String phoneNumber;
     private String imageUrl;
     private String email;
-    private UserStatus status;
     private String password;
-    private List<Long> organisationIds = new ArrayList<>();
+    private UserStatus status;
+    private List<Long> organisations = new ArrayList<>();
+    private List<Long> processRoles = new ArrayList<>();
+    private List<RoleResource> roles = new ArrayList<>();
 
     public UserResource() {
     	// no-arg constructor
-    }
-
-    public UserResource(User user) {
-        id = user.getId();
-        title = user.getTitle();
-        firstName = user.getFirstName();
-        lastName = user.getLastName();
-        inviteName = user.getInviteName();
-        phoneNumber = user.getPhoneNumber();
-        imageUrl = user.getImageUrl();
-        email = user.getEmail();
-        password = user.getEmail();
-        status = user.getStatus();
-        organisationIds = simpleMap(user.getOrganisations(), Organisation::getId);
     }
 
     public Long getId() {
@@ -53,6 +41,14 @@ public class UserResource {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getTitle() {
@@ -134,12 +130,28 @@ public class UserResource {
         this.password = password;
     }
 
-    public List<Long> getOrganisationIds() {
-        return this.organisationIds;
+    public List<Long> getOrganisations() {
+        return this.organisations;
     }
 
-    public void setOrganisationIds(List<Long> organisationIds) {
-        this.organisationIds = organisationIds;
+    public void setOrganisations(List<Long> organisationIds) {
+        this.organisations = organisationIds;
+    }
+
+    public List<Long> getProcessRoles() {
+        return processRoles;
+    }
+
+    public void setProcessRoles(List<Long> processRoles) {
+        this.processRoles = processRoles;
+    }
+
+    public List<RoleResource> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<RoleResource> roles) {
+        this.roles = roles;
     }
 
     @Override
@@ -152,6 +164,7 @@ public class UserResource {
 
         return new EqualsBuilder()
                 .append(id, that.id)
+                .append(uid, that.uid)
                 .append(title, that.title)
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
@@ -159,9 +172,11 @@ public class UserResource {
                 .append(phoneNumber, that.phoneNumber)
                 .append(imageUrl, that.imageUrl)
                 .append(email, that.email)
-                .append(status, that.status)
                 .append(password, that.password)
-                .append(organisationIds, that.organisationIds)
+                .append(status, that.status)
+                .append(organisations, that.organisations)
+                .append(processRoles, that.processRoles)
+                .append(roles, that.roles)
                 .isEquals();
     }
 
@@ -169,6 +184,7 @@ public class UserResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
+                .append(uid)
                 .append(title)
                 .append(firstName)
                 .append(lastName)
@@ -176,9 +192,11 @@ public class UserResource {
                 .append(phoneNumber)
                 .append(imageUrl)
                 .append(email)
-                .append(status)
                 .append(password)
-                .append(organisationIds)
+                .append(status)
+                .append(organisations)
+                .append(processRoles)
+                .append(roles)
                 .toHashCode();
     }
 
@@ -188,5 +206,9 @@ public class UserResource {
 
     public void setStatus(UserStatus status) {
         this.status = status;
+    }
+
+    public boolean hasRole(UserRoleType role) {
+        return simpleMap(roles, RoleResource::getName).contains(role.getName());
     }
 }

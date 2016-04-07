@@ -6,6 +6,7 @@ import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.mapper.OrganisationTypeMapper;
 import com.worth.ifs.user.mapper.ProcessRoleMapper;
+import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.mapstruct.Mapper;
 
@@ -15,7 +16,8 @@ import org.mapstruct.Mapper;
         ProcessRoleMapper.class,
         ApplicationFinanceMapper.class,
         OrganisationAddressMapper.class,
-        OrganisationTypeMapper.class
+        OrganisationTypeMapper.class,
+        UserMapper.class
     }
 )
 public abstract class OrganisationMapper extends BaseMapper<Organisation, OrganisationResource, Long> {

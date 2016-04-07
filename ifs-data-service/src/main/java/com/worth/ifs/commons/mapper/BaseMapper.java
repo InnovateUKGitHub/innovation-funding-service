@@ -1,10 +1,10 @@
 package com.worth.ifs.commons.mapper;
 
 
+import java.io.Serializable;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
-
-import java.io.Serializable;
 
 public abstract class BaseMapper<D, R, I extends Serializable> {
     protected CrudRepository<D, I> repository;

@@ -1,7 +1,8 @@
 package com.worth.ifs;
 
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.UserRepository;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +24,20 @@ public abstract class BaseControllerIntegrationTest<ControllerType> extends Base
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserMapper userMapper;
+
     protected ControllerType controller;
 
     @Autowired
     protected abstract void setControllerUnderTest(ControllerType controller);
 
-    protected User getSteveSmith() {
-        return userRepository.findByEmail("steve.smith@empire.com").get();
+    protected UserResource getSteveSmith() {
+        return userMapper.mapToResource(userRepository.findByEmail("steve.smith@empire.com").get());
     }
 
-    protected User getPeteTom() {
-        return userRepository.findByEmail("pete.tom@egg.com").get();
+    protected UserResource getPeteTom() {
+        return userMapper.mapToResource(userRepository.findByEmail("pete.tom@egg.com").get());
     }
 
     protected void loginSteveSmith() {

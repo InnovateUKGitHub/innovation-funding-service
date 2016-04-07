@@ -1,6 +1,7 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceBuilder> {
@@ -28,6 +30,14 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
     @Override
     protected UserResource createInitial() {
         return new UserResource();
+    }
+
+    public UserResourceBuilder withUID(String... uids) {
+        return withArray((uid, user) -> setField("uid", uid, user), uids);
+    }
+
+    public UserResourceBuilder withRolesGlobal(RoleResource... globalRoles) {
+        return with(user -> user.setRoles(asList(globalRoles)));
     }
 
     public UserResourceBuilder withId(Long... ids) {
@@ -60,6 +70,10 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
 
     public UserResourceBuilder withPassword(String... passwords) {
         return withArray((password, user) -> setField("password", password, user), passwords);
+    }
+
+    public UserResourceBuilder withProcessRoles(List<Long>... processRoles) {
+        return withArray((processRoleList, user) -> user.setProcessRoles(processRoleList), processRoles);
     }
 
 

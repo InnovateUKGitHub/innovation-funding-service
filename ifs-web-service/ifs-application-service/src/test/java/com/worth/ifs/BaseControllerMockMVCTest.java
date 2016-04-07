@@ -4,6 +4,7 @@ import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
@@ -76,7 +77,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     /**
      * Get the user on the Spring Security ThreadLocals
      */
-    protected User getLoggedInUser() {
+    protected UserResource getLoggedInUser() {
         return ((UserAuthentication) SecurityContextHolder.getContext().getAuthentication()).getDetails();
     }
 
@@ -85,7 +86,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
      *
      * @param user
      */
-    protected void setLoggedInUser(User user) {
+    protected void setLoggedInUser(UserResource user) {
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
     }
 }

@@ -1,11 +1,13 @@
 package com.worth.ifs.organisation.security;
 
+import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
@@ -14,15 +16,17 @@ import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests the logic within the individual OrganisationRules methods that secures basic Organisation details
  */
-public class OrganisationPermissionRulesTest {
+public class OrganisationPermissionRulesTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private OrganisationPermissionRules rules = new OrganisationPermissionRules();
@@ -40,10 +44,10 @@ public class OrganisationPermissionRulesTest {
     @Test
     public void testMemberOfOrganisationCanViewOwnOrganisation() {
 
-        User user = newUser().build();
-        User anotherUser = newUser().build();
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
 
-        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user, anotherUser)).build();
+        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user.getId(), anotherUser.getId())).build();
 
         assertTrue(rules.memberOfOrganisationCanViewOwnOrganisation(organisation, user));
     }
@@ -51,11 +55,11 @@ public class OrganisationPermissionRulesTest {
     @Test
     public void testMemberOfOrganisationCanViewOwnOrganisationButUserIsNotAMemberOfTheOrganisation() {
 
-        User user = newUser().build();
-        User anotherUser = newUser().build();
-        User unrelatedUser = newUser().build();
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        UserResource unrelatedUser = newUserResource().build();
 
-        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user, anotherUser)).build();
+        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user.getId(), anotherUser.getId())).build();
 
         assertFalse(rules.memberOfOrganisationCanViewOwnOrganisation(organisation, unrelatedUser));
     }
@@ -63,10 +67,10 @@ public class OrganisationPermissionRulesTest {
     @Test
     public void testMemberOfOrganisationCanUpdateOwnOrganisation() {
 
-        User user = newUser().build();
-        User anotherUser = newUser().build();
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
 
-        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user, anotherUser)).build();
+        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user.getId(), anotherUser.getId())).build();
 
         assertTrue(rules.memberOfOrganisationCanUpdateOwnOrganisation(organisation, user));
     }
@@ -74,11 +78,11 @@ public class OrganisationPermissionRulesTest {
     @Test
     public void testMemberOfOrganisationCanUpdateOwnOrganisationButUserIsNotAMemberOfTheOrganisation() {
 
-        User user = newUser().build();
-        User anotherUser = newUser().build();
-        User unrelatedUser = newUser().build();
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        UserResource unrelatedUser = newUserResource().build();
 
-        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user, anotherUser)).build();
+        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user.getId(), anotherUser.getId())).build();
 
         assertFalse(rules.memberOfOrganisationCanUpdateOwnOrganisation(organisation, unrelatedUser));
     }
@@ -87,9 +91,11 @@ public class OrganisationPermissionRulesTest {
     public void testUsersCanViewOrganisationsOnTheirOwnApplications() {
 
         Organisation organisation = newOrganisation().withId(123L).build();
-        User user = newUser().build();
         Application application = newApplication().build();
-        ProcessRole processRole = newProcessRole().withUser(user).withApplication(application).withOrganisation(organisation).build();
+        ProcessRole processRole = newProcessRole().withApplication(application).withOrganisation(organisation).build();
+        UserResource user = newUserResource().withProcessRoles(singletonList(processRole.getId())).build();
+
+        when(processRoleRepositoryMock.findOne(processRole.getId())).thenReturn(processRole);
 
         OrganisationResource organisationResource =
                 newOrganisationResource().withId(organisation.getId()).withProcessRoles(singletonList(processRole.getId())).build();
@@ -100,10 +106,7 @@ public class OrganisationPermissionRulesTest {
     @Test
     public void testUsersCanViewOrganisationsOnTheirOwnApplicationsButUserIsNotOnAnyApplicationsWithThisOrganisation() {
 
-        Organisation organisation = newOrganisation().withId(123L).build();
-        User user = newUser().build();
-        Application application = newApplication().build();
-        newProcessRole().withUser(user).withApplication(application).withOrganisation(organisation).build();
+        UserResource user = newUserResource().build();
 
         Organisation anotherOrganisation = newOrganisation().withId(456L).build();
         User anotherUser = newUser().build();
@@ -134,7 +137,7 @@ public class OrganisationPermissionRulesTest {
 
     @Test
     public void testAnyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsersButOrganisationAttachedToUsers() {
-        OrganisationResource organisation = newOrganisationResource().withUsers(singletonList(newUser().build())).build();
+        OrganisationResource organisation = newOrganisationResource().withUsers(singletonList(123L)).build();
         assertFalse(rules.anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, null));
     }
 

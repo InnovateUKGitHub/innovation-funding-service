@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.security.SecuritySetter;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
+import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -22,6 +26,11 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
     @Autowired
     protected void setControllerUnderTest(FormInputResponseController controller) {
         this.controller = controller;
+    }
+
+    @Before
+    public void setup(){
+        addBasicSecurityUser();
     }
 
     @Test

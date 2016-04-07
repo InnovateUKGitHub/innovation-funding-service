@@ -2,7 +2,6 @@ package com.worth.ifs.user.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserStatus;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Ignore;
@@ -12,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -39,13 +39,13 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     public void test_findAll() {
 
-        List<User> users = controller.findAll().getSuccessObject();
+        List<UserResource> users = controller.findAll().getSuccessObject();
         assertEquals(USER_COUNT, users.size());
 
         //
         // Assert that we've got the users we were expecting
         //
-        List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
+        List<String> emailAddresses = users.stream().map(UserResource::getEmail).collect(toList());
         List<String> expectedUsers = ALL_USERS_EMAIL;
         assertTrue(emailAddresses.containsAll(expectedUsers));
     }
@@ -77,13 +77,13 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     @Ignore("TODO DW - INFUND-936 - Not valid test after passwords moved out to Shib")
     @Test
     public void testVerifyEmail() {
-        RestResult<User> beforeVerify = controller.getUserByUid("6198a6e1-495f-402e-9eff-28611efeadb8");
+        RestResult<UserResource> beforeVerify = controller.getUserByUid("6198a6e1-495f-402e-9eff-28611efeadb8");
         assertTrue(beforeVerify.isFailure());
 
         RestResult<Void> restResult = controller.verifyEmail("4a5bc71c9f3a2bd50fada434d888579aec0bd53fe7b3ca3fc650a739d1ad5b1a110614708d1fa083");
         assertTrue(restResult.isSuccess());
 
-        RestResult<User> afterVerify = controller.getUserByUid("6198a6e1-495f-402e-9eff-28611efeadb8");
+        RestResult<UserResource> afterVerify = controller.getUserByUid("6198a6e1-495f-402e-9eff-28611efeadb8");
         assertTrue(afterVerify.isSuccess());
     }
 
@@ -107,19 +107,17 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         user.setFirstName("Some");
         user.setLastName("How");
 
-        RestResult<UserResource> restResult = controller.createUser(user);
+        RestResult<Void> restResult = controller.updateDetails(user);
         assertTrue(restResult.isFailure());
     }
 
     @Test
     public void testUpdateUserDetails() {
-        User userOne = controller.getUserById(1L).getSuccessObject();
+        UserResource userOne = controller.getUserById(1L).getSuccessObject();
+        userOne.setFirstName("Some");
+        userOne.setLastName("How");
 
-        UserResource userResource = new UserResource(userOne);
-        userResource.setFirstName("Some");
-        userResource.setLastName("How");
-
-        RestResult<UserResource> restResult = controller.createUser(userResource);
+        RestResult<Void> restResult = controller.updateDetails(userOne);
         assertTrue(restResult.isSuccess());
     }
 

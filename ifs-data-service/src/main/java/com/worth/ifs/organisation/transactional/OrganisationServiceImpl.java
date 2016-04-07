@@ -77,11 +77,11 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressType addressType, AddressResource addressResource) {
-        return find(organisation(organisationId)).andOnSuccess(organisation -> {
+        return find(organisation(organisationId)).andOnSuccessReturn(organisation -> {
             Address address = addressMapper.mapToDomain(addressResource);
             organisation.addAddress(address, addressType);
-            Organisation updatedOrganisation = organisationRepository.findOne(organisationId);
-            return serviceSuccess(organisationMapper.mapToResource(updatedOrganisation));
+            Organisation updatedOrganisation = organisationRepository.save(organisation);
+            return organisationMapper.mapToResource(updatedOrganisation);
         });
     }
 

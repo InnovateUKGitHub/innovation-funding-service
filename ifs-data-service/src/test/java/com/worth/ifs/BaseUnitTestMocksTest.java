@@ -22,6 +22,7 @@ import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
+import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.*;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
@@ -138,6 +139,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected TokenRepository tokenRepositoryMock;
+
+    @Mock
+    protected UserMapper userMapperMock;
 
     @Before
     public void setupMockInjection() {

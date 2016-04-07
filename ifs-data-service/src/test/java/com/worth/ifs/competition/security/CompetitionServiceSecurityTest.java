@@ -4,7 +4,7 @@ import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.competition.transactional.CompetitionService;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -48,7 +48,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         ServiceResult<List<CompetitionResource>> results = service.findAll();
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(rules, times(2)).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(User.class));
+        verify(rules, times(2)).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -59,7 +59,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
 
         service.getCompetitionById(1L);
 
-        verify(rules).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(User.class));
+        verify(rules).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 

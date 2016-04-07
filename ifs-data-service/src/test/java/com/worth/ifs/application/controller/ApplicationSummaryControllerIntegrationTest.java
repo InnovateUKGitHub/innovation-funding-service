@@ -1,6 +1,7 @@
 package com.worth.ifs.application.controller;
 
 import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -8,6 +9,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.worth.ifs.user.resource.RoleResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,8 +67,8 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         
         compAdminUserId = 2L;
         compAdminRoleId = 2L;
-        User compAdminUser = new User(compAdminUserId, "jim", "kirk", "j.kirk@starfleet.org", "", new ArrayList<>(), "123abc");
-        Role compAdminRole = new Role(compAdminRoleId, UserRoleType.COMP_ADMIN.getName(), new ArrayList<>());
+        UserResource compAdminUser =  newUserResource().withId(compAdminUserId).withFirstName("jim").withLastName("kirk").withEmail("j.kirk@starfleet.org").build();
+        RoleResource compAdminRole = new RoleResource(compAdminRoleId, UserRoleType.COMP_ADMIN.getName(), new ArrayList<>());
         compAdminUser.getRoles().add(compAdminRole);
         swapOutForUser(compAdminUser);
     }
