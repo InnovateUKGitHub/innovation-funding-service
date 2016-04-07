@@ -1,17 +1,20 @@
 package com.worth.ifs.assessment.transactional;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.dto.Feedback;
 import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
-import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * Service to handle crosscutting business processes related to Assessors and their role within the system.
@@ -28,19 +31,19 @@ public interface AssessorService {
     @PreAuthorize("hasPermission(#id, 'com.worth.ifs.assessment.dto.Feedback', 'READ')")
     ServiceResult<Feedback> getFeedback(@P("id") Feedback.Id id);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PreAuthorize("hasPermission(#a, 'UPDATE')")
     ServiceResult<Void> save(Assessment a);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PreAuthorize("hasPermission(#a, 'UPDATE')")
     ServiceResult<Assessment> saveAndGet(Assessment a);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.assessment.domain.Assessment', 'READ')")
     ServiceResult<Assessment> getOne(Long id);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<Assessment>> getAllByCompetitionAndAssessor(Long competitionId, Long assessorId);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<Assessment> getOneByProcessRole(Long processRoleId);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
