@@ -34,6 +34,15 @@
   display: block;
 }
 
+.info-area.sticky {
+  position: fixed;
+    top: 0;
+    width: 15.5%;
+}
+.competition-management .pagination {
+    border-top:none;
+    margin-top:0;  
+}
 
 .competition-management.app-summary #content  {
   padding-bottom:0;

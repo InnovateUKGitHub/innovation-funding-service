@@ -27,6 +27,7 @@ public abstract class ClosedCompetitionApplicationSummaryMapper {
 		result.setId(source.getId());
 		result.setLead(source.getLeadApplicant().getName());
 		result.setName(source.getName());
+		result.setDuration(source.getDurationInMonths());
 		
 		RestResult<List<ApplicationFinanceResource>> applicationFinancesResult = applicationFinanceRestService.getApplicationFinances(source.getId());
 		
