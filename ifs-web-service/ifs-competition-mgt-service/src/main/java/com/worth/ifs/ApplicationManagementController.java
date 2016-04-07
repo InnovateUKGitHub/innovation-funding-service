@@ -61,6 +61,6 @@ public class ApplicationManagementController extends AbstractApplicationControll
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         addOrganisationAndUserFinanceDetails(applicationId, user, model, form);
         model.addAttribute("applicationReadyForSubmit", false);
-        return "application/summary";
+        return "competition-mgt-application-overview";
     }
 }

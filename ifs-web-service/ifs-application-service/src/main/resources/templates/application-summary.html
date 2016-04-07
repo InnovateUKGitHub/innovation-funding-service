@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Summary'" th:remove="tag"/>
+</head>
+<body class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<div th:if="${currentApplication.isOpen()}" th:include="fragments/modals ::modal-confirm-submit-application
+    (messageTitle='This is your final chance to make changes to the application.',
+     message='You will not be able to access the application after this point. Are you sure you want to submit?',
+     submitLink='/application/'+${currentApplication.getId()}+'/submit',
+     submitText='Yes, I want to submit my application',
+     cancelText='Cancel')"
+     th:remove="tag"/>
+<div th:include="fragments/layout :: body-start" th:remove="tag"/>
+<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+
+<main id="content">
+  TEST
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+
+    <div th:if="${currentApplication.isOpen()}" th:include="fragments/layout :: header-sub"
+         th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}"
+         th:remove="tag"/>
+
+    <div class="page-title">
+        <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag"/>
+        <h1 th:if="${currentApplication.isOpen()}" class="heading-xlarge">Application Summary</h1>
+        <h1 th:unless="${currentApplication.isOpen()}" class="heading-xlarge">Application Overview</h1>
+
+    </div>
+    <p class="subtitle extra-margin" th:if="${currentApplication.isOpen()}">
+        Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
+    </p>
+
+    <form action="#" method="post" th:object="${form}" class="form-serialize-js section-overview">
+      <div th:include="fragments/application :: application-summary" th:remove="tag"/>
+    </form>
+
+    <div th:unless="${currentCompetition.isOpen()}">
+        <div class="warning-alert">
+            This competition has already closed, you are no longer able to submit you application.
+        </div>
+    </div>
+    <div th:if="${currentCompetition.isOpen()}">
+        <div th:if="${currentApplication.isOpen()}">
+            <hr/>
+            <span class="icon icon-information"></span>
+            <span> You will not be able to make changes to your application or resubmit after this point.</span>
+        </div>
+
+        <div th:if="${currentApplication.isOpen()}" th:include="fragments/elements :: application-agree-to-terms" class="agree-to-terms-container"/>
+
+        <div class="alignright-button" th:unless="${!currentApplication.isOpen()}">
+            <a id="submit-application-button" class="button large no-margin-right" data-js-modal="modal-confirm-submit-application"
+               th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${applicationReadyForSubmit}">Submit application</a>
+            <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
+        </div>
+    </div>
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"/>
+<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+</body>
+</html>
