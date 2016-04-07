@@ -11,6 +11,7 @@ import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -43,7 +44,7 @@ public class ApplicationController extends AbstractApplicationController {
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.GET)
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletRequest request) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
@@ -54,7 +55,7 @@ public class ApplicationController extends AbstractApplicationController {
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.POST)
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                      HttpServletResponse response, HttpServletRequest request) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         assignQuestion(request, applicationId);
 
         return "redirect:/application/"+applicationId;
@@ -66,7 +67,7 @@ public class ApplicationController extends AbstractApplicationController {
                                      @PathVariable("applicationId") final Long applicationId,
                                      @PathVariable("sectionId") final Long sectionId,
                                                 HttpServletRequest request){
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         SectionResource section = sectionService.getById(sectionId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -84,20 +85,20 @@ public class ApplicationController extends AbstractApplicationController {
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
 
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         addOrganisationAndUserFinanceDetails(applicationId, user, model, form);
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
-        return "application/summary";
+        return "application-summary";
     }
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)
     public String applicationSummarySubmit(@RequestParam(MARK_AS_COMPLETE) Long markQuestionCompleteId, @PathVariable("applicationId") final Long applicationId,
                                            HttpServletRequest request) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         if(markQuestionCompleteId!=null) {
             questionService.markAsComplete(markQuestionCompleteId, applicationId, user.getId());
         }
@@ -107,7 +108,7 @@ public class ApplicationController extends AbstractApplicationController {
     @RequestMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                            HttpServletRequest request){
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
@@ -116,12 +117,12 @@ public class ApplicationController extends AbstractApplicationController {
 
     @RequestMapping(value = "/{applicationId}/submit", method = RequestMethod.POST)
     public String applicationSubmit(ApplicationForm form, Model model, @RequestParam(value = "agreeTerms", required = false) boolean agreeTerms, @PathVariable("applicationId") final Long applicationId,
-                                    HttpServletRequest request, HttpServletResponse response){ 
+                                    HttpServletRequest request, HttpServletResponse response){
     	if(!agreeTerms) {
     		cookieFlashMessageFilter.setFlashMessage(response, "agreeToTerms");
     		return "redirect:/application/" + applicationId + "/confirm-submit";
     	}
-    	User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         applicationService.updateStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -133,7 +134,7 @@ public class ApplicationController extends AbstractApplicationController {
     @RequestMapping("/{applicationId}/track")
     public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
                                     HttpServletRequest request){
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
@@ -212,7 +213,7 @@ public class ApplicationController extends AbstractApplicationController {
         doAssignQuestion(applicationId, request, response);
 
         ApplicationResource application = applicationService.getById(applicationId);
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
         CompetitionResource  competition = competitionService.getById(application.getCompetition());
 
@@ -282,7 +283,7 @@ public class ApplicationController extends AbstractApplicationController {
     @RequestMapping(value="/{applicationId}/print")
     public String print(@PathVariable("applicationId") final Long applicationId,
             Model model, HttpServletRequest request) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 

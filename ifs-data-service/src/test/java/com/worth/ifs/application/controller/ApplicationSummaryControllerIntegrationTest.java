@@ -1,6 +1,7 @@
 package com.worth.ifs.application.controller;
 
 import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -8,6 +9,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.worth.ifs.user.resource.RoleResource;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +25,6 @@ import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 
@@ -64,8 +66,8 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         
         compAdminUserId = 2L;
         compAdminRoleId = 2L;
-        User compAdminUser = new User(compAdminUserId, "jim", "kirk", "j.kirk@starfleet.org", "", new ArrayList<>(), "123abc");
-        Role compAdminRole = new Role(compAdminRoleId, UserRoleType.COMP_ADMIN.getName(), new ArrayList<>());
+        UserResource compAdminUser =  newUserResource().withId(compAdminUserId).withFirstName("jim").withLastName("kirk").withEmail("j.kirk@starfleet.org").build();
+        RoleResource compAdminRole = new RoleResource(compAdminRoleId, UserRoleType.COMP_ADMIN.getName(), new ArrayList<>());
         compAdminUser.getRoles().add(compAdminRole);
         swapOutForUser(compAdminUser);
     }
@@ -104,8 +106,8 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
         assertEquals(20, result.getSuccessObject().getSize());
-        assertEquals(0, result.getSuccessObject().getTotalElements());
-        assertEquals(0, result.getSuccessObject().getTotalPages());
+        assertEquals(3, result.getSuccessObject().getTotalElements());
+        assertEquals(1, result.getSuccessObject().getTotalPages());
     }
     
     @Test
@@ -115,7 +117,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
         assertEquals(20, result.getSuccessObject().getSize());
-        assertEquals(6, result.getSuccessObject().getTotalElements());
+        assertEquals(1, result.getSuccessObject().getTotalElements());
         assertEquals(1, result.getSuccessObject().getTotalPages());
         assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getContent().get(0).getId());
         assertNull(result.getSuccessObject().getContent().get(0).getTotalProjectCost());

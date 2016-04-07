@@ -8,12 +8,15 @@ import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.application.transactional.SectionService;
 
+import com.worth.ifs.security.SecuritySetter;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -102,6 +105,9 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
 
         assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());
         assertEquals(7, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccessObject().size());
+
+        UserResource collaborator = newUserResource().withId(collaboratorIdOne).build();
+        SecuritySetter.swapOutForUser(collaborator);
         assertEquals(8, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).getSuccessObject().size());
 
         section = sectionRepository.findOne(11L);

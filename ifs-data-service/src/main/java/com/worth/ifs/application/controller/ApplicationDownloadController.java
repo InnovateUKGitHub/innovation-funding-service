@@ -10,9 +10,9 @@ import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -47,9 +47,11 @@ public class ApplicationDownloadController {
 
     @RequestMapping("/downloadByCompetition/{competitionId}")
     public @ResponseBody ResponseEntity<ByteArrayResource> getDownloadByCompetitionId(@PathVariable("competitionId") Long competitionId) throws IOException {
-        List<Application> applications = applicationSummaryService.getApplicationSummariesByCompetitionIdAndStatus(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
+        ApplicationStatusConstants status = ApplicationStatusConstants.SUBMITTED;
+        List<Application> applications = applicationSummaryService.getApplicationSummariesByCompetitionIdAndStatus(competitionId, status.getId());
+        LOG.info(String.format("Generate download for %s applications with status %s ", applications.size(), status.getName()));
 
-        XSSFWorkbook wb = getExcelWorkbook(applications);
+        HSSFWorkbook wb = getExcelWorkbook(applications);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         wb.write(baos);
 
@@ -61,14 +63,14 @@ public class ApplicationDownloadController {
         return new ResponseEntity<>(new ByteArrayResource(baos.toByteArray()), httpHeaders, HttpStatus.OK);
     }
 
-    private XSSFWorkbook getExcelWorkbook(List<Application> applications) {
-        XSSFWorkbook wb = new XSSFWorkbook();
-        XSSFSheet sheet = wb.createSheet("Submitted Applications");
+    private HSSFWorkbook getExcelWorkbook(List<Application> applications) {
+        HSSFWorkbook wb = new HSSFWorkbook();
+        HSSFSheet sheet = wb.createSheet("Submitted Applications");
         int rowCount = 0;
 
-        // Set header row
+        // ADD HEADER ROW
         int headerCount = 0;
-        XSSFRow row = sheet.createRow(rowCount++);
+        HSSFRow row = sheet.createRow(rowCount++);
         row.createCell(headerCount++).setCellValue("Application ID");
         row.createCell(headerCount++).setCellValue("Application Title");
         row.createCell(headerCount++).setCellValue("Lead Organisation");
@@ -82,6 +84,7 @@ public class ApplicationDownloadController {
         row.createCell(headerCount++).setCellValue("Funding sought");
 
         for (Application a : applications) {
+            // PREPARE APPLICATION INFORMATION
             Optional<List<ApplicationFinanceResource>> financeTotalsOptional = costService.financeTotals(a.getId()).getOptionalSuccessObject();
             List<FormInputResponse> projectSummary = formInputResponseRepository.findByApplicationIdAndFormInputId(a.getId(), APPLICATION_SUMMARY_FORM_INPUT_ID);
             String projectSummaryString = "";
@@ -95,14 +98,18 @@ public class ApplicationDownloadController {
                 List<ApplicationFinanceResource> financeTotals;
                 financeTotals = financeTotalsOptional.get();
                 total = financeTotals.stream().map(t -> t.getTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
-                fundingSought = financeTotals.stream().map(t -> t.getTotalFundingSought()).reduce(BigDecimal.ZERO, BigDecimal::add);
+                fundingSought = financeTotals.stream()
+                        .filter(of -> of != null && of.getGrantClaimPercentage() != null)
+                        .map(of -> of.getTotalFundingSought())
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
             }
             String totalFormatted = NumberFormat.getCurrencyInstance(Locale.UK).format(total);
             String fundingSoughtFormatted = NumberFormat.getCurrencyInstance(Locale.UK).format(fundingSought);
 
+            // ADD APPLICATION ROW
             int cellCount = 0;
             row = sheet.createRow(rowCount++);
-            row.createCell(cellCount++).setCellValue(a.getId());
+            row.createCell(cellCount++).setCellValue(a.getFormattedId());
             row.createCell(cellCount++).setCellValue(a.getName());
             row.createCell(cellCount++).setCellValue(a.getLeadOrganisation().getName());
             row.createCell(cellCount++).setCellValue(a.getLeadApplicant().getFirstName());

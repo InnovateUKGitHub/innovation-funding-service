@@ -25,6 +25,7 @@ import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
@@ -142,7 +143,7 @@ public abstract class AbstractApplicationController extends BaseController {
     }
 
     protected void assignQuestion(HttpServletRequest request, Long applicationId) {
-        User user = userAuthenticationService.getAuthenticatedUser(request);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
 
         Map<String, String[]> params = request.getParameterMap();
@@ -442,7 +443,7 @@ public abstract class AbstractApplicationController extends BaseController {
         return application;
     }
 
-    protected void addOrganisationAndUserFinanceDetails(Long applicationId, User user,
+    protected void addOrganisationAndUserFinanceDetails(Long applicationId, UserResource user,
                                                         Model model, ApplicationForm form) {
         model.addAttribute("currentUser", user);
         financeOverviewModelManager.addFinanceDetails(model, applicationId);

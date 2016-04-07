@@ -6,12 +6,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationResource {
+    public static final String ID_PATTERN = "#00000000";
+    public static final DecimalFormat formatter = new DecimalFormat(ID_PATTERN);
 
     private Long id;
     private String name;
@@ -28,6 +31,11 @@ public class ApplicationResource {
 
     public Long getId() {
         return id;
+    }
+
+    @JsonIgnore
+    public String getFormattedId(){
+        return formatter.format(id);
     }
 
     public void setId(Long id) {

@@ -10,6 +10,7 @@ import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
                                                Model model,
                                                HttpServletRequest request
     ){
-        User user = getLoggedUser(request);
+        UserResource user = getLoggedUser(request);
         Long applicationId = Long.valueOf(applicationIdString);
         form.setAdminMode(true);
 
@@ -61,6 +62,6 @@ public class ApplicationManagementController extends AbstractApplicationControll
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
         addOrganisationAndUserFinanceDetails(applicationId, user, model, form);
         model.addAttribute("applicationReadyForSubmit", false);
-        return "application/summary";
+        return "competition-mgt-application-overview";
     }
 }

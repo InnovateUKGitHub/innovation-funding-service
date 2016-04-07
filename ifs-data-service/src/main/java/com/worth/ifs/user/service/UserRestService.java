@@ -12,24 +12,24 @@ import java.util.concurrent.Future;
  * Interface for CRUD operations on {@link User} related data.
  */
 public interface UserRestService {
-    RestResult<User> retrieveUserByUid(String uid);
-    RestResult<User> retrieveUserById(Long id);
-    RestResult<List<User>> findAll();
+    RestResult<UserResource> retrieveUserResourceByUid(String uid);
+
+    RestResult<UserResource> retrieveUserById(Long id);
+    RestResult<List<UserResource>> findAll();
     RestResult<ProcessRole> findProcessRole(Long userId, Long applicationId);
     RestResult<List<ProcessRole>> findProcessRole(Long applicationId);
-    RestResult<List<User>> findAssignableUsers(Long applicationId);
-
-    RestResult<Void> sendPasswordResetNotification(String email);
-
-    RestResult<Void> checkPasswordResetHash(String hash);
-
-    RestResult<Void> resetPassword(String hash, String password);
-
+    RestResult<List<UserResource>> findAssignableUsers(Long applicationId);
     RestResult<UserResource> findUserByEmail(String email);
     Future<RestResult<ProcessRole[]>> findAssignableProcessRoles(Long applicationId);
-    RestResult<List<User>> findRelatedUsers(Long applicationId);
+    RestResult<List<UserResource>> findRelatedUsers(Long applicationId);
+
     Future<RestResult<ProcessRole>> findProcessRoleById(Long processRoleId);
     RestResult<Void> verifyEmail(String hash);
+
+    RestResult<Void> sendPasswordResetNotification(String email);
+    RestResult<Void> checkPasswordResetHash(String hash);
+    RestResult<Void> resetPassword(String hash, String password);
+
     RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Long competitionId);
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
     RestResult<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber);

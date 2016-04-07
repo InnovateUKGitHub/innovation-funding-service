@@ -11,6 +11,7 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
+import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,23 +38,23 @@ public class ApplicationRules {
     RoleRepository roleRepository;
 
     @PermissionRule(value = "READ", description = "A user can see an applicationResource which they are connected to and if the application exists")
-    public boolean applicantCanSeeConnectedApplicationResource(ApplicationResource application, User user) {
+    public boolean applicantCanSeeConnectedApplicationResource(ApplicationResource application, UserResource user) {
         return SecurityRuleUtil.isCompAdmin(user) || !(applicationExists(application) && !userIsConnectedToApplicationResource(application, user));
     }
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
-    public boolean applicantCanUpdateApplicationResource(ApplicationResource application, User user) {
+    public boolean applicantCanUpdateApplicationResource(ApplicationResource application, UserResource user) {
         List<Role> allApplicantRoles = roleRepository.findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()));
         List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, application.getId());
         return !applicantProcessRoles.isEmpty();
     }
 
-    boolean userIsConnectedToApplicationResource(ApplicationResource application, User user) {
-        List<ProcessRole> processRole = processRoleRepository.findByUserAndApplicationId(user, application.getId());
-        return !processRole.isEmpty();
+    boolean userIsConnectedToApplicationResource(ApplicationResource application, UserResource user) {
+        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), application.getId());
+        return processRole!=null;
     }
 
-    boolean userIsLeadApplicantOnApplicationResource(ApplicationResource application, User user) {
+    boolean userIsLeadApplicantOnApplicationResource(ApplicationResource application, UserResource user) {
         Role role = onlyElement(roleRepository.findByName(UserRoleType.LEADAPPLICANT.getName()));
         return !processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(), role, application.getId()).isEmpty();
     }
