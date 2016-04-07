@@ -15,8 +15,10 @@ import org.springframework.security.access.AccessDeniedException;
 import java.util.Optional;
 
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * Testing how this service integrates with Spring Security
@@ -32,12 +34,39 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         lookup = getMockPermissionEntityLookupStrategiesBean(UserLookupStrategies.class);
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test
     public void testCreateApplicantUser() {
+
         UserResource userToCreate = newUserResource().build();
-        service.createApplicantUser(123L, userToCreate);
-        verify(rules).systemUserCanCreateUsers(userToCreate, getLoggedInUser());
-        verifyNoMoreInteractions(rules);
+
+        assertAccessDenied(() -> service.createApplicantUser(123L, userToCreate), () -> {
+            verify(rules).systemUserCanCreateUsers(userToCreate, getLoggedInUser());
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
+    public void testCreateApplicantUserWithCompetitionId() {
+
+        UserResource userToCreate = newUserResource().build();
+
+        assertAccessDenied(() -> service.createApplicantUser(123L, Optional.of(456L), userToCreate), () -> {
+            verify(rules).systemUserCanCreateUsers(userToCreate, getLoggedInUser());
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
+    public void testActivateUser() {
+
+        UserResource userToActivate = newUserResource().build();
+
+        when(lookup.findById(123L)).thenReturn(userToActivate);
+        
+        assertAccessDenied(() -> service.activateUser(123L), () -> {
+            verify(rules).systemUserCanActivateUsers(userToActivate, getLoggedInUser());
+            verifyNoMoreInteractions(rules);
+        });
     }
 
     @Override

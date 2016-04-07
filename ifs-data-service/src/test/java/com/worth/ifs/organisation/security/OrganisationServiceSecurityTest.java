@@ -10,7 +10,6 @@ import com.worth.ifs.user.resource.OrganisationResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.access.AccessDeniedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +18,7 @@ import java.util.Set;
 import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static com.worth.ifs.address.domain.AddressType.REGISTERED;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -33,14 +33,13 @@ import static org.mockito.Mockito.*;
  */
 public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<OrganisationService> {
 
-    private OrganisationPermissionRules organisationRules;
+    private OrganisationPermissionRules rules;
+    private OrganisationLookupStrategies lookup;
 
     @Before
     public void lookupPermissionRules() {
-
-        organisationRules = getMockPermissionRulesBean(OrganisationPermissionRules.class);
-
-        MockitoAnnotations.initMocks(this);
+        rules = getMockPermissionRulesBean(OrganisationPermissionRules.class);
+        lookup = getMockPermissionEntityLookupStrategiesBean(OrganisationLookupStrategies.class);
     }
 
     @Override
@@ -54,69 +53,69 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
         ServiceResult<Set<OrganisationResource>> results = service.findByApplicationId(1L);
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(organisationRules, times(2)).anyoneCanSeeOrganisationsNotYetConnectedToApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
-        verify(organisationRules, times(2)).memberOfOrganisationCanViewOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
-        verify(organisationRules, times(2)).usersCanViewOrganisationsOnTheirOwnApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
-        verify(organisationRules, times(2)).compAdminsCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
-        verifyNoMoreInteractions(organisationRules);
+        verify(rules, times(2)).anyoneCanSeeOrganisationsNotYetConnectedToApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
+        verify(rules, times(2)).memberOfOrganisationCanViewOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
+        verify(rules, times(2)).usersCanViewOrganisationsOnTheirOwnApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
+        verify(rules, times(2)).compAdminsCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
+        verifyNoMoreInteractions(rules);
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test
     public void testFindById() {
-
-        service.findById(1L);
-
-        verify(organisationRules).anyoneCanSeeOrganisationsNotYetConnectedToApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
-        verify(organisationRules).memberOfOrganisationCanViewOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
-        verify(organisationRules).usersCanViewOrganisationsOnTheirOwnApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
-        verify(organisationRules).compAdminsCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
-        verifyNoMoreInteractions(organisationRules);
+        assertAccessDenied(() -> service.findById(1L), () -> {
+            verify(rules).anyoneCanSeeOrganisationsNotYetConnectedToApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verify(rules).memberOfOrganisationCanViewOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verify(rules).usersCanViewOrganisationsOnTheirOwnApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verify(rules).compAdminsCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verifyNoMoreInteractions(rules);
+        });
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test
     public void testCreate() {
-
-        service.create(newOrganisationResource().build());
-
-        verify(organisationRules).anyoneCanCreateOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
-        verifyNoMoreInteractions(organisationRules);
+        assertAccessDenied(() -> service.create(newOrganisationResource().build()), () -> {
+            verify(rules).anyoneCanCreateOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verifyNoMoreInteractions(rules);
+        });
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test
     public void testUpdate() {
-
-        service.update(newOrganisationResource().build());
-
-        verify(organisationRules).anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(isA(OrganisationResource.class), eq(getLoggedInUser()));
-        verifyNoMoreInteractions(organisationRules);
+        assertAccessDenied(() -> service.update(newOrganisationResource().build()), () -> {
+            verify(rules).anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verify(rules).memberOfOrganisationCanUpdateOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verifyNoMoreInteractions(rules);
+        });
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test
     public void testAddAddress() {
 
-        service.addAddress(1L, REGISTERED, newAddressResource().build());
+        when(lookup.findOrganisationById(123L)).thenReturn(newOrganisationResource().build());
 
-        verify(organisationRules).anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(isA(OrganisationResource.class), eq(getLoggedInUser()));
-        verifyNoMoreInteractions(organisationRules);
+        assertAccessDenied(() -> service.addAddress(123L, REGISTERED, newAddressResource().build()), () -> {
+            verify(rules).anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verify(rules).memberOfOrganisationCanUpdateOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
+            verifyNoMoreInteractions(rules);
+        });
     }
 
-
+    @Test
     public void testSearchAcademic() {
 
         ServiceResult<List<OrganisationSearchResult>> results = service.searchAcademic("Univer", 10);
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(organisationRules, times(2)).anyoneCanSeeOrganisationSearchResults(isA(OrganisationSearchResult.class), eq(getLoggedInUser()));
-        verifyNoMoreInteractions(organisationRules);
+        verify(rules, times(2)).anyoneCanSeeOrganisationSearchResults(isA(OrganisationSearchResult.class), eq(getLoggedInUser()));
+        verifyNoMoreInteractions(rules);
     }
 
-    @Test(expected = AccessDeniedException.class)
+    @Test
     public void testGetSearchOrganisation() {
-
-        service.getSearchOrganisation(1L);
-
-        verify(organisationRules).anyoneCanSeeOrganisationSearchResults(isA(OrganisationSearchResult.class), eq(getLoggedInUser()));
-        verifyNoMoreInteractions(organisationRules);
+        assertAccessDenied(() -> service.getSearchOrganisation(1L), () -> {
+            verify(rules).anyoneCanSeeOrganisationSearchResults(isA(OrganisationSearchResult.class), eq(getLoggedInUser()));
+            verifyNoMoreInteractions(rules);
+        });
     }
 
     /**
