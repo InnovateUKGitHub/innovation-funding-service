@@ -18,7 +18,6 @@ IFS.competition_management = (function(){
             IFS.competition_management.getMenuHeight();
             IFS.competition_management.getContainerHeight();
 
-
             if(IFS.competition_management.stickyEnabled()){
                 IFS.competition_management.getMenuWidth();
                 IFS.competition_management.getMenuOffset();
@@ -67,10 +66,9 @@ IFS.competition_management = (function(){
           return false;
         },
         menuPxToPercentage : function(){
-            calculatedValues.menuPercentage =  parseFloat((calculatedValues.menuWidth/calculatedValues.windowWidth)*100).toFixed(2);
+          calculatedValues.menuPercentage =  parseFloat((calculatedValues.menuWidth/calculatedValues.windowWidth)*100).toFixed(2);
         },
         stickyScroll : function(){
-
           if(IFS.competition_management.stickyEnabled()){
             var scroll = jQuery(document).scrollTop();
             if((calculatedValues.menuHeight+scroll) > (calculatedValues.containerHeight+calculatedValues.containerOffsetTop)){
