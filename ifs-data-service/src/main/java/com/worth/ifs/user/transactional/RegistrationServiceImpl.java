@@ -11,6 +11,7 @@ import com.worth.ifs.token.domain.TokenType;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.*;
+import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.CompAdminEmailRepository;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,11 +61,14 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
     @Override
-    public ServiceResult<Void> createApplicantUser(Long organisationId, UserResource userResource) {
+    public ServiceResult<UserResource> createApplicantUser(Long organisationId, UserResource userResource) {
         return createApplicantUser(organisationId, Optional.empty(), userResource);
     }
 
@@ -79,7 +83,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<Void> createApplicantUser(Long organisationId, Optional<Long> competitionId, UserResource userResource) {
+    public ServiceResult<UserResource> createApplicantUser(Long organisationId, Optional<Long> competitionId, UserResource userResource) {
         String roleName;
         if(isUserCompAdmin(userResource.getEmail())){
             roleName = UserRoleType.COMP_ADMIN.getName();
@@ -89,15 +93,13 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         User newUser = assembleUserFromResource(userResource);
         return addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
                 addRoleToUser(user, roleName)).andOnSuccess(user ->
-                createUserWithUid(newUser, userResource.getPassword(), competitionId)).andOnSuccessReturnVoid();
+                createUserWithUid(newUser, userResource.getPassword(), competitionId)).andOnSuccessReturn(userMapper::mapToResource);
     }
 
     @Override
     public ServiceResult<Void> activateUser(Long userId){
         return getUser(userId).andOnSuccessReturnVoid(u -> {
             idpService.activateUser(u.getUid());
-
-            // TODO DW - INFUND-2086 - can these come out now that the user is activated in the IDP?
             u.setStatus(UserStatus.ACTIVE);
             userRepository.save(u);
         });

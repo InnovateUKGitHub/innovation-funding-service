@@ -1,6 +1,7 @@
 package com.worth.ifs;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -15,4 +16,6 @@ public interface Builder<T, S> {
     List<T> build(int numberToBuild);
 
     T[] buildArray(int numberToBuild, Class<T> clazz);
+
+    Set<T> buildSet(int numberToBuild);
 }

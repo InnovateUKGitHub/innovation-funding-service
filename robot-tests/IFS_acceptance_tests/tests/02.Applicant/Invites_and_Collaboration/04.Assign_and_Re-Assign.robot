@@ -54,7 +54,7 @@ The question is enabled for the assignee
     And the user should see the element    css=#form-input-12 .editor
     And the user should not see the element    css=#form-input-12 .readonly
     And the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
-    And the question should contain the correct status/name    css=#form-input-12 .assign-container    You
+    And the question should contain the correct status/name    jQuery=#section-1 .section:nth-child(3) .assign-container    You
 
 The question is enabled on the summary page for the assignee
     [Documentation]     INFUND-2302
@@ -108,7 +108,7 @@ The question can be reassigned to the lead applicant
     And the user should see the element    css=#form-input-12 .editor
     And the user should not see the element    css=#form-input-12 .readonly
     And the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
-    And the question should contain the correct status/name    css=#form-input-12 .assign-container    You
+    And the question should contain the correct status/name     jQuery=#section-1 .section:nth-child(3) .assign-container    You
     [Teardown]    User closes the browser
 
 Appendices are assigned along with the question

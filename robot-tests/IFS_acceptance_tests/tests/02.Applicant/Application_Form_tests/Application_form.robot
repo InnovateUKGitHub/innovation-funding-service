@@ -232,7 +232,7 @@ the Applicant edits 'Public description' and marks it as complete
 
 the question should be marked as complete on the application overview page
     The user navigates to the page    ${NEW_TEST_APPLICATION_OVERVIEW}
-    Page Should Contain Element    css=#form-input-12 .complete
+    The user should see the element     jQuery=#section-1 .section:nth-child(3) img[src="/images/field/field-done-right.png"]
 
 the Applicant marks as incomplete 'Public description'
     Click Button    css=#form-input-12 div.textarea-footer > button[name="mark_as_incomplete"]
@@ -245,5 +245,5 @@ the button state should change to 'Mark as complete'
 
 the question should not be marked as complete on the application overview page
     The user navigates to the page    ${NEW_TEST_APPLICATION_OVERVIEW}
-    Page Should Contain Element    css=#form-input-12    Question element found on application overview
-    Page Should Not Contain Element    css=#form-input-12 div.marked-as-complete img.marked-as-complete    Mark as complete class is not found, that's correct
+    Page Should Contain Element    jQuery=#section-1 .section:nth-child(3)    Question element found on application overview
+    Page Should Not Contain Element    jQuery=#section-1 .section:nth-child(3) img[src="/images/field/field-done-right.png"]

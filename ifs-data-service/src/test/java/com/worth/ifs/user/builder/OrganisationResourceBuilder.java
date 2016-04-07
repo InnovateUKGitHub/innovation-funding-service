@@ -2,6 +2,7 @@ package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.user.domain.Organisation;
+import com.worth.ifs.user.domain.OrganisationSize;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -55,6 +56,14 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
 
     public OrganisationResourceBuilder withUsers(List<Long>... users) {
         return withArray((user, organisation) -> setField("users", user, organisation), users);
+    }
+
+    public OrganisationResourceBuilder withProcessRoles(List<Long>... processRoles) {
+        return withArray((processRoleList, organisation) -> organisation.setProcessRoles(processRoleList), processRoles);
+    }
+
+    public OrganisationResourceBuilder withOrganisationSize(OrganisationSize... size) {
+        return withArray((organisationSize, organisation) -> organisation.setOrganisationSize(organisationSize), size);
     }
 
     @Override

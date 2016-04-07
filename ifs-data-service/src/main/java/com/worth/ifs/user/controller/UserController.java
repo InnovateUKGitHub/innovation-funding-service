@@ -124,12 +124,12 @@ public class UserController {
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}")
-    public RestResult<Void> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
+    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
         return registrationService.createApplicantUser(organisationId, userResource).toPostCreateResponse();
     }
 
     @RequestMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
-    public RestResult<Void> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
+    public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
         return registrationService.createApplicantUser(organisationId, of(competitionId), userResource).toPostCreateResponse();
     }
 

@@ -99,8 +99,12 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
         when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
-        ServiceResult<Void> result = service.createApplicantUser(123L, userToCreate);
+        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
+
+        ServiceResult<UserResource> result = service.createApplicantUser(123L, userToCreate);
         assertTrue(result.isSuccess());
+        assertEquals(userToCreate, result.getSuccessObject());
+
         verify(tokenRepositoryMock).save(isA(Token.class));
     }
 
@@ -118,8 +122,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(null);
         when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
+        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
 
-        ServiceResult<Void> result = service.createApplicantUser(123L, userToCreate);
+        ServiceResult<UserResource> result = service.createApplicantUser(123L, userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(Organisation.class, 123L)));
     }
@@ -141,8 +146,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(roleRepositoryMock.findByName(APPLICANT.getName())).thenReturn(emptyList());
         when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
+        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
 
-        ServiceResult<Void> result = service.createApplicantUser(123L, userToCreate);
+        ServiceResult<UserResource> result = service.createApplicantUser(123L, userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(Role.class, APPLICANT.getName())));
     }
@@ -166,8 +172,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(roleRepositoryMock.findByName(APPLICANT.getName())).thenReturn(singletonList(applicantRole));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
         when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(null);
+        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
 
-        ServiceResult<Void> result = service.createApplicantUser(123L, userToCreate);
+        ServiceResult<UserResource> result = service.createApplicantUser(123L, userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
     }
@@ -227,8 +234,11 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
         when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(compAdminEmail);
-        ServiceResult<Void> result = service.createApplicantUser(123L, userToCreate);
+        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
+
+        ServiceResult<UserResource> result = service.createApplicantUser(123L, userToCreate);
         assertTrue(result.isSuccess());
+        assertEquals(userToCreate, result.getSuccessObject());
 
         verify(tokenRepositoryMock).save(isA(Token.class));
     }
@@ -251,8 +261,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(roleRepositoryMock.findByName(COMP_ADMIN.getName())).thenReturn(emptyList());
         when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(compAdminEmail);
+        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
 
-        ServiceResult<Void> result = service.createApplicantUser(123L, userToCreate);
+        ServiceResult<UserResource> result = service.createApplicantUser(123L, userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(Role.class, COMP_ADMIN.getName())));
     }

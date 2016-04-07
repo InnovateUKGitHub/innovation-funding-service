@@ -1,15 +1,9 @@
 package com.worth.ifs.organisation.transactional;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.worth.ifs.address.domain.Address;
 import com.worth.ifs.address.domain.AddressType;
 import com.worth.ifs.address.mapper.AddressMapper;
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.organisation.domain.Academic;
 import com.worth.ifs.organisation.mapper.OrganisationMapper;
@@ -21,10 +15,14 @@ import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.repository.OrganisationTypeRepository;
 import com.worth.ifs.user.resource.OrganisationResource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -62,7 +60,13 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<OrganisationResource> create(final Organisation organisation) {
+    public ServiceResult<OrganisationResource> create(final OrganisationResource organisationToCreate) {
+        return update(organisationToCreate);
+    }
+
+    @Override
+    public ServiceResult<OrganisationResource> update(final OrganisationResource organisationResource) {
+        Organisation organisation = organisationMapper.mapToDomain(organisationResource);
 
         if (organisation.getOrganisationType() == null) {
             organisation.setOrganisationType(organisationTypeRepository.findOne(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()));
@@ -72,17 +76,12 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<OrganisationResource> saveResource(final OrganisationResource organisationResource) {
-        return create(organisationMapper.mapToDomain(organisationResource));
-    }
-
-    @Override
     public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final AddressType addressType, AddressResource addressResource) {
-        return find(organisation(organisationId)).andOnSuccess(organisation -> {
+        return find(organisation(organisationId)).andOnSuccessReturn(organisation -> {
             Address address = addressMapper.mapToDomain(addressResource);
             organisation.addAddress(address, addressType);
             Organisation updatedOrganisation = organisationRepository.save(organisation);
-            return serviceSuccess(organisationMapper.mapToResource(updatedOrganisation));
+            return organisationMapper.mapToResource(updatedOrganisation);
         });
     }
 
@@ -97,7 +96,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
         ServiceResult organisationResults;
         if (organisations.isEmpty()) {
-            organisationResults = serviceFailure(CommonErrors.notFoundError(Academic.class, organisationName));
+            organisationResults = serviceFailure(notFoundError(Academic.class, organisationName));
         } else {
             organisationResults = serviceSuccess(organisations);
         }
@@ -110,7 +109,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
         ServiceResult organisationResults;
         if (academic == null) {
-            organisationResults = serviceFailure(CommonErrors.notFoundError(Academic.class, searchOrganisationId));
+            organisationResults = serviceFailure(notFoundError(Academic.class, searchOrganisationId));
         } else {
             organisationResults = serviceSuccess(new OrganisationSearchResult(academic.getId().toString(), academic.getName()));
         }

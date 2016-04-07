@@ -50,64 +50,80 @@
 </div>
 
 <!-- Box with summary about competition on left hand side -->
-<div th:remove="tag" th:fragment="info-area">
+<div th:remove="tag" th:fragment="info-area" class="bold-small blue-block">
+    <div th:switch="${competitionSummary.competitionStatus.name()}">
+    <div th:remove="tag" th:case="'NOT_STARTED'">
+        <div class="info-area boxed">
+            <p>
+                This competition has not yet been started.
+            </p>
+        </div>
+    </div>
 
-    <div th:switch="${competitionSummary.competitionStatus.name()}" th:remove="tag">
-      <div th:case="'NOT_STARTED'"  class="info-area boxed">
-          <p>This competition has not yet been started.</p>
-      </div>
+    <div th:remove="tag" th:case="'OPEN'">
+        <div class="info-area boxed">
+            <p>
+            <span class="bold-medium">
+              <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
+              <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            </span> Application deadline
+            </p>
+            <p><span class="bold-medium" th:text="${competitionSummary.totalNumberOfApplications}" /> Total number of applications</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsStarted}" /> Applications started</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress}" /> Applications in progress (Beyond 50%)</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
+        </div>
+    </div>
 
-      <div th:case="'OPEN'" class="info-area boxed">
-          <p>
-          <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
-          </span> Application deadline
-          </p>
-          <p><span class="bold-medium" th:text="${competitionSummary.totalNumberOfApplications}" /> Total number of applications</p>
-          <p><span class="bold-medium" th:text="${competitionSummary.applicationsStarted}" /> Applications started</p>
-          <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress}" /> Applications in progress (Beyond 50%)</p>
-          <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
-      </div>
+    <div th:remove="tag" th:case="'IN_ASSESSMENT'">
+        <div class="info-area boxed">
+            <p>
+            <span class="bold-medium">
+              <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
+              <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            </span> Application deadline
+            </p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
+            <p th:if="${param.tab != null} and ${param.tab[0] == 'notSubmitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}"/> Applications not submitted</p>
+            <p th:if="${param.tab != null} and ${param.tab[0] == 'submitted'}"><a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.csv)</a></p>
+        </div>
+    </div>
 
-      <div th:case="'IN_ASSESSMENT'" class="info-area boxed">
-          <p>
-          <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
-          </span> Application deadline
-          </p>
-          <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
-          <p th:if="${param.tab != null} and ${param.tab[0] == 'notSubmitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress + competitionSummary.applicationsStarted}"/> Applications not submitted</p>
-          <p th:if="${param.tab != null} and ${param.tab[0] == 'submitted'}"><a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.xls)</a></p>
-      </div>
+    <div th:remove="tag" th:case="'FUNDERS_PANEL'">
+        <div class="info-area boxed">
+            <p>
+            <span class="bold-medium">
+              <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
+              <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            </span> Assessment deadline
+            </p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}" /> Applications not submitted</p>
+            <a th:href="/management/competition/${competitionSummary.competitionId}/download" class="button-secondary">Export application data (.csv)</a>
+            <a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
+        </div>
+    </div>
 
-      <div th:case="'FUNDERS_PANEL'" class="info-area boxed">
-          <p>
-          <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
-          </span> Assessment deadline
-          </p>
-          <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress + competitionSummary.applicationsStarted}" /> Applications not submitted</p>
-          <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
-          <a th:href="/management/competition/${competitionSummary.competitionId}/download" class="button-secondary">Export application data (.xls)</a>
-          <a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
-      </div>
+    <div th:remove="tag" th:case="'PROJECT_SETUP'">
+        <div class="info-area boxed">
+            <p>
+            <span class="bold-medium">
+              <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
+              <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
+            </span> Application deadline
+            </p>
+            <p><span class="bold-medium" th:text="${competitionSummary.totalNumberOfApplications}" /> Total number of applications</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsStarted}" /> Applications started</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress}" /> Applications in progress (Beyond 50%)</p>
+            <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
+        </div>
+    </div>
 
-      <div th:case="'PROJECT_SETUP'" class="info-area boxed">
-          <p>
-          <span class="bold-medium">
-            <div th:include="fragments/elements :: ordinal-day (date=${competitionSummary.getApplicationDeadline()})" th:remove="tag" />
-            <div th:remove="tag" th:text="${#temporals.format(competitionSummary.getApplicationDeadline(), 'MMMM yyyy')}" />
-          </span> Application deadline
-          </p>
-          <p><span class="bold-medium" th:text="${competitionSummary.totalNumberOfApplications}" /> Total number of applications</p>
-          <p><span class="bold-medium" th:text="${competitionSummary.applicationsStarted}" /> Applications started</p>
-          <p><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress}" /> Applications in progress (Beyond 50%)</p>
-          <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
-      </div>
+    <div th:remove="tag" th:case="'*'">
+        <p>Competition is in invalid state</p>
+    </div>
         &nbsp; <!--/* don't remove is for mainting layout when the info box is sticky/fixed */-->
     </div>
+
 </div>
 </html>

@@ -70,7 +70,7 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
         /****** For organisation creation *******/
         antPathRequestMatchers.add(new AntPathRequestMatcher("/organisation/create/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/organisation/save/**"));
-        antPathRequestMatchers.add(new AntPathRequestMatcher("/organisation/saveResource/**"));
+        antPathRequestMatchers.add(new AntPathRequestMatcher("/organisation/update/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/organisationtype/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/organisation/addAddress/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/companyhouse/**"));

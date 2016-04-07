@@ -28,6 +28,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userList
  */
 @Service
 public class UserRestServiceImpl extends BaseRestService implements UserRestService {
+
     private static final Log LOG = LogFactory.getLog(UserRestServiceImpl.class);
     private String userRestURL;
     private String processRoleRestURL;
@@ -135,7 +136,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
     @Override
     public RestResult<Void> verifyEmail(String hash){
-        return getWithRestResult(userRestURL + "/verifyEmail/"+hash, Void.class);
+        return getWithRestResultAnonymous(userRestURL + "/verifyEmail/"+hash, Void.class);
     }
 
     @Override
@@ -156,7 +157,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
             url = userRestURL + "/createLeadApplicantForOrganisation/" + organisationId;
         }
 
-        return postWithRestResult(url, user, UserResource.class);
+        return postWithRestResultAnonymous(url, user, UserResource.class);
     }
     @Override
     public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
