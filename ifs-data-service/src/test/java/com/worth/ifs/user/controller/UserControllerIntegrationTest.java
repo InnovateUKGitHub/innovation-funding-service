@@ -2,7 +2,6 @@ package com.worth.ifs.user.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserStatus;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Ignore;
@@ -11,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -133,7 +132,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         userResource.setTitle("King");
         userResource.setPhoneNumber("0123335787888");
 
-        RestResult<Void> restResult = controller.createUser(1L, 1L, userResource);
+        RestResult<UserResource> restResult = controller.createUser(1L, 1L, userResource);
         assertTrue(restResult.isSuccess());
 
         UserResource user = controller.getUserById(1L).getSuccessObject();

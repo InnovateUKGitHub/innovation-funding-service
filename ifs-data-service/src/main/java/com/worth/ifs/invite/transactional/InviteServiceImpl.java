@@ -216,8 +216,13 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
             if(invite.getEmail().equals(user.getEmail())){
                 invite.setStatus(InviteStatusConstants.ACCEPTED);
+
+                if(invite.getInviteOrganisation().getOrganisation()==null && !user.getOrganisations().isEmpty()){
+                    invite.getInviteOrganisation().setOrganisation(user.getOrganisations().get(0));
+                }
                 invite = inviteRepository.save(invite);
                 initializeInvitee(invite, user);
+
                 return serviceSuccess();
             }
             LOG.error(String.format("Invited emailaddress not the same as the users emailaddress %s => %s ", user.getEmail(), invite.getEmail()));
