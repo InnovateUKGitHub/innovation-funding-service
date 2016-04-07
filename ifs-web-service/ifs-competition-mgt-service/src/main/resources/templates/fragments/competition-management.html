@@ -84,12 +84,8 @@
             </span> Application deadline
             </p>
             <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
-<<<<<<< HEAD
-            <a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.xls)</a>
-=======
             <p th:if="${param.tab != null} and ${param.tab[0] == 'notSubmitted'}"><span class="bold-medium" th:text="${competitionSummary.applicationsInProgress + competitionSummary.applicationsStarted}"/> Applications not submitted</p>
-            <p th:if="${param.tab != null} and ${param.tab[0] == 'submitted'}"><a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.csv)</a></p>
->>>>>>> b9c5fd3c9cc8917359b2ec11b62bf941083e5d1b
+            <p th:if="${param.tab != null} and ${param.tab[0] == 'submitted'}"><a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.xls)</a></p>
         </div>
     </div>
 
