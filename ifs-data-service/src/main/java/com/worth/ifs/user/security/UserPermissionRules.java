@@ -14,9 +14,17 @@ import static com.worth.ifs.user.domain.UserRoleType.SYSTEM_REGISTRATION_USER;
 @PermissionRules
 public class UserPermissionRules {
 
-    @PermissionRule(value = "CREATE", description = "A System User can create new Users")
+    @PermissionRule(value = "CREATE", description = "A System Registration User can create new Users")
     public boolean systemUserCanCreateUsers(UserResource userToCreate, UserResource user) {
-        return user.hasRole(SYSTEM_REGISTRATION_USER);
+        return isSystemRegistrationUser(user);
     }
 
+    @PermissionRule(value = "ACTIVATE", description = "A System Registration User can activate Users")
+    public boolean systemUserCanActivateUsers(UserResource userToCreate, UserResource user) {
+        return isSystemRegistrationUser(user);
+    }
+
+    private boolean isSystemRegistrationUser(UserResource user) {
+        return user.hasRole(SYSTEM_REGISTRATION_USER);
+    }
 }

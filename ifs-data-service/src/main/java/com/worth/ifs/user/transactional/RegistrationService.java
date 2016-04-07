@@ -18,6 +18,6 @@ public interface RegistrationService {
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createApplicantUser(Long organisationId, Optional<Long> competitionId, @P("user") UserResource userResource);
 
-    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'CREATE')")
+    @PreAuthorize("hasPermission(#userId, 'com.worth.ifs.user.resource.UserResource', 'ACTIVATE')")
     ServiceResult<Void> activateUser(Long userId);
 }

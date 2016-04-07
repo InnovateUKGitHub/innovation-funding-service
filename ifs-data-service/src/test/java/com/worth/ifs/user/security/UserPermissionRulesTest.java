@@ -23,6 +23,17 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         });
     }
 
+    @Test
+    public void testSystemUserCanActivateUsers() {
+        allRoleUsers.forEach(user -> {
+            if (user.equals(systemRegistrationUser())) {
+                assertTrue(rules.systemUserCanActivateUsers(newUserResource().build(), user));
+            } else {
+                assertFalse(rules.systemUserCanActivateUsers(newUserResource().build(), user));
+            }
+        });
+    }
+
     @Override
     protected UserPermissionRules supplyPermissionRulesUnderTest() {
         return new UserPermissionRules();
