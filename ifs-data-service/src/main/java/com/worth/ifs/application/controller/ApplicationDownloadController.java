@@ -13,9 +13,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -112,7 +109,7 @@ public class ApplicationDownloadController {
             // ADD APPLICATION ROW
             int cellCount = 0;
             row = sheet.createRow(rowCount++);
-            row.createCell(cellCount++).setCellValue(a.getId());
+            row.createCell(cellCount++).setCellValue(a.getFormattedId());
             row.createCell(cellCount++).setCellValue(a.getName());
             row.createCell(cellCount++).setCellValue(a.getLeadOrganisation().getName());
             row.createCell(cellCount++).setCellValue(a.getLeadApplicant().getFirstName());
