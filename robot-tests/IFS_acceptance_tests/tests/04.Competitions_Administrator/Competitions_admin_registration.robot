@@ -71,7 +71,7 @@ the user enters the details and clicks the create account
 Download File
     [Arguments]    ${COOKIE_VALUE}    ${URL}    ${FILENAME}
     log    ${COOKIE_VALUE}
-    Run and Return RC    curl -v --insecure --cookie "${COOKIE_VALUE}" ${URL} > ../download_files/${/}${FILENAME}
+    Run and Return RC    curl -v --insecure --cookie "${COOKIE_VALUE}" ${URL} > download_files/${/}${FILENAME}
 
 the admin downloads the excel
     ${ALL_COOKIES} =    Get Cookies
@@ -80,7 +80,7 @@ the admin downloads the excel
     sleep    2s
 
 User opens the excel and checks the content
-    Open Excel    ../download_files/submitted_applications.xls
+    Open Excel    download_files/submitted_applications.xls
     ${APPLICATION_ID_1}=    read Cell Data by name    Submitted Applications    A2
     Should Be Equal    ${APPLICATION_ID_1}    00000005
     ${APPLICATION_TITLE_1}=    read Cell Data by name    Submitted Applications    B2
@@ -105,4 +105,4 @@ User opens the excel and checks the content
     Should Be Equal    ${FUNDING_1}    £8,000.00
 
 Empty the download directory
-    Empty Directory    ../download_files
+    Empty Directory    download_files
