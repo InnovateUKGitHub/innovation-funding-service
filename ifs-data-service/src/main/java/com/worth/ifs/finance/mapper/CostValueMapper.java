@@ -10,7 +10,6 @@ import org.mapstruct.Mapper;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-        CostMapper.class,
         CostFieldMapper.class
     }
 )
