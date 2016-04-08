@@ -1,7 +1,6 @@
 package com.worth.ifs.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
@@ -23,12 +22,6 @@ public interface CostService {
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<Void> updateCost(Long id, CostItem newCostItem);
-
-    @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<List<Cost>> findCostsByApplicationId(Long applicationFinanceId);
-
-    @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<Cost> findCostById(Long id);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<Void> deleteCost(Long costId);

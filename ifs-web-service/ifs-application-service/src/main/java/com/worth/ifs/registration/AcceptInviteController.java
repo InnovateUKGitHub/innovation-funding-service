@@ -122,7 +122,7 @@ public class AcceptInviteController extends BaseController {
             InviteResource inviteResource = invite.getSuccessObject();
             if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
-                OrganisationResource organisation = organisationService.getOrganisationById(inviteOrganisation.getOrganisation());
+                OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
 
                 model.addAttribute("invite", inviteResource);
                 model.addAttribute("inviteOrganisation", inviteOrganisation);

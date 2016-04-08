@@ -18,6 +18,9 @@ public interface OrganisationService {
     Optional<OrganisationResource> getApplicationLeadOrganisation(ApplicationResource application);
     Optional<OrganisationResource> getUserOrganisation(ApplicationResource application, Long userId);
     OrganisationResource getOrganisationById(Long organisationId);
+
+    OrganisationResource getOrganisationByIdForAnonymousUserFlow(Long organisationId);
+
     OrganisationResource save(OrganisationResource organisation);
     OrganisationSearchResult getCompanyHouseOrganisation(String organisationId);
     OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, AddressType type);
