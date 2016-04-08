@@ -2,16 +2,19 @@ package com.worth.ifs.token.transactional;
 
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.token.domain.Token;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Optional;
 
 public interface TokenService {
-    @NotSecured("Not secured, this is used in the email verification flow.")
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     Optional<Token> getTokenByHash(String hash);
 
-    @NotSecured("Not secured, this is used in the email verification flow.")
+    @PreAuthorize("hasPermission(#token, 'DELETE')")
     void removeToken(Token token);
 
-    @NotSecured("Not secured, this is used in the email verification flow.")
+    @PreAuthorize("hasPermission(#token, 'READ')")
     void handleExtraAttributes(Token token);
 }

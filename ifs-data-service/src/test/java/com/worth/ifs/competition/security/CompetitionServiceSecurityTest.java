@@ -52,15 +52,14 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         verifyNoMoreInteractions(rules);
     }
 
-    @Test(expected = AccessDeniedException.class)
     public void testGetCompetitionById() {
 
         setLoggedInUser(null);
 
-        service.getCompetitionById(1L);
-
-        verify(rules).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
-        verifyNoMoreInteractions(rules);
+        assertAccessDenied(() -> service.getCompetitionById(1L), () -> {
+            verify(rules).anyoneCanViewCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+            verifyNoMoreInteractions(rules);
+        });
     }
 
     /**

@@ -29,7 +29,7 @@ public abstract class ApplicationSummaryMapper {
 		result.setApplicationStatus(source.getApplicationStatus().getId());
 		result.setApplicationStatusName(source.getApplicationStatus().getName());
 		result.setId(source.getId());
-		result.setLead(source.getLeadApplicant().getName());
+		result.setLead(source.getLeadOrganisation().getName());
 		result.setName(source.getName());
 		return result;
 	}
