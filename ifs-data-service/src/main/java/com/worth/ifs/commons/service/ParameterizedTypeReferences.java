@@ -4,6 +4,7 @@ import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.competition.domain.Competition;
@@ -84,8 +85,8 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<Response>>() {};
     }
 
-    public static ParameterizedTypeReference<List<Question>> questionListType() {
-        return new ParameterizedTypeReference<List<Question>>() {};
+    public static ParameterizedTypeReference<List<QuestionResource>> questionResourceListType() {
+        return new ParameterizedTypeReference<List<QuestionResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<Assessment>> assessmentListType() {

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
@@ -18,7 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface QuestionService {
 
     @NotSecured("TODO")
-    ServiceResult<Question> getQuestionById(final Long id);
+    ServiceResult<QuestionResource> getQuestionById(final Long id);
 
     @NotSecured("TODO")
     ServiceResult<Void> markAsComplete(final Long questionId,
@@ -46,22 +47,25 @@ public interface QuestionService {
                             final Boolean notify);
 
     @NotSecured("TODO")
-    ServiceResult<List<Question>> findByCompetition(final Long competitionId);
+    ServiceResult<List<QuestionResource>> findByCompetition(final Long competitionId);
 
     @NotSecured("TODO")
-    ServiceResult<Question> getNextQuestion(final Long questionId);
+    ServiceResult<QuestionResource> getNextQuestion(final Long questionId);
 
     @NotSecured("TODO")
-    ServiceResult<Question> getPreviousQuestionBySection(final Long sectionId);
+    ServiceResult<QuestionResource> getPreviousQuestionBySection(final Long sectionId);
 
     @NotSecured("TODO")
-    ServiceResult<Question> getNextQuestionBySection(final Long sectionId);
+    ServiceResult<QuestionResource> getNextQuestionBySection(final Long sectionId);
 
     @NotSecured("TODO")
-    ServiceResult<Question> getPreviousQuestion(final Long questionId);
+    ServiceResult<QuestionResource> getPreviousQuestion(final Long questionId);
 
     @NotSecured("TODO")
     ServiceResult<Boolean> isMarkedAsComplete(Question question, Long applicationId, Long organisationId);
+
+    @NotSecured("TODO")
+    ServiceResult<QuestionResource> getQuestionResourceByFormInputType(String formInputTypeTitle);
 
     @NotSecured("TODO")
     ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle);

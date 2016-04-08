@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.resource.QuestionResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +13,10 @@ import java.util.List;
 import java.util.Set;
 
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.service.Futures.settable;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
@@ -42,11 +45,11 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     @Test
     public void findByCompetitionTest() {
 
-        List<Question> questions = newQuestion().build(3);
-        setupGetWithRestResultExpectations(questionRestURL + "/findByCompetition/1", questionListType(), questions);
+        List<QuestionResource> questions = newQuestionResource().build(3);
+        setupGetWithRestResultExpectations(questionRestURL + "/findByCompetition/1", questionResourceListType(), questions);
 
         // now run the method under test
-        List<Question> returnedQuestions = service.findByCompetition(1L).getSuccessObject();
+        List<QuestionResource> returnedQuestions = service.findByCompetition(1L).getSuccessObject();
 
         // verify
         assertEquals(questions, returnedQuestions);
@@ -55,11 +58,11 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     @Test
     public void findByIdTest() {
 
-        Question question = newQuestion().build();
-        setupGetWithRestResultExpectations(questionRestURL + "/id/1", Question.class, question);
+        QuestionResource question = newQuestionResource().build();
+        setupGetWithRestResultExpectations(questionRestURL + "/id/1", QuestionResource.class, question);
 
         // now run the method under test
-        Question returnedQuestion = service.findById(1L).getSuccessObject();
+        QuestionResource returnedQuestion = service.findById(1L).getSuccessObject();
 
         // verify
         assertNotNull(returnedQuestion);
@@ -102,19 +105,19 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
     @Test
     public void getNextQuestionTest() {
-        Question question = newQuestion().build();
-        setupGetWithRestResultExpectations(questionRestURL + "/getNextQuestion/1", Question.class, question);
+        QuestionResource question = newQuestionResource().build();
+        setupGetWithRestResultExpectations(questionRestURL + "/getNextQuestion/1", QuestionResource.class, question);
 
-        Question nextQuestion = service.getNextQuestion(1L).getSuccessObject();
+        QuestionResource nextQuestion = service.getNextQuestion(1L).getSuccessObject();
         assertEquals(question, nextQuestion);
     }
 
     @Test
     public void getPreviousQuestionTest() {
-        Question question = newQuestion().build();
-        setupGetWithRestResultExpectations(questionRestURL + "/getPreviousQuestion/2", Question.class, question);
+        QuestionResource question = newQuestionResource().build();
+        setupGetWithRestResultExpectations(questionRestURL + "/getPreviousQuestion/2", QuestionResource.class, question);
 
-        Question nextQuestion = service.getPreviousQuestion(2L).getSuccessObject();
+        QuestionResource nextQuestion = service.getPreviousQuestion(2L).getSuccessObject();
         assertEquals(question, nextQuestion);
     }
 }

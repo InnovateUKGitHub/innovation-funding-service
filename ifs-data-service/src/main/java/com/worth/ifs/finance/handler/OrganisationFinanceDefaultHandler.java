@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.handler;
 
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
