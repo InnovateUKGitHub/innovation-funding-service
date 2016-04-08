@@ -7,10 +7,8 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationSummaryRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,7 +55,8 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
         ApplicationResource application = applicationService.getById(applicationId);
         // so the mode is viewonly
-        application.setApplicationStatus(ApplicationStatusConstants.SUBMITTED.getId());
+        application.enableViewMode();
+
 
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);

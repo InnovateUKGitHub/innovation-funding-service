@@ -37,7 +37,6 @@ import java.util.Optional;
 @Controller
 public class AcceptInviteAuthenticatedController extends BaseController{
     public static final String INVITE_HASH = "invite_hash";
-    public static final String ORGANISATION_TYPE = "organisationType";
     private static final Log LOG = LogFactory.getLog(AcceptInviteAuthenticatedController.class);
     @Autowired
     private InviteRestService inviteRestService;
@@ -69,11 +68,9 @@ public class AcceptInviteAuthenticatedController extends BaseController{
                 if (invalidInvite(model, loggedInUser, inviteResource, inviteOrganisation)){
                     return "registration/accept-invite-failure";
                 }
-
                 OrganisationResource organisation = getUserOrInviteOrganisation(loggedInUser, inviteOrganisation);
 
                 model.addAttribute("invite", inviteResource);
-                model.addAttribute("inviteOrganisation", inviteOrganisation);
                 model.addAttribute("organisation", organisation);
                 model.addAttribute("organisationAddress", getOrganisationAddress(organisation));
                 model.addAttribute("acceptInviteUrl", "/accept-invite-authenticated/confirm-invited-organisation/confirm");
@@ -100,27 +97,21 @@ public class AcceptInviteAuthenticatedController extends BaseController{
             InviteResource inviteResource = invite.getSuccessObject();
             if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
-                OrganisationResource organisation = getUserOrInviteOrganisation(loggedInUser, inviteOrganisation);
 
                 if (invalidInvite(model, loggedInUser, inviteResource, inviteOrganisation)) {
                     return "registration/accept-invite-failure";
                 }
-
                 inviteRestService.acceptInvite(hash, loggedInUser.getId()).getSuccessObjectOrThrowException();
                 CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
                 return "redirect:/application/"+ inviteResource.getApplication();
 
             } else {
-                CookieUtil.removeCookie(response, INVITE_HASH);
-                cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
-                return "redirect:/login";
+                return AcceptInviteController.handleAcceptedInvite(cookieFlashMessageFilter, response);
             }
         } else {
-            CookieUtil.removeCookie(response, INVITE_HASH);
-            throw new InvalidURLException("Invite url is not valid", null);
+            AcceptInviteController.handleInvalidInvite(response);
         }
-
-
+        return "";
     }
 
     private OrganisationResource getUserOrInviteOrganisation(UserResource loggedInUser, InviteOrganisationResource inviteOrganisation) {

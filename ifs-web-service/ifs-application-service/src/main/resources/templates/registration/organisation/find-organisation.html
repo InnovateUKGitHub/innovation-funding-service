@@ -13,7 +13,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" th:remove="tag" />
 
     <h1 class="heading-large">Create your account</h1>
-    <p class="form-hint icon-info-small-blue">Your business must be UK based to receive funding from Innovate UK</p>
+    <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p>
 
     <h2 class="heading-medium" th:text="${organisationForm.organisationType.name} + ''">? organisation</h2>
 
