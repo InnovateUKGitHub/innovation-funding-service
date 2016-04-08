@@ -32,9 +32,8 @@ Collaborators can view files but not remove them
 Questions can be assigned with appendices to the collaborator
     [Documentation]    INFUND-832
     ...    INFUND-409
-    [Tags]    Collaboration    Upload    PendingForDev
+    [Tags]    Collaboration    Upload
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    # pending for dev until we have access to the dev server's IFS file repository
     Given the user navigates to the page    ${project_team_url}
     And the user should see the text in the page    ${valid_pdf}
     When the user assigns the question to the collaborator    Jessica Doe

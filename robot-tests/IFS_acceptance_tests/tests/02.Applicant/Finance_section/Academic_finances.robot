@@ -36,8 +36,7 @@ Academic invalid upload
 
 Academics upload
     [Documentation]    INFUND-917
-    [Tags]    PendingForDev
-    # pending until we have access to the dev server's IFS file repository
+    [Tags]
     When the academic partner uploads a file    ${valid_pdf}
     Then the user should not see the text in the page    No file currently uploaded
     And the user should see the element    link=testing.pdf
@@ -52,8 +51,7 @@ Mark all as complete
 
 Academic finance overview
     [Documentation]    INFUND-917
-    [Tags]    PendingForDev
-    # pending until we have access to the dev server's IFS file repository
+    [Tags]
     Given the user navigates to the page    ${FINANCES_OVERVIEW_URL}
     Then the finance table should be correct
     When the user clicks the button/link    link=testing.pdf
