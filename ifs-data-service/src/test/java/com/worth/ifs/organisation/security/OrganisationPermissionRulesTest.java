@@ -7,6 +7,7 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -15,8 +16,10 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertFalse;
@@ -31,6 +34,8 @@ public class OrganisationPermissionRulesTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private OrganisationPermissionRules rules = new OrganisationPermissionRules();
 
+    private RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
+
     @Test
     public void testAnyoneCanViewAnOrganisationThatIsNotYetLinkedToAnApplication() {
         assertTrue(rules.anyoneCanSeeOrganisationsNotYetConnectedToApplications(newOrganisationResource().build(), null));
@@ -39,6 +44,12 @@ public class OrganisationPermissionRulesTest extends BaseUnitTestMocksTest {
     @Test
     public void testAnyoneCanViewAnOrganisationThatIsNotYetLinkedToAnApplicationIncludingAnonymousUsers() {
         assertTrue(rules.anyoneCanSeeOrganisationsNotYetConnectedToApplications(newOrganisationResource().build(), null));
+    }
+
+    @Test
+    public void testCompAdminsCanViewAnyOrganisation() {
+        UserResource compAdminUser = newUserResource().withRolesGlobal(compAdminRole).build();
+        assertTrue(rules.compAdminsCanSeeAllOrganisations(newOrganisationResource().build(), compAdminUser));
     }
 
     @Test
