@@ -1,5 +1,7 @@
 package com.worth.ifs.assessment.security;
 
+import java.util.List;
+
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -33,9 +35,9 @@ public class AssessmentRulesTest {
     @Before
     public void setup(){
         Long assessorId = 123L;
-        RoleResource compadminRole = newRoleResource().withType(COMP_ADMIN).build();
-        RoleResource applicantRole = newRoleResource().withType(APPLICANT).build();
-        RoleResource assessorRole = newRoleResource().withType(ASSESSOR).build();
+        List<RoleResource> compadminRole = newRoleResource().withType(COMP_ADMIN).build(1);
+        List<RoleResource> applicantRole = newRoleResource().withType(APPLICANT).build(1);
+        List<RoleResource> assessorRole = newRoleResource().withType(ASSESSOR).build(1);
         Application application = newApplication().build();
         ProcessRole assessorProcessRole = newProcessRole().withApplication(application).withUser(newUser().withid(assessorId).build()).build();
         ProcessRole assessmentProcessRole = newProcessRole().withApplication(application).build();
