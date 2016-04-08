@@ -5,7 +5,6 @@ import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +78,7 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "CHANGE_PASSWORD", description = "A User should be able to change their own password")
-    public boolean usersCanChangeTheirOwnPassword(UserResource userToUpdate, UserResource user) {
+    public boolean anyoneCanChangeTheirOwnPassword(UserResource userToUpdate, UserResource user) {
         return userToUpdate.getId().equals(user.getId());
     }
 
