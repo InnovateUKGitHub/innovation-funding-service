@@ -51,6 +51,10 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 			ApplicationStatusConstants.REJECTED.getId(),
 			ApplicationStatusConstants.SUBMITTED.getId());
 
+	private static final Collection<Long> CREATED_AND_OPEN_STATUS_IDS = Arrays.asList(
+			ApplicationStatusConstants.CREATED.getId(),
+			ApplicationStatusConstants.OPEN.getId());
+
 	@Autowired
     private ApplicationSummaryMapper applicationSummaryMapper;
 	
@@ -94,13 +98,30 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		competitionSummaryResource.setCompetitionName(competition.getName());
 		competitionSummaryResource.setCompetitionStatus(competition.getCompetitionStatus());
 		competitionSummaryResource.setTotalNumberOfApplications(applicationRepository.countByCompetitionId(competitionId));
-		competitionSummaryResource.setApplicationsStarted(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId()));
+		competitionSummaryResource.setApplicationsStarted(getApplicationStartedCountByCompetitionId(competitionId));
 		competitionSummaryResource.setApplicationsInProgress(getApplicationInProgressCountByCompetitionId(competitionId));
 		competitionSummaryResource.setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS));
 		competitionSummaryResource.setApplicationsNotSubmitted(competitionSummaryResource.getTotalNumberOfApplications() - competitionSummaryResource.getApplicationsSubmitted());
 		competitionSummaryResource.setApplicationDeadline(competition.getEndDate());
 
 		return serviceSuccess(competitionSummaryResource);
+	}
+
+	private long getApplicationStartedCountByCompetitionId(Long competitionId){
+		applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId());
+
+		Long startedCount = 0L;
+
+		final List<Application> applications = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, CREATED_AND_OPEN_STATUS_IDS);
+
+		for(Application application : applications){
+			final CompletedPercentageResource completedPercentageResource = applicationService.getProgressPercentageByApplicationId(application.getId()).getSuccessObject();
+			if(completedPercentageResource.getCompletedPercentage().intValue() <= 50) {
+				startedCount++;
+			}
+		}
+
+		return startedCount;
 	}
 
 	private Long getApplicationInProgressCountByCompetitionId(Long competitionId) {
