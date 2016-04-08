@@ -13,23 +13,23 @@ import static org.junit.Assert.assertTrue;
 public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermissionRules> {
 
     @Test
-    public void testSystemUserCanCreateUsers() {
+    public void testSystemRegistrationUserCanCreateUsers() {
         allRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
-                assertTrue(rules.systemUserCanCreateUsers(newUserResource().build(), user));
+                assertTrue(rules.systemRegistrationUserCanCreateUsers(newUserResource().build(), user));
             } else {
-                assertFalse(rules.systemUserCanCreateUsers(newUserResource().build(), user));
+                assertFalse(rules.systemRegistrationUserCanCreateUsers(newUserResource().build(), user));
             }
         });
     }
 
     @Test
-    public void testSystemUserCanActivateUsers() {
+    public void testSystemRegistrationUserCanActivateUsers() {
         allRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
-                assertTrue(rules.systemUserCanActivateUsers(newUserResource().build(), user));
+                assertTrue(rules.systemRegistrationUserCanActivateUsers(newUserResource().build(), user));
             } else {
-                assertFalse(rules.systemUserCanActivateUsers(newUserResource().build(), user));
+                assertFalse(rules.systemRegistrationUserCanActivateUsers(newUserResource().build(), user));
             }
         });
     }

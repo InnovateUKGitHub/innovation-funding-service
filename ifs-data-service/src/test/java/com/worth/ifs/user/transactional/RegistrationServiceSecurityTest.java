@@ -1,16 +1,12 @@
 package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.application.security.FormInputResponseFileUploadLookupStrategies;
-import com.worth.ifs.application.security.FormInputResponseFileUploadRules;
-import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.security.UserLookupStrategies;
 import com.worth.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.AccessDeniedException;
 
 import java.util.Optional;
 
@@ -40,7 +36,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         UserResource userToCreate = newUserResource().build();
 
         assertAccessDenied(() -> service.createApplicantUser(123L, userToCreate), () -> {
-            verify(rules).systemUserCanCreateUsers(userToCreate, getLoggedInUser());
+            verify(rules).systemRegistrationUserCanCreateUsers(userToCreate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
@@ -51,7 +47,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         UserResource userToCreate = newUserResource().build();
 
         assertAccessDenied(() -> service.createApplicantUser(123L, Optional.of(456L), userToCreate), () -> {
-            verify(rules).systemUserCanCreateUsers(userToCreate, getLoggedInUser());
+            verify(rules).systemRegistrationUserCanCreateUsers(userToCreate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
@@ -62,9 +58,9 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         UserResource userToActivate = newUserResource().build();
 
         when(lookup.findById(123L)).thenReturn(userToActivate);
-        
+
         assertAccessDenied(() -> service.activateUser(123L), () -> {
-            verify(rules).systemUserCanActivateUsers(userToActivate, getLoggedInUser());
+            verify(rules).systemRegistrationUserCanActivateUsers(userToActivate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
