@@ -329,8 +329,8 @@
                  th:remove="tag"/>
 
             by
-            <span th:if="${response?.getUpdatedBy()?.getUser()?.getId() == currentUser.getId()}" th:text="you"/>
-            <span th:unless="${response?.getUpdatedBy()?.getUser()?.getId() == currentUser.getId()}" th:text="${response?.getUpdatedBy()?.getUser()?.getName()}"/>
+            <span th:if="${response?.getUpdatedByUser() == currentUser.getId()}" th:text="you"/>
+            <span th:unless="${response?.getUpdatedByUser() == currentUser.getId()}" th:text="${response?.getUpdatedByUserName()}"/>
 
         </small></div>
 </div>

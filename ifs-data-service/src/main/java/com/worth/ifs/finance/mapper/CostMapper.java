@@ -7,20 +7,24 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.CostResource;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Mapper(
-    config = GlobalMapperConfig.class,
-    uses = {
-        CostValueMapper.class,
-        ApplicationFinanceMapper.class,
-        QuestionMapper.class
-    }
+        config = GlobalMapperConfig.class,
+        uses = {
+                ApplicationFinanceMapper.class,
+                QuestionMapper.class,
+                CostValueMapper.class
+        }
 )
 public abstract class CostMapper extends BaseMapper<Cost, CostResource, Long> {
 
-    public Long mapCostToId(Cost object) {
-        if (object == null) {
-            return null;
+        public Long mapCostToId(Cost object) {
+                if (object == null) {
+                        return null;
+                }
+                return object.getId();
         }
-        return object.getId();
-    }
+
 }

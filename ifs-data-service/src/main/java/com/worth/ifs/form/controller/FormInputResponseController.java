@@ -5,6 +5,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.validator.ValidatedResponse;
 import com.worth.ifs.validator.util.ValidationUtil;
@@ -33,7 +34,7 @@ public class FormInputResponseController {
     private static final Log LOG = LogFactory.getLog(FormInputResponseController.class);
 
     @RequestMapping("/findResponsesByApplication/{applicationId}")
-    public RestResult<List<FormInputResponse>> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
+    public RestResult<List<FormInputResponseResource>> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
         return formInputService.findResponsesByApplication(applicationId).toGetResponse();
     }
 

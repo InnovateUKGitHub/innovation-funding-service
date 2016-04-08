@@ -13,10 +13,13 @@ public class FormInputResponseResource {
     private LocalDateTime updateDate;
     private String value;
     private Long updatedBy;
+    private Long updatedByUser;
+    private String updatedByUserName;
     private Long formInput;
     private Integer formInputMaxWordCount;
     private Long application;
     private Long fileEntry;
+    private String filename;
 
     public FormInputResponseResource() {
     	// no-arg constructor
@@ -62,10 +65,6 @@ public class FormInputResponseResource {
         this.application = application;
     }
 
-    public void setApplication(Application application) {
-        this.application = application.getId();
-    }
-
     public LocalDateTime getUpdateDate() {
         return updateDate;
     }
@@ -108,10 +107,6 @@ public class FormInputResponseResource {
         this.formInput = formInput;
     }
 
-    public void setFormInput(FormInput formInput) {
-        this.formInput = formInput.getId();
-    }
-
     public Long getUpdatedBy() {
         return updatedBy;
     }
@@ -120,8 +115,20 @@ public class FormInputResponseResource {
         this.updatedBy = updatedBy;
     }
 
-    public void setUpdatedBy(ProcessRole updatedBy) {
-        this.updatedBy = updatedBy.getId();
+    public Long getUpdatedByUser() {
+        return updatedByUser;
+    }
+
+    public void setUpdatedByUser(Long updatedByUser) {
+        this.updatedByUser = updatedByUser;
+    }
+
+    public String getUpdatedByUserName() {
+        return updatedByUserName;
+    }
+
+    public void setUpdatedByUserName(String updatedByUserName) {
+        this.updatedByUserName = updatedByUserName;
     }
 
     public Long getFileEntry() {
@@ -132,8 +139,11 @@ public class FormInputResponseResource {
         this.fileEntry = fileEntry;
     }
 
-    public void setFileEntry(FileEntry fileEntry) {
-        this.fileEntry = fileEntry.getId();
+    public String getFilename() {
+        return filename;
     }
 
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 }

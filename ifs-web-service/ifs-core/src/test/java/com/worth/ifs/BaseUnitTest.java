@@ -30,6 +30,7 @@ import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
@@ -80,6 +81,7 @@ import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetitio
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -179,7 +181,7 @@ public class BaseUnitTest {
     public List<Section> sections;
     public List<SectionResource> sectionResources;
     public Map<Long, Question> questions;
-    public Map<Long, FormInputResponse> formInputsToFormInputResponses;
+    public Map<Long, FormInputResponseResource> formInputsToFormInputResponses;
     public List<Competition> competitions;
     public Competition competition;
     public List<CompetitionResource> competitionResources;
@@ -677,12 +679,12 @@ public class BaseUnitTest {
         });
 
         List<FormInput> formInputs = questions.get(01L).getFormInputs();
-        List<FormInputResponse> formInputResponses = newFormInputResponse().withFormInputs(formInputs).
+        List<Long> formInputIds = simpleMap(formInputs, f -> f.getId());
+        List<FormInputResponseResource> formInputResponses = newFormInputResponseResource().withFormInputs(formInputIds).
                 with(idBasedValues("Value ")).build(formInputs.size());
 
         when(formInputResponseService.getByApplication(application.getId())).thenReturn(formInputResponses);
-        formInputResponses.stream().map(FormInputResponse::getFormInput).map(FormInput::getId).forEach(log::debug);
-        formInputsToFormInputResponses = formInputResponses.stream().collect(toMap(formInputResponse -> formInputResponse.getFormInput().getId(), identity()));
+        formInputsToFormInputResponses = formInputResponses.stream().collect(toMap(formInputResponseResource -> formInputResponseResource.getFormInput(), identity()));
         when(formInputResponseService.mapFormInputResponsesToFormInput(formInputResponses)).thenReturn(formInputsToFormInputResponses);
     }
 

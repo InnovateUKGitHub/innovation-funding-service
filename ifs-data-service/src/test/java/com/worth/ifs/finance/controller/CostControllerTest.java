@@ -20,7 +20,6 @@ import java.util.List;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.finance.builder.CostBuilder.newCost;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -127,50 +126,6 @@ public class CostControllerTest extends BaseControllerMockMVCTest<CostController
                 .andExpect(status().isOk());
 
         verify(costServiceMock, times(1)).updateCost(eq(123L), isA(CostItem.class));
-    }
-
-    @Test
-    public void findByApplicationId() throws Exception {
-
-        List<Cost> costsToGet = newCost().build(2);
-        when(costServiceMock.findCostsByApplicationId(123L)).thenReturn(serviceSuccess(costsToGet));
-
-        MvcResult mvcResult = mockMvc.perform(get("/cost/get/{applicationFinanceId}", "123"))
-                .andExpect(status().isOk()).andReturn();
-
-        Cost[] costs = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), Cost[].class);
-        assertEquals(2, costs.length);
-        assertEquals(costsToGet.get(0).getId(), costs[0].getId());
-        assertEquals(costsToGet.get(1).getId(), costs[1].getId());
-
-        verify(costServiceMock, times(1)).findCostsByApplicationId(123L);
-    }
-
-    @Test
-    public void findOneCostAPICallShouldReturnNotFoundOnWrongId() throws Exception {
-
-        when(costServiceMock.findCostById(123L)).thenReturn(serviceFailure(notFoundError(Cost.class, 123L)));
-
-        mockMvc.perform(get("/cost/findById/{id}", "123"))
-                .andExpect(status().isNotFound());
-
-        verify(costServiceMock, times(1)).findCostById(123L);
-    }
-
-    @Test
-    public void findOneCostAPICallShouldReturnCostOnKnownId() throws Exception {
-
-        Cost foundCost = newCost().build();
-        when(costServiceMock.findCostById(123L)).thenReturn(serviceSuccess(foundCost));
-
-        MvcResult mvcResult = mockMvc.perform(get("/cost/findById/{id}", "123"))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        Cost returnedCost = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), Cost.class);
-        assertEquals(foundCost.getId(), returnedCost.getId());
-
-        verify(costServiceMock, times(1)).findCostById(123L);
     }
 
     @Test

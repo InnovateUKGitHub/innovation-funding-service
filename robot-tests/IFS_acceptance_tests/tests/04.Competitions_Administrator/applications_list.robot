@@ -54,28 +54,31 @@ The applications can be sorted by project title
 
 
 The applications can be sorted by project lead
-    [Documentation]     INFUND-2135: listing of applications for an open competition
+    [Documentation]     INFUND-2300: listing of applications for an open competition
     [Tags]      Competition management      Pending
-    # pending until has been refactored(2176)
+    # pending until has been refactored(INFUND-2176)
     Given the user navigates to the page     ${COMP_MANAGEMENT_APPLICATIONS_LIST}
     When the application list is sorted by      Lead
     Then the applications should be sorted by project lead
 
 
 The applications can be sorted by percentage complete
-    [Documentation]     INFUND-2135: listing of applications for an open competition
+    [Documentation]     INFUND-2300: listing of applications for an open competition
     [Tags]      Competition management
     Given the user navigates to the page     ${COMP_MANAGEMENT_APPLICATIONS_LIST}
     When the application list is sorted by      Percentage complete
     Then the applications should be sorted by percentage complete
 
 Clicking on an application takes the competitions manager to a view of that application
-    [Documentation]     INFUND-2135: listing of applications for an open competition
+    [Documentation]     INFUND-2300: listing of applications for an open competition
+     ...
+     ...                 INFUND-2304: Read only view mode of applications from the application list page
     [Tags]      Competition management
     Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
     When the user clicks the button/link     link=00000001
     Then the user should be redirected to the correct page      ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
-
+    And the user should see the text in the page        A novel solution to an old problem
+    And the user can see the uplaod for the 'Technical approach' question
 
 
 
@@ -98,4 +101,6 @@ the applications should be sorted by Percentage complete
     element should contain  css=table tbody tr td a     00000007
 
 
-
+the user can see the uplaod for the 'Technical approach' question
+    the user clicks the button/link     css=[aria-controls="collapsible-8"]
+    the user should see the text in the page        testing.pdf
