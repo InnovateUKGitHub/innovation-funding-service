@@ -1,6 +1,5 @@
 package com.worth.ifs.registration;
 
-import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;

@@ -2,7 +2,6 @@ package com.worth.ifs.user.resource;
 
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.user.domain.OrganisationSize;
-import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -19,6 +18,7 @@ public class OrganisationResource {
     private List<OrganisationAddressResource> addresses = new ArrayList<>();
     private List<Long> users = new ArrayList<>();
     private Long organisationType;
+    private String organisationTypeName;
 
     public Long getId() {
         return id;
@@ -100,5 +100,13 @@ public class OrganisationResource {
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    public String getOrganisationTypeName() {
+        return organisationTypeName;
+    }
+
+    public void setOrganisationTypeName(String organisationTypeName) {
+        this.organisationTypeName = organisationTypeName;
     }
 }

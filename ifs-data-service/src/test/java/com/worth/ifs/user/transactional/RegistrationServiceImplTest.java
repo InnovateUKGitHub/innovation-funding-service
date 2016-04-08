@@ -235,7 +235,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
         when(compAdminEmailRepositoryMock.findOneByEmail(userToCreate.getEmail())).thenReturn(compAdminEmail);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-
         ServiceResult<UserResource> result = service.createApplicantUser(123L, userToCreate);
         assertTrue(result.isSuccess());
         assertEquals(userToCreate, result.getSuccessObject());

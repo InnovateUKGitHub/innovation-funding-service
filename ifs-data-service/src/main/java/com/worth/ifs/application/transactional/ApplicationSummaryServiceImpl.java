@@ -1,16 +1,14 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
-import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryPageMapper;
-import com.worth.ifs.application.resource.*;
-import com.worth.ifs.application.resource.comparators.*;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.transactional.BaseTransactionalService;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.EntityLookupCallbacks.find;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,18 +18,39 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static com.worth.ifs.util.EntityLookupCallbacks.find;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryPageMapper;
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ApplicationSummaryResource;
+import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.resource.CompletedPercentageResource;
+import com.worth.ifs.application.resource.PageResource;
+import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceLeadComparator;
+import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourcePercentageCompleteComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryGrantRequestedComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryLeadComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryNumberOfPartnersComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryTotalProjectCostComparator;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.transactional.BaseTransactionalService;
 
 @Service
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
 
 	private static final int PAGE_SIZE = 20;
 	
+	private static final Collection<Long> SUBMITTED_STATUS_IDS = Arrays.asList(
+			ApplicationStatusConstants.APPROVED.getId(),
+			ApplicationStatusConstants.REJECTED.getId(),
+			ApplicationStatusConstants.SUBMITTED.getId());
+
 	@Autowired
     private ApplicationSummaryMapper applicationSummaryMapper;
 	
@@ -77,7 +96,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		competitionSummaryResource.setTotalNumberOfApplications(applicationRepository.countByCompetitionId(competitionId));
 		competitionSummaryResource.setApplicationsStarted(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId()));
 		competitionSummaryResource.setApplicationsInProgress(getApplicationInProgressCountByCompetitionId(competitionId));
-		competitionSummaryResource.setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId()));
+		competitionSummaryResource.setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS));
 		competitionSummaryResource.setApplicationsNotSubmitted(competitionSummaryResource.getTotalNumberOfApplications() - competitionSummaryResource.getApplicationsSubmitted());
 		competitionSummaryResource.setApplicationDeadline(competition.getEndDate());
 
@@ -120,18 +139,18 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		if(canUseSpringDataPaginationForClosedCompetitionResults(sortBy)){
 			Page<Application> applicationResults;
 			if(submitted) {
-				applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId(), pageable);
+				applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS, pageable);
 			} else {
-				applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId(), pageable);
+				applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS, pageable);
 			}
 			return find(applicationResults, notFoundError(Page.class)).andOnSuccessReturn(closedCompetitionApplicationSummaryPageMapper::mapToResource);
 		}
 		
 		List<Application> resultsList;
 		if(submitted) {
-			resultsList = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
+			resultsList = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS);
 		} else {
-			resultsList = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId());
+			resultsList = applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS);
 		}
 		
 		ClosedCompetitionApplicationSummaryPageResource result = new ClosedCompetitionApplicationSummaryPageResource();
@@ -139,7 +158,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		
 		return pageFromUnsortedApplicationResults(result, resultsList, pageable, sortBy, ClosedCompetitionApplicationSummaryPageResource.class);
 	}
-
+	
 	@Override
 	public List<Application> getApplicationSummariesByCompetitionIdAndStatus(Long competitionId, Long applicationStatusId) {
 		List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, applicationStatusId);

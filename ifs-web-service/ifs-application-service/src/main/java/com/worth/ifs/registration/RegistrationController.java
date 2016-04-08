@@ -1,6 +1,5 @@
 package com.worth.ifs.registration;
 
-import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.application.ApplicationCreationController;
 import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.commons.error.Error;
@@ -14,7 +13,6 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.registration.form.RegistrationForm;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
@@ -212,7 +210,7 @@ public class RegistrationController {
 
             if (createUserResult.isSuccess()) {
                 removeCompetitionIdCookie(response);
-                acceptInvite(request, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
+                acceptInvite(response, request, createUserResult.getSuccessObject()); // might want to move this, to after email verifications.
                 destination = "redirect:/registration/success";
             } else {
                 if (!processOrganisation(request, model)) {
@@ -241,13 +239,13 @@ public class RegistrationController {
         return competitionId;
     }
 
-    private boolean acceptInvite(HttpServletRequest request, UserResource userResource) {
+    private boolean acceptInvite(HttpServletResponse response, HttpServletRequest request, UserResource userResource) {
         String inviteHash = CookieUtil.getCookieValue(request, AcceptInviteController.INVITE_HASH);
         if(StringUtils.hasText(inviteHash)){
-            RestResult<InviteResource> restResult = inviteRestService.getInviteByHash(inviteHash).andOnSuccessReturn(i -> {
-                inviteRestService.acceptInvite(inviteHash, userResource.getId()).getStatusCode();
-                return i;
-            });
+            RestResult<Void> restResult = inviteRestService.acceptInvite(inviteHash, userResource.getId());
+            if(restResult.isSuccess()){
+                CookieUtil.removeCookie(response, AcceptInviteController.INVITE_HASH);
+            }
             return restResult.isSuccess();
         }
         return false;

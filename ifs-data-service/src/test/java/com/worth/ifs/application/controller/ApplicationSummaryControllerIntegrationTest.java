@@ -106,7 +106,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
         assertEquals(20, result.getSuccessObject().getSize());
-        assertEquals(3, result.getSuccessObject().getTotalElements());
+        assertEquals(5, result.getSuccessObject().getTotalElements());
         assertEquals(1, result.getSuccessObject().getTotalPages());
     }
     
