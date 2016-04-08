@@ -32,6 +32,7 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -92,7 +93,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void onGetRequestRegistrationViewIsReturned() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
         mockMvc.perform(get("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -105,7 +106,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void onGetRequestRegistrationViewIsReturnedWithInviteEmail() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
         mockMvc.perform(get("/registration/register?organisationId=1")
                 .cookie(inviteHashCookie)
@@ -119,7 +120,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void onGetRequestRegistrationViewIsReturnedWithUsedInviteEmail() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
         mockMvc.perform(get("/registration/register?organisationId=1")
                 .cookie(usedInviteHashCookie)
@@ -205,7 +206,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
         String email = "alreadyexistingemail@test.test";
 
-        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
         when(userService.findUserByEmail(email)).thenReturn(restSuccess(new UserResource()));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
@@ -221,7 +222,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void emptyFormInputsShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -250,7 +251,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void invalidEmailFormatShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email", "invalid email format")
@@ -264,7 +265,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void invalidCharactersInEmailShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -283,7 +284,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void incorrectPasswordSizeShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -300,7 +301,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void unmatchedPasswordAndRetypePasswordShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -316,7 +317,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void uncheckedTermsAndConditionsCheckboxShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -342,7 +343,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .build();
 
 
-        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
         when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getPassword(),
@@ -383,7 +384,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .withId(1L)
                 .build();
 
-        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
         when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getPassword(),
@@ -414,7 +415,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void correctOrganisationNameIsAddedToModel() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(4L).withName("uniqueOrganisationName").build();
 
-        when(organisationService.getOrganisationById(4L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(4L)).thenReturn(organisation);
         mockMvc.perform(post("/registration/register?organisationId=4")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         ).andExpect(model().attribute("organisationName", "uniqueOrganisationName"));
@@ -423,9 +424,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
-                newUserResource().withRolesGlobal(
+                newUserResource().withRolesGlobal(singletonList(
                         newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
-                ).build()
+                )).build()
         );
 
         mockMvc.perform(get("/registration/register?organisationId=1"))
@@ -438,9 +439,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void postingRegistrationWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
-                newUserResource().withRolesGlobal(
+                newUserResource().withRolesGlobal(singletonList(
                         newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
-                ).build()
+                )).build()
         );
 
         mockMvc.perform(post("/registration/register?organisationId=1"))
@@ -465,7 +466,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
         Error error = new Error("errorname", "errordescription", BAD_REQUEST);
 
-        when(organisationService.getOrganisationById(1L)).thenReturn(organisation);
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
         when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getPassword(),

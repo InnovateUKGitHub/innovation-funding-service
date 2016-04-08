@@ -23,8 +23,11 @@ import org.mapstruct.Mappings;
 public abstract class FormInputResponseMapper extends BaseMapper<FormInputResponse, FormInputResponseResource, Long> {
 
     @Mappings({
-            @Mapping(source = "formInput.wordCount", target = "formInputMaxWordCount")
-    })
+            @Mapping(source = "formInput.wordCount", target = "formInputMaxWordCount"),
+            @Mapping(source = "fileEntry.name", target = "filename"),
+            @Mapping(source = "updatedBy.user.id", target = "updatedByUser"),
+            @Mapping(source = "updatedBy.user.name", target = "updatedByUserName")
+})
     
     @Override
     public abstract FormInputResponseResource mapToResource(FormInputResponse domain);

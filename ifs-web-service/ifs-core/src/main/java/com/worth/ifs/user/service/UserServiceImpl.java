@@ -86,8 +86,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RestResult<UserResource> updateDetails(String email, String firstName, String lastName, String title, String phoneNumber) {
-        return userRestService.updateDetails(email, firstName, lastName, title, phoneNumber);
+    public RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber) {
+        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber);
     }
 
     @Override

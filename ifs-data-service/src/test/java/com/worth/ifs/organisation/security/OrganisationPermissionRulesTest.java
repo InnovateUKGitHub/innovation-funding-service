@@ -1,25 +1,21 @@
 package com.worth.ifs.organisation.security;
 
-import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertFalse;
@@ -29,12 +25,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests the logic within the individual OrganisationRules methods that secures basic Organisation details
  */
-public class OrganisationPermissionRulesTest extends BaseUnitTestMocksTest {
-
-    @InjectMocks
-    private OrganisationPermissionRules rules = new OrganisationPermissionRules();
-
-    private RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
+public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<OrganisationPermissionRules> {
 
     @Test
     public void testAnyoneCanViewAnOrganisationThatIsNotYetLinkedToAnApplication() {
@@ -48,8 +39,24 @@ public class OrganisationPermissionRulesTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testCompAdminsCanViewAnyOrganisation() {
-        UserResource compAdminUser = newUserResource().withRolesGlobal(compAdminRole).build();
-        assertTrue(rules.compAdminsCanSeeAllOrganisations(newOrganisationResource().build(), compAdminUser));
+        allRoleUsers.forEach(user -> {
+            if (user.equals(compAdminUser())) {
+                assertTrue(rules.compAdminsCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            } else {
+                assertFalse(rules.compAdminsCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void testSystemRegistrationUsersCanViewAnyOrganisation() {
+        allRoleUsers.forEach(user -> {
+            if (user.equals(systemRegistrationUser())) {
+                assertTrue(rules.systemRegistrationUserCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            } else {
+                assertFalse(rules.systemRegistrationUserCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            }
+        });
     }
 
     @Test
@@ -155,5 +162,10 @@ public class OrganisationPermissionRulesTest extends BaseUnitTestMocksTest {
     @Test
     public void testAnyoneCanSeeOrganisationSearchResults() {
         assertTrue(rules.anyoneCanSeeOrganisationSearchResults(new OrganisationSearchResult(), null));
+    }
+
+    @Override
+    protected OrganisationPermissionRules supplyPermissionRulesUnderTest() {
+        return new OrganisationPermissionRules();
     }
 }

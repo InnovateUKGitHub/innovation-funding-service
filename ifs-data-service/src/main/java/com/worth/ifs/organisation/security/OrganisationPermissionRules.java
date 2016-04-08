@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.domain.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static com.worth.ifs.util.CollectionFunctions.flattenLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -28,9 +29,14 @@ public class OrganisationPermissionRules {
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
-    @PermissionRule(value = "READ", description = "Comp Admins can see all Competitions")
+    @PermissionRule(value = "READ", description = "Comp Admins can see all Organisations")
     public boolean compAdminsCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         return user.hasRole(COMP_ADMIN);
+    }
+
+    @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")
+    public boolean systemRegistrationUserCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
+        return user.hasRole(SYSTEM_REGISTRATION_USER);
     }
 
     @PermissionRule(value = "READ", description = "Organisations that are not yet a part of any Applications are visible to anyone, " +
