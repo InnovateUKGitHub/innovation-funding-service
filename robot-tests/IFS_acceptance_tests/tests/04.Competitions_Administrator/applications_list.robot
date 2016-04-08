@@ -89,7 +89,7 @@ the applications should be sorted by application number
     element should contain  css=table tbody tr td a     00000001
 
 the applications should be sorted by project title
-    element should contain  css=table tbody tr td a     00000005
+    element should contain  css=table tbody tr td a     00000008
 
 the applications should be sorted by Project lead
     element should contain  css=table tbody tr td a     foo
