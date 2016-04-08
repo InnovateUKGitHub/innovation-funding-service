@@ -1,11 +1,11 @@
 package com.worth.ifs;
 
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.service.ApplicationSummaryService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -18,10 +18,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.service.ApplicationSummaryService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource;
 
 @Controller
 @RequestMapping("/competition")
@@ -59,21 +62,21 @@ public class CompetitionManagementController {
 	private String inAssessmentCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
 			BindingResult bindingResult) {
 		
-		ClosedCompetitionApplicationSummaryPageResource results;
 		if("notSubmitted".equals(queryForm.getTab())) {
-			results = applicationSummaryService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
+			ClosedCompetitionNotSubmittedApplicationSummaryPageResource results = applicationSummaryService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
+			model.addAttribute("results", results);
 			model.addAttribute("activeTab", "notSubmitted");
+			model.addAttribute("activeSortField", getActiveSortFieldForClosedCompetitionNotSubmittedApplications(queryForm.getSort()));
 		} else {
-			results = applicationSummaryService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
+			ClosedCompetitionSubmittedApplicationSummaryPageResource results = applicationSummaryService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
+			model.addAttribute("results", results);
 			model.addAttribute("activeTab", "submitted");
+			model.addAttribute("activeSortField", getActiveSortFieldForClosedCompetitionSubmittedApplications(queryForm.getSort()));
 		}
-		
-		model.addAttribute("results", results);
 		
         LOG.warn("Show in assessment competition info");
         return "comp-mgt-in-assessment";
 	}
-
 
 	private String openCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
 			BindingResult bindingResult) {
@@ -87,10 +90,24 @@ public class CompetitionManagementController {
 	}
 
     private String getActiveSortFieldForOpenCompetition(String sort) {
-		if("id".equals(sort) || "lead".equals(sort) || "name".equals(sort) || "status".equals(sort)) {
-			return sort;
+    	return activeSortField(sort, "percentageComplete", "id", "lead", "name", "status");
+	}
+    
+	private String getActiveSortFieldForClosedCompetitionSubmittedApplications(String sort) {
+		return activeSortField(sort,  "id", "lead", "name", "numberOfPartners", "grantRequested", "totalProjectCost", "duration");
+	}
+
+	private String getActiveSortFieldForClosedCompetitionNotSubmittedApplications(String sort) {
+		return activeSortField(sort, "percentageComplete", "id", "lead", "name");
+	}
+
+	private String activeSortField(String givenField, String defaultField, String... allowedFields) {
+		for(String allowedField: allowedFields) {
+			if(allowedField.equals(givenField)) {
+				return givenField;
+			}
 		}
-		return "percentageComplete";
+		return defaultField;
 	}
 
 	@RequestMapping("/{competitionId}/download")
