@@ -91,6 +91,15 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
+    public RestResult<UserResource> findUserByEmailForAnonymousUserFlow(String email) {
+        if(StringUtils.isEmpty(email)) {
+            return restFailure(notFoundError(User.class, email));
+        }
+
+        return getWithRestResultAnonymous(userRestURL + "/findByEmail/" + email + "/", UserResource.class);
+    }
+
+    @Override
     public RestResult<UserResource> retrieveUserById(Long id) {
         if(id == null || id.equals(0L)) {
             return restFailure(notFoundError(User.class, id));

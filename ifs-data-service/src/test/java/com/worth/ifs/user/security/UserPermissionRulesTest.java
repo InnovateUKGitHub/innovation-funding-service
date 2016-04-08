@@ -9,12 +9,14 @@ import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
 import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
@@ -146,16 +148,10 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 withUser(application2Lead, application2Collaborator1, application1Lead3AndApplication2Collaborator2).build(3);
 
         List<User> application1Consortium = simpleMap(application1ConsortiumRoles, ProcessRole::getUser);
-        List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, user -> {
-            List<Long> processRoleIds = simpleMap(user.getProcessRoles(), ProcessRole::getId);
-            return newUserResource().withId(user.getId()).withProcessRoles(processRoleIds).build();
-        });
+        List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
 
         List<User> application2Consortium = simpleMap(application2ConsortiumRoles, ProcessRole::getUser);
-        List<UserResource> application2ConsortiumResources = simpleMap(application2Consortium, user -> {
-            List<Long> processRoleIds = simpleMap(user.getProcessRoles(), ProcessRole::getId);
-            return newUserResource().withId(user.getId()).withProcessRoles(processRoleIds).build();
-        });
+        List<UserResource> application2ConsortiumResources = simpleMap(application2Consortium, userResourceForUser());
 
         combineLists(application1ConsortiumRoles, application2ConsortiumRoles).forEach(role -> {
             when(processRoleRepositoryMock.findOne(role.getId())).thenReturn(role);
@@ -191,6 +187,41 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void testConsortiumMembersCanViewOtherConsortiumMembersButNotAssessors() {
+
+        Role leadRole = newRole().withType(LEADAPPLICANT).build();
+        Role collaboratorRole = newRole().withType(COLLABORATOR).build();
+        Role assessorRole = newRole().withType(ASSESSOR).build();
+
+        Application application1 = newApplication().build();
+
+        User applicationLead = newUser().build();
+        User applicationCollaborator = newUser().build();
+        User applicationAssessor = newUser().build();
+
+        List<ProcessRole> applicationConsortiumRoles = newProcessRole().withApplication(application1).
+                withRole(leadRole, collaboratorRole).
+                withUser(applicationLead, applicationCollaborator).
+                build(2);
+
+        ProcessRole assessorProcessRole = newProcessRole().withApplication(application1).withRole(assessorRole).
+                withUser(applicationAssessor).build();
+
+        List<User> applicationConsortium = simpleMap(applicationConsortiumRoles, ProcessRole::getUser);
+        List<UserResource> applicationConsortiumResources = simpleMap(applicationConsortium, userResourceForUser());
+        UserResource applicationAssessorResource = userResourceForUser().apply(applicationAssessor);
+
+        combineLists(applicationConsortiumRoles, assessorProcessRole).forEach(role -> {
+            when(processRoleRepositoryMock.findOne(role.getId())).thenReturn(role);
+        });
+
+        // assert that consortium members can't see the assessor using this rule
+        applicationConsortiumResources.forEach(consortiumUser -> {
+            assertFalse(rules.consortiumMembersCanViewOtherConsortiumMembers(applicationAssessorResource, consortiumUser));
+        });
+    }
+
+    @Test
     public void testUsersCanUpdateTheirOwnProfiles() {
         UserResource user = newUserResource().build();
         assertTrue(rules.usersCanUpdateTheirOwnProfiles(user, user));
@@ -206,5 +237,12 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Override
     protected UserPermissionRules supplyPermissionRulesUnderTest() {
         return new UserPermissionRules();
+    }
+
+    private Function<User, UserResource> userResourceForUser() {
+        return user -> {
+            List<Long> processRoleIds = simpleMap(user.getProcessRoles(), ProcessRole::getId);
+            return newUserResource().withId(user.getId()).withProcessRoles(processRoleIds).build();
+        };
     }
 }
