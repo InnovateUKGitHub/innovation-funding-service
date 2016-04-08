@@ -1,26 +1,28 @@
 package com.worth.ifs.application.security;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
-import com.worth.ifs.security.SecurityRuleUtil;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static com.worth.ifs.user.domain.UserRoleType.*;
+import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
+import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
+import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
 import static com.worth.ifs.util.CollectionFunctions.onlyElement;
 
 @PermissionRules
@@ -39,7 +41,7 @@ public class ApplicationRules {
 
     @PermissionRule(value = "READ", description = "A user can see an applicationResource which they are connected to and if the application exists")
     public boolean applicantCanSeeConnectedApplicationResource(ApplicationResource application, UserResource user) {
-        return SecurityRuleUtil.isCompAdmin(user) || !(applicationExists(application) && !userIsConnectedToApplicationResource(application, user));
+        return isCompAdmin(user) || !(applicationExists(application) && !userIsConnectedToApplicationResource(application, user));
     }
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
