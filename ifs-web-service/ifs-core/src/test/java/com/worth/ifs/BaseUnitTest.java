@@ -7,10 +7,10 @@ import com.worth.ifs.application.builder.SectionResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.finance.model.UserRole;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.*;
-import com.worth.ifs.application.finance.model.UserRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -59,7 +59,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import javax.management.relation.RoleResult;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -630,6 +629,7 @@ public class BaseUnitTest {
         when(applicationService.getById(applications.get(2).getId())).thenReturn(applications.get(2));
         when(applicationService.getById(applications.get(3).getId())).thenReturn(applications.get(3));
         when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet.first());
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getUserOrganisation(applications.get(0), loggedInUser.getId())).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(applications.get(0))).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationOrganisations(applications.get(0))).thenReturn(organisationSet);
@@ -651,6 +651,7 @@ public class BaseUnitTest {
         when(sectionService.getById(3L)).thenReturn(sectionResources.get(2));
 
         organisations.forEach(organisation -> when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation)));
+        organisations.forEach(organisation -> when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisation.getId())).thenReturn(restSuccess(organisation)));
     }
 
     public void setupApplicationResponses(){

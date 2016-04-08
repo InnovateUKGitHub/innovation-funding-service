@@ -51,6 +51,10 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 			ApplicationStatusConstants.REJECTED.getId(),
 			ApplicationStatusConstants.SUBMITTED.getId());
 
+	private static final Collection<Long> CREATED_AND_OPEN_STATUS_IDS = Arrays.asList(
+			ApplicationStatusConstants.CREATED.getId(),
+			ApplicationStatusConstants.OPEN.getId());
+
 	@Autowired
     private ApplicationSummaryMapper applicationSummaryMapper;
 	
@@ -94,7 +98,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		competitionSummaryResource.setCompetitionName(competition.getName());
 		competitionSummaryResource.setCompetitionStatus(competition.getCompetitionStatus());
 		competitionSummaryResource.setTotalNumberOfApplications(applicationRepository.countByCompetitionId(competitionId));
-		competitionSummaryResource.setApplicationsStarted(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId()));
+		competitionSummaryResource.setApplicationsStarted(getApplicationStartedCountByCompetitionId(competitionId));
 		competitionSummaryResource.setApplicationsInProgress(getApplicationInProgressCountByCompetitionId(competitionId));
 		competitionSummaryResource.setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS));
 		competitionSummaryResource.setApplicationsNotSubmitted(competitionSummaryResource.getTotalNumberOfApplications() - competitionSummaryResource.getApplicationsSubmitted());
@@ -103,15 +107,32 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		return serviceSuccess(competitionSummaryResource);
 	}
 
-	private Long getApplicationInProgressCountByCompetitionId(Long competitionId) {
+	private long getApplicationStartedCountByCompetitionId(Long competitionId){
+		applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.OPEN.getId());
 
-		final List<Application> applications = applicationRepository.findByCompetitionId(competitionId);
+		Long startedCount = 0L;
 
-		Long inProgressCount = 0l;
+		final List<Application> applications = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, CREATED_AND_OPEN_STATUS_IDS);
 
 		for(Application application : applications){
 			final CompletedPercentageResource completedPercentageResource = applicationService.getProgressPercentageByApplicationId(application.getId()).getSuccessObject();
-			if(completedPercentageResource.getCompletedPercentage().intValue() > 50 && !(application.getApplicationStatus().equals(ApplicationStatusConstants.SUBMITTED))){
+			if(completedPercentageResource.getCompletedPercentage().intValue() <= 50) {
+				startedCount++;
+			}
+		}
+
+		return startedCount;
+	}
+
+	private Long getApplicationInProgressCountByCompetitionId(Long competitionId) {
+
+		Long inProgressCount = 0L;
+
+		final List<Application> applications = applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS);
+
+		for(Application application : applications){
+			final CompletedPercentageResource completedPercentageResource = applicationService.getProgressPercentageByApplicationId(application.getId()).getSuccessObject();
+			if(completedPercentageResource.getCompletedPercentage().intValue() > 50) {
 				inProgressCount++;
 			}
 		}
@@ -190,7 +211,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	}
 
 	private boolean canUseSpringDataPaginationForSummaryResults(String sortBy) {
-		return "id".equals(sortBy) || "name".equals(sortBy) || "status".equals(sortBy);
+		return "id".equals(sortBy) || "name".equals(sortBy);
 	}
 
 	private String[] getApplicationSummarySortField(String sortBy) {
@@ -203,8 +224,6 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 			return new String[]{"id"};
 		case "name":
 			return new String[]{"name", "id"};
-		case "status":
-			return new String[]{"applicationStatus.name", "id"};
 		default:
 			return new String[]{"id"};
 		}

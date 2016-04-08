@@ -99,6 +99,39 @@ table{
 	}
 }
 
+/*----- Project status table ----*/
+
+#table-project-status{
+	.status{
+		width: 70px;
+		text-align: center;
+		padding-left: 0.625em;
+		padding-right: 0.625em;
+
+		&.na{
+			background: $grey-3;
+		}
+		&.ok{
+			color: $green;
+			font-weight: bold;
+
+			a{
+				color: $green;
+				font-weight: bold;
+			}
+		}
+		&.action{
+			background: $red;
+			a{
+				color: white;
+				font-weight: bold;
+			}
+		}
+
+	}
+}
+
+
 /*----- Forecast table ----*/
 
 #table-forecast{

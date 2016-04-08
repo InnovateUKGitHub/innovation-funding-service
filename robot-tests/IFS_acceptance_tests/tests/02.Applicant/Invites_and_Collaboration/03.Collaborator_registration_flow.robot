@@ -134,7 +134,7 @@ Business organisation (accept invitation flow)
     ...    INFUND-2286
     ...    INFUND-1779
     ...    INFUND-2336
-    [Tags]    HappyPath    FailingForLocal
+    [Tags]    HappyPath    FailingForLocal      Failing
     Given the user navigates to the page    ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    organisationType    1
@@ -157,7 +157,7 @@ Business organisation (accept invitation flow)
     And the user can see the updated company name throughut the application
 
 User who accepted the invite should be able to log-in
-    [Tags]    FailingForLocal
+    [Tags]    FailingForLocal           Failing
     Given the user navigates to the page    ${INVITE_LINK}
     When the guest user enters the login credentials    worth.email.test+invite1@gmail.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -185,7 +185,7 @@ User who accepted the invite cannot invite others to other organisations
 
 The collaborator who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
-    [Tags]    HappyPath    FailingForLocal
+    [Tags]    HappyPath    FailingForLocal      Failing
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${PROJECT_SUMMARY_URL}
     And the user clicks the button/link    css=.assign-button
@@ -197,7 +197,7 @@ Academic organisation (accept invitation flow)
     [Documentation]    INFUND-1166
     ...
     ...    INFUND-917
-    [Tags]    HappyPath    FailingForLocal
+    [Tags]    HappyPath    FailingForLocal      Failing
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${INVITE_LINK_2}
     When the user clicks the button/link    jQuery=.button:contains("Create")

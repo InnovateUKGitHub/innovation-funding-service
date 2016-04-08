@@ -95,6 +95,11 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
+    public OrganisationResource getOrganisationByIdForAnonymousUserFlow(Long organisationId) {
+        return organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public OrganisationResource save(OrganisationResource organisation) {
         return organisationRestService.update(organisation).getSuccessObjectOrThrowException();
     }

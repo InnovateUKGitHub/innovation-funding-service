@@ -32,9 +32,8 @@ Collaborators can view files but not remove them
 Questions can be assigned with appendices to the collaborator
     [Documentation]    INFUND-832
     ...    INFUND-409
-    [Tags]    Collaboration    Upload    PendingForDev
+    [Tags]    Collaboration    Upload
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    # pending for dev until we have access to the dev server's IFS file repository
     Given the user navigates to the page    ${project_team_url}
     And the user should see the text in the page    ${valid_pdf}
     When the user assigns the question to the collaborator    Jessica Doe
@@ -74,6 +73,9 @@ Non pdf uploads not allowed
     Given the user can see the option to upload a file on the page    ${PROJECT_TEAM_URL}
     When the user uploads the file to the 'project team' question    ${text_file}
     Then the user should get an error page    ${wrong_filetype_validation_error}
+    And the user uploads the file to the 'project team' question        ${valid_pdf}
+    # note: this suite finishes by uploading this file so that its visibility can be later tested for the comp manager - please don't remove this last step!
+
 
 *** Keywords ***
 the user logs out

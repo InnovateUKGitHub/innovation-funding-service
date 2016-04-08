@@ -1,6 +1,7 @@
 package com.worth.ifs.user.security;
 
 import com.worth.ifs.BasePermissionRulesTest;
+import com.worth.ifs.user.resource.UserResource;
 import org.junit.Test;
 
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -32,6 +33,19 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 assertFalse(rules.systemRegistrationUserCanActivateUsers(newUserResource().build(), user));
             }
         });
+    }
+
+    @Test
+    public void testUsersCanUpdateTheirOwnProfiles() {
+        UserResource user = newUserResource().build();
+        assertTrue(rules.usersCanUpdateTheirOwnProfiles(user, user));
+    }
+
+    @Test
+    public void testUsersCanUpdateTheirOwnProfilesButAttemptingTOUpdatenotherUsersProfile() {
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        assertFalse(rules.usersCanUpdateTheirOwnProfiles(user, anotherUser));
     }
 
     @Override
