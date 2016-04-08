@@ -1,7 +1,6 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.exception.ErrorControllerAdvice;
@@ -31,9 +30,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
