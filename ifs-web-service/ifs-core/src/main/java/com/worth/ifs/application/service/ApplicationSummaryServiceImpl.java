@@ -5,7 +5,8 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 
 @Service
@@ -25,13 +26,13 @@ public class ApplicationSummaryServiceImpl implements ApplicationSummaryService 
 	}
 
 	@Override
-	public ClosedCompetitionApplicationSummaryPageResource getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
+	public ClosedCompetitionSubmittedApplicationSummaryPageResource getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
 			Long competitionId, int pageNumber, String sortField) {
 		return applicationSummaryRestService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, pageNumber, sortField).getSuccessObjectOrThrowException();
 	}
 
 	@Override
-	public ClosedCompetitionApplicationSummaryPageResource getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
+	public ClosedCompetitionNotSubmittedApplicationSummaryPageResource getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
 			Long competitionId, int pageNumber, String sortField) {
 		return applicationSummaryRestService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, pageNumber, sortField).getSuccessObjectOrThrowException();
 	}
