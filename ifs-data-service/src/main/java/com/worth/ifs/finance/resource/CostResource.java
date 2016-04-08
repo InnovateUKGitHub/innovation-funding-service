@@ -13,12 +13,12 @@ public class CostResource {
     private String description;
     private Integer quantity;
     private BigDecimal cost;
-    private List<CostValue> costValues = new ArrayList<>();
+    private List<CostValueResource> costValues = new ArrayList<>();
     private Long applicationFinance;
     private Long question;
 
     public Long getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(Long id) {
@@ -34,7 +34,7 @@ public class CostResource {
     }
 
     public String getItem() {
-        return this.item;
+        return item;
     }
 
     public void setItem(String item) {
@@ -42,7 +42,7 @@ public class CostResource {
     }
 
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
     public void setDescription(String description) {
@@ -50,7 +50,7 @@ public class CostResource {
     }
 
     public Integer getQuantity() {
-        return this.quantity;
+        return quantity;
     }
 
     public void setQuantity(Integer quantity) {
@@ -58,23 +58,23 @@ public class CostResource {
     }
 
     public BigDecimal getCost() {
-        return this.cost;
+        return cost;
     }
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
 
-    public List<CostValue> getCostValues() {
-        return this.costValues;
+    public List<CostValueResource> getCostValues() {
+        return costValues;
     }
 
-    public void setCostValues(List<CostValue> costValues) {
+    public void setCostValues(List<CostValueResource> costValues) {
         this.costValues = costValues;
     }
 
     public Long getApplicationFinance() {
-        return this.applicationFinance;
+        return applicationFinance;
     }
 
     public void setApplicationFinance(Long applicationFinance) {
@@ -82,7 +82,7 @@ public class CostResource {
     }
 
     public Long getQuestion() {
-        return this.question;
+        return question;
     }
 
     public void setQuestion(Long question) {

@@ -7,6 +7,7 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -31,7 +32,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
     String formInputResponseRestURL;
 
     @Override
-    public RestResult<List<FormInputResponse>> getResponsesByApplicationId(Long applicationId) {
+    public RestResult<List<FormInputResponseResource>> getResponsesByApplicationId(Long applicationId) {
         return getWithRestResult(formInputResponseRestURL + "/findResponsesByApplication/" + applicationId, formInputResponseListType());
     }
 

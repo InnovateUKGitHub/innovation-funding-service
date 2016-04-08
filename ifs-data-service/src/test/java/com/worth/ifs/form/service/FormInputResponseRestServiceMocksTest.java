@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.junit.Test;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.stringsListType;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.OK;
@@ -31,11 +33,11 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void test_getResponsesByApplicationId() {
-        List<FormInputResponse> returnedResponses = newFormInputResponse().build(3);
+        List<FormInputResponseResource> returnedResponses = newFormInputResponseResource().build(3);
 
         setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponsesByApplication/123", formInputResponseListType(), returnedResponses);
 
-        List<FormInputResponse> responses = service.getResponsesByApplicationId(123L).getSuccessObject();
+        List<FormInputResponseResource> responses = service.getResponsesByApplicationId(123L).getSuccessObject();
         assertEquals(returnedResponses, responses);
     }
 
