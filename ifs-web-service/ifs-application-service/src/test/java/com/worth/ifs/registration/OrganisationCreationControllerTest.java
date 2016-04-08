@@ -37,17 +37,6 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.address.service.AddressRestService;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.exception.ErrorControllerAdvice;
-import com.worth.ifs.organisation.resource.OrganisationSearchResult;
-import com.worth.ifs.registration.form.OrganisationCreationForm;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.service.OrganisationSearchRestService;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
