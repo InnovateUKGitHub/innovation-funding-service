@@ -117,6 +117,8 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         userOne.setFirstName("Some");
         userOne.setLastName("How");
 
+        setLoggedInUser(userOne);
+
         RestResult<Void> restResult = controller.updateDetails(userOne);
         assertTrue(restResult.isSuccess());
     }

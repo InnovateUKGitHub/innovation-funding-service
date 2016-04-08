@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+	
+
+
+	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
+		<style>
+			#application-list tbody tr{
+				display: none;
+			}
+			.pagination{
+				display: none;
+			}
+			#application-list tbody tr.filtered-result{
+				display: table-row;
+			}
+		</style>
+	</div>
+
+	<style>
+		.underline{
+			border-width: 2px !important;
+		}
+	</style>
+
+</head>
+
+<body class="full-width">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${'/prototypes/1627-admin-view-project-status-grid?status=setup'})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+	
+	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Assign monitoring officer'})" th:remove="tag" />
+
+	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
+
+	<div class="grid-row constrain-width">		
+		
+		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		
+	
+		<div class="column-half">
+			<h2 class="heading-large">Monitoring officer</h2>
+			<form action="GET">
+				<fieldset>
+					<legend class="visuallyhidden">
+						Monitoring officer
+					</legend>
+					<div class="form-group">
+						<label class="form-label" for="first-name">
+							<span class="form-label-bold">First name</span>
+						</label>
+						<input class="form-control width-full" id="first-name" name="first-name" value="" type="text" th:unless="${param.status != null and param.status[0] == 'edit'}"/>
+
+						<input class="form-control width-full" id="first-name" name="first-name" value="" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
+					</div>
+
+					<div class="form-group">
+						<label class="form-label" for="last-name">
+							<span class="form-label-bold">Last name</span>
+						</label>
+						<input class="form-control width-full" id="last-name" name="last-name" value="" type="text" th:unless="${param.status != null and param.status[0] == 'edit'}"/>
+						<input class="form-control width-full" id="last-name" name="last-name" value="" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
+					</div>
+
+					<div class="form-group">
+						<label class="form-label" for="email">
+							<span class="form-label-bold">Email</span>
+						</label>
+						<input class="form-control width-full" id="email" name="email" value="" type="text" th:unless="${param.status != null and param.status[0] == 'edit'}"/>
+						<input class="form-control width-full" id="email" name="email" value="" type="text" disabled="disabled"  th:unless="${param.status == null or param.status[0] != 'edit'}"/>
+					</div>
+
+					<input type="hidden" id="status" name="status" value="setup" />
+
+
+					<a href="#" class="button" data-js-modal="modal-assign-mo" th:unless="${param.status != null and param.status[0] == 'edit'}">Assign Monitoring officer</a>
+
+					<a href="/prototypes/1576-assign-mo" th:unless="${param.status == null or param.status[0] != 'edit'}">Change monitoring officer</a>
+
+
+
+					
+					<div class="modal-assign-mo" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+				        <button class="js-close close" aria-label="Close Popup">X</button>
+				        <div>
+							
+							<h2 class="heading-medium no-margin">Assign Monitoring officer</h2>
+
+							<p>This will now notify the Project manager and the Monitoring officer of this appointment. The monitoring officer will be visible to all members of the consortium.</p>
+
+							<hr />
+				            
+				            <div class="grid-row extra-margin">
+				            	<div class="column-half">
+				            		<a href="/prototypes/1576-assign-mo">Cancel</a>
+				            	</div>
+				            	<div class="column-half alignright-button">
+				            		<button formaction="/prototypes/1627-admin-view-project-status-grid?status=setup" class="button">Assign Monitoring officer</button>
+				            	</div>
+				            </div>
+
+				        </div>
+				    </div>
+
+				</fieldset>
+			</form>
+		</div>
+		<div class="column-half">
+			
+			<h2 class="heading-large">Supporting information</h2>
+
+			<h3 class="heading-medium no-margin">Project title</h3>
+			<p>Technology inspired</p>
+
+			<h3 class="heading-medium no-margin">Area</h3>
+			<p>Technology</p>
+
+			<h3 class="heading-medium no-margin">Primary address</h3>
+			<p class="form-hint">This has been designated by the lead organisation as the main work location for the project.</p>
+			<p>Algate Solutions<br />
+				21 Ballygowen Road<br />
+				Bristol<br />
+				BS2 1RF
+			</p>
+
+			<h3 class="heading-medium no-margin">Target project start date</h3>
+			<p class="form-hint">Planned Start date for the project.</p>
+			<p>1st January 2017</p>
+
+			<h3 class="heading-medium no-margin">Project manager</h3>
+			<p class="form-hint">Project manager fo the project, designated by the lead organisation.</p>
+			<p>David Smith</p>
+
+			<h3 class="heading-medium no-margin">Partners with their finance contacts</h3>
+			<p class="form-hint">Project partners with their Finance contacts</p>
+
+			<ul class="list-bullet">
+				<li>Company A (Lead)</li>
+				<li>Company B</li>
+				<li>Company C</li>
+				<li>Company D</li>
+				<li>Company E</li>
+			</ul>
+
+
+
+		</div>
+
+
+	</div>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+		function $_GET(param) {
+	        var vars = {};
+	        window.location.href.replace( location.hash, '' ).replace( 
+	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+	            function( m, key, value ) { // callback
+	                vars[key] = value !== undefined ? value : '';
+	            }
+	        );
+
+	        if ( param ) {
+	            return vars[param] ? vars[param] : null;    
+	        }
+	        return vars;
+	    }
+
+
+		if (localStorage.getItem('moDetails') != null){
+
+			jQuery('#first-name').val(localStorage.getItem('moFirstName'));
+			jQuery('#last-name').val(localStorage.getItem('moLastName'));
+			jQuery('#email').val(localStorage.getItem('moEmail'));
+
+		}else if ($_GET('status') == 'edit' && localStorage.getItem('moDetails') == null ){
+
+			jQuery('#first-name').val('David');
+			jQuery('#last-name').val('Jones');
+			jQuery('#email').val('djones@companya.co.uk');
+		}
+
+	});
+	// ]]>
+</script>
+</body>
+</html>

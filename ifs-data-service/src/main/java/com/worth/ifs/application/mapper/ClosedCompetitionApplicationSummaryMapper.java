@@ -45,7 +45,7 @@ public abstract class ClosedCompetitionApplicationSummaryMapper {
 
 	private BigDecimal getTotalProjectCost(RestResult<List<ApplicationFinanceResource>> applicationFinancesResult) {
 		if(applicationFinancesResult.isFailure()){
-			return null;
+			return BigDecimal.ZERO;
 		}
 		List<ApplicationFinanceResource> result = applicationFinancesResult.getSuccessObject();
 		
@@ -54,7 +54,7 @@ public abstract class ClosedCompetitionApplicationSummaryMapper {
 
 	private BigDecimal getGrantRequested(RestResult<List<ApplicationFinanceResource>> applicationFinancesResult) {
 		if(applicationFinancesResult.isFailure()){
-			return null;
+			return BigDecimal.ZERO;
 		}
 		List<ApplicationFinanceResource> result = applicationFinancesResult.getSuccessObject();
 		
