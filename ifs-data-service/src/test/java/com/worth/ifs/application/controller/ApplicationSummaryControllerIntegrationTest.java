@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(6, result.getSuccessObject().getTotalElements());
         assertEquals(1, result.getSuccessObject().getTotalPages());
         assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getContent().get(0).getId());
-        assertEquals(ApplicationStatusConstants.OPEN.getName(), result.getSuccessObject().getContent().get(0).getApplicationStatusName());
+        assertEquals("Started", result.getSuccessObject().getContent().get(0).getStatus());
         assertEquals("A novel solution to an old problem", result.getSuccessObject().getContent().get(0).getName());
         assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
         assertEquals(Integer.valueOf(36), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
@@ -120,8 +121,8 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(1, result.getSuccessObject().getTotalElements());
         assertEquals(1, result.getSuccessObject().getTotalPages());
         assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getContent().get(0).getId());
-        assertNull(result.getSuccessObject().getContent().get(0).getTotalProjectCost());
-        assertNull(result.getSuccessObject().getContent().get(0).getGrantRequested());
+        assertEquals(BigDecimal.ZERO, result.getSuccessObject().getContent().get(0).getTotalProjectCost());
+        assertEquals(BigDecimal.ZERO, result.getSuccessObject().getContent().get(0).getGrantRequested());
         assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
         assertEquals(Integer.valueOf(5), result.getSuccessObject().getContent().get(0).getNumberOfPartners());
     }
