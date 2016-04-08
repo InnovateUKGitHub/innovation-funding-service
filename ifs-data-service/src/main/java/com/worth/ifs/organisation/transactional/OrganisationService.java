@@ -37,6 +37,6 @@ public interface OrganisationService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<OrganisationSearchResult>> searchAcademic(String organisationName, int maxItems);
 
-    @PreAuthorize("hasPermission(#organisationId, 'com.worth.ifs.user.resource.OrganisationResource', 'READ')")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationSearchResult> getSearchOrganisation(@P("organisationId") Long searchOrganisationId);
 }

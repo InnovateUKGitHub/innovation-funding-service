@@ -12,21 +12,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @PermissionEntityLookupStrategies
-public class OrganisationLookup {
-    @Autowired
-    private OrganisationRepository organisationRepository;
+public class OrganisationLookupStrategies {
 
     @Autowired
     private OrganisationMapper organisationMapper;
 
-
     @PermissionEntityLookupStrategy
-    public Organisation findOrganisationById(Long id){
-        return organisationRepository.findOne(id);
-    }
-
-    @PermissionEntityLookupStrategy
-    public OrganisationResource findRecourceById(Long id){
-        return organisationMapper.mapToResource(organisationRepository.findOne(id));
+    public OrganisationResource findOrganisationById(Long id){
+        return organisationMapper.mapIdToResource(id);
     }
 }
