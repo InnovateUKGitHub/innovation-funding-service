@@ -143,7 +143,7 @@ the user can see the option to upload a file
     the user should see the text in the page    Upload
 
 the user assigns the question to Jessica Doe
-    the applicant assigns the question to the collaborator    css=#form-input-17 .editor    testtest    Jessica Doe
+    the applicant assigns the question to the collaborator    css=#form-input-6 .editor    testtest    Jessica Doe
     reload page
 
 the user can log out
