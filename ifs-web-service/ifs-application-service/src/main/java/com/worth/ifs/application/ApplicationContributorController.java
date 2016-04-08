@@ -282,9 +282,11 @@ public class ApplicationContributorController{
         });
 
         if (organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))) {
-            // save new invites, to InviteOrganisation that already is saved.
-            inviteRestService.saveInvites(invites);
-            cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
+            if(invites.size() > 0) {
+                // save new invites, to InviteOrganisation that already is saved.
+                inviteRestService.saveInvites(invites);
+                cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
+            }
         } else if (existingOrganisation != null) {
             // Save invites, and link to existing organisation.
             inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);

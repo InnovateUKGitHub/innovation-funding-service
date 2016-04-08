@@ -1,5 +1,6 @@
 package com.worth.ifs.application.mapper;
 
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationSummaryResource;
 import com.worth.ifs.application.resource.CompletedPercentageResource;
@@ -26,12 +27,25 @@ public abstract class ApplicationSummaryMapper {
 			result.setCompletedPercentage(percentageResult.getSuccessObject().getCompletedPercentage().intValue());
 		}
 		
-		result.setApplicationStatus(source.getApplicationStatus().getId());
-		result.setApplicationStatusName(source.getApplicationStatus().getName());
+		result.setStatus(status(source, result.getCompletedPercentage()));
 		result.setId(source.getId());
 		result.setLead(source.getLeadOrganisation().getName());
 		result.setName(source.getName());
 		return result;
+	}
+
+	private String status(Application source, Integer completedPercentage) {
+		
+		if(ApplicationStatusConstants.SUBMITTED.getId().equals(source.getApplicationStatus().getId())
+				|| ApplicationStatusConstants.APPROVED.getId().equals(source.getApplicationStatus().getId())
+				|| ApplicationStatusConstants.REJECTED.getId().equals(source.getApplicationStatus().getId())) {
+			return "Submitted";
+		}
+		
+		if(completedPercentage != null && completedPercentage > 50) {
+			return "In Progress";
+		}
+		return "Started";
 	}
 
 	public Iterable<ApplicationSummaryResource> mapToResource(Iterable<Application> source){

@@ -104,7 +104,7 @@
                 <li th:class="${(page == 'not-submitted' ? 'selected' : '')}">
                     <a th:href="${(param.status != null ? '/prototypes/1348-not-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-not-submitted-applications')}">Applications not submitted</a>
                 </li>
-                <li th:class="${(page == 'project-setup' ? 'selected' : '')}"><a href="/prototypes/1627-admin-view-projects?status=setup">Projects in setup</a></li>
+                <li th:class="${(page == 'project-setup' ? 'selected' : '')}"><a href="/prototypes/1627-admin-view-project-status-grid?status=setup">Projects in setup</a></li>
             </ul>
 
         </div>

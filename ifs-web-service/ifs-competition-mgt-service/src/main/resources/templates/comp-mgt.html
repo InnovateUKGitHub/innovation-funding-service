@@ -45,7 +45,6 @@
                           <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
                           <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
                           <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
-                          <option value="status" th:selected="${(activeSortField == 'status')}">Status</option>
                           <option value="percentageComplete" th:selected="${(activeSortField == 'percentageComplete')}">Percentage complete</option>
                       </select>
                       <button type="submit" class="button no-margin">Sort</button>
@@ -67,7 +66,7 @@
                       <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}" th:text="${result.getFormattedId()}" /></td>
                       <td th:text="${result.name}"></td>
                       <td th:text="${result.lead}"></td>
-                      <td th:text="${result.applicationStatusName}"></td>
+                      <td th:text="${result.status}"></td>
                       <td th:text="${result.completedPercentage}"></td>
                     </tr>
                   </tbody>
