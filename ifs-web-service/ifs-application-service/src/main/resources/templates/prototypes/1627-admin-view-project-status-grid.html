@@ -223,12 +223,14 @@
 		var moFirstName = $_GET('first-name'),
 			moLastName = $_GET('last-name'),
 			moEmail = $_GET('email');
+			moPhoneNumber = $_GET('phone-number');
 
 
 		if (moFirstName != null && moLastName != null && moEmail != null || localStorage.getItem('moDetails') != null){
 			localStorage.setItem('moFirstName', moFirstName);
 			localStorage.setItem('moLastName', moLastName);
 			localStorage.setItem('moEmail', moEmail);
+			localStorage.setItem('moPhoneNumber', moPhoneNumber);
 			localStorage.setItem('moDetails', 'set');
 
 			jQuery('#assignMo').removeClass('action');
