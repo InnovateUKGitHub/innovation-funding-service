@@ -678,7 +678,7 @@ public class BaseUnitTest {
         });
 
         List<FormInput> formInputs = questions.get(01L).getFormInputs();
-        List<Long> formInputIds = formInputs.stream().map(f -> f.getId()).collect(Collectors.toList());
+        List<Long> formInputIds = simpleMap(formInputs, f -> f.getId());
         List<FormInputResponseResource> formInputResponses = newFormInputResponseResource().withFormInputs(formInputIds).
                 with(idBasedValues("Value ")).build(formInputs.size());
 
