@@ -102,6 +102,7 @@ public class ProfileController {
 
     private RestResult<UserResource> updateUser(final UserResource loggedInUser, UserDetailsForm userDetailsForm) {
         return userService.updateDetails(
+                loggedInUser.getId(),
                 loggedInUser.getEmail(),
                 userDetailsForm.getFirstName(),
                 userDetailsForm.getLastName(),

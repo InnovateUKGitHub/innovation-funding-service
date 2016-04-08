@@ -71,7 +71,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 withTitle("Mr").
                 build();
 
-        when(userServiceMock.findByEmail("email@serviceFailureexample.com")).thenReturn(serviceFailure(notFoundError(User.class, userToUpdate.getEmail())));
+        when(userServiceMock.getUserById(userToUpdate.getId())).thenReturn(serviceFailure(notFoundError(User.class, userToUpdate.getId())));
 
         ServiceResult<Void> result = service.updateProfile(userToUpdate);
         assertTrue(result.isFailure());

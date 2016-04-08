@@ -24,6 +24,11 @@ public class UserPermissionRules {
         return isSystemRegistrationUser(user);
     }
 
+    @PermissionRule(value = "UPDATE", description = "A User can update their own profile")
+    public boolean usersCanUpdateTheirOwnProfiles(UserResource userToUpdate, UserResource user) {
+        return userToUpdate.getId().equals(user.getId());
+    }
+
     private boolean isSystemRegistrationUser(UserResource user) {
         return user.hasRole(SYSTEM_REGISTRATION_USER);
     }
