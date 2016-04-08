@@ -17,7 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface QuestionService {
 
-    @NotSecured("TODO")
+    @NotSecured("Any loggedIn user can get a question")
     ServiceResult<Question> getQuestionById(final Long id);
 
     @NotSecured("TODO")
@@ -37,7 +37,8 @@ public interface QuestionService {
                 final Long assigneeId,
                 final Long assignedById);
 
-    @NotSecured("TODO")
+
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Set<Long>> getMarkedAsComplete(Long applicationId,
                                   Long organisationId);
 
@@ -45,25 +46,25 @@ public interface QuestionService {
     ServiceResult<Void> updateNotification(final Long questionStatusId,
                             final Boolean notify);
 
-    @NotSecured("TODO")
+    @NotSecured("Any loggedIn user can get a question")
     ServiceResult<List<Question>> findByCompetition(final Long competitionId);
 
-    @NotSecured("TODO")
+    @NotSecured("Any loggedIn user can get a question")
     ServiceResult<Question> getNextQuestion(final Long questionId);
 
-    @NotSecured("TODO")
+    @NotSecured("Any loggedIn user can get a question")
     ServiceResult<Question> getPreviousQuestionBySection(final Long sectionId);
 
-    @NotSecured("TODO")
+    @NotSecured("Any loggedIn user can get a question")
     ServiceResult<Question> getNextQuestionBySection(final Long sectionId);
 
-    @NotSecured("TODO")
+    @NotSecured("Any loggedIn user can get a question")
     ServiceResult<Question> getPreviousQuestion(final Long questionId);
 
-    @NotSecured("TODO")
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Boolean> isMarkedAsComplete(Question question, Long applicationId, Long organisationId);
 
-    @NotSecured("TODO")
+    @NotSecured("Any loggedIn user can get a question")
     ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
