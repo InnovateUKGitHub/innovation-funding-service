@@ -36,5 +36,11 @@ pip install robotframework-xvfb
 echo "# Installing ImapLibrary"
 pip install robotframework-imaplibrary
 
+echo "# Installing excellibrary"
+pip install robotframework-excellibrary
+
+echo "# Installing ftplibrary"
+pip install robotframework-ftplibrary
+
 #fi
 

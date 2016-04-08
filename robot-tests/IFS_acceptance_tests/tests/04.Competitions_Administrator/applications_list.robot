@@ -23,7 +23,7 @@ The correct number of applications is showing in the application list
     [Documentation]     INFUND-2135: listing of applications for an open competition
     [Tags]      Competition management
     When the user navigates to the page     ${COMP_MANAGEMENT_APPLICATIONS_LIST}
-    Then the user should see the text in the page       8 applications
+    Then the user should see the text in the page       9 applications
 
 
 The correct columns show for the application list table (application no, project title, lead, status, percentage complete)
