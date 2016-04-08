@@ -6,11 +6,13 @@ import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.mapper.FormInputMapper;
+import com.worth.ifs.form.mapper.FormInputResponseMapper;
 import com.worth.ifs.form.mapper.FormInputTypeMapper;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.repository.FormInputTypeRepository;
 import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -27,6 +29,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Arrays.asList;
 
@@ -48,6 +51,9 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     @Autowired
     private FormInputMapper formInputMapper;
 
+    @Autowired
+    private FormInputResponseMapper formInputResponseMapper;
+
     @Override
     public ServiceResult<FormInputResource> findFormInput(Long id) {
         return findFormInputEntity(id).andOnSuccessReturn(formInputMapper::mapToResource);
@@ -64,8 +70,8 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     }
 
     @Override
-    public ServiceResult<List<FormInputResponse>> findResponsesByApplication(final Long applicationId) {
-        return serviceSuccess(formInputResponseRepository.findByApplicationId(applicationId));
+    public ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(final Long applicationId) {
+        return serviceSuccess(formInputResponsesToResources(formInputResponseRepository.findByApplicationId(applicationId)));
     }
 
     @Override
@@ -107,5 +113,9 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     private Supplier<ServiceResult<FormInput>> formInput(Long id) {
         return () -> findFormInputEntity(id);
+    }
+
+    private List<FormInputResponseResource> formInputResponsesToResources(List<FormInputResponse> filtered) {
+        return simpleMap(filtered, formInputResponse -> formInputResponseMapper.mapToResource(formInputResponse));
     }
 }

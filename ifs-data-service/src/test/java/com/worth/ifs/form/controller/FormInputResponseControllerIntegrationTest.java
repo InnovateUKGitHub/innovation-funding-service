@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.security.SecuritySetter;
 
 import org.junit.Before;
@@ -38,11 +39,11 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
     public void test_findResponsesByApplication(){
         Long applicationId = 1L;
         Long formInputId = 1L;
-        List<FormInputResponse> responses = controller.findResponsesByApplication(applicationId).getSuccessObject();
+        List<FormInputResponseResource> responses = controller.findResponsesByApplication(applicationId).getSuccessObject();
 
         assertThat(responses, hasSize(16));
 
-        Optional<FormInputResponse> response = responses.stream().filter(r -> r.getFormInput().getId().equals(formInputId)).findFirst();
+        Optional<FormInputResponseResource> response = responses.stream().filter(r -> r.getFormInput().equals(formInputId)).findFirst();
 
         assertTrue(response.isPresent());
         assertThat(response.get().getValue(), containsString("Within the Industry one issue has caused"));
@@ -68,8 +69,8 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(forbiddenError("Unable to update question response")));
 
-        List<FormInputResponse> responses = controller.findResponsesByApplication(applicationId).getSuccessObject();
-        Optional<FormInputResponse> response = responses.stream().filter(r -> r.getFormInput().getId().equals(formInputId)).findFirst();
+        List<FormInputResponseResource> responses = controller.findResponsesByApplication(applicationId).getSuccessObject();
+        Optional<FormInputResponseResource> response = responses.stream().filter(r -> r.getFormInput().equals(formInputId)).findFirst();
 
         assertTrue(response.isPresent());
         assertNotEquals(inputValue, response.get().getValue());

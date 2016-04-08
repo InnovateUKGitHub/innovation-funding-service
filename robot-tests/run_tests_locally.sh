@@ -192,7 +192,7 @@ unset opt
 unset quickTest
 unset testScrub
 unset happyPath
-unset useXvfb
+useXvfb=true
 unset remoteRun
 
 
@@ -212,7 +212,7 @@ while getopts ":q :t :h :p :r :d: :x" opt ; do
 	 happyPathTestOnly=1
 	;;
 	x)
-	 useXvfb=true
+	 useXvfb=false
 	;;
         r)
          remoteRun=1

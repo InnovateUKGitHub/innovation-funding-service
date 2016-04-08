@@ -37,16 +37,6 @@ public class CostController {
         return costService.updateCost(id, newCostItem).toPutResponse();
     }
 
-    @RequestMapping("/get/{applicationFinanceId}")
-    public RestResult<List<Cost>> findByApplicationId(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
-        return costService.findCostsByApplicationId(applicationFinanceId).toGetResponse();
-    }
-
-    @RequestMapping("/findById/{id}")
-    public RestResult<Cost> findById(@PathVariable("id") final Long id) {
-        return costService.findCostById(id).toGetResponse();
-    }
-
     @RequestMapping("/delete/{costId}")
     public RestResult<Void> delete(@PathVariable("costId") final Long costId) {
         return costService.deleteCost(costId).toDeleteResponse();

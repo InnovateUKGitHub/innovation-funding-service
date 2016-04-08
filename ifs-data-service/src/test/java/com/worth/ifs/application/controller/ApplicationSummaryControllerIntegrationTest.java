@@ -95,7 +95,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getContent().get(0).getId());
         assertEquals(ApplicationStatusConstants.OPEN.getName(), result.getSuccessObject().getContent().get(0).getApplicationStatusName());
         assertEquals("A novel solution to an old problem", result.getSuccessObject().getContent().get(0).getName());
-        assertEquals("Steve Smith", result.getSuccessObject().getContent().get(0).getLead());
+        assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
         assertEquals(Integer.valueOf(36), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
     }
     
@@ -122,8 +122,8 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getContent().get(0).getId());
         assertNull(result.getSuccessObject().getContent().get(0).getTotalProjectCost());
         assertNull(result.getSuccessObject().getContent().get(0).getGrantRequested());
-        assertEquals("Steve Smith", result.getSuccessObject().getContent().get(0).getLead());
-        assertEquals(Integer.valueOf(3), result.getSuccessObject().getContent().get(0).getNumberOfPartners());
+        assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
+        assertEquals(Integer.valueOf(5), result.getSuccessObject().getContent().get(0).getNumberOfPartners());
     }
 
 }

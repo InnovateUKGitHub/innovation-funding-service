@@ -8,6 +8,7 @@ import com.worth.ifs.application.service.ApplicationSummaryRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
@@ -50,7 +51,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
         Long applicationId = Long.valueOf(applicationIdString);
         form.setAdminMode(true);
 
-        List<FormInputResponse> responses = formInputResponseService.getByApplication(applicationId);
+        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
 //        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
 

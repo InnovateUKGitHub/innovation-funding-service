@@ -33,11 +33,6 @@ public class CostServiceImpl implements CostService {
     }
 
     @Override
-    public CostItem getById(Long costId) {
-        return costRestService.findById(costId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
     public void delete(Long costId) {costRestService.delete(costId);}
 
     @Override

@@ -7,10 +7,10 @@ import com.worth.ifs.application.builder.SectionResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.*;
+import com.worth.ifs.application.finance.model.UserRole;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.*;
-import com.worth.ifs.application.finance.model.UserRole;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -30,6 +30,7 @@ import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
@@ -58,7 +59,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import javax.management.relation.RoleResult;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -81,6 +81,7 @@ import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetitio
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -180,7 +181,7 @@ public class BaseUnitTest {
     public List<Section> sections;
     public List<SectionResource> sectionResources;
     public Map<Long, Question> questions;
-    public Map<Long, FormInputResponse> formInputsToFormInputResponses;
+    public Map<Long, FormInputResponseResource> formInputsToFormInputResponses;
     public List<Competition> competitions;
     public Competition competition;
     public List<CompetitionResource> competitionResources;
@@ -628,6 +629,7 @@ public class BaseUnitTest {
         when(applicationService.getById(applications.get(2).getId())).thenReturn(applications.get(2));
         when(applicationService.getById(applications.get(3).getId())).thenReturn(applications.get(3));
         when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet.first());
+        when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getUserOrganisation(applications.get(0), loggedInUser.getId())).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationLeadOrganisation(applications.get(0))).thenReturn(Optional.of(organisation1));
         when(organisationService.getApplicationOrganisations(applications.get(0))).thenReturn(organisationSet);
@@ -649,6 +651,7 @@ public class BaseUnitTest {
         when(sectionService.getById(3L)).thenReturn(sectionResources.get(2));
 
         organisations.forEach(organisation -> when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation)));
+        organisations.forEach(organisation -> when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisation.getId())).thenReturn(restSuccess(organisation)));
     }
 
     public void setupApplicationResponses(){
@@ -676,12 +679,12 @@ public class BaseUnitTest {
         });
 
         List<FormInput> formInputs = questions.get(01L).getFormInputs();
-        List<FormInputResponse> formInputResponses = newFormInputResponse().withFormInputs(formInputs).
+        List<Long> formInputIds = simpleMap(formInputs, f -> f.getId());
+        List<FormInputResponseResource> formInputResponses = newFormInputResponseResource().withFormInputs(formInputIds).
                 with(idBasedValues("Value ")).build(formInputs.size());
 
         when(formInputResponseService.getByApplication(application.getId())).thenReturn(formInputResponses);
-        formInputResponses.stream().map(FormInputResponse::getFormInput).map(FormInput::getId).forEach(log::debug);
-        formInputsToFormInputResponses = formInputResponses.stream().collect(toMap(formInputResponse -> formInputResponse.getFormInput().getId(), identity()));
+        formInputsToFormInputResponses = formInputResponses.stream().collect(toMap(formInputResponseResource -> formInputResponseResource.getFormInput(), identity()));
         when(formInputResponseService.mapFormInputResponsesToFormInput(formInputResponses)).thenReturn(formInputsToFormInputResponses);
     }
 
