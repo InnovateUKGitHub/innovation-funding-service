@@ -1,6 +1,7 @@
 package com.worth.ifs.application;
 
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.registration.AcceptInviteController;
 import com.worth.ifs.registration.RegistrationController;
 import com.worth.ifs.util.CookieUtil;
 import org.apache.commons.logging.Log;

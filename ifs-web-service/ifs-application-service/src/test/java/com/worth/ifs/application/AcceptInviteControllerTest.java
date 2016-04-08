@@ -3,6 +3,7 @@ package com.worth.ifs.application;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.registration.AcceptInviteController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,7 +89,7 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
                 .andExpect(cookie().exists(AcceptInviteController.INVITE_HASH))
                 .andExpect(cookie().value(AcceptInviteController.INVITE_HASH, INVITE_HASH_EXISTING_USER))
                 .andExpect(model().attribute("emailAddressRegistered", "true"))
-                .andExpect(view().name("registration/accept-invite"));
+                .andExpect(view().name("registration/accept-invite-failure"));
     }
 
     @Test(expected = Exception.class)
