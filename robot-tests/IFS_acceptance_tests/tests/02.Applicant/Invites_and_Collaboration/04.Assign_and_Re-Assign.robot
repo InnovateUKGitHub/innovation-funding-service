@@ -115,12 +115,12 @@ Appendices are assigned along with the question
     [Documentation]    INFUND-409
     [Tags]    Collaboration
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    Given the user navigates to the page    ${PROJECT_TEAM_URL}
+    Given the user navigates to the page    ${INNOVATION_URL}
     And the user can see the option to upload a file
     When the user assigns the question to Jessica Doe
     And the user can log out
     And the user can log in as Jessica Doe
-    Then the user navigates to the page    ${PROJECT_TEAM_URL}
+    Then the user navigates to the page    ${INNOVATION_URL}
     And the user can see the option to upload a file
     And the user assigns the question to the lead applicant
     And the user can't see the option to upload a file
@@ -143,7 +143,7 @@ the user can see the option to upload a file
     the user should see the text in the page    Upload
 
 the user assigns the question to Jessica Doe
-    the applicant assigns the question to the collaborator    css=#form-input-8 .editor    testtest    Jessica Doe
+    the applicant assigns the question to the collaborator    css=#form-input-17 .editor    testtest    Jessica Doe
     reload page
 
 the user can log out
