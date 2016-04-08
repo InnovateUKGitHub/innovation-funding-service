@@ -5,6 +5,7 @@ import com.worth.ifs.application.service.ResponseRestService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -26,15 +27,15 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
     private FormInputResponseRestService responseRestService;
 
     @Override
-    public List<FormInputResponse> getByApplication(Long applicationId) {
+    public List<FormInputResponseResource> getByApplication(Long applicationId) {
         return responseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public Map<Long, FormInputResponse> mapFormInputResponsesToFormInput(List<FormInputResponse> responses) {
+    public Map<Long, FormInputResponseResource> mapFormInputResponsesToFormInput(List<FormInputResponseResource> responses) {
         return simpleToMap(
             responses,
-            response -> response.getFormInput().getId(),
+            response -> response.getFormInput(),
             response -> response
         );
     }

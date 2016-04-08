@@ -16,6 +16,7 @@ import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
@@ -240,8 +241,8 @@ public abstract class AbstractApplicationController extends BaseController {
     protected void addQuestionsDetails(Model model, ApplicationResource application, Form form) {
         LOG.info("*********************");
         LOG.info(application.getId());
-        List<FormInputResponse> responses = getFormInputResponses(application);
-        Map<Long, FormInputResponse> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
+        List<FormInputResponseResource> responses = getFormInputResponses(application);
+        Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
         model.addAttribute("responses",mappedResponses);
 
         if(form == null){
@@ -259,7 +260,7 @@ public abstract class AbstractApplicationController extends BaseController {
         return responseService.getByApplication(application.getId());
     }
 
-    protected List<FormInputResponse> getFormInputResponses(ApplicationResource application) {
+    protected List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
         return formInputResponseService.getByApplication(application.getId());
     }
 

@@ -168,7 +168,7 @@ public class RegistrationController {
     }
 
     private OrganisationResource getOrganisation(HttpServletRequest request) {
-        return organisationService.getOrganisationById(getOrganisationId(request));
+        return organisationService.getOrganisationByIdForAnonymousUserFlow(getOrganisationId(request));
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)

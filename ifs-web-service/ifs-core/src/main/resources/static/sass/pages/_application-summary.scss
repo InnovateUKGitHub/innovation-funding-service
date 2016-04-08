@@ -31,6 +31,12 @@
 	border:none;
 	padding:0;
 	background:transparent;
+	min-height: 0;
+	resize:none;
+	overflow:visible;
+	p:last-child {
+			margin-bottom:0;
+	}
 }
 .app-summary.is-closed .textarea-footer {
 	display: none;

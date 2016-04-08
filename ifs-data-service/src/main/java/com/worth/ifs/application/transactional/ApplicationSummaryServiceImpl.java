@@ -211,7 +211,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	}
 
 	private boolean canUseSpringDataPaginationForSummaryResults(String sortBy) {
-		return "id".equals(sortBy) || "name".equals(sortBy) || "status".equals(sortBy);
+		return "id".equals(sortBy) || "name".equals(sortBy);
 	}
 
 	private String[] getApplicationSummarySortField(String sortBy) {
@@ -224,8 +224,6 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 			return new String[]{"id"};
 		case "name":
 			return new String[]{"name", "id"};
-		case "status":
-			return new String[]{"applicationStatus.name", "id"};
 		default:
 			return new String[]{"id"};
 		}

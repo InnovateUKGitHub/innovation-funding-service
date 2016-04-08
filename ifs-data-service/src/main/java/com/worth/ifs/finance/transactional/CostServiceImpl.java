@@ -6,7 +6,6 @@ import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.repository.FileEntryRepository;
-import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
@@ -119,16 +118,6 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
             return updatedCost;
         });
-    }
-
-    @Override
-    public ServiceResult<List<Cost>> findCostsByApplicationId(final Long applicationFinanceId) {
-        return serviceSuccess(costRepository.findByApplicationFinanceId(applicationFinanceId));
-    }
-
-    @Override
-    public ServiceResult<Cost> findCostById(final Long id) {
-        return find(costRepository.findOne(id), notFoundError(Cost.class, id));
     }
 
     @Override
@@ -303,5 +292,4 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
             organisationFinanceHandler.initialiseCostType(applicationFinance, costType);
         }
     }
-
 }

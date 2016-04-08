@@ -73,7 +73,7 @@ public class ProfileControllerTest extends BaseUnitTest {
     @Test
     public void userServiceSaveMethodIsCalledWhenSubmittingValidDetailsForm() throws Exception {
 
-        when(userService.updateDetails(user.getEmail(), "newfirstname", "newlastname", "Mrs", "0987654321")).thenReturn(restSuccess(newUserResource().build()));
+        when(userService.updateDetails(user.getId(), user.getEmail(), "newfirstname", "newlastname", "Mrs", "0987654321")).thenReturn(restSuccess(newUserResource().build()));
         mockMvc.perform(post("/profile/edit")
                         .param("title", "Mrs")
                         .param("firstName", "newfirstname")
@@ -82,6 +82,7 @@ public class ProfileControllerTest extends BaseUnitTest {
         );
 
         verify(userService, times(1)).updateDetails(
+                user.getId(),
                 user.getEmail(),
                 "newfirstname",
                 "newlastname",
@@ -99,6 +100,7 @@ public class ProfileControllerTest extends BaseUnitTest {
         );
 
         verify(userService, times(0)).updateDetails(
+                isA(Long.class),
                 isA(String.class),
                 isA(String.class),
                 isA(String.class),
@@ -109,7 +111,7 @@ public class ProfileControllerTest extends BaseUnitTest {
     @Test
     public void whenSubmittingAValidFormTheUserProfileDetailsViewIsReturned() throws Exception {
 
-        when(userService.updateDetails(user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle(), user.getPhoneNumber())).thenReturn(restSuccess(newUserResource().build()));
+        when(userService.updateDetails(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle(), user.getPhoneNumber())).thenReturn(restSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/profile/edit")
                         .param("title", user.getTitle())
@@ -138,7 +140,7 @@ public class ProfileControllerTest extends BaseUnitTest {
     public void userServiceResponseErrorsAreAddedTheModel() throws Exception {
 
         Error error = new Error("errorname", "errordescription", BAD_REQUEST);
-        when(userService.updateDetails(user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle(), user.getPhoneNumber())).thenReturn(restFailure(error));
+        when(userService.updateDetails(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle(), user.getPhoneNumber())).thenReturn(restFailure(error));
 
         mockMvc.perform(post("/profile/edit")
                         .param("title", user.getTitle())

@@ -9,7 +9,6 @@ import java.util.List;
  * {@code CostService} retrieving and updating costs
  */
 public interface CostService {
-    CostItem getById(Long costId);
     List<CostFieldResource> getCostFields();
     void update(CostItem costItem);
     void delete(Long costId);
