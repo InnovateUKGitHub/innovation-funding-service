@@ -1,7 +1,6 @@
 package com.worth.ifs.registration;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.exception.ErrorControllerAdvice;

@@ -1,12 +1,14 @@
 package com.worth.ifs.application.repository;
 
-import com.worth.ifs.application.domain.Application;
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+import com.worth.ifs.application.domain.Application;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -23,12 +25,20 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     List<Application> findByCompetitionId(Long competitionId);
 
-	Page<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId, Pageable pageable);
+	Page<Application> findByCompetitionIdAndApplicationStatusIdIn(Long competitionId, Collection<Long> applicationStatusIds, Pageable pageable);
+
+	Page<Application> findByCompetitionIdAndApplicationStatusIdNotIn(Long competitionId, Collection<Long> applicationStatusIds, Pageable pageable);
+	
+	List<Application> findByCompetitionIdAndApplicationStatusIdIn(Long competitionId, Collection<Long> applicationStatusIds);
+
+	List<Application> findByCompetitionIdAndApplicationStatusIdNotIn(Long competitionId, Collection<Long> applicationStatusIds);
 
 	List<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);
-
+	
     Long countByCompetitionId(Long competitionId);
 
     Long countByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);
 
+    Long countByCompetitionIdAndApplicationStatusIdIn(Long competitionId, Collection<Long> submittedStatusIds);
+    
 }

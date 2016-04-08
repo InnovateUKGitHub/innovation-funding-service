@@ -3,7 +3,6 @@ package com.worth.ifs.registration;
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
-import com.worth.ifs.application.AcceptInviteController;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.exception.ErrorControllerAdvice;

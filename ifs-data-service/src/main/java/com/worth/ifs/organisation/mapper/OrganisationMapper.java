@@ -9,6 +9,8 @@ import com.worth.ifs.user.mapper.ProcessRoleMapper;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.resource.OrganisationResource;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -21,6 +23,13 @@ import org.mapstruct.Mapper;
     }
 )
 public abstract class OrganisationMapper extends BaseMapper<Organisation, OrganisationResource, Long> {
+
+    @Mappings({
+            @Mapping(source = "organisationType.name", target = "organisationTypeName"),
+    })
+    @Override
+    public abstract OrganisationResource mapToResource(Organisation domain);
+
 
     public Long mapOrganisationToId(Organisation object) {
         if (object == null) {
