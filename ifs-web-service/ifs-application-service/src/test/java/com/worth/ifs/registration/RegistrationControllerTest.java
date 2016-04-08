@@ -32,6 +32,7 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -423,9 +424,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
-                newUserResource().withRolesGlobal(
+                newUserResource().withRolesGlobal(singletonList(
                         newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
-                ).build()
+                )).build()
         );
 
         mockMvc.perform(get("/registration/register?organisationId=1"))
@@ -438,9 +439,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void postingRegistrationWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(
-                newUserResource().withRolesGlobal(
+                newUserResource().withRolesGlobal(singletonList(
                         newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
-                ).build()
+                )).build()
         );
 
         mockMvc.perform(post("/registration/register?organisationId=1"))

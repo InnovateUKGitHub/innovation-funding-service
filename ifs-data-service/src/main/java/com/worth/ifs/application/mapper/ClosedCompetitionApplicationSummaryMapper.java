@@ -2,6 +2,7 @@ package com.worth.ifs.application.mapper;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.domain.ProcessRole;
 
 @Mapper(config = GlobalMapperConfig.class)
 public abstract class ClosedCompetitionApplicationSummaryMapper {
@@ -25,7 +26,7 @@ public abstract class ClosedCompetitionApplicationSummaryMapper {
 		ClosedCompetitionApplicationSummaryResource result = new ClosedCompetitionApplicationSummaryResource();
 		
 		result.setId(source.getId());
-		result.setLead(source.getLeadApplicant().getName());
+		result.setLead(source.getLeadOrganisation().getName());
 		result.setName(source.getName());
 		result.setDuration(source.getDurationInMonths());
 		
@@ -34,8 +35,8 @@ public abstract class ClosedCompetitionApplicationSummaryMapper {
 		BigDecimal grantRequested = getGrantRequested(applicationFinancesResult);
 		result.setGrantRequested(grantRequested);
 		
-		long numberOfPartners = source.getProcessRoles().stream().filter(it -> it.getRole().getName().equals(UserRoleType.COLLABORATOR.getName())).count();
-		result.setNumberOfPartners(Integer.valueOf((int)numberOfPartners));
+		int numberOfPartners = source.getProcessRoles().stream().collect(Collectors.groupingBy(ProcessRole::getOrganisation)).size();
+		result.setNumberOfPartners(numberOfPartners);
 		
 		BigDecimal totalProjectCost = getTotalProjectCost(applicationFinancesResult);
 		result.setTotalProjectCost(totalProjectCost);

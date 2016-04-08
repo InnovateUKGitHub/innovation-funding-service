@@ -14,15 +14,18 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
 
 import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
@@ -225,6 +228,15 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
         return Pair.of(mockPermissionRulesBeans, newMockRulesMap);
 
 
+    }
+
+    protected void assertAccessDenied(Runnable serviceCall, Runnable verifications) {
+        try {
+            serviceCall.run();
+            fail("Expected an AccessDeniedException");
+        } catch (AccessDeniedException e) {
+            verifications.run();
+        }
     }
 
     public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {}
