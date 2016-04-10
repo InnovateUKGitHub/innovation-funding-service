@@ -31,7 +31,7 @@ public class UserPermissionRules {
 
     private static Predicate<ProcessRole> consortiumProcessRoleFilter = role -> CONSORTIUM_ROLES.contains(role.getRole().getName());
 
-    private static Predicate<ProcessRole> assessorProcessRoleFilter = role -> role.getRole().getName().equals(ASSESSOR);
+    private static Predicate<ProcessRole> assessorProcessRoleFilter = role -> role.getRole().getName().equals(ASSESSOR.getName());
 
     @PermissionRule(value = "CREATE", description = "A System Registration User can create new Users")
     public boolean systemRegistrationUserCanCreateUsers(UserResource userToCreate, UserResource user) {
@@ -65,8 +65,8 @@ public class UserPermissionRules {
         return simpleMap(allConsortiumUsers, User::getId).contains(userToView.getId());
     }
 
-    @PermissionRule(value = "READ", description = "Assessors can view users on the Applications that they are assessing")
-    public boolean assessorsCanViewUsersOnTheApplicationsTheyAreAssessing(UserResource userToView, UserResource user) {
+    @PermissionRule(value = "READ", description = "Assessors can view the members of individual Consortiums on the various Applications that they are assessing")
+    public boolean assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(UserResource userToView, UserResource user) {
         List<Long> applicationRoles = user.getProcessRoles();
         List<ProcessRole> processRoles = simpleMap(applicationRoles, processRoleRepository::findOne);
         List<ProcessRole> processRolesWhereUserIsAssessor = simpleFilter(processRoles, assessorProcessRoleFilter);
@@ -78,7 +78,7 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "CHANGE_PASSWORD", description = "A User should be able to change their own password")
-    public boolean anyoneCanChangeTheirOwnPassword(UserResource userToUpdate, UserResource user) {
+    public boolean usersCanChangeTheirOwnPassword(UserResource userToUpdate, UserResource user) {
         return userToUpdate.getId().equals(user.getId());
     }
 

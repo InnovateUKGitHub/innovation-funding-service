@@ -110,9 +110,9 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         allRoleUsers.forEach(user -> {
             allRoleUsers.forEach(otherUser -> {
                 if (user.equals(otherUser)) {
-                    assertTrue(rules.anyoneCanChangeTheirOwnPassword(otherUser, user));
+                    assertTrue(rules.usersCanChangeTheirOwnPassword(otherUser, user));
                 } else {
-                    assertFalse(rules.anyoneCanChangeTheirOwnPassword(otherUser, user));
+                    assertFalse(rules.usersCanChangeTheirOwnPassword(otherUser, user));
                 }
             });
         });
@@ -222,16 +222,69 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void testAssessorsCanViewConsortiumMembersForApplicationsTheyAreAssessing() {
+
+        Role leadRole = newRole().withType(LEADAPPLICANT).build();
+        Role collaboratorRole = newRole().withType(COLLABORATOR).build();
+        Role assessorRole = newRole().withType(ASSESSOR).build();
+
+        Application application1 = newApplication().build();
+        Application application2 = newApplication().build();
+        Application application3 = newApplication().build();
+
+        User application1Lead = newUser().build();
+        User application2Collaborator = newUser().build();
+        User application3Lead = newUser().build();
+        User assessorForApplications1And2 = newUser().build();
+
+        ProcessRole application1LeadProcessRole = newProcessRole().withApplication(application1).withRole(leadRole).withUser(application1Lead).build();
+        ProcessRole application2CollaboratorProcessRole = newProcessRole().withApplication(application2).withRole(collaboratorRole).withUser(application2Collaborator).build();
+        ProcessRole application3LeadProcessRole = newProcessRole().withApplication(application3).withRole(leadRole).withUser(application3Lead).build();
+
+        List<ProcessRole> assessorProcessRole = newProcessRole().withApplication(application1, application2).withRole(assessorRole, assessorRole).
+                withUser(assessorForApplications1And2, assessorForApplications1And2).build(2);
+
+        combineLists(assessorProcessRole, application1LeadProcessRole, application2CollaboratorProcessRole, application3LeadProcessRole).forEach(role -> {
+            when(processRoleRepositoryMock.findOne(role.getId())).thenReturn(role);
+        });
+
+        UserResource application1LeadResource = userResourceForUser().apply(application1Lead);
+        UserResource application2CollaboratorResource = userResourceForUser().apply(application2Collaborator);
+        UserResource application3LeadResource = userResourceForUser().apply(application3Lead);
+        UserResource assessorForApplications1And2Resource = userResourceForUser().apply(assessorForApplications1And2);
+
+        // assert that the assessor can see users from application1 and application2
+        assertTrue(rules.assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(application1LeadResource, assessorForApplications1And2Resource));
+        assertTrue(rules.assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(application2CollaboratorResource, assessorForApplications1And2Resource));
+
+        // assert that they can't see users from application 3 because they are not assessing it
+        assertFalse(rules.assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(application3LeadResource, assessorForApplications1And2Resource));
+    }
+
+    @Test
     public void testUsersCanUpdateTheirOwnProfiles() {
         UserResource user = newUserResource().build();
         assertTrue(rules.usersCanUpdateTheirOwnProfiles(user, user));
     }
 
     @Test
-    public void testUsersCanUpdateTheirOwnProfilesButAttemptingTOUpdatenotherUsersProfile() {
+    public void testUsersCanUpdateTheirOwnProfilesButAttemptingToUpdateAnotherUsersProfile() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
         assertFalse(rules.usersCanUpdateTheirOwnProfiles(user, anotherUser));
+    }
+
+    @Test
+    public void testUsersCanChangeTheirOwnPasswords() {
+        UserResource user = newUserResource().build();
+        assertTrue(rules.usersCanChangeTheirOwnPassword(user, user));
+    }
+
+    @Test
+    public void testUsersCanChangeTheirOwnPasswordsButAttemptingToUpdateAnotherUsersPassword() {
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        assertFalse(rules.usersCanChangeTheirOwnPassword(user, anotherUser));
     }
 
     @Override
