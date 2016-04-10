@@ -22,21 +22,27 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
 import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
-import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryMapper;
-import com.worth.ifs.application.mapper.ClosedCompetitionApplicationSummaryPageMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionNotSubmittedApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionNotSubmittedApplicationSummaryPageMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionSubmittedApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionSubmittedApplicationSummaryPageMapper;
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.ApplicationSummaryResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryResource;
+import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryResource;
+import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.resource.CompletedPercentageResource;
 import com.worth.ifs.application.resource.PageResource;
 import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourceLeadComparator;
 import com.worth.ifs.application.resource.comparators.ApplicationSummaryResourcePercentageCompleteComparator;
-import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryGrantRequestedComparator;
-import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryLeadComparator;
-import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryNumberOfPartnersComparator;
-import com.worth.ifs.application.resource.comparators.ClosedCompetitionApplicationSummaryTotalProjectCostComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionNotSubmittedApplicationSummaryLeadComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionNotSubmittedApplicationSummaryPercentageCompleteComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionSubmittedApplicationSummaryGrantRequestedComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionSubmittedApplicationSummaryLeadComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionSubmittedApplicationSummaryNumberOfPartnersComparator;
+import com.worth.ifs.application.resource.comparators.ClosedCompetitionSubmittedApplicationSummaryTotalProjectCostComparator;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.transactional.BaseTransactionalService;
@@ -65,10 +71,16 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	private ApplicationService applicationService;
 	
 	@Autowired
-	private ClosedCompetitionApplicationSummaryMapper closedCompetitionApplicationSummaryMapper;
+	private ClosedCompetitionSubmittedApplicationSummaryMapper closedCompetitionSubmittedApplicationSummaryMapper;
 	
 	@Autowired
-	private ClosedCompetitionApplicationSummaryPageMapper closedCompetitionApplicationSummaryPageMapper;
+	private ClosedCompetitionSubmittedApplicationSummaryPageMapper closedCompetitionSubmittedApplicationSummaryPageMapper;
+	
+	@Autowired
+	private ClosedCompetitionNotSubmittedApplicationSummaryMapper closedCompetitionNotSubmittedApplicationSummaryMapper;
+	
+	@Autowired
+	private ClosedCompetitionNotSubmittedApplicationSummaryPageMapper closedCompetitionNotSubmittedApplicationSummaryPageMapper;
 	
 	@Override
 	public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, int pageIndex, String sortBy) {
@@ -141,44 +153,43 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	}
 
 	@Override
-	public ServiceResult<ClosedCompetitionApplicationSummaryPageResource> getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
+	public ServiceResult<ClosedCompetitionSubmittedApplicationSummaryPageResource> getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
 			Long competitionId, int pageIndex, String sortBy) {
-		return getClosedCompetitionApplicationSummariesByCompetitionId(competitionId, pageIndex, sortBy, true);
+		String[] sortField = getClosedCompetitionSubmittedApplicationSummarySortField(sortBy);
+		Pageable pageable = new PageRequest(pageIndex, PAGE_SIZE, new Sort(Direction.ASC, sortField));
+		
+		if(canUseSpringDataPaginationForClosedCompetitionSubmittedResults(sortBy)){
+			Page<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS, pageable);
+			return find(applicationResults, notFoundError(Page.class)).andOnSuccessReturn(closedCompetitionSubmittedApplicationSummaryPageMapper::mapToResource);
+		}
+		
+		List<Application> resultsList = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS);
+		
+		ClosedCompetitionSubmittedApplicationSummaryPageResource result = new ClosedCompetitionSubmittedApplicationSummaryPageResource();
+		result.setContent(closedCompetitionSubmittedSortAndRestrictResults(resultsList, pageable, sortBy));
+		
+		return pageFromUnsortedApplicationResults(result, resultsList, pageable, sortBy, ClosedCompetitionSubmittedApplicationSummaryPageResource.class);
 	}
 	
 	@Override
-	public ServiceResult<ClosedCompetitionApplicationSummaryPageResource> getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
+	public ServiceResult<ClosedCompetitionNotSubmittedApplicationSummaryPageResource> getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
 			Long competitionId, int pageIndex, String sortBy) {
-		return getClosedCompetitionApplicationSummariesByCompetitionId(competitionId, pageIndex, sortBy, false);
-	}
-	
-	private ServiceResult<ClosedCompetitionApplicationSummaryPageResource> getClosedCompetitionApplicationSummariesByCompetitionId(
-			Long competitionId, int pageIndex, String sortBy, boolean submitted) {
-		String[] sortField = getClosedCompetitionApplicationSummarySortField(sortBy);
+		String[] sortField = getClosedCompetitionNotSubmittedApplicationSummarySortField(sortBy);
 		Pageable pageable = new PageRequest(pageIndex, PAGE_SIZE, new Sort(Direction.ASC, sortField));
 		
-		if(canUseSpringDataPaginationForClosedCompetitionResults(sortBy)){
-			Page<Application> applicationResults;
-			if(submitted) {
-				applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS, pageable);
-			} else {
-				applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS, pageable);
-			}
-			return find(applicationResults, notFoundError(Page.class)).andOnSuccessReturn(closedCompetitionApplicationSummaryPageMapper::mapToResource);
+		if(canUseSpringDataPaginationForClosedCompetitionNotSubmittedResults(sortBy)){
+			Page<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS, pageable);
+			return find(applicationResults, notFoundError(Page.class)).andOnSuccessReturn(closedCompetitionNotSubmittedApplicationSummaryPageMapper::mapToResource);
 		}
 		
-		List<Application> resultsList;
-		if(submitted) {
-			resultsList = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS);
-		} else {
-			resultsList = applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS);
-		}
+		List<Application> resultsList = applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS);
 		
-		ClosedCompetitionApplicationSummaryPageResource result = new ClosedCompetitionApplicationSummaryPageResource();
-		result.setContent(closedCompetitionSortAndRestrictResults(resultsList, pageable, sortBy));
+		ClosedCompetitionNotSubmittedApplicationSummaryPageResource result = new ClosedCompetitionNotSubmittedApplicationSummaryPageResource();
+		result.setContent(closedCompetitionNotSubmittedSortAndRestrictResults(resultsList, pageable, sortBy));
 		
-		return pageFromUnsortedApplicationResults(result, resultsList, pageable, sortBy, ClosedCompetitionApplicationSummaryPageResource.class);
+		return pageFromUnsortedApplicationResults(result, resultsList, pageable, sortBy, ClosedCompetitionNotSubmittedApplicationSummaryPageResource.class);
 	}
+	
 	
 	@Override
 	public List<Application> getApplicationSummariesByCompetitionIdAndStatus(Long competitionId, Long applicationStatusId) {
@@ -229,7 +240,8 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		}
 	}
 
-	private String[] getClosedCompetitionApplicationSummarySortField(String sortBy) {
+	
+	private String[] getClosedCompetitionSubmittedApplicationSummarySortField(String sortBy) {
 		if(StringUtils.isEmpty(sortBy)){
 			return new String[]{"id"};
 		}
@@ -246,24 +258,59 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 		}
 	}
 	
-	private boolean canUseSpringDataPaginationForClosedCompetitionResults(String sortBy) {
+	private String[] getClosedCompetitionNotSubmittedApplicationSummarySortField(String sortBy) {
+		if(StringUtils.isEmpty(sortBy)){
+			return new String[]{"id"};
+		}
+		
+		switch (sortBy) {
+		case "id":
+			return new String[]{"id"};
+		case "name":
+			return new String[]{"name", "id"};
+		default:
+			return new String[]{"id"};
+		}
+	}
+	
+	private boolean canUseSpringDataPaginationForClosedCompetitionSubmittedResults(String sortBy) {
 		return !("numberOfPartners".equals(sortBy) || "lead".equals(sortBy) | "grantRequested".equals(sortBy) || "totalProjectCost".equals(sortBy));
 	}
 	
-	private List<ClosedCompetitionApplicationSummaryResource> closedCompetitionSortAndRestrictResults(List<Application> resultsList, Pageable pageable, String sortBy) {
+	private boolean canUseSpringDataPaginationForClosedCompetitionNotSubmittedResults(String sortBy) {
+		return "id".equals(sortBy) || "name".equals(sortBy);
+	}
+	
+	private List<ClosedCompetitionSubmittedApplicationSummaryResource> closedCompetitionSubmittedSortAndRestrictResults(List<Application> resultsList, Pageable pageable, String sortBy) {
 		return resultsList.stream()
-				.map(closedCompetitionApplicationSummaryMapper::mapToResource)
+				.map(closedCompetitionSubmittedApplicationSummaryMapper::mapToResource)
 				.sorted((i1, i2) -> {
 					if("numberOfPartners".equals(sortBy)) {
-						return new ClosedCompetitionApplicationSummaryNumberOfPartnersComparator().compare(i1, i2);
+						return new ClosedCompetitionSubmittedApplicationSummaryNumberOfPartnersComparator().compare(i1, i2);
 					} else if("lead".equals(sortBy)) {
-						return new ClosedCompetitionApplicationSummaryLeadComparator().compare(i1, i2);
+						return new ClosedCompetitionSubmittedApplicationSummaryLeadComparator().compare(i1, i2);
 					} else if("grantRequested".equals(sortBy)) {
-						return new ClosedCompetitionApplicationSummaryGrantRequestedComparator().compare(i1, i2);
+						return new ClosedCompetitionSubmittedApplicationSummaryGrantRequestedComparator().compare(i1, i2);
 					} else if("totalProjectCost".equals(sortBy)) {
-						return new ClosedCompetitionApplicationSummaryTotalProjectCostComparator().compare(i1, i2);
+						return new ClosedCompetitionSubmittedApplicationSummaryTotalProjectCostComparator().compare(i1, i2);
 					}
 					return 0;
+				})
+				.skip(pageable.getOffset())
+				.limit(pageable.getPageSize())
+				.collect(Collectors.toList());
+	}
+	
+	private List<ClosedCompetitionNotSubmittedApplicationSummaryResource> closedCompetitionNotSubmittedSortAndRestrictResults(List<Application> resultsList, Pageable pageable, String sortBy) {
+		return resultsList.stream()
+				.map(closedCompetitionNotSubmittedApplicationSummaryMapper::mapToResource)
+				.sorted((i1, i2) -> {
+					if("id".equals(sortBy)) {
+						return 0;
+					} else if("lead".equals(sortBy)) {
+						return new ClosedCompetitionNotSubmittedApplicationSummaryLeadComparator().compare(i1, i2);
+					}
+					return new ClosedCompetitionNotSubmittedApplicationSummaryPercentageCompleteComparator().compare(i1, i2);
 				})
 				.skip(pageable.getOffset())
 				.limit(pageable.getPageSize())
