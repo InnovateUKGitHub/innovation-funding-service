@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryResource;
+import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
@@ -26,10 +26,10 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.UserRoleType;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ClosedCompetitionApplicationSummaryMapperTest {
+public class ClosedCompetitionSubmittedApplicationSummaryMapperTest {
 
 	@InjectMocks
-	private ClosedCompetitionApplicationSummaryMapperImpl mapper;
+	private ClosedCompetitionSubmittedApplicationSummaryMapperImpl mapper;
 	
 	@Mock
 	private ApplicationFinanceRestService applicationFinanceRestService;
@@ -62,7 +62,7 @@ public class ClosedCompetitionApplicationSummaryMapperTest {
 		List<ApplicationFinanceResource> resources = Arrays.asList(resource);
 		when(applicationFinanceRestService.getApplicationFinances(Long.valueOf(123L))).thenReturn(restSuccess(resources));
 		
-		ClosedCompetitionApplicationSummaryResource result = mapper.mapToResource(source);
+		ClosedCompetitionSubmittedApplicationSummaryResource result = mapper.mapToResource(source);
 		
 		assertEquals(Long.valueOf(123L), result.getId());
 		assertEquals("appname", result.getName());

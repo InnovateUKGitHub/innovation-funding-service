@@ -1,13 +1,14 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 
@@ -33,7 +34,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	}
 
 	@Override
-	public RestResult<ClosedCompetitionApplicationSummaryPageResource> getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long competitionId, int pageNumber, String sortField) {
+	public RestResult<ClosedCompetitionSubmittedApplicationSummaryPageResource> getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long competitionId, int pageNumber, String sortField) {
 		String urlWithoutSortField = applicationSummaryRestUrl + "/findByClosedCompetition/" + competitionId + "/submitted?page=" + Integer.toString(pageNumber);
 		String url;
 		if(StringUtils.isEmpty(sortField)){
@@ -41,7 +42,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		} else {
 			url = urlWithoutSortField + "&sort=" + sortField;
 		}
-		return getWithRestResult(url, ClosedCompetitionApplicationSummaryPageResource.class);
+		return getWithRestResult(url, ClosedCompetitionSubmittedApplicationSummaryPageResource.class);
 	}
 
 	@Override
@@ -52,7 +53,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 
 	
 	@Override
-	public RestResult<ClosedCompetitionApplicationSummaryPageResource> getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long competitionId, int pageNumber, String sortField) {
+	public RestResult<ClosedCompetitionNotSubmittedApplicationSummaryPageResource> getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long competitionId, int pageNumber, String sortField) {
 		String urlWithoutSortField = applicationSummaryRestUrl + "/findByClosedCompetition/" + competitionId + "/not-submitted?page=" + Integer.toString(pageNumber);
 		String url;
 		if(StringUtils.isEmpty(sortField)){
@@ -60,7 +61,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		} else {
 			url = urlWithoutSortField + "&sort=" + sortField;
 		}
-		return getWithRestResult(url, ClosedCompetitionApplicationSummaryPageResource.class);
+		return getWithRestResult(url, ClosedCompetitionNotSubmittedApplicationSummaryPageResource.class);
 	}
 
 	@Override

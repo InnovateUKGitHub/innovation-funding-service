@@ -110,3 +110,15 @@ table img.table-tick {
     border: 1px solid #bfc1c3;
 		padding:10px 0;
 }
+
+#other-costs-table textarea,
+#other-costs-table input {
+	width:100%;
+	resize:vertical;
+}
+#other-costs-table td {
+	vertical-align:top;
+	&:first-child {
+		min-width:60%;
+	}
+}

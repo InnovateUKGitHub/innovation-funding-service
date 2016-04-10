@@ -2,7 +2,7 @@ package com.worth.ifs.application.resource;
 
 import java.math.BigDecimal;
 
-public class ClosedCompetitionApplicationSummaryResource {
+public class ClosedCompetitionSubmittedApplicationSummaryResource {
 
 	private Long id;
 	private String name;

@@ -15,7 +15,6 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
@@ -24,7 +23,6 @@ import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
@@ -281,14 +279,8 @@ public abstract class AbstractApplicationController extends BaseController {
     protected void addAssignableDetails(Model model, ApplicationResource application, OrganisationResource userOrganisation,
                                          Long userId, Optional<SectionResource> currentSection, Optional<Long> currentQuestionId) {
 
-        if(!application.isOpen() || userOrganisation == null){
-            //Application Not open, so add empty lists
-            model.addAttribute("assignableUsers", new ArrayList<ProcessRole>());
-            model.addAttribute("pendingAssignableUsers", new ArrayList<InviteResource>());
-            model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
-            model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
+        if (isApplicationInViewMode(model, application, userOrganisation))
             return;
-        }
 
         Map<Long, QuestionStatusResource> questionAssignees;
         if(currentQuestionId.isPresent()){
@@ -320,7 +312,19 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("notifications", notifications);
     }
 
-	private List<InviteResource> pendingInvitations(ApplicationResource application) {
+    private boolean isApplicationInViewMode(Model model, ApplicationResource application, OrganisationResource userOrganisation) {
+        if(!application.isOpen() || userOrganisation == null){
+            //Application Not open, so add empty lists
+            model.addAttribute("assignableUsers", new ArrayList<ProcessRole>());
+            model.addAttribute("pendingAssignableUsers", new ArrayList<InviteResource>());
+            model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
+            model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
+            return true;
+        }
+        return false;
+    }
+
+    private List<InviteResource> pendingInvitations(ApplicationResource application) {
         RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(application.getId());
 
         return pendingAssignableUsersResult.handleSuccessOrFailure(
