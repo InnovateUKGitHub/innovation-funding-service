@@ -2,9 +2,7 @@ package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -42,6 +40,6 @@ public interface UserService {
     @PreAuthorize("hasPermission(#hash, 'com.worth.ifs.token.domain.Token', 'READ')")
     ServiceResult<Void> checkPasswordResetHashValidity(@P("hash") String hash);
 
-    @PreAuthorize("hasPermission(#hash, 'com.worth.ifs.user.resource.UserResource', 'CHANGE_PASSWORD')")
+    @PreAuthorize("hasPermission(#hash, 'com.worth.ifs.token.domain.Token', 'CHANGE_PASSWORD')")
     ServiceResult<Void> changePassword(@P("hash") String hash, String password);
 }
