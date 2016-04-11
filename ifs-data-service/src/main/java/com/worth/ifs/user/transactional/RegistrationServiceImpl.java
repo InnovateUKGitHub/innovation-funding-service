@@ -3,6 +3,9 @@ package com.worth.ifs.user.transactional;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.authentication.service.IdentityProviderService;
+import com.worth.ifs.commons.error.CommonErrors;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
@@ -16,17 +19,23 @@ import com.worth.ifs.user.repository.CompAdminEmailRepository;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
 
+import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  * A service around Registration and general user-creation operations
@@ -86,14 +95,24 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<UserResource> createApplicantUser(Long organisationId, Optional<Long> competitionId, UserResource userResource) {
         String roleName;
         if(isUserCompAdmin(userResource.getEmail())){
-            roleName = UserRoleType.COMP_ADMIN.getName();
+            roleName = COMP_ADMIN.getName();
         } else {
-            roleName = UserRoleType.APPLICANT.getName();
+            roleName = APPLICANT.getName();
         }
         User newUser = assembleUserFromResource(userResource);
-        return addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
+        return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
                 addRoleToUser(user, roleName)).andOnSuccess(user ->
-                createUserWithUid(newUser, userResource.getPassword(), competitionId)).andOnSuccessReturn(userMapper::mapToResource);
+                createUserWithUid(newUser, userResource.getPassword(), competitionId))).andOnSuccessReturn(userMapper::mapToResource);
+    }
+
+    private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
+        if (inExclusionList(password, userResource)) {
+            return serviceFailure(new Error("INVALID_PASSWORD_EXCLUSION", BAD_REQUEST));
+        }
+    }
+
+    private boolean inExclusionList(String password, UserResource userResource) {
+        if ()
     }
 
     @Override
