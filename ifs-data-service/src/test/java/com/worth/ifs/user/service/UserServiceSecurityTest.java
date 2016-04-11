@@ -69,7 +69,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         // this method must remain unsecured because it is the way in which we get a user onto the
         // SecurityContext in the first place for permission checking
         service.getUserResourceByUid("asdf");
-        verifyNoMoreIteractionsWithRules();
+        verifyNoMoreInteractionsWithRules();
     }
 
     @Test
@@ -80,7 +80,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
         assertAccessDenied(() -> service.changePassword("hash", "newpassword"), () -> {
             verify(tokenRules).systemRegistrationUserCanUseTokensToResetPaswords(token, getLoggedInUser());
-            verifyNoMoreIteractionsWithRules();
+            verifyNoMoreInteractionsWithRules();
         });
     }
 
@@ -92,7 +92,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
         assertAccessDenied(() -> service.checkPasswordResetHashValidity("hash"), () -> {
             verify(tokenRules).systemRegistrationUserCanReadTokens(token, getLoggedInUser());
-            verifyNoMoreIteractionsWithRules();
+            verifyNoMoreInteractionsWithRules();
         });
     }
 
@@ -103,7 +103,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         assertAccessDenied(() -> service.sendPasswordResetNotification(user), () -> {
             verify(userRules).usersCanChangeTheirOwnPassword(user, getLoggedInUser());
             verify(userRules).systemRegistrationUserCanChangePasswordsForUsers(user, getLoggedInUser());
-            verifyNoMoreIteractionsWithRules();
+            verifyNoMoreInteractionsWithRules();
         });
     }
 
@@ -127,10 +127,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         verify(userRules, times(numberOfUsers)).compAdminsCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers)).consortiumMembersCanViewOtherConsortiumMembers(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers)).systemRegistrationUserCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
-        verifyNoMoreIteractionsWithRules();
+        verifyNoMoreInteractionsWithRules();
     }
 
-    private void verifyNoMoreIteractionsWithRules() {
+    private void verifyNoMoreInteractionsWithRules() {
         verifyNoMoreInteractions(tokenRules);
         verifyNoMoreInteractions(userRules);
     }

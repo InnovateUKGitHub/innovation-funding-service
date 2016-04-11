@@ -33,7 +33,7 @@ public class UserPermissionRules {
 
     private static Predicate<ProcessRole> assessorProcessRoleFilter = role -> role.getRole().getName().equals(ASSESSOR.getName());
 
-    @PermissionRule(value = "CREATE", description = "A System Registration User can create new Users")
+    @PermissionRule(value = "CREATE", description = "A System Registration User can create new Users on behalf of non-logged in users")
     public boolean systemRegistrationUserCanCreateUsers(UserResource userToCreate, UserResource user) {
         return isSystemRegistrationUser(user);
     }
