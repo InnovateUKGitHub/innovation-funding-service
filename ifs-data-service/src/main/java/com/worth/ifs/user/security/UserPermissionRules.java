@@ -55,11 +55,8 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "Consortium members (Lead Applicants and Collaborators) can view the others in their Consortium Teams on their various Applications")
     public boolean consortiumMembersCanViewOtherConsortiumMembers(UserResource userToView, UserResource user) {
-        List<Long> applicationRoles = user.getProcessRoles();
-        List<ProcessRole> processRoles = simpleMap(applicationRoles, processRoleRepository::findOne);
-        List<ProcessRole> processRolesWhereUserIsOnConsortium = simpleFilter(processRoles, consortiumProcessRoleFilter);
-        List<Application> applicationsWhereThisUserIsInConsortium = simpleMap(processRolesWhereUserIsOnConsortium, ProcessRole::getApplication);
-        List<ProcessRole> otherProcessRolesForThoseApplications = flattenLists(simpleMap(applicationsWhereThisUserIsInConsortium, Application::getProcessRoles));
+        List<Application> applicationsWhereThisUserIsInConsortium = getApplicationsRelatedToUserByProcessRoles(user, consortiumProcessRoleFilter);
+        List<ProcessRole> otherProcessRolesForThoseApplications = getAllProcessRolesForApplications(applicationsWhereThisUserIsInConsortium);
         List<ProcessRole> allConsortiumProcessRoles = simpleFilter(otherProcessRolesForThoseApplications, consortiumProcessRoleFilter);
         List<User> allConsortiumUsers = simpleMap(allConsortiumProcessRoles, ProcessRole::getUser);
         return simpleMap(allConsortiumUsers, User::getId).contains(userToView.getId());
@@ -67,11 +64,8 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "Assessors can view the members of individual Consortiums on the various Applications that they are assessing")
     public boolean assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(UserResource userToView, UserResource user) {
-        List<Long> applicationRoles = user.getProcessRoles();
-        List<ProcessRole> processRoles = simpleMap(applicationRoles, processRoleRepository::findOne);
-        List<ProcessRole> processRolesWhereUserIsAssessor = simpleFilter(processRoles, assessorProcessRoleFilter);
-        List<Application> applicationsThatThisUserIsAssessing = simpleMap(processRolesWhereUserIsAssessor, ProcessRole::getApplication);
-        List<ProcessRole> processRolesForAllApplications = flattenLists(simpleMap(applicationsThatThisUserIsAssessing, Application::getProcessRoles));
+        List<Application> applicationsThatThisUserIsAssessing = getApplicationsRelatedToUserByProcessRoles(user, assessorProcessRoleFilter);
+        List<ProcessRole> processRolesForAllApplications = getAllProcessRolesForApplications(applicationsThatThisUserIsAssessing);
         List<ProcessRole> allConsortiumProcessRoles = simpleFilter(processRolesForAllApplications, consortiumProcessRoleFilter);
         List<User> allConsortiumUsers = simpleMap(allConsortiumProcessRoles, ProcessRole::getUser);
         return simpleMap(allConsortiumUsers, User::getId).contains(userToView.getId());
@@ -95,6 +89,21 @@ public class UserPermissionRules {
     @PermissionRule(value = "UPDATE", description = "A User can update their own profile")
     public boolean usersCanUpdateTheirOwnProfiles(UserResource userToUpdate, UserResource user) {
         return userToUpdate.getId().equals(user.getId());
+    }
+
+    private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {
+        List<ProcessRole> applicableProcessRoles = getFilteredProcessRoles(user, processRoleFilter);
+        return simpleMap(applicableProcessRoles, ProcessRole::getApplication);
+    }
+
+    private List<ProcessRole> getFilteredProcessRoles(UserResource user, Predicate<ProcessRole> filter) {
+        List<Long> applicationRoles = user.getProcessRoles();
+        List<ProcessRole> processRoles = simpleMap(applicationRoles, processRoleRepository::findOne);
+        return simpleFilter(processRoles, filter);
+    }
+
+    private List<ProcessRole> getAllProcessRolesForApplications(List<Application> applicationsWhereThisUserIsInConsortium) {
+        return flattenLists(simpleMap(applicationsWhereThisUserIsInConsortium, Application::getProcessRoles));
     }
 
     private boolean isSystemRegistrationUser(UserResource user) {
