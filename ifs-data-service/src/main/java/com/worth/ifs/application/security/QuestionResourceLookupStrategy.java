@@ -5,7 +5,6 @@ import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.security.PermissionEntityLookupStrategies;
 import com.worth.ifs.security.PermissionEntityLookupStrategy;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

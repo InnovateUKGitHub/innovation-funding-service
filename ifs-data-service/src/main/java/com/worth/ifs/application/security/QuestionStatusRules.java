@@ -1,12 +1,9 @@
 package com.worth.ifs.application.security;
 
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
-
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 package com.worth.ifs.application.resource.comparators;
 
-import java.util.Comparator;
-
 import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryResource;
+
+import java.util.Comparator;
 
 public class ClosedCompetitionNotSubmittedApplicationSummaryPercentageCompleteComparator extends DualFieldComparator<Integer, Long> implements Comparator<ClosedCompetitionNotSubmittedApplicationSummaryResource> {
 
