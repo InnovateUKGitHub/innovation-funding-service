@@ -47,11 +47,11 @@
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 
-	<div class="sticky-zone">
+	<div class="grid-row">
 		
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 		
-		<div class="info-area">
+		<!-- <div class="info-area">
 			<section class="boxed">
 				<h3 class="heading-medium no-margin-top">Project setup stages</h3>
 				<ol class="list-number">
@@ -65,9 +65,9 @@
 					<li>Exported to _connect</li>
 				</ol>
 			</section>
-		</div>
+		</div> -->
 
-		<div class="data-area">
+		<div class="column-one">
 
 			<h2 class="heading-large">Projects in setup</h2>
 
@@ -80,14 +80,14 @@
 							<th scope="col" colspan="8" class="aligncentre">Project setup stage</th>
 						</tr>
 						<tr>
-							<th class="status" scope="col">1</th>
-							<th class="status" scope="col">2</th>
-							<th class="status" scope="col">3</th>
-							<th class="status" scope="col">4</th>
-							<th class="status" scope="col">5</th>
-							<th class="status" scope="col">6</th>
-							<th class="status" scope="col">7</th>
-							<th class="status" scope="col">8</th>
+							<th class="status" scope="col">Project details</th>
+							<th class="status" scope="col">MO</th>
+							<th class="status" scope="col">Bank details</th>
+							<th class="status" scope="col">Finance checks</th>
+							<th class="status" scope="col">Forecast / spend</th>
+							<th class="status" scope="col">Other docs</th>
+							<th class="status" scope="col">GOL</th>
+							<th class="status" scope="col">Complete</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -136,7 +136,7 @@
 							<td class="status">-</td>
 							<td class="status">-</td>
 						</tr>
-						<tr style="border-bottom: 2px solid black">
+						<tr class="project-divide">
 							<td><a href="#">Company E</a></td>
 							<td class="status ok">OK</td>
 							<td class="status na">&nbsp;</td>
