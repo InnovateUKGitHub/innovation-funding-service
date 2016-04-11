@@ -55,7 +55,7 @@
 
 
     <div id="selected-address" class="boxed extra-margin" style="display: none;">
-        <h3 class="heading-medium no-margin-top">Confirm project location</h3>
+        <h3 class="heading-medium no-margin-top" th:text="${(address != null and address == 'bankDetails' ? 'Confirm organisation address' : 'Confirm project location')}">LOCATION TITLE</h3>
         <p><span class="street">Street</span> <br />
             <span class="street2"></span> <br />
             <span class="street3"></span> <br />

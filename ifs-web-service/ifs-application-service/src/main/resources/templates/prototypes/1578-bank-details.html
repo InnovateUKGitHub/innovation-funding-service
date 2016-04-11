@@ -48,15 +48,15 @@
 				<label class="form-label" for="bank-sort-code">
 					<span class="form-label-bold">Sort code</span>
 				</label>
-				<p class="form-hint">For example: 31-12-12</p>
+				<p class="form-hint">For example: 311212</p>
 				<input class="form-control width-medium" id="bank-sort-code" name="bank-sort-code" value="" type="text" />
 			</div>
 
 			<h2 class="heading-large">Organisation address</h2>
 
-			<p class="form-hint">Please select your company's address.</p>
+			<p class="form-hint">Please select your organisation's address.</p>
 
-			<div th:include="prototypes/fragments/project-setup :: prototype-select-address" th:remove="tag" />
+			<div th:include="prototypes/fragments/project-setup :: prototype-select-address" th:with="address='bankDetails'" th:remove="tag" />
 
 		</fieldset>
 
