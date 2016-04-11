@@ -1,7 +1,6 @@
 package com.worth.ifs;
 
 import com.worth.ifs.application.AbstractApplicationController;
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationSummaryRestService;
