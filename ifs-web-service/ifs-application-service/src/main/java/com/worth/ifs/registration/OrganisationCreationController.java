@@ -246,7 +246,7 @@ public class OrganisationCreationController {
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-        return "redirect:/organisation/create/" + FIND_ORGANISATION + "/" + organisationForm.getOrganisationSearchName();
+        return "redirect:/organisation/create/" + FIND_ORGANISATION + "/results";
     }
 
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = NOT_IN_COMPANY_HOUSE, method = RequestMethod.POST)
