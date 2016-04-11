@@ -6,6 +6,7 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +20,6 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
-import static org.springframework.data.domain.Sort.Direction.ASC;
 import org.springframework.data.domain.Sort.Order;
 
 import com.google.common.collect.Lists;
@@ -27,8 +27,15 @@ import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.mapper.ApplicationSummaryMapper;
 import com.worth.ifs.application.mapper.ApplicationSummaryPageMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionNotSubmittedApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionNotSubmittedApplicationSummaryPageMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionSubmittedApplicationSummaryMapper;
+import com.worth.ifs.application.mapper.ClosedCompetitionSubmittedApplicationSummaryPageMapper;
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.ApplicationSummaryResource;
+import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryResource;
+import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryPageResource;
 import com.worth.ifs.commons.service.ServiceResult;
 
 public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
@@ -43,6 +50,18 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
 	@Mock
 	private ApplicationSummaryPageMapper applicationSummaryPageMapper;
+	
+	@Mock
+	private ClosedCompetitionSubmittedApplicationSummaryMapper closedCompetitionSubmittedApplicationSummaryMapper;
+	
+	@Mock
+	private ClosedCompetitionSubmittedApplicationSummaryPageMapper closedCompetitionSubmittedApplicationSummaryPageMapper;
+	
+	@Mock
+	private ClosedCompetitionNotSubmittedApplicationSummaryMapper closedCompetitionNotSubmittedApplicationSummaryMapper;
+	
+	@Mock
+	private ClosedCompetitionNotSubmittedApplicationSummaryPageMapper closedCompetitionNotSubmittedApplicationSummaryPageMapper;
 
 	@Test
 	public void findByCompetitionNoSortWillSortByPercentageCompleteDescending() throws Exception {
@@ -84,7 +103,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		
 		when(applicationRepositoryMock.findByCompetitionId(COMP_ID)).thenReturn(applications);
 		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 0, "penguin");
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 0, "status");
 		
 		assertTrue(result.isSuccess());
 		assertEquals(0, result.getSuccessObject().getNumber());
@@ -123,22 +142,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 		
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 6, "name");
-		
-		assertTrue(result.isSuccess());
-		assertEquals(resource, result.getSuccessObject());
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void findByCompetitionSortByStatus() throws Exception {
-
-		Page<Application> page = mock(Page.class);
-		when(applicationRepositoryMock.findByCompetitionId(eq(COMP_ID), argThat(new PageableMatcher(6, 20, srt("applicationStatus.name", ASC), srt("id", ASC))))).thenReturn(page);
-
-		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
-		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
-		
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, 6, "status");
 		
 		assertTrue(result.isSuccess());
 		assertEquals(resource, result.getSuccessObject());
@@ -394,6 +397,50 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		assertEquals(sum3, result.getSuccessObject().getContent().get(2));
 	}
 	
+	@Test
+	public void findByClosedCompetitionNotSubmittedApplications() throws Exception {
+
+		Application app1 = mock(Application.class);
+		Application app2 = mock(Application.class);
+		List<Application> applications = Arrays.asList(app1, app2);
+		
+		ClosedCompetitionNotSubmittedApplicationSummaryResource sum1 = closedAppSumPercentage(25);
+		ClosedCompetitionNotSubmittedApplicationSummaryResource sum2 = closedAppSumPercentage(50);
+		when(closedCompetitionNotSubmittedApplicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
+		when(closedCompetitionNotSubmittedApplicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
+		
+		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdNotIn(COMP_ID, Arrays.asList(3L,4L,2L))).thenReturn(applications);
+		
+		ServiceResult<ClosedCompetitionNotSubmittedApplicationSummaryPageResource> result = applicationSummaryService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMP_ID, 0, null);
+		
+		assertTrue(result.isSuccess());
+		assertEquals(0, result.getSuccessObject().getNumber());
+		assertEquals(2, result.getSuccessObject().getContent().size());
+		assertEquals(sum2, result.getSuccessObject().getContent().get(0));
+		assertEquals(sum1, result.getSuccessObject().getContent().get(1));
+		assertEquals(20, result.getSuccessObject().getSize());
+		assertEquals(2, result.getSuccessObject().getTotalElements());
+		assertEquals(1, result.getSuccessObject().getTotalPages());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void findByClosedCompetitionSubmittedApplications() throws Exception {
+
+		Page<Application> page = mock(Page.class);
+
+		ClosedCompetitionSubmittedApplicationSummaryPageResource resource = mock(ClosedCompetitionSubmittedApplicationSummaryPageResource.class);
+		when(closedCompetitionSubmittedApplicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
+		
+		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(eq(COMP_ID), eq(Arrays.asList(3L,4L,2L)), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+		
+		ServiceResult<ClosedCompetitionSubmittedApplicationSummaryPageResource> result = applicationSummaryService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMP_ID, 0, null);
+		
+		assertTrue(result.isSuccess());
+		assertEquals(0, result.getSuccessObject().getNumber());
+		assertEquals(resource, result.getSuccessObject());
+	}
+	
 	private ApplicationSummaryResource sumLead(String lead) {
 		ApplicationSummaryResource res = new ApplicationSummaryResource();
 		res.setLead(lead);
@@ -416,6 +463,12 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		ApplicationSummaryResource res = sumPercentage(percentage);
 		res.setId(id);
 		return res;
+	}
+	
+	private ClosedCompetitionNotSubmittedApplicationSummaryResource closedAppSumPercentage(Integer completedPercentage) {
+		ClosedCompetitionNotSubmittedApplicationSummaryResource resource = new ClosedCompetitionNotSubmittedApplicationSummaryResource();
+		resource.setCompletedPercentage(completedPercentage);
+		return resource;
 	}
 	
 	private Sort srt(String field, Direction dir){

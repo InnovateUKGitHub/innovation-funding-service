@@ -9,8 +9,7 @@ public class ApplicationSummaryResource {
     private Long id;
     private String name;
     private String lead;
-    private Long applicationStatus;
-    private String applicationStatusName;
+    private String status;
     private Integer completedPercentage;
 	public Long getId() {
 		return id;
@@ -32,17 +31,11 @@ public class ApplicationSummaryResource {
 	public void setLead(String lead) {
 		this.lead = lead;
 	}
-	public Long getApplicationStatus() {
-		return applicationStatus;
+	public String getStatus() {
+		return status;
 	}
-	public void setApplicationStatus(Long applicationStatus) {
-		this.applicationStatus = applicationStatus;
-	}
-	public String getApplicationStatusName() {
-		return applicationStatusName;
-	}
-	public void setApplicationStatusName(String applicationStatusName) {
-		this.applicationStatusName = applicationStatusName;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	public Integer getCompletedPercentage() {
 		return completedPercentage;

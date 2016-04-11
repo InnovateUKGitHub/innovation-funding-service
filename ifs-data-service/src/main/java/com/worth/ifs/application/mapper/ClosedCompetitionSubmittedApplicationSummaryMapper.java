@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryResource;
+import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryResource;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -16,14 +16,14 @@ import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 
 @Mapper(config = GlobalMapperConfig.class)
-public abstract class ClosedCompetitionApplicationSummaryMapper {
+public abstract class ClosedCompetitionSubmittedApplicationSummaryMapper {
 
 	@Autowired
 	private ApplicationFinanceRestService applicationFinanceRestService;
 	
-	public ClosedCompetitionApplicationSummaryResource mapToResource(Application source){
+	public ClosedCompetitionSubmittedApplicationSummaryResource mapToResource(Application source){
 		
-		ClosedCompetitionApplicationSummaryResource result = new ClosedCompetitionApplicationSummaryResource();
+		ClosedCompetitionSubmittedApplicationSummaryResource result = new ClosedCompetitionSubmittedApplicationSummaryResource();
 		
 		result.setId(source.getId());
 		result.setLead(source.getLeadOrganisation().getName());
@@ -45,7 +45,7 @@ public abstract class ClosedCompetitionApplicationSummaryMapper {
 
 	private BigDecimal getTotalProjectCost(RestResult<List<ApplicationFinanceResource>> applicationFinancesResult) {
 		if(applicationFinancesResult.isFailure()){
-			return null;
+			return BigDecimal.ZERO;
 		}
 		List<ApplicationFinanceResource> result = applicationFinancesResult.getSuccessObject();
 		
@@ -54,7 +54,7 @@ public abstract class ClosedCompetitionApplicationSummaryMapper {
 
 	private BigDecimal getGrantRequested(RestResult<List<ApplicationFinanceResource>> applicationFinancesResult) {
 		if(applicationFinancesResult.isFailure()){
-			return null;
+			return BigDecimal.ZERO;
 		}
 		List<ApplicationFinanceResource> result = applicationFinancesResult.getSuccessObject();
 		

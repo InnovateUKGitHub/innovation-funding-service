@@ -3,14 +3,11 @@ package com.worth.ifs.application.controller;
 import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.worth.ifs.user.resource.RoleResource;
-import com.worth.ifs.user.resource.UserResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,11 +19,14 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryPageResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.RoleResource;
+import com.worth.ifs.user.resource.UserResource;
 
 @Rollback
 public class ApplicationSummaryControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationSummaryController> {
@@ -93,7 +93,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(6, result.getSuccessObject().getTotalElements());
         assertEquals(1, result.getSuccessObject().getTotalPages());
         assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getContent().get(0).getId());
-        assertEquals(ApplicationStatusConstants.OPEN.getName(), result.getSuccessObject().getContent().get(0).getApplicationStatusName());
+        assertEquals("Started", result.getSuccessObject().getContent().get(0).getStatus());
         assertEquals("A novel solution to an old problem", result.getSuccessObject().getContent().get(0).getName());
         assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
         assertEquals(Integer.valueOf(36), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
@@ -101,7 +101,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     
     @Test
     public void testApplicationSummariesByClosedCompetitionId() throws Exception {
-        RestResult<ClosedCompetitionApplicationSummaryPageResource> result = controller.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null);
+        RestResult<ClosedCompetitionSubmittedApplicationSummaryPageResource> result = controller.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null);
         
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -112,7 +112,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     
     @Test
     public void testNotSubmittedApplicationSummariesByClosedCompetitionId() throws Exception {
-        RestResult<ClosedCompetitionApplicationSummaryPageResource> result = controller.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null);
+        RestResult<ClosedCompetitionNotSubmittedApplicationSummaryPageResource> result = controller.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null);
         
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -120,10 +120,8 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(1, result.getSuccessObject().getTotalElements());
         assertEquals(1, result.getSuccessObject().getTotalPages());
         assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getContent().get(0).getId());
-        assertNull(result.getSuccessObject().getContent().get(0).getTotalProjectCost());
-        assertNull(result.getSuccessObject().getContent().get(0).getGrantRequested());
+        assertEquals(Integer.valueOf(36), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
         assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
-        assertEquals(Integer.valueOf(5), result.getSuccessObject().getContent().get(0).getNumberOfPartners());
     }
 
 }

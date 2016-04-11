@@ -1,18 +1,5 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.domain.UserRoleType;
-import com.worth.ifs.user.resource.RoleResource;
-import org.junit.Test;
-import org.springframework.security.access.AccessDeniedException;
-
-import java.util.List;
-
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
@@ -20,6 +7,21 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.fail;
+
+import java.util.List;
+
+import org.junit.Test;
+import org.springframework.security.access.AccessDeniedException;
+
+import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.RoleResource;
 
 public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTest<ApplicationSummaryService> {
 
@@ -184,13 +186,13 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 		}
 
 		@Override
-		public ServiceResult<ClosedCompetitionApplicationSummaryPageResource> getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
+		public ServiceResult<ClosedCompetitionSubmittedApplicationSummaryPageResource> getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
 				Long competitionId, int pageIndex, String sortBy) {
 			return null;
 		}
 
 		@Override
-		public ServiceResult<ClosedCompetitionApplicationSummaryPageResource> getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
+		public ServiceResult<ClosedCompetitionNotSubmittedApplicationSummaryPageResource> getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
 				Long competitionId, int pageIndex, String sortBy) {
 			return null;
 		}

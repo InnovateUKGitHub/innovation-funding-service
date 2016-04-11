@@ -71,45 +71,58 @@ public class AcceptInviteController extends BaseController {
         RestResult<InviteResource> invite = inviteRestService.getInviteByHash(hash);
         CookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
 
-        if (invite.isSuccess()) {
+        if (!invite.isSuccess()) {
+            handleInvalidInvite(response);
+            return "never should get here because of exception.";
+        } else {
             InviteResource inviteResource = invite.getSuccessObject();
-            if (InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
-                // check if there already is a user with this emailaddress
-                RestResult existingUserSearch = userService.findUserByEmail(inviteResource.getEmail());
-                model.addAttribute("invite", inviteResource);
+            if (!InviteStatusConstants.SEND.equals(inviteResource.getStatus())) {
+                return handleAcceptedInvite(cookieFlashMessageFilter, response);
+            } else {
                 CookieUtil.saveToCookie(response, INVITE_HASH, hash);
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
+                // check if there already is a user with this emailaddress
+                RestResult existingUserSearch = userService.findUserByEmail(inviteResource.getEmail());
                 // User already registered?
-                if (existingUserSearch.isSuccess()) {
-                    model.addAttribute("emailAddressRegistered", "true");
+                String redirectUrl = handleExistingUser(hash, response, request, model, inviteResource, existingUserSearch, inviteOrganisation);
+                if (redirectUrl != null) return redirectUrl;
 
-                    UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
-                    if (loggedInUser != null) {
-                        if (AcceptInviteAuthenticatedController.invalidInvite(model, loggedInUser, inviteResource, inviteOrganisation)) {
-                            return "registration/accept-invite-failure";
-                        }else{
-                            CookieUtil.saveToCookie(response, INVITE_HASH, hash);
-                            return "redirect:/accept-invite-authenticated/confirm-invited-organisation";
-                        }
-                    }
-                }
-
-
-                if (inviteOrganisation.getOrganisation() != null) {
-                    model.addAttribute("createAccountLink", "/accept-invite/confirm-invited-organisation");
-                } else {
-                    model.addAttribute("createAccountLink", "/organisation/create/type/new-account-organisation-type");
-                }
+                model.addAttribute("invite", inviteResource);
+                addCreateAccountURL(model, inviteOrganisation);
                 return "registration/accept-invite";
-            } else {
-                CookieUtil.removeCookie(response, INVITE_HASH);
-                cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
-                return "redirect:/login";
             }
+        }
+    }
+
+    protected static String handleAcceptedInvite(CookieFlashMessageFilter cookieFlashMessageFilter, HttpServletResponse response) {
+        CookieUtil.removeCookie(response, INVITE_HASH);
+        cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
+        return "redirect:/login";
+    }
+
+    private String handleExistingUser(@PathVariable("hash") String hash, HttpServletResponse response, HttpServletRequest request, Model model, InviteResource inviteResource, RestResult existingUserSearch, InviteOrganisationResource inviteOrganisation) {
+        if (existingUserSearch.isSuccess()) {
+            model.addAttribute("emailAddressRegistered", "true");
+
+            UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
+            if (loggedInUser != null) {
+                if (AcceptInviteAuthenticatedController.invalidInvite(model, loggedInUser, inviteResource, inviteOrganisation)) {
+                    return "registration/accept-invite-failure";
+                }else{
+                    CookieUtil.saveToCookie(response, INVITE_HASH, hash);
+                    return "redirect:/accept-invite-authenticated/confirm-invited-organisation";
+                }
+            }
+        }
+        return null;
+    }
+
+    private void addCreateAccountURL(Model model, InviteOrganisationResource inviteOrganisation) {
+        if (inviteOrganisation.getOrganisation() != null) {
+            model.addAttribute("createAccountLink", "/accept-invite/confirm-invited-organisation");
         } else {
-            CookieUtil.removeCookie(response, INVITE_HASH);
-            throw new InvalidURLException("Invite url is not valid", null);
+            model.addAttribute("createAccountLink", "/organisation/create/type/new-account-organisation-type");
         }
     }
 
@@ -125,20 +138,22 @@ public class AcceptInviteController extends BaseController {
                 OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
 
                 model.addAttribute("invite", inviteResource);
-                model.addAttribute("inviteOrganisation", inviteOrganisation);
                 model.addAttribute("organisation", organisation);
                 model.addAttribute("organisationAddress", getOrganisationAddress(organisation));
                 model.addAttribute("registerUrl", RegistrationController.BASE_URL + "?" + RegistrationController.ORGANISATION_ID_PARAMETER_NAME + "=" + inviteOrganisation.getOrganisation());
                 return "registration/confirm-invited-organisation";
             } else {
-                CookieUtil.removeCookie(response, INVITE_HASH);
-                cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
-                return "redirect:/login";
+                return handleAcceptedInvite(cookieFlashMessageFilter, response);
             }
-        } else {
-            CookieUtil.removeCookie(response, INVITE_HASH);
-            throw new InvalidURLException("Invite url is not valid", null);
+        }else{
+            handleInvalidInvite(response);
         }
+        return "";
+    }
+
+    protected static void handleInvalidInvite(HttpServletResponse response) throws InvalidURLException{
+        CookieUtil.removeCookie(response, INVITE_HASH);
+        throw new InvalidURLException("Invite url is not valid", null);
     }
 
     /**
