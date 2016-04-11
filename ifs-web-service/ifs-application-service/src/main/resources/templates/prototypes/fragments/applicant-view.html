@@ -570,7 +570,7 @@
 
     </div>
 
-    <div th:if="${param.status != null} and ${param.status[0] == 'successfulFeedback'} or ${param.status != null} and ${param.status[0] == 'unsuccessfulFeedback'}" th:remove="tag">
+    <div th:if="${param.status != null} and (${param.status[0] == 'successfulFeedback'} or ${param.status[0] == 'unsuccessfulFeedback'} or ${param.status[0] == 'setup'})" th:remove="tag">
 
         <div class="form-group download extra-margin">
             <h3 class="heading-small no-margin">View your application feedback:</h3>
