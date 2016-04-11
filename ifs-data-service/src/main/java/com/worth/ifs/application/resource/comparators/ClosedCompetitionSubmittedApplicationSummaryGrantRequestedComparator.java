@@ -1,9 +1,9 @@
 package com.worth.ifs.application.resource.comparators;
 
+import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryResource;
+
 import java.math.BigDecimal;
 import java.util.Comparator;
-
-import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryResource;
 
 /**
  * Camporator, handling nulls, and using id if grant requested is equal.

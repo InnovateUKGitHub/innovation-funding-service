@@ -1,12 +1,9 @@
 package com.worth.ifs;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.worth.ifs.exception.CommonErrorControllerAdvice;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-
-import com.worth.ifs.exception.CommonErrorControllerAdvice;
 
 /**
  * This controller can handle all Exceptions, so the user should always gets a
@@ -15,8 +12,6 @@ import com.worth.ifs.exception.CommonErrorControllerAdvice;
  */
 @ControllerAdvice
 public class ErrorControllerAdvice extends CommonErrorControllerAdvice {
-    private static final Log LOG = LogFactory.getLog(ErrorControllerAdvice.class);
-
     public ErrorControllerAdvice() {
         super();
     }
