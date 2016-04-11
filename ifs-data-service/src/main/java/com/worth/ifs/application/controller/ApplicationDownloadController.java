@@ -1,6 +1,5 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.transactional.ApplicationSummaryService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -32,6 +31,8 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
+
 @RestController
 @RequestMapping("/application/download")
 public class ApplicationDownloadController {
@@ -47,9 +48,8 @@ public class ApplicationDownloadController {
 
     @RequestMapping("/downloadByCompetition/{competitionId}")
     public @ResponseBody ResponseEntity<ByteArrayResource> getDownloadByCompetitionId(@PathVariable("competitionId") Long competitionId) throws IOException {
-        ApplicationStatusConstants status = ApplicationStatusConstants.SUBMITTED;
-        List<Application> applications = applicationSummaryService.getApplicationSummariesByCompetitionIdAndStatus(competitionId, status.getId());
-        LOG.info(String.format("Generate download for %s applications with status %s ", applications.size(), status.getName()));
+        List<Application> applications = applicationSummaryService.getApplicationSummariesByCompetitionIdAndStatus(competitionId, SUBMITTED_STATUS_IDS);
+        LOG.info(String.format("Generate download for %s applications with status ", applications.size()));
 
         HSSFWorkbook wb = getExcelWorkbook(applications);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
