@@ -17,7 +17,7 @@ Excel export
     Given the user navigates to the page    ${COMP_ADMINISTRATOR}
     When the admin downloads the excel
     And user opens the excel and checks the content
-    [Teardown]    Then empty the download directory
+    [Teardown]    Empty the download directory
 
 *** Keywords ***
 Empty the download directory
