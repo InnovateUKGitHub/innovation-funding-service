@@ -15,7 +15,6 @@ import java.util.Set;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.service.Futures.settable;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
