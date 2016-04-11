@@ -174,7 +174,7 @@
                        th:value="${cost.labourDays}"
                         />
             </td>
-            <td rowspan="2" th:unless="${complete == 'complete'}">
+            <td rowspan="2" class="rowspan" th:unless="${complete == 'complete'}">
                 <button type="submit"
                         name="remove_cost"
                         class="buttonlink js-remove-row"
@@ -184,7 +184,7 @@
             </td>
         </tr>
         <tr th:attr="data-repeatable-row=${cost.id}">
-            <td colspan="4" class="numeric">
+            <td colspan="4" class="numeric colspan">
                 <label th:for="${'cost-labour-'+cost.id+'-labourTotalCost'}">Total costs</label>
                 <input type="text"
                        class="form-control width-medium"
