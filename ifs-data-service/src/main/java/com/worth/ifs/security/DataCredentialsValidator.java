@@ -6,6 +6,7 @@ import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class DataCredentialsValidator implements CredentialsValidator {
 
     @Autowired
+    @Lazy
     private UserService userService;
 
     @Override

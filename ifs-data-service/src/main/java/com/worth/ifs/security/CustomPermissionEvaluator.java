@@ -171,6 +171,11 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     @Override
     public boolean hasPermission(final Authentication authentication, final Object targetDomainObject, final Object permission) {
+
+        if (targetDomainObject == null) {
+            return true;
+        }
+
         Class<?> dtoClass = targetDomainObject.getClass();
         ListOfMethods methodsToCheck =
                 rulesMap.getOrDefault(dtoClass, emptyPermissions())

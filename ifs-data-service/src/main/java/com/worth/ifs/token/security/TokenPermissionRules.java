@@ -3,7 +3,6 @@ package com.worth.ifs.token.security;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.token.domain.Token;
-import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +24,11 @@ public class TokenPermissionRules {
 
     @PermissionRule(value = "READ", description = "The System Registration user can read Tokens in order to verify them on behalf of a non-logged in user")
     public boolean systemRegistrationUserCanReadTokensOptional(Optional<Token> token, UserResource user) {
+        return isSystemRegistrationUser(user);
+    }
+
+    @PermissionRule(value = "CHANGE_PASSWORD", description = "The System Registration user can use a Token to change a password on behalf of a non-logged in user")
+    public boolean systemRegistrationUserCanUseTokensToResetPaswords(Token token, UserResource user) {
         return isSystemRegistrationUser(user);
     }
 
