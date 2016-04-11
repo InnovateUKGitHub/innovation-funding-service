@@ -2,7 +2,8 @@
 package com.worth.ifs;
 
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.CompetitionService;
@@ -112,7 +113,7 @@ public class CompetitionManagementControllerTest  {
     	competitionSummaryResource.setCompetitionStatus(Status.IN_ASSESSMENT);
     	 
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-    	ClosedCompetitionApplicationSummaryPageResource summary = new ClosedCompetitionApplicationSummaryPageResource();
+    	ClosedCompetitionSubmittedApplicationSummaryPageResource summary = new ClosedCompetitionSubmittedApplicationSummaryPageResource();
 
     	when(applicationSummaryService.findByCompetitionId(COMPETITION_ID, 0, null)).thenReturn(resource);
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
@@ -137,7 +138,7 @@ public class CompetitionManagementControllerTest  {
     	competitionSummaryResource.setCompetitionStatus(Status.IN_ASSESSMENT);
     	 
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-    	ClosedCompetitionApplicationSummaryPageResource summary = new ClosedCompetitionApplicationSummaryPageResource();
+    	ClosedCompetitionSubmittedApplicationSummaryPageResource summary = new ClosedCompetitionSubmittedApplicationSummaryPageResource();
 
     	when(applicationSummaryService.findByCompetitionId(COMPETITION_ID, 0, null)).thenReturn(resource);
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
@@ -162,7 +163,7 @@ public class CompetitionManagementControllerTest  {
     	competitionSummaryResource.setCompetitionStatus(Status.IN_ASSESSMENT);
     	 
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-    	ClosedCompetitionApplicationSummaryPageResource summary = new ClosedCompetitionApplicationSummaryPageResource();
+    	ClosedCompetitionNotSubmittedApplicationSummaryPageResource summary = new ClosedCompetitionNotSubmittedApplicationSummaryPageResource();
 
     	when(applicationSummaryService.findByCompetitionId(COMPETITION_ID, 0, null)).thenReturn(resource);
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
