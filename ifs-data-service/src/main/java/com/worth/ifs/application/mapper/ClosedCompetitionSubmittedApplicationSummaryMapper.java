@@ -1,7 +1,6 @@
 package com.worth.ifs.application.mapper;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
@@ -9,17 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryResource;
+import com.worth.ifs.application.transactional.ApplicationSummarisationService;
 import com.worth.ifs.commons.mapper.GlobalMapperConfig;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.service.ApplicationFinanceRestService;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.ProcessRole;
 
 @Mapper(config = GlobalMapperConfig.class)
 public abstract class ClosedCompetitionSubmittedApplicationSummaryMapper {
 
 	@Autowired
-	private ApplicationFinanceRestService applicationFinanceRestService;
+	private ApplicationSummarisationService applicationSummarisationService;
 	
 	public ClosedCompetitionSubmittedApplicationSummaryResource mapToResource(Application source){
 		
@@ -30,41 +28,31 @@ public abstract class ClosedCompetitionSubmittedApplicationSummaryMapper {
 		result.setName(source.getName());
 		result.setDuration(source.getDurationInMonths());
 		
-		RestResult<List<ApplicationFinanceResource>> applicationFinancesResult = applicationFinanceRestService.getApplicationFinances(source.getId());
 		
-		BigDecimal grantRequested = getGrantRequested(applicationFinancesResult);
+		BigDecimal grantRequested = getGrantRequested(source);
 		result.setGrantRequested(grantRequested);
 		
 		int numberOfPartners = source.getProcessRoles().stream().collect(Collectors.groupingBy(ProcessRole::getOrganisation)).size();
 		result.setNumberOfPartners(numberOfPartners);
 		
-		BigDecimal totalProjectCost = getTotalProjectCost(applicationFinancesResult);
+		BigDecimal totalProjectCost = getTotalProjectCost(source);
 		result.setTotalProjectCost(totalProjectCost);
 		return result;
 	}
 
-	private BigDecimal getTotalProjectCost(RestResult<List<ApplicationFinanceResource>> applicationFinancesResult) {
-		if(applicationFinancesResult.isFailure()){
+	private BigDecimal getTotalProjectCost(Application source) {
+		ServiceResult<BigDecimal> totalCostResult = applicationSummarisationService.getTotalProjectCost(source);
+		if(totalCostResult.isFailure()){
 			return BigDecimal.ZERO;
 		}
-		List<ApplicationFinanceResource> result = applicationFinancesResult.getSuccessObject();
-		
-		return result.stream().map(res -> res.getTotal()).reduce((i, j) -> i.add(j)).get();
+		return totalCostResult.getSuccessObject();
 	}
 
-	private BigDecimal getGrantRequested(RestResult<List<ApplicationFinanceResource>> applicationFinancesResult) {
-		if(applicationFinancesResult.isFailure()){
+	private BigDecimal getGrantRequested(Application source) {
+		ServiceResult<BigDecimal> fundingSoughtResult = applicationSummarisationService.getFundingSought(source);
+		if(fundingSoughtResult.isFailure()){
 			return BigDecimal.ZERO;
 		}
-		List<ApplicationFinanceResource> result = applicationFinancesResult.getSuccessObject();
-		
-		return result.stream().map(res -> {
-			if(res.getGrantClaim() != null){
-				return res.getGrantClaim().getTotal();
-			}
-			return BigDecimal.ZERO;
-		}).reduce((i, j) -> {
-			return i.add(j);
-		}).get();
+		return fundingSoughtResult.getSuccessObject();
 	}
 }
