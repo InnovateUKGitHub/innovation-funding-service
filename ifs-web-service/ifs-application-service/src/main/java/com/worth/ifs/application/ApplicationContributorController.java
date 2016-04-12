@@ -309,7 +309,7 @@ public class ApplicationContributorController{
         contributorsForm.getOrganisations().forEach(o -> o.getInvites().forEach(i -> {
             if(!savedEmails.add(i.getEmail())){
                 // Could not add the element, so its a duplicate.
-                FieldError fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].email", contributorsForm.getOrganisations().indexOf(o), o.getInvites().indexOf(i)), i.getEmail(), false, new String[]{"NotUnique"}, null, "may not be duplicate");
+                FieldError fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].email", contributorsForm.getOrganisations().indexOf(o), o.getInvites().indexOf(i)), i.getEmail(), false, new String[]{"NotUnique"}, null, "You have already added this email address.");
                 bindingResult.addError(fieldError);
             }
         }));

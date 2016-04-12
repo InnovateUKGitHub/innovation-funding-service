@@ -48,12 +48,19 @@ IFS.invites = (function(){
           var orgContainer = jQuery(e.target).closest('[data-invite-org]');
           var orgId = orgContainer.index();
           var rowId = orgContainer.find('[data-invite-row]').length;
-          var html = '<tr class="form-group" data-invite-row>\
-                        <td><input type="text" class="form-control width-full" value="" placeholder="name" name="organisations['+orgId+'].invites['+rowId+'].personName" /></td>\
-                        <td><input type="email" class="form-control width-full" value="" placeholder="name@company.co.uk" name="organisations['+orgId+'].invites['+rowId+'].email" /></td>\
+          var html = '<tr data-invite-row>\
+                        <td class="form-group">\
+                          <label for="organisations'+orgId+'.invites'+rowId+'.personName"><span class="visuallyhidden">Name</span></label>\
+                          <input type="text" id="organisations'+orgId+'.invites'+rowId+'.personName" class="form-control width-full" value="" placeholder="name" name="organisations['+orgId+'].invites['+rowId+'].personName" required />\
+                        </td>\
+                        <td class="form-group">\
+                          <label for="organisations'+orgId+'.invites'+rowId+'.email"><span class="visuallyhidden">Email</span></label>\
+                          <input type="email" class="form-control width-full" value="" placeholder="name@company.co.uk" name="organisations['+orgId+'].invites['+rowId+'].email" required />\
+                        </td>\
                         <td class="alignright"><button value="'+orgId+'_'+rowId+'" name="remove_person" type="submit" class="remove-another-row buttonlink">Remove</button></td>\
                       </tr>';
           orgContainer.find('tbody').append(html);
+          jQuery('[id="organisations'+orgId+'.invites'+rowId+'.personName"]').focus();
           IFS.invites.saveToCookie();
       },
       addOrg : function(e){
@@ -63,8 +70,8 @@ IFS.invites = (function(){
         var html = '<li data-invite-org>\
                       <h2 class="heading-medium">Partner Organisation<span></span></h2>\
                       <div class="form-group">\
-                        <label for="organisations['+orgId+'].organisationName" class="form-label">Organisation Name</label>\
-                        <input type="text" value="" name="organisations['+orgId+'].organisationName"  placeholder="Name of the partner company" class="form-control js-partner-name">\
+                        <label for="organisations'+orgId+'.organisationName" class="form-label"><span>Organisation Name</span></label>\
+                        <input type="text" id="organisations'+orgId+'.organisationName" value="" name="organisations['+orgId+'].organisationName"  placeholder="Name of the partner company" class="form-control js-partner-name" required>\
                       </div>\
                           <table>\
                               <thead><tr>\
@@ -73,9 +80,15 @@ IFS.invites = (function(){
                                   <th>&nbsp;</th>\
                               </tr></thead>\
                               <tbody>\
-                              <tr data-invite-row class="form-group">\
-                                  <td><input type="text" value="" name="organisations['+orgId+'].invites[0].personName"  placeholder="name" class="form-control width-full"></td>\
-                                  <td><input type="email" value="" name="organisations['+orgId+'].invites[0].email" placeholder="name@company.co.uk" class="form-control width-full"></td>\
+                              <tr data-invite-row>\
+                                  <td class="form-group">\
+                                      <label for="organisations'+orgId+'.invites0.personName"><span class="visuallyhidden">Name</span></label>\
+                                      <input type="text" value="" id="organisations'+orgId+'.invites0.personName" name="organisations['+orgId+'].invites[0].personName"  placeholder="name" class="form-control width-full" required>\
+                                  </td>\
+                                  <td class="form-group">\
+                                      <label for="organisations'+orgId+'.invites0.email"><span class="visuallyhidden">Email</span></label>\
+                                      <input type="email" value="" id="organisations'+orgId+'.invites0.email" name="organisations['+orgId+'].invites[0].email" placeholder="name@company.co.uk" class="form-control width-full" required>\
+                                  </td>\
                                   <td class="alignright"><button value="'+orgId+'_0" name="remove_person" type="submit" class="remove-another-row buttonlink">Remove</button></td>\
                               </tr>\
                               </tbody>\
@@ -86,6 +99,7 @@ IFS.invites = (function(){
                       </li>';
 
           currentOrgs.last().after(html);
+          jQuery('[id="organisations'+orgId+'.organisationName"]').focus();
           IFS.invites.saveToCookie();
       },
       recountRows : function(){
