@@ -1,9 +1,10 @@
 package com.worth.ifs.interceptors;
 
+import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -20,7 +21,6 @@ import java.util.Optional;
 public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
 
     public static final String USER_DASHBOARD_LINK="userDashboardLink";
-    public static final String DASHBOARD_LINK="/dashboard";
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -37,9 +37,9 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
     }
 
     private void addUserDashboardLink(HttpServletRequest request, ModelAndView modelAndView) {
-        String roleName = getRoleName(request);
-        if(!roleName.isEmpty()) {
-            modelAndView.getModelMap().addAttribute(USER_DASHBOARD_LINK, "/" + roleName + DASHBOARD_LINK);
+        String dashboardUrl = getDashboardUrl(request);
+        if(!dashboardUrl.isEmpty()) {
+            modelAndView.getModelMap().addAttribute(USER_DASHBOARD_LINK, dashboardUrl);
         }
     }
 
@@ -47,14 +47,18 @@ public class MenuLinksHandlerInterceptor extends HandlerInterceptorAdapter {
         modelAndView.addObject("logoutUrl", logoutUrl);
     }
 
-    private String  getRoleName(HttpServletRequest request) {
-        Authentication authentication = userAuthenticationService.getAuthentication(request);
+    /**
+     * Get the dashboard url, from the Role object.
+     */
+    private String  getDashboardUrl(HttpServletRequest request) {
+        UserAuthentication authentication = (UserAuthentication) userAuthenticationService.getAuthentication(request);
         if(authentication!=null) {
             Optional<SimpleGrantedAuthority> simpleGrantedAuthority = (Optional<SimpleGrantedAuthority>)authentication.getAuthorities().stream().findFirst();
             if(simpleGrantedAuthority.isPresent()) {
-                return simpleGrantedAuthority.get().getAuthority();
+                UserResource details = authentication.getDetails();
+                return "/" + details.getRoles().get(0).getUrl();
             }
         }
-        return "";
+        return "/";
     }
 }
