@@ -51,11 +51,11 @@ IFS.invites = (function(){
           var html = '<tr data-invite-row>\
                         <td class="form-group">\
                           <label for="organisations'+orgId+'.invites'+rowId+'.personName"><span class="visuallyhidden">Name</span></label>\
-                          <input type="text" id="organisations'+orgId+'.invites'+rowId+'.personName" class="form-control width-full" value="" placeholder="name" name="organisations['+orgId+'].invites['+rowId+'].personName" required />\
+                          <input type="text" id="organisations'+orgId+'.invites'+rowId+'.personName" class="form-control width-full" value="" placeholder="name" name="organisations['+orgId+'].invites['+rowId+'].personName"  />\
                         </td>\
                         <td class="form-group">\
                           <label for="organisations'+orgId+'.invites'+rowId+'.email"><span class="visuallyhidden">Email</span></label>\
-                          <input type="email" class="form-control width-full" value="" placeholder="name@company.co.uk" name="organisations['+orgId+'].invites['+rowId+'].email" required />\
+                          <input type="email" class="form-control width-full" value="" placeholder="name@company.co.uk" name="organisations['+orgId+'].invites['+rowId+'].email"  />\
                         </td>\
                         <td class="alignright"><button value="'+orgId+'_'+rowId+'" name="remove_person" type="submit" class="remove-another-row buttonlink">Remove</button></td>\
                       </tr>';
@@ -71,7 +71,7 @@ IFS.invites = (function(){
                       <h2 class="heading-medium">Partner Organisation<span></span></h2>\
                       <div class="form-group">\
                         <label for="organisations'+orgId+'.organisationName" class="form-label"><span>Organisation Name</span></label>\
-                        <input type="text" id="organisations'+orgId+'.organisationName" value="" name="organisations['+orgId+'].organisationName"  placeholder="Name of the partner company" class="form-control js-partner-name" required>\
+                        <input type="text" id="organisations'+orgId+'.organisationName" value="" name="organisations['+orgId+'].organisationName"  placeholder="Name of the partner company" class="form-control js-partner-name" />\
                       </div>\
                           <table>\
                               <thead><tr>\
@@ -83,11 +83,11 @@ IFS.invites = (function(){
                               <tr data-invite-row>\
                                   <td class="form-group">\
                                       <label for="organisations'+orgId+'.invites0.personName"><span class="visuallyhidden">Name</span></label>\
-                                      <input type="text" value="" id="organisations'+orgId+'.invites0.personName" name="organisations['+orgId+'].invites[0].personName"  placeholder="name" class="form-control width-full" required>\
+                                      <input type="text" value="" id="organisations'+orgId+'.invites0.personName" name="organisations['+orgId+'].invites[0].personName"  placeholder="name" class="form-control width-full" />\
                                   </td>\
                                   <td class="form-group">\
                                       <label for="organisations'+orgId+'.invites0.email"><span class="visuallyhidden">Email</span></label>\
-                                      <input type="email" value="" id="organisations'+orgId+'.invites0.email" name="organisations['+orgId+'].invites[0].email" placeholder="name@company.co.uk" class="form-control width-full" required>\
+                                      <input type="email" value="" id="organisations'+orgId+'.invites0.email" name="organisations['+orgId+'].invites[0].email" placeholder="name@company.co.uk" class="form-control width-full" />\
                                   </td>\
                                   <td class="alignright"><button value="'+orgId+'_0" name="remove_person" type="submit" class="remove-another-row buttonlink">Remove</button></td>\
                               </tr>\
