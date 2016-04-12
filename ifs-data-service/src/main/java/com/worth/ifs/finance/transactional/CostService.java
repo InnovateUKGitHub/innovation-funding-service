@@ -6,6 +6,7 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.security.NotSecured;
+import org.springframework.security.access.prepost.PostFilter;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface CostService {
     @NotSecured("TODO")
     ServiceResult<CostField> getCostFieldById(Long id);
 
-    @NotSecured("TODO")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CostFieldResource>> findAllCostFields();
 
     @NotSecured("TODO DW - implement when permissions matrix available")
