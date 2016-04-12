@@ -87,7 +87,7 @@ the finance Project cost breakdown calculations should be correct
     Element Should Contain    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
 
 the finance summary calculations should be correct
-    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £129,000
+    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £1,329,000
     Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    50%
     Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    70%
     Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    100%
