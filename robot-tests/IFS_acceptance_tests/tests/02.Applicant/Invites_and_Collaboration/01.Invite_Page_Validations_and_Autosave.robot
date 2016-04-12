@@ -153,6 +153,7 @@ the applicant fills the lead organisation fields
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${LEAD_EMAIL}
     # the following keyword disables the browser's validation
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+    Focus    jquery=button:contains("Begin application")
     Click Element    jquery=button:contains("Begin application")
     sleep    1s
 

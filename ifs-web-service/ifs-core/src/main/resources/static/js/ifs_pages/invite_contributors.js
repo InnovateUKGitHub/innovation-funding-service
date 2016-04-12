@@ -75,7 +75,7 @@ IFS.invites = (function(){
                       </div>\
                           <table>\
                               <thead><tr>\
-                                  <th>Name</th>\
+                                  <th>Applicant name</th>\
                                   <th>Email</th>\
                                   <th>&nbsp;</th>\
                               </tr></thead>\

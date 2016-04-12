@@ -72,7 +72,7 @@
                                placeholder="Name of the partner company"
                                th:errorclass="field-error"
                                th:field="*{organisations[__${organisationStats.index}__].organisationName}"
-                               
+
                                th:readonly="${organisationInviteForm.organisationInviteId != null} and ${organisationInvites?.get(organisationInviteForm.organisationInviteId)?.inviteResources?.size()}"/>
                     </div>
                     <div th:if="${organisationInviteForm.organisationNameConfirmed != null}" th:class="${#fields.hasErrors('organisations[__${organisationStats.index}__].organisationNameConfirmed') ? 'form-group error' : 'form-group'}">
@@ -96,7 +96,7 @@
                 <table>
                     <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Applicant name</th>
                         <th>Email</th>
                         <th>&nbsp;</th>
                     </tr>
@@ -112,7 +112,7 @@
                             <input type="text" class="form-control width-full" id="lead-email" th:value="${leadApplicant.email}" readonly="readonly"/>
                         </td>
                         <td class="alignright remove">
-                            <span th:if="${leadApplicant.id == authenticatedUser.id}">That's you!</span>
+                            Lead applicant
                         </td>
                     </tr>
                     <div th:if="${organisationInviteForm.organisationInviteId != null} and ${organisationInvites?.get(organisationInviteForm.organisationInviteId)?.inviteResources?.size()}" th:remove="tag">
