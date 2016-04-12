@@ -164,7 +164,7 @@ the applicant cannot assign to pending invitees
     Page Should not Contain Element    jQuery=button:contains("tester")
 
 the status of the people should be correct in the Manage contributors page
-    Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    That's you!
+    Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    Lead applicant
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-child(3)    (pending)
     # Element Should Not Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
 

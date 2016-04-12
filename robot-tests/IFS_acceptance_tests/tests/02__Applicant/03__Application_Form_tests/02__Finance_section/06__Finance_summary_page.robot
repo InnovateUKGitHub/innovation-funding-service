@@ -15,11 +15,11 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 Suite Teardown    User closes the browser
 Force Tags        Finance    Applicant    # these tests have been tagged as failing since the numbers no longer match up to the database - find out why!
 Default Tags
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../../resources/variables/User_credentials.robot
+Resource          ../../../../resources/keywords/Login_actions.robot
+Resource          ../../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/2

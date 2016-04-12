@@ -2,11 +2,11 @@
 Documentation     INFUND-832
 ...               INFUND-409
 Suite Teardown    TestTeardown User closes the browser
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot    # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files    # If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically    # But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
+Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../../resources/variables/User_credentials.robot
+Resource          ../../../../resources/keywords/Login_actions.robot
+Resource          ../../../../resources/keywords/User_actions.robot    # Note that all of these tests will require you to set an absolute path for the upload folder robot-tests/upload_files    # If you are using the run_tests_locally shellscript then this will attempt to swap in a valid path automatically    # But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
 
 *** Variables ***
 ${valid_pdf}      testing.pdf

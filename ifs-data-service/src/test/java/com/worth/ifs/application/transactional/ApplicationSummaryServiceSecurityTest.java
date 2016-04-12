@@ -203,7 +203,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 		}
 
 		@Override
-		public List<Application> getApplicationSummariesByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId) {
+		public ServiceResult<List<Application>> getApplicationSummariesByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId) {
 			return null;
 		}
 
