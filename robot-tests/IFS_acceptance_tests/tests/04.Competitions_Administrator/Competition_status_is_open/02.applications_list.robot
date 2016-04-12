@@ -51,8 +51,7 @@ The applications can be sorted by project title
 
 The applications can be sorted by project lead
     [Documentation]    INFUND-2300: listing of applications for an open competition
-    [Tags]    Competition management    Pending
-    # pending until has been refactored(INFUND-2176)
+    [Tags]    Competition management
     When the application list is sorted by    Lead
     Then the applications should be sorted by column        3
 
