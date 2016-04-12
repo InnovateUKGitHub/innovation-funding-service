@@ -34,6 +34,7 @@
                     <input  class="form-control" th:field="*{organisationSearchName}" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'field-error'" type="text" value="" />
                     <button type="submit" id="org-search" name="search-organisation" class="button">Search</button>
                 </div>
+                <span th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">Choose your organisation:</span>
                 <ul id="org-results" class="results-list panel-indent" th:if="${organisationForm.organisationSearching}"
                     th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                     <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">
