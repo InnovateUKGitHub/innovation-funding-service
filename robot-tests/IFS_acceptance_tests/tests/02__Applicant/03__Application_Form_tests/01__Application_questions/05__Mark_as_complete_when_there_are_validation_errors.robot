@@ -8,6 +8,7 @@ Resource          ../../../../resources/variables/User_credentials.robot
 Resource          ../../../../resources/keywords/Login_actions.robot
 Resource          ../../../../resources/keywords/User_actions.robot
 
+
 *** Variables ***
 
 *** Test Cases ***

@@ -2,11 +2,11 @@
 Documentation     INFUND-1110: As an applicant/partner applicant I want to add my required Funding Level so that innovate uk know my grant request
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    User closes the browser
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../../resources/variables/User_credentials.robot
+Resource          ../../../../resources/keywords/Login_actions.robot
+Resource          ../../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${small_org_option}    SMALL

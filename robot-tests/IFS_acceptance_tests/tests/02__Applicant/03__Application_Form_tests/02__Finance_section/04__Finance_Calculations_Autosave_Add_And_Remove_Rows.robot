@@ -6,11 +6,11 @@ Suite Setup       Run Keywords    Guest user log-in    &{lead_applicant_credenti
 ...               AND    Given the user navigates to the page    ${YOUR_FINANCES_URL}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        HappyPath
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../../../resources/variables/User_credentials.robot
+Resource          ../../../../../resources/keywords/Login_actions.robot
+Resource          ../../../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${OTHER_FUNDING_SOURCE}    Alice

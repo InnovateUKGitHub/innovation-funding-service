@@ -6,11 +6,11 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 Suite Setup       Guest user log-in    &{collaborator2_credentials}
 Suite Teardown    User closes the browser
 Force Tags        Finances    HappyPath
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../../../resources/variables/User_credentials.robot
+Resource          ../../../../../resources/keywords/Login_actions.robot
+Resource          ../../../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
