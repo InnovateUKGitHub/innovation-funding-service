@@ -1,13 +1,12 @@
 *** Settings ***
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    User closes the browser
+Force Tags        FailingForDev
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
-Force Tags          FailingForDev
-
 
 *** Test Cases ***
 Excel export
@@ -21,12 +20,12 @@ Excel export
 
 *** Keywords ***
 Empty the download directory
-    Empty Directory    download_files
+    Empty Directory    ${DOWNLOAD_FOLDER}
 
 Download File
     [Arguments]    ${COOKIE_VALUE}    ${URL}    ${FILENAME}
     log    ${COOKIE_VALUE}
-    Run and Return RC    curl -v --insecure --cookie "${COOKIE_VALUE}" ${URL} > download_files/${/}${FILENAME}
+    Run and Return RC    curl -v --insecure --cookie "${COOKIE_VALUE}" ${URL} > ${DOWNLOAD_FOLDER}/${/}${FILENAME}
 
 the admin downloads the excel
     ${ALL_COOKIES} =    Get Cookies
@@ -35,26 +34,26 @@ the admin downloads the excel
     sleep    2s
 
 User opens the excel and checks the content
-    ${wb}    Open Excel File    download_files/submitted_applications.xlsx
-    ${APPLICATION_ID_1}=    Get Cell Value By Sheet Name    ${wb}    Submitted Applications    A2
+    ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
+    ${APPLICATION_ID_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A4
     Should Be Equal    ${APPLICATION_ID_1}    00000005
-    ${APPLICATION_TITLE_1}=    read Cell Data by name    Submitted Applications    B2
+    ${APPLICATION_TITLE_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    B4
     should be equal    ${APPLICATION_TITLE_1}    A new innovative solution
-    ${LEAD_ORRGANISATION_1}=    read Cell Data by name    Submitted Applications    C2
+    ${LEAD_ORRGANISATION_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    C4
     should be equal    ${LEAD_ORRGANISATION_1}    Empire Ltd
-    ${FIRST_NAME_1}=    read Cell Data by name    Submitted Applications    D2
+    ${FIRST_NAME_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    D4
     should be equal    ${FIRST_NAME_1}    Steve
-    ${LAST_NAME_1}=    read Cell Data by name    Submitted Applications    E2
+    ${LAST_NAME_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    E4
     should be equal    ${LAST_NAME_1}    Smith
-    ${EMAIL_1}=    read Cell Data by name    Submitted Applications    F2
+    ${EMAIL_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    F4
     should be equal    ${EMAIL_1}    steve.smith@empire.com
-    ${DURATION_1}=    read Cell Data by name    Submitted Applications    G2
+    ${DURATION_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    G4
     Should Be Equal As Numbers    ${DURATION_1}    20.0
-    ${NUMBER_OF_PARTNERS_1}=    read Cell Data by name    Submitted Applications    H2
+    ${NUMBER_OF_PARTNERS_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    H4
     Should Be Equal As Numbers    ${NUMBER_OF_PARTNERS_1}    4.0
-    ${SUMMARY_1}=    read Cell Data by name    Submitted Applications    I2
+    ${SUMMARY_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    I4
     Should contain    ${SUMMARY_1}    The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years.
-    ${TOTAL_COST_1}=    read Cell Data by name    Submitted Applications    J2
+    ${TOTAL_COST_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    J4
     Should Be Equal    ${TOTAL_COST_1}    £398,324.29
-    ${FUNDING_1}=    read Cell Data by name    Submitted Applications    K2
+    ${FUNDING_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    K4
     Should Be Equal    ${FUNDING_1}    £8,000.00

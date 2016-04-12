@@ -2,11 +2,11 @@
 Documentation     INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
 Suite Teardown    User closes the browser
 Force Tags        Finances    Validation
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../../resources/variables/User_credentials.robot
+Resource          ../../../../resources/keywords/Login_actions.robot
+Resource          ../../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 
