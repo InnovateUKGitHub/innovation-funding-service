@@ -11,11 +11,11 @@ Documentation     -INFUND-184: As an applicant and on the over view of the appli
 Suite Setup       Run Keywords    Guest user log-in    &{lead_applicant_credentials}
 ...               AND    Create new application
 Suite Teardown    TestTeardown User closes the browser
-Resource          ../../../resources/GLOBAL_LIBRARIES.robot
-Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
-Resource          ../../../resources/variables/User_credentials.robot
-Resource          ../../../resources/keywords/Login_actions.robot
-Resource          ../../../resources/keywords/User_actions.robot
+Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
+Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
+Resource          ../../../../resources/variables/User_credentials.robot
+Resource          ../../../../resources/keywords/Login_actions.robot
+Resource          ../../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${CREATE_APPLICATION_PAGE}    ${SERVER}/application/create/1?accept=accepted

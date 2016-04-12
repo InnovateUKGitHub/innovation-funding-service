@@ -145,7 +145,7 @@ the user's inputs should still be visible
     Should Be Equal As Strings    ${input_value} =    ${input_value} =
 
 the lead applicant cannot be removed
-    Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-of-type(3)    That's you!
+    Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-of-type(3)    Lead applicant
 
 the applicant fills the lead organisation fields
     [Arguments]    ${LEAD_NAME}    ${LEAD_EMAIL}
@@ -153,6 +153,7 @@ the applicant fills the lead organisation fields
     Input Text    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${LEAD_EMAIL}
     # the following keyword disables the browser's validation
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+    Focus    jquery=button:contains("Begin application")
     Click Element    jquery=button:contains("Begin application")
     sleep    1s
 
