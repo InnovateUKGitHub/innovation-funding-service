@@ -12,6 +12,7 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
+
 *** Test Cases ***
 Competitions admin should be able to see the list of applications
     [Documentation]    INFUND-2135: listing of applications for an open competition
@@ -89,7 +90,10 @@ Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300: listing of applications for an open competition
     ...
     ...    INFUND-2304: Read only view mode of applications from the application list page
-    [Tags]    Competition management
+    [Tags]    Competition management        Pending
+    Test setup      Run keywords        Log in as user    &{lead_applicant_credentials}
+                    AND     the user can see the option to upload a file on the page    ${project_team_url}
+                    AND     the user uploads the file to the 'project team' question    ${valid_pdf}
     When the user clicks the button/link    link=00000001
     Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     And the user should see the text in the page    A novel solution to an old problem
@@ -157,3 +161,14 @@ the table header matches the number of rows in the applications list table
     ${row_count}=       get matching xpath count        //*[td]
     ${apps_string}=      Catenate            ${row_count}        applications
     The user should see the text in the page     ${apps_string}
+
+
+the user can see the option to upload a file on the page
+    [Arguments]    ${url}
+    The user navigates to the page    ${url}
+    Page Should Contain    Upload
+
+the user uploads the file to the 'project team' question
+    [Arguments]    ${file_name}
+    Choose File    name=formInput[18]    ${UPLOAD_FOLDER}/${file_name}
+    Sleep    500ms
