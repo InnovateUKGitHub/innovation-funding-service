@@ -19,6 +19,7 @@ import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.service.OrganisationSearchRestService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
 import com.worth.ifs.util.CookieUtil;
+import com.worth.ifs.util.EncodingUtils;
 import com.worth.ifs.util.JsonUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -249,14 +250,7 @@ public class OrganisationCreationController {
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-        String encodedSearchString = organisationForm.getOrganisationSearchName();
-        try {
-            encodedSearchString = URLEncoder.encode(encodedSearchString, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            LOG.info("Unsupported Encoding.  Skipping encoding and using original search string.");
-        }
-
-        return "redirect:/organisation/create/" + FIND_ORGANISATION + "/" + encodedSearchString;
+        return "redirect:/organisation/create/" + FIND_ORGANISATION + "/" + EncodingUtils.urlEncode(organisationForm.getOrganisationSearchName());
     }
 
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = NOT_IN_COMPANY_HOUSE, method = RequestMethod.POST)
