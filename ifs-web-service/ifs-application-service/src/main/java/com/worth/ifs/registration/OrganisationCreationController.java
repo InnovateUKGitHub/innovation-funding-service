@@ -38,6 +38,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -54,8 +56,9 @@ import static com.worth.ifs.commons.rest.RestResult.restFailure;
 @Controller
 @RequestMapping("/organisation/create")
 public class OrganisationCreationController {
-    public static final String ORGANISATION_ID = "organisationId";
     private static final Log LOG = LogFactory.getLog(OrganisationCreationController.class);
+
+    public static final String ORGANISATION_ID = "organisationId";
     public static final String ORGANISATION_FORM = "organisationForm";
     public static final String TEMPLATE_PATH = "registration/organisation";
     public static final String CONFIRM_SELECTED_ORGANISATION = "confirm-selected-organisation";
@@ -246,7 +249,14 @@ public class OrganisationCreationController {
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-        return "redirect:/organisation/create/" + FIND_ORGANISATION + "/results";
+        String encodedSearchString = organisationForm.getOrganisationSearchName();
+        try {
+            encodedSearchString = URLEncoder.encode(encodedSearchString, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOG.info("Unsupported Encoding.  Skipping encoding and using original search string.");
+        }
+
+        return "redirect:/organisation/create/" + FIND_ORGANISATION + "/" + encodedSearchString;
     }
 
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = NOT_IN_COMPANY_HOUSE, method = RequestMethod.POST)

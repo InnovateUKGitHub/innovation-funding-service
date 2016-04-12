@@ -227,11 +227,11 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .header("referer", "/organisation/create/find-organisation/")
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/find-organisation/results"))
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/find-organisation/" + companyName))
                 .andExpect(cookie().exists("organisationForm"))
                 .andReturn().getResponse().getCookie("organisationForm");
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/organisation/create/find-organisation/results")
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/organisation/create/find-organisation/" + companyName)
                 .cookie(organisationTypeBusiness)
                 .cookie(cookie)
         )
@@ -249,7 +249,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                         .cookie(organisationTypeBusiness)
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/find-organisation/results"));
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/find-organisation/"));
     }
 
     @Test
