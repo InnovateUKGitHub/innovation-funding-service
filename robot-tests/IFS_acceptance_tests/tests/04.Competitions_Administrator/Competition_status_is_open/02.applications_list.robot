@@ -110,9 +110,9 @@ the applications should be sorted by application number
     \   log to console       ${cell_read}
     \   append to list       @{app_number_list}      ${cell_read}
 
-    @{sorting_list}=    Copy List       @{app_number_list}
-    Sort List       @{sorting_list}
-    Lists Should Be Equal       @{app_number_list}      @{sorting_list}
+    ${sorting_list}=    Copy List       ${app_number_list}
+    Sort List       ${sorting_list}
+    Lists Should Be Equal       ${app_number_list}      ${sorting_list}
 
 
     # element should contain    css=table tbody tr td a    00000001
