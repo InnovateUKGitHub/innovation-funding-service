@@ -12,7 +12,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
-When user from the list is not registered shouldn't be able to login
+If user from the list is not registered shouldn't be able to login
     [Documentation]    INFUND-2129
     Given the user navigates to the page    ${LOGIN_URL}
     When the guest user enters the log in credentials    worth.email.test+admin2@gmail.com    Passw0rd
