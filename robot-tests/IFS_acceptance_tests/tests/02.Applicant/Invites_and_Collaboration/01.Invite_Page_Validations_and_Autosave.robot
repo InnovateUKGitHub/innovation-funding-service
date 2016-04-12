@@ -145,7 +145,7 @@ the user's inputs should still be visible
     Should Be Equal As Strings    ${input_value} =    ${input_value} =
 
 the lead applicant cannot be removed
-    Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-of-type(3)    That's you!
+    Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-of-type(3)    Lead applicant
 
 the applicant fills the lead organisation fields
     [Arguments]    ${LEAD_NAME}    ${LEAD_EMAIL}

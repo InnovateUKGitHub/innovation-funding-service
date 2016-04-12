@@ -101,17 +101,6 @@ the new application should be visible in the dashboard page
     Wait Until Page Contains    test title
     Page Should Contain    Application number: 0000
 
-the user enters the details and clicks the create account
-    [Arguments]    ${REG_EMAIL}
-    Input Text    id=firstName    Stuart
-    Input Text    id=lastName    ANDERSON
-    Input Text    id=phoneNumber    23232323
-    Input Text    id=email    ${REG_EMAIL}
-    Input Password    id=password    Passw0rd2
-    Input Password    id=retypedPassword    Passw0rd2
-    Select Checkbox    termsAndConditions
-    Submit Form
-
 the user clicks the Not on company house link
     Click Element    name=not-in-company-house
     Click Element    name=manual-address
