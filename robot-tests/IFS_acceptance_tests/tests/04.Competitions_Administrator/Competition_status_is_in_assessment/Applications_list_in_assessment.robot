@@ -31,12 +31,12 @@ Download File
 the admin downloads the excel
     ${ALL_COOKIES} =    Get Cookies
     Log    ${ALL_COOKIES}
-    Download File    ${ALL_COOKIES}    https://ifs-local-dev/management/competition/1/download    submitted_applications.xls
+    Download File    ${ALL_COOKIES}    https://ifs-local-dev/management/competition/1/download    submitted_applications.xlsx
     sleep    2s
 
 User opens the excel and checks the content
-    Open Excel    download_files/submitted_applications.xls
-    ${APPLICATION_ID_1}=    read Cell Data by name    Submitted Applications    A2
+    ${wb}    Open Excel File    download_files/submitted_applications.xlsx
+    ${APPLICATION_ID_1}=    Get Cell Value By Sheet Name    ${wb}    Submitted Applications    A2
     Should Be Equal    ${APPLICATION_ID_1}    00000005
     ${APPLICATION_TITLE_1}=    read Cell Data by name    Submitted Applications    B2
     should be equal    ${APPLICATION_TITLE_1}    A new innovative solution

@@ -1,14 +1,13 @@
 package com.worth.ifs.application.resource;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.competition.domain.Competition;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Question defines database relations and a model to use client side and server side.

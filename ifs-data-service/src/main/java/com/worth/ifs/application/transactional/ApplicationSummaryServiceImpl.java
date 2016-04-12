@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -30,8 +29,8 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
 
 	private static final int PAGE_SIZE = 20;
-	
-	private static final Collection<Long> SUBMITTED_STATUS_IDS = Arrays.asList(
+
+	public static final Collection<Long> SUBMITTED_STATUS_IDS = Arrays.asList(
 			ApplicationStatusConstants.APPROVED.getId(),
 			ApplicationStatusConstants.REJECTED.getId(),
 			ApplicationStatusConstants.SUBMITTED.getId());
@@ -65,7 +64,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, int pageIndex, String sortBy) {
 		
 		String[] sortField = getApplicationSummarySortField(sortBy);
-		Pageable pageable = new PageRequest(pageIndex, PAGE_SIZE, new Sort(Direction.ASC, sortField));
+		Pageable pageable = new PageRequest(pageIndex, PAGE_SIZE, new Sort(Sort.Direction.ASC, sortField));
 		
 		if(canUseSpringDataPaginationForSummaryResults(sortBy)){
 			Page<Application> applicationResults = applicationRepository.findByCompetitionId(competitionId, pageable);
@@ -135,8 +134,8 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	public ServiceResult<ClosedCompetitionSubmittedApplicationSummaryPageResource> getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
 			Long competitionId, int pageIndex, String sortBy) {
 		String[] sortField = getApplicationSummarySortField(sortBy);
-		Pageable pageable = new PageRequest(pageIndex, PAGE_SIZE, new Sort(Direction.ASC, sortField));
-		
+		Pageable pageable = new PageRequest(pageIndex, PAGE_SIZE, new Sort(Sort.Direction.ASC, sortField));
+
 		if(canUseSpringDataPaginationForClosedCompetitionSubmittedResults(sortBy)){
 			Page<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS, pageable);
 			return find(applicationResults, notFoundError(Page.class)).andOnSuccessReturn(closedCompetitionSubmittedApplicationSummaryPageMapper::mapToResource);
@@ -153,8 +152,8 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	@Override
 	public ServiceResult<ClosedCompetitionNotSubmittedApplicationSummaryPageResource> getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
 			Long competitionId, int pageIndex, String sortBy) {
-		String[] sortField = getClosedCompetitionNotSubmittedApplicationSummarySortField(sortBy);
-		Pageable pageable = new PageRequest(pageIndex, PAGE_SIZE, new Sort(Direction.ASC, sortField));
+		String[] sortField = getApplicationSummarySortField(sortBy);
+		Pageable pageable = new PageRequest(pageIndex, PAGE_SIZE, new Sort(Sort.Direction.ASC, sortField));
 		
 		if(canUseSpringDataPaginationForClosedCompetitionNotSubmittedResults(sortBy)){
 			Page<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS, pageable);
@@ -171,8 +170,8 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	
 	
 	@Override
-	public List<Application> getApplicationSummariesByCompetitionIdAndStatus(Long competitionId, Long applicationStatusId) {
-		List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, applicationStatusId);
+	public List<Application> getApplicationSummariesByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId) {
+		List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, applicationStatusId);
 		return applicationResults;
 	}
 
@@ -218,21 +217,6 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 			return new String[]{"applicationStatus.name", "id"};
 		case "duration":
 			return new String[]{"durationInMonths", "id"};
-		default:
-			return new String[]{"id"};
-		}
-	}
-	
-	private String[] getClosedCompetitionNotSubmittedApplicationSummarySortField(String sortBy) {
-		if(StringUtils.isEmpty(sortBy)){
-			return new String[]{"id"};
-		}
-		
-		switch (sortBy) {
-		case "id":
-			return new String[]{"id"};
-		case "name":
-			return new String[]{"name", "id"};
 		default:
 			return new String[]{"id"};
 		}

@@ -13,29 +13,79 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project details'}, ${'/prototypes/1575-project-details'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${'/prototypes/1588-project-status'})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Project address'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Bank account'})" th:remove="tag" />
+
+	<p>To enable InnovateUK to Fund your project we require a a bank account. This will allow the bank account to be verified to the organisation that has entered the organisation</p>
+
+	<p>The Bank account entered must belong to</p>
+	
+	<div th:if="${param.status == null or param.status != 'nonBusiness'}">
+		<h2 class="heading-medium no-margin-bottom">Nomensa Ltd</h2>
+		<p>Company no. 04214477</p>
+	</div>
+	
+	<div th:if="${param.status != null and param.status[0] == 'nonBusiness'}">
+		<h2 class="heading-medium no-margin-bottom">University of Bristol</h2>
+	</div>
 	
 	<form action="#">
 
 		<fieldset>
 			
-			<h2 class="heading-medium">Project location</h2>
+			<h2 class="heading-medium no-margin-bottom">Account details</h2>
 
-			<legend class="visuallyhidden">Project location</legend>
+			<legend class="visuallyhidden">Account details</legend>
 
-			<p class="form-hint">Where is the main location of the project?</p>
+			<p class="form-hint">Please enter the bank account account that you wish to use for during the project.</p>
 
-			<p>We will assign a monitoring officer who will visit your project at this address.</p>
+			<div class="form-group extra-margin">
+				<label class="form-label" for="bank-sort-code">
+					<span class="form-label-bold">Account number</span>
+				</label>
+				<p class="form-hint">For example: 1548965</p>
+				<input class="form-control" id="bank-acc-number" name="bank-acc-number" value="" type="text" />
+			</div>
 
-			<div th:include="prototypes/fragments/project-setup :: prototype-select-address" th:remove="tag" />
+			<div class="form-group ">
+				<label class="form-label" for="bank-sort-code">
+					<span class="form-label-bold">Sort code</span>
+				</label>
+				<p class="form-hint">For example: 311212</p>
+				<input class="form-control width-medium" id="bank-sort-code" name="bank-sort-code" value="" type="text" />
+			</div>
+
+			<h2 class="heading-large">Organisation address</h2>
+
+			<p class="form-hint">Please select your organisation's address.</p>
+
+			<div th:include="prototypes/fragments/project-setup :: prototype-select-address" th:with="address='bankDetails'" th:remove="tag" />
 
 		</fieldset>
 
-		<button class="button button-large extra-margin" formaction="/prototypes/1575-project-details">Save</button>
+		<div class="extra-margin">
+			<a href="#" class="button" data-js-modal="modal-bank">Submit bank account details</a>
+		</div>
+
+		<div class="modal-bank" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+	        <button class="js-close close" aria-label="Close Popup">X</button>
+	        <div>
+				
+				<h2 class="heading-medium no-margin">Bank details submitted</h2>
+
+				<p>The bank details provided have been successfully submitted to Innovate UK for review. If required Innovate will contact you to clarify any issues, before performing finance checks.</p>
+
+				<hr />
+	            
+            	<div class="alignright-button">
+            		<button formaction="/prototypes/1588-project-status" class="button">OK</button>
+            	</div>
+
+	        </div>
+	    </div>
 
 	</form>
 

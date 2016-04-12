@@ -6,7 +6,6 @@ import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.security.PermissionEntityLookupStrategies;
 import com.worth.ifs.security.PermissionEntityLookupStrategy;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
