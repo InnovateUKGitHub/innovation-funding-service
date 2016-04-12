@@ -18,6 +18,7 @@ Competitions admin should be able to see the list of applications
     [Tags]    Competition management
     Then the user should see the text in the page    Application list
 
+
 The correct columns show for the application list table
     [Documentation]    INFUND-2135: listing of applications for an open competition
     [Tags]    Competition management
@@ -27,17 +28,26 @@ The correct columns show for the application list table
     And the user should see the text in the page    Status
     And the user should see the text in the page    Percentage complete
 
+
+The correct number of applications shows in the table header
+    [Documentation]     INFUND-2135: listing of applications for an open competition
+    [Tags]      Competition management
+    Then the table header matches the number of rows in the applications list table
+
+
 The applications can be sorted by application number
     [Documentation]    INFUND-2135: listing of applications for an open competition
     [Tags]    Competition management
     When the application list is sorted by    Application no.
     Then the applications should be sorted by application number
 
+
 The applications can be sorted by project title
     [Documentation]    INFUND-2135: listing of applications for an open competition
     [Tags]    Competition management
     When the application list is sorted by    Project title
     Then the applications should be sorted by project title
+
 
 The applications can be sorted by project lead
     [Documentation]    INFUND-2300: listing of applications for an open competition
@@ -46,16 +56,18 @@ The applications can be sorted by project lead
     When the application list is sorted by    Lead
     Then the applications should be sorted by project lead
 
+
 The applications can be sorted by percentage complete
     [Documentation]    INFUND-2300: listing of applications for an open competition
     [Tags]    Competition management
     When the application list is sorted by    Percentage complete
     Then the applications should be sorted by percentage complete
 
+
 Calculations of the open applications
     [Documentation]    INFUND-2259
     [Tags]      Competition management
-    # extra validation to only run the calculation if there are open applications
+    # extra validation to only check the calculation if there are open applications
     ${open_count}=       Get matching xpath count    //*[text()="open"]
     Run keyword if            ${open_count} != 0      open application calculations are correct
 
@@ -63,7 +75,7 @@ Calculations of the open applications
 Calculations of the submitted application
     [Documentation]    INFUND-2259
     [Tags]  Competition management
-    # extra validation to only run the calculation if there are submitted applications
+    # extra validation to only check the calculation if there are submitted applications
     ${submitted_count}=     Get matching xpath count    //*[text()="submitted"]
     Run keyword if           ${submitted_count} != 0    submitted application calculations are correct
 
@@ -72,6 +84,7 @@ Calculations for the Number of applications
     [Documentation]    INFUND-2259
     Then the calculations should be correct    jQuery=td:contains("00000")    css=.info-area p:nth-child(2) span
     And both calculations in the page should show the same
+
 
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300: listing of applications for an open competition
@@ -83,13 +96,26 @@ Comp admin can open the view mode of the application
     And the user should see the text in the page    A novel solution to an old problem
     And the user can see the upload for the 'Technical approach' question
 
+
 *** Keywords ***
 the application list is sorted by
     [Arguments]    ${sorting_factor}
     Select From List    name=sort    ${sorting_factor}
 
 the applications should be sorted by application number
-    element should contain    css=table tbody tr td a    00000001
+    @{app_number_list}=        Create List
+    ${row_count}=       get matching xpath count        //*[td]
+    : FOR       ${row}      IN RANGE        1       ${row_count}
+    \   ${cell_read}=       get table cell      css=table       ${row}      1
+    \   log to console       ${cell_read}
+    \   append to list       @{app_number_list}      ${cell_read}
+
+    @{sorting_list}=    Copy List       @{app_number_list}
+    Sort List       @{sorting_list}
+    Lists Should Be Equal       @{app_number_list}      @{sorting_list}
+
+
+    # element should contain    css=table tbody tr td a    00000001
 
 the applications should be sorted by project title
     element should contain    css=table tbody tr td a    00000008
@@ -123,3 +149,9 @@ open application calculations are correct
 
 submitted application calculations are correct
     the calculations should be correct    jQuery=td:contains("submitted")    css=.info-area p:nth-child(5) span
+
+
+the table header matches the number of rows in the applications list table
+    ${row_count}=       get matching xpath count        //*[td]
+    ${apps_string}=      Catenate            ${row_count}        applications
+    The user should see the text in the page     ${apps_string}
