@@ -1,6 +1,8 @@
 package com.worth.ifs.application.mapper;
 
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -17,6 +19,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryResource;
+import com.worth.ifs.application.transactional.ApplicationSummarisationService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
@@ -32,7 +35,7 @@ public class ClosedCompetitionSubmittedApplicationSummaryMapperTest {
 	private ClosedCompetitionSubmittedApplicationSummaryMapperImpl mapper;
 	
 	@Mock
-	private ApplicationFinanceRestService applicationFinanceRestService;
+	private ApplicationSummarisationService applicationSummarisationService;
 	
 	@Test
 	public void testMap() {
@@ -54,13 +57,8 @@ public class ClosedCompetitionSubmittedApplicationSummaryMapperTest {
 		ProcessRole collaboratorProcessRole3 = collaboratorProcessRole(org1);
 		source.addUserApplicationRole(collaboratorProcessRole3);
 		
-		ApplicationFinanceResource resource = mock(ApplicationFinanceResource.class);
-		GrantClaim grantClaim = mock(GrantClaim.class);
-		when(grantClaim.getTotal()).thenReturn(new BigDecimal("12.30"));
-		when(resource.getGrantClaim()).thenReturn(grantClaim);
-		when(resource.getTotal()).thenReturn(new BigDecimal("66.60"));
-		List<ApplicationFinanceResource> resources = Arrays.asList(resource);
-		when(applicationFinanceRestService.getApplicationFinances(Long.valueOf(123L))).thenReturn(restSuccess(resources));
+		when(applicationSummarisationService.getFundingSought(source)).thenReturn(serviceSuccess(new BigDecimal("1.23")));
+		when(applicationSummarisationService.getTotalProjectCost(source)).thenReturn(serviceSuccess(new BigDecimal("9.87")));
 		
 		ClosedCompetitionSubmittedApplicationSummaryResource result = mapper.mapToResource(source);
 		
@@ -68,8 +66,8 @@ public class ClosedCompetitionSubmittedApplicationSummaryMapperTest {
 		assertEquals("appname", result.getName());
 		assertEquals("leadorg", result.getLead());
 		assertEquals(Integer.valueOf(2), result.getNumberOfPartners());
-		assertEquals(new BigDecimal("12.30"), result.getGrantRequested());
-		assertEquals(new BigDecimal("66.60"), result.getTotalProjectCost());
+		assertEquals(new BigDecimal("1.23"), result.getGrantRequested());
+		assertEquals(new BigDecimal("9.87"), result.getTotalProjectCost());
 		assertEquals(Long.valueOf(5L), result.getDuration());
 	}
 
