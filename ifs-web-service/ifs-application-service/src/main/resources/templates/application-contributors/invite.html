@@ -72,7 +72,7 @@
                                placeholder="Name of the partner company"
                                th:errorclass="field-error"
                                th:field="*{organisations[__${organisationStats.index}__].organisationName}"
-                               required="required"
+                               
                                th:readonly="${organisationInviteForm.organisationInviteId != null} and ${organisationInvites?.get(organisationInviteForm.organisationInviteId)?.inviteResources?.size()}"/>
                     </div>
                     <div th:if="${organisationInviteForm.organisationNameConfirmed != null}" th:class="${#fields.hasErrors('organisations[__${organisationStats.index}__].organisationNameConfirmed') ? 'form-group error' : 'form-group'}">
@@ -143,7 +143,7 @@
                                    placeholder="name"
                                    th:errorclass="field-error"
                                    th:field="*{organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName}"
-                                   required="required" />
+                                    />
                         </td>
                         <td th:unless="${user.getInviteStatus() != null}"  th:class="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email') ? 'form-group error' : 'form-group'}">
                             <label th:for="'organisations'+${organisationStats.index}+'.invites'+${userStats.index}+'.email'">
@@ -156,7 +156,7 @@
                                    placeholder="name@company.co.uk"
                                    th:errorclass="field-error"
                                    th:field="*{organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email}"
-                                   required="required" />
+                                    />
                         </td>
                         <td class="form-group " th:if="${user.getInviteStatus() != null}">
                               <span th:text="${user.personName}"></span>
