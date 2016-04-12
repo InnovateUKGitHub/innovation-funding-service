@@ -39,14 +39,14 @@ The applications can be sorted by application number
     [Documentation]    INFUND-2135: listing of applications for an open competition
     [Tags]    Competition management
     When the application list is sorted by    Application no.
-    Then the applications should be sorted by application number
+    Then the applications should be sorted by column        1
 
 
 The applications can be sorted by project title
     [Documentation]    INFUND-2135: listing of applications for an open competition
     [Tags]    Competition management
     When the application list is sorted by    Project title
-    Then the applications should be sorted by project title
+    Then the applications should be sorted by column        2
 
 
 The applications can be sorted by project lead
@@ -54,14 +54,14 @@ The applications can be sorted by project lead
     [Tags]    Competition management    Pending
     # pending until has been refactored(INFUND-2176)
     When the application list is sorted by    Lead
-    Then the applications should be sorted by project lead
+    Then the applications should be sorted by column        3
 
 
 The applications can be sorted by percentage complete
     [Documentation]    INFUND-2300: listing of applications for an open competition
-    [Tags]    Competition management
+    [Tags]    Competition management        Pending
     When the application list is sorted by    Percentage complete
-    Then the applications should be sorted by percentage complete
+    Then the applications should be sorted in reverse order by column        5
 
 
 Calculations of the open applications
@@ -102,29 +102,32 @@ the application list is sorted by
     [Arguments]    ${sorting_factor}
     Select From List    name=sort    ${sorting_factor}
 
-the applications should be sorted by application number
-    @{app_number_list}=        Create List
-    ${row_count}=       get matching xpath count        //*[td]
-    : FOR       ${row}      IN RANGE        1       ${row_count}
-    \   ${cell_read}=       get table cell      css=table       ${row}      1
-    \   log to console       ${cell_read}
-    \   append to list       @{app_number_list}      ${cell_read}
 
-    ${sorting_list}=    Copy List       ${app_number_list}
-    Sort List       ${sorting_list}
-    Lists Should Be Equal       ${app_number_list}      ${sorting_list}
+the applications should be sorted by column
+    [Arguments]     ${column_number}
+    ${row_count}=       get matching xpath count    //*[td]
+    @{sorted_column_contents}=     Create List
+    : FOR       ${row}      IN RANGE        2       ${row_count}
+    \   ${cell_contents}=       get table cell      css=table       ${row}      ${column_number}
+    \   append to list       ${sorted_column_contents}      ${cell_contents}
+
+    ${test_sorting_list}=    Copy List       ${sorted_column_contents}
+    Sort List       ${test_sorting_list}
+    Lists Should Be Equal          ${sorted_column_contents}        ${test_sorting_list}
 
 
-    # element should contain    css=table tbody tr td a    00000001
+the applications should be sorted in reverse order by column
+    [Arguments]     ${column_number}
+    ${row_count}=       get matching xpath count    //*[td]
+    @{sorted_column_contents}=     Create List
+    : FOR       ${row}      IN RANGE        2       ${row_count}
+    \   ${cell_contents}=       get table cell      css=table       ${row}      ${column_number}
+    \   append to list       ${sorted_column_contents}      ${cell_contents}
 
-the applications should be sorted by project title
-    element should contain    css=table tbody tr td a    00000008
-
-the applications should be sorted by Project lead
-    element should contain    css=table tbody tr td a    foo
-
-the applications should be sorted by Percentage complete
-    element should contain    css=table tbody tr td a    00000007
+    ${test_sorting_list}=    Copy List       ${sorted_column_contents}
+    Sort List       ${test_sorting_list}
+    Reverse List    ${test_sorting_list}
+    Lists Should Be Equal          ${sorted_column_contents}        ${test_sorting_list}
 
 the user can see the upload for the 'Technical approach' question
     the user clicks the button/link    css=[aria-controls="collapsible-8"]
