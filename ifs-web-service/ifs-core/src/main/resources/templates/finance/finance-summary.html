@@ -146,11 +146,12 @@
                             <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}">
                                 <small>Partner</small>
                             </div>
-                            <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/tick-icon.png')}"
-                                 th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" alt="has marked the Finances as complete"/>
-                            <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/warning-icon.png')}"
-                                 th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" alt="has not yet marked the Finances as complete" />
-
+                            <div th:remove="tag" th:if="${currentApplication.isOpen()}">
+                              <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/tick-icon.png')}"
+                                   th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" alt="has marked the Finances as complete"/>
+                              <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/warning-icon.png')}"
+                                   th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" alt="has not yet marked the Finances as complete" />
+                            </div>
                         </div>
                     </th>
                     <div th:with="organisationFinance=${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
@@ -179,7 +180,7 @@
                             <div>
                                 <small>(pending)</small>
                             </div>
-                            
+
                         </div>
                     </th>
                     <div th:remove="tag">
