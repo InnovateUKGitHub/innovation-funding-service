@@ -13,6 +13,10 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 
+*** Variables ***
+
+${valid_pdf}        testing.pdf
+
 *** Test Cases ***
 Competitions admin should be able to see the list of applications
     [Documentation]    INFUND-2135: listing of applications for an open competition
