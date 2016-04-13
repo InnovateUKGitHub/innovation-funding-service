@@ -27,7 +27,7 @@ Non registered users CH route
     ...    INFUND-1904
     ...
     ...    INFUND-1920
-    [Tags]    Create application    HappyPath    FailingForLocal
+    [Tags]    Create application    HappyPath       Email
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -58,7 +58,7 @@ Non registered users non CH route
     ...    INFUND-1904
     ...
     ...    INFUND-1920
-    [Tags]    Create application    HappyPath    FailingForLocal
+    [Tags]    Create application    HappyPath       Email
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -81,8 +81,7 @@ Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
-    [Tags]    Applicant    New application    HappyPath    FailingForLocal
-    # failing because of a user not being created by failing verification email test
+    [Tags]    Applicant    New application    HappyPath    Email
     When guest user log-in    worth.email.test+1@gmail.com    Passw0rd2
     And the user edits the competition title
     Then the user should see the text in the page    test title

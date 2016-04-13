@@ -17,24 +17,28 @@ ${ASSESSOR_DETAILS_PAGE}    ${SERVER}/assessor/competitions/1/applications/3
 *** Test Cases ***
 Guest user can't access the Assessor's dashboard page
     [Documentation]    INFUND-1683
+    [Tags]  Assessor
     Given the guest user opens the browser
     When the user navigates to the page    ${ASSESSOR_DASHBOARD}
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 Guest user can't access the competitions details page
     [Documentation]    INFUND-1683
+    [Tags]      Assessor
     Given the guest user opens the browser
     When the user navigates to the page    ${ASSESSOR_COMPETITIONS_DETAILS}
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 Guest user can't access assessor's review application page
     [Documentation]    INFUND-1683
+    [Tags]      Assessor
     Given the guest user opens the browser
     When the user navigates to the page    ${ASSESSOR_REVIEW_APPLICATION}
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 Guest user can't access the Assessors details page
     [Documentation]    INFUND-1683
+    [Tags]      Assessor
     Given the guest user opens the browser
     When the user navigates to the page    ${ASSESSOR_DETAILS_PAGE}
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
@@ -42,7 +46,7 @@ Guest user can't access the Assessors details page
 Applicant can't access Assessor's dashboard page
     [Documentation]    INFUND-1683
     [Tags]    Pending
-    #Pending infund-1753
+    #Pending due to INFUND-1753
     Given guest user log-in    &{collaborator2_credentials}
     When the user navigates to the page and gets a custom error message    ${ASSESSOR_DASHBOARD}    ${403_error_message}
 
@@ -50,7 +54,7 @@ Applicant can't access Assessor's dashboard page
 Applicant can't access the competitions details page
     [Documentation]    INFUND-1683
     [Tags]    Pending
-    #Pending infund-1753
+    #Pending due to INFUND-1753
     Given guest user log-in    &{collaborator2_credentials}
     When the user navigates to the page and gets a custom error message    ${ASSESSOR_COMPETITIONS_DETAILS}     ${403_error_message}
 

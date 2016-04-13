@@ -13,12 +13,13 @@ Resource          ../../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 If research participation is too high, an error is shown on the form and also the overview page
     [Documentation]    INFUND-1436
-    [Tags]    HappyPath    Research percentage    Validation    Failing
+    [Tags]    HappyPath    Research percentage    Validation
     Given the applicant logs in
     When the research participation on the second application is too high
     Then there is an error message on the finances form
     And there is an error message on the summary page
-    And the applicant can log out
+    And the academic collaborator can change their level of participation back
+    And the user can log out
 
 If research participation is below the maximum level, no error is shown
     [Documentation]    INFUND-1436
@@ -28,16 +29,25 @@ If research participation is below the maximum level, no error is shown
     And the applicant logs in
     Then there is no error message on the finances form
     And there is no error message on the summary page
-    And the first collaborator can log out
+    And the user can log out
 
 *** Keywords ***
 The applicant logs in
     Guest user log-in    &{lead_applicant_credentials}
 
 The research participation on the second application is too high
-    Go To    ${FINANCES_OVERVIEW_URL_APPLICATION_2}
+    Guest user log-in    &{collaborator2_credentials}
+    the user navigates to the page      ${your_finances_url_application_2}
+    Input Text    id=incurred-staff    1000000000
+
+the academic collaborator can change their level of participation back
+    Guest user log-in    &{collaborator2_credentials}
+    the user navigates to the page      ${your_finances_url_application_2}
+    Input Text    id=incurred-staff    1000
 
 There is an error message on the finances form
+    the applicant logs in
+    the user navigates to the page   ${FINANCES_OVERVIEW_URL_APPLICATION_2}
     Page Should Contain    The participation levels of this project are not within the required range
 
 There is an error message on the summary page
@@ -45,14 +55,13 @@ There is an error message on the summary page
     Click Button    css=[aria-controls="collapsible-14"]
     Page Should Contain    The participation levels of this project are not within the required range
 
-The applicant can log out
-    Logout as user
 
 The first collaborator logs in
     Guest user log-in    &{collaborator1_credentials}
 
+
 The first collaborator edits financial details to bring down the research participation level
-    Go To    ${your_finances_url_application_2}
+    the user navigates to the page       ${your_finances_url_application_2}
     Click Element    css=[aria-controls="collapsible-0"]
     Wait Until Element Is Visible    name=add_cost
     Click Element    name=add_cost
@@ -74,5 +83,4 @@ There is no error message on the summary page
     Sleep    3s
     Page Should Not Contain    The participation levels of this project are not within the required range
 
-The first collaborator can log out
-    Logout as user
+

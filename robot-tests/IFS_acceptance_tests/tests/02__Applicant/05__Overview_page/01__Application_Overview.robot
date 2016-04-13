@@ -56,6 +56,7 @@ The Progress bar should be visible in the overview page
 
 User can print the application
     [Documentation]    INFUND-1162
+    [Tags]      Applicant   Overview
     Given the user navigates to the page without the usual headers    ${SERVER}/application/1/print?noprint    #This URL its only for testing purposes
     Then the user should see the element    jQuery=.button:contains("Print your application")
     When the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
