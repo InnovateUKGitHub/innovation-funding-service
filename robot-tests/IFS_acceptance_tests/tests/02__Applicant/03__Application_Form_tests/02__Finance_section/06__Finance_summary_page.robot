@@ -91,7 +91,7 @@ the finance summary calculations should be correct
     Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    50%
     Element Should Contain    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    70%
     Element Should Contain    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    100%
-    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £61,000
+    Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £901,000
     Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(4)    £20,000
     Element Should Contain    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £48,000
 
