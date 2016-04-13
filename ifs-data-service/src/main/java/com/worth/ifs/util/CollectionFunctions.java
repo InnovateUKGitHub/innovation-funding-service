@@ -371,4 +371,15 @@ public final class CollectionFunctions {
         asList(items).forEach(set::add);
         return set;
     }
+
+    public static <T> List<T> removeElement(List<T> list, int index) {
+        List<T> copy = new ArrayList<>(list);
+        copy.remove(index);
+        return copy;
+    }
+
+    public static <T> List<T> removeDuplicates(List<T> list) {
+        Set<T> set = new LinkedHashSet<>(list);
+        return new ArrayList<>(set);
+    }
 }

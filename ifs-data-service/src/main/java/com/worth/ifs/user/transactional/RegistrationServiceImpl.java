@@ -3,9 +3,6 @@ package com.worth.ifs.user.transactional;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.authentication.service.IdentityProviderService;
-import com.worth.ifs.commons.error.CommonErrors;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.service.FailingOrSucceedingResult;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.*;
 import com.worth.ifs.notifications.service.NotificationService;
@@ -19,23 +16,19 @@ import com.worth.ifs.user.repository.CompAdminEmailRepository;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
 
-import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
 import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
  * A service around Registration and general user-creation operations
@@ -73,6 +66,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private PasswordPolicyValidator passwordPolicyValidator;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -106,13 +102,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
-        if (inExclusionList(password, userResource)) {
-            return serviceFailure(new Error("INVALID_PASSWORD_EXCLUSION", BAD_REQUEST));
-        }
-    }
-
-    private boolean inExclusionList(String password, UserResource userResource) {
-        if ()
+        return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccessReturn(success -> userResource);
     }
 
     @Override
