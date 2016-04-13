@@ -37,8 +37,7 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
     @Before
     public void setupValidator() {
         validator.postConstruct();
-        List<ExclusionRulePatternGenerator> exclusionRulePatternGenerators = (List<ExclusionRulePatternGenerator>) ReflectionTestUtils.getField(validator, "exclusionRulePatternGenerators");
-        lettersForNumbersGenerator = exclusionRulePatternGenerators.get(0);
+        lettersForNumbersGenerator = (ExclusionRulePatternGenerator) ReflectionTestUtils.getField(validator, "lettersForNumbersGenerator");
     }
 
     @Test

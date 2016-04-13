@@ -11,6 +11,8 @@ import java.util.stream.Collector;
 import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
@@ -381,5 +383,22 @@ public final class CollectionFunctions {
     public static <T> List<T> removeDuplicates(List<T> list) {
         Set<T> set = new LinkedHashSet<>(list);
         return new ArrayList<>(set);
+    }
+
+    public static <T> List<List<T>> findPermutations(List<T> excludedWords) {
+        List<List<List<T>>> allPermutations = mapWithIndex(excludedWords, (i, currentWord) -> findPermutations(emptyList(), currentWord, removeElement(excludedWords, i)));
+        return flattenLists(allPermutations);
+    }
+
+    private static <T> List<List<T>> findPermutations(List<T> permutationStringSoFar, T currentWord, List<T> remainingWords) {
+
+        List<T> newPermutationStringSoFar = combineLists(permutationStringSoFar, currentWord);
+
+        if (remainingWords.isEmpty()) {
+            return singletonList(newPermutationStringSoFar);
+        }
+
+        List<List<List<T>>> furtherPermutations = mapWithIndex(remainingWords, (i, remainingWord) -> findPermutations(newPermutationStringSoFar, remainingWord, removeElement(remainingWords, i)));
+        return flattenLists(furtherPermutations);
     }
 }
