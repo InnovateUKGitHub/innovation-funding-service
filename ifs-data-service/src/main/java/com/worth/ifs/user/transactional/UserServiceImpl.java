@@ -63,6 +63,9 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private PasswordPolicyValidator passwordPolicyValidator;
+
     @Override
     public ServiceResult<UserResource> getUserResourceByUid(final String uid) {
         return find(repository.findOneByUid(uid), notFoundError(UserResource.class, uid)).andOnSuccessReturn(userMapper::mapToResource);
@@ -148,17 +151,17 @@ public class UserServiceImpl extends BaseTransactionalService implements UserSer
     public ServiceResult<Void> changePassword(String hash, String password){
         Optional<Token> token = tokenRepository.findByHash(hash);
         if(token.isPresent() && TokenType.RESET_PASSWORD.equals(token.get().getType())) {
-            User user = userRepository.findOne(token.get().getClassPk());
-            ServiceResult<String> result = identityProviderService.updateUserPassword(user.getUid(), password);
 
-            return result.handleSuccessOrFailure(
-                    failure -> serviceFailure(failure.getErrors()),
-                    success -> {
+            return find(user(token.get().getClassPk())).andOnSuccess(user -> {
+
+                UserResource userResource = userMapper.mapToResource(user);
+
+                return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccessReturnVoid(() ->
+                    identityProviderService.updateUserPassword(user.getUid(), password).andOnSuccess(() -> {
                         tokenRepository.delete(token.get());
-                        return serviceSuccess();
-                    }
-            );
-
+                    })
+                );
+            });
         }
         return serviceFailure(notFoundError(Token.class, hash));
     }
