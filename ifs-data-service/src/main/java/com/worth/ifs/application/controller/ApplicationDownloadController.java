@@ -1,17 +1,25 @@
 package com.worth.ifs.application.controller;
 
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.transactional.ApplicationSummaryService;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.transactional.CostService;
-import com.worth.ifs.form.domain.FormInputResponse;
-import com.worth.ifs.form.repository.FormInputResponseRepository;
-import com.worth.ifs.user.domain.ProcessRole;
+import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.POIXMLDocument;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -23,16 +31,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.transactional.ApplicationSummarisationService;
+import com.worth.ifs.application.transactional.ApplicationSummaryService;
+import com.worth.ifs.commons.error.exception.SummaryDataUnavailableException;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.repository.FormInputResponseRepository;
+import com.worth.ifs.user.domain.ProcessRole;
 
 @RestController
 @RequestMapping("/application/download")
@@ -42,21 +48,36 @@ public class ApplicationDownloadController {
     public static final int PROJECT_SUMMARY_COLUMN_WITH = 50; // the width in amount of letters.
     public static final String FONT_NAME = "Arial";
     @Autowired
-    ApplicationSummaryService applicationSummaryService;
+    private ApplicationSummaryService applicationSummaryService;
     @Autowired
-    CostService costService;
+    private ApplicationSummarisationService applicationSummarisationService;
     @Autowired
-    FormInputResponseRepository formInputResponseRepository;
+    private FormInputResponseRepository formInputResponseRepository;
     private Integer cellCount = 0;
     private Integer rowCount = 0;
     private Integer headerCount = 0;
 
     @RequestMapping("/downloadByCompetition/{competitionId}")
     public @ResponseBody ResponseEntity<ByteArrayResource> getDownloadByCompetitionId(@PathVariable("competitionId") Long competitionId) throws IOException {
-        List<Application> applications = applicationSummaryService.getApplicationSummariesByCompetitionIdAndStatus(competitionId, SUBMITTED_STATUS_IDS);
+        ServiceResult<List<Application>> applicationsResult = applicationSummaryService.getApplicationSummariesByCompetitionIdAndStatus(competitionId, SUBMITTED_STATUS_IDS);
+        
+        List<Application> applications;
+        if(applicationsResult.isSuccess()) {
+        	applications = applicationsResult.getSuccessObject();
+        } else {
+        	LOG.error("failed call to get application summaries by competiton and status for the download");
+        	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
         LOG.info(String.format("Generate download for %s applications with status ", applications.size()));
 
-        POIXMLDocument wb = getExcelWorkbook(applications);
+        POIXMLDocument wb;
+        try {
+        	wb = getExcelWorkbook(applications);
+        } catch (SummaryDataUnavailableException e) {
+        	LOG.error("unable to retrieve data required for the excel workbook");
+        	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         wb.write(baos);
 
@@ -71,7 +92,6 @@ public class ApplicationDownloadController {
     private XSSFWorkbook getExcelWorkbook(List<Application> applications) {
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet("Submitted Applications");
-
 
         XSSFFont font = wb.createFont();
         font.setFontName(FONT_NAME);
@@ -107,24 +127,28 @@ public class ApplicationDownloadController {
 
         for (Application a : applications) {
             // PREPARE APPLICATION INFORMATION
-            Optional<List<ApplicationFinanceResource>> financeTotalsOptional = costService.financeTotals(a.getId()).getOptionalSuccessObject();
+        	
             List<FormInputResponse> projectSummary = formInputResponseRepository.findByApplicationIdAndFormInputId(a.getId(), APPLICATION_SUMMARY_FORM_INPUT_ID);
-            String projectSummaryString = "";
-            if(!projectSummary.isEmpty()){
-                projectSummaryString = projectSummary.get(0).getValue();
+            String projectSummaryString;
+            if(projectSummary.isEmpty()){
+                projectSummaryString = "";
+            } else {
+            	projectSummaryString = projectSummary.get(0).getValue();
             }
-
-            BigDecimal total = BigDecimal.ZERO;
-            BigDecimal fundingSought = BigDecimal.ZERO;
-            if(financeTotalsOptional.isPresent()){
-                List<ApplicationFinanceResource> financeTotals;
-                financeTotals = financeTotalsOptional.get();
-                total = financeTotals.stream().map(t -> t.getTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
-                fundingSought = financeTotals.stream()
-                        .filter(of -> of != null && of.getGrantClaimPercentage() != null)
-                        .map(of -> of.getTotalFundingSought())
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-            }
+            
+        	ServiceResult<BigDecimal> totalResult = applicationSummarisationService.getTotalProjectCost(a);
+        	ServiceResult<BigDecimal> fundingSoughtResult = applicationSummarisationService.getFundingSought(a);
+        	
+        	BigDecimal total;
+        	BigDecimal fundingSought;
+        	
+        	if(totalResult.isSuccess() && fundingSoughtResult.isSuccess()) {
+        		total = totalResult.getSuccessObject();
+        		fundingSought = fundingSoughtResult.getSuccessObject();
+        	} else {
+        		throw new SummaryDataUnavailableException();
+        	}
+        	
             String totalFormatted = NumberFormat.getCurrencyInstance(Locale.UK).format(total);
             String fundingSoughtFormatted = NumberFormat.getCurrencyInstance(Locale.UK).format(fundingSought);
 

@@ -49,7 +49,7 @@ ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
 ${APPLICATION_TEAM_URL}    ${SERVER}/application/1/contributors
 ${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/1/contributors/invite
 ${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/1
-${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}       ${SERVER}/management/competition/1/application/1
+${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/1/application/1
 ${404_error_message}    Page Not Found
 ${403_error_message}    You do not have the necessary permissions for your request
 ${wrong_filetype_validation_error}    Please upload a file in .pdf format only
@@ -62,5 +62,6 @@ ${REGISTRATION_VERIFIED}    ${SERVER}/registration/verified
 ${UPLOAD_FOLDER}    uploaded_files
 ${VIRTUAL_DISPLAY}    ${EMPTY}
 ${POSTCODE_LOOKUP_IMPLEMENTED}    ${EMPTY}
-${LOCAL_MAIL_SENDING_IMPLEMENTED}       ${EMPTY}
+${LOCAL_MAIL_SENDING_IMPLEMENTED}    'YES'
 ${COMP_ADMINISTRATOR}    ${SERVER}/management/competition/1
+${DOWNLOAD_FOLDER}      ../download_files
