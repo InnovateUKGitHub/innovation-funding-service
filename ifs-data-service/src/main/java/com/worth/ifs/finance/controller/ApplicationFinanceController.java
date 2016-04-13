@@ -75,7 +75,6 @@ public class ApplicationFinanceController {
     public RestResult<ApplicationFinanceResource> findByApplicationOrganisation(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
-
         return costService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId).toGetResponse();
     }
 

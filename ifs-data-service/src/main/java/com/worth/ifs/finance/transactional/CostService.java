@@ -6,6 +6,7 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.security.NotSecured;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 
 import java.util.List;
@@ -27,10 +28,10 @@ public interface CostService {
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<Void> deleteCost(Long costId);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, Long organisationId);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PostFilter("hasPermission(returnObject, 'READ')")
     ServiceResult<List<ApplicationFinanceResource>> findApplicationFinanceByApplication(Long applicationId);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
@@ -39,15 +40,15 @@ public interface CostService {
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<ApplicationFinanceResource> addCost(Long applicationId, Long organisationId);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<ApplicationFinanceResource> updateCost(Long applicationFinanceId, ApplicationFinanceResource applicationFinance);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PostFilter("hasPermission(returnObject, 'READ')")
     ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId);
 }

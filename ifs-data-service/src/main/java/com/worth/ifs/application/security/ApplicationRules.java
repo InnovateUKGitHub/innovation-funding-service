@@ -36,6 +36,15 @@ public class ApplicationRules {
     @Autowired
     RoleRepository roleRepository;
 
+
+    // TODO RP
+    @PermissionRule(value = "READ_PARTICIPATION_PERCENTAGE", description = "TODO")
+    public boolean qqRP(final ApplicationResource applicationResource, UserResource user){
+        ProcessRole byUserIdAndApplicationId = processRoleRepository.findByUserIdAndApplicationId(user.getId(), applicationResource.getId());
+        return  byUserIdAndApplicationId != null;
+    }
+
+
     @PermissionRule(value = "READ", description = "A user can see an applicationResource which they are connected to and if the application exists")
     public boolean applicantCanSeeConnectedApplicationResource(ApplicationResource application, UserResource user) {
         return isCompAdmin(user) || !(applicationExists(application) && !userIsConnectedToApplicationResource(application, user));
@@ -50,7 +59,7 @@ public class ApplicationRules {
 
     boolean userIsConnectedToApplicationResource(ApplicationResource application, UserResource user) {
         ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), application.getId());
-        return processRole!=null;
+        return processRole != null;
     }
 
     boolean userIsLeadApplicantOnApplicationResource(ApplicationResource application, UserResource user) {
