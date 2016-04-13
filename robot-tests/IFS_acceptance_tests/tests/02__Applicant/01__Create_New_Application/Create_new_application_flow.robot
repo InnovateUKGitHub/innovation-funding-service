@@ -82,7 +82,6 @@ Verify the name of the new application
     ...
     ...    INFUND-1163
     [Tags]    Applicant    New application    HappyPath    Email
-    # failing because of a user not being created by failing verification email test
     When guest user log-in    worth.email.test+1@gmail.com    Passw0rd2
     And the user edits the competition title
     Then the user should see the text in the page    test title

@@ -27,7 +27,7 @@ Enter Valid Postcode and see the results in the dropdown
 
 Empty Postcode field
     [Documentation]    INFUND-890
-    [Tags]
+    [Tags]  Postcode
     Given the user navigates to the page    ${POSTCODE_LOOKUP_URL}
     When the user enters text to a text field    id=addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link    id=postcode-lookup
