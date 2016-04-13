@@ -23,6 +23,7 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.repository.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,6 +31,7 @@ import org.hibernate.validator.HibernateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
@@ -66,6 +68,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Autowired
     private InviteRepository inviteRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
@@ -245,6 +249,14 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Override
     public ServiceResult<InviteResource> getInviteByHash(String hash) {
         return getByHash(hash).andOnSuccessReturn(inviteMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<Void> checkUserExistingByInviteHash(@P("hash") String hash) {
+        return getByHash(hash)
+                .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()))
+                .andOnSuccessReturn(u -> u.get())
+                .andOnSuccessReturnVoid();
     }
 
     protected Supplier<ServiceResult<Invite>> invite(final String hash) {
