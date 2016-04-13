@@ -26,13 +26,13 @@ All questions are present in the summary page
 
 When Applicant clicks the "Scope" this section is expanded
     [Documentation]    INFUND-1075
-    [Tags]
+    [Tags]  Summary
     When the user clicks the button/link    jQuery=button:contains("Scope")
     Then the Scope section should be expanded
 
 Edit link navigates to the application form
     [Documentation]    INFUND-193
-    [Tags]
+    [Tags]  Summary
     When the user clicks the button/link    jQuery=button:contains("Project summary")
     And the user clicks the button/link    css=#form-input-11 .textarea-footer button.button
     Then the user is on the page    ${PROJECT_SUMMARY_EDIT_URL}
@@ -41,7 +41,7 @@ Application overview button
     [Documentation]    INFUND-1075
     ...
     ...    INFUND-841
-    [Tags]
+    [Tags]  Summary
     Given the user navigates to the page    ${SUMMARY_URL}
     When the user clicks the button/link    link=Application Overview
     Then the user is on the page    ${APPLICATION_OVERVIEW_URL}

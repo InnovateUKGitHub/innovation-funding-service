@@ -2,6 +2,8 @@
 Documentation     INFUND-248: As an assessor I want to submit my assessments one at a time or as a batch, so I can work in the way I feel most comfortable.
 Suite Setup       Guest user log-in    &{assessor_credentials}
 Suite Teardown    TestTeardown User closes the browser
+Force Tags          Pending
+# These tests are pending since the assessor pages are due to be refactored
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
@@ -15,7 +17,7 @@ ${competition_name}    Technology Inspired
 *** Test Cases ***
 Submitting an application shows a confirmation popup
     [Documentation]    INFUND-342
-    [Tags]    Assessor    HappyPath    Failing
+    [Tags]    Assessor    HappyPath
     Given The user clicks the button/link  link=${competition_name}
     When Select Application Checkbox    ${application_name}
     And Submit Selected Applications
@@ -23,7 +25,7 @@ Submitting an application shows a confirmation popup
 
 Cancelling the confirmation leaves the Application in unchanged state
     [Documentation]    INFUND-342
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     Given Select Application Checkbox    ${application_name}
     And Submit Selected Applications
     When Cancel the confirmation popup
@@ -31,7 +33,7 @@ Cancelling the confirmation leaves the Application in unchanged state
 
 Confirming the popup changes the Application state to submitted
     [Documentation]    INFUND-342
-    [Tags]    Assessor    HappyPath    Failing
+    [Tags]    Assessor    HappyPath
     Given Select Application Checkbox    ${application_name}
     And Submit Selected Applications
     When Confirm the confirmation popup

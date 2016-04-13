@@ -43,7 +43,7 @@ Invalid registration number
 
 Company with spaces in the name
     [Documentation]    INFUND-1757
-    [Tags]    Create application    FailingForLocal
+    [Tags]    Create application
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -55,11 +55,12 @@ Company with spaces in the name
 Invalid characters
     [Documentation]    INFUND-887
     [Tags]    Applicant    Company house    Pending
-    # Pending INFUND-1493
+    # Pending due to INFUND-1493
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When the user enters text to a text field    id=organisationSearchName    {}{}
     And the user clicks the button/link    id=org-search
-    Then the applicant should get a validation error for the company house
+    Then the applicant should get a validation error for the company house lookup
+
 
 *** Keywords ***
 the valid company names matching the search criteria should be displayed
@@ -70,8 +71,7 @@ the valid company names matching the search criteria should be displayed
     Element Should Contain    css=.form-block p:nth-child(2)    INNOVATE LTD
     Page Should Contain    Registration number
     Page should contain    05493105
-    # Page Should Contain    Address
-    # Page Should Contain    M45 8QP
 
-the applicant should get a validation error for the company house
+
+the applicant should get a validation error for the company house lookup
     Element Should Be Visible    css=.error-message

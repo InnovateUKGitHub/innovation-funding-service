@@ -70,7 +70,7 @@ Submit flow (complete application)
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
-    [Tags]    FailingForLocal    HappyPath
+    [Tags]    Email    HappyPath
     Then the user should get a confirmation email
 
 Submitted application is read only
