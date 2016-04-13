@@ -21,7 +21,7 @@ If user from the list is not registered shouldn't be able to login
 
 Registration for a user who is in the list
     [Documentation]    INFUND-2129
-    [Tags]    HappyPath    FailingForLocal
+    [Tags]    HappyPath
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And User creates new account verifies email and login    worth.email.test+admin1@gmail.com
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR}

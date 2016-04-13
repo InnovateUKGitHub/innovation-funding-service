@@ -7,6 +7,7 @@ import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.security.NotSecured;
+import org.springframework.security.access.method.P;
 
 import java.util.List;
 import java.util.Set;
@@ -39,4 +40,7 @@ public interface InviteService {
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<InviteResource> getInviteByHash(String hash);
+
+    @NotSecured("We need to check if there is already a user with the invited email address")
+    ServiceResult<Void> checkUserExistingByInviteHash(@P("hash") String hash);
 }
