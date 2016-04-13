@@ -89,17 +89,3 @@ we create a new user
     The guest user inserts user email & password    worth.email.test+reg2@gmail.com    Passw0rd2
     The guest user clicks the log-in button
     user closes the browser
-
-the user opens the mailbox and accepts the invitation to collaborate
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    ${LATEST} =    wait for email
-    ${HTML}=    get email body    ${LATEST}
-    log    ${HTML}
-    ${LINK}=    Get Links From Email    ${LATEST}
-    log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    2
-    log    ${VERIFY_EMAIL}
-    go to    ${VERIFY_EMAIL}
-    Capture Page Screenshot
-    Delete All Emails
-    close mailbox

@@ -201,3 +201,17 @@ the user enters the details and clicks the create account
     Input Password    id=retypedPassword    Passw0rd2
     Select Checkbox    termsAndConditions
     Submit Form
+
+the user opens the mailbox and accepts the invitation to collaborate
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    ${LATEST} =    wait for email
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    2
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
