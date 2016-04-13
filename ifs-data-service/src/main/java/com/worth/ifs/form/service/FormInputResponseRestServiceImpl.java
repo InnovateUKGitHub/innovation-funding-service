@@ -87,6 +87,15 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
         return getWithRestResult(url, ByteArrayResource.class);
     }
 
+    @Override
+    public RestResult<List<FormInputResponseResource>> getByFormInputIdAndApplication(long formInputId, long applicationId) {
+        String url = formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/" +
+                + formInputId +
+                "/" + applicationId;
+
+        return getWithRestResult(url, formInputResponseListType());
+    }
+
     private HttpHeaders createHeader(String contentType, long contentLength){
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(contentType));

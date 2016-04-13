@@ -34,7 +34,7 @@ public class CompetitionManagementController {
 
     @Autowired
     private ApplicationSummaryService applicationSummaryService;
-    
+
 
     @RequestMapping("/{competitionId}")
     public String displayCompetitionInfo(Model model, @PathVariable("competitionId") Long competitionId, @ModelAttribute ApplicationSummaryQueryForm queryForm, BindingResult bindingResult){

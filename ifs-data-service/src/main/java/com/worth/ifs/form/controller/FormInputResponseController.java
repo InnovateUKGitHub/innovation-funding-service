@@ -38,6 +38,11 @@ public class FormInputResponseController {
         return formInputService.findResponsesByApplication(applicationId).toGetResponse();
     }
 
+    @RequestMapping("/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}")
+    public RestResult<List<FormInputResponseResource>> findByFormInputIdAndApplication(@PathVariable("formInputId") final Long formInputId, @PathVariable("applicationId") final Long applicationId){
+        return formInputService.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId).toGetResponse();
+    }
+
     @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
     public RestResult<List<String>> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
 

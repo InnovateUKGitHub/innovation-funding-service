@@ -22,6 +22,9 @@ public interface FormInputService {
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.domain.Application', 'READ')")
     ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(Long applicationId);
 
+    @NotSecured("TODO RB - implement when permissions matrix available")
+    ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(Long formInputId, Long applicationId);
+
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<FormInputResponse> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String htmlUnescapedValue);
 }
