@@ -89,10 +89,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<List<FormInputResponseResource>> getByFormInputIdAndApplication(long formInputId, long applicationId) {
-        String url = formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/" +
-                + formInputId +
-                "/" + applicationId;
-
+        String url = formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/" + formInputId + "/" + applicationId;
         return getWithRestResult(url, formInputResponseListType());
     }
 
