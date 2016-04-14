@@ -204,6 +204,11 @@ the user opens the mailbox and accepts the invitation to collaborate
     Delete All Emails
     close mailbox
 
+Delete the emails from the test mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
     Input Text    id=firstName    Stuart
