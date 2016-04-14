@@ -126,6 +126,10 @@ public class ApplicationResource {
     public boolean isOpen(){
         return ApplicationStatusConstants.OPEN.getId().equals(applicationStatus) || ApplicationStatusConstants.CREATED.getId().equals(applicationStatus);
     }
+    @JsonIgnore
+    public void enableViewMode(){
+        setApplicationStatus(ApplicationStatusConstants.SUBMITTED.getId());
+    }
 
     @Override
     public boolean equals(Object o) {

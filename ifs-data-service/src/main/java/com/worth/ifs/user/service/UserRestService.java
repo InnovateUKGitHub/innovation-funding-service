@@ -14,6 +14,8 @@ import java.util.concurrent.Future;
 public interface UserRestService {
     RestResult<UserResource> retrieveUserResourceByUid(String uid);
 
+    RestResult<UserResource> findUserByEmailForAnonymousUserFlow(String email);
+
     RestResult<UserResource> retrieveUserById(Long id);
     RestResult<List<UserResource>> findAll();
     RestResult<ProcessRole> findProcessRole(Long userId, Long applicationId);

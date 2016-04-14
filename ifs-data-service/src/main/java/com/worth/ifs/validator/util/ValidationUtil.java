@@ -12,7 +12,7 @@ import org.springframework.validation.Validator;
 import java.util.Set;
 
 public final class ValidationUtil {
-    public final static Log log = LogFactory.getLog(ValidationUtil.class);
+    public final static Log LOG = LogFactory.getLog(ValidationUtil.class);
 
     private ValidationUtil() {}
     
@@ -32,9 +32,9 @@ public final class ValidationUtil {
                             binder.addValidators(validator);
                         }
                     } catch (Exception e) {
-                        log.error("Could not find validator class: " + v.getClazzName());
-                        log.error("Exception message: " + e.getMessage());
-                        log.error(e);
+                        LOG.error("Could not find validator class: " + v.getClazzName());
+                        LOG.error("Exception message: " + e.getMessage());
+                        LOG.error(e);
                     }
                 }
         );

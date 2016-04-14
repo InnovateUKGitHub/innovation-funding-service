@@ -80,6 +80,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         registrationController.setValidator(new LocalValidatorFactoryBean());
 
         when(userService.findUserByEmail(anyString())).thenReturn(restSuccess(new UserResource()));
+        when(userService.findUserByEmailForAnonymousUserFlow(anyString())).thenReturn(restSuccess(new UserResource()));
         when(userService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(restSuccess(new UserResource()));
 
         when(userService.verifyEmail(eq(VERIFY_HASH))).thenReturn(restSuccess());
@@ -207,7 +208,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         String email = "alreadyexistingemail@test.test";
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
-        when(userService.findUserByEmail(email)).thenReturn(restSuccess(new UserResource()));
+        when(userService.findUserByEmailForAnonymousUserFlow(email)).thenReturn(restSuccess(new UserResource()));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -352,7 +353,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getPhoneNumber(),
                 1L,
                 null)).thenReturn(restSuccess(userResource));
-        when(userService.findUserByEmail("test@test.test")).thenReturn(restFailure(notFoundError(User.class, "test@test.test")));
+        when(userService.findUserByEmailForAnonymousUserFlow("test@test.test")).thenReturn(restFailure(notFoundError(User.class, "test@test.test")));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -393,7 +394,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getPhoneNumber(),
                 1L,
                 null)).thenReturn(restSuccess(userResource));
-        when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(restFailure(notFoundError(User.class, "invited@email.com")));
+        when(userService.findUserByEmailForAnonymousUserFlow(eq("invited@email.com"))).thenReturn(restFailure(notFoundError(User.class, "invited@email.com")));
         when(inviteRestService.acceptInvite(eq(INVITE_HASH),anyLong())).thenReturn(restSuccess());
         mockMvc.perform(post("/registration/register?organisationId=1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

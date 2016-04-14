@@ -32,19 +32,19 @@ div.readonly{
       margin-right: 1em;
     }
 }
-tr.form-group {
+td.form-group {
   float:none;
-  td:first-child {
+  width:auto;
+  padding-left:0;
+  input {
+    vertical-align: top;
+  }
+  &.error  {
+    border-left:none;
+  }
+  &:first-child {
     padding-left:1.25em;
   }
-  td.form-group.form-group {
-    float:none;
-    border:none;
-    input {
-      vertical-align: top;
-    }
-  }
-
 }
 .field-error {
   @include box-shadow(none);

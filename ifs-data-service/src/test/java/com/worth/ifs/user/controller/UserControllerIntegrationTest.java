@@ -32,6 +32,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Test
     public void test_findByEmailAddress() {
+        loginSteveSmith();
         UserResource user= controller.findByEmail("steve.smith@empire.com").getSuccessObject();
         assertEquals(EMAIL, user.getEmail());
     }
@@ -39,6 +40,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     public void test_findAll() {
 
+        loginCompAdmin();
         List<UserResource> users = controller.findAll().getSuccessObject();
         assertEquals(USER_COUNT, users.size());
 
@@ -52,24 +54,28 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Test
     public void testSendPasswordResetNotification() {
+        loginSystemRegistrationUser();
         RestResult<Void> restResult = controller.sendPasswordResetNotification(EMAIL);
         assertTrue(restResult.isSuccess());
     }
 
     @Test
     public void testCheckPasswordResetToken() {
+        loginSystemRegistrationUser();
         RestResult<Void> restResult = controller.checkPasswordReset("a2e2928b-960f-469d-859f-f038b2bd9f42");
         assertTrue(restResult.isSuccess());
     }
 
     @Test
     public void testSendPasswordResetNotificationInvalid() {
+        loginSystemRegistrationUser();
         RestResult<Void> restResult = controller.sendPasswordResetNotification("steveAAAAAsmith@empire.com");
         assertTrue(restResult.isFailure());
     }
 
     @Test
     public void testCheckPasswordResetTokenInvalid() {
+        loginSystemRegistrationUser();
         RestResult<Void> restResult = controller.checkPasswordReset("a2e2928b-960f-INVALID-859f-f038b2bd9f42");
         assertTrue(restResult.isFailure());
     }
@@ -89,6 +95,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Test
     public void testVerifyEmailInvalid() {
+        loginSystemRegistrationUser();
         RestResult<Void> restResult = controller.verifyEmail("4a5bc71c9f3a2bd50fada434d888====INVALID====650a739d1ad5b1a110614708d1fa083");
         assertTrue(restResult.isFailure());
     }
@@ -113,7 +120,10 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Test
     public void testUpdateUserDetails() {
+        loginCompAdmin();
         UserResource userOne = controller.getUserById(1L).getSuccessObject();
+        setLoggedInUser(userOne);
+
         userOne.setFirstName("Some");
         userOne.setLastName("How");
 

@@ -28,7 +28,6 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
@@ -80,7 +79,6 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
-import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -750,7 +748,8 @@ public class BaseUnitTest {
         when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(restSuccess(invite));
         when(inviteOrganisationRestService.findOne(eq(invite.getInviteOrganisation()))).thenReturn(restSuccess(inviteOrganisation));
         when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
-        when(userService.findUserByEmail(eq(email))).thenReturn(restFailure(notFoundError(User.class, email)));
+        when(inviteRestService.checkExistingUser(eq(INVITE_HASH))).thenReturn(restFailure(notFoundError(User.class, INVITE_HASH)));
+        when(inviteRestService.checkExistingUser(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(notFoundError(User.class, email)));
         when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(emptyList()));
         when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
 
@@ -768,7 +767,7 @@ public class BaseUnitTest {
         existingUserInvite.setName("Some Invitee");
         existingUserInvite.setHash(INVITE_HASH_EXISTING_USER);
         existingUserInvite.setEmail("existing@email.com");
-        when(userService.findUserByEmail(eq("existing@email.com"))).thenReturn(restSuccess(new UserResource()));
+        when(inviteRestService.checkExistingUser(eq(INVITE_HASH_EXISTING_USER))).thenReturn(restSuccess());
         when(inviteRestService.getInviteByHash(eq(INVITE_HASH_EXISTING_USER))).thenReturn(restSuccess(existingUserInvite));
 
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(emptyList()));

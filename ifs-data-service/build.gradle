@@ -220,6 +220,8 @@ processTestResources {
 }
 
 compileJava.dependsOn generateMainMapperClasses
+flywayMigrate.dependsOn processResources
+flywayClean.dependsOn processResources
 
 task cleanDeploy() {
     build.mustRunAfter clean

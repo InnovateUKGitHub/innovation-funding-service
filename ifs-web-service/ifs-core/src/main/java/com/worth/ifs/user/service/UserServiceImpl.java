@@ -114,4 +114,9 @@ public class UserServiceImpl implements UserService {
     public RestResult<UserResource> findUserByEmail(String email) {
         return userRestService.findUserByEmail(email);
     }
+
+    @Override
+    public RestResult<UserResource> findUserByEmailForAnonymousUserFlow(String email) {
+        return userRestService.findUserByEmail(email);
+    }
 }

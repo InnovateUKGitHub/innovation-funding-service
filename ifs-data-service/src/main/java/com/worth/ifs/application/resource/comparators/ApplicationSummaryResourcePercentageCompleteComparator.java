@@ -1,8 +1,8 @@
 package com.worth.ifs.application.resource.comparators;
 
-import java.util.Comparator;
-
 import com.worth.ifs.application.resource.ApplicationSummaryResource;
+
+import java.util.Comparator;
 
 /**
  * Camporator, handling nulls, and using id if percentage complete is equal.

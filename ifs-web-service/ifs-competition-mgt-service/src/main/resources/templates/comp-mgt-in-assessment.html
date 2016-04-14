@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor Dashboard'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
 </head>
 <body class="competition-management application-in-assessment">
 
@@ -45,20 +45,26 @@
         </div>
         <div class="column-third alignright">
           <label for="sort-by">Sort by</label>
-          <select id="sort-by" name="sort" class="js-auto-submit form-control">
-              <option value="id" th:selected="${(param.sort != null) and (param.sort[0] == 'id')}">Application no.</option>
-              <option value="name" th:selected="${(param.sort != null) and (param.sort[0] == 'name')}">Project title</option>
-              <option value="lead" th:selected="${(param.sort != null) and (param.sort[0] == 'lead')}">Lead</option>
-              <option value="numberOfPartners" th:selected="${(param.sort != null) and (param.sort[0] == 'numberOfPartners')}">No. of partners</option>
-              <option value="grantRequested" th:selected="${(param.sort != null) and (param.sort[0] == 'grantRequested')}">Grant requested</option>
-              <option value="totalProjectCost" th:selected="${(param.sort != null) and (param.sort[0] == 'totalProjectCost')}">Total project cost</option>
-              <option value="duration" th:selected="${(param.sort != null) and (param.sort[0] == 'duration')}">Duration</option>
+          <select id="sort-by" name="sort" class="js-auto-submit form-control" th:if="${activeTab == 'submitted'}">
+              <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
+              <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
+              <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
+              <option value="numberOfPartners" th:selected="${(activeSortField == 'numberOfPartners')}">No. of partners</option>
+              <option value="grantRequested" th:selected="${(activeSortField == 'grantRequested')}">Grant requested</option>
+              <option value="totalProjectCost" th:selected="${(activeSortField == 'totalProjectCost')}">Total project cost</option>
+              <option value="duration" th:selected="${(activeSortField == 'duration')}">Duration</option>
+          </select>
+          <select id="sort-by" name="sort" class="js-auto-submit form-control" th:if="${activeTab == 'notSubmitted'}">
+              <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
+              <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
+              <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
+              <option value="percentageComplete" th:selected="${(activeSortField == 'percentageComplete')}">Percentage complete</option>
           </select>
           <button type="submit" class="button no-margin">Sort</button>
         </div>
     </div>
 
-    <table>
+    <table th:if="${activeTab == 'submitted'}">
        <thead>
          <tr>
            <th scope="col">Application no</th>
@@ -79,6 +85,25 @@
            <td th:text="${result.grantRequested}"></td>
            <td th:text="${result.totalProjectCost}"></td>
            <td th:text="${result.duration}"></td>
+         </tr>
+       </tbody>
+     </table>
+     
+     <table th:if="${activeTab == 'notSubmitted'}">
+       <thead>
+         <tr>
+           <th scope="col">Application no</th>
+           <th scope="col">Project title</th>
+           <th scope="col">Lead</th>
+           <th scope="col">Percentage complete</th>
+         </tr>
+       </thead>
+       <tbody>
+         <tr th:each="result : ${results.content}">
+           <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
+           <td th:text="${result.name}"></td>
+           <td th:text="${result.lead}"></td>
+           <td th:text="${result.completedPercentage}"></td>
          </tr>
        </tbody>
      </table>

@@ -33,15 +33,35 @@ public abstract class BaseControllerIntegrationTest<ControllerType> extends Base
     protected abstract void setControllerUnderTest(ControllerType controller);
 
     protected UserResource getSteveSmith() {
-        return userMapper.mapToResource(userRepository.findByEmail("steve.smith@empire.com").get());
+        return getByEmail("steve.smith@empire.com");
     }
 
     protected UserResource getPeteTom() {
-        return userMapper.mapToResource(userRepository.findByEmail("pete.tom@egg.com").get());
+        return getByEmail("pete.tom@egg.com");
+    }
+
+    protected UserResource getCompAdmin() {
+        return getByEmail("compadmin@innovateuk.test");
+    }
+
+    protected UserResource getSystemRegistrationUser() {
+        return getByEmail("ifs_web_user@innovateuk.org");
+    }
+
+    protected UserResource getByEmail(String email) {
+        return userMapper.mapToResource(userRepository.findByEmail(email).get());
     }
 
     protected void loginSteveSmith() {
         setLoggedInUser(getSteveSmith());
+    }
+
+    protected void loginCompAdmin() {
+        setLoggedInUser(getCompAdmin());
+    }
+
+    protected void loginSystemRegistrationUser() {
+        setLoggedInUser(getSystemRegistrationUser());
     }
 
     protected void loginPeteTom() {

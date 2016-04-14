@@ -131,7 +131,7 @@
                 <div th:class="${#fields.hasErrors('password')}? 'form-group error':'form-group'">
                     <label class="form-label" for="password">
                         <span class="form-label-bold">Create password</span>
-                        <span class="form-hint">Passwords must be between 8 and 30 characters</span>
+                        <span class="form-hint">Passwords must be between 10 and 30 characters</span>
                         <span th:if="${#fields.hasErrors('password')}" th:remove="tag">
                               <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
                         </span>
@@ -140,11 +140,11 @@
                            type="password"
                            th:field="*{password}"
                            required="required"
-                           minlength="8"
+                           minlength="10"
                            maxlength="30"
                            data-required-errormessage="Please enter your password"
-                           data-minlength-errormessage="Password size should be between 8 and 30 characters"
-                           data-maxlength-errormessage="Password size should be between 8 and 30 characters" />
+                           data-minlength-errormessage="Password size should be between 10 and 30 characters"
+                           data-maxlength-errormessage="Password size should be between 10 and 30 characters" />
                 </div>
                 <div th:class="${#fields.hasErrors('retypedPassword')}? 'form-group error':'form-group'">
                     <label class="form-label" for="retypedPassword">
@@ -157,11 +157,11 @@
                            type="password"
                            th:field="*{retypedPassword}"
                            required="required"
-                           minlength="8"
+                           minlength="10"
                            maxlength="30"
                            data-required-errormessage="Please enter your password"
-                           data-minlength-errormessage="Password size should be between 8 and 30 characters"
-                           data-maxlength-errormessage="Password size should be between 8 and 30 characters" />
+                           data-minlength-errormessage="Password size should be between 10 and 30 characters"
+                           data-maxlength-errormessage="Password size should be between 10 and 30 characters" />
                 </div>
                 <div th:class="${#fields.hasErrors('termsAndConditions')}? 'form-group error':'form-group'">
                   <fieldset>

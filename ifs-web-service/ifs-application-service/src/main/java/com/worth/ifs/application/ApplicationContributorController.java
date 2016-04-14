@@ -44,6 +44,8 @@ public class ApplicationContributorController{
     public static final String APPLICATION_CONTRIBUTORS_INVITE = "application-contributors/invite";
     private static final String CONTRIBUTORS_COOKIE = "contributor_invite_state";
     public static final String INVITES_SEND = "invitesSend";
+    public static final String INVITES_SAVED = "invitesSaved";
+
     @Autowired
     private InviteRestService inviteRestService;
     @Autowired
@@ -281,18 +283,20 @@ public class ApplicationContributorController{
             invites.add(inviteResource);
         });
 
-        if (organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))) {
+        if(!invites.isEmpty()) {
             // save new invites, to InviteOrganisation that already is saved.
-            inviteRestService.saveInvites(invites);
-            cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
-        } else if (existingOrganisation != null) {
-            // Save invites, and link to existing organisation.
-            inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
-            cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
-        } else {
-            // Save invites, and create new InviteOrganisation
-            inviteRestService.createInvitesByInviteOrganisation(organisationInvite.getOrganisationName(), invites);
-            cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
+            if (organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))) {
+                inviteRestService.saveInvites(invites);
+                cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
+            } else if (existingOrganisation != null) {
+                // Save invites, and link to existing organisation.
+                inviteRestService.createInvitesByOrganisation(existingOrganisation.getId(), invites);
+                cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
+            } else {
+                // Save invites, and create new InviteOrganisation
+                inviteRestService.createInvitesByInviteOrganisation(organisationInvite.getOrganisationName(), invites);
+                cookieFlashMessageFilter.setFlashMessage(response, INVITES_SEND);
+            }
         }
     }
 
@@ -305,7 +309,7 @@ public class ApplicationContributorController{
         contributorsForm.getOrganisations().forEach(o -> o.getInvites().forEach(i -> {
             if(!savedEmails.add(i.getEmail())){
                 // Could not add the element, so its a duplicate.
-                FieldError fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].email", contributorsForm.getOrganisations().indexOf(o), o.getInvites().indexOf(i)), i.getEmail(), false, new String[]{"NotUnique"}, null, "may not be duplicate");
+                FieldError fieldError = new FieldError("contributorsForm", String.format("organisations[%d].invites[%d].email", contributorsForm.getOrganisations().indexOf(o), o.getInvites().indexOf(i)), i.getEmail(), false, new String[]{"NotUnique"}, null, "You have already added this email address.");
                 bindingResult.addError(fieldError);
             }
         }));
