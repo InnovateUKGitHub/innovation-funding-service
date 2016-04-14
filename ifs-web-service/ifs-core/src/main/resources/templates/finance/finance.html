@@ -821,8 +821,10 @@
                         No
                     </label>
                 </div>
+                <div id="other-funding-table">
+
                 <div class="form-group" th:attr="data-repeatable-container=${question.getId()}">
-                    <table id="other-funding-table">
+                    <table>
                         <thead>
                         <tr>
                             <th id="other-funding-source">Source of funding</th>
@@ -853,15 +855,7 @@
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
 
                 </div>
-
-                <!--/* Please re-add when help text is available *-->
-                <!--/*
-                 <details>
-                    <summary><span class="summary">Why has this changed?</span></summary>
-                    <div class="panel-indent">
-                        Help text required
-                    </div>
-                </details> */-->
+              </div>
 
             </fieldset>
         </div>

@@ -14,7 +14,7 @@ Resource          ../../../resources/keywords/Application_question_edit_actions.
 *** Test Cases ***
 Status is updated after mark as complete
     [Documentation]    INFUND-544
-    [Tags]    Applicant    HappyPath
+    [Tags]    Summary   Applicant    HappyPath
     Given the user navigates to the page    ${APPLICATION_2_SUMMARY_URL}
     And the user should not see the text in the page    Complete
     When the user navigates to the page    ${ECONOMIC_BENEFIT_URL_APPLICATION_2}
@@ -24,7 +24,7 @@ Status is updated after mark as complete
 
 Status is updated after editing a section
     [Documentation]    INFUND-544
-    [Tags]
+    [Tags]      Summary     Applicant
     Given the user navigates to the page    ${APPLICATION_2_SUMMARY_URL}
     And the user should see the text in the page    Complete
     When the user navigates to the page    ${ECONOMIC_BENEFIT_URL_APPLICATION_2}

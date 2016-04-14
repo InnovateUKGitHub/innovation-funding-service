@@ -11,19 +11,19 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 View and edit profile link is visible in the Dashboard page
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
-    [Tags]    HappyPath
+    [Tags]    HappyPath     Profile
     Given the user navigates to the page    ${DASHBOARD_URL}
     Then the user should see the element    link=View and edit your profile details
 
 View and edit profile link redirects to the Your profile page
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
-    [Tags]    HappyPath
+    [Tags]    HappyPath     Profile
     When the user clicks the button/link    link=View and edit your profile details
     Then the user should see the element    link=Edit your details
 
 Edit the profile and verify if the changes are saved
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
-    [Tags]    HappyPath
+    [Tags]    HappyPath     Profile
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=View and edit your profile details
     And the user clicks the button/link    link=Edit your details
@@ -35,7 +35,7 @@ Edit the profile and verify if the changes are saved
 
 Verify that the applicant's name has been changed on other parts of the site
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
-    [Tags]
+    [Tags]  Profile
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=View and edit your profile details
     And the user clicks the button/link    link=Edit your details
@@ -47,6 +47,7 @@ Verify that the applicant's name has been changed on other parts of the site
 
 Display errors for invalid inputs of the First name
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
+    [Tags]      Profile
     Given the user navigates to the page    ${EDIT_PROFILE_URL}
     And browser validations have been disabled
     When the Applicant fills the First name    ${EMPTY}
@@ -62,6 +63,7 @@ Display errors for invalid inputs of the First name
 
 Display errors for invalid inputs of the Last name
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
+    [Tags]      Profile
     Given the user navigates to the page    ${EDIT_PROFILE_URL}
     And browser validations have been disabled
     When the Applicant fills the last name    ${EMPTY}
@@ -77,6 +79,7 @@ Display errors for invalid inputs of the Last name
 
 Display errors for invalid inputs of the Phone field
     [Documentation]    INFUND-1042 : As an applicant I want to be able to edit my user profile details so I can be identified to other users in the system
+    [Tags]      Profile
     Given the user navigates to the page    ${EDIT_PROFILE_URL}
     And browser validations have been disabled
     And the Applicant fills the Phone field    ${EMPTY}
