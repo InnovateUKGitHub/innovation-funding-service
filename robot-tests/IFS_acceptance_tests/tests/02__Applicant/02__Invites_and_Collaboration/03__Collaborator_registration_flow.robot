@@ -129,75 +129,11 @@ Academic organisations search (empty, invalid & valid inputs)
     Then the user should see the text in the page    Enter address manually
     And the user should see the text in the page    University (HEI)
 
-Business organisation (accept invitation flow)
-    [Documentation]    INFUND-1005
-    ...    INFUND-2286
-    ...    INFUND-1779
-    ...    INFUND-2336
-    [Tags]    HappyPath    FailingForLocal      Failing
-    Given the user navigates to the page    ${INVITE_LINK}
-    When the user clicks the button/link    jQuery=.button:contains("Create")
-    And user selects the radio button    organisationType    1
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user enters text to a text field    id=organisationSearchName    Nomensa
-    And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    link=Nomensa
-    and the user enters text to a text field    id=addressForm.postcodeInput    2233
-    And the user clicks the button/link    id=postcode-lookup
-    And the user clicks the button/link    css=#select-address-block > button
-    And the user clicks the button/link    jQuery=.button:contains("Save organisation and")
-    And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user fills the create account form    Rogier    De Regt
-    And the user tries to go back, but can't modify their details
-    And the user verifies the email
-    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    And the user clicks the button/link    jQuery=.button:contains("Log in")
-    And guest user log-in    worth.email.test+invite1@gmail.com    Passw0rd
-    Then the user should be redirected to the correct page    ${DASHBOARD_URL}
-    And the user can see the updated company name throughut the application
-
-User who accepted the invite should be able to log-in
-    [Tags]    FailingForLocal           Failing
-    Given the user navigates to the page    ${INVITE_LINK}
-    When the guest user enters the login credentials    worth.email.test+invite1@gmail.com    Passw0rd
-    And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should be redirected to the correct page    ${DASHBOARD_URL}
-    And the user should see the text in the page    A novel solution to an old problem
-    [Teardown]    User closes the browser
-
-
-User who accepted the invite can invite others to their own organisation
-    [Documentation]     INFUND-2335
-    [Tags]      FailingForLocal         Pending
-    # pending as not yet finished
-    Given guest user log-in             worth.email.test+invite1@gmail.com      Passw0rd
-    When the user navigates to the page     ${MANAGE_CONTRIBUTORS_URL}
-    Then the user should see the element        foobar
-
-
-User who accepted the invite cannot invite others to other organisations
-    [Documentation]     INFUND-2335
-    [Tags]      FailingForLocal     Pending
-    # pending as not yet finished
-    Given guest user log-in             worth.email.test+invite1@gmail.com      Passw0rd
-    When the user navigates to the page     ${MANAGE_CONTRIBUTORS_URL}
-    Then the user should not see the element        foobar
-
-The collaborator who accepted the invite should be visible in the assign list
-    [Documentation]    INFUND-1779
-    [Tags]    HappyPath    FailingForLocal      Failing
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
-    When the user navigates to the page    ${PROJECT_SUMMARY_URL}
-    And the user clicks the button/link    css=.assign-button
-    Then the user should see the element    jQuery=button:contains("Rogier De Regt")
-    [Teardown]    TestTeardown User closes the browser
-
-
 Academic organisation (accept invitation flow)
     [Documentation]    INFUND-1166
     ...
     ...    INFUND-917
-    [Tags]    HappyPath    FailingForLocal      Failing
+    [Tags]    HappyPath    FailingForLocal    Failing
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${INVITE_LINK_2}
     When the user clicks the button/link    jQuery=.button:contains("Create")
@@ -232,16 +168,6 @@ user selects the radio button
     [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
     Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
 
-the user fills the create account form
-    [Arguments]    ${NAME}    ${LAST_NAME}
-    Input Text    id=firstName    ${NAME}
-    Input Text    id=lastName    ${LAST_NAME}
-    Input Text    id=phoneNumber    0612121212
-    Input Password    id=password    Passw0rd2
-    Input Password    id=retypedPassword    Passw0rd2
-    Select Checkbox    termsAndConditions
-    Submit Form
-
 the radio button should have the new selection
     [Arguments]    ${ORG_TYPE}
     Radio Button Should Be Set To    organisationType    ${ORG_TYPE}
@@ -259,17 +185,3 @@ the user verifies the email
     Capture Page Screenshot
     Delete All Emails
     close mailbox
-
-
-the user tries to go back, but can't modify their details
-    Go Back
-    the user should not see the text in the page        Create your account
-    the user should see the text in the page            Sign in
-
-the user can see the updated company name throughut the application
-    the user navigates to the page    ${FINANCES_OVERVIEW_URL}
-    the user should see the text in the page        Nomensa
-    the user navigates to the page      ${APPLICATION_TEAM_URL}
-    the user should see the text in the page        Nomensa
-    the user navigates to the page    ${MANAGE_CONTRIBUTORS_URL}
-    the user should see the text in the page        Nomensa
