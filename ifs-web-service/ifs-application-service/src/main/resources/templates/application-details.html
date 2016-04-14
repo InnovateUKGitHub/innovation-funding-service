@@ -27,8 +27,7 @@
             <dt>Innovate UK</dt>
             <dd>Application deadline:</dd>
             <dt>
-              12:00pm
-              <div th:remove="tag" th:text="${#temporals.dayOfWeekName(currentCompetition.endDate)}" />
+              <div th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'hh:mma EEEE')}" />
               <div th:include="fragments/elements :: ordinal-day (date=${currentCompetition.endDate})" th:remove="tag" />
               <div th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'MMMM yyyy')}" />
             </dt>
