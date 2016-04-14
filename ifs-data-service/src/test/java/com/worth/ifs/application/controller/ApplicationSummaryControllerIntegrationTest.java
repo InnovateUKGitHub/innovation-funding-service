@@ -174,7 +174,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     
     @Test
     public void testApplicationSummariesByClosedCompetitionId() throws Exception {
-        RestResult<ClosedCompetitionSubmittedApplicationSummaryPageResource> result = controller.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null);
+        RestResult<ApplicationSummaryPageResource> result = controller.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null);
         
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -185,7 +185,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     
     @Test
     public void testNotSubmittedApplicationSummariesByClosedCompetitionId() throws Exception {
-        RestResult<ClosedCompetitionNotSubmittedApplicationSummaryPageResource> result = controller.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null);
+        RestResult<ApplicationSummaryPageResource> result = controller.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(COMPETITION_ID, 0, null);
         
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
