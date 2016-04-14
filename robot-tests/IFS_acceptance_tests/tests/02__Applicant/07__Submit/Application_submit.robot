@@ -71,7 +71,7 @@ Submit flow (complete application)
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
     [Tags]    Email    HappyPath        Pending
-    # Fix this test and remove the tag TODO EC
+    # Pending due to INFUND-2492
     Then the user should get a confirmation email
 
 Submitted application is read only

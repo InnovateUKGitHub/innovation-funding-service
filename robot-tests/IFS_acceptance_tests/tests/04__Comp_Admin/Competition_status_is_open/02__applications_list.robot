@@ -63,8 +63,7 @@ The applications can be sorted by project lead
 
 The applications can be sorted by percentage complete
     [Documentation]    INFUND-2300: listing of applications for an open competition
-    [Tags]    Competition management        Pending
-    # TODO EC remove tag and fix test
+    [Tags]    Competition management
     When the application list is sorted by    Percentage complete
     Then the applications should be sorted in reverse order by column        5
 
@@ -132,11 +131,15 @@ the applications should be sorted in reverse order by column
     @{sorted_column_contents}=     Create List
     : FOR       ${row}      IN RANGE        2       ${row_count}
     \   ${cell_contents}=       get table cell      css=table       ${row}      ${column_number}
+    \   convert to number       ${cell_contents}
     \   append to list       ${sorted_column_contents}      ${cell_contents}
 
     ${test_sorting_list}=    Copy List       ${sorted_column_contents}
     Sort List       ${test_sorting_list}
+    log to console  ${test_sorting_list}
+    log to console  ${sorted_column_contents}
     Reverse List    ${test_sorting_list}
+    log to console  ${test_sorting_list}
     Lists Should Be Equal          ${sorted_column_contents}        ${test_sorting_list}
 
 the user can see the upload for the 'Technical approach' question
