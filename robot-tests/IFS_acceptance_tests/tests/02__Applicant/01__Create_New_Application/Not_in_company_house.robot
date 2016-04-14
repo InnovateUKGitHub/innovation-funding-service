@@ -53,4 +53,4 @@ Manually can enter and see details pass to the confirmation page
 *** Keywords ***
 the applicant can reload the page
     Reload Page
-    #Alert Should Be Present
+

@@ -177,9 +177,8 @@ the user opens the mailbox and verfies the official innovate email
     the user opens the mailbox and verifies the email from    noresponse@innovateuk.gov.uk
 
 the user opens the mailbox and verifies the email from
-    [Arguments]    ${sender}
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    ${LATEST} =    wait for email    fromEmail=${sender}
+    ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
@@ -190,17 +189,6 @@ the user opens the mailbox and verifies the email from
     Capture Page Screenshot
     Delete All Emails
     close mailbox
-
-the user enters the details and clicks the create account
-    [Arguments]    ${REG_EMAIL}
-    Input Text    id=firstName    Stuart
-    Input Text    id=lastName    ANDERSON
-    Input Text    id=phoneNumber    23232323
-    Input Text    id=email    ${REG_EMAIL}
-    Input Password    id=password    Passw0rd2
-    Input Password    id=retypedPassword    Passw0rd2
-    Select Checkbox    termsAndConditions
-    Submit Form
 
 the user opens the mailbox and accepts the invitation to collaborate
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
@@ -215,3 +203,29 @@ the user opens the mailbox and accepts the invitation to collaborate
     Capture Page Screenshot
     Delete All Emails
     close mailbox
+
+Delete the emails from the test mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+
+the user enters the details and clicks the create account
+    [Arguments]    ${REG_EMAIL}
+    Input Text    id=firstName    Stuart
+    Input Text    id=lastName    ANDERSON
+    Input Text    id=phoneNumber    23232323
+    Input Text    id=email    ${REG_EMAIL}
+    Input Password    id=password    Passw0rd2
+    Input Password    id=retypedPassword    Passw0rd2
+    Select Checkbox    termsAndConditions
+    Submit Form
+
+the user fills the create account form
+    [Arguments]    ${NAME}    ${LAST_NAME}
+    Input Text    id=firstName    ${NAME}
+    Input Text    id=lastName    ${LAST_NAME}
+    Input Text    id=phoneNumber    0612121212
+    Input Password    id=password    Passw0rd
+    Input Password    id=retypedPassword    Passw0rd
+    Select Checkbox    termsAndConditions
+    Submit Form

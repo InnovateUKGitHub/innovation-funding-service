@@ -1,8 +1,6 @@
 package com.worth.ifs;
 
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.application.service.CompetitionService;
@@ -35,6 +33,8 @@ public class CompetitionManagementController {
     @Autowired
     private ApplicationSummaryService applicationSummaryService;
 
+    @Autowired
+    private ApplicationSummarySortFieldService applicationSummarySortFieldService;
 
     @RequestMapping("/{competitionId}")
     public String displayCompetitionInfo(Model model, @PathVariable("competitionId") Long competitionId, @ModelAttribute ApplicationSummaryQueryForm queryForm, BindingResult bindingResult){
@@ -57,56 +57,51 @@ public class CompetitionManagementController {
     	}
     }
 
+	private String openCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
+			BindingResult bindingResult) {
+
+		String sort = applicationSummarySortFieldService.sortFieldForOpenCompetition(queryForm.getSort());
+
+		ApplicationSummaryPageResource applicationSummary = applicationSummaryService.findByCompetitionId(competitionId, queryForm.getPage() - 1, sort);
+		model.addAttribute("results", applicationSummary);
+		model.addAttribute("activeSortField", sort);
+
+        LOG.warn("Show open competition info");
+        return "comp-mgt";
+	}
+
 	private String inAssessmentCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
 			BindingResult bindingResult) {
 		
 		if("notSubmitted".equals(queryForm.getTab())) {
-			ClosedCompetitionNotSubmittedApplicationSummaryPageResource results = applicationSummaryService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
-			model.addAttribute("results", results);
-			model.addAttribute("activeTab", "notSubmitted");
-			model.addAttribute("activeSortField", getActiveSortFieldForClosedCompetitionNotSubmittedApplications(queryForm.getSort()));
+			populateNotSubmittedModel(model, competitionId, queryForm, bindingResult);
+
 		} else {
-			ClosedCompetitionSubmittedApplicationSummaryPageResource results = applicationSummaryService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
-			model.addAttribute("results", results);
-			model.addAttribute("activeTab", "submitted");
-			model.addAttribute("activeSortField", getActiveSortFieldForClosedCompetitionSubmittedApplications(queryForm.getSort()));
+			populateSubmittedModel(model, competitionId, queryForm, bindingResult);
 		}
 		
         LOG.warn("Show in assessment competition info");
         return "comp-mgt-in-assessment";
 	}
 
-	private String openCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
+	private void populateNotSubmittedModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
 			BindingResult bindingResult) {
-		
-		ApplicationSummaryPageResource applicationSummary = applicationSummaryService.findByCompetitionId(competitionId, queryForm.getPage() - 1, queryForm.getSort());
-		model.addAttribute("results", applicationSummary);
-		model.addAttribute("activeSortField", getActiveSortFieldForOpenCompetition(queryForm.getSort()));
-
-        LOG.warn("Show open competition info");
-        return "comp-mgt";
+		String sort = applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(queryForm.getSort());
+		ApplicationSummaryPageResource results = applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(competitionId, queryForm.getPage() - 1, sort);
+		model.addAttribute("results", results);
+		model.addAttribute("activeTab", "notSubmitted");
+		model.addAttribute("activeSortField", sort);
 	}
 
-    private String getActiveSortFieldForOpenCompetition(String sort) {
-    	return activeSortField(sort, "percentageComplete", "id", "lead", "name", "status");
-	}
-    
-	private String getActiveSortFieldForClosedCompetitionSubmittedApplications(String sort) {
-		return activeSortField(sort,  "id", "lead", "name", "numberOfPartners", "grantRequested", "totalProjectCost", "duration");
-	}
-
-	private String getActiveSortFieldForClosedCompetitionNotSubmittedApplications(String sort) {
-		return activeSortField(sort, "percentageComplete", "id", "lead", "name");
+	private void populateSubmittedModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
+			BindingResult bindingResult) {
+		String sort = applicationSummarySortFieldService.sortFieldForSubmittedApplications(queryForm.getSort());
+		ApplicationSummaryPageResource results = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, queryForm.getPage() - 1, sort);
+		model.addAttribute("results", results);
+		model.addAttribute("activeTab", "submitted");
+		model.addAttribute("activeSortField", sort);
 	}
 
-	private String activeSortField(String givenField, String defaultField, String... allowedFields) {
-		for(String allowedField: allowedFields) {
-			if(allowedField.equals(givenField)) {
-				return givenField;
-			}
-		}
-		return defaultField;
-	}
 
 	@RequestMapping("/{competitionId}/download")
     public void downloadApplications(@PathVariable("competitionId") Long competitionId, HttpServletResponse response) throws IOException {
@@ -122,6 +117,5 @@ public class CompetitionManagementController {
             IOUtils.copy(resource.getInputStream(), response.getOutputStream());
             response.flushBuffer();
         }
-
     }
 }
