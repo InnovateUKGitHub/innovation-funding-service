@@ -368,23 +368,54 @@ public final class CollectionFunctions {
         return null;
     }
 
+    /**
+     * Convert the given varargs to a LinkedHashSet
+     *
+     * @param items
+     * @param <T>
+     * @return
+     */
     public static <T> Set<T> asLinkedSet(T... items) {
         LinkedHashSet<T> set = new LinkedHashSet<>();
         asList(items).forEach(set::add);
         return set;
     }
 
+    /**
+     * Given a list, this method will return a new list with the element at the given index removed
+     *
+     * @param list
+     * @param index
+     * @param <T>
+     * @return
+     */
     public static <T> List<T> removeElement(List<T> list, int index) {
         List<T> copy = new ArrayList<>(list);
         copy.remove(index);
         return copy;
     }
 
+    /**
+     * Given a list, this method will remove any duplicate entries from it and return the list in the same order as it was given
+     *
+     * @param list
+     * @param <T>
+     * @return
+     */
     public static <T> List<T> removeDuplicates(List<T> list) {
         Set<T> set = new LinkedHashSet<>(list);
         return new ArrayList<>(set);
     }
 
+    /**
+     * Given a list of elements, this method will find all possible permutations of those elements.
+     *
+     * E.g. given (1, 2, 3), possible permutations are (1, 2, 3), (2, 1, 3), (3, 1, 2) etc...
+     *
+     * @param excludedWords
+     * @param <T>
+     * @return
+     */
     public static <T> List<List<T>> findPermutations(List<T> excludedWords) {
         List<List<List<T>>> allPermutations = mapWithIndex(excludedWords, (i, currentWord) -> findPermutations(emptyList(), currentWord, removeElement(excludedWords, i)));
         return flattenLists(allPermutations);
