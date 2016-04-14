@@ -190,17 +190,6 @@ the user opens the mailbox and verifies the email from
     Delete All Emails
     close mailbox
 
-the user enters the details and clicks the create account
-    [Arguments]    ${REG_EMAIL}
-    Input Text    id=firstName    Stuart
-    Input Text    id=lastName    ANDERSON
-    Input Text    id=phoneNumber    23232323
-    Input Text    id=email    ${REG_EMAIL}
-    Input Password    id=password    Passw0rd2
-    Input Password    id=retypedPassword    Passw0rd2
-    Select Checkbox    termsAndConditions
-    Submit Form
-
 the user opens the mailbox and accepts the invitation to collaborate
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
     ${LATEST} =    wait for email
@@ -214,6 +203,17 @@ the user opens the mailbox and accepts the invitation to collaborate
     Capture Page Screenshot
     Delete All Emails
     close mailbox
+
+the user enters the details and clicks the create account
+    [Arguments]    ${REG_EMAIL}
+    Input Text    id=firstName    Stuart
+    Input Text    id=lastName    ANDERSON
+    Input Text    id=phoneNumber    23232323
+    Input Text    id=email    ${REG_EMAIL}
+    Input Password    id=password    Passw0rd2
+    Input Password    id=retypedPassword    Passw0rd2
+    Select Checkbox    termsAndConditions
+    Submit Form
 
 the user fills the create account form
     [Arguments]    ${NAME}    ${LAST_NAME}
