@@ -39,6 +39,7 @@ Lead applicant can access the Application team page
 Valid invitation submit
     [Documentation]    INFUND-901
     [Tags]    HappyPath
+    [Setup]    Delete the emails from the test mailbox
     Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     When the applicant enters valid inputs
     Then the user should see the text in the page    Application team
@@ -144,6 +145,7 @@ When the Lead applicant invites a non registered user in the same organisation
     ...
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
     [Tags]    HappyPath
+    [Setup]    Delete the emails from the test mailbox
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage Contributors
