@@ -2,9 +2,6 @@ package com.worth.ifs.finance.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.application.resource.FormInputResponseFileEntryResource;
-import com.worth.ifs.commons.error.*;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -24,9 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -203,10 +199,10 @@ public class ApplicationFinanceController {
         ServiceResult<ApplicationFinanceResource> applicationFinanceServiceResult = costService.getApplicationFinanceById(applicationFinanceId);
         ServiceResult<ApplicationFinanceResource> applicationFinanceResourceServiceResult = applicationFinanceServiceResult.andOnSuccess(applicationFinanceResource -> {
             Long fileEntryId = applicationFinanceResource.getFinanceFileEntry();
-            return fileService.deleteFile(fileEntryId).andOnSuccess(deletedFile -> {
-                    applicationFinanceResource.setFinanceFileEntry(null);
-                    return costService.updateCost(applicationFinanceResource.getId(), applicationFinanceResource).andOnSuccess(ServiceResult::serviceSuccess);
-                });
+            return fileService.deleteFile(fileEntryId).andOnSuccess(() -> {
+                applicationFinanceResource.setFinanceFileEntry(null);
+                return costService.updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
+            });
         });
         return applicationFinanceResourceServiceResult.toDeleteResponse();
     }

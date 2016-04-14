@@ -1,6 +1,7 @@
 package com.worth.ifs.commons.service;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * An interface that represents a result of some process that can either fail or succeed.  Additionally, it can then be chained with
@@ -18,6 +19,14 @@ public interface FailingOrSucceedingResult<SuccessType, FailureType> {
     FailureType getFailure();
 
     <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(ExceptionThrowingFunction<? super SuccessType, FailingOrSucceedingResult<R, FailureType>> successHandler);
+
+    <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(Runnable successHandler);
+
+    FailingOrSucceedingResult<Void, FailureType> andOnSuccessReturnVoid(Runnable successHandler);
+
+    <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(Supplier<FailingOrSucceedingResult<R, FailureType>> successHandler);
+
+    <R> FailingOrSucceedingResult<R, FailureType> andOnSuccessReturn(Supplier<R> successHandler);
 
     <R> FailingOrSucceedingResult<R, FailureType> andOnSuccessReturn(ExceptionThrowingFunction<? super SuccessType, R> successHandler);
 
