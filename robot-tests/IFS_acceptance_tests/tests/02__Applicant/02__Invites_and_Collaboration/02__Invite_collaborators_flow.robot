@@ -13,7 +13,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...               INFUND-1463: As a user with an invitation to collaborate on an application but not registered with IFS I want to be able to confirm my organisation so that I only have to create my account to work on the application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Invites
+Force Tags        Invites    Email
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
