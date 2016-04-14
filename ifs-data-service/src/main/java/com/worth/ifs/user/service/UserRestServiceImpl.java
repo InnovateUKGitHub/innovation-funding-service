@@ -56,7 +56,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(StringUtils.isEmpty(email))
             return restFailure(notFoundError(User.class, email));
 
-        return getWithRestResult(userRestURL + "/"+UserController.URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
+        return getWithRestResultAnonymous(userRestURL + "/"+UserController.URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
             return restFailure(badRequestError("Missing the hash to reset the password with"));
 
         LOG.warn("checkPasswordResetHash 2 " + userRestURL + "/"+ UserController.URL_CHECK_PASSWORD_RESET_HASH+"/"+hash);
-        return getWithRestResult(userRestURL + "/"+ UserController.URL_CHECK_PASSWORD_RESET_HASH+"/"+hash, Void.class);
+        return getWithRestResultAnonymous(userRestURL + "/"+ UserController.URL_CHECK_PASSWORD_RESET_HASH+"/"+hash, Void.class);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
             return restFailure(badRequestError("Missing the hash to reset the password with"));
 
         LOG.warn("resetPassword 2 " + userRestURL + "/"+ UserController.URL_PASSWORD_RESET+"/"+hash+"/"+password);
-        return getWithRestResult(String.format("%s/%s/%s/%s", userRestURL, UserController.URL_PASSWORD_RESET, hash, password), Void.class);
+        return getWithRestResultAnonymous(String.format("%s/%s/%s/%s", userRestURL, UserController.URL_PASSWORD_RESET, hash, password), Void.class);
     }
 
     @Override

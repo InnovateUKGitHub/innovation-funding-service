@@ -44,6 +44,10 @@ public final class CommonErrors {
         return new Error(BAD_REQUEST, message, BAD_REQUEST);
     }
 
+    public static Error badRequestErrorWithKey(String key) {
+        return new Error(key, BAD_REQUEST);
+    }
+
     public static Error internalServerErrorError() {
         return internalServerErrorError(null);
     }

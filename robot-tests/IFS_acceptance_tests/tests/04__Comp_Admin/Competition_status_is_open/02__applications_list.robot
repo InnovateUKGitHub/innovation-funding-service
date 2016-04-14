@@ -64,6 +64,7 @@ The applications can be sorted by project lead
 The applications can be sorted by percentage complete
     [Documentation]    INFUND-2300: listing of applications for an open competition
     [Tags]    Competition management        Pending
+    # TODO EC remove tag and fix test
     When the application list is sorted by    Percentage complete
     Then the applications should be sorted in reverse order by column        5
 

@@ -9,9 +9,11 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...
 ...               INFUND-929: As a lead applicant i want to be able to have a separate screen, so that i can invite contributors to the application
-Suite Setup       Guest user log-in    &{lead_applicant_credentials}
+...
+...
+...               INFUND-1463: As a user with an invitation to collaborate on an application but not registered with IFS I want to be able to confirm my organisation so that I only have to create my account to work on the application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Create new application    collaboration
+Force Tags        Invites    Email
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -20,21 +22,78 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${INVITE_COLLABORATORS_PAGE}    ${SERVER}/application/1/contributors/invite?newApplication
-${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/2/contributors/invite?newApplication
-${INVITE_COLLABORATORS_PAGE}    ${SERVER}/application/1/contributors/invite?newApplication
 ${APPLICATION_TEAM_PAGE}    ${SERVER}/application/1/contributors
-${YOUR_FINANCES_URL}    ${SERVER}/application/1/form/section/7
 
 *** Test Cases ***
+Lead applicant can access the Application team page
+    [Documentation]    INFUND-928
+    [Tags]    HappyPath
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    Given the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
+    And the user should see the text in the page    View team members and add collaborators
+    When the user clicks the button/link    link=View team members and add collaborators
+    Then the user should see the text in the page    Application team
+    And the user should see the text in the page    View and manage your contributors and partners in the application.
+    And the lead applicant should have the correct status
+
 Valid invitation submit
     [Documentation]    INFUND-901
     [Tags]    HappyPath
     Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     When the applicant enters valid inputs
-    And the user verifies their email    ${verify_link_3}
-    And the user logs back in
-    Then the user should see the text in the page    Your dashboard
-    And the lead applicant logs back in
+    Then the user should see the text in the page    Application team
+    And the user should see the text in the page    Invites sent
+
+Pending users are visible in the assign list but not clickable
+    [Documentation]    INFUND-928
+    ...
+    ...    INFUND-1962
+    [Tags]
+    Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
+    Then the applicant cannot assign to pending invitees
+    And the user should see the text in the page    Adrian Booth (pending)
+    And the user navigates to the page    ${LOG_OUT}
+
+Business organisation (accept invitation)
+    [Documentation]    INFUND-1005
+    ...    INFUND-2286
+    ...    INFUND-1779
+    ...    INFUND-2336
+    [Tags]    HappyPath    Email
+    When the user opens the mailbox and accepts the invitation to collaborate
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And user selects the radio button    organisationType    1
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    And the user enters text to a text field    id=organisationSearchName    Nomensa
+    And the user clicks the button/link    id=org-search
+    And the user clicks the button/link    link=NOMENSA LTD
+    And the user selects the same address
+    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user fills the create account form    Adrian    Booth
+    And the user opens the mailbox and verifies the email from
+    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+
+User who accepted the invite should be able to log-in
+    [Tags]
+    Given the user clicks the button/link    jQuery=.button:contains("Log in")
+    When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd
+    Then the user should be redirected to the correct page    ${DASHBOARD_URL}
+    And the user can see the updated company name throughout the application
+
+User who accepted the invite can invite others to their own organisation
+    [Documentation]    INFUND-2335
+    [Tags]    Pending
+    # pending as not yet finished
+    When the user navigates to the page    ${MANAGE_CONTRIBUTORS_URL}
+    Then the user should see the element    foobar
+
+User who accepted the invite cannot invite others to other organisations
+    [Documentation]    INFUND-2335
+    [Tags]    Pending
+    # pending as not yet finished
+    When the user navigates to the page    ${MANAGE_CONTRIBUTORS_URL}
+    Then the user should not see the element    foobar
 
 Collaborator can change the name of their company and this updates throughout the application
     [Documentation]    INFUND-2083
@@ -46,17 +105,15 @@ Collaborator can change the name of their company and this updates throughout th
     Then the new company name should be shown throughout the application
     And the lead applicant logs back in
     And the new company name should be shown throughout the application
-    [Teardown]    TestTeardown User closes the browser
 
-Lead applicant can access the Application team page(Link in the overview page)
-    [Documentation]    INFUND-928
+The collaborator who accepted the invite should be visible in the assign list
+    [Documentation]    INFUND-1779
     [Tags]    HappyPath
-    Given the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
-    And the user should see the text in the page    View team members and add collaborators
-    When the user clicks the button/link    link=View team members and add collaborators
-    Then the user should see the text in the page    Application team
-    And the user should see the text in the page    View and manage your contributors and partners in the application.
-    And the lead applicant should have the correct status
+    [Setup]    Run keywords    User closes the browser
+    ...    AND    Log in as user    &{lead_applicant_credentials}
+    When the user navigates to the page    ${PROJECT_SUMMARY_URL}
+    And the user clicks the button/link    css=.assign-button
+    Then the user should see the element    jQuery=button:contains("Adrian Booth")
 
 Status of the invited people (Application team page)
     [Documentation]    INFUND-929
@@ -72,18 +129,6 @@ Status of the invited people (Manage contributors page)
     Then the user should see the text in the page    Manage Contributors
     And the status of the people should be correct in the Manage contributors page
 
-The lead applicant can add new collaborators
-    [Documentation]    INFUND-928
-    [Tags]    HappyPath
-    Given the user navigates to the page    ${APPLICATION_TEAM_URL}
-    When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then the user should see the text in the page    Manage Contributors
-    And the user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
-    When the user adds new collaborator
-    And the applicant can enter Organisation name, Name and E-mail
-    And the user clicks the button/link    jquery=button:contains("Save Changes")
-    Then the user should be redirected to the correct page    ${APPLICATION_TEAM_URL}
-
 Invited collaborators are not editable
     [Documentation]    INFUND-929
     [Tags]
@@ -92,33 +137,45 @@ Invited collaborators are not editable
     Then the user should see the text in the page    Manage Contributors
     And the invited collaborators are not editable
 
-Pending users are visible in the assign list but not clickable
+When the Lead applicant invites a non registered user in the same organisation
     [Documentation]    INFUND-928
     ...
-    ...    INFUND-1962
-    [Tags]
-    Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    Then the applicant cannot assign to pending invitees
-    And the user should see the text in the page    Roger Axe (pending)
+    ...    INFUND-1463
+    ...
+    ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
+    [Tags]    HappyPath
+    Given the user navigates to the page    ${APPLICATION_TEAM_URL}
+    When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    Then the user should see the text in the page    Manage Contributors
+    And the user clicks the button/link    jQuery=li:nth-child(4) button:contains("Add person")
+    When the user adds new collaborator
+    And the user clicks the button/link    jquery=button:contains("Save Changes")
+    Then the user should be redirected to the correct page    ${APPLICATION_TEAM_URL}
+    [Teardown]    User closes the browser
+
+The user should not create new org but should follow the create account flow
+    [Documentation]    INFUND-1463
+    ...
+    ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
+    [Setup]    The guest user opens the browser
+    When the user opens the mailbox and accepts the invitation to collaborate
+    And the user should see the text in the page    Join an application
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user should see the text in the page    Your organisation
+    And the user should see the text in the page    Business Organisation
+    And the user should see the element    link=email the application lead
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    And the user fills the create account form    Roger    Axe
+    And the user opens the mailbox and verifies the email from
+    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 *** Keywords ***
 the applicant enters valid inputs
-    click element    jquery=button:contains('Add person')
-    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    tester
-    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    ewan+1@hiveit.co.uk
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[3].organisationName    Fannie May
-    #Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
-    Input Text    name=organisations[3].invites[0].personName    Collaborator 2
-    #Input Text    css=li:nth-child(3) tr:nth-of-type(1) td:nth-of-type(3) input    ewan+10@hiveit.co.uk
-    Input Text    name=organisations[3].invites[0].email    ewan+10@hiveit.co.uk
-    Click Element    jquery=li:nth-child(4) button:contains('Add person')
-    #Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
-    Input Text    name=organisations[3].invites[1].personName    Collaborator 3
-    #Input Text    css=li:nth-child(3) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
-    Input Text    name=organisations[3].invites[1].email    ewan+11@hiveit.co.uk
-    focus    jquery=li:nth-child(3) button:contains('Add person')
-    Sleep    1s
+    Input Text    name=organisations[3].invites[0].personName    Adrian Booth
+    Input Text    name=organisations[3].invites[0].email    worth.email.test+inviteorg1@gmail.com
+    focus    jquery=button:contains("Begin application")
     Click Element    jquery=button:contains("Begin application")
 
 The lead applicant should have the correct status
@@ -130,19 +187,11 @@ The lead applicant should have the correct status
     Should Be Equal As Strings    ${input_value}    (Lead Applicant)
 
 the user adds new collaborator
-    Wait Until Element Is Visible    name=organisations[0].invites[0].personName
-    Input Text    name=organisations[0].invites[0].personName    Roger Axe
-    Input Text    name=organisations[0].invites[0].email    ewan+13@hiveit.co.uk
+    Wait Until Element Is Visible    css=li:nth-child(4) tr:nth-of-type(2) td:nth-of-type(1) input
+    Input Text    css=li:nth-child(4) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
+    Input Text    css=li:nth-child(4) tr:nth-of-type(2) td:nth-of-type(2) input    worth.email.test+inviteorg2@gmail.com
     focus    jquery=li:nth-child(1) button:contains('Add person')
-    sleep    1s
-
-the applicant can enter Organisation name, Name and E-mail
-    Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
-    Input Text    name=organisations[3].organisationName    Z Ltd
-    Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(1) input    Elvis Furcic
-    Input Text    css=li:nth-child(4) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+14@hiveit.co.uk
-    focus    jquery=li:nth-child(2) button:contains('Add person')
-    Sleep    2s
+    sleep    300ms
 
 The status of the invited people should be correct in the application team page
     Element Should Contain    css=#content ul li:nth-child(1)    (Lead Applicant)
@@ -161,15 +210,11 @@ the invited collaborators are not editable
 
 the applicant cannot assign to pending invitees
     Click Element    jQuery=button:contains("Assigned to")
-    Page Should not Contain Element    jQuery=button:contains("tester")
+    Page Should not Contain Element    jQuery=button:contains("Adrian Booth")
 
 the status of the people should be correct in the Manage contributors page
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    Lead applicant
     Element Should Contain    css=li:nth-child(1) tr:nth-of-type(2) td:nth-child(3)    (pending)
-    # Element Should Not Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
-
-the user logs back in
-    guest user log-in    ewan+1@hiveit.co.uk    Passw0rd
 
 the lead applicant logs out
     Logout as user
@@ -185,3 +230,16 @@ the new company name should be shown throughout the application
 
 the lead applicant logs back in
     guest user log-in    &{lead_applicant_credentials}
+
+user selects the radio button
+    [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
+    Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
+
+the user can see the updated company name throughout the application
+    the user navigates to the page    ${FINANCES_OVERVIEW_URL}
+    the user should see the text in the page    NOMENSA LTD
+    the user navigates to the page    ${APPLICATION_TEAM_URL}
+    the user should see the text in the page    NOMENSA LTD
+
+the user selects the same address
+    select Checkbox    id=address-same

@@ -48,7 +48,7 @@ Calculations for the first collaborator
     And the finance Project cost breakdown calculations should be correct
     And the applicant enters a bigger funding amount
     # Then the contribution to project and funding sought should be 0 and not a negative number
-    # commented out this step for now as the numbers need to be readjusted EC
+    # commented out this step for now as the numbers need to be readjusted TODO EC
     [Teardown]    Log out as user
 
 Red warning should show when the finances are incomplete
