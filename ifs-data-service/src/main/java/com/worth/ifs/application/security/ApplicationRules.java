@@ -39,8 +39,7 @@ public class ApplicationRules {
     public boolean consortiumCanSeeTheParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
         final boolean isLeadApplicant = checkRole(user, applicationResource.getId(), LEADAPPLICANT);
         final boolean isCollaborator = checkRole(user, applicationResource.getId(), COLLABORATOR);
-        final boolean isApplicant = checkRole(user, applicationResource.getId(), APPLICANT);
-        return isLeadApplicant || isCollaborator || isApplicant;
+        return isLeadApplicant || isCollaborator;
     }
 
     @PermissionRule(value = "READ_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
@@ -61,7 +60,7 @@ public class ApplicationRules {
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")
     public boolean applicantCanUpdateApplicationResource(ApplicationResource application, UserResource user) {
-        List<Role> allApplicantRoles = roleRepository.findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()));
+        List<Role> allApplicantRoles = roleRepository.findByNameIn(Arrays.asList(LEADAPPLICANT.getName(), COLLABORATOR.getName()));
         List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, application.getId());
         return !applicantProcessRoles.isEmpty();
     }

@@ -10,8 +10,6 @@ import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,8 +25,6 @@ import static com.worth.ifs.user.domain.UserRoleType.*;
 @PermissionRules
 public class ApplicationFinancePermissionRules {
 
-    private static final Log LOG = LogFactory.getLog(ApplicationFinancePermissionRules.class);
-
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
@@ -39,7 +35,6 @@ public class ApplicationFinancePermissionRules {
     public boolean consortiumCanSeeTheApplicationFinancesForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         final boolean isLeadApplicant = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT);
         final boolean isCollaborator = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR);
-        final boolean isApplicant = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), APPLICANT);
         return isLeadApplicant || isCollaborator;
     }
 

@@ -36,7 +36,6 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         service.findAllCostFields();
         verify(costFieldPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).loggedInUsersCanReadCostFieldReferenceData(isA(CostFieldResource.class), isA(UserResource.class));
         verifyNoMoreInteractions(costFieldPermissionsRules);
-
     }
 
     @Override
