@@ -66,7 +66,7 @@ The 'your finances' section can be successfully saved
 
 The 'your finances' section cannot be successfully saved
     the user is on the page    ${your_finances_url}
-    the user sees the text in the page    This field should be
+    the user should see the text in the page    This field should be
 
 Applicant enters the organisation size
     [Arguments]    ${org_size_option}
@@ -77,8 +77,9 @@ Applicant enters the funding level
     Input Text    id=cost-financegrantclaim    ${funding_level}
 
 Applicant chooses to save and return to application overview
-    the user clicks the button/link    Save and return to application overview
-    the user should be redirected to the correct page  ${application_overview_url}
+    Click Button        Save and return to application overview
+    # the user clicks the button/link    link=Save and return to application overview
+    # the user should be redirected to the correct page  ${application_overview_url}
 
 Applicant can see the correct organisation size has been selected
     [Arguments]    ${org_size_option}
