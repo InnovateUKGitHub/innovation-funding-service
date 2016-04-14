@@ -106,7 +106,6 @@ the applicant inserts "2016" in the Year field(valid date)
     Input Text    id=application_details-startdate_year    2016
 
 the applicant clears the text area of the "Project Summary"
-    #Question should be editable    css=#form-input-11 .buttonlink[name="mark_as_incomplete"]
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn

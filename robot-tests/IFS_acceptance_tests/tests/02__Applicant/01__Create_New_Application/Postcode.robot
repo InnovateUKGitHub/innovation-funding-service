@@ -10,7 +10,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
 Enter Valid Postcode and see the results in the dropdown
-    [Documentation]    INFUND-890    # note that this will only work for the dev server for now, since postcode lookup isn't implemented on our local machines
+    [Documentation]    INFUND-890
     [Tags]    HappyPath
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
