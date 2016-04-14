@@ -73,8 +73,7 @@ Non pdf uploads not allowed
     Given the user can see the option to upload a file on the page    ${PROJECT_TEAM_URL}
     When the user uploads the file to the 'project team' question    ${text_file}
     Then the user should get an error page    ${wrong_filetype_validation_error}
-    # And the user uploads the file to the 'project team' question        ${valid_pdf}
-    # note: this suite finishes by uploading this file so that its visibility can be later tested for the comp manager - please don't remove this last step!
+
 
 
 *** Keywords ***
