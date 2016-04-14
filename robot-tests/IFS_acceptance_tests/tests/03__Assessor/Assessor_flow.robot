@@ -10,11 +10,15 @@ Suite Setup       Guest user log-in    &{assessor_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Test Setup
 Test Teardown
+Force Tags         Pending
+# These tests are pending since the assessor pages are due to be refactored
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
 Resource          ../../resources/keywords/Login_actions.robot
 Resource          ../../resources/keywords/User_actions.robot
+
+
 
 *** Variables ***
 ${reject_application_name}    Security for the Internet of Things
@@ -34,33 +38,33 @@ ${persistence_application_name}    A new innovative solution
 *** Test Cases ***
 Assessment progress is 1 out of 4
     [Documentation]    INFUND-302
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_before}
 
 Assessor can see the applications details page
     [Documentation]    INFUND-337
-    [Tags]    Assessor    HappyPath    Failing
+    [Tags]    Assessor    HappyPath
     When the user clicks the button/link        link=${competition_name}
     Then Competition's details page should be visible
 
 Application invitation review page shows the title
     [Documentation]    INFUND-329
-    [Tags]    Assessor    HappyPath    Failing
+    [Tags]    Assessor    HappyPath
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Application title
 
 Application invitation review page shows partners
     [Documentation]    INFUND-329
-    [Tags]    Assessor    HappyPath    Failing
+    [Tags]    Assessor    HappyPath
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     Then Application invitation Review page shows the Partners organisations
 
 Application state changes when accepting an invitation for assessment
     [Documentation]    INFUND-338
-    [Tags]    Assessor    HappyPath    Failing
+    [Tags]    Assessor    HappyPath
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     And Assessor accepts the application
@@ -68,7 +72,7 @@ Application state changes when accepting an invitation for assessment
 
 Application state changes when rejecting an invitation for assessment
     [Documentation]    INFUND-338
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     And Assessor opens an application    ${reject_application_name}
     When Assessor rejects the application
@@ -77,7 +81,7 @@ Application state changes when rejecting an invitation for assessment
 
 Application Summary sections can be opened and closed
     [Documentation]    INFUND-354
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     And Assessor clicks the Review Button
@@ -86,7 +90,7 @@ Application Summary sections can be opened and closed
 
 Application Summary sections contain questions
     [Documentation]    INFUND-354
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     When Assessor opens an application    ${accept_application_name}
     And Assessor clicks the Review Button
@@ -95,7 +99,7 @@ Application Summary sections contain questions
 
 Application Summary shows your feedback when appropriate
     [Documentation]    INFUND-357
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     And Assessor opens an application    ${accept_application_name}
     And Assessor clicks the Review Button
@@ -106,7 +110,7 @@ Application Summary shows your feedback when appropriate
 
 Application Summary returns an error message when submitting empty feedback
     [Documentation]    INFUND-357
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     Given Assessor is viewing the Competitions Applications list
     And Assessor opens an application    ${accept_application_name}
     And Assessor clicks the Review Button
@@ -140,7 +144,7 @@ Competition for Assessment count
 
 Applications details page has two lists
     [Documentation]    INFUND-322
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     When Assessor clicks the competition
     Then Details page should contain a list with the applications for assessment
@@ -148,13 +152,13 @@ Applications details page has two lists
 
 Assessment progress is 1 out of 3
     [Documentation]    INFUND-302
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     When Assessor is viewing the Competitions list
     Then Competitions progress should show    @{competitions_assessment_progress_after}
 
 Application Review changes are persisted when saving
     [Documentation]    INFUND-354
-    [Tags]    Assessor    Failing
+    [Tags]    Assessor
     ${section_name} =    Set Variable    Scope
     ${feedback_selection_value} =    Set Variable    No
     ${feedback_textarea_value} =    Set Variable    Test feedback text UNIQUE123

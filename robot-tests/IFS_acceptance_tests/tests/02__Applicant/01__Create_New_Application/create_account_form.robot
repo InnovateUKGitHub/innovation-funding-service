@@ -66,6 +66,8 @@ Phone number left blank
     And the user logs out if they are logged in
 
 Phone number validation
+    [Documentation]    -INFUND-885
+    [Tags]    Account    Validations
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
@@ -79,6 +81,8 @@ Phone number validation
     And the user logs out if they are logged in
 
 Phone number too short
+    [Documentation]    -INFUND-885
+    [Tags]    Account    Validations
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
@@ -188,7 +192,7 @@ Valid account creation
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
-    And the user enters text to a text field    id=email    ${email_already_in_db}
+    And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information

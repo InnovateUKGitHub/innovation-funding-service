@@ -53,7 +53,8 @@ Logout as user
     Sleep    1s
     Location Should contain    ${LOGGED_OUT_URL_FRAGMENT}
 
-    
+The user can log out
+    logout as user
 
 Get Sauce Labs Test Report
     Run keyword and ignore error     Report Sauce status    'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}

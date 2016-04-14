@@ -21,7 +21,7 @@ If user from the list is not registered shouldn't be able to login
 
 Registration for a user who is in the list
     [Documentation]    INFUND-2129
-    [Tags]    HappyPath    FailingForLocal
+    [Tags]    HappyPath     Email
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And User creates new account verifies email and login    worth.email.test+admin1@gmail.com
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR}
@@ -40,7 +40,7 @@ User creates new account verifies email and login
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details and clicks the create account    ${CREATE_ACCOUNT_EMAIL}
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user clicks the link from the appropriate email sender
+    And the user clicks the link from the appropriate email sender
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Log in")
     And the guest user inserts user email & password    ${CREATE_ACCOUNT_EMAIL}    Passw0rd

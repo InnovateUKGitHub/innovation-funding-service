@@ -49,7 +49,7 @@ Verify the navigation in the form sections
 
 Verify that the word count works
     [Documentation]    INFUND-198
-    [Tags]    Applicant    Form    # HappyPath
+    [Tags]    Applicant    Form
     Given the user navigates to the page    ${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}
     When the Applicant edits the Public description
     Then the word count should be correct for the Public description

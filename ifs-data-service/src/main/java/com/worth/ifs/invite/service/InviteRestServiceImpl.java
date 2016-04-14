@@ -5,6 +5,8 @@ import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.inviteOr
 
 @Service
 public class InviteRestServiceImpl extends BaseRestService implements InviteRestService {
+    private static final Log LOG = LogFactory.getLog(InviteRestServiceImpl.class);
 
     private String inviteRestUrl;
 
@@ -60,6 +63,12 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     public RestResult<Void> acceptInvite(String inviteHash, Long userId) {
         String url = inviteRestUrl + String.format("/acceptInvite/%s/%s", inviteHash, userId);
         return putWithRestResult(url, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> checkExistingUser(String inviteHash) {
+        String url = inviteRestUrl + String.format("/checkExistingUser/%s", inviteHash);
+        return getWithRestResult(url, Void.class);
     }
 
     @Override
