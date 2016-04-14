@@ -8,7 +8,6 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -22,7 +21,6 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
 import static java.util.Arrays.asList;
@@ -120,11 +118,6 @@ public class ApplicationRulesTest extends BaseUnitTestMocksTest {
     @Test
     public void userIsConnectedToApplicationResourceTest(){
         assertTrue(applicationRules.userIsConnectedToApplicationResource(applicationResource1, user1));
-    }
-
-    @Test
-    public void userIsLeadApplicantOnApplicationResourceTest(){
-        assertTrue(applicationRules.userIsLeadApplicantOnApplicationResource(applicationResource1, user1));
     }
 
     @Test
