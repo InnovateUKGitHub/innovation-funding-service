@@ -128,10 +128,18 @@
                                data-required-errormessage="Please enter your email" />
                     </span>
                 </div>
+
+
                 <div th:class="${#fields.hasErrors('password')}? 'form-group error':'form-group'">
                     <label class="form-label" for="password">
                         <span class="form-label-bold">Create password</span>
-                        <span class="form-hint">Passwords must be between 10 and 30 characters</span>
+                        <span class="form-hint">Your password is case-sensitive and needs to:
+                          <ul class="list-bullet">
+                            <li>be between 10 and 30 characters long</li>
+                            <li>contain at least 1 capital letter and 1 number</li>
+                            <li>be secure, ideally as a passphrase with spaces rather than easy to guess passwords such as names</li>
+                          </ul>
+                        </span>
                         <span th:if="${#fields.hasErrors('password')}" th:remove="tag">
                               <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
                         </span>
