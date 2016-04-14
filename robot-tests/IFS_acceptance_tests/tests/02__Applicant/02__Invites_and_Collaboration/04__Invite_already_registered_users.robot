@@ -16,6 +16,7 @@ ${INVITE_COLLABORATORS_PAGE_APPL1}    ${SERVER}application/1/contributors/invite
 The invited registered user should redirect to the correct page
     [Documentation]    INFUND-1458
     [Tags]
+    [Setup]    Delete the emails from the test mailbox
     Given we create a new user
     Given the lead applicant invites a registered user
     When the user opens the mailbox and accepts the invitation to collaborate

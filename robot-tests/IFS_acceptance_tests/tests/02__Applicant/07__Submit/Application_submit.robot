@@ -59,6 +59,7 @@ Submit flow (complete application)
     ...
     ...    INFUND-1887
     [Tags]    Summary    HappyPath
+    [Setup]    Delete the emails from the test mailbox
     Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
     When the user clicks the button/link    link=Review & submit
     And the user should be redirected to the correct page    ${SUMMARY_PAGE_APPLICATION_7}
@@ -71,7 +72,7 @@ Submit flow (complete application)
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
     [Tags]    Email    HappyPath        Pending
-    # Fix this test and remove the tag TODO EC
+    # Pending due to INFUND-2492
     Then the user should get a confirmation email
 
 Submitted application is read only

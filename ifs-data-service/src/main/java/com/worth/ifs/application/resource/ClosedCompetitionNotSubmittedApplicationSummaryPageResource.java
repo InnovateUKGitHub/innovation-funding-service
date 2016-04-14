@@ -1,5 +1,0 @@
-package com.worth.ifs.application.resource;
-
-public class ClosedCompetitionNotSubmittedApplicationSummaryPageResource extends PageResource<ClosedCompetitionNotSubmittedApplicationSummaryResource> {
-
-}
