@@ -51,11 +51,11 @@ public class ApplicationManagementController extends AbstractApplicationControll
     protected ProcessRoleService processRoleService;
 
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.GET)
-    public String displayCompetitionInfo(@PathVariable("competitionId") final String competitionId,
-                                               @PathVariable("applicationId") final String applicationIdString,
-                                               @ModelAttribute("form") ApplicationForm form,
-                                               Model model,
-                                               HttpServletRequest request
+    public String displayApplicationForCompetitionAdministrator(@PathVariable("competitionId") final String competitionId,
+                                                                @PathVariable("applicationId") final String applicationIdString,
+                                                                @ModelAttribute("form") ApplicationForm form,
+                                                                Model model,
+                                                                HttpServletRequest request
     ){
         UserResource user = getLoggedUser(request);
         Long applicationId = Long.valueOf(applicationIdString);
