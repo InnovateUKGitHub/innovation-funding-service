@@ -24,6 +24,7 @@ import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.*;
+import com.worth.ifs.user.transactional.PasswordPolicyValidator;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
 import org.junit.Before;
@@ -142,6 +143,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected UserMapper userMapperMock;
+
+    @Mock
+    protected PasswordPolicyValidator passwordPolicyValidatorMock;
 
     @Before
     public void setupMockInjection() {

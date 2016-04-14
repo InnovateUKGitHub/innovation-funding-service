@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a FailureType, and a
@@ -33,6 +34,69 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
     public <R> BaseEitherBackedResult<R, FailureType> andOnSuccess(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, FailureType>> successHandler) {
         return map(successHandler);
     }
+
+    @Override
+    public BaseEitherBackedResult<Void, FailureType> andOnSuccessReturnVoid(Runnable successHandler) {
+
+        if (result.isLeft()) {
+            return createFailure((FailingOrSucceedingResult<Void, FailureType>) this);
+        }
+
+        try {
+            successHandler.run();
+            return (BaseEitherBackedResult<Void, FailureType>) this;
+        } catch (Exception e) {
+            LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public BaseEitherBackedResult<T, FailureType> andOnSuccess(Runnable successHandler) {
+
+        if (result.isLeft()) {
+            return createFailure(this);
+        }
+
+        try {
+            successHandler.run();
+            return this;
+        } catch (Exception e) {
+            LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(Supplier<FailingOrSucceedingResult<R, FailureType>> successHandler) {
+        if (result.isLeft()) {
+            return (BaseEitherBackedResult<R, FailureType>) createFailure(this);
+        }
+
+        try {
+            return (FailingOrSucceedingResult<R, FailureType>) successHandler.get();
+        } catch (Exception e) {
+            LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public <R> BaseEitherBackedResult<R, FailureType> andOnSuccessReturn(Supplier<R> successHandler) {
+
+        if (result.isLeft()) {
+            return (BaseEitherBackedResult<R, FailureType>) createFailure(this);
+        }
+
+        try {
+            R result = successHandler.get();
+            return createSuccess(result);
+        } catch (Exception e) {
+            LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public <R> BaseEitherBackedResult<R, FailureType> andOnSuccessReturn(ExceptionThrowingFunction<? super T, R> successHandler) {
