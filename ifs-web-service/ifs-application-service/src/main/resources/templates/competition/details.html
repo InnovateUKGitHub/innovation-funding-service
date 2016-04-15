@@ -49,13 +49,13 @@
         <div class="column-two-thirds">
             <p>Innovate UK is to invest up to &pound;9 million in feasibility studies to stimulate innovation across four enabling technology areas that underpin future UK growth: advanced materials; biosciences; electronics, sensors and photonics; and information and communication technology (ICT).</p>
             <ul class="list-bullet">
-                <li><a href="https://interact.innovateuk.org/-/technology-inspired-innovation-may-2015-advanced-materials">Full competition brief</a></li>
+                <li><a rel="external" href="https://interact.innovateuk.org/-/technology-inspired-innovation-may-2015-advanced-materials">Full competition brief</a></li>
             </ul>
             <p>The aim of this competition is to ensure that small and micro businesses in the UK are well positioned to respond to market opportunities across a range of economic sectors.</p>
             <p>Studies must be led by a business. Projects are open to companies of any size, but must be led by a small or micro company, working in collaboration with one or more business or research partners.</p>
             <p>Small or micro businesses could receive up to 70% of their eligible project costs, medium-sized businesses 60% and large businesses 50%.</p>
             <p>We expect projects to last 6 to 15 months and to range in size from total costs of £50,000 to £150,000, although we may consider projects outside this range.</p>
-            <p>This competition opens on  <span th:remove="tag" th:text="${#temporals.format(currentCompetition.startDate, 'd MMMM yyyy')}" />, and the deadline for applications is at noon on <span th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'd MMMM yyyy')}" />,. There will be a briefing day for potential applicants in London on 20 May 2016.</p>
+            <p>This competition opens on  <span th:remove="tag" th:text="${#temporals.format(currentCompetition.startDate, 'd MMMM yyyy')}" />, and the deadline for applications is at <span th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'hh:mma')}" /> on <span th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'd MMMM yyyy')}" />. There will be a briefing day for potential applicants in London on 20 May 2016.</p>
         </div>
     </div>
 

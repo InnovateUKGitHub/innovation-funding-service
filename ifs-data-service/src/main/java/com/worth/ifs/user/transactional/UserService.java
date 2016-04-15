@@ -2,8 +2,11 @@ package com.worth.ifs.user.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Set;
@@ -13,30 +16,30 @@ import java.util.Set;
  */
 public interface UserService {
 
-    @NotSecured("Need to keep open to all to allow login")
+    @NotSecured("This UID method is needed prior to being able to put a User on the SecurityContext, and so it cannot be secured itself")
     ServiceResult<UserResource> getUserResourceByUid(final String uid);
 
-    @NotSecured("TODO - implement when permissions matrix in place")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserResource> getUserById(final Long id);
 
-    @NotSecured("TODO - implement when permissions matrix in place")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<UserResource>> findAll();
 
-    @NotSecured("TODO - implement when permissions matrix in place")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserResource> findByEmail(final String email);
 
-    @NotSecured("TODO - implement when permissions matrix in place")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<Set<UserResource>> findAssignableUsers(final Long applicationId);
 
-    @NotSecured("TODO - implement when permissions matrix in place")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<Set<UserResource>> findRelatedUsers(final Long applicationId);
 
-    @NotSecured("TODO - implement when permissions matrix in place")
-    ServiceResult<Void> sendPasswordResetNotification(UserResource user);
+    @PreAuthorize("hasPermission(#user, 'CHANGE_PASSWORD')")
+    ServiceResult<Void> sendPasswordResetNotification(@P("user") UserResource user);
 
-    @NotSecured("Need to keep open to allow password reset")
-    ServiceResult<Void> checkPasswordResetHashValidity(String hash);
+    @PreAuthorize("hasPermission(#hash, 'com.worth.ifs.token.domain.Token', 'READ')")
+    ServiceResult<Void> checkPasswordResetHashValidity(@P("hash") String hash);
 
-    @NotSecured("Need to keep open to allow password reset")
-    ServiceResult<Void> changePassword(String hash, String password);
+    @PreAuthorize("hasPermission(#hash, 'com.worth.ifs.token.domain.Token', 'CHANGE_PASSWORD')")
+    ServiceResult<Void> changePassword(@P("hash") String hash, String password);
 }

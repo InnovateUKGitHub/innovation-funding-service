@@ -21,6 +21,7 @@ public interface UserService {
     RestResult<Void> checkPasswordResetHash(String hash);
     RestResult<Void> resetPassword(String hash, String password);
     RestResult<UserResource> findUserByEmail(String email);
+    RestResult<UserResource> findUserByEmailForAnonymousUserFlow(String email);
     Set<User> getAssignableUsers(ApplicationResource application);
     Set<User> getApplicationUsers(ApplicationResource application);
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);

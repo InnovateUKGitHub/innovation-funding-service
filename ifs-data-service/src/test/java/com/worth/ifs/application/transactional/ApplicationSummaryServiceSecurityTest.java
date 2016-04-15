@@ -14,11 +14,7 @@ import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
 import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.RoleResource;
@@ -79,7 +75,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 	public void test_submittedApplicationSummariesByClosedCompetitionId_allowedIfGlobalCompAdminRole() {
 
 		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
-		service.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(123L, 0, null);
+		service.getSubmittedApplicationSummariesByCompetitionId(123L, 0, null);
 	}
 
 	@Test
@@ -87,7 +83,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 
 		setLoggedInUser(null);
 		try {
-			service.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(123L, 0, null);
+			service.getSubmittedApplicationSummariesByCompetitionId(123L, 0, null);
 			fail("Should not have been able to get application summaries without first logging in");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -98,7 +94,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 	public void test_submittedApplicationSummariesByClosedCompeititonId_deniedIfNoGlobalRolesAtAll() {
 
 		try {
-			service.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(123L, 0, null);
+			service.getSubmittedApplicationSummariesByCompetitionId(123L, 0, null);
 			fail("Should not have been able to get application summaries without the global comp admin role");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -116,7 +112,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 			setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
 
 			try {
-				service.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(123L, 0, null);
+				service.getSubmittedApplicationSummariesByCompetitionId(123L, 0, null);
 				fail("Should not have been able to get application summaries without the global Comp Admin role");
 			} catch (AccessDeniedException e) {
 				// expected behaviour
@@ -127,7 +123,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 	public void test_notSubmittedApplicationSummariesByClosedCompetitionId_allowedIfGlobalCompAdminRole() {
 
 		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
-		service.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(123L, 0, null);
+		service.getNotSubmittedApplicationSummariesByCompetitionId(123L, 0, null);
 	}
 
 	@Test
@@ -135,7 +131,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 
 		setLoggedInUser(null);
 		try {
-			service.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(123L, 0, null);
+			service.getNotSubmittedApplicationSummariesByCompetitionId(123L, 0, null);
 			fail("Should not have been able to get application summaries without first logging in");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -146,7 +142,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 	public void test_notSubmittedApplicationSummariesByClosedCompeititonId_deniedIfNoGlobalRolesAtAll() {
 
 		try {
-			service.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(123L, 0, null);
+			service.getNotSubmittedApplicationSummariesByCompetitionId(123L, 0, null);
 			fail("Should not have been able to get application summaries without the global comp admin role");
 		} catch (AccessDeniedException e) {
 			// expected behaviour
@@ -164,7 +160,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 			setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
 
 			try {
-				service.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(123L, 0, null);
+				service.getNotSubmittedApplicationSummariesByCompetitionId(123L, 0, null);
 				fail("Should not have been able to get application summaries without the global Comp Admin role");
 			} catch (AccessDeniedException e) {
 				// expected behaviour
@@ -186,24 +182,14 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 		}
 
 		@Override
-		public ServiceResult<ClosedCompetitionSubmittedApplicationSummaryPageResource> getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
+		public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
 				Long competitionId, int pageIndex, String sortBy) {
 			return null;
 		}
 
 		@Override
-		public ServiceResult<ClosedCompetitionNotSubmittedApplicationSummaryPageResource> getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(
+		public ServiceResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(
 				Long competitionId, int pageIndex, String sortBy) {
-			return null;
-		}
-
-		@Override
-		public ServiceResult<CompetitionSummaryResource> getCompetitionSummaryByCompetitionId(Long competitionId) {
-			return null;
-		}
-		
-		@Override
-		public List<Application> getApplicationSummariesByCompetitionIdAndStatus(Long competitionId, Long applicationStatusId) {
 			return null;
 		}
 

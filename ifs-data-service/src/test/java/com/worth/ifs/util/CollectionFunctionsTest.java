@@ -2,13 +2,15 @@ package com.worth.ifs.util;
 
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static java.util.function.Function.identity;
 import static org.junit.Assert.*;
 
@@ -406,6 +408,22 @@ public class CollectionFunctionsTest {
 
         Map<Integer, Integer> toMap = CollectionFunctions.simpleToMap(null, identity());
         assertTrue(toMap.isEmpty());
+    }
+
+    @Test
+    public void testFindPermutations() {
+
+        List<List<String>> permutations = CollectionFunctions.findPermutations(asList("a", "b", "c"));
+        assertEquals(3 * 2 * 1, permutations.size());
+
+        List<List<String>> expectedPermutations = asList(
+                asList("a", "b", "c"),
+                asList("b", "a", "c"),
+                asList("c", "a", "b"),
+                asList("a", "c", "b"),
+                asList("b", "c", "a"),
+                asList("c", "b", "a"));
+        expectedPermutations.forEach(expected -> assertTrue(permutations.contains(expected)));
     }
 }
 

@@ -56,10 +56,10 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     public UserRestService userRestService;
 
     @Autowired
-    private UserRepository userRepository;
+    public UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    public UserAuthenticationService userAuthenticationService;
+    public UserRepository userRepository;
 
     @Autowired
     UserMapper userMapper;
@@ -132,10 +132,19 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
     }
 
     private UserResource leadApplicantUser(){
-        return userRestService.findUserByEmail("steve.smith@empire.com").getSuccessObject();
+        return getUserResourceForSecurity("steve.smith@empire.com");
     }
 
     private UserResource assessorUser(){
-        return userRestService.findUserByEmail("paul.plum@gmail.com").getSuccessObject();
+        return getUserResourceForSecurity("paul.plum@gmail.com");
+    }
+
+    private UserResource getUserResourceForSecurity(String email) {
+
+        User user = userRepository.findByEmail(email).get();
+
+        UserResource resource = new UserResource();
+        resource.setUid(user.getUid());
+        return resource;
     }
 }

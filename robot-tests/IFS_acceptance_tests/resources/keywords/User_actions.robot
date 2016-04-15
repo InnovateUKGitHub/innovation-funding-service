@@ -167,19 +167,18 @@ the user cannot remove the uploaded file
     Page Should Not Contain    Remove
 
 the user clicks the link from the appropriate email sender
-    Run keyword if      '${RUNNING_ON_DEV}' == ''       the user opens the mailbox and verifies the email sent from a developer machine
-    Run keyword if      '${RUNNING_ON_DEV}' != ''       the user opens the mailbox and verifies the official innovate email
+    Run keyword if    '${RUNNING_ON_DEV}' == ''    the user opens the mailbox and verifies the email sent from a developer machine
+    Run keyword if    '${RUNNING_ON_DEV}' != ''    the user opens the mailbox and verifies the official innovate email
 
 the user opens the mailbox and verifies the email sent from a developer machine
-    the user opens the mailbox and verifies the email from      dev-dwatson-liferay-portal@hiveit.co.uk
+    the user opens the mailbox and verifies the email from    dev-dwatson-liferay-portal@hiveit.co.uk
 
 the user opens the mailbox and verfies the official innovate email
-    the user opens the mailbox and verifies the email from      noresponse@innovateuk.gov.uk
+    the user opens the mailbox and verifies the email from    noresponse@innovateuk.gov.uk
 
 the user opens the mailbox and verifies the email from
-    [Arguments]     ${sender}
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    ${LATEST} =    wait for email    fromEmail=${sender}
+    ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
@@ -190,3 +189,43 @@ the user opens the mailbox and verifies the email from
     Capture Page Screenshot
     Delete All Emails
     close mailbox
+
+the user opens the mailbox and accepts the invitation to collaborate
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    ${LATEST} =    wait for email
+    ${HTML}=    get email body    ${LATEST}
+    log    ${HTML}
+    ${LINK}=    Get Links From Email    ${LATEST}
+    log    ${LINK}
+    ${VERIFY_EMAIL}=    Get From List    ${LINK}    2
+    log    ${VERIFY_EMAIL}
+    go to    ${VERIFY_EMAIL}
+    Capture Page Screenshot
+    Delete All Emails
+    close mailbox
+
+Delete the emails from the test mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+
+the user enters the details and clicks the create account
+    [Arguments]    ${REG_EMAIL}
+    Input Text    id=firstName    Stuart
+    Input Text    id=lastName    ANDERSON
+    Input Text    id=phoneNumber    23232323
+    Input Text    id=email    ${REG_EMAIL}
+    Input Password    id=password    Passw0rd2
+    Input Password    id=retypedPassword    Passw0rd2
+    Select Checkbox    termsAndConditions
+    Submit Form
+
+the user fills the create account form
+    [Arguments]    ${NAME}    ${LAST_NAME}
+    Input Text    id=firstName    ${NAME}
+    Input Text    id=lastName    ${LAST_NAME}
+    Input Text    id=phoneNumber    0612121212
+    Input Password    id=password    Passw0rd
+    Input Password    id=retypedPassword    Passw0rd
+    Select Checkbox    termsAndConditions
+    Submit Form

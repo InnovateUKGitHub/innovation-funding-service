@@ -5,7 +5,8 @@ import com.worth.ifs.token.domain.Token;
 import com.worth.ifs.token.security.TokenPermissionRules;
 import org.junit.Test;
 
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import java.util.Optional;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -21,6 +22,17 @@ public class TokenPermissionRulesTest extends BasePermissionRulesTest<TokenPermi
                 assertTrue(rules.systemRegistrationUserCanReadTokens(new Token(), user));
             } else {
                 assertFalse(rules.systemRegistrationUserCanReadTokens(new Token(), user));
+            }
+        });
+    }
+
+    @Test
+    public void testSystemRegistrationUserCanReadTokensOptional() {
+        allRoleUsers.forEach(user -> {
+            if (user.equals(systemRegistrationUser())) {
+                assertTrue(rules.systemRegistrationUserCanReadTokensOptional(Optional.of(new Token()), user));
+            } else {
+                assertFalse(rules.systemRegistrationUserCanReadTokensOptional(Optional.of(new Token()), user));
             }
         });
     }

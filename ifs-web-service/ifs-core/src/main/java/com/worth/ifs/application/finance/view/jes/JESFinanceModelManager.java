@@ -36,12 +36,14 @@ public class JESFinanceModelManager implements FinanceModelManager {
         String organisationName = processRole.getOrganisation().getName();
         Map<CostType, CostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
         AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
-        financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).andOnSuccessReturn(
-                fileEntry -> {
-                    model.addAttribute("filename", fileEntry.getName());
-                    return fileEntry;
-                }
-        );
+        if(applicationFinanceResource.getFinanceFileEntry() != null) {
+            financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).andOnSuccessReturn(
+                    fileEntry -> {
+                        model.addAttribute("filename", fileEntry.getName());
+                        return fileEntry;
+                    }
+            );
+        }
 
         model.addAttribute("title", organisationName + " finances");
         model.addAttribute("applicationFinanceId", applicationFinanceResource.getId());

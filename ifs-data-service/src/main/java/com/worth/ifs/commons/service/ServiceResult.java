@@ -1,16 +1,15 @@
 package com.worth.ifs.commons.service;
 
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.ErrorTemplate;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.util.Either;
-
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
@@ -33,6 +32,26 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     @Override
     public <R> ServiceResult<R> andOnSuccess(ExceptionThrowingFunction<? super T, FailingOrSucceedingResult<R, ServiceFailure>> successHandler) {
         return (ServiceResult<R>) super.andOnSuccess(successHandler);
+    }
+
+    @Override
+    public <R> ServiceResult<R> andOnSuccess(Supplier<FailingOrSucceedingResult<R, ServiceFailure>> successHandler) {
+        return (ServiceResult<R>) super.andOnSuccess(successHandler);
+    }
+
+    @Override
+    public <R> ServiceResult<R> andOnSuccessReturn(Supplier<R> successHandler) {
+        return (ServiceResult<R>) super.andOnSuccessReturn(successHandler);
+    }
+
+    @Override
+    public ServiceResult<T> andOnSuccess(Runnable successHandler) {
+        return (ServiceResult<T>) super.andOnSuccess(successHandler);
+    }
+
+    @Override
+    public ServiceResult<Void> andOnSuccessReturnVoid(Runnable successHandler) {
+        return (ServiceResult<Void>) super.andOnSuccessReturnVoid(successHandler);
     }
 
     public ServiceResult<Void> andOnSuccessReturnVoid() {

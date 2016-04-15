@@ -44,12 +44,14 @@
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Assign monitoring officer'})" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
+	
+	<hr />
 
 	<div class="grid-row constrain-width">		
 		
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 		
-	
+		
 		<div class="column-half">
 			<h2 class="heading-large">Monitoring officer</h2>
 			<form action="GET">
@@ -79,13 +81,21 @@
 							<span class="form-label-bold">Email</span>
 						</label>
 						<input class="form-control width-full" id="email" name="email" value="" type="text" th:unless="${param.status != null and param.status[0] == 'edit'}"/>
-						<input class="form-control width-full" id="email" name="email" value="" type="text" disabled="disabled"  th:unless="${param.status == null or param.status[0] != 'edit'}"/>
+						<input class="form-control width-full" id="email" name="email" value="" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
+					</div>
+
+					<div class="form-group">
+						<label class="form-label" for="phone-number">
+							<span class="form-label-bold">Phone number</span>
+						</label>
+						<input class="form-control" id="phone-number" name="phone-number" type="text" th:unless="${param.status != null and param.status[0] == 'edit'}"/>
+						<input class="form-control" id="phone-number" name="phone-number" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
 					</div>
 
 					<input type="hidden" id="status" name="status" value="setup" />
 
 
-					<a href="#" class="button" data-js-modal="modal-assign-mo" th:unless="${param.status != null and param.status[0] == 'edit'}">Assign Monitoring officer</a>
+					<a href="#" class="button" data-js-modal="modal-assign-mo" th:unless="${param.status != null and param.status[0] == 'edit'}">Assign monitoring officer</a>
 
 					<a href="/prototypes/1576-assign-mo" th:unless="${param.status == null or param.status[0] != 'edit'}">Change monitoring officer</a>
 
@@ -140,7 +150,7 @@
 			<p>1st January 2017</p>
 
 			<h3 class="heading-medium no-margin">Project manager</h3>
-			<p class="form-hint">Project manager fo the project, designated by the lead organisation.</p>
+			<p class="form-hint">Project manager for the project, designated by the lead organisation.</p>
 			<p>David Smith</p>
 
 			<h3 class="heading-medium no-margin">Partners with their finance contacts</h3>
@@ -195,12 +205,14 @@
 			jQuery('#first-name').val(localStorage.getItem('moFirstName'));
 			jQuery('#last-name').val(localStorage.getItem('moLastName'));
 			jQuery('#email').val(localStorage.getItem('moEmail'));
+			jQuery('#phone-number').val(localStorage.getItem('moPhoneNumber'));
 
 		}else if ($_GET('status') == 'edit' && localStorage.getItem('moDetails') == null ){
 
 			jQuery('#first-name').val('David');
 			jQuery('#last-name').val('Jones');
 			jQuery('#email').val('djones@companya.co.uk');
+			jQuery('#phone-number').val('01234 456879');
 		}
 
 	});

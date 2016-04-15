@@ -174,7 +174,7 @@
                        th:value="${cost.labourDays}"
                         />
             </td>
-            <td rowspan="2" th:unless="${complete == 'complete'}">
+            <td rowspan="2" class="rowspan" th:unless="${complete == 'complete'}">
                 <button type="submit"
                         name="remove_cost"
                         class="buttonlink js-remove-row"
@@ -184,7 +184,7 @@
             </td>
         </tr>
         <tr th:attr="data-repeatable-row=${cost.id}">
-            <td colspan="4" class="numeric">
+            <td colspan="4" class="numeric colspan">
                 <label th:for="${'cost-labour-'+cost.id+'-labourTotalCost'}">Total costs</label>
                 <input type="text"
                        class="form-control width-medium"
@@ -821,8 +821,10 @@
                         No
                     </label>
                 </div>
+                <div id="other-funding-table">
+
                 <div class="form-group" th:attr="data-repeatable-container=${question.getId()}">
-                    <table id="other-funding-table">
+                    <table>
                         <thead>
                         <tr>
                             <th id="other-funding-source">Source of funding</th>
@@ -853,15 +855,7 @@
                            th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
 
                 </div>
-
-                <!--/* Please re-add when help text is available *-->
-                <!--/*
-                 <details>
-                    <summary><span class="summary">Why has this changed?</span></summary>
-                    <div class="panel-indent">
-                        Help text required
-                    </div>
-                </details> */-->
+              </div>
 
             </fieldset>
         </div>

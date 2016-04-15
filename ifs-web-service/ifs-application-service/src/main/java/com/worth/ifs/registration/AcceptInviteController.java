@@ -83,7 +83,7 @@ public class AcceptInviteController extends BaseController {
                 InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
 
                 // check if there already is a user with this emailaddress
-                RestResult existingUserSearch = userService.findUserByEmail(inviteResource.getEmail());
+                RestResult<Void> existingUserSearch = inviteRestService.checkExistingUser(hash);
                 // User already registered?
                 String redirectUrl = handleExistingUser(hash, response, request, model, inviteResource, existingUserSearch, inviteOrganisation);
                 if (redirectUrl != null) return redirectUrl;
@@ -113,7 +113,12 @@ public class AcceptInviteController extends BaseController {
                     CookieUtil.saveToCookie(response, INVITE_HASH, hash);
                     return "redirect:/accept-invite-authenticated/confirm-invited-organisation";
                 }
+            }else{
+                CookieUtil.saveToCookie(response, INVITE_HASH, hash);
+                // just show the login link
             }
+        }else{
+            LOG.debug("Not found a user with hash "+ hash);
         }
         return null;
     }
