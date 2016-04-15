@@ -33,6 +33,21 @@ processResources {
     }
 }
 
+task copyTemplatesInPlace(type: Copy) {
+    into "$tomcatWebAppsDir/management/WEB-INF/classes/templates"
+    from 'src/main/resources/templates'
+}
+
+task copyCssInPlace(type: Copy) {
+    into "$tomcatWebAppsDir/management/WEB-INF/classes/static/css"
+    from 'src/main/resources/static/css'
+}
+
+task copyJsInPlace(type: Copy) {
+    into "$tomcatWebAppsDir/management/WEB-INF/classes/static/js/dest"
+    from 'src/main/resources/static/js/dest'
+}
+
 
 task deployToTomcat(type: Copy) {
     from war
