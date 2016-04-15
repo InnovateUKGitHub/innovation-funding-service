@@ -71,7 +71,7 @@ Submit flow (complete application)
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
-    [Tags]    Email    HappyPath        Pending
+    [Tags]    Email    HappyPath
     # Pending due to INFUND-2492
     Then the user should get a confirmation email
 
@@ -120,7 +120,7 @@ The user can check that the sections are read only
 
 the user should get a confirmation email
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    ${LATEST} =    wait for email    fromEmail=noresponse@innovateuk.gov.uk
+    ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}
     ${MATCHES1}=    Get Matches From Email    ${LATEST}    Congratulations, you have successfully submitted an application for funding to Innovate
