@@ -2,6 +2,7 @@ package com.worth.ifs.application.transactional;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompletedPercentageResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
@@ -22,6 +23,7 @@ import org.springframework.security.access.method.P;
 import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -357,5 +359,12 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         public ServiceResult<ObjectNode> applicationReadyForSubmit(Long id) {
             return null;
         }
+
+		@Override
+		public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId,
+				Collection<Long> applicationStatusId) {
+			// TODO Auto-generated method stub
+			return null;
+		}
     }
 }

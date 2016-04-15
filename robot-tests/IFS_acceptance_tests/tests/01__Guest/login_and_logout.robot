@@ -125,5 +125,4 @@ the user should be logged-in as an Assessor
 
 the user opens the mailbox and clicks the reset link
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    The user clicks the link from the appropriate email sender
-
+    And the user opens the mailbox and verifies the email from

@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
-import static com.worth.ifs.user.domain.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static com.worth.ifs.security.SecurityRuleUtil.isCompAdmin;
+import static com.worth.ifs.security.SecurityRuleUtil.isSystemRegistrationUser;
 import static com.worth.ifs.util.CollectionFunctions.flattenLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -31,18 +31,18 @@ public class OrganisationPermissionRules {
 
     @PermissionRule(value = "READ", description = "Comp Admins can see all Organisations")
     public boolean compAdminsCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
-        return user.hasRole(COMP_ADMIN);
+        return isCompAdmin(user);
     }
 
     @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")
     public boolean systemRegistrationUserCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
-        return user.hasRole(SYSTEM_REGISTRATION_USER);
+        return isSystemRegistrationUser(user);
     }
 
-    @PermissionRule(value = "READ", description = "Organisations that are not yet a part of any Applications are visible to anyone, " +
-            "because this needs to be possible to create them during registration where there is not yet a logged-in user")
-    public boolean anyoneCanSeeOrganisationsNotYetConnectedToApplications(OrganisationResource organisation, UserResource user) {
-        return organisationNotYetLinkedToAnApplication(organisation);
+    @PermissionRule(value = "READ", description = "The System Registration User can see Organisations on behalf of non-logged in users " +
+            "whilst the Organisation is not yet linked to an Application")
+    public boolean systemRegistrationUserCanSeeOrganisationsNotYetConnectedToApplications(OrganisationResource organisation, UserResource user) {
+        return isSystemRegistrationUser(user) && organisationNotYetLinkedToAnApplication(organisation);
     }
 
     @PermissionRule(value = "READ", description = "A member of an Organisation can view their own Organisation")
@@ -63,17 +63,16 @@ public class OrganisationPermissionRules {
         return simpleMap(allOrganisationsLinkedToAnyOfUsersApplications, Organisation::getId).contains(organisation.getId());
     }
 
-    @PermissionRule(value = "CREATE", description = "Anyone should be able to create Organisations, " +
-            "because this needs to be possible to create them during registration where there is not yet a logged-in user")
-    public boolean anyoneCanCreateOrganisations(OrganisationResource organisation, UserResource user) {
-        return true;
+    @PermissionRule(value = "CREATE", description = "The System Registration User can create Organisations on behalf of non-logged in Users " +
+            "during the regsitration process")
+    public boolean systemRegistrationUserCanCreateOrganisations(OrganisationResource organisation, UserResource user) {
+        return isSystemRegistrationUser(user);
     }
 
-    @PermissionRule(value = "UPDATE", description = "Organisations that are not yet a part of any Applications are " +
-            "updatable by anyone, because this needs to be possible to update them during registration where there is " +
-            "not yet a logged-in user")
-    public boolean anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(OrganisationResource organisation, UserResource user) {
-        return organisationNotYetLinkedToAnApplication(organisation) && organisationNotYetLinkedToAnyUsers(organisation);
+    @PermissionRule(value = "UPDATE", description = "The System Registration User can update Organisations that are not yet linked to Applications on behalf of non-logged in Users " +
+            "during the regsitration process")
+    public boolean systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(OrganisationResource organisation, UserResource user) {
+        return isSystemRegistrationUser(user) && organisationNotYetLinkedToAnApplication(organisation) && organisationNotYetLinkedToAnyUsers(organisation);
     }
 
     @PermissionRule(value = "UPDATE", description = "A member of an Organisation can update their own Organisation")
@@ -81,9 +80,10 @@ public class OrganisationPermissionRules {
         return isMemberOfOrganisation(organisation, user);
     }
 
-    @PermissionRule(value = "READ", description = "Anyone can search for and see all search results for Organisations")
-    public boolean anyoneCanSeeOrganisationSearchResults(OrganisationSearchResult organisation, UserResource user) {
-        return true;
+    @PermissionRule(value = "READ", description = "The System Registration User can search for Organisations on behalf of non-logged in " +
+            "users during the registration process")
+    public boolean systemRegistrationUserCanSeeOrganisationSearchResults(OrganisationSearchResult organisation, UserResource user) {
+        return isSystemRegistrationUser(user);
     }
 
     private boolean isMemberOfOrganisation(OrganisationResource organisation, UserResource user) {

@@ -110,7 +110,9 @@ table img.table-tick {
     border: 1px solid #bfc1c3;
 		padding:10px 0;
 }
-
+#other-costs-table textarea{
+	min-height: 80px;
+}
 #other-costs-table textarea,
 #other-costs-table input {
 	width:100%;

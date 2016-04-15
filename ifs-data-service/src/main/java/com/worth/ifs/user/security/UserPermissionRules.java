@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static com.worth.ifs.security.SecurityRuleUtil.isSystemRegistrationUser;
 import static com.worth.ifs.user.domain.UserRoleType.*;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
@@ -104,9 +105,5 @@ public class UserPermissionRules {
 
     private List<ProcessRole> getAllProcessRolesForApplications(List<Application> applicationsWhereThisUserIsInConsortium) {
         return flattenLists(simpleMap(applicationsWhereThisUserIsInConsortium, Application::getProcessRoles));
-    }
-
-    private boolean isSystemRegistrationUser(UserResource user) {
-        return user.hasRole(SYSTEM_REGISTRATION_USER);
     }
 }

@@ -5,7 +5,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-896: As a lead applicant i want to invite partner organisations to collaborate on line in my application, so that i can create the consortium needed to complete the proposed project
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Create new application    collaboration
+Force Tags        collaboration
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -18,7 +18,7 @@ ${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/3/contributors/invite?new
 ${APPLICATION_3_TEAM_PAGE}    ${SERVER}/application/3/contributors
 
 *** Test Cases ***
-The lead applicant should be able to add/remove a collaborator
+lead applicant should be able to add/remove collaborators
     [Documentation]    INFUND-901
     [Tags]    HappyPath
     Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
@@ -27,19 +27,19 @@ The lead applicant should be able to add/remove a collaborator
     And The user clicks the button/link    jquery=li:nth-child(1) button:contains('Remove')
     Then The user should not see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
 
-The lead applicant shouldn't be able to remove himself
+lead applicant shouldn't be able to remove himself
     [Documentation]    INFUND-901
     Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     Then the lead applicant cannot be removed
 
-Validations for the Email field user remains in the invite page
+Validations for the Email field
     [Documentation]    INFUND-901
     [Tags]
     When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
     And the applicant fills the lead organisation fields    Collaborator01    @hiveit.co.uk
     Then The user should see the text in the page    Inviting Contributors
 
-Validation for the name field user remains in the invite page
+Validations for the name field
     [Documentation]    INFUND-901
     [Tags]
     When the applicant fills the lead organisation fields    ${EMPTY}    ewan+5@hiveit.co.uk
@@ -48,7 +48,7 @@ Validation for the name field user remains in the invite page
 
 Link to remove partner organisation
     [Documentation]    INFUND-1039
-    [Tags]    Collaboration
+    [Tags]
     # on the user interface.    All we can test is that the state is saved in cookie, so not lost on page reload.
     When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     And the applicant inputs details    1
@@ -56,23 +56,23 @@ Link to remove partner organisation
     When The user clicks the button/link    jquery=li:nth-child(2) button:contains('Remove')
     Then The user should not see the text in the page    Organisation name
 
-Applicant inputs Organisation and other details should be autosaved (in cookie)
+Applicant inputsshould be autosaved (in cookie)
     [Documentation]    INFUND-1039
-    [Tags]    Collaboration    HappyPath
+    [Tags]    HappyPath
     When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     And the applicant can enter Organisation name, Name and E-mail
     Then the applicant's inputs should be visible
 
 Blank organisation name is not allowed
     [Documentation]    INFUND-896
-    [Tags]    Collaboration
+    [Tags]
     When the applicant fills the Partner organisation fields    1    ${EMPTY}    Collaborator 7    ewan+6@hiveit.co.uk
     And The user clicks the button/link    jquery=button:contains('Begin application')
     Then a validation error is shown on organisation name    1
 
 Blank person name is not allowed
     [Documentation]    INFUND-896
-    [Tags]    Collaboration
+    [Tags]
     When the applicant fills the Partner organisation fields    1    Fannie May    ${EMPTY}    ewan+7@hiveit.co.uk
     And The user clicks the button/link    jquery=button:contains('Begin application')
     #user should get validation error
@@ -80,7 +80,7 @@ Blank person name is not allowed
 
 Blank email is not allowed
     [Documentation]    INFUND-896
-    [Tags]    Collaboration
+    [Tags]
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ${EMPTY}
     And The user clicks the button/link    jquery=button:contains('Begin application')
     #user should get validation error
@@ -88,13 +88,13 @@ Blank email is not allowed
 
 Invalid email address is not allowed
     [Documentation]    INFUND-896
-    [Tags]    Collaboration
+    [Tags]
     And the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    collaborator10_invalid_email
     And The user clicks the button/link    jquery=button:contains('Begin application')
     #user should get validation error
     Then The user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
 
-Already invite email should not be allowed
+Already invite email should is not allowed
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ewan+5@hiveit.co.uk
     And The user clicks the button/link    jquery=button:contains('Begin application')
     #user should get validation error

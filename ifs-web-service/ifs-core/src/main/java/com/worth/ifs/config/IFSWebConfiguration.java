@@ -37,7 +37,7 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
             VersionResourceResolver versionResourceResolver = new VersionResourceResolver()
                     .addVersionStrategy(new ContentVersionStrategy(), "/**");
 
-            registry.addResourceHandler("/js/**", "/css/**", "/images/**")
+            registry.addResourceHandler("/js/**", "/css/**", "/images/**", "/favicon.ico")
                     .addResourceLocations(
                             "classpath:static/js/", "static/js/",
                             "classpath:static/css/", "static/css/",
@@ -47,7 +47,7 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
                     .resourceChain(true)
                     .addResolver(versionResourceResolver);
         }else{
-            registry.addResourceHandler("/js/**", "/css/**", "/images/**")
+            registry.addResourceHandler("/js/**", "/css/**", "/images/**", "/favicon.ico")
                     .addResourceLocations(
                             "classpath:static/js/", "static/js/",
                             "classpath:static/css/", "static/css/",
