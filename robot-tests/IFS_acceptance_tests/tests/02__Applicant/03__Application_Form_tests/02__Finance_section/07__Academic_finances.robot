@@ -41,6 +41,12 @@ Academics upload
     Then the user should not see the text in the page    No file currently uploaded
     And the user should see the element    link=testing.pdf
 
+Academic finances JeS link showing
+    [Documentation]     INFUND-2402
+    [Tags]  Academic    Finances
+    When the user can see the link for more JeS details
+
+
 Mark all as complete
     [Documentation]    INFUND-918
     Given the user reloads the page
@@ -105,3 +111,8 @@ Lead applicant marks the finances as incomplete
 
 the user reloads the page
     Reload Page
+
+
+the user can see the link for more JeS details
+    Element Should Be Visible       link=Je-S website
+    Page Should Contain Element        xpath=//a[contains(@href,'https://je-s.rcuk.ac.uk')]
