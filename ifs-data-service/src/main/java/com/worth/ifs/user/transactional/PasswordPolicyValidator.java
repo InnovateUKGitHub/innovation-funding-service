@@ -71,6 +71,12 @@ public class PasswordPolicyValidator {
 
     }
 
+    /**
+     * A component that, given a regular expression that defines an exclusion rule (e.g. for checking for the presence of
+     * a first name in a string "*.first.*name.*"), is able to produce variations on this regex for additional checking of
+     * common numerical replacements for letters.  e.g. given a pattern checking for ".*hello.*there.*", this generator
+     * would allow numberical replacements to be checked for as well like ".*h[e3][l1][l1][o0].*th[e3]r[e3].*"
+     */
     private ExclusionRulePatternGenerator lettersForNumbersGenerator = new ExclusionRulePatternGenerator() {
 
         private Map<String, String> interchangeableLettersAndNumbers = asMap(
@@ -84,9 +90,9 @@ public class PasswordPolicyValidator {
                 "z", "2");
 
         @Override
-        public List<Pattern> apply(String currentExcludedWord) {
+        public List<Pattern> apply(String currentExcludedRegexPattern) {
 
-            String currentExcludedWordWithNumericalReplacements = currentExcludedWord.toLowerCase();
+            String currentExcludedWordWithNumericalReplacements = currentExcludedRegexPattern.toLowerCase();
 
             for (Map.Entry<String, String> replacement : interchangeableLettersAndNumbers.entrySet()) {
                 String searchString = format("([%s])", replacement.getKey());
@@ -118,6 +124,13 @@ public class PasswordPolicyValidator {
         exclusionRulePatternGenerators = asList(lettersForNumbersGenerator);
     }
 
+    /**
+     * Validate the password, returning a list of errors if one or more exclusions were found
+     *
+     * @param password
+     * @param userResource
+     * @return
+     */
     public ServiceResult<Void> validatePassword(String password, UserResource userResource) {
 
         List<ServiceResult<Void>> exclusionResults = flattenLists(simpleMap(exclusionRules, rule ->
@@ -149,6 +162,17 @@ public class PasswordPolicyValidator {
         }
     }
 
+    /**
+     * This method, given a user, their chosen password, an exclusion rule (e.g. no full names) and a pattern generator, will
+     * check for the presence of excluded tokens (in different orders as well if, for instance, checking for more than one word
+     * for a single rule, like in the case of full name (that uses "first name" and "last name" in combination)).
+     *
+     * @param password
+     * @param rule
+     * @param patternGenerator
+     * @param excludedWords
+     * @return
+     */
     private ServiceResult<Void> checkForExclusionWordsWithinPassword(String password, ExclusionRule rule, ExclusionRulePatternGenerator patternGenerator, List<String> excludedWords) {
 
         int lengthOfAllWords = excludedWords.stream().collect(summingInt(String::length));

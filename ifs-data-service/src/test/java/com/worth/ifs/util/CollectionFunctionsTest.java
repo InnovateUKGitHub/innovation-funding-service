@@ -2,10 +2,7 @@ package com.worth.ifs.util;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import static java.util.Arrays.asList;
@@ -424,6 +421,28 @@ public class CollectionFunctionsTest {
                 asList("b", "c", "a"),
                 asList("c", "b", "a"));
         expectedPermutations.forEach(expected -> assertTrue(permutations.contains(expected)));
+    }
+
+    @Test
+    public void testRemoveElement() {
+        List<String> tokens = asList("a", "b", "c");
+        assertEquals(asList("a", "c"), CollectionFunctions.removeElement(tokens, 1));
+        assertEquals(asList("a", "b", "c"), tokens);
+    }
+
+    @Test
+    public void testRemoveDuplicates() {
+        List<String> tokens = asList("a", "b", "c", "b", "e", "c");
+        assertEquals(asList("a", "b", "c", "e"), CollectionFunctions.removeDuplicates(tokens));
+        assertEquals(asList("a", "b", "c", "b", "e", "c"), tokens);
+    }
+
+    @Test
+    public void testAsLinkedSet() {
+        List<String> tokens = asList("a", "b", "c", "b", "e", "c");
+        Set<String> expectedNewSet = new LinkedHashSet<>();
+        asList("a", "b", "c", "e").forEach(token -> expectedNewSet.add(token));
+        assertEquals(asList("a", "b", "c", "b", "e", "c"), tokens);
     }
 }
 
