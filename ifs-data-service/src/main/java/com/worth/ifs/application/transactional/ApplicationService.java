@@ -3,6 +3,7 @@ package com.worth.ifs.application.transactional;
 import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -13,6 +14,7 @@ import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.CompletedPercentageResource;
 import com.worth.ifs.application.resource.FormInputResponseFileEntryId;
@@ -88,4 +90,7 @@ public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#id, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<ObjectNode> applicationReadyForSubmit(final Long id);
+    
+    @PreAuthorize("hasAuthority('comp_admin')")
+	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId);
 }

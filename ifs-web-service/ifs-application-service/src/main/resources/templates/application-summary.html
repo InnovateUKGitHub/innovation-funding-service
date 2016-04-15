@@ -38,23 +38,29 @@
 
     <div th:unless="${currentCompetition.isOpen()}">
         <div class="warning-alert">
-            This competition has already closed, you are no longer able to submit you application.
+            This competition has already closed, you are no longer able to submit your application.
         </div>
     </div>
-    <div th:if="${currentCompetition.isOpen()}">
-        <div th:if="${currentApplication.isOpen()}">
-            <hr/>
-            <span class="icon icon-information"></span>
-            <span> You will not be able to make changes to your application or resubmit after this point.</span>
+    <div th:if="${currentCompetition.isOpen() and currentApplication.isOpen()}">
+        <hr/>
+
+        <div th:if="${userIsLeadApplicant}" th:remove="tag">
+            <div>
+                <span class="icon icon-information"></span>
+                <span> You will not be able to make changes to your application or resubmit after this point.</span>
+            </div>
+            <div th:include="fragments/elements :: application-agree-to-terms" class="agree-to-terms-container" />
+            <div class="alignright-button">
+                <a id="submit-application-button" class="button large no-margin-right" data-js-modal="modal-confirm-submit-application"
+                   th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${applicationReadyForSubmit}">Submit application</a>
+                <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
+            </div>
+        </div>
+        <div th:unless="${userIsLeadApplicant}" th:remove="tag">
+          <span class="icon icon-information"></span>
+          <span> Only the lead applicant (<span th:remove="tag" th:text="${leadApplicant.user.firstName+' '+leadApplicant.user.lastName}" />) will be able to submit your application and only if all sections are marked as complete.</span>
         </div>
 
-        <div th:if="${currentApplication.isOpen()}" th:include="fragments/elements :: application-agree-to-terms" class="agree-to-terms-container"/>
-
-        <div class="alignright-button" th:unless="${!currentApplication.isOpen()}">
-            <a id="submit-application-button" class="button large no-margin-right" data-js-modal="modal-confirm-submit-application"
-               th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}" th:if="${applicationReadyForSubmit}">Submit application</a>
-            <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
-        </div>
     </div>
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
 </main>

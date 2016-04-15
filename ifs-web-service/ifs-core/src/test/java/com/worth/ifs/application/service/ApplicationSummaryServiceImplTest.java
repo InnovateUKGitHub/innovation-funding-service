@@ -12,8 +12,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
 import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryPageResource;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationSummaryServiceImplTest {
@@ -46,20 +44,20 @@ public class ApplicationSummaryServiceImplTest {
 	
 	@Test
 	public void testFindSubmittedByCompetitionId() {
-		ClosedCompetitionSubmittedApplicationSummaryPageResource resource = new ClosedCompetitionSubmittedApplicationSummaryPageResource();
-		when(applicationSummaryRestService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(123L), 0, "sort")).thenReturn(restSuccess(resource));
+		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+		when(applicationSummaryRestService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), 0, "sort")).thenReturn(restSuccess(resource));
 		
-		ClosedCompetitionSubmittedApplicationSummaryPageResource result = service.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(123L), 0, "sort");
+		ApplicationSummaryPageResource result = service.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), 0, "sort");
 		
 		assertEquals(resource, result);
 	}
 	
 	@Test
 	public void testFindNotSubmittedByCompetitionId() {
-		ClosedCompetitionNotSubmittedApplicationSummaryPageResource resource = new ClosedCompetitionNotSubmittedApplicationSummaryPageResource();
-		when(applicationSummaryRestService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(123L), 0, "sort")).thenReturn(restSuccess(resource));
+		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+		when(applicationSummaryRestService.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), 0, "sort")).thenReturn(restSuccess(resource));
 		
-		ClosedCompetitionNotSubmittedApplicationSummaryPageResource result = service.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(123L), 0, "sort");
+		ApplicationSummaryPageResource result = service.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), 0, "sort");
 		
 		assertEquals(resource, result);
 	}

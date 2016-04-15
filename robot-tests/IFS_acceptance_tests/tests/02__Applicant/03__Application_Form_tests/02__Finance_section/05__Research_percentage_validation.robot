@@ -44,6 +44,7 @@ the academic collaborator can change their level of participation back
     Guest user log-in    &{collaborator2_credentials}
     the user navigates to the page      ${your_finances_url_application_2}
     Input Text    id=incurred-staff    1000
+    Sleep       1s
 
 There is an error message on the finances form
     the applicant logs in

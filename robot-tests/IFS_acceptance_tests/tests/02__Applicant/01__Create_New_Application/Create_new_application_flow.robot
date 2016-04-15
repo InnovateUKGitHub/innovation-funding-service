@@ -9,7 +9,7 @@ Documentation     INNFUND-669 As an applicant I want to create a new application
 ...
 ...
 ...               INFUND-1920 As an applicant once I am accessing my dashboard and clicking on the newly created application for the first time, it will allow me to invite contributors and partners
-Test Setup        The guest user opens the browser
+Suite Setup       Delete the emails from the test mailbox
 Test Teardown     User closes the browser
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -27,7 +27,8 @@ Non registered users CH route
     ...    INFUND-1904
     ...
     ...    INFUND-1920
-    [Tags]    Create application    HappyPath       Email
+    [Tags]    Create application    HappyPath    Email      Failing
+    [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -35,14 +36,12 @@ Non registered users CH route
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    LINK=INNOVATE LTD
-    And the user enters text to a text field    id=addressForm.postcodeInput    2234
-    And the user clicks the button/link    id=postcode-lookup
-    And the user clicks the button/link    css=#select-address-block > button
+    Select Checkbox    id=address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details and clicks the create account    worth.email.test+1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    And the user clicks the link from the appropriate email sender
+    And the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Log in")
     And the guest user inserts user email & password    worth.email.test+1@gmail.com    Passw0rd2
@@ -58,7 +57,8 @@ Non registered users non CH route
     ...    INFUND-1904
     ...
     ...    INFUND-1920
-    [Tags]    Create application    HappyPath       Email
+    [Tags]    Create application    HappyPath    Email  Failing
+    [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -68,7 +68,7 @@ Non registered users non CH route
     And the user enters the details and clicks the create account    worth.email.test+2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     # And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    And the user clicks the link from the appropriate email sender
+    And the user opens the mailbox and verifies the email from
     And the user clicks the button/link    jQuery=.button:contains("Log in")
     The guest user inserts user email & password    worth.email.test+2@gmail.com    Passw0rd2
     And the guest user clicks the log-in button
@@ -81,7 +81,8 @@ Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
-    [Tags]    Applicant    New application    HappyPath    Email
+    [Tags]    Applicant    New application    HappyPath    Email    Failing
+    [Setup]    The guest user opens the browser
     When guest user log-in    worth.email.test+1@gmail.com    Passw0rd2
     And the user edits the competition title
     Then the user should see the text in the page    test title

@@ -15,10 +15,14 @@ IFS.formValidation = (function(){
                 fields: '[max]',
                 messageInvalid : 'This field should be %max% or lower'
             },
-            password: {
+            passwordEqual: {
                 field1 : '[name="password"]',
                 field2 : '[name="retypedPassword"]',
                 messageInvalid : 'Passwords must match'
+            },
+            passwordPolicy : {
+                fields : '[name="password"],[name="retypedPassword"]',
+                messageInvalid : 'Your password should contain a number, a lower and uppercase character'
             },
             email : {
                 fields : '[type="email"]',
@@ -45,16 +49,17 @@ IFS.formValidation = (function(){
         init : function(){
             s = this.settings;
             //bind the checks if password and retyped password are equal
-            jQuery('body').on('change keyup', s.password.field1+','+s.password.field2, function(e){
+            jQuery('body').on('change keyup', s.passwordEqual.field1+','+s.passwordEqual.field2, function(e){
                 switch(e.type){
                     case 'keyup':
                       clearTimeout(window.IFS.formValidation_timer);
-                      window.IFS.formValidation_timer = setTimeout(function(){IFS.formValidation.checkPasswords();}, s.typeTimeout);
+                      window.IFS.formValidation_timer = setTimeout(function(){IFS.formValidation.checkEqualPasswords();}, s.typeTimeout);
                       break;
                     default:
-                      IFS.formValidation.checkPasswords();
+                      IFS.formValidation.checkEqualPasswords();
                 }
             });
+            jQuery('body').on('change',s.passwordPolicy.fields, function(){IFS.formValidation.checkPasswordPolicy(jQuery(this));});
             jQuery('body').on('change', s.email.fields , function(){IFS.formValidation.checkEmail(jQuery(this));});
             jQuery('body').on('change', s.number.fields , function(){IFS.formValidation.checkNumber(jQuery(this));});
             jQuery('body').on('change', s.min.fields , function(){IFS.formValidation.checkMin(jQuery(this));});
@@ -64,10 +69,10 @@ IFS.formValidation = (function(){
             jQuery('body').on('change',s.maxlength.fields,function(){ IFS.formValidation.checkMaxLength(jQuery(this)); });
             jQuery('body').on('change',s.tel.fields,function(){ IFS.formValidation.checkTel(jQuery(this)); });
         },
-        checkPasswords : function(){
-            var pw1 = jQuery(s.password.field1);
-            var pw2 = jQuery(s.password.field2);
-            var errorMessage = IFS.formValidation.getErrorMessage(pw2,'password');
+        checkEqualPasswords : function(){
+            var pw1 = jQuery(s.passwordEqual.field1);
+            var pw2 = jQuery(s.passwordEqual.field2);
+            var errorMessage = IFS.formValidation.getErrorMessage(pw2,'passwordEqual');
 
             //if both are on the page and have content (.val)
             if(pw1.length && pw2.length && pw1.val().length && pw2.val().length){
@@ -79,6 +84,20 @@ IFS.formValidation = (function(){
                     IFS.formValidation.setInvalid(pw1,errorMessage);
                     IFS.formValidation.setInvalid(pw2,errorMessage);
                 }
+            }
+        },
+        checkPasswordPolicy : function(field){
+            var password = field.val();
+            var re = /(?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9])/;
+            var errorMessage = IFS.formValidation.getErrorMessage(field,'passwordPolicy');
+            var pwConfirmsToPolciy = re.test(password);
+            if(!pwConfirmsToPolciy){
+              IFS.formValidation.setInvalid(field,errorMessage);
+              return false;
+            }
+            else {
+              IFS.formValidation.setValid(field,errorMessage);
+              return true;
             }
         },
         checkEmail : function(field){
@@ -203,8 +222,9 @@ IFS.formValidation = (function(){
             }
         },
         getErrorMessage : function(field,type){
+            //first look if there is a custom message defined on the element
             var errorMessage = field.attr('data-'+type+'-errormessage');
-            //if there is no data-errormessage we use the default messagging
+            //if there is no data-errormessage we use the default messagging defined in the settings object
             if (typeof(errorMessage) == 'undefined') {
                   switch(type){
                       case 'min':
