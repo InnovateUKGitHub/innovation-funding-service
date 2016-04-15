@@ -34,8 +34,7 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
             = Arrays.asList(
                     UidAuthenticationService.class,
                     StatelessAuthenticationFilter.class,
-                    FileServiceImpl.class,
-                    CompanyHouseApiServiceImpl.class
+                    FileServiceImpl.class
             );
 
     List<Class<? extends Annotation>> securityAnnotations
