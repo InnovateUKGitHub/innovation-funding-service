@@ -61,7 +61,7 @@ The email address does not stay in the cookie
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    LINK=INNOVATE LTD
+    And the user clicks the button/link    link=INNOVATE LTD
     Select Checkbox    id=address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
