@@ -97,8 +97,10 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Rollback
     @Test
     public void testCreate() throws Exception {
-        OrganisationResource organisationResource = createOrganisation();
 
+        loginSystemRegistrationUser();
+
+        OrganisationResource organisationResource = createOrganisation();
 
         assertEquals(companyHouseId, organisationResource.getCompanyHouseNumber());
         assertEquals(companyName, organisationResource.getName());
@@ -111,6 +113,9 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Rollback
     @Test
     public void testCreateSecondConstructor() throws Exception {
+
+        loginSystemRegistrationUser();
+
         OrganisationResource organisation = newOrganisationResource().
                 withName(companyName).withCompanyHouseNumber(companyHouseId).withOrganisationSize(OrganisationSize.LARGE).
                 build();
@@ -132,6 +137,9 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Rollback
     @Test
     public void testAddAddress() throws Exception {
+
+        loginSystemRegistrationUser();
+
         OrganisationResource organisationResource = createOrganisation();
 
         AddressResource addressResource = new AddressResource("Line1", "Line2",  "Line3", "town", "county", "postcode");
