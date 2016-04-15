@@ -31,11 +31,11 @@ public class CompanyHouseRestServiceImpl  extends BaseRestService implements Com
             log.error(e);
             searchTextEncoded = searchText;
         }
-        return asList(restGet(companyHouseRestUrl + "/searchCompanyHouse/"+searchTextEncoded, OrganisationSearchResult[].class));
+        return asList(restGetAnonymous(companyHouseRestUrl + "/searchCompanyHouse/"+searchTextEncoded, OrganisationSearchResult[].class));
     }
     @Override
     public OrganisationSearchResult getOrganisationById(String id){
 
-        return restGet(companyHouseRestUrl + "/getCompanyHouse/"+id, OrganisationSearchResult.class);
+        return restGetAnonymous(companyHouseRestUrl + "/getCompanyHouse/"+id, OrganisationSearchResult.class);
     }
 }
