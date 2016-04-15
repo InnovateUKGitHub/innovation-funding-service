@@ -1,10 +1,10 @@
 package com.worth.ifs.security;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import com.worth.ifs.BaseIntegrationTest;
 import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.transactional.FileServiceImpl;
-import com.worth.ifs.organisation.transactional.CompanyHouseApiServiceImpl;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -16,7 +16,10 @@ import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.stereotype.Service;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -72,6 +75,36 @@ public class AllServicesAreAnnotatedTest extends BaseIntegrationTest {
 
         // Make sure we are not failing silently
         assertTrue("We should be checking at least one method for security annotations", totalMethodsChecked > 0);
+    }
+
+    @Test
+    public void generateLowLevelPermissionsDocumentation() throws IOException {
+
+        CustomPermissionEvaluator evaluator = (CustomPermissionEvaluator) context.getBean("customPermissionEvaluator");
+
+        CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods rulesMap =
+                (CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(evaluator, "rulesMap");
+
+        CSVWriter writer = new CSVWriter(new FileWriter("permission-rules.csv"), '\t');
+
+        try {
+
+            writer.writeNext(new String[]{"Object", "Action", "Rule"});
+
+            rulesMap.forEach((clazz, action) -> {
+                action.forEach((actionName, permissionRuleMethods) -> permissionRuleMethods.forEach(serviceAndMethod -> {
+
+                    Object service = serviceAndMethod.getLeft();
+                    Method ruleMethod = serviceAndMethod.getValue();
+                    PermissionRule permissionRule = ruleMethod.getDeclaredAnnotation(PermissionRule.class);
+
+                    writer.writeNext(new String[]{clazz.getSimpleName(), actionName, permissionRule.description()});
+                }));
+            });
+
+        } finally {
+            writer.close();
+        }
     }
 
     private boolean hasOneOf(Method method, List<Class<? extends Annotation>> annotations) {
