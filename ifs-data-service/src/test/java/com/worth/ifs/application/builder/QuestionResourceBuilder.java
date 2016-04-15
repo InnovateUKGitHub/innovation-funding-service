@@ -36,6 +36,26 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
                 .withGuidanceAnswer("Some Guidance Answer Text");
     }
 
+    public QuestionResourceBuilder withId(Long... ids) {
+        return withArray((id, address) -> setField("id", id, address), ids);
+    }
+
+    public QuestionResourceBuilder withName(String... names) {
+        return withArray((name, object) -> setField("name", name, object), names);
+    }
+
+    public QuestionResourceBuilder withShortName(String... shortNames) {
+        return withArray((shortName, object) -> setField("shortName", shortName, object), shortNames);
+    }
+
+    public QuestionResourceBuilder withDescription(String... descriptions) {
+        return withArray((description, object) -> setField("description", description, object), descriptions);
+    }
+
+    public QuestionResourceBuilder withAssessorConfirmationQuestion(String... assessorConfirmationQuestions) {
+        return withArray((assessorConfirmationQuestion, object) -> setField("assessorConfirmationQuestion", assessorConfirmationQuestion, object), assessorConfirmationQuestions);
+    }
+
     public QuestionResourceBuilder withNeedingAssessorScore(boolean needingAssessorScore) {
         return with(question -> setField("needingAssessorScore", needingAssessorScore, question));
     }
