@@ -51,6 +51,23 @@ Non registered users CH route
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user should see the text in the page    Application overview
 
+The email address does not stay in the cookie
+    [Documentation]     INFUND_2510
+    [Tags]  Email       Create application
+    [Setup]     The guest user opens the browser
+    Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user enters text to a text field    id=organisationSearchName    Innovate
+    And the user clicks the button/link    id=org-search
+    And the user clicks the button/link    link=INNOVATE LTD
+    Select Checkbox    id=address-same
+    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    Then the user should not see the text in the page       worth.email.test+1@gmail.com
+
+
 Non registered users non CH route
     [Documentation]    INFUND-669
     ...
