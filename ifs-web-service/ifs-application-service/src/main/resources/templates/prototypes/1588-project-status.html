@@ -21,6 +21,12 @@
 
 	<p class="form-hint">You need to complete the following steps before this project can begin.</p>
 
+	<div class="warning-alert" th:unless="${param.status == null or param.status[0] != 'noCompHouse'}">
+        <h2 class="heading-small no-margin">Your business is not currently linked with Companies House</h2>
+        <p>To enable your project to be funded by Innovate UK <strong>[Business name]</strong> must be registered with Companies House. </p>
+        <p><a href="/prototypes/2537-partner-add-companies-house">Link [Business name] to Companies House registration</a></p>
+    </div>
+
 	<ul class="application-progress-list extra-margin">
 		<li class="complete">
 			<span>
@@ -41,7 +47,7 @@
 
 		<li th:class="${(param.user != null and param.user[0] == 'nonLead' ? 'complete' : 'waiting')}">
 			<span>
-				<h2 class="heading-medium">Monitoring officer assigned</h2> 
+				<h2 class="heading-medium"><a href="/prototypes/2484-mo-partner">Monitoring officer assigned</a></h2> 
 				<p>Your monitoring officer for this project is <a href="#">Tom Evans</a>.</p>
 			</span>
 		</li>

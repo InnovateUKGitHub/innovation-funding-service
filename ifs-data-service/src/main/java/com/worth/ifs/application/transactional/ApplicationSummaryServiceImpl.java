@@ -1,7 +1,6 @@
 package com.worth.ifs.application.transactional;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 import java.util.Arrays;
@@ -69,12 +68,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 	
 	@Autowired
 	private ApplicationSummaryPageMapper applicationSummaryPageMapper;
-	
-	@Override
-	public ServiceResult<List<Application>> getApplicationSummariesByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId) {
-		List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, applicationStatusId);
-		return serviceSuccess(applicationResults);
-	}
+
 	
 	@Override
 	public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, int pageIndex, String sortBy) {

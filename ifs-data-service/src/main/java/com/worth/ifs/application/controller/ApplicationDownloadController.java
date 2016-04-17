@@ -32,8 +32,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.ApplicationSummarisationService;
-import com.worth.ifs.application.transactional.ApplicationSummaryService;
 import com.worth.ifs.commons.error.exception.SummaryDataUnavailableException;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
@@ -48,7 +48,7 @@ public class ApplicationDownloadController {
     public static final int PROJECT_SUMMARY_COLUMN_WITH = 50; // the width in amount of letters.
     public static final String FONT_NAME = "Arial";
     @Autowired
-    private ApplicationSummaryService applicationSummaryService;
+    private ApplicationService applicationService;
     @Autowired
     private ApplicationSummarisationService applicationSummarisationService;
     @Autowired
@@ -59,7 +59,7 @@ public class ApplicationDownloadController {
 
     @RequestMapping("/downloadByCompetition/{competitionId}")
     public @ResponseBody ResponseEntity<ByteArrayResource> getDownloadByCompetitionId(@PathVariable("competitionId") Long competitionId) throws IOException {
-        ServiceResult<List<Application>> applicationsResult = applicationSummaryService.getApplicationSummariesByCompetitionIdAndStatus(competitionId, SUBMITTED_STATUS_IDS);
+        ServiceResult<List<Application>> applicationsResult = applicationService.getApplicationsByCompetitionIdAndStatus(competitionId, SUBMITTED_STATUS_IDS);
         
         List<Application> applications;
         if(applicationsResult.isSuccess()) {
