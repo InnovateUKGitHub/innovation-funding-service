@@ -35,6 +35,29 @@
         <div class="extra-margin">
             <a th:href="${'/application/' + currentApplication.id + '/print'}" rel="nofollow" target="_blank"><div class="icon icon-print"></div>Print application</a>
         </div>
+        <h2 class="heading-medium">Appendices</h2>
+
+        <div th:each="appendix : ${appendices}" th:remove="tag">
+            <div class="form-group download">
+                <h3 class="heading-small no-margin" th:text="${appendix.name}">View project management appendix:</h3>
+                <a href="#" th:text="${appendix.name + '(' + appendix.fileSize + ')'}">Project-plan.pdf (161.96 KB)</a>
+            </div>
+        </div>
+
+        <div class="form-group download">
+            <h3 class="heading-small no-margin">View project management appendix:</h3>
+            <a href="#">Project-plan.pdf (161.96 KB)</a>
+        </div>
+
+        <div class="form-group download">
+            <h3 class="heading-small no-margin">View innovation appendix:</h3>
+            <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
+        </div>
+
+        <div class="form-group download">
+            <h3 class="heading-small no-margin">View project team appendix:</h3>
+            <a href="#">CVs-of-team.pdf (161.96 KB)</a>
+        </div>
     </form>
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
   </div>
