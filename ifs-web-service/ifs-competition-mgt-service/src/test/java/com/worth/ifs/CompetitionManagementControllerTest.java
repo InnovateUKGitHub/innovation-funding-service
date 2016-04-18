@@ -2,11 +2,13 @@
 package com.worth.ifs;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -187,5 +189,15 @@ public class CompetitionManagementControllerTest  {
     	
     	verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, 0, "sortfield");
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
+    }
+    
+    @Test
+    public void getByCompetitionIdProvidingInvalidPage() throws Exception {
+    	
+    	mockMvc.perform(get("/competition/123?page=0"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/competition/123"));
+    	
+    	verifyNoMoreInteractions(applicationSummaryService);
     }
 }

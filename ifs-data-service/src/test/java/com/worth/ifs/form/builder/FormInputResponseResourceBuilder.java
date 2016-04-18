@@ -1,11 +1,10 @@
 package com.worth.ifs.form.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.file.domain.FileEntry;
-import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -44,8 +43,36 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
         return withList(owningFormInputs, (formInput, formInputResponseResource) -> formInputResponseResource.setFormInput(formInput));
     }
 
-    public FormInputResponseResourceBuilder withFileEntry(FileEntry fileEntry) {
+    public FormInputResponseResourceBuilder withFileEntry(FileEntryResource fileEntry) {
         return with(response -> response.setFileEntry(fileEntry.getId()));
+    }
+
+    public FormInputResponseResourceBuilder withApplication(Long applicationId) {
+        return with(response -> response.setApplication(applicationId));
+    }
+
+    public FormInputResponseResourceBuilder withFileName(String fileName) {
+        return with(response -> response.setFilename(fileName));
+    }
+
+    public FormInputResponseResourceBuilder withFormInputMaxWordCount(Integer formInputMaxWordCount) {
+        return with(response -> response.setFormInputMaxWordCount(formInputMaxWordCount));
+    }
+
+    public FormInputResponseResourceBuilder withUpdateDate(LocalDateTime dateTime) {
+        return with(response -> response.setUpdateDate(dateTime));
+    }
+
+    public FormInputResponseResourceBuilder withUpdatedBy(Long applicationId) {
+        return with(response -> response.setUpdatedBy(applicationId));
+    }
+
+    public FormInputResponseResourceBuilder withUpdatedByUserName(String userName) {
+        return with(response -> response.setUpdatedByUserName(userName));
+    }
+
+    public FormInputResponseResourceBuilder withValue(String value) {
+        return with(response -> response.setValue(value));
     }
 
     @Override
