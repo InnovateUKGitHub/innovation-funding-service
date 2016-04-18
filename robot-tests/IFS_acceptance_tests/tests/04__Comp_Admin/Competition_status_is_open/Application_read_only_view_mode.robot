@@ -59,6 +59,6 @@ the user can see the upload for the 'Technical approach' question
     the user clicks the button/link    css=[aria-controls="collapsible-8"]
     the user should see the text in the page    ${valid_pdf}
 
-the user can choose to view this file without any errors
+the user can view this file without any errors
     the user clicks the button/link         css=.uploaded-file
     the user should not see an error in the page
