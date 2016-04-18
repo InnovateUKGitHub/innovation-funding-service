@@ -7,8 +7,8 @@ import java.io.Serializable;
  * Compound class for holding the application finance resource keys
  */
 public class ApplicationFinanceResourceId implements Serializable {
-    Long applicationId;
-    Long organisationId;
+    private Long applicationId;
+    private Long organisationId;
 
     public ApplicationFinanceResourceId(Long applicationId, Long organisationId) {
         this.applicationId = applicationId;
