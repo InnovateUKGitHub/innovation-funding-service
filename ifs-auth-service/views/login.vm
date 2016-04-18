@@ -182,7 +182,8 @@
             </ul>
           </div>
         </section>
-  </main>
+        <p class="user-feedback"><span>Need help with this service?</span> <a href="//#springMessageText('ifs.webserver.resources.url', '#')/info/contact">Contact us</a></p>
+        </main>
 
       <footer class="group js-footer" id="footer" role="contentinfo">
         <div class="footer-wrapper">
