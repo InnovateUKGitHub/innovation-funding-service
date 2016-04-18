@@ -81,10 +81,12 @@ Capital usage
 Subcontracting costs
     [Documentation]    INFUND-192
     ...    INFUND-736
+    ...     INFUND-2303
     [Tags]    Finances
     When the applicant edits the Subcontracting costs section
     Then Totals should be correct    css=#section-total-13    £ 200    css=[aria-controls="collapsible-4"] [data-mirror]    £ 200
     And the user clicks the button/link    css=#subcontracting_costs [data-repeatable-row]:nth-child(1) button
+    And the user cannot see a validation error in the page
     And the user reloads the page
     Then Totals should be correct    css=#section-total-13    £ 100    css=[aria-controls="collapsible-4"] [data-mirror]    £ 100
     [Teardown]    Click Element    jQuery=button:contains("Subcontracting costs")

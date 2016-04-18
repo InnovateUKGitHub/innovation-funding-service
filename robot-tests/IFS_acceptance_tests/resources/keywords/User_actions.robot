@@ -261,3 +261,6 @@ the address fields should be filled with dummy data
     Textfield Should Contain    id=addressForm.selectedPostcode.town    Neston
     Textfield Should Contain    id=addressForm.selectedPostcode.county    Cheshire
     Textfield Should Contain    id=addressForm.selectedPostcode.postcode    CH64 3RU
+
+the user cannot see a validation error in the page
+    Element Should Not Be Visible       css=.error
