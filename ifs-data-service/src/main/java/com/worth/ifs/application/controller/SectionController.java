@@ -3,6 +3,7 @@ package com.worth.ifs.application.controller;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,20 @@ public class SectionController {
                                           @PathVariable("organisationId") final Long organisationId) {
 
         return sectionService.getCompletedSections(applicationId, organisationId).toGetResponse();
+    }
+
+    @RequestMapping("/markAsComplete/{sectionId}/{applicationId}/{markedAsCompleteById}")
+    public RestResult<List<ValidationMessages>> markAsComplete(@PathVariable("sectionId") final Long sectionId,
+                                                               @PathVariable("applicationId") final Long applicationId,
+                                                               @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
+        return sectionService.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById).toGetResponse();
+    }
+
+    @RequestMapping("/markAsInComplete/{sectionId}/{applicationId}/{markedAsCompleteById}")
+    public RestResult<Void> markAsInComplete(@PathVariable("sectionId") final Long sectionId,
+                                           @PathVariable("applicationId") final Long applicationId,
+                                           @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
+        return sectionService.markSectionAsInComplete(sectionId, applicationId, markedAsCompleteById).toPutResponse();
     }
 
     @RequestMapping("/allSectionsMarkedAsComplete/{applicationId}")

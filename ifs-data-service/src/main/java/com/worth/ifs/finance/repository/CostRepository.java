@@ -14,4 +14,5 @@ import java.util.List;
 public interface CostRepository extends PagingAndSortingRepository<Cost, Long> {
     public List<Cost> findByApplicationFinanceId(@Param("applicationFinanceId") Long applicationFinanceId);
     public Cost findOneByApplicationFinanceIdAndNameAndQuestionId(Long applicationFinanceId, String name, Long questionId);
+    public List<Cost> findByApplicationFinanceIdAndNameAndQuestionId(Long applicationFinanceId, String name, Long questionId);
 }

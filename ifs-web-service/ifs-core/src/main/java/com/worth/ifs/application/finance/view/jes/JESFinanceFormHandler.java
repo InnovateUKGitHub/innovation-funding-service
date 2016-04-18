@@ -8,6 +8,7 @@ import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.finance.view.item.CostHandler;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -66,12 +67,13 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     }
 
     @Override
-    public void storeCost(Long userId, Long applicationId, String fieldName, String value) {
+    public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value) {
         if (fieldName != null && value != null) {
             if (fieldName.startsWith("cost-")) {
                 storeField(fieldName.replace("cost-", ""), value, userId, applicationId);
             }
         }
+        return null;
     }
 
     private void storeField(String fieldName, String value, Long userId, Long applicationId) {

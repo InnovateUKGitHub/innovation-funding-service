@@ -10,7 +10,9 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.domain.CostValue;
-import com.worth.ifs.finance.handler.*;
+import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
+import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
+import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
 import com.worth.ifs.finance.mapper.CostFieldMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostFieldRepository;
@@ -41,33 +43,24 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
 public class CostServiceImpl extends BaseTransactionalService implements CostService {
 
     private static final Log LOG = LogFactory.getLog(CostServiceImpl.class);
-
-    @Autowired
-    private CostFieldMapper costFieldMapper;
-
-    @Autowired
-    private QuestionRepository questionRepository;
-
-    @Autowired
-    private CostRepository costRepository;
-
-    @Autowired
-    private CostFieldRepository costFieldRepository;
-
-    @Autowired
-    private CostValueRepository costValueRepository;
-
-    @Autowired
-    private ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Autowired
-    private ApplicationFinanceHandler applicationFinanceHandler;
-
     @Autowired
     OrganisationFinanceDelegate organisationFinanceDelegate;
-
     @Autowired
     FileEntryRepository fileEntryRepository;
+    @Autowired
+    private CostFieldMapper costFieldMapper;
+    @Autowired
+    private QuestionRepository questionRepository;
+    @Autowired
+    private CostRepository costRepository;
+    @Autowired
+    private CostFieldRepository costFieldRepository;
+    @Autowired
+    private CostValueRepository costValueRepository;
+    @Autowired
+    private ApplicationFinanceRepository applicationFinanceRepository;
+    @Autowired
+    private ApplicationFinanceHandler applicationFinanceHandler;
 
     @Override
     public ServiceResult<CostField> getCostFieldById(Long id) {
@@ -82,7 +75,15 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     @Override
+    public ServiceResult<CostItem> getCostItem(final Long costItemId) {
+        Cost cost = costRepository.findOne(costItemId);
+        ApplicationFinance applicationFinance = cost.getApplicationFinance();
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
+
         return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
+    }
+
+    @Override
     public ServiceResult<CostItem> addCost(final Long applicationFinanceId, final Long questionId, final CostItem newCostItem) {
 
         return find(question(questionId), applicationFinance(applicationFinanceId)).andOnSuccess((question, applicationFinance) -> {
@@ -103,18 +104,35 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         return doUpdate(id, newCostItem).andOnSuccessReturnVoid();
     }
 
+    @Override
+    public ServiceResult<List<Cost>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId) {
+        List<Cost> costs = costRepository.findByApplicationFinanceIdAndNameAndQuestionId(applicationFinanceId, costTypeName, questionId);
+        return serviceSuccess(costs);
+    }
+
+    @Override
+    public ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, String costTypeName, Long questionId) {
+        return getApplicationFinance(applicationFinanceId).andOnSuccessReturn((applicationFinance) -> {
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
+            List<Cost> costs = costRepository.findByApplicationFinanceIdAndNameAndQuestionId(applicationFinanceId, costTypeName, questionId);
+            return organisationFinanceHandler.costToCostItem(costs);
+        });
+    }
+
     private ServiceResult<Cost> doUpdate(Long id, CostItem newCostItem) {
         return find(costRepository.findOne(id), notFoundError(Cost.class, id)).andOnSuccessReturn(existingCost -> {
             ApplicationFinance applicationFinance = existingCost.getApplicationFinance();
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
             Cost newCost = organisationFinanceHandler.costItemToCost(newCostItem);
             Cost updatedCost = mapCost(existingCost, newCost);
+
             Cost savedCost = costRepository.save(updatedCost);
 
             newCost.getCostValues()
                     .stream()
                     .filter(c -> c.getValue() != null)
                     .filter(c -> !"null".equals(c.getValue()))
+                    .peek(c -> LOG.debug("CostValue: " + c.getValue()))
                     .forEach(costValue -> updateCostValue(costValue, savedCost));
 
             return updatedCost;
@@ -123,7 +141,6 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<Void> deleteCost(final Long costId) {
-
         costValueRepository.deleteByCostId(costId);
         costRepository.delete(costId);
         return serviceSuccess();
@@ -137,9 +154,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<List<ApplicationFinanceResource>> findApplicationFinanceByApplication(Long applicationId) {
-
         return find(applicationFinanceRepository.findByApplicationId(applicationId), notFoundError(ApplicationFinance.class, applicationId)).andOnSuccessReturn(applicationFinances -> {
-
             List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();
             if (applicationFinances != null) {
                 applicationFinances.stream().forEach(af -> applicationFinanceResources.add(new ApplicationFinanceResource(af)));
@@ -160,7 +175,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     @Override
     public ServiceResult<ApplicationFinanceResource> addCost(Long applicationId, Long organisationId) {
         ApplicationFinance existingFinances = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-        if(existingFinances != null){
+        if (existingFinances != null) {
             return serviceSuccess(new ApplicationFinanceResource(existingFinances));
         }
 
@@ -192,7 +207,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     private ApplicationFinance setFinanceUpload(ApplicationFinance applicationFinance, Long fileEntryId) {
-        if(fileEntryId==null || fileEntryId == 0L) {
+        if (fileEntryId == null || fileEntryId == 0L) {
             applicationFinance.setFinanceFileEntry(null);
         } else {
             FileEntry fileEntry = fileEntryRepository.findOne(fileEntryId);
@@ -205,6 +220,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
+        LOG.info(String.format("financeDetails %s / %s ", applicationId, organisationId));
         ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
         return getApplicationFinanceForOrganisation(applicationFinanceResourceId);
     }
@@ -219,11 +235,12 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     private ServiceResult<ApplicationFinanceResource> getApplicationFinanceForOrganisation(ApplicationFinanceResourceId applicationFinanceResourceId) {
+        LOG.info("getApplicationFinanceForOrganisation " + applicationFinanceResourceId);
         return serviceSuccess(applicationFinanceHandler.getApplicationOrganisationFinances(applicationFinanceResourceId));
     }
 
     private Cost addCostItem(ApplicationFinance applicationFinance, Question question, CostItem newCostItem) {
-        Cost existingCost = costRepository.findOneByApplicationFinanceIdAndNameAndQuestionId(applicationFinance.getId(), newCostItem.getName() ,question.getId());
+        Cost existingCost = costRepository.findOneByApplicationFinanceIdAndNameAndQuestionId(applicationFinance.getId(), newCostItem.getName(), question.getId());
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
 
         if (existingCost == null) {

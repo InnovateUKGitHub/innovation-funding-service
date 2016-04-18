@@ -148,6 +148,15 @@ public class Application {
     }
 
     @JsonIgnore
+    public ProcessRole getLeadApplicantProcessRole(){
+        Optional<ProcessRole> role = this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
+        if(role.isPresent()){
+            return role.get();
+        }
+        return null;
+    }
+
+    @JsonIgnore
     public User getLeadApplicant(){
         Optional<ProcessRole> role = this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
         if(role.isPresent()){
