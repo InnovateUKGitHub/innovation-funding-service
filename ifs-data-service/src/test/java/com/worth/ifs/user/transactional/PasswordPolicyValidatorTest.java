@@ -169,4 +169,16 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         assertTrue(validator.validatePassword("456eggs456", user).getFailure().is(badRequestErrorWithKey(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
         assertTrue(validator.validatePassword("456eggsempire ltd456", user).getFailure().is(badRequestErrorWithKey(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
     }
+
+    @Test
+    public void testValidatePasswordStopsUserUsingOrganisationNameButNotWhenVeryShort() {
+
+        UserResource user = newUserResource().withFirstName("William").withLastName("Lo").
+                withOrganisations(asList(123L, 456L)).build();
+
+        when(organisationRepositoryMock.findOne(123L)).thenReturn(newOrganisation().withName("Hi").build());
+        when(organisationRepositoryMock.findOne(456L)).thenReturn(newOrganisation().withName("lo").build());
+
+        assertTrue(validator.validatePassword("highlow", user).isSuccess());
+    }
 }

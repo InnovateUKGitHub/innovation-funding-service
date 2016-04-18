@@ -8,16 +8,13 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.fail;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
 import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.RoleResource;
@@ -193,11 +190,6 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 		@Override
 		public ServiceResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(
 				Long competitionId, int pageIndex, String sortBy) {
-			return null;
-		}
-
-		@Override
-		public ServiceResult<List<Application>> getApplicationSummariesByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId) {
 			return null;
 		}
 

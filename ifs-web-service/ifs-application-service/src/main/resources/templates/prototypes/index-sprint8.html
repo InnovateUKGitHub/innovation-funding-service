@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint8'"  th:remove="tag" />
+
+	
+	<section class="grid-row">
+		<div class="row">
+			<h1 class="heading-large">Sprint 8</h1>
+
+			<section>
+				
+				<h2 class="heading-medium">Content Updates</h2>
+
+				<ul class="list-bullet">
+					<li>
+						<a href="/prototypes/643-create-acc-org-new-lead">INFUND-2423</a> Password guidance for applicants
+					</li>
+				</ul>
+			</section>
+
+			<section>
+				
+				<h2 class="heading-medium">Partner view during project setup</h2>
+
+				<ul class="list-bullet">
+					<li>
+						<h3 class="heading-small">INFUND-1577</h3> 
+						<p>As partners within a project I want to be informed of who my MO is and their contact details so we can arrange a first meeting</p>
+						
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/2484-mo-partner?status=noMo">INFUND-2484</a> Create a view that allows applicants to see information on monitoring officers before they are assigned
+							</li>
+							<li>
+								<a href="/prototypes/2484-mo-partner">INFUND-2485</a> Create a view that allows applicants to view their assigned MO and information on the role
+							</li>
+						</ul>
+					</li>
+					<li>
+						<h3 class="heading-small">INFUND-2425</h3>
+						<p>Create view that allows the applicant to confirm the change to their organisation details</p>
+						<ul class="list-bullet">
+							 <ul class="list-bullet">
+							 	<li><a href="/prototypes/1588-project-status?status=noCompHouse">INFUND-2536</a> Create a view that informs business applicants that they have not signed up to companies house</li>
+							 	<li><a href="/prototypes/2537-partner-add-companies-house">INFUND-2537</a> Create a view that allows applicants add their companies house information</li>
+							 	<li><a href="/prototypes/2538-confirm-org">INFUND-2538</a> Create view that allows the applicant to confirm the change to their organisation details</li>
+							 </ul>
+						</ul>
+					</li>
+				</ul>
+
+			</section>
+
+			<section>
+				
+				<h2 class="heading-medium">Comp admin - MVP</h2>
+
+				<ul class="list-bullet">
+					<li>
+						<h3 class="heading-small">INFUND-1973</h3> 
+						<p>As an internal user I want to check and review / confirm the bank details for the organisation</p>
+					</li>
+				</ul>
+			</section>
+		</div>
+	</section>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>

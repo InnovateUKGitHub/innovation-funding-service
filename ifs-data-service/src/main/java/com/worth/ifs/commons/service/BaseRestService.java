@@ -119,8 +119,16 @@ public abstract class BaseRestService {
         return restGetEntity(path, c).getBody();
     }
 
+    protected <T> T restGetAnonymous(String path, Class<T> c) {
+        return restGetEntityAnonymous(path, c).getBody();
+    }
+
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
         return adaptor.restGetEntity(getDataRestServiceURL() + path, c);
+    }
+
+    protected <T> ResponseEntity<T> restGetEntityAnonymous(String path, Class<T> c) {
+        return anonymousRestTemplateAdaptor.restGetEntity(getDataRestServiceURL() + path, c);
     }
 
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, HttpHeaders headers) {

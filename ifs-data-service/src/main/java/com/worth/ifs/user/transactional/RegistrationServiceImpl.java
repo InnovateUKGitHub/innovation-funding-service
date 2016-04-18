@@ -97,12 +97,13 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         }
         User newUser = assembleUserFromResource(userResource);
         return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
-                addRoleToUser(user, roleName)).andOnSuccess(user ->
-                createUserWithUid(newUser, userResource.getPassword(), competitionId))).andOnSuccessReturn(userMapper::mapToResource);
+                addRoleToUser(user, roleName)).andOnSuccess(() ->
+                createUserWithUid(newUser, userResource.getPassword(), competitionId))).
+                andOnSuccessReturn(userMapper::mapToResource);
     }
 
     private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
-        return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccessReturn(success -> userResource);
+        return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccessReturn(() -> userResource);
     }
 
     @Override

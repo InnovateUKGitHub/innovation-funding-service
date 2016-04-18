@@ -21,6 +21,9 @@ public interface FormInputService {
     @PostFilter("hasPermission(returnObject, 'READ')")
     ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(Long applicationId);
 
+    @NotSecured("TODO RB - implement when permissions matrix available")
+    ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(Long formInputId, Long applicationId);
+
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<FormInputResponse> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String htmlUnescapedValue);
 }

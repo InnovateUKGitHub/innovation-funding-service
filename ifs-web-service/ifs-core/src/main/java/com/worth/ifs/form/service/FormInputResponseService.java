@@ -21,4 +21,5 @@ public interface FormInputResponseService {
                                              Long contentLength, String originalFileName, byte[] file);
     RestResult<Void> removeFile(Long formInputId, Long applicationId, Long processRoleId);
     RestResult<ByteArrayResource> getFile(Long formInputId, Long applicationId, Long processRoleId);
+    RestResult<List<FormInputResponseResource>> getByFormInputIdAndApplication(Long formInputId, Long applicationId);
 }

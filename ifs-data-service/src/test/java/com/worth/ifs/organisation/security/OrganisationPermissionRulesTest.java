@@ -28,13 +28,14 @@ import static org.mockito.Mockito.when;
 public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<OrganisationPermissionRules> {
 
     @Test
-    public void testAnyoneCanViewAnOrganisationThatIsNotYetLinkedToAnApplication() {
-        assertTrue(rules.anyoneCanSeeOrganisationsNotYetConnectedToApplications(newOrganisationResource().build(), null));
-    }
-
-    @Test
-    public void testAnyoneCanViewAnOrganisationThatIsNotYetLinkedToAnApplicationIncludingAnonymousUsers() {
-        assertTrue(rules.anyoneCanSeeOrganisationsNotYetConnectedToApplications(newOrganisationResource().build(), null));
+    public void testSystemRegistrationUserCanViewAnOrganisationThatIsNotYetLinkedToAnApplication() {
+        allRoleUsers.forEach(user -> {
+            if (user.equals(systemRegistrationUser())) {
+                assertTrue(rules.systemRegistrationUserCanSeeOrganisationsNotYetConnectedToApplications(newOrganisationResource().build(), user));
+            } else {
+                assertFalse(rules.systemRegistrationUserCanSeeOrganisationsNotYetConnectedToApplications(newOrganisationResource().build(), user));
+            }
+        });
     }
 
     @Test
@@ -138,30 +139,52 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     }
 
     @Test
-    public void testAnyoneCanCreateOrganisations() {
-        assertTrue(rules.anyoneCanCreateOrganisations(newOrganisationResource().build(), null));
+    public void testSystemRegistrationUserCanCreateOrganisations() {
+        allRoleUsers.forEach(user -> {
+            if (user.equals(systemRegistrationUser())) {
+                assertTrue(rules.systemRegistrationUserCanCreateOrganisations(newOrganisationResource().build(), user));
+            } else {
+                assertFalse(rules.systemRegistrationUserCanCreateOrganisations(newOrganisationResource().build(), user));
+            }
+        });
     }
 
     @Test
-    public void testAnyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers() {
-        assertTrue(rules.anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(newOrganisationResource().build(), null));
+    public void testSystemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers() {
+        allRoleUsers.forEach(user -> {
+            if (user.equals(systemRegistrationUser())) {
+                assertTrue(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(newOrganisationResource().build(), user));
+            } else {
+                assertFalse(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(newOrganisationResource().build(), user));
+            }
+        });
     }
 
     @Test
-    public void testAnyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsersButOrganisationAttachedToApplication() {
+    public void testSystemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsersButOrganisationAttachedToApplication() {
         OrganisationResource organisation = newOrganisationResource().withProcessRoles(singletonList(123L)).build();
-        assertFalse(rules.anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, null));
+        allRoleUsers.forEach(user -> {
+            assertFalse(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, user));
+        });
     }
 
     @Test
-    public void testAnyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsersButOrganisationAttachedToUsers() {
+    public void testSystemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsersButOrganisationAttachedToUsers() {
         OrganisationResource organisation = newOrganisationResource().withUsers(singletonList(123L)).build();
-        assertFalse(rules.anyoneCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, null));
+        allRoleUsers.forEach(user -> {
+            assertFalse(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, user));
+        });
     }
 
     @Test
-    public void testAnyoneCanSeeOrganisationSearchResults() {
-        assertTrue(rules.anyoneCanSeeOrganisationSearchResults(new OrganisationSearchResult(), null));
+    public void testSystemRegistrationUserCanSeeOrganisationSearchResults() {
+        allRoleUsers.forEach(user -> {
+            if (user.equals(systemRegistrationUser())) {
+                assertTrue(rules.systemRegistrationUserCanSeeOrganisationSearchResults(new OrganisationSearchResult(), user));
+            } else {
+                assertFalse(rules.systemRegistrationUserCanSeeOrganisationSearchResults(new OrganisationSearchResult(), user));
+            }
+        });
     }
 
     @Override

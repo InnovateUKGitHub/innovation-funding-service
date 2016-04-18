@@ -57,4 +57,14 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
         List<String> responses = service.saveQuestionResponse(123L, 456L, 789L, "Very good answer!", false).getSuccessObject();
         assertEquals(returnedResponses, responses);
     }
+
+    @Test
+    public void test_getByFormInputIdAndApplication(){
+        List<FormInputResponseResource> returnedResponses = newFormInputResponseResource().build(3);
+
+        setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/456/123", formInputResponseListType(), returnedResponses);
+
+        List<FormInputResponseResource> responses = service.getByFormInputIdAndApplication(456L, 123L).getSuccessObject();
+        assertEquals(returnedResponses, responses);
+    }
 }
