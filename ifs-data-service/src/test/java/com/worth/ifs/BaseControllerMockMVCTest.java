@@ -11,15 +11,20 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.restdocs.RestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import com.worth.ifs.commons.error.Error;
+
+import java.io.IOException;
 import java.util.List;
 
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static java.util.stream.Collectors.toList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -77,5 +82,23 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     protected static ResultMatcher contentError(final Error error) throws JsonProcessingException {
         return contentObject(new RestErrorResponse(error));
+    }
+
+    protected void assertResponseErrorMessageEqual(String expectedMessage, Error expectedError, MvcResult mvcResult) throws IOException {
+        String content = mvcResult.getResponse().getContentAsString();
+        RestErrorResponse restErrorResponse = new ObjectMapper().readValue(content, RestErrorResponse.class);
+        assertErrorMessageEqual(expectedMessage, expectedError, restErrorResponse);
+    }
+
+    private void assertErrorMessageEqual(String expectedMessage, Error expectedError, RestErrorResponse restErrorResponse) {
+        assertEquals(expectedMessage, restErrorResponse.getErrors().get(0).getErrorMessage());
+        assertEqualsUpNoIncludingStatusCode(restErrorResponse, expectedError);
+    }
+
+    protected void assertEqualsUpNoIncludingStatusCode(final RestErrorResponse restErrorResponse, final Error expectedError){
+        assertTrue(restErrorResponse.getErrors().size() == 1);
+        assertEquals(restErrorResponse.getErrors().get(0).getErrorMessage(), expectedError.getErrorMessage());
+        assertEquals(restErrorResponse.getErrors().get(0).getArguments() , expectedError.getArguments());
+        assertEquals(restErrorResponse.getErrors().get(0).getErrorKey() , expectedError.getErrorKey());
     }
 }
