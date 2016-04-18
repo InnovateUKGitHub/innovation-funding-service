@@ -9,6 +9,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -17,6 +18,7 @@ import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
@@ -67,6 +69,9 @@ public class ApplicationFormController extends AbstractApplicationController {
     @Autowired
     private CostService costService;
 
+    @Autowired
+    private FormInputService formInputService;
+
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
         dataBinder.registerCustomEditor(LocalDate.class, APPLICATION_START_DATE, new LocalDatePropertyEditor(webRequest));
@@ -81,7 +86,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                @PathVariable(QUESTION_ID) final Long questionId,
                                HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        Question question = questionService.getById(questionId);
+        QuestionResource question = questionService.getById(questionId);
         SectionResource section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -154,7 +159,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                    CompetitionResource competition,
                                    Optional<SectionResource> section,
                                    Long userId, Model model,
-                                   ApplicationForm form, Optional<Question> question,
+                                   ApplicationForm form, Optional<QuestionResource> question,
                                    List<ProcessRole> userApplicationRoles){
         addApplicationDetails(application, competition, userId, section, question.map(q -> q.getId()), model, form, userApplicationRoles);
         addNavigation(question.orElse(null), application.getId(), model);
@@ -187,7 +192,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             }
             return showQuestion(form, bindingResult, model, applicationId, questionId, request);
         } else {
-            Question question = questionService.getById(questionId);
+            QuestionResource question = questionService.getById(questionId);
             SectionResource section = sectionService.getSectionByQuestionId(questionId);
             ApplicationResource application = applicationService.getById(applicationId);
             CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -239,29 +244,29 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (section == null) {
             return;
         }
-        Optional<Question> previousQuestion = questionService.getPreviousQuestionBySection(section.getId());
+        Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestionBySection(section.getId());
         addPreviousQuestionToModel(previousQuestion, applicationId, model);
-        Optional<Question> nextQuestion = questionService.getNextQuestionBySection(section.getId());
+        Optional<QuestionResource> nextQuestion = questionService.getNextQuestionBySection(section.getId());
         addNextQuestionToModel(nextQuestion, applicationId, model);
     }
 
-    private void addNavigation(Question question, Long applicationId, Model model) {
+    private void addNavigation(QuestionResource question, Long applicationId, Model model) {
         if (question == null) {
             return;
         }
 
-        Optional<Question> previousQuestion = questionService.getPreviousQuestion(question.getId());
+        Optional<QuestionResource> previousQuestion = questionService.getPreviousQuestion(question.getId());
         addPreviousQuestionToModel(previousQuestion, applicationId, model);
-        Optional<Question> nextQuestion = questionService.getNextQuestion(question.getId());
+        Optional<QuestionResource> nextQuestion = questionService.getNextQuestion(question.getId());
         addNextQuestionToModel(nextQuestion, applicationId, model);
     }
 
-    private void addPreviousQuestionToModel(Optional<Question> previousQuestionOptional, Long applicationId, Model model) {
+    private void addPreviousQuestionToModel(Optional<QuestionResource> previousQuestionOptional, Long applicationId, Model model) {
         String previousUrl;
         String previousText;
 
         if (previousQuestionOptional.isPresent()) {
-            Question previousQuestion = previousQuestionOptional.get();
+            QuestionResource previousQuestion = previousQuestionOptional.get();
             SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
             if (previousSection.isQuestionGroup()) {
                 previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + previousSection.getId();
@@ -275,12 +280,12 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private void addNextQuestionToModel(Optional<Question> nextQuestionOptional, Long applicationId, Model model) {
+    private void addNextQuestionToModel(Optional<QuestionResource> nextQuestionOptional, Long applicationId, Model model) {
         String nextUrl;
         String nextText;
 
         if (nextQuestionOptional.isPresent()) {
-            Question nextQuestion = nextQuestionOptional.get();
+            QuestionResource nextQuestion = nextQuestionOptional.get();
             SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
 
             if (nextSection.isQuestionGroup()) {
@@ -331,7 +336,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     private void saveApplicationForm(ApplicationResource application,
                                               CompetitionResource competition,
                                               ApplicationForm form,
-                                              Long applicationId, Long sectionId, Question question,
+                                              Long applicationId, Long sectionId, QuestionResource question,
                                               HttpServletRequest request,
                                               HttpServletResponse response,
                                               BindingResult bindingResult ) {
@@ -347,7 +352,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             errors = saveQuestionResponses(application, Collections.singletonList(question), user.getId(), processRole.getId(), bindingResult, request, ignoreEmpty);
         } else {
             SectionResource selectedSection = getSelectedSection(competition.getSections(), sectionId);
-            List<Question> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
+            List<QuestionResource> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
             errors = saveQuestionResponses(application, questions, user.getId(), processRole.getId(), bindingResult, request, ignoreEmpty);
         }
 
@@ -384,11 +389,11 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         final Set<Long> allQuestions = sectionService.getQuestionsForSectionAndSubsections(selectedSection.getId());
 
-        List<Question> questions = simpleMap(allQuestions, questionService::getById);
+        List<QuestionResource> questions = simpleMap(allQuestions, questionService::getById);
 
         String action = params.containsKey(MARK_SECTION_AS_COMPLETE) ? MARK_AS_COMPLETE : MARK_AS_INCOMPLETE;
 
-        for(final Question question : questions) {
+        for(final QuestionResource question : questions) {
             boolean marked = markQuestion(question.getId(), action, application.getId(), processRoleId, errors);
 
             // if a question is marked as complete, don't show the field saved message.
@@ -414,7 +419,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                 .get();
     }
 
-    private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<Question> questions,
+    private Map<Long, List<String>> saveQuestionResponses(ApplicationResource application, List<QuestionResource> questions,
                                                           Long userId,
                                                           Long processRoleId,
                                                           BindingResult bindingResult,
@@ -523,7 +528,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private Map<Long, List<String>> saveQuestionResponses(HttpServletRequest request,
-                                                          List<Question> questions,
+                                                          List<QuestionResource> questions,
                                                           Long userId,
                                                           Long processRoleId,
                                                           Long applicationId,
@@ -539,7 +544,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return errorMap;
     }
 
-    private Map<Long, List<String>> saveNonFileUploadQuestions(List<Question> questions,
+    private Map<Long, List<String>> saveNonFileUploadQuestions(List<QuestionResource> questions,
                                                                Map<String, String[]> params,
                                                                HttpServletRequest request,
                                                                Long userId,
@@ -549,11 +554,11 @@ public class ApplicationFormController extends AbstractApplicationController {
         questions.stream()
                 .forEach(question -> question.getFormInputs()
                                 .stream()
-                                .filter(formInput1 -> !"fileupload".equals(formInput1.getFormInputType().getTitle()))
+                                .filter(formInput1 -> !"fileupload".equals(formInputService.getOne(formInput1).getFormInputTypeTitle()))
                                 .forEach(formInput -> {
-                                            if (params.containsKey("formInput[" + formInput.getId() + "]")) {
-                                                String value = request.getParameter("formInput[" + formInput.getId() + "]");
-                                                List<String> errors = formInputResponseService.save(userId, applicationId, formInput.getId(), value, ignoreEmpty);
+                                            if (params.containsKey("formInput[" + formInput + "]")) {
+                                                String value = request.getParameter("formInput[" + formInput + "]");
+                                                List<String> errors = formInputResponseService.save(userId, applicationId, formInput, value, ignoreEmpty);
                                                 if (!errors.isEmpty()) {
                                                     log.error("save failed. " + question.getId());
                                                     errorMap.put(question.getId(), new ArrayList<>(errors));
@@ -565,7 +570,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         return errorMap;
     }
 
-    private Map<Long, List<String>> saveFileUploadQuestionsIfAny(List<Question> questions,
+    private Map<Long, List<String>> saveFileUploadQuestionsIfAny(List<QuestionResource> questions,
                                                                  final Map<String, String[]> params,
                                                                  HttpServletRequest request,
                                                                  Long applicationId,
@@ -574,20 +579,20 @@ public class ApplicationFormController extends AbstractApplicationController {
         questions.stream()
                 .forEach(question -> question.getFormInputs()
                         .stream()
-                        .filter(formInput1 -> "fileupload".equals(formInput1.getFormInputType().getTitle()) && request instanceof StandardMultipartHttpServletRequest)
+                        .filter(formInput1 -> "fileupload".equals(formInputService.getOne(formInput1).getFormInputTypeTitle()) && request instanceof StandardMultipartHttpServletRequest)
                         .forEach(formInput -> processFormInput(formInput, params, applicationId, processRoleId, request, errorMap)));
         return errorMap;
     }
     
-    private void processFormInput(FormInput formInput, Map<String, String[]> params, Long applicationId, Long processRoleId, HttpServletRequest request, Map<Long, List<String>> errorMap){
+    private void processFormInput(Long formInputId, Map<String, String[]> params, Long applicationId, Long processRoleId, HttpServletRequest request, Map<Long, List<String>> errorMap){
         if (params.containsKey(REMOVE_UPLOADED_FILE)) {
-            formInputResponseService.removeFile(formInput.getId(), applicationId, processRoleId).getSuccessObjectOrThrowException();
+            formInputResponseService.removeFile(formInputId, applicationId, processRoleId).getSuccessObjectOrThrowException();
         } else {
             final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
-            final MultipartFile file = fileMap.get("formInput[" + formInput.getId() + "]");
+            final MultipartFile file = fileMap.get("formInput[" + formInputId + "]");
             if (file != null && !file.isEmpty()) {
                 try {
-                    RestResult<FileEntryResource> result = formInputResponseService.createFile(formInput.getId(),
+                    RestResult<FileEntryResource> result = formInputResponseService.createFile(formInputId,
                             applicationId,
                             processRoleId,
                             file.getContentType(),
@@ -595,7 +600,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                             file.getOriginalFilename(),
                             file.getBytes());
                     if (result.isFailure()) {
-                        errorMap.put(formInput.getId(),
+                        errorMap.put(formInputId,
                                 result.getFailure().getErrors().stream()
                                         .map(e -> MessageUtil.getFromMessageBundle(messageSource, e.getErrorKey(), "Unknown error on file upload", request.getLocale())).collect(Collectors.toList()));
                     }

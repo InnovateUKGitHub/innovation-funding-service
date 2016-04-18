@@ -4,6 +4,7 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.domain.FormInputResponse;
@@ -224,15 +225,15 @@ public class ApplicationController extends AbstractApplicationController {
 //        addOrganisationAndUserFinanceDetails(applicationId, user, model, form);
 
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
-        Optional<Question> question = getQuestion(currentSection, questionId);
+        Optional<QuestionResource> question = getQuestion(currentSection, questionId);
 
-        super.addApplicationAndSections(application, competition, user.getId(), currentSection, question.map(Question::getId), model, form);
+        super.addApplicationAndSections(application, competition, user.getId(), currentSection, question.map(QuestionResource::getId), model, form);
         super.addOrganisationAndUserFinanceDetails(applicationId, user, model, form);
 
         model.addAttribute("currentUser", user);
         model.addAttribute("section", currentSection.get());
 
-        Map<Long, List<Question>> sectionQuestions = new HashMap<>();
+        Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
         if(questionId != null && question.isPresent()){
             sectionQuestions.put(currentSection.get().getId(), Arrays.asList(questionService.getById(questionId)));
         }else{
@@ -245,7 +246,7 @@ public class ApplicationController extends AbstractApplicationController {
         return "application/single-section-details";
     }
 
-    private Optional<Question> getQuestion(Optional<SectionResource> currentSection, Long questionId) {
+    private Optional<QuestionResource> getQuestion(Optional<SectionResource> currentSection, Long questionId) {
         return currentSection.get().getQuestions().stream()
                     .map(questionService::getById)
                     .filter(q -> q.getId().equals(questionId))

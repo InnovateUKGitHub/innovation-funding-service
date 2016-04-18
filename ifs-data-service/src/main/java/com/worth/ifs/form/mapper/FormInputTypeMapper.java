@@ -5,6 +5,8 @@ import com.worth.ifs.commons.mapper.GlobalMapperConfig;
 import com.worth.ifs.form.domain.FormInputType;
 import com.worth.ifs.form.resource.FormInputTypeResource;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
     config = GlobalMapperConfig.class,

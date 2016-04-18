@@ -2,6 +2,7 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<Question> findByCompetition(Long competitionId) {
+    public List<QuestionResource> findByCompetition(Long competitionId) {
         return questionRestService.findByCompetition(competitionId).getSuccessObjectOrThrowException();
     }
 
@@ -80,32 +81,32 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question getById(Long questionId) {
+    public QuestionResource getById(Long questionId) {
         return questionRestService.findById(questionId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public Optional<Question> getNextQuestion(Long questionId) {
+    public Optional<QuestionResource> getNextQuestion(Long questionId) {
         return questionRestService.getNextQuestion(questionId).getOptionalSuccessObject();
     }
 
     @Override
-    public Optional<Question> getPreviousQuestion(Long questionId) {
+    public Optional<QuestionResource> getPreviousQuestion(Long questionId) {
         return questionRestService.getPreviousQuestion(questionId).getOptionalSuccessObject();
     }
 
     @Override
-    public Optional<Question> getPreviousQuestionBySection(Long sectionId) {
+    public Optional<QuestionResource> getPreviousQuestionBySection(Long sectionId) {
         return questionRestService.getPreviousQuestionBySection(sectionId).getOptionalSuccessObject();
     }
 
     @Override
-    public Optional<Question> getNextQuestionBySection(Long sectionId) {
+    public Optional<QuestionResource> getNextQuestionBySection(Long sectionId) {
         return questionRestService.getNextQuestionBySection(sectionId).getOptionalSuccessObject();
     }
 
     @Override
-    public RestResult<Question> getQuestionByFormInputType(String formInputType) {
+    public RestResult<QuestionResource> getQuestionByFormInputType(String formInputType) {
         return questionRestService.getQuestionByFormInputType(formInputType);
     }
 

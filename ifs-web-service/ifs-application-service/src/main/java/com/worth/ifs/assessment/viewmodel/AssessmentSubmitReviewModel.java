@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.RecommendedValue;
@@ -39,8 +40,8 @@ public class AssessmentSubmitReviewModel {
     private final Assessment assessment;
     private final ApplicationResource application;
     private final CompetitionResource competition;
-    private final List<Question> questions;
-    private final List<Question> scorableQuestions;
+    private final List<QuestionResource> questions;
+    private final List<QuestionResource> scorableQuestions;
     private final Score score;
     private final Map<Long, AssessorFeedback> responseIdsAndFeedback;
     private final Map<Long, Optional<Response>> questionIdsAndResponses;
@@ -50,22 +51,22 @@ public class AssessmentSubmitReviewModel {
     // TODO this logic should live in the data layer and we should return a dto instead.
     // TODO Note there is code commonality with AssessmentHandler.getScore.
     // TODO make these changes when converting to dtos.
-    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ApplicationResource application, CompetitionResource competition, Score score, List<Question> questions, List<SectionResource> sections) {
+    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ApplicationResource application, CompetitionResource competition, Score score, List<QuestionResource> questions, List<SectionResource> sections) {
         this.assessment = assessment;
         this.application = application;
         this.competition = competition;
         this.score = score;
         this.questions = questions;
 
-        scorableQuestions = questions.stream().filter(Question::getNeedingAssessorScore).collect(toList());
+        scorableQuestions = questions.stream().filter(QuestionResource::getNeedingAssessorScore).collect(toList());
 
-        List<Pair<Question, Optional<Response>>> questionsAndResponsePairs = questions.stream().
+        List<Pair<QuestionResource, Optional<Response>>> questionsAndResponsePairs = questions.stream().
                 map(question -> Pair.of(question, responses.stream().
                         filter(response -> response.getQuestion().getId().equals(question.getId())).
                         findFirst())).
                 collect(toList());
 
-        Map<Question, Optional<Response>> questionsAndResponses =
+        Map<QuestionResource, Optional<Response>> questionsAndResponses =
                 questionsAndResponsePairs.stream().collect(pairsToMap());
 
         questionIdsAndResponses = questionsAndResponses.entrySet().stream().
@@ -80,11 +81,11 @@ public class AssessmentSubmitReviewModel {
                 collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
 
 
-        Map<Question, Optional<AssessorFeedback>> questionsAndFeedback = questionsAndResponses.entrySet().stream().
+        Map<QuestionResource, Optional<AssessorFeedback>> questionsAndFeedback = questionsAndResponses.entrySet().stream().
                 map(e -> Pair.of(e.getKey(), e.getValue().map(feedback -> Optional.ofNullable(responseIdsAndFeedback.get(feedback.getId()))).orElse(empty()))).
                         collect(pairsToMap());
 
-        Map<Long, List<Question>> sectionQuestions = simpleToMap(sections,
+        Map<Long, List<QuestionResource>> sectionQuestions = simpleToMap(sections,
                 SectionResource::getId,
                 s -> simpleFilter(questions,
                         q -> s.getQuestions()
@@ -112,11 +113,11 @@ public class AssessmentSubmitReviewModel {
         return competition;
     }
 
-    public List<Question> getScorableQuestions() {
+    public List<QuestionResource> getScorableQuestions() {
         return scorableQuestions;
     }
 
-    public List<Question> getQuestions() {
+    public List<QuestionResource> getQuestions() {
         return questions;
     }
 
@@ -136,7 +137,7 @@ public class AssessmentSubmitReviewModel {
         return assessmentSummarySections;
     }
 
-    public AssessorFeedback getFeedbackForQuestion(Question question) {
+    public AssessorFeedback getFeedbackForQuestion(QuestionResource question) {
         Optional<Response> responseOption = questionIdsAndResponses.get(question.getId());
         return responseOption.map(response -> responseIdsAndFeedback.get(response.getId())).orElse(null);
     }

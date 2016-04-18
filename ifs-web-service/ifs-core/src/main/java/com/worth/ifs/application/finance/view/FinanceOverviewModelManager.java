@@ -2,6 +2,7 @@ package com.worth.ifs.application.finance.view;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.service.FinanceService;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.application.service.SectionService;
@@ -60,7 +61,7 @@ public class FinanceOverviewModelManager {
         List<SectionResource> financeSectionChildren = simpleMap(section.getChildSections(), sectionService::getById);
         model.addAttribute("financeSectionChildren", financeSectionChildren);
 
-        Map<Long, List<Question>> financeSectionChildrenQuestionsMap = financeSectionChildren.stream()
+        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSectionChildren.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId,
                         s -> simpleMap(s.getQuestions(), questionService::getById)

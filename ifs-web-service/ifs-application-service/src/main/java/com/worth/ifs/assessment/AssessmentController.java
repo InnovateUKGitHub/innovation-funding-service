@@ -5,6 +5,7 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
@@ -250,7 +251,7 @@ public class AssessmentController extends AbstractApplicationController {
 
         Score score = assessmentRestService.getScore(assessment.getId()).getSuccessObjectOrThrowException();
 
-        List<Question> questions = competition.getSections()
+        List<QuestionResource> questions = competition.getSections()
                 .stream()
                 .map(sectionService::getById)
                 .flatMap(section -> section.getQuestions()

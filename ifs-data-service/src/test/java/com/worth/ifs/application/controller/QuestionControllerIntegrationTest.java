@@ -6,6 +6,7 @@ import java.util.Set;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.QuestionResource;
@@ -33,6 +34,8 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     QuestionService questionService;
     @Autowired
     QuestionRepository questionRepository;
+    @Autowired
+    QuestionMapper questionMapper;
 
 
     private final Long userId = 1L;
@@ -50,7 +53,9 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Before
     public void setup(){
-        questionResource = controller.getQuestionById(questionId).getSuccessObject();
+        question = questionRepository.findOne(questionId);
+        questionResource = questionMapper.mapToResource(question);
+
         addBasicSecurityUser();
     }
 

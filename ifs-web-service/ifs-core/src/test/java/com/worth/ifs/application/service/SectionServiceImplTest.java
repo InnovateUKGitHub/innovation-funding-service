@@ -2,8 +2,10 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.application.builder.QuestionBuilder;
+import com.worth.ifs.application.builder.QuestionResourceBuilder;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.application.service.SectionRestService;
@@ -22,6 +24,7 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -55,14 +58,10 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         when(sectionRestService.getById(eq(childSection1.getId()))).thenReturn(RestResult.restSuccess(childSection1));
         when(sectionRestService.getById(eq(parentSection.getId()))).thenReturn(RestResult.restSuccess(parentSection));
 
-        FormInputType formInputType1 = new FormInputType(1L, "empty");
-        FormInput formInputs1 = FormInputBuilder.newFormInput().withFormInputType(formInputType1).build();
-        Question question1 = QuestionBuilder.newQuestion().withFormInputs(Arrays.asList(formInputs1)).build();
+        QuestionResource question1 = QuestionResourceBuilder.newQuestionResource().withFormInputs(Arrays.asList(1L)).build();
         when(questionService.getById(eq(question1.getId()))).thenReturn(question1);
 
-        FormInputType formInputType2 = new FormInputType(2L, "Something");
-        FormInput formInputs2 = FormInputBuilder.newFormInput().withFormInputType(formInputType2).build();
-        Question question2 = QuestionBuilder.newQuestion().withFormInputs(Arrays.asList(formInputs2)).build();
+        QuestionResource question2 = QuestionResourceBuilder.newQuestionResource().withFormInputs(Arrays.asList(2L)).build();
         when(questionService.getById(eq(question2.getId()))).thenReturn(question2);
 
         childSection1.setQuestions(Arrays.asList(question1.getId(), question2.getId()));

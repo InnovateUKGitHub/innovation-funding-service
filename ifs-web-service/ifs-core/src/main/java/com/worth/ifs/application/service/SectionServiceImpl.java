@@ -2,8 +2,10 @@ package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.form.service.FormInputService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,9 @@ public class SectionServiceImpl implements SectionService {
 
     @Autowired
     private SectionRestService sectionRestService;
+
+    @Autowired
+    private FormInputService formInputService;
 
     @Autowired
     private QuestionService questionService;
@@ -99,11 +104,11 @@ public class SectionServiceImpl implements SectionService {
                                 .filter(
                                         q -> q != null &&
                                                 !q.getFormInputs().stream()
-                                                .anyMatch(
-                                                        input -> input.getFormInputType().getTitle().equals(name)
-                                                )
+                                                        .anyMatch(
+                                                                input -> formInputService.getOne(input).getFormInputTypeTitle().equals(name)
+                                                        )
                                 )
-                                .map(Question::getId)
+                                .map(QuestionResource::getId)
                                 .collect(toList())
                 )
         );

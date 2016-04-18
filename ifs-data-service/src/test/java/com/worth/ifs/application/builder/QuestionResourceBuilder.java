@@ -1,6 +1,8 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.competition.domain.Competition;
@@ -56,6 +58,26 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return withArray((assessorConfirmationQuestion, object) -> setField("assessorConfirmationQuestion", assessorConfirmationQuestion, object), assessorConfirmationQuestions);
     }
 
+    public QuestionResourceBuilder withCompetition(Long... competitions) {
+        return withArray((competition, object) -> setField("competition", competition, object), competitions);
+    }
+
+    public QuestionResourceBuilder withSection(Long... sections) {
+        return withArray((section, object) -> setField("section", section, object), sections);
+    }
+
+    public QuestionResourceBuilder withResponses(List<Long>... responses) {
+        return withArray((response, object) -> setField("responses", response, object), responses);
+    }
+
+    public QuestionResourceBuilder withQuestionStatuses(List<Long>... questionStatuses) {
+        return withArray((questionStatus, object) -> setField("questionStatuses", questionStatus, object), questionStatuses);
+    }
+
+    public QuestionResourceBuilder withCosts(List<Long>... costs) {
+        return withArray((cost, object) -> setField("costs", cost, object), costs);
+    }
+
     public QuestionResourceBuilder withNeedingAssessorScore(boolean needingAssessorScore) {
         return with(question -> setField("needingAssessorScore", needingAssessorScore, question));
     }
@@ -80,7 +102,7 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
         return with((i, question) -> setField("priority", prioritySetter.apply(i), question));
     }
 
-    public QuestionResourceBuilder withFormInputs(List<FormInput> formInputs) {
+    public QuestionResourceBuilder withFormInputs(List<Long> formInputs) {
         return with(question -> setField("formInputs", new ArrayList<>(formInputs), question));
     }
 

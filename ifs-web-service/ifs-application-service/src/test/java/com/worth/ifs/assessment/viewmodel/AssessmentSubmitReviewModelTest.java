@@ -7,6 +7,7 @@ import com.worth.ifs.application.builder.SectionBuilder;
 import com.worth.ifs.application.builder.SectionResourceBuilder;
 import com.worth.ifs.application.domain.*;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.competition.domain.Competition;
@@ -24,6 +25,7 @@ import static com.worth.ifs.application.builder.ApplicationBuilder.newApplicatio
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.AssessorFeedbackBuilder.newFeedback;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
+import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
@@ -54,23 +56,23 @@ public class AssessmentSubmitReviewModelTest {
         ProcessRole assessorProcessRole = newProcessRole().build();
         Assessment assessment = newAssessment().withProcessRole(assessorProcessRole).build();
 
-        List<Question> section1Questions = newQuestion().build(2);
-        List<Question> section2Questions = newQuestion().build(2);
+        List<QuestionResource> section1Questions = newQuestionResource().build(2);
+        List<QuestionResource> section2Questions = newQuestionResource().build(2);
 
-        List<Question> questions = new ArrayList<>(section1Questions.size() + section2Questions.size());
+        List<QuestionResource> questions = new ArrayList<>(section1Questions.size() + section2Questions.size());
         questions.addAll(section1Questions);
         questions.addAll(section2Questions);
 
         List<Section> sections = newSection()
                 .withId(501L, 502L)
                 .with(BuilderAmendFunctions.idBasedNames("Section "))
-                .withQuestionSets(asList(section1Questions, section2Questions))
+                //.withQuestionSets(asList(section1Questions, section2Questions))
                 .build(2);
 
         List<SectionResource> sectionResources = newSectionResource()
                 .withId(501L, 502L)
                 .with(BuilderAmendFunctions.idBasedNames("Section "))
-                .withQuestionSets(asList(simpleMap(section1Questions, Question::getId), simpleMap(section2Questions,Question::getId)))
+                .withQuestionSets(asList(simpleMap(section1Questions, QuestionResource::getId), simpleMap(section2Questions,QuestionResource::getId)))
                 .build(2);
 
         Competition competition = newCompetition()
@@ -100,12 +102,10 @@ public class AssessmentSubmitReviewModelTest {
         List<AssessorFeedback> section2ResponseFeedback = feedbackBuilder.build(2);
 
         List<Response> section1Responses = responseBuilder.
-                withQuestions(section1Questions).
                 withFeedback(section1ResponseFeedback).
                 build(2);
 
         List<Response> section2Responses = responseBuilder.
-                withQuestions(section2Questions).
                 withFeedback(section2ResponseFeedback).
                 build(2);
 
@@ -117,7 +117,7 @@ public class AssessmentSubmitReviewModelTest {
         //
         AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, allResponses, applicationResource, competitionResource, null, questions, sectionResources);
 
-        Map<Question, AssessorFeedback> originalQuestionToFeedback = new HashMap<>();
+        Map<QuestionResource, AssessorFeedback> originalQuestionToFeedback = new HashMap<>();
         IntStream.range(0, section1Questions.size()).forEach(i -> originalQuestionToFeedback.put(section1Questions.get(i), section1ResponseFeedback.get(i)));
         IntStream.range(0, section2Questions.size()).forEach(i -> originalQuestionToFeedback.put(section2Questions.get(i), section2ResponseFeedback.get(i)));
 
@@ -129,7 +129,7 @@ public class AssessmentSubmitReviewModelTest {
         assertEquals(competitionResource, model.getCompetition());
 
         originalQuestionToFeedback.entrySet().forEach(entry -> {
-            Question question = entry.getKey();
+            QuestionResource question = entry.getKey();
             AssessorFeedback feedback = entry.getValue();
             assertEquals(feedback, model.getFeedbackForQuestion(question));
         });
@@ -137,7 +137,7 @@ public class AssessmentSubmitReviewModelTest {
         //
         // test the questions and score sections
         //
-        List<Question> allQuestions = combineLists(section1Questions, section2Questions);
+        List<QuestionResource> allQuestions = combineLists(section1Questions, section2Questions);
         assertEquals(allQuestions, model.getQuestions());
         assertEquals(allQuestions, model.getScorableQuestions());
         // TODO qqRP assertEquals(1 + 2 + 1 + 2, model.getTotalScore());
@@ -188,14 +188,13 @@ public class AssessmentSubmitReviewModelTest {
         SectionBuilder sectionBuilder = newSection().withDisplayInAssessmentApplicationSummary(false);
         SectionResourceBuilder sectionResourceBuilder = newSectionResource().withDisplayInAssessmentApplicationSummary(false);
         
-        List<Question> questions = newQuestion().build(3);
+        List<QuestionResource> questions = newQuestionResource().build(3);
 
-        Section section1 = sectionBuilder.withQuestions(singletonList(questions.get(0))).build();
+        Section section1 = sectionBuilder.build();
         Section section2ToBeIncluded = sectionBuilder
                 .with(BuilderAmendFunctions.idBasedNames("Section "))
-                .withDisplayInAssessmentApplicationSummary(true)
-                .withQuestions(singletonList(questions.get(1))).build();
-        Section section3 = sectionBuilder.withQuestions(singletonList(questions.get(2))).build();
+                .withDisplayInAssessmentApplicationSummary(true).build();
+        Section section3 = sectionBuilder.build();
         List<Section> sections = asList(section1, section2ToBeIncluded, section3);
 
         SectionResource sectionResource1 = sectionResourceBuilder
@@ -242,17 +241,15 @@ public class AssessmentSubmitReviewModelTest {
         //
         ProcessRole assessorProcessRole = newProcessRole().build();
 
-        Question scorableQuestion = newQuestion().build();
-        Question nonScorableQuestion = newQuestion().withNeedingAssessorScore(false).build();
+        QuestionResource scorableQuestion = newQuestionResource().build();
+        QuestionResource nonScorableQuestion = newQuestionResource().withNeedingAssessorScore(false).build();
 
-        List<Question> questions = asList(scorableQuestion, nonScorableQuestion);
+        List<QuestionResource> questions = asList(scorableQuestion, nonScorableQuestion);
 
         List<Section> sections = newSection()
-                .withQuestions(asList(scorableQuestion, nonScorableQuestion))
                 .build(1);
 
         List<SectionResource> sectionResources = newSectionResource()
-                .withQuestions(simpleMap(questions, Question::getId))
                 .build(1);
 
         Competition competition = newCompetition().withSections(sections).build();
@@ -268,8 +265,7 @@ public class AssessmentSubmitReviewModelTest {
                 withAssessmentValue((i, fb) -> (i + 1) + "").
                 build(1);
 
-        List<Response> responses = newResponse().withApplication(application).
-                withQuestions(asList(scorableQuestion)).withFeedback(feedback).build(1);
+        List<Response> responses = newResponse().withApplication(application).withFeedback(feedback).build(1);
 
         //
         // Build the model

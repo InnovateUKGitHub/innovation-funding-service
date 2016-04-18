@@ -8,6 +8,7 @@ import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.*;
@@ -346,7 +347,7 @@ public abstract class AbstractApplicationController extends BaseController {
         userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
 
         model.addAttribute("sections", sections);
-        Map<Long, List<Question>> sectionQuestions = sectionsList.stream()
+        Map<Long, List<QuestionResource>> sectionQuestions = sectionsList.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId,
                         s -> simpleMap(s.getQuestions(), questionService::getById)
@@ -358,7 +359,7 @@ public abstract class AbstractApplicationController extends BaseController {
             subSections.put(currentSection.get().getId(), currentSection.get().getChildSections().stream().map(sectionService::getById).collect(Collectors.toList()));
 
             model.addAttribute("subSections", subSections);
-            Map<Long, List<Question>> subsectionQuestions = subSections.get(currentSection.get().getId()).stream()
+            Map<Long, List<QuestionResource>> subsectionQuestions = subSections.get(currentSection.get().getId()).stream()
                     .collect(Collectors.toMap(SectionResource::getId,
                             ss -> simpleMap(ss.getQuestions(), questionService::getById)
                     ));
@@ -369,7 +370,7 @@ public abstract class AbstractApplicationController extends BaseController {
                             SectionResource::getId, s -> simpleMap(s.getChildSections(), sectionService::getById)
                     ));
             model.addAttribute("subSections", subSections);
-            Map<Long, List<Question>> subsectionQuestions = sectionsList.stream()
+            Map<Long, List<QuestionResource>> subsectionQuestions = sectionsList.stream()
                     .collect(Collectors.toMap(SectionResource::getId,
                             ss -> simpleMap(ss.getQuestions(), questionService::getById)
                     ));
@@ -401,8 +402,8 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("currentSectionId", currentSection.map(SectionResource::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
         if(currentSection.isPresent()) {
-            List<Question> questions = simpleMap(currentSection.get().getQuestions(), questionService::getById);
-            Map<Long, List<Question>> sectionQuestions = new HashMap<>();
+            List<QuestionResource> questions = simpleMap(currentSection.get().getQuestions(), questionService::getById);
+            Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
             sectionQuestions.put(currentSection.get().getId(), questions);
 
             model.addAttribute("sectionQuestions", sectionQuestions);
