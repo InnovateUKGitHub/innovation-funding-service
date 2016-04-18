@@ -12,6 +12,10 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
+*** Variables ***
+${valid_pdf}       testing.pdf
+
+
 *** Test Cases ***
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300
@@ -35,6 +39,17 @@ Comp admin should not be able to edit the finances
     Then the user should not see the element    link=your finances
 
 *** Keywords ***
+
+the user uploads the file to the 'project team' question
+    [Arguments]    ${file_name}
+    Choose File    name=formInput[18]    ${UPLOAD_FOLDER}/${file_name}
+    Sleep    500ms
+
+the user can see the option to upload a file on the page
+    [Arguments]    ${url}
+    The user navigates to the page    ${url}
+    Page Should Contain    Upload
+
 the user can see the upload for the 'Technical approach' question
     the user clicks the button/link    css=[aria-controls="collapsible-8"]
-    the user should see the text in the page    testing.pdf
+    the user should see the text in the page    ${valid_pdf}
