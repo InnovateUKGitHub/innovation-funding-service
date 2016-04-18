@@ -105,6 +105,11 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
+    public OrganisationResource saveForAnonymousUserFlow(OrganisationResource organisation) {
+        return organisationRestService.updateByIdForAnonymousUserFlow(organisation).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, AddressType addressType) {
         return organisationRestService.addAddress(organisation, address, addressType).getSuccessObjectOrThrowException();
     }
