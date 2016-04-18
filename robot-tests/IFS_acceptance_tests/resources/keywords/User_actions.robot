@@ -11,6 +11,7 @@ The user navigates to the page
     Wait Until Element Is Visible    id=global-header
     Page Should Contain    BETA
     # "Contact us" checking (INFUND-1289)
+    # Pending completion of INFUND-2544, INFUND-2545
     # Wait Until Page Contains Element   link=Contact Us
     # Page Should Contain Link        href=${SERVER}/info/contact
 
@@ -40,6 +41,7 @@ The user is on the page
     Wait Until Element Is Visible    id=global-header
     Page Should Contain    BETA
     # "Contact us" checking (INFUND-1289)
+    # Pending completion of INFUND-2544, INFUND-2545
     # Wait Until Page Contains Element   link=Contact Us
     # Page Should Contain Link        href=${SERVER}/info/contact
 
