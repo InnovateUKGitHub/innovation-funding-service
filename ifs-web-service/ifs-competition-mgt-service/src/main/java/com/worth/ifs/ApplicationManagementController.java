@@ -5,26 +5,33 @@ import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationSummaryRestService;
 import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.ProcessRoleService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.concurrent.ExecutionException;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
@@ -43,12 +50,18 @@ public class ApplicationManagementController extends AbstractApplicationControll
     @Autowired
     FileEntryRestService fileEntryRestService;
 
+    @Autowired
+    protected UserAuthenticationService userAuthenticationService;
+
+    @Autowired
+    protected ProcessRoleService processRoleService;
+
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.GET)
-    public String displayCompetitionInfo(@PathVariable("competitionId") final String competitionId,
-                                               @PathVariable("applicationId") final String applicationIdString,
-                                               @ModelAttribute("form") ApplicationForm form,
-                                               Model model,
-                                               HttpServletRequest request
+    public String displayApplicationForCompetitionAdministrator(@PathVariable("competitionId") final String competitionId,
+                                                                @PathVariable("applicationId") final String applicationIdString,
+                                                                @ModelAttribute("form") ApplicationForm form,
+                                                                Model model,
+                                                                HttpServletRequest request
     ){
         UserResource user = getLoggedUser(request);
         Long applicationId = Long.valueOf(applicationIdString);
@@ -68,7 +81,34 @@ public class ApplicationManagementController extends AbstractApplicationControll
         addAppendices(responses, model);
 
         model.addAttribute("applicationReadyForSubmit", false);
+        model.addAttribute("isCompManagementDownload", true);
         return "competition-mgt-application-overview";
+    }
+
+    @RequestMapping(value = "/{applicationId}/forminput/{formInputId}/download", method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadQuestionFile(
+            @PathVariable("applicationId") final Long applicationId,
+            @PathVariable("formInputId") final Long formInputId,
+            HttpServletRequest request) throws ExecutionException, InterruptedException {
+        final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        ProcessRole processRole;
+        if(user.hasRole(UserRoleType.COMP_ADMIN)){
+            long processRoleId = formInputResponseService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
+            processRole = processRoleService.getById(processRoleId).get();
+        } else {
+            processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        }
+
+        final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        return getPdfFile(resource);
+    }
+
+    private ResponseEntity<ByteArrayResource> getPdfFile(ByteArrayResource resource) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentLength(resource.contentLength());
+        httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
+        return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
     }
 
     private void addAppendices(List<FormInputResponseResource> responses, Model model) {

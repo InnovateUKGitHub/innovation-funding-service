@@ -59,4 +59,9 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
     public RestResult<ByteArrayResource> getFile(Long formInputId, Long applicationId, Long processRoleId) {
         return responseRestService.getFile(formInputId, applicationId, processRoleId);
     }
+
+    @Override
+    public RestResult<List<FormInputResponseResource>> getByFormInputIdAndApplication(Long formInputId, Long applicationId) {
+        return responseRestService.getByFormInputIdAndApplication(formInputId, applicationId);
+    }
 }

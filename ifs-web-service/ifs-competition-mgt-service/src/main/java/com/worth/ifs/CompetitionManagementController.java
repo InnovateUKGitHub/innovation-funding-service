@@ -35,7 +35,7 @@ public class CompetitionManagementController {
 
     @Autowired
     private ApplicationSummaryService applicationSummaryService;
-    
+
     @Autowired
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
 
@@ -62,9 +62,9 @@ public class CompetitionManagementController {
 
 	private String openCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
 			BindingResult bindingResult) {
-		
+
 		String sort = applicationSummarySortFieldService.sortFieldForOpenCompetition(queryForm.getSort());
-		
+
 		ApplicationSummaryPageResource applicationSummary = applicationSummaryService.findByCompetitionId(competitionId, queryForm.getPage() - 1, sort);
 		model.addAttribute("results", applicationSummary);
 		model.addAttribute("activeSortField", sort);
@@ -72,13 +72,13 @@ public class CompetitionManagementController {
         LOG.warn("Show open competition info");
         return "comp-mgt";
 	}
-	
+
 	private String inAssessmentCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
 			BindingResult bindingResult) {
 		
 		if("notSubmitted".equals(queryForm.getTab())) {
 			populateNotSubmittedModel(model, competitionId, queryForm, bindingResult);
-			
+
 		} else {
 			populateSubmittedModel(model, competitionId, queryForm, bindingResult);
 		}
@@ -95,7 +95,7 @@ public class CompetitionManagementController {
 		model.addAttribute("activeTab", "notSubmitted");
 		model.addAttribute("activeSortField", sort);
 	}
-	
+
 	private void populateSubmittedModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
 			BindingResult bindingResult) {
 		String sort = applicationSummarySortFieldService.sortFieldForSubmittedApplications(queryForm.getSort());
