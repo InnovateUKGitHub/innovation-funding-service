@@ -93,6 +93,7 @@ The user enters text to a text field
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
+    Wait Until Element Is Visible   ${BUTTON}
     click element    ${BUTTON}
 
 The user should see the text in the page
