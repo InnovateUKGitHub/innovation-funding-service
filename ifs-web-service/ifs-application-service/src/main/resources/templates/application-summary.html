@@ -58,7 +58,7 @@
         </div>
         <div th:unless="${userIsLeadApplicant}" th:remove="tag">
           <span class="icon icon-information"></span>
-          <span> Only the lead applicant (<span th:remove="tag" th:text="${leadApplicant.user.firstName+' '+leadApplicant.user.lastName}" />) will be able to submit your application and only if all sections are marked as complete.</span>
+          <span>All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application.</span>
         </div>
 
     </div>
