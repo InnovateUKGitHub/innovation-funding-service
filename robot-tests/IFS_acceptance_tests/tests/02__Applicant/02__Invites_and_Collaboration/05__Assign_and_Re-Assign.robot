@@ -80,6 +80,7 @@ Collaborator should see the review button instead of the review and submit
     And the user clicks the button/link    jQuery=.button:contains("Review")
     And the user should be redirected to the correct page    ${SUMMARY_URL}
     And the user should not see the element    jQuery=.button:contains("Submit application")
+    And the user should see the text in the page    All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application
     [Teardown]
 
 Collaborators cannot assign a question
