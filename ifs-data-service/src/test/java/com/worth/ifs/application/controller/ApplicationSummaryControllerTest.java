@@ -13,8 +13,6 @@ import org.mockito.Mock;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryPageResource;
 import com.worth.ifs.application.transactional.ApplicationSummaryService;
 
 public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<ApplicationSummaryController> {
@@ -54,55 +52,55 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     }
     
     @Test
-    public void searchSubmittedByClosedCompetitionId() throws Exception {
-    	ClosedCompetitionSubmittedApplicationSummaryPageResource resource = new ClosedCompetitionSubmittedApplicationSummaryPageResource();
+    public void searchSubmittedByCompetitionId() throws Exception {
+    	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(3), 6, null)).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, null)).thenReturn(serviceSuccess(resource));
         
-    	mockMvc.perform(get("/applicationSummary/findByClosedCompetition/3/submitted?page=6"))
+    	mockMvc.perform(get("/applicationSummary/findByCompetition/3/submitted?page=6"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(3), 6, null);
+    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, null);
     }
     
     @Test
-    public void searchSubmittedByClosedCompetitionIdWithSortField() throws Exception {
-    	ClosedCompetitionSubmittedApplicationSummaryPageResource resource = new ClosedCompetitionSubmittedApplicationSummaryPageResource();
+    public void searchSubmittedByCompetitionIdWithSortField() throws Exception {
+    	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(3), 6, "id")).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, "id")).thenReturn(serviceSuccess(resource));
         
-    	mockMvc.perform(get("/applicationSummary/findByClosedCompetition/3/submitted?page=6&sort=id"))
+    	mockMvc.perform(get("/applicationSummary/findByCompetition/3/submitted?page=6&sort=id"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(3), 6, "id");
+    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, "id");
     }
     
     @Test
-    public void searchNotSubmittedByClosedCompetitionId() throws Exception {
-    	ClosedCompetitionNotSubmittedApplicationSummaryPageResource resource = new ClosedCompetitionNotSubmittedApplicationSummaryPageResource();
+    public void searchNotSubmittedByCompetitionId() throws Exception {
+    	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(3), 6, null)).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, null)).thenReturn(serviceSuccess(resource));
         
-    	mockMvc.perform(get("/applicationSummary/findByClosedCompetition/3/not-submitted?page=6"))
+    	mockMvc.perform(get("/applicationSummary/findByCompetition/3/not-submitted?page=6"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(3), 6, null);
+    	verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, null);
     }
     
     @Test
     public void searchNotSubmittedByClosedCompetitionIdWithSortField() throws Exception {
-    	ClosedCompetitionNotSubmittedApplicationSummaryPageResource resource = new ClosedCompetitionNotSubmittedApplicationSummaryPageResource();
+    	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(3), 6, "id")).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, "id")).thenReturn(serviceSuccess(resource));
         
-    	mockMvc.perform(get("/applicationSummary/findByClosedCompetition/3/not-submitted?page=6&sort=id"))
+    	mockMvc.perform(get("/applicationSummary/findByCompetition/3/not-submitted?page=6&sort=id"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(3), 6, "id");
+    	verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), 6, "id");
     }
 
 }

@@ -17,7 +17,7 @@ ${invitee_name}    michael
 *** Test Cases ***
 Lead applicant can assign a question
     [Documentation]    INFUND-275, INFUND-280
-    [Tags]    Collaboration    HappyPath
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     When the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Jessica Doe
@@ -28,7 +28,7 @@ Lead applicant can assign a question
 
 The question is disabled for other collaborators
     [Documentation]    INFUND-275
-    [Tags]    Collaboration    HappyPath
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    &{collaborator2_credentials}
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then The user should see the element    css=#form-input-12 .readonly
@@ -36,7 +36,7 @@ The question is disabled for other collaborators
 
 The question is disabled on the summary page for other collaborators
     [Documentation]    INFUND-2302
-    [Tags]    Collaboration    Summary
+    [Tags]
     [Setup]    Guest user log-in    &{collaborator2_credentials}
     Given the user navigates to the page    ${SUMMARY_URL}
     When the user opens the 'public description' collapsible
@@ -46,7 +46,7 @@ The question is disabled on the summary page for other collaborators
 
 The question is enabled for the assignee
     [Documentation]    INFUND-275
-    [Tags]    Collaboration    Overview    HappyPath
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    &{collaborator1_credentials}
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then the user should see the browser notification    Steve Smith has assigned a question to you
@@ -57,7 +57,7 @@ The question is enabled for the assignee
 
 The question is enabled on the summary page for the assignee
     [Documentation]    INFUND-2302
-    [Tags]    Collaboration    Summary
+    [Tags]    Summary
     [Setup]    Guest user log-in    &{collaborator1_credentials}
     Given the user navigates to the page    ${SUMMARY_URL}
     When the user opens the 'public description' collapsible
@@ -65,14 +65,14 @@ The question is enabled on the summary page for the assignee
 
 'Last update' message is correctly updating
     [Documentation]    INFUND-280
-    [Tags]    Collaboration
+    [Tags]
     Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     When the collaborator edits the 'public description' question
     Then the question should contain the correct status/name    css=#form-input-12 .textarea-footer    Last updated: Today by you
 
 Collaborators cannot assign a question
     [Documentation]    INFUND-839
-    [Tags]    Collaboration
+    [Tags]
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then The user should not see the text in the page    Assign to
 
@@ -85,7 +85,7 @@ Collaborators should not be able to edit application details
 
 Collaborators can mark as ready for review
     [Documentation]    INFUND-877
-    [Tags]    Collaboration    HappyPath
+    [Tags]    HappyPath
     Given the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     When the user clicks the button/link    jQuery=button:contains("Ready for review")
     Then the user should see the notification    Question assigned successfully
@@ -93,14 +93,14 @@ Collaborators can mark as ready for review
 
 Collaborator cannot edit after marking ready for review
     [Documentation]    INFUND-275
-    [Tags]    Collaboration
+    [Tags]
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then the user should see the element    css=#form-input-12 .readonly
     [Teardown]    User closes the browser
 
 The question can be reassigned to the lead applicant
     [Documentation]    INFUND-275
-    [Tags]    Collaboration
+    [Tags]
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     Then the user should see the browser notification    Jessica Doe has assigned a question to you
@@ -112,7 +112,7 @@ The question can be reassigned to the lead applicant
 
 Appendices are assigned along with the question
     [Documentation]    INFUND-409
-    [Tags]    Collaboration
+    [Tags]
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the user navigates to the page    ${INNOVATION_URL}
     And the user can see the option to upload a file
@@ -157,9 +157,6 @@ the user can log in as Jessica Doe
 
 the user can't see the option to upload a file
     the user should not see the text in the page    Upload
-
-Attempt to assign to a pending invitee
-    the applicant assigns the question to the collaborator    css=#form-input-13 .editor    test1233    ${invitee_name}
 
 The user opens the 'public description' collapsible
     The user clicks the button/link    xpath=//*[@aria-controls="collapsible-2"]

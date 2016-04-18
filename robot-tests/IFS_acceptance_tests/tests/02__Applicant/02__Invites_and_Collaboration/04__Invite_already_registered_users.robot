@@ -2,7 +2,7 @@
 Documentation     INFUND-1458 As a existing user with an invitation to collaborate on an application and I am already registered with IFS I want to be able to use my existing credentials and confirm my details so that I don't have to follow the registration process again.
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
-Force Tags
+Force Tags        Email
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -16,6 +16,7 @@ ${INVITE_COLLABORATORS_PAGE_APPL1}    ${SERVER}application/1/contributors/invite
 The invited registered user should redirect to the correct page
     [Documentation]    INFUND-1458
     [Tags]
+    [Setup]    Delete the emails from the test mailbox
     Given we create a new user
     Given the lead applicant invites a registered user
     When the user opens the mailbox and accepts the invitation to collaborate
@@ -54,7 +55,7 @@ the lead applicant invites a registered user
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    worth.email.test+invite2@gmail.com
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    The user clicks the link from the appropriate email sender
+    And the user opens the mailbox and verifies the email from
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     The user clicks the button/link    jQuery=.button:contains("Log in")
     The guest user inserts user email & password    worth.email.test+invite2@gmail.com    Passw0rd2
@@ -83,7 +84,7 @@ we create a new user
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    worth.email.test+reg2@gmail.com
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    The user clicks the link from the appropriate email sender
+    And the user opens the mailbox and verifies the email from
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     The user clicks the button/link    jQuery=.button:contains("Log in")
     The guest user inserts user email & password    worth.email.test+reg2@gmail.com    Passw0rd2

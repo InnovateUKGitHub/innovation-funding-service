@@ -75,6 +75,7 @@ public class ApplicationFinanceController {
     public RestResult<ApplicationFinanceResource> findByApplicationOrganisation(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
+
         return costService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId).toGetResponse();
     }
 
@@ -198,10 +199,10 @@ public class ApplicationFinanceController {
         ServiceResult<ApplicationFinanceResource> applicationFinanceServiceResult = costService.getApplicationFinanceById(applicationFinanceId);
         ServiceResult<ApplicationFinanceResource> applicationFinanceResourceServiceResult = applicationFinanceServiceResult.andOnSuccess(applicationFinanceResource -> {
             Long fileEntryId = applicationFinanceResource.getFinanceFileEntry();
-            return fileService.deleteFile(fileEntryId).andOnSuccess(deletedFile -> {
-                    applicationFinanceResource.setFinanceFileEntry(null);
-                    return costService.updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
-                });
+            return fileService.deleteFile(fileEntryId).andOnSuccess(() -> {
+                applicationFinanceResource.setFinanceFileEntry(null);
+                return costService.updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
+            });
         });
         return applicationFinanceResourceServiceResult.toDeleteResponse();
     }

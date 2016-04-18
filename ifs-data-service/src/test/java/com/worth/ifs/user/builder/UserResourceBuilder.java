@@ -75,5 +75,7 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
         return withArray((processRoleList, user) -> user.setProcessRoles(processRoleList), processRoles);
     }
 
-
+    public UserResourceBuilder withOrganisations(List<Long>... organisationIds) {
+        return withArray((organisationIdList, user) -> user.setOrganisations(organisationIdList), organisationIds);
+    }
 }
