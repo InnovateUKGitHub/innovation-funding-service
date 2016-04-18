@@ -541,7 +541,7 @@ public class OrganisationCreationController {
     }
 
     private OrganisationResource saveNewOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
-        organisationResource = organisationService.save(organisationResource);
+        organisationResource = organisationService.saveForAnonymousUserFlow(organisationResource);
         linkOrganisationToInvite(organisationResource, request);
         return organisationResource;
     }
