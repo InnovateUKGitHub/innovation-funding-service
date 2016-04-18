@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -86,10 +85,10 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
      *
      * This is of the format "Entity", "Action", "Rule description"
      *
-     * @throws IOException
+     * @throws Exception
      */
     @Test
-    public void generateLowLevelPermissionsDocumentation() throws IOException {
+    public void generateLowLevelPermissionsDocumentation() throws Exception {
 
         CustomPermissionEvaluator evaluator = (CustomPermissionEvaluator) context.getBean("customPermissionEvaluator");
 
