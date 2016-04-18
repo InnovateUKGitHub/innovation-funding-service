@@ -107,6 +107,10 @@ public abstract class BaseRestService {
         return adaptor.putWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
     }
 
+    protected <R> RestResult<R> putWithRestResultAnonymous(String path, Object objectToSend, Class<R> returnType) {
+        return anonymousRestTemplateAdaptor.putWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
+    }
+
     protected <T> RestResult<T> deleteWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
         return adaptor.deleteWithRestResult(getDataRestServiceURL() + path, returnType);
     }
