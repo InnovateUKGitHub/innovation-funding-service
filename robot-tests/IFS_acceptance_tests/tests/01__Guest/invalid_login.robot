@@ -51,10 +51,10 @@ Email persists with wrong email address and invalid password
                       [Tags]    Log in      Guest
                       ${incorrect_email}      ${invalid_password}
 
-Email persists with correct email address and empty password
+Email persists with wrong email address and empty password
                       [Documentation]              INFUND-703
                       [Tags]    Log in      Guest
-                      ${correct_email}      ${EMPTY}
+                      ${incorrect_email}      ${EMPTY}
 
 
 Email persists with invalid email address and correct password
@@ -75,17 +75,17 @@ Email persists with invalid email address and invalid password
 Email persists with invalid email address and empty password
                       [Documentation]              INFUND-703
                       [Tags]    Log in      Guest
-                      ${correct_email}      ${EMPTY}
+                      ${invalid_email}      ${EMPTY}
 
 
 *** Keywords ***
 Email persists on invalid login
     [Arguments]    ${email_address}     ${password}
     Given the guest user enters the login credentials         ${email_address}        ${password}
-    When the user clicks the button/link    css=button[name="_eventId_proceed"]
+    When the user tries to log in
     Then the user is not logged-in
     And the email address should persist    ${email_address}
-    And the user should see the text in the page        Your login was unsuccessful
+
 
 the user is not logged-in
     Element Should Not Be Visible    link=My dashboard
@@ -94,5 +94,11 @@ the user is not logged-in
 
 the email address should persist
     [Arguments]     ${email_addy}
+    # Note: we have to do it this way rather than the more straightforward eg Textfield Value Should Be
+    # due to a bug in selenium2library
     ${stored_data}=     Get Value       id=username
     Should Be Equal     ${stored_data}      ${email_addy}
+
+the user tries to log in
+    the user clicks the button/link    css=button[name="_eventId_proceed"]
+    wait until page contains            Your login was unsuccessful

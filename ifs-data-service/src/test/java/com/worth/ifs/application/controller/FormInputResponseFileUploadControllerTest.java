@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Supplier;
 
@@ -28,10 +27,8 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.LambdaMatcher.lambdaMatches;
-import static com.worth.ifs.commons.error.CommonErrors.payloadTooLargeError;
+import static com.worth.ifs.commons.error.CommonErrors.*;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
-import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
-import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
@@ -897,24 +894,6 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
         assertEquals(expectedStatus.value(), response.getResponse().getStatus());
         assertResponseErrorMessageEqual(expectedMessage, errorToReturn, response);
-    }
-
-    private void assertResponseErrorMessageEqual(String expectedMessage, Error expectedError, MvcResult mvcResult) throws IOException {
-        String content = mvcResult.getResponse().getContentAsString();
-        RestErrorResponse restErrorResponse = new ObjectMapper().readValue(content, RestErrorResponse.class);
-        assertErrorMessageEqual(expectedMessage, expectedError, restErrorResponse);
-    }
-
-    private void assertErrorMessageEqual(String expectedMessage, Error expectedError, RestErrorResponse restErrorResponse) {
-        assertEquals(expectedMessage, restErrorResponse.getErrors().get(0).getErrorMessage());
-        assertEqualsUpNoIncludingStatusCode(restErrorResponse, expectedError);
-    }
-
-    private void assertEqualsUpNoIncludingStatusCode(final RestErrorResponse restErrorResponse, final Error expectedError){
-        assertTrue(restErrorResponse.getErrors().size() == 1);
-        assertEquals(restErrorResponse.getErrors().get(0).getErrorMessage(), expectedError.getErrorMessage());
-        assertEquals(restErrorResponse.getErrors().get(0).getArguments() , expectedError.getArguments());
-        assertEquals(restErrorResponse.getErrors().get(0).getErrorKey() , expectedError.getErrorKey());
     }
 
     private FormInputResponseFileEntryId fileEntryExpectations() {

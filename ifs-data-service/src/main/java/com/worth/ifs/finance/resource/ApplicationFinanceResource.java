@@ -1,22 +1,21 @@
 package com.worth.ifs.finance.resource;
 
-import java.math.BigDecimal;
-import java.util.Map;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.user.domain.OrganisationSize;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.math.BigDecimal;
+import java.util.Map;
 
 /**
- * Application finance reosurce holda the organisation's finance resources for an application
+ * Application finance resource holds the organisation's finance resources for an application
  */
 public class ApplicationFinanceResource {
 

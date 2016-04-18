@@ -18,4 +18,5 @@ public interface FormInputResponseRestService {
     RestResult<FileEntryResource> createFileEntry(long formInputId, long applicationId, long processRoleId, String contentType, long contentLength, String originalFilename, byte[] file);
     RestResult<Void> removeFileEntry(long formInputId, long applicationId, long processRoleId);
     RestResult<ByteArrayResource> getFile(long formInputId, long applicationId, long processRoleId);
+    RestResult<List<FormInputResponseResource>> getByFormInputIdAndApplication(long formInputId, long applicationId);
 }
