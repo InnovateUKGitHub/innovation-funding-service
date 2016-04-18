@@ -3,7 +3,6 @@ Documentation     INFUND-2135 As a Competition Administrator I want to be able t
 ...
 ...               INFUND-2259 As a competitions administrator I want to see summary details of all applications in a competition displayed alongside the list of applications so that I can reference information relating to the status of the competition
 ...
-...               INFUND-2443 Acceptance test: Check that the comp manager cannot edit an application's finances
 Suite Setup       Run Keywords    Log in as user    &{Comp_admin1_credentials}
 ...               AND    Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
 Suite Teardown    User closes the browser
@@ -81,27 +80,6 @@ Calculations for the Number of applications
     Then the calculations should be correct    jQuery=td:contains("00000")    css=.info-area p:nth-child(2) span
     And both calculations in the page should show the same
 
-Comp admin can open the view mode of the application
-    [Documentation]    INFUND-2300: listing of applications for an open competition
-    ...
-    ...    INFUND-2304: Read only view mode of applications from the application list page
-    [Tags]    Competition management
-    [Setup]    Run keywords    Log in as user    &{lead_applicant_credentials}
-    ...    AND    the user can see the option to upload a file on the page    ${project_team_url}
-    ...    AND    the user uploads the file to the 'project team' question    ${valid_pdf}
-    Given log in as user    &{Comp_admin1_credentials}
-    And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
-    When the user clicks the button/link    link=00000001
-    Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
-    And the user should see the text in the page    A novel solution to an old problem
-    And the user can see the upload for the 'Technical approach' question
-
-The comp admin should not be able to edit the finances
-    [Documentation]    INFUND-2443
-    Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
-    When the user clicks the button/link    jQuery=button:contains("Finances Summary")
-    Then the user should not see the element    link=your finances
-
 *** Keywords ***
 the application list is sorted by
     [Arguments]    ${sorting_factor}
@@ -133,10 +111,6 @@ the applications should be sorted in reverse order by column
     ${sorted_list}=    Reverse List    ${test_sorting_list}
     log to console    ${sorted_list}
     Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}
-
-the user can see the upload for the 'Technical approach' question
-    the user clicks the button/link    css=[aria-controls="collapsible-8"]
-    the user should see the text in the page    testing.pdf
 
 The calculations should be correct
     [Arguments]    ${LIST_LOCATOR}    ${SUMMARY_LOCATOR}
