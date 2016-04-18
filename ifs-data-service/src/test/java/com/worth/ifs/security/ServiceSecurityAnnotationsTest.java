@@ -5,7 +5,7 @@ import com.worth.ifs.BaseIntegrationTest;
 import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.transactional.FileServiceImpl;
-import org.apache.commons.lang3.tuple.Triple;
+import com.worth.ifs.util.TriConsumer;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -26,8 +26,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.sort;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.*;
 
 /**
@@ -94,7 +93,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
         CustomPermissionEvaluator evaluator = (CustomPermissionEvaluator) context.getBean("customPermissionEvaluator");
 
-        List<Triple<String, String, String>> permissionRuleRows = new ArrayList<>();
+        List<String[]> permissionRuleRows = new ArrayList<>();
 
         CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods rulesMap =
                 (CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(evaluator, "rulesMap");
@@ -123,18 +122,32 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
                         finalClassName = clazz.getSimpleName();
                     }
 
-                    permissionRuleRows.add(Triple.of(finalClassName, actionName, permissionRule.description()));
+                    permissionRuleRows.add(new String[] {finalClassName, actionName, permissionRule.description(),
+                            ruleMethod.getDeclaringClass().getSimpleName() + "." + ruleMethod.getName(), permissionRule.additionalComments()});
                 });
             });
         });
 
-        CSVWriter writer = new CSVWriter(new FileWriter("build/permission-rules.csv"), '\t');
-        try {
-            writer.writeNext(new String[]{"Entity", "Action", "Rule description"});
-            permissionRuleRows.forEach(row -> writer.writeNext(new String[] {row.getLeft(), row.getMiddle(), row.getRight()}));
-        } finally {
-            writer.close();
-        }
+        TriConsumer<String, String[], List<String[]>> fileWriter = (filename, headers, rows) -> {
+
+            CSVWriter writer = new CSVWriter(new FileWriter(filename), '\t');
+            try {
+                writer.writeNext(headers);
+                rows.forEach(writer::writeNext);
+            } finally {
+                writer.close();
+            }
+        };
+
+        // output a simple csv of rule information
+        String[] simpleHeaders = {"Entity", "Action", "Rule description"};
+        List<String[]> simpleRows = simpleMap(permissionRuleRows, row -> new String[]{row[0], row[1], row[2]});
+        fileWriter.apply("build/permission-rules-summary.csv", simpleHeaders, simpleRows);
+
+        // output a more complex csv of rule information
+        String[] fullHeaders = {"Entity", "Action", "Rule description", "Rule method", "Additional rule comments"};
+        fileWriter.apply("build/permission-rules-full.csv", fullHeaders, permissionRuleRows);
+
     }
 
     private boolean hasOneOf(Method method, List<Class<? extends Annotation>> annotations) {
