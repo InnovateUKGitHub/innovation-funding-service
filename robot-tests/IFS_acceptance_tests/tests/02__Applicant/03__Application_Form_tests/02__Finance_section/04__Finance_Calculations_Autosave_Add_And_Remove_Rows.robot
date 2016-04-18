@@ -81,10 +81,12 @@ Capital usage
 Subcontracting costs
     [Documentation]    INFUND-192
     ...    INFUND-736
+    ...     INFUND-2303
     [Tags]    Finances
     When the applicant edits the Subcontracting costs section
     Then Totals should be correct    css=#section-total-13    £ 200    css=[aria-controls="collapsible-4"] [data-mirror]    £ 200
     And the user clicks the button/link    css=#subcontracting_costs [data-repeatable-row]:nth-child(1) button
+    And the user cannot see a validation error in the page
     And the user reloads the page
     Then Totals should be correct    css=#section-total-13    £ 100    css=[aria-controls="collapsible-4"] [data-mirror]    £ 100
     [Teardown]    Click Element    jQuery=button:contains("Subcontracting costs")
@@ -109,13 +111,17 @@ Other costs
     [Teardown]    Click Element    jQuery=button:contains("Other Costs")
 
 Other Funding
-    [Documentation]    INFUND-438
+    [Documentation]    INFUND-438, INFUND-2257
     [Tags]    Finances
-    When Applicant selects 'Yes' and fills two rows
+    When the applicant can see the option to add another source of funding
+    And the applicant selects 'No' for other funding
+    And the applicant cannot see the option to add another source of funding
+    And the applicant selects 'Yes' and fills two rows
     Then the total of the other funding should be correct
-    And Applicant can leave the 'Your finances' page but the details are still saved
-    And applicant selects 'No' for other funding
-    And applicant cannot see the 'other funding' details
+    And the applicant can leave the 'Your finances' page but the details are still saved
+    And the applicant selects 'No' for other funding
+    And the applicant cannot see the option to add another source of funding
+    And the applicant cannot see the 'other funding' details
 
 *** Keywords ***
 the Applicant fills in the Labour costs for two rows
@@ -211,6 +217,12 @@ the applicant adds one row for the other costs
     Mouse Out    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     focus    css=.app-submit-btn
 
+the applicant can see the option to add another source of funding
+    Element Should Be Visible           jQuery=button:contains('Add another source of funding')
+
+the applicant cannot see the option to add another source of funding
+    Element Should Not Be Visible       jQuery=button:contains('Add another source of funding')
+
 the user reloads the page
     Execute Javascript    jQuery('form').attr('data-test','true');
     Reload page
@@ -219,24 +231,23 @@ the user reloads the page
 the total of the other funding should be correct
     Textfield Value Should Be    id=other-funding-total    £ 20,000
 
-Applicant cannot see the 'other funding' details
+The applicant cannot see the 'other funding' details
     Page Should Not Contain    ${OTHER_FUNDING_SOURCE}
     Page Should Not Contain    ${OTHER_FUNDING_DATE}
     Page Should Not Contain    ${OTHER_FUNDING_AMOUNT}
     Radio Button Should Be Set To    other_funding-otherPublicFunding-35-54    No
 
-Applicant can leave the 'Your finances' page but the details are still saved
+The applicant can leave the 'Your finances' page but the details are still saved
     Execute Javascript    jQuery('form').attr('data-test','true');
     Reload Page
-    #Alert Should Be Present
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
     Textfield Should Contain    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
     Textfield Should Contain    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
 
-Applicant selects 'No' for other funding
+The applicant selects 'No' for other funding
     Select Radio button    other_funding-otherPublicFunding-35-54    No
 
-Applicant selects 'Yes' and fills two rows
+The applicant selects 'Yes' and fills two rows
     Select Radio button    other_funding-otherPublicFunding-35-54    Yes
     Click Element    jQuery=button:contains('Add another source of funding')
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input

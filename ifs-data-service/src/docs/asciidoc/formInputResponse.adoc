@@ -1,0 +1,19 @@
+=== Get form input responses from form input id and application id
+==== Success case
+===== Request
+include::{snippets}/forminputresponse/find-responses-by-form-input-id-and-application-id/http-request.adoc[]
+
+===== Response
+include::{snippets}/forminputresponse/find-responses-by-form-input-id-and-application-id/http-response.adoc[]
+include::{snippets}/forminputresponse/find-responses-by-form-input-id-and-application-id/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/forminputresponse/find-responses-by-form-input-id-and-application-id/curl-request.adoc[]
+
+==== Failure cases
+
+===== Form Input not found
+include::{snippets}/forminputresponse/find-by-form-input-id-and-application-id-formInputIdNotFound/http-response.adoc[]
+
+===== Application not found
+include::{snippets}/forminputresponse/find-by-form-input-id-and-application-id-applicationNotFound/http-response.adoc[]

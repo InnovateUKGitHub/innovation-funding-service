@@ -1,5 +1,6 @@
 package com.worth.ifs;
 
+import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.transactional.AddressLookupService;
 import com.worth.ifs.address.transactional.AddressService;
 import com.worth.ifs.application.mapper.ApplicationMapper;
@@ -15,15 +16,16 @@ import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
+import com.worth.ifs.form.transactional.FormInputService;
 import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.notifications.service.NotificationService;
-import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.*;
+import com.worth.ifs.user.transactional.PasswordPolicyValidator;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
 import org.junit.Before;
@@ -142,6 +144,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected UserMapper userMapperMock;
+
+    @Mock
+    protected PasswordPolicyValidator passwordPolicyValidatorMock;
+
+    @Mock
+    protected FormInputService formInputService;
 
     @Before
     public void setupMockInjection() {

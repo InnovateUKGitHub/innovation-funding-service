@@ -8,11 +8,34 @@
 	<div class="question">
 		<div><p>You may claim the labour costs of all individuals you have working on your project.</p> <p> If your application is awarded funding, you will need to account for all your labour costs as they occur. For example, you should keep timesheets and payroll records. These should show the actual hours worked by individuals and paid by the organisation.</p></div>
 		
-		<details role="group">
-		<summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
-		<span class="summary">Labour costs guidance</span>
-		</summary>
-		<div class="panel-indent" id="details-content-0" aria-hidden="true" style="display: none;"><p>You can include the following labour costs, based upon your PAYE records:</p> <ul class="list-bullet">         <li>gross salary</li><li>National Insurance</li><li>company pension contribution</li><li>life insurance</li><li>other non-discretionary package costs.</li>     </ul><p>You can't include:</p><ul class="list-bullet">         <li>discretionary bonuses</li><li>performance related payments of any kind</li></ul> <p>We base the total number of working days per year on full time days less standard holiday allowance. You should not include:</p><ul class="list-bullet">         <li>sick days</li><li>waiting time</li><li>training days</li><li>non-productive time</li></ul> <p>On the finance form, list the total days worked by all categories of staff on your project. Describe their role.</p><p>We will review the total amount of time and cost before we approve your application. The terms and conditions of the grant include compliance with these points.</p></div>
+		<details>
+			<summary>
+				<span class="summary">Labour costs guidance</span>
+			</summary>
+			<div class="panel-indent">
+				<p>You can include the following labour costs, based upon your PAYE records:</p>
+				<ul class="list-bullet">
+					<li>gross salary</li>
+					<li>National Insurance</li>
+					<li>company pension contribution</li>
+					<li>life insurance</li>
+					<li>other non-discretionary package costs.</li>
+				</ul>
+				<p>You can't include:</p>
+				<ul class="list-bullet">
+					<li>discretionary bonuses</li>
+					<li>performance related payments of any kind</li>
+				</ul>
+				<p>You may include the total number of working days for staff but do not include:</p>
+				<ul class="list-bullet">
+					<li>sick days</li>
+					<li>waiting time</li>
+					<li>training days</li>
+					<li>non-productive time</li>
+				</ul>
+				<p>Enter the total number of working days in the year. List the total days worked by all categories of staff on your project. Describe their role.</p>
+				<p>We will review the total amount of time and cost of labour before we approve your application. The terms and conditions of the grant include compliance with these points.</p>
+			</div>
 		</details>
 	<div>
 	<div data-finance-subsection-table-container="28">
@@ -121,7 +144,19 @@
 
 <div th:fragment="finance-question-admin-support">
 	<div class="question">
-		<p>Administration support costs are related expenses incurred as a result of delivering the project. They are eligible for project funding.</p>
+		<p>Administration support costs are related expenses incurred as a result of delivering the project.</p>
+
+		<details>
+		    <summary>
+		    	<span class="summary">Administration support costs guidance</span>
+			</summary>
+		    <div class="panel-indent">
+		      <p>
+		        If you&#x2019;re not sure about your nationality, try to find out from an official document like a passport or national ID card.
+		      </p>
+
+		    </div>
+	  	</details>
 
 		<p>A common way of estimating overheads on Innovate UK projects is to use a flat rate of 20% of labour costs. This is the default rate.</p>
 
@@ -211,10 +246,10 @@
 			<div><p>Overheads are incremental indirect expenses incurred as a result of delivering the project. They are eligible for project funding.</p></div>
 
 			<details>
-			<summary>
-			<span class="summary">Overheads guidance</span>
-			</summary>
-			<div class="panel-indent">We will review and test your calculation. This is so that we can make sure that the items included are eligible and reasonable<p></p><p>Please read our guide to claiming Overheads for further information.</p></div>
+				<summary>
+				<span class="summary">Overheads guidance</span>
+				</summary>
+				<div class="panel-indent">We will review and test your calculation. This is so that we can make sure that the items included are eligible and reasonable<p></p><p>Please read our guide to claiming Overheads for further information.</p></div>
 			</details>
 		</div>
 
@@ -278,16 +313,30 @@
 <div th:fragment="finance-question-materials">
 	<div class="question">
 		<div>
-			<div><p>You can claim the costs of materials used on your project providing:</p><ul class="list-bullet">         <li>they are not already purchased or included in the overheads</li><li>they won't have a residual/resale value at the end of your project. If they do, you can claim the costs minus this value.</li></ul><p><a href="https://interact.innovateuk.org/-/project-costs">Please refer to our guide to project costs for further information.</a></p></div>
+			<div>
+				<p>You can claim the costs of materials used on your project providing:</p>
 
-			<details role="group">
-			<summary role="button" aria-controls="details-content-2" tabindex="0" aria-expanded="false">
-			<span class="summary">Materials costs guidance</span>
-			</summary>
-			<div class="panel-indent" id="details-content-2" aria-hidden="true" style="display: none;">If you are using materials supplied by associated companies or sub contracted from other consortium members then you are required to exclude the profit element of the value placed on that material - the materials should be charged at cost.
-				Software that you have purchased specifically for use during your project should be included in materials.
-			However if you already own software which will be used in the project, or it is provided for usage within your consortium by a consortium member, only additional costs incurred &amp; paid between the start and end of your project will be eligible. Examples of costs that may be eligible are those related to the preparation of disks, manuals, installation, training or customisation.</div>
+				<ul class="list-bullet">
+					<li>they are not already purchased or included in the administration support costs</li>
+					<li>they are purchased from third parties</li>
+					<li>they won’t have a residual/resale value at the end of your project. If they do you can claim the costs minus this value</li>
+				</ul>
+
+				<p><a href="https://interact.innovateuk.org/-/project-costs">Please refer to our guide to project costs for further information.</a></p>
+			</div>
+
+			<details>
+				<summary>
+					<span class="summary">Materials costs guidance</span>
+				</summary>
+
+				<div class="panel-indent">
+					<p>Materials supplied by associated companies or project partners should be charged at cost.</p>
+					<p>Software that you have purchased specifically for use during your project may be included. If you already own the software then only additional costs which are incurred and paid during your project, will be eligible. For example, installation, training or customisation.</p>
+					<p>Material costs must be itemised to justify that they are eligible.</p>
+				</div>
 			</details>
+
 		</div>
 		<table id="material-costs-table">
 		    <thead>
@@ -372,13 +421,16 @@
 <div th:fragment="finance-question-capital">
 	<div class="question">
 		<div>
-			<div><p>Capital usage refers to an asset that you will use in your project. The asset will have a useful life of more than one year, be stand-alone, distinct and moveable.</p></div>
+			<div><p>You should provide details of capital equipment and tools you will buy for, or use on, your project.</p></div>
 
 			<details role="group">
 			<summary role="button" aria-controls="details-content-3" tabindex="0" aria-expanded="false">
 			<span class="summary">Capital usage guidance</span>
 			</summary>
-			<div class="panel-indent" id="details-content-3" aria-hidden="true" style="display: none;"><p>You should provide details of capital equipment and tools you will buy for, or use on, your project.</p><p>You will need to calculate a ‘usage’ value for each item. You can do this by deducting its expected value at the end of your project from its original price. If you owned the equipment before you started the project, you should use its Net Present Value.</p><p>This value is then multiplied by the percentage that your project will be utilising the equipment. This final value represents the eligible cost to your project.</p></div>
+			<div class="panel-indent" id="details-content-3" aria-hidden="true" style="display: none;">
+				<p>You will need to calculate a ‘usage’ value for each item. You can do this by deducting its expected value from its original price at the end of your project. If you owned the equipment before the project started then you should use its Net Present Value.</p>
+				<p>This value is then multiplied by the amount, in percentages, that it is used during the project. This final value represents the eligible cost to your project.</p>
+			</div>
 			</details>
 		</div>
 		<div>
@@ -415,15 +467,17 @@
 <div th:fragment="finance-question-subcontracting">
 	<div class="question">
 		<div>
-		    <div><p>Subcontracting costs relate to work carried out by third party organisations. These organisations are not part of your project or collaboration. You may subcontract work if you don't have the expertise in your consortium. You can also subcontract if it is cheaper than developing your skills in-house.</p></div>
+		    <div><p>Subcontracting costs relate to work carried out by third party organisations. These organisations are not part of your project or collaboration. You may subcontract work if you don’t have the expertise in your consortium. You can also subcontract if it is cheaper than developing your skills in-house.</p></div>
 
 		    <details role="group">
-		    <summary role="button" aria-controls="details-content-4" tabindex="0" aria-expanded="false">
-		    <span class="summary">Subcontracting costs guidance</span>
-		    </summary>
-		    <div class="panel-indent" id="details-content-4" aria-hidden="true" style="display: none;">Subcontract services supplied by associated companies should exclude any profit element and be charged at cost.
-		        You should name the subcontractor (where known) and describe what the subcontractor will be doing and where the work will be undertaken. We will look at the size of this contribution when assessing eligibility and level of support.
-		    </div>
+		    	<summary>
+		    		<span class="summary">Subcontracting costs guidance</span>
+		    	</summary>
+			    <div class="panel-indent">
+			    	<p>Subcontracting costs relate to work carried out by third party organisations. These organisations are not part of your project or collaboration.</p>
+			    	<p>Subcontracting is eligible providing it’s justified as to why the work cannot be performed by a project partner.</p>
+			    	<p>Where possible you should select a UK based contractor. You should name the subcontractor (where known) and describe what they will be doing. You should also state where the work will be undertaken. We will look at the size of this contribution when assessing your eligibility and level of support.</p>
+			    </div>
 		    </details>
 		</div><div>
 		<p>Please provide details of any work that you expect to subcontract for your project.</p>
@@ -583,10 +637,10 @@
 
 <div th:fragment="finance-other-funding">
 
-<h2 class="heading-medium no-margin-bottom">Other public funding</h2>
+<h2 class="heading-medium no-margin-bottom">Other funding</h2>
 	<fieldset>
-		<legend class="visuallyhidden">Other public funding</legend>
-		<p class="form-hint">Please tell us if you have received, or will receive any other public sector funding for this project.</p>
+		<legend class="visuallyhidden">Other funding</legend>
+		<p class="form-hint">Please tell us if you have applied for or received any other public sector funding for this project. Any other funding received will need to be deducted from the total value of any funding you are claiming for this project.</p>
 		<details>
 			    <summary><span class="summary">What should I include in other funding?</span></summary>
 			    <div class="panel-indent">

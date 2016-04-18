@@ -59,6 +59,7 @@ Submit flow (complete application)
     ...
     ...    INFUND-1887
     [Tags]    Summary    HappyPath
+    [Setup]    Delete the emails from the test mailbox
     Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
     When the user clicks the button/link    link=Review & submit
     And the user should be redirected to the correct page    ${SUMMARY_PAGE_APPLICATION_7}
@@ -71,6 +72,7 @@ Submit flow (complete application)
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
     [Tags]    Email    HappyPath
+    # Pending due to INFUND-2492
     Then the user should get a confirmation email
 
 Submitted application is read only
@@ -118,7 +120,7 @@ The user can check that the sections are read only
 
 the user should get a confirmation email
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    ${LATEST} =    wait for email    fromEmail=noresponse@innovateuk.gov.uk
+    ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}
     ${MATCHES1}=    Get Matches From Email    ${LATEST}    Congratulations, you have successfully submitted an application for funding to Innovate

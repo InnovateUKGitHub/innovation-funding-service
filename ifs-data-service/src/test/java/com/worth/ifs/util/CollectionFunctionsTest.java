@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static java.util.function.Function.identity;
 import static org.junit.Assert.*;
 
@@ -406,6 +405,44 @@ public class CollectionFunctionsTest {
 
         Map<Integer, Integer> toMap = CollectionFunctions.simpleToMap(null, identity());
         assertTrue(toMap.isEmpty());
+    }
+
+    @Test
+    public void testFindPermutations() {
+
+        List<List<String>> permutations = CollectionFunctions.findPermutations(asList("a", "b", "c"));
+        assertEquals(3 * 2 * 1, permutations.size());
+
+        List<List<String>> expectedPermutations = asList(
+                asList("a", "b", "c"),
+                asList("b", "a", "c"),
+                asList("c", "a", "b"),
+                asList("a", "c", "b"),
+                asList("b", "c", "a"),
+                asList("c", "b", "a"));
+        expectedPermutations.forEach(expected -> assertTrue(permutations.contains(expected)));
+    }
+
+    @Test
+    public void testRemoveElement() {
+        List<String> tokens = asList("a", "b", "c");
+        assertEquals(asList("a", "c"), CollectionFunctions.removeElement(tokens, 1));
+        assertEquals(asList("a", "b", "c"), tokens);
+    }
+
+    @Test
+    public void testRemoveDuplicates() {
+        List<String> tokens = asList("a", "b", "c", "b", "e", "c");
+        assertEquals(asList("a", "b", "c", "e"), CollectionFunctions.removeDuplicates(tokens));
+        assertEquals(asList("a", "b", "c", "b", "e", "c"), tokens);
+    }
+
+    @Test
+    public void testAsLinkedSet() {
+        List<String> tokens = asList("a", "b", "c", "b", "e", "c");
+        Set<String> expectedNewSet = new LinkedHashSet<>();
+        asList("a", "b", "c", "e").forEach(token -> expectedNewSet.add(token));
+        assertEquals(asList("a", "b", "c", "b", "e", "c"), tokens);
     }
 }
 

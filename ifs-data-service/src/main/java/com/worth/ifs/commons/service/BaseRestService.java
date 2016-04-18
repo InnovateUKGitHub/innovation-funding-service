@@ -107,6 +107,10 @@ public abstract class BaseRestService {
         return adaptor.putWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
     }
 
+    protected <R> RestResult<R> putWithRestResultAnonymous(String path, Object objectToSend, Class<R> returnType) {
+        return anonymousRestTemplateAdaptor.putWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
+    }
+
     protected <T> RestResult<T> deleteWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
         return adaptor.deleteWithRestResult(getDataRestServiceURL() + path, returnType);
     }
@@ -119,8 +123,16 @@ public abstract class BaseRestService {
         return restGetEntity(path, c).getBody();
     }
 
+    protected <T> T restGetAnonymous(String path, Class<T> c) {
+        return restGetEntityAnonymous(path, c).getBody();
+    }
+
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c) {
         return adaptor.restGetEntity(getDataRestServiceURL() + path, c);
+    }
+
+    protected <T> ResponseEntity<T> restGetEntityAnonymous(String path, Class<T> c) {
+        return anonymousRestTemplateAdaptor.restGetEntity(getDataRestServiceURL() + path, c);
     }
 
     protected <T> ResponseEntity<T> restGetEntity(String path, Class<T> c, HttpHeaders headers) {

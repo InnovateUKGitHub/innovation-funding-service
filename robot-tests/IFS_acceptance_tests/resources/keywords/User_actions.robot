@@ -8,8 +8,12 @@ The user navigates to the page
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
-    Element Should Be Visible    id=global-header
+    Wait Until Element Is Visible    id=global-header
     Page Should Contain    BETA
+    # "Contact us" checking (INFUND-1289)
+    # Pending completion of INFUND-2544, INFUND-2545
+    # Wait Until Page Contains Element   link=Contact Us
+    # Page Should Contain Link        href=${SERVER}/info/contact
 
 The user navigates to the page without the usual headers
     [Arguments]    ${TARGET_URL}
@@ -36,6 +40,11 @@ The user is on the page
     # Header checking (INFUND-1892)
     Wait Until Element Is Visible    id=global-header
     Page Should Contain    BETA
+    # "Contact us" checking (INFUND-1289)
+    # Pending completion of INFUND-2544, INFUND-2545
+    # Wait Until Page Contains Element   link=Contact Us
+    # Page Should Contain Link        href=${SERVER}/info/contact
+
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
@@ -84,6 +93,7 @@ The user enters text to a text field
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
+    Wait Until Element Is Visible   ${BUTTON}
     click element    ${BUTTON}
 
 The user should see the text in the page
@@ -94,6 +104,12 @@ The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
     sleep    500ms
     Page should not contain    ${NOT_VISIBLE_TEXT}
+
+the user should not see an error in the page
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
 
 The user should see an error
     [Arguments]    ${ERROR_TEXT}
@@ -177,9 +193,8 @@ the user opens the mailbox and verfies the official innovate email
     the user opens the mailbox and verifies the email from    noresponse@innovateuk.gov.uk
 
 the user opens the mailbox and verifies the email from
-    [Arguments]    ${sender}
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
-    ${LATEST} =    wait for email    fromEmail=${sender}
+    ${LATEST} =    wait for email
     ${HTML}=    get email body    ${LATEST}
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
@@ -190,17 +205,6 @@ the user opens the mailbox and verifies the email from
     Capture Page Screenshot
     Delete All Emails
     close mailbox
-
-the user enters the details and clicks the create account
-    [Arguments]    ${REG_EMAIL}
-    Input Text    id=firstName    Stuart
-    Input Text    id=lastName    ANDERSON
-    Input Text    id=phoneNumber    23232323
-    Input Text    id=email    ${REG_EMAIL}
-    Input Password    id=password    Passw0rd2
-    Input Password    id=retypedPassword    Passw0rd2
-    Select Checkbox    termsAndConditions
-    Submit Form
 
 the user opens the mailbox and accepts the invitation to collaborate
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
@@ -215,3 +219,54 @@ the user opens the mailbox and accepts the invitation to collaborate
     Capture Page Screenshot
     Delete All Emails
     close mailbox
+
+Delete the emails from the test mailbox
+    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Delete All Emails
+    close mailbox
+
+the user enters the details and clicks the create account
+    [Arguments]    ${REG_EMAIL}
+    Input Text    id=firstName    Stuart
+    Input Text    id=lastName    ANDERSON
+    Input Text    id=phoneNumber    23232323
+    Input Text    id=email    ${REG_EMAIL}
+    Input Password    id=password    Passw0rd2
+    Input Password    id=retypedPassword    Passw0rd2
+    Select Checkbox    termsAndConditions
+    Submit Form
+
+the user fills the create account form
+    [Arguments]    ${NAME}    ${LAST_NAME}
+    Input Text    id=firstName    ${NAME}
+    Input Text    id=lastName    ${LAST_NAME}
+    Input Text    id=phoneNumber    0612121212
+    Input Password    id=password    Passw0rd
+    Input Password    id=retypedPassword    Passw0rd
+    Select Checkbox    termsAndConditions
+    Submit Form
+
+
+the address fields should be filled
+    # postcode lookup implemented on some machines but not others, so check which is running:
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' != ''    the address fields should be filled with valid data
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' == ''    the address fields should be filled with dummy data
+
+the address fields should be filled with valid data
+    Textfield Should Contain    id=addressForm.selectedPostcode.addressLine1    Am Reprographics
+    Textfield Should Contain    id=addressForm.selectedPostcode.addressLine2    King William House
+    Textfield Should Contain    id=addressForm.selectedPostcode.addressLine3    13 Queen Square
+    Textfield Should Contain    id=addressForm.selectedPostcode.town    Bristol
+    Textfield Should Contain    id=addressForm.selectedPostcode.county    City of Bristol
+    Textfield Should Contain    id=addressForm.selectedPostcode.postcode    BS1 4NT
+
+the address fields should be filled with dummy data
+    Textfield Should Contain    id=addressForm.selectedPostcode.addressLine1    Montrose House 1
+    Textfield Should Contain    id=addressForm.selectedPostcode.addressLine2    Clayhill Park
+    Textfield Should Contain    id=addressForm.selectedPostcode.addressLine3    Cheshire West and Chester
+    Textfield Should Contain    id=addressForm.selectedPostcode.town    Neston
+    Textfield Should Contain    id=addressForm.selectedPostcode.county    Cheshire
+    Textfield Should Contain    id=addressForm.selectedPostcode.postcode    CH64 3RU
+
+the user cannot see a validation error in the page
+    Element Should Not Be Visible       css=.error

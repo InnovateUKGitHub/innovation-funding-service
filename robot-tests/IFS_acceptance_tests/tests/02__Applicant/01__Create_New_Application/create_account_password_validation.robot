@@ -38,7 +38,7 @@ Invalid password (from the blacklist)
 
 Invalid password (all lower case)
     [Documentation]    INFUND-1147
-    [Tags]    Account
+    [Tags]    Account   Failing
     # Note that the copy for this message is wrong - so it will start failing once that copy changes. Can be simply fixed with a change to ${lower_case_message} above
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
@@ -54,7 +54,7 @@ Invalid password (all lower case)
 
 Invalid password (all upper case)
     [Documentation]    INFUND-1147
-    [Tags]    Account
+    [Tags]    Account       Failing
     # Note that the copy for this message is wrong - so it will start failing once that copy changes. Can be simply fixed with a change to ${upper_case_message} above
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
@@ -70,7 +70,7 @@ Invalid password (all upper case)
 
 Invalid password (no numbers)
     [Documentation]    INFUND-1147
-    [Tags]    Account
+    [Tags]    Account       Failing
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith

@@ -7,8 +7,6 @@ import org.junit.Test;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionNotSubmittedApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.ClosedCompetitionSubmittedApplicationSummaryPageResource;
 import com.worth.ifs.commons.rest.RestResult;
 
 public class ApplicationSummaryRestServiceMocksTest  extends BaseRestServiceUnitTest<ApplicationSummaryRestServiceImpl> {
@@ -45,44 +43,44 @@ public class ApplicationSummaryRestServiceMocksTest  extends BaseRestServiceUnit
     }
     
     @Test
-    public void testFindSubmittedApplicationsByClosedCompetitionWithoutSortField() {
-    	ClosedCompetitionSubmittedApplicationSummaryPageResource responseBody = new ClosedCompetitionSubmittedApplicationSummaryPageResource();
-        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByClosedCompetition/123/submitted?page=6", ClosedCompetitionSubmittedApplicationSummaryPageResource.class, responseBody);
+    public void testFindSubmittedApplicationsByCompetitionWithoutSortField() {
+    	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/submitted?page=6", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ClosedCompetitionSubmittedApplicationSummaryPageResource> result = service.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(123L), 6, null);
-
-        assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
-    }
-    
-    @Test
-    public void testFindSubmittedApplicationsByClosedCompetitionWithSortField() {
-    	ClosedCompetitionSubmittedApplicationSummaryPageResource responseBody = new ClosedCompetitionSubmittedApplicationSummaryPageResource();
-        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByClosedCompetition/123/submitted?page=6&sort=id", ClosedCompetitionSubmittedApplicationSummaryPageResource.class, responseBody);
-
-        RestResult<ClosedCompetitionSubmittedApplicationSummaryPageResource> result = service.getSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(123L), 6, "id");
+        RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), 6, null);
 
         assertTrue(result.isSuccess());
         assertEquals(responseBody, result.getSuccessObject());
     }
     
     @Test
-    public void testFindNotSubmittedApplicationsByClosedCompetitionWithoutSortField() {
-    	ClosedCompetitionNotSubmittedApplicationSummaryPageResource responseBody = new ClosedCompetitionNotSubmittedApplicationSummaryPageResource();
-        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByClosedCompetition/123/not-submitted?page=6", ClosedCompetitionNotSubmittedApplicationSummaryPageResource.class, responseBody);
+    public void testFindSubmittedApplicationsByCompetitionWithSortField() {
+    	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/submitted?page=6&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ClosedCompetitionNotSubmittedApplicationSummaryPageResource> result = service.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(123L), 6, null);
+        RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), 6, "id");
 
         assertTrue(result.isSuccess());
         assertEquals(responseBody, result.getSuccessObject());
     }
     
     @Test
-    public void testFindNotSubmittedApplicationsByClosedCompetitionWithSortField() {
-    	ClosedCompetitionNotSubmittedApplicationSummaryPageResource responseBody = new ClosedCompetitionNotSubmittedApplicationSummaryPageResource();
-        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByClosedCompetition/123/not-submitted?page=6&sort=id", ClosedCompetitionNotSubmittedApplicationSummaryPageResource.class, responseBody);
+    public void testFindNotSubmittedApplicationsByCompetitionWithoutSortField() {
+    	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/not-submitted?page=6", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ClosedCompetitionNotSubmittedApplicationSummaryPageResource> result = service.getNotSubmittedApplicationSummariesForClosedCompetitionByCompetitionId(Long.valueOf(123L), 6, "id");
+        RestResult<ApplicationSummaryPageResource> result = service.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), 6, null);
+
+        assertTrue(result.isSuccess());
+        assertEquals(responseBody, result.getSuccessObject());
+    }
+    
+    @Test
+    public void testFindNotSubmittedApplicationsByCompetitionWithSortField() {
+    	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/not-submitted?page=6&sort=id", ApplicationSummaryPageResource.class, responseBody);
+
+        RestResult<ApplicationSummaryPageResource> result = service.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), 6, "id");
 
         assertTrue(result.isSuccess());
         assertEquals(responseBody, result.getSuccessObject());

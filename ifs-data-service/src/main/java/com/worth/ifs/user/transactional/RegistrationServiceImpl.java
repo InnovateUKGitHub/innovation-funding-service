@@ -24,6 +24,8 @@ import java.util.*;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;
@@ -64,6 +66,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private PasswordPolicyValidator passwordPolicyValidator;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -86,14 +91,19 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<UserResource> createApplicantUser(Long organisationId, Optional<Long> competitionId, UserResource userResource) {
         String roleName;
         if(isUserCompAdmin(userResource.getEmail())){
-            roleName = UserRoleType.COMP_ADMIN.getName();
+            roleName = COMP_ADMIN.getName();
         } else {
-            roleName = UserRoleType.APPLICANT.getName();
+            roleName = APPLICANT.getName();
         }
         User newUser = assembleUserFromResource(userResource);
-        return addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
-                addRoleToUser(user, roleName)).andOnSuccess(user ->
-                createUserWithUid(newUser, userResource.getPassword(), competitionId)).andOnSuccessReturn(userMapper::mapToResource);
+        return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
+                addRoleToUser(user, roleName)).andOnSuccess(() ->
+                createUserWithUid(newUser, userResource.getPassword(), competitionId))).
+                andOnSuccessReturn(userMapper::mapToResource);
+    }
+
+    private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
+        return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccessReturn(() -> userResource);
     }
 
     @Override

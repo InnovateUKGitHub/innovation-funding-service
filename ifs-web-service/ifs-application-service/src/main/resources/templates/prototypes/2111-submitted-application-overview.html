@@ -22,9 +22,10 @@
 
 		<div class="success-alert">
 	        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
-	        <p>You have been successful with this round of funding. All partners in the consortium have been informed. <br />
-	        Feedback on this application will be provided here by <strong>[Date]</strong>
+	        <p>You have been successful in this round of funding. All partners and collaborators in the project have been informed. Assessor feedback on your application will be available here by 5:30pm on <strong>[Date]</strong>
 	        </p>
+
+	        <p>Start to <a href="/prototypes/1588-project-status">plan your project</a></p>
 	    </div>
 
 	</div>
@@ -32,8 +33,8 @@
 	<div th:if="${param.status != null and param.status[0] == 'unsuccessful' or param.status[0] == 'unsuccessfulFeedback'}" th:remove="tag">
 
 		<div class="warning-alert">
-	        <h2 class="heading-small no-margin">Your application has not been successful in this competition</h2>
-	        <p>Feedback from the assessors will be provided here by <strong>[Date]</strong></p>
+	        <h2 class="heading-small no-margin">Your application has not been successful in this competition.</h2>
+	        <p>All partners and collaborators in the project have been informed. Assessor feedback on your application will be available here by 5:30pm on <strong>[Date]</strong></p>
 	    </div>
 
 	</div>
