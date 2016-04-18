@@ -91,10 +91,6 @@ public abstract class BaseRestService {
         return adaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType, expectedStatusCode, otherExpectedStatusCodes);
     }
 
-    protected <R> RestResult<R> postWithRestResultAnonymous(String path, Object objectToSend, HttpHeaders additionalHeaders, Class<R> returnType) {
-        return anonymousRestTemplateAdaptor.postWithRestResult(getDataRestServiceURL() + path, objectToSend, returnType);
-    }
-
     protected <T> RestResult<T> putWithRestResult(String path, ParameterizedTypeReference<T> returnType) {
         return adaptor.putWithRestResult(getDataRestServiceURL() + path, returnType);
     }
