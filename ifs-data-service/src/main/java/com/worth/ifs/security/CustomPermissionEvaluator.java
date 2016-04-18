@@ -41,6 +41,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     private DtoClassToLookupMethod lookupStrategyMap;
 
+    public static boolean isAnonymous(UserResource user){
+        return user == ANONYMOUS_USER;
+    }
+
     @PostConstruct
     void generateRules() {
         Collection<Object> permissionRuleBeans = applicationContext.getBeansWithAnnotation(PermissionRules.class).values();

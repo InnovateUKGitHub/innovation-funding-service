@@ -1,12 +1,10 @@
 package com.worth.ifs;
 
-import com.worth.ifs.commons.security.UserAuthentication;
 import com.worth.ifs.security.CustomPermissionEvaluator;
 import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToLookupMethod;
 import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods;
 import com.worth.ifs.security.CustomPermissionEvaluator.ListOfMethods;
 import com.worth.ifs.security.CustomPermissionEvaluator.PermissionsToPermissionsMethods;
-import com.worth.ifs.user.domain.User;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
 import org.junit.Before;
@@ -15,15 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.Callable;
 
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -156,7 +151,7 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
 
 
     /**
-     * Revert the temporary bean definintions used for testing, and replace the original rulesMap and lookup strategy on the custom permission evaluator
+     * Revert the temporary bean definitions used for testing, and replace the original rulesMap and lookup strategy on the custom permission evaluator
      */
     @After
     public void teardown() {
