@@ -45,6 +45,14 @@ Valid invitation submit
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    Invites sent
 
+Validation for duplicate email address
+    [Documentation]    INFUND-2375
+    Given the user navigates to the page    ${MANAGE_CONTRIBUTORS_URL}
+    When the user clicks the button/link    jQuery=li:nth-child(4) button:contains("Add person")
+    And the user enters duplicate email address along with name
+    Then The user should see the element    css=li:nth-child(4) tr:nth-of-type(2) td:nth-of-type(2) .field-error
+    And The user should see the text in the page     	You have already added this email address.
+
 Pending users are visible in the assign list but not clickable
     [Documentation]    INFUND-928
     ...
@@ -246,3 +254,9 @@ the user can see the updated company name throughout the application
 
 the user selects the same address
     select Checkbox    id=address-same
+
+the user enters duplicate email address along with name
+    Input Text    css=li:nth-child(4) tr:nth-of-type(2) td:nth-of-type(1) input    Wester
+    Input Text    css=li:nth-child(4) tr:nth-of-type(2) td:nth-of-type(2) input    worth.email.test+invite2@gmail.com
+    Click Element    jquery=button:contains("Save Changes")
+
