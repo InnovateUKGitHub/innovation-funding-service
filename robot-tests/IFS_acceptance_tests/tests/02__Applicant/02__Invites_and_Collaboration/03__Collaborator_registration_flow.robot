@@ -133,6 +133,7 @@ Academic organisation (accept invitation flow)
     [Documentation]    INFUND-1166
     ...
     ...    INFUND-917
+    ...    INFUND-2450
     [Tags]    HappyPath    FailingForLocal    Failing
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${INVITE_LINK_2}
@@ -162,6 +163,7 @@ Academic organisation (accept invitation flow)
     And the user clicks the button/link    link=Your finances
     Then the user should see the text in the page    TSB reference
     And the user should not see the text in the page    Labour
+    And the user should not see an error in the page
 
 
 Catapult search (empty, invalid & valid inputs)
