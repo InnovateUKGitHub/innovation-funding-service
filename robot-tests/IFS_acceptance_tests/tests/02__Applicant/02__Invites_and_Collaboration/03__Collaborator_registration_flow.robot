@@ -134,7 +134,7 @@ Academic organisation (accept invitation flow)
     ...
     ...    INFUND-917
     ...    INFUND-2450
-    [Tags]    HappyPath    FailingForLocal    Failing
+    [Tags]    HappyPath     Failing
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${INVITE_LINK_2}
     When the user clicks the button/link    jQuery=.button:contains("Create")
@@ -168,7 +168,7 @@ Academic organisation (accept invitation flow)
 
 Catapult search (empty, invalid & valid inputs)
     [Documentation]     INFUND-1230
-    [Tags]  Inivte  Catapult
+    [Tags]  Invite  Catapult
     Given the user navigates to the page        ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And the user selects the radio button    organisationType    2
