@@ -133,7 +133,8 @@ Academic organisation (accept invitation flow)
     [Documentation]    INFUND-1166
     ...
     ...    INFUND-917
-    [Tags]    HappyPath    FailingForLocal    Failing
+    ...    INFUND-2450
+    [Tags]    HappyPath     Failing
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${INVITE_LINK_2}
     When the user clicks the button/link    jQuery=.button:contains("Create")
@@ -162,11 +163,12 @@ Academic organisation (accept invitation flow)
     And the user clicks the button/link    link=Your finances
     Then the user should see the text in the page    TSB reference
     And the user should not see the text in the page    Labour
+    And the user should not see an error in the page
 
 
 Catapult search (empty, invalid & valid inputs)
     [Documentation]     INFUND-1230
-    [Tags]  Inivte  Catapult
+    [Tags]  Invite  Catapult
     Given the user navigates to the page        ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And the user selects the radio button    organisationType    2

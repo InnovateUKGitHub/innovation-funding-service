@@ -12,11 +12,17 @@ Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
+*** Variables ***
+${valid_pdf}       testing.pdf
+
+
 *** Test Cases ***
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300
     ...
     ...    INFUND-2304
+    ...
+    ...    INFUND-2435
     [Tags]    Competition management
     [Setup]    Run keywords    Log in as user    &{lead_applicant_credentials}
     ...    AND    the user can see the option to upload a file on the page    ${project_team_url}
@@ -27,6 +33,9 @@ Comp admin can open the view mode of the application
     Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     And the user should see the text in the page    A novel solution to an old problem
     And the user can see the upload for the 'Technical approach' question
+    And the user can view this file without any errors
+
+
 
 Comp admin should not be able to edit the finances
     [Documentation]    INFUND-2443
@@ -35,6 +44,21 @@ Comp admin should not be able to edit the finances
     Then the user should not see the element    link=your finances
 
 *** Keywords ***
+
+the user uploads the file to the 'project team' question
+    [Arguments]    ${file_name}
+    Choose File    name=formInput[18]    ${UPLOAD_FOLDER}/${file_name}
+    Sleep    500ms
+
+the user can see the option to upload a file on the page
+    [Arguments]    ${url}
+    The user navigates to the page    ${url}
+    Page Should Contain    Upload
+
 the user can see the upload for the 'Technical approach' question
     the user clicks the button/link    css=[aria-controls="collapsible-8"]
-    the user should see the text in the page    testing.pdf
+    the user should see the text in the page    ${valid_pdf}
+
+the user can view this file without any errors
+    the user clicks the button/link         css=.uploaded-file
+    the user should not see an error in the page
