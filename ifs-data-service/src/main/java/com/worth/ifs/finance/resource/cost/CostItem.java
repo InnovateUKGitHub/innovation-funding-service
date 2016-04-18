@@ -23,6 +23,7 @@ import java.math.BigDecimal;
         @JsonSubTypes.Type(value = TravelCost.class, name = "travelCost")
 })
 public interface CostItem {
+    int MAX_DIGITS = 20;
     public Long getId();
     public BigDecimal getTotal();
     public CostType getCostType();

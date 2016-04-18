@@ -82,6 +82,7 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     @Override
+        return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
     public ServiceResult<CostItem> addCost(final Long applicationFinanceId, final Long questionId, final CostItem newCostItem) {
 
         return find(question(questionId), applicationFinance(applicationFinanceId)).andOnSuccess((question, applicationFinance) -> {

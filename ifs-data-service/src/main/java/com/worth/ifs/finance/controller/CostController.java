@@ -1,16 +1,20 @@
 package com.worth.ifs.finance.controller;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.transactional.CostService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import javax.validation.Valid;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -20,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/cost")
 public class CostController {
+    private static final Log LOG = LogFactory.getLog(CostController.class);
 
     @Autowired
     private CostService costService;
@@ -32,9 +37,31 @@ public class CostController {
         return costService.addCost(applicationFinanceId, questionId, newCostItem).toPostCreateResponse();
     }
 
+    @RequestMapping("/{id}")
+    public RestResult<CostItem> get(@PathVariable("id") final Long id) {
+        return costService.getCostItem(id).toGetResponse();
+    }
+
+    /**
+     * Save the updated CostItem and if there are validation messages, return those (but still save)
+     * @return ValidationMessages resource object to store validation messages about invalid user input.
+     */
     @RequestMapping("/update/{id}")
-    public RestResult<Void> update(@PathVariable("id") final Long id, @RequestBody final CostItem newCostItem) {
-        return costService.updateCost(id, newCostItem).toPutResponse();
+    public RestResult<ValidationMessages> update(@PathVariable("id") final Long id, @Valid @RequestBody final CostItem newCostItem, BindingResult bindingResult) {
+        RestResult<Void> updateResult = costService.updateCost(id, newCostItem)
+                .toPutResponse();
+
+        if(updateResult.isFailure()){
+            return updateResult.toGetResponse(new ValidationMessages());
+        }else{
+            if(bindingResult.hasErrors()){
+                bindingResult.getFieldErrors().stream()
+                        .forEach(fe -> LOG.debug(String.format("Field Error: %s / %s / %s",  fe.getCode(),  fe.getField(),  fe.getDefaultMessage())));
+                return RestResult.restSuccess(new ValidationMessages(id, bindingResult));
+            }else{
+                return RestResult.restSuccess(new ValidationMessages());
+            }
+        }
     }
 
     @RequestMapping("/delete/{costId}")

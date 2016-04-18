@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.resource.cost;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
 public class OtherFunding implements CostItem {
@@ -9,6 +9,8 @@ public class OtherFunding implements CostItem {
     private String otherPublicFunding;
     private String fundingSource;
     private String securedDate;
+    @DecimalMin(value = "0")
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     private BigDecimal fundingAmount;
     private CostType costType;
     private String name;

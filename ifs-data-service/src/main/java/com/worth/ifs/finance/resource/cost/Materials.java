@@ -1,5 +1,8 @@
 package com.worth.ifs.finance.resource.cost;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 
 /**
@@ -7,11 +10,14 @@ import java.math.BigDecimal;
  */
 public class Materials implements CostItem {
     private Long id;
-    private String name;
     private String item;
+    private String name;
+    @DecimalMin(value = "1")
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     private BigDecimal cost;
+    @Min(1)
     private Integer quantity;
-    private BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal total = BigDecimal.ZERO; // calculated, no validation
     private CostType costType;
 
     public Materials() {
