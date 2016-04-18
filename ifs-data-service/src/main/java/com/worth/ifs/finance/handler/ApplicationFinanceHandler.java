@@ -16,6 +16,6 @@ public interface ApplicationFinanceHandler {
     @PostFilter("hasPermission(returnObject, 'READ')")
     List<ApplicationFinanceResource> getApplicationTotals(final Long applicationId);
 
-    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_PARTICIPATION_PERCENTAGE')")
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
     BigDecimal getResearchParticipationPercentage(final Long applicationId);
 }

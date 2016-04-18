@@ -35,21 +35,21 @@ public class ApplicationRules {
     @Autowired
     RoleRepository roleRepository;
 
-    @PermissionRule(value = "READ_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
-    public boolean consortiumCanSeeTheParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
+    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
+    public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
         final boolean isLeadApplicant = checkRole(user, applicationResource.getId(), LEADAPPLICANT);
         final boolean isCollaborator = checkRole(user, applicationResource.getId(), COLLABORATOR);
         return isLeadApplicant || isCollaborator;
     }
 
-    @PermissionRule(value = "READ_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
-    public boolean assessorCanSeeTheParticipantPercentageInApplicationsTheyAssess(final ApplicationResource applicationResource, UserResource user) {
+    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
+    public boolean assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(final ApplicationResource applicationResource, UserResource user) {
         final boolean isAssessor = checkRole(user, applicationResource.getId(), ASSESSOR);
         return isAssessor;
     }
 
-    @PermissionRule(value = "READ_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
-    public boolean compAdminCanSeeTheParticipantPercentageInApplications(final ApplicationResource applicationResource, UserResource user) {
+    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
+    public boolean compAdminCanSeeTheResearchParticipantPercentageInApplications(final ApplicationResource applicationResource, UserResource user) {
         return isCompAdmin(user);
     }
 
