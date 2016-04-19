@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
@@ -17,23 +18,20 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface QuestionService {
 
-    @NotSecured("Any loggedIn user can get a question")
+    @NotSecured("Any loggedIn user can read a question")
     ServiceResult<Question> getQuestionById(final Long id);
 
-    @NotSecured("TODO")
-    ServiceResult<Void> markAsComplete(final Long questionId,
-                        final Long applicationId,
+    @PreAuthorize("hasPermission(#ids, 'UPDATE')")
+    ServiceResult<Void> markAsComplete(final QuestionApplicationCompositeId ids,
                         final Long markedAsCompleteById);
 
 
-    @NotSecured("TODO")
-    ServiceResult<Void> markAsInComplete(final Long questionId,
-                          final Long applicationId,
+    @PreAuthorize("hasPermission(#ids, 'UPDATE')")
+    ServiceResult<Void> markAsInComplete(final QuestionApplicationCompositeId ids,
                           final Long markedAsInCompleteById);
 
-    @NotSecured("TODO")
-    ServiceResult<Void> assign(final Long questionId,
-                final Long applicationId,
+    @PreAuthorize("hasPermission(#ids, 'UPDATE')")
+    ServiceResult<Void> assign(final QuestionApplicationCompositeId ids,
                 final Long assigneeId,
                 final Long assignedById);
 
@@ -42,7 +40,7 @@ public interface QuestionService {
     ServiceResult<Set<Long>> getMarkedAsComplete(Long applicationId,
                                   Long organisationId);
 
-    @NotSecured("TODO")
+    @PreAuthorize("hasPermission(#questionStatusId, 'com.worth.ifs.application.resource.QuestionStatusResource', 'UPDATE')")
     ServiceResult<Void> updateNotification(final Long questionStatusId,
                             final Boolean notify);
 

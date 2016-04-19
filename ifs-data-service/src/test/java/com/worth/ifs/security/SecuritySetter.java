@@ -6,19 +6,15 @@ import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.commons.security.UserAuthentication;
-import com.worth.ifs.user.builder.UserResourceBuilder;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
-
 import com.worth.ifs.user.resource.UserResource;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 
 public class SecuritySetter {
@@ -37,7 +33,7 @@ public class SecuritySetter {
 
     private static List<Organisation> organisations = newOrganisation().withId(1L, 3L, 6L).build(3);
 
-    private static UserResource basicSecurityUser = newUserResource().withId(1L).withFirstName("steve").withLastName("smith").withEmail("steve.smith@empire.com").build();
+    public static UserResource basicSecurityUser = newUserResource().withId(1L).withFirstName("steve").withLastName("smith").withEmail("steve.smith@empire.com").build();
 
     public static final UserResource swapOutForUser(UserResource user) {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
