@@ -7,8 +7,8 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
-Resource          ../../../resources/Variables/EMAIL_VARIABLES.robot
-Resource          ../../../resources/Variables/PASSWORD_VARIABLES.robot
+Resource          ../../../resources/variables/EMAIL_VARIABLES.robot
+Resource          ../../../resources/variables/PASSWORD_VARIABLES.robot
 
 *** Test Cases ***
 Invalid email plaintext
