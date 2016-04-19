@@ -76,11 +76,14 @@
 <!-- ===================Assessor Page title============================== -->
 <div th:fragment="prototype-project-page-title(subtitle, heading)">
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+        <div th:if="${subtitle == 'projectSetup'}" th:remove="tag">
+            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+        </div>
         <div th:if="${subtitle == 'successful'}" th:remove="tag">
             <p class="subtitle no-margin">10294856: Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'successfulFeedback'}" th:remove="tag">
-            <p class="subtitle no-margin">10294855: Mobile Phone Data for Logistics Analytics</p>
+            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'unsuccessful'}" th:remove="tag">
             <p class="subtitle no-margin">10294856: Machine learning in robots</p>
@@ -176,18 +179,17 @@
                 <h3 class="heading-small">Project title</h3>
                 <p th:if="${param.status == null or param.status[0] == 'successful' or param.status[0] == 'unsuccessful'}">Machine learning in robots</p>
 
-                <p th:if="${param.status != null and param.status[0] == 'successfulFeedback' or param.status != null and param.status[0] == 'unsuccessfulFeedback'}">Mobile Phone Data for Logistics Analytics</p>
+                <p th:if="${param.status != null and param.status[0] == 'successfulFeedback' or param.status != null and param.status[0] == 'unsuccessfulFeedback'}">Machine learning in robots</p>
 
                 <p th:if="${param.status != null and param.status[0] == 'notSubmitted'}">Not submitted</p>
 
                 <h3 class="heading-small">Lead organisation</h3>
-                <p>Empire Ltd</p>
+                <p>Aptrans Ltd</p>
 
                 <h3 class="heading-small">Partners</h3>
                 <ul class="list-bullet">
-                    <li>Empire Ltd</li>
-                    <li>Ludlow</li>
-                    <li>EGGS</li>
+                    <li>Biotech Corp</li>
+                    <li>University of Cardiff</li>
                 </ul>
             </div>
 
