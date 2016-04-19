@@ -1,14 +1,5 @@
 *** Settings ***
-Documentation     INFUND-1005: As a collaborator I want to select my organisation type, so that I can create the correct account type for my organisation
-...
-...               INFUND-1779: As a collaborator registering my company as Business, I want to be able provide my organisation name and address details so I can successfully register for the competition
-...
-...               INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list
-...
-...
-...               INFUND-1166: As a collaborator registering my company as Research organisation type, I need to inform Innovate UK what type of research organisation I am so that this can inform how I provide my finances
-...
-...               INFUND-917: As an academic partner i want to input my finances according to the JES field headings, so that i enter my figures into the correct sections
+Documentation     INFUND-1231: As a collaborator registering my company as Academic, I want to be able to enter full or partial details of the Academic organisation's name so I can select my Academic organisation from a list
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags
@@ -109,62 +100,6 @@ The type of the sub organisation navigates to the correct page
     When the user should see the text in the page    Postcode
     When the user goes back to the previous page
 
-Academic organisations search (empty, invalid & valid inputs)
-    [Documentation]    INFUND-1231
-    [Tags]    HappyPath
-    When the user selects the radio button    organisationType    5
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jQuery=.button:contains("Search")
-    Then the user should see an error    This field cannot be left blank
-    When the user enters text to a text field    id=organisationSearchName    abcd
-    And the user clicks the button/link    jQuery=.button:contains("Search")
-    Then the user should see the text in the page    Sorry we couldn't find any results.
-    When the user enters text to a text field    id=organisationSearchName    !!
-    And the user clicks the button/link    jQuery=.button:contains("Search")
-    Then the user should see the text in the page    Please enter valid characters
-    When the user enters text to a text field    id=organisationSearchName    Liv
-    And the user clicks the button/link    jQuery=.button:contains("Search")
-    Then the user should see the text in the page    University of Liverpool
-    When the user clicks the button/link    link= University of Liverpool
-    Then the user should see the text in the page    Enter address manually
-    And the user should see the text in the page    University (HEI)
-
-Academic organisation (accept invitation flow)
-    [Documentation]    INFUND-1166
-    ...
-    ...    INFUND-917
-    ...    INFUND-2450
-    [Tags]    HappyPath    Failing
-    [Setup]    The guest user opens the browser
-    Given the user navigates to the page    ${INVITE_LINK_2}
-    When the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user selects the radio button    organisationType    2
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    When the user selects the radio button    organisationType    5
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jQuery=.button:contains("Search")
-    Then the user should see an error    This field cannot be left blank
-    When the user enters text to a text field    id=organisationSearchName    Liverpool
-    And the user clicks the button/link    jQuery=.button:contains("Search")
-    Then the user should see the text in the page    University of Liverpool
-    When the user clicks the button/link    link= University of Liverpool
-    And the user enters text to a text field    id=addressForm.postcodeInput    postcode
-    And the user clicks the button/link    id=postcode-lookup
-    And the user clicks the button/link    css=#select-address-block > button
-    And the user clicks the button/link    jQuery=.button:contains("Save organisation and")
-    And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user fills the create account form    Steven    Gerrard
-    And the user verifies the email
-    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    And the user clicks the button/link    jQuery=.button:contains("Log in")
-    And guest user log-in    worth.email.test+invite2@gmail.com    Passw0rd123
-    Then the user should be redirected to the correct page    ${DASHBOARD_URL}
-    When the user clicks the button/link    link=A novel solution to an old problem
-    And the user clicks the button/link    link=Your finances
-    Then the user should see the text in the page    TSB reference
-    And the user should not see the text in the page    Labour
-    And the user should not see an error in the page
-
 Catapult search (empty, invalid & valid inputs)
     [Documentation]    INFUND-1230
     [Tags]    Invite    Catapult
@@ -195,10 +130,11 @@ Catapult search (accept invitation flow)
     And the user should see the text in the page    Operating Address
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Thierry    Henry
-    And the user verifies the email
+    And the user opens the mailbox and verifies the email from
+    # And the user verifies the email
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Log in")
-    And guest user log-in    worth.email.test+invite2@gmail.com    testtest
+    And guest user log-in    worth.email.test+invite1@gmail.com    testtest
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=A novel solution to an old problem
     And the user clicks the button/link    link=Your finances
