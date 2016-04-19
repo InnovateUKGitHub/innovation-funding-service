@@ -11,8 +11,9 @@ The user navigates to the page
     Wait Until Element Is Visible    id=global-header
     Page Should Contain    BETA
     # "Contact us" checking (INFUND-1289)
-    # Wait Until Page Contains Element   link=Contact Us
-    # Page Should Contain Link        href=${SERVER}/info/contact
+    # Pending completion of INFUND-2544, INFUND-2545
+    # Wait Until Page Contains Element    link=Contact Us
+    # Page Should Contain Link    href=${SERVER}/info/contact
 
 The user navigates to the page without the usual headers
     [Arguments]    ${TARGET_URL}
@@ -40,9 +41,9 @@ The user is on the page
     Wait Until Element Is Visible    id=global-header
     Page Should Contain    BETA
     # "Contact us" checking (INFUND-1289)
-    # Wait Until Page Contains Element   link=Contact Us
-    # Page Should Contain Link        href=${SERVER}/info/contact
-
+    # Pending completion of INFUND-2544, INFUND-2545
+    # Wait Until Page Contains Element    link=Contact Us
+    # Page Should Contain Link    href=${SERVER}/info/contact
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
@@ -91,6 +92,7 @@ The user enters text to a text field
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
+    Wait Until Element Is Visible    ${BUTTON}
     click element    ${BUTTON}
 
 The user should see the text in the page
@@ -101,6 +103,12 @@ The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
     sleep    500ms
     Page should not contain    ${NOT_VISIBLE_TEXT}
+
+the user should not see an error in the page
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
 
 The user should see an error
     [Arguments]    ${ERROR_TEXT}
@@ -222,8 +230,8 @@ the user enters the details and clicks the create account
     Input Text    id=lastName    ANDERSON
     Input Text    id=phoneNumber    23232323
     Input Text    id=email    ${REG_EMAIL}
-    Input Password    id=password    Passw0rd2
-    Input Password    id=retypedPassword    Passw0rd2
+    Input Password    id=password    Passw0rd123
+    Input Password    id=retypedPassword    Passw0rd123
     Select Checkbox    termsAndConditions
     Submit Form
 
@@ -232,7 +240,113 @@ the user fills the create account form
     Input Text    id=firstName    ${NAME}
     Input Text    id=lastName    ${LAST_NAME}
     Input Text    id=phoneNumber    0612121212
-    Input Password    id=password    Passw0rd
-    Input Password    id=retypedPassword    Passw0rd
+    Input Password    id=password    Passw0rd123
+    Input Password    id=retypedPassword    Passw0rd123
     Select Checkbox    termsAndConditions
     Submit Form
+
+the address fields should be filled
+    # postcode lookup implemented on some machines but not others, so check which is running:
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' != ''    the address fields should be filled with valid data
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' == ''    the address fields should be filled with dummy data
+
+the address fields should be filled with valid data
+    Textfield Should Contain    id=addressForm.selectedPostcode.addressLine1    Am Reprographics
+    Textfield Should Contain    id=addressForm.selectedPostcode.addressLine2    King William House
+    Textfield Should Contain    id=addressForm.selectedPostcode.addressLine3    13 Queen Square
+    Textfield Should Contain    id=addressForm.selectedPostcode.town    Bristol
+    Textfield Should Contain    id=addressForm.selectedPostcode.county    City of Bristol
+    Textfield Should Contain    id=addressForm.selectedPostcode.postcode    BS1 4NT
+
+the address fields should be filled with dummy data
+    Textfield Should Contain    id=addressForm.selectedPostcode.addressLine1    Montrose House 1
+    Textfield Should Contain    id=addressForm.selectedPostcode.addressLine2    Clayhill Park
+    Textfield Should Contain    id=addressForm.selectedPostcode.addressLine3    Cheshire West and Chester
+    Textfield Should Contain    id=addressForm.selectedPostcode.town    Neston
+    Textfield Should Contain    id=addressForm.selectedPostcode.county    Cheshire
+    Textfield Should Contain    id=addressForm.selectedPostcode.postcode    CH64 3RU
+
+the user cannot see a validation error in the page
+    Element Should Not Be Visible    css=.error
+
+the user submits their information
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+    Select Checkbox    termsAndConditions
+    Submit Form
+
+the user logs out if they are logged in
+    run keyword and ignore error    log out as user
+
+the user cannot login with their new details
+    [Arguments]    ${email}    ${password}
+    The user navigates to the page    ${LOGIN_URL}
+    Input Text    id=username    ${email}
+    Input Password    id=password    ${password}
+    Click Button    css=button[name="_eventId_proceed"]
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
+
+the user cannot login with either password
+    The user navigates to the page    ${LOGIN_URL}
+    Input Text    id=username    ${valid_email}
+    Input Password    id=password    ${correct_password}
+    Click Button    css=button[name="_eventId_proceed"]
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
+    go to    ${LOGIN_URL}
+    Input Text    id=username    ${valid_email}
+    Input Password    id=password    ${incorrect_password}
+    Click Button    css=button[name="_eventId_proceed"]
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
+
+we create a new user
+    [Arguments]    ${EMAIL_INVITED}
+    The user navigates to the page    ${COMPETITION_DETAILS_URL}
+    The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    The user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    The user clicks the button/link    jQuery=.button:contains("Create")
+    The user enters text to a text field    id=organisationSearchName    Innovate
+    The user clicks the button/link    id=org-search
+    The user clicks the button/link    LINK=INNOVATE LTD
+    select Checkbox    id=address-same
+    The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    The user clicks the button/link    jQuery=.button:contains("Save")
+    The user enters the details and clicks the create account    ${EMAIL_INVITED}
+    The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    And the user opens the mailbox and verifies the email from
+    The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    The user clicks the button/link    jQuery=.button:contains("Log in")
+    The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
+    The guest user clicks the log-in button
+    user closes the browser
+
+the lead applicant invites a registered user
+    [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
+    The guest user opens the browser
+    The user navigates to the page    ${COMPETITION_DETAILS_URL}
+    The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    The user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    The user clicks the button/link    jQuery=.button:contains("Create")
+    The user enters text to a text field    id=organisationSearchName    Innovate
+    The user clicks the button/link    id=org-search
+    The user clicks the button/link    LINK=INNOVATE LTD
+    select Checkbox    id=address-same
+    The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    The user clicks the button/link    jQuery=.button:contains("Save")
+    The user enters the details and clicks the create account    ${EMAIL_LEAD}
+    The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    And the user opens the mailbox and verifies the email from
+    The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    The user clicks the button/link    jQuery=.button:contains("Log in")
+    The guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
+    The guest user clicks the log-in button
+    The user clicks the button/link    link=Technology Inspired
+    Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
+    Input Text    name=organisations[1].organisationName    innovate
+    Input Text    name=organisations[1].invites[0].personName    Partner name
+    Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
+    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user should see the text in the page    Application overview
+    User closes the browser
+    The guest user opens the browser

@@ -21,6 +21,7 @@ public interface OrganisationService {
 
     OrganisationResource getOrganisationByIdForAnonymousUserFlow(Long organisationId);
 
+    OrganisationResource saveForAnonymousUserFlow(OrganisationResource organisation);
     OrganisationResource save(OrganisationResource organisation);
     OrganisationSearchResult getCompanyHouseOrganisation(String organisationId);
     OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, AddressType type);

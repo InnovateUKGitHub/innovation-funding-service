@@ -19,7 +19,6 @@ import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.service.OrganisationSearchRestService;
 import com.worth.ifs.user.service.OrganisationTypeRestService;
 import com.worth.ifs.util.CookieUtil;
-import com.worth.ifs.util.EncodingUtils;
 import com.worth.ifs.util.JsonUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,8 +38,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -250,7 +247,7 @@ public class OrganisationCreationController {
         organisationForm.setOrganisationSearching(true);
         organisationForm.setManualEntry(false);
         CookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
-        return "redirect:/organisation/create/" + FIND_ORGANISATION + "/" + EncodingUtils.urlEncode(organisationForm.getOrganisationSearchName());
+        return "redirect:/organisation/create/" + FIND_ORGANISATION + "/" + escapePathVariable(organisationForm.getOrganisationSearchName());
     }
 
     @RequestMapping(value = "/" + FIND_ORGANISATION + "/**", params = NOT_IN_COMPANY_HOUSE, method = RequestMethod.POST)
@@ -399,9 +396,9 @@ public class OrganisationCreationController {
 
         if (!referer.contains(FIND_ORGANISATION)) {
             if (StringUtils.hasText(organisationForm.getSearchOrganisationId()) && organisationForm.getAddressForm().getSelectedPostcodeIndex() != null && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:%s/%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), organisationForm.getAddressForm().getPostcodeInput(), organisationForm.getAddressForm().getSelectedPostcodeIndex());
+                return String.format("redirect:%s/%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()), organisationForm.getAddressForm().getSelectedPostcodeIndex());
             } else if (StringUtils.hasText(organisationForm.getSearchOrganisationId()) && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), UrlEscapers.urlPathSegmentEscaper().escape(organisationForm.getAddressForm().getPostcodeInput()));
+                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId(), escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()));
             } else if (StringUtils.hasText(organisationForm.getSearchOrganisationId())) {
                 return String.format("redirect:%s/%s/%s", BASE_URL, redirectPart, organisationForm.getSearchOrganisationId());
             } else {
@@ -409,9 +406,9 @@ public class OrganisationCreationController {
             }
         } else {
             if (organisationForm.getAddressForm().getSelectedPostcodeIndex() != null && StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, organisationForm.getAddressForm().getPostcodeInput(), organisationForm.getAddressForm().getSelectedPostcodeIndex());
+                return String.format("redirect:%s/%s/%s/%s", BASE_URL, redirectPart, escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()), organisationForm.getAddressForm().getSelectedPostcodeIndex());
             } else if (StringUtils.hasText(organisationForm.getAddressForm().getPostcodeInput())) {
-                return String.format("redirect:%s/%s/%s", BASE_URL, redirectPart, UrlEscapers.urlPathSegmentEscaper().escape(organisationForm.getAddressForm().getPostcodeInput()));
+                return String.format("redirect:%s/%s/%s", BASE_URL, redirectPart, escapePathVariable(organisationForm.getAddressForm().getPostcodeInput()));
             } else {
                 return String.format("redirect:%s/%s", BASE_URL, redirectPart);
             }
@@ -541,7 +538,7 @@ public class OrganisationCreationController {
     }
 
     private OrganisationResource saveNewOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
-        organisationResource = organisationService.save(organisationResource);
+        organisationResource = organisationService.saveForAnonymousUserFlow(organisationResource);
         linkOrganisationToInvite(organisationResource, request);
         return organisationResource;
     }
@@ -578,5 +575,9 @@ public class OrganisationCreationController {
                 failure -> new ArrayList<>(),
                 addresses -> addresses);
         return addressResourceList;
+    }
+
+    private String escapePathVariable(final String input){
+        return UrlEscapers.urlPathSegmentEscaper().escape(input);
     }
 }
