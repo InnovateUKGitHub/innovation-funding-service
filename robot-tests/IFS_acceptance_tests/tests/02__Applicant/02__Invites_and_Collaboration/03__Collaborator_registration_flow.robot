@@ -195,15 +195,17 @@ Catapult search (accept invitation flow)
     And the user should see the text in the page    Operating Address
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Thierry    Henry
-    And the user verifies the email
+    And the user opens the mailbox and verifies the email from
+    # And the user verifies the email
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Log in")
-    And guest user log-in    worth.email.test+invite2@gmail.com    testtest
+    And guest user log-in    worth.email.test+invite1@gmail.com    testtest
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=A novel solution to an old problem
     And the user clicks the button/link    link=Your finances
     Then the user should see the text in the page    TSB reference
     And the user should not see the text in the page    Labour
+
 
 *** Keywords ***
 the user selects the radio button
