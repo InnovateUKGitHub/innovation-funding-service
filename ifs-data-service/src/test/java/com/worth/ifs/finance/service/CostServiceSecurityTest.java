@@ -5,7 +5,6 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
 import com.worth.ifs.application.security.ApplicationRules;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.finance.builder.CostBuilder;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
@@ -24,6 +23,7 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static com.worth.ifs.finance.builder.CostBuilder.newCost;
 import static com.worth.ifs.finance.builder.CostFieldResourceBuilder.newCostFieldResource;
 import static com.worth.ifs.finance.service.CostServiceSecurityTest.TestCostService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static org.junit.Assert.assertTrue;
@@ -41,6 +41,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
     private ApplicationRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
     private CostLookupStrategy costLookupStrategy;
+    private CostFieldLookupStrategy costFieldLookupStrategy;
     private ApplicationFinanceLookupStrategy applicationFinanceLookupStrategy;
 
     @Before
@@ -51,6 +52,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         applicationRules = getMockPermissionRulesBean(ApplicationRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
         costLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostLookupStrategy.class);
+        costFieldLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostFieldLookupStrategy.class);
     }
 
     @Test
@@ -123,11 +125,22 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
     @Test
     public void testUpdateCost() {
         final Long costId = 1L;
-        when(costLookupStrategy.getCost(costId)).thenReturn(CostBuilder.newCost().with(id(costId)).build());
+        when(costLookupStrategy.getCost(costId)).thenReturn(newCost().with(id(costId)).build());
         assertAccessDenied(
                 () -> service.updateCost(costId, new AcademicCost()),
                 () -> {
                     verify(costPermissionsRules).consortiumCanUpdateACostForTheirApplicationAndOrganisation(isA(Cost.class), isA(UserResource.class));
+                });
+    }
+
+    @Test
+    public void test() {
+        final Long costFieldId = 1L;
+        when(costFieldLookupStrategy.getCostField(costFieldId)).thenReturn(newCostFieldResource().with(id(costFieldId)).build());
+        assertAccessDenied(
+                () -> service.getCostFieldById(costFieldId),
+                () -> {
+                    verify(costFieldPermissionsRules).loggedInUsersCanReadCostFieldReferenceData(isA(CostFieldResource.class), isA(UserResource.class));
                 });
     }
 

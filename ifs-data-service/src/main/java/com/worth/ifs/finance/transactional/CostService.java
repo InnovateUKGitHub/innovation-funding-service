@@ -15,8 +15,8 @@ import java.util.List;
 
 public interface CostService {
 
-    @NotSecured("TODO")
-    ServiceResult<CostField> getCostFieldById(Long id);
+    @PreAuthorize("hasPermission(#costFieldId, 'com.worth.ifs.finance.resource.CostFieldResource', 'READ')")
+    ServiceResult<CostField> getCostFieldById(@P("costFieldId")Long costFieldId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CostFieldResource>> findAllCostFields();
