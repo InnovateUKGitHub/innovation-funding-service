@@ -11,15 +11,15 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Valid company name
     [Documentation]    INFUND-887
-    [Tags]    Applicant    Company house    HappyPath
+    [Tags]    HappyPath
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When the user enters text to a text field    id=organisationSearchName    innovate
     And the user clicks the button/link    id=org-search
-    Then the valid company names matching the search criteria should be displayed
+    Then the search criteria should be displayed
 
 Invalid company name
     [Documentation]    INFUND-887
-    [Tags]    Applicant    Company house
+    [Tags]
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When the user enters text to a text field    id=organisationSearchName    innoavte
     And the user clicks the button/link    id=org-search
@@ -27,15 +27,15 @@ Invalid company name
 
 Valid registration number
     [Documentation]    INFUND-887
-    [Tags]    Applicant    Company house    HappyPath
+    [Tags]    HappyPath
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When the user enters text to a text field    id=organisationSearchName    05493105
     And the user clicks the button/link    id=org-search
-    Then the valid company names matching the search criteria should be displayed
+    Then the search criteria should be displayed
 
 Invalid registration number
     [Documentation]    INFUND-887
-    [Tags]    Applicant    Company house
+    [Tags]
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When the user enters text to a text field    id=organisationSearchName    64536
     And the user clicks the button/link    id=org-search
@@ -43,7 +43,7 @@ Invalid registration number
 
 Company with spaces in the name
     [Documentation]    INFUND-1757
-    [Tags]    Create application
+    [Tags]
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -54,16 +54,20 @@ Company with spaces in the name
 
 Invalid characters
     [Documentation]    INFUND-887
-    [Tags]    Applicant    Company house    Pending
-    # Pending due to INFUND-1493
+    [Tags]
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
-    When the user enters text to a text field    id=organisationSearchName    {}{}
+    When the user enters text to a text field    id=organisationSearchName    {}
     And the user clicks the button/link    id=org-search
-    Then the applicant should get a validation error for the company house lookup
+    Then the user should see an error    Please enter valid characters
 
+Empty company name field
+    Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
+    When the user enters text to a text field    id=organisationSearchName    ${EMPTY}
+    And the user clicks the button/link    id=org-search
+    Then the user should see an error    This field cannot be left blank
 
 *** Keywords ***
-the valid company names matching the search criteria should be displayed
+the search criteria should be displayed
     Page Should Contain    05493105 - Incorporated on 28 June 2005
     Click Link    INNOVATE LTD
     Page Should Contain    Business
@@ -71,7 +75,3 @@ the valid company names matching the search criteria should be displayed
     Element Should Contain    css=.form-block p:nth-child(2)    INNOVATE LTD
     Page Should Contain    Registration number
     Page should contain    05493105
-
-
-the applicant should get a validation error for the company house lookup
-    Element Should Be Visible    css=.error-message
