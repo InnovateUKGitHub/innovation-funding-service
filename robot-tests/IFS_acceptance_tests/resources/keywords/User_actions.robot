@@ -268,3 +268,34 @@ the address fields should be filled with dummy data
 
 the user cannot see a validation error in the page
     Element Should Not Be Visible    css=.error
+
+the user submits their information
+    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+    Select Checkbox    termsAndConditions
+    Submit Form
+
+the user logs out if they are logged in
+    run keyword and ignore error    log out as user
+
+the user cannot login with their new details
+    [Arguments]    ${email}    ${password}
+    The user navigates to the page    ${LOGIN_URL}
+    Input Text    id=username    ${email}
+    Input Password    id=password    ${password}
+    Click Button    css=button[name="_eventId_proceed"]
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
+
+the user cannot login with either password
+    The user navigates to the page    ${LOGIN_URL}
+    Input Text    id=username    ${valid_email}
+    Input Password    id=password    ${correct_password}
+    Click Button    css=button[name="_eventId_proceed"]
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
+    go to    ${LOGIN_URL}
+    Input Text    id=username    ${valid_email}
+    Input Password    id=password    ${incorrect_password}
+    Click Button    css=button[name="_eventId_proceed"]
+    Page Should Contain    Your login was unsuccessful because of the following issue(s)
+    Page Should Contain    Your username/password combination doesn't seem to work
