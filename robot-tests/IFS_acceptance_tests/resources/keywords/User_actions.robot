@@ -299,3 +299,54 @@ the user cannot login with either password
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    Your login was unsuccessful because of the following issue(s)
     Page Should Contain    Your username/password combination doesn't seem to work
+
+we create a new user
+    [Arguments]    ${EMAIL_INVITED}
+    The user navigates to the page    ${COMPETITION_DETAILS_URL}
+    The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    The user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    The user clicks the button/link    jQuery=.button:contains("Create")
+    The user enters text to a text field    id=organisationSearchName    Innovate
+    The user clicks the button/link    id=org-search
+    The user clicks the button/link    LINK=INNOVATE LTD
+    select Checkbox    id=address-same
+    The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    The user clicks the button/link    jQuery=.button:contains("Save")
+    The user enters the details and clicks the create account    ${EMAIL_INVITED}
+    The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    And the user opens the mailbox and verifies the email from
+    The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    The user clicks the button/link    jQuery=.button:contains("Log in")
+    The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
+    The guest user clicks the log-in button
+    user closes the browser
+
+the lead applicant invites a registered user
+    [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
+    The guest user opens the browser
+    The user navigates to the page    ${COMPETITION_DETAILS_URL}
+    The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
+    The user clicks the button/link    jQuery=.button:contains("Sign in to apply")
+    The user clicks the button/link    jQuery=.button:contains("Create")
+    The user enters text to a text field    id=organisationSearchName    Innovate
+    The user clicks the button/link    id=org-search
+    The user clicks the button/link    LINK=INNOVATE LTD
+    select Checkbox    id=address-same
+    The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    The user clicks the button/link    jQuery=.button:contains("Save")
+    The user enters the details and clicks the create account    ${EMAIL_LEAD}
+    The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
+    And the user opens the mailbox and verifies the email from
+    The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    The user clicks the button/link    jQuery=.button:contains("Log in")
+    The guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
+    The guest user clicks the log-in button
+    The user clicks the button/link    link=Technology Inspired
+    Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
+    Input Text    name=organisations[1].organisationName    innovate
+    Input Text    name=organisations[1].invites[0].personName    Partner name
+    Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
+    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user should see the text in the page    Application overview
+    User closes the browser
+    The guest user opens the browser
