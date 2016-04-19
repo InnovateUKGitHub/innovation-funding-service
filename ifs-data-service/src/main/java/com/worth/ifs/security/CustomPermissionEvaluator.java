@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -63,7 +64,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         if (LOG.isDebugEnabled()) {
             rulesMap.values().forEach(permission -> permission.values().forEach(pairs -> pairs.forEach(pair -> {
                 Method permissionMethod = pair.getRight();
-                PermissionRule permissionAnnotation = permissionMethod.getAnnotation(PermissionRule.class);
+                PermissionRule permissionAnnotation = AnnotationUtils.findAnnotation(permissionMethod, PermissionRule.class);
                 LOG.debug("Registered PermissionRule: " + permissionAnnotation.description());
             })));
         }
@@ -131,7 +132,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         List<Pair<Object, List<Method>>> beansAndPermissionMethods = owningBeans.stream().
                 map(rulesClassInstance -> Pair.of(rulesClassInstance, asList(rulesClassInstance.getClass().getMethods()))).
                 map(beanAndAllMethods -> {
-                    List<Method> permissionsRuleMethods = beanAndAllMethods.getRight().stream().filter(method -> method.getAnnotationsByType(annotation).length > 0).collect(toList());
+                    List<Method> permissionsRuleMethods = beanAndAllMethods.getRight().stream().filter(method -> AnnotationUtils.findAnnotation(method, annotation) != null).collect(toList());
                     return Pair.of(beanAndAllMethods.getLeft(), permissionsRuleMethods);
                 }).collect(toList());
         return ListOfMethods.from(beansAndPermissionMethods.stream().flatMap(beanAndPermissionMethods -> {
@@ -164,7 +165,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         DtoClassToPermissionsToPermissionsMethods map = new DtoClassToPermissionsToPermissionsMethods();
         for (Entry<Class<?>, ListOfMethods> entry : dtoClassToMethods.entrySet()) {
             for (Pair<Object, Method> methodAndBean : entry.getValue()) {
-                String permission = methodAndBean.getRight().getAnnotationsByType(PermissionRule.class)[0].value();
+                Method method = methodAndBean.getRight();
+                String permission = AnnotationUtils.findAnnotation(method, PermissionRule.class).value();
                 map.putIfAbsent(entry.getKey(), new PermissionsToPermissionsMethods());
                 map.get(entry.getKey()).putIfAbsent(permission, new ListOfMethods());
                 map.get(entry.getKey()).get(permission).add(methodAndBean);
