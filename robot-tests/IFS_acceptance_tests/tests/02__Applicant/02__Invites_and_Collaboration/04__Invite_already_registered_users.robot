@@ -17,8 +17,8 @@ The invited registered user should redirect to the correct page
     [Documentation]    INFUND-1458
     [Tags]
     [Setup]    Delete the emails from the test mailbox
-    Given we create a new user
-    Given the lead applicant invites a registered user
+    Given we create a new user    worth.email.test+invitedregistered@gmail.com
+    Given the lead applicant invites a registered user    worth.email.test+invite2@gmail.com    worth.email.test+invitedregistered@gmail.com
     When the user opens the mailbox and accepts the invitation to collaborate
     Then the user should see the text in the page    We found a user account with the invited email address
 
@@ -26,7 +26,7 @@ The user clicks the login link
     [Documentation]    INFUND-1458
     [Tags]
     When the user clicks the button/link    link=Click here to login
-    And the guest user inserts user email & password    worth.email.test+reg2@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    worth.email.test+invitedregistered@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Confirm your organisation
 
@@ -44,51 +44,3 @@ The continue button should redirect to the overview page
     Then the user should see the text in the page    Application overview
 
 *** Keywords ***
-the lead applicant invites a registered user
-    The guest user opens the browser
-    The user navigates to the page    ${COMPETITION_DETAILS_URL}
-    The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    The user clicks the button/link    jQuery=.button:contains("Sign in to apply")
-    The user clicks the button/link    jQuery=.button:contains("Create")
-    The user enters text to a text field    id=organisationSearchName    Innovate
-    The user clicks the button/link    id=org-search
-    The user clicks the button/link    LINK=INNOVATE LTD
-    select Checkbox    id=address-same
-    The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    The user clicks the button/link    jQuery=.button:contains("Save")
-    The user enters the details and clicks the create account    worth.email.test+invite2@gmail.com
-    The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    And the user opens the mailbox and verifies the email from
-    The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    The user clicks the button/link    jQuery=.button:contains("Log in")
-    The guest user inserts user email & password    worth.email.test+invite2@gmail.com    Passw0rd123
-    The guest user clicks the log-in button
-    The user clicks the button/link    link=Technology Inspired
-    Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
-    Input Text    name=organisations[1].organisationName    innovate
-    Input Text    name=organisations[1].invites[0].personName    Registered user
-    Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    worth.email.test+reg2@gmail.com
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
-    And the user should see the text in the page    Application overview
-    User closes the browser
-    The guest user opens the browser
-
-we create a new user
-    The user navigates to the page    ${COMPETITION_DETAILS_URL}
-    The user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
-    The user clicks the button/link    jQuery=.button:contains("Sign in to apply")
-    The user clicks the button/link    jQuery=.button:contains("Create")
-    The user enters text to a text field    id=organisationSearchName    Innovate
-    The user clicks the button/link    id=org-search
-    The user clicks the button/link    LINK=INNOVATE LTD
-    select Checkbox    id=address-same
-    The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    The user clicks the button/link    jQuery=.button:contains("Save")
-    The user enters the details and clicks the create account    worth.email.test+reg2@gmail.com
-    The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    And the user opens the mailbox and verifies the email from
-    The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    The user clicks the button/link    jQuery=.button:contains("Log in")
-    The guest user inserts user email & password    worth.email.test+reg2@gmail.com    Passw0rd123
-    The guest user clicks the log-in button
-    user closes the browser
