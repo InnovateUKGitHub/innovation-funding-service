@@ -1,8 +1,10 @@
 package com.worth.ifs;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import com.worth.ifs.security.PermissionRule;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -12,14 +14,19 @@ import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreFilter;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static java.util.Arrays.asList;
 
 /**
@@ -32,7 +39,30 @@ import static java.util.Arrays.asList;
  */
 public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
 
+    public static final String SERVICE_DOCUMENTATION_FILENAME = "build/service-calls-and-permission-rules.csv";
+
+    static {
+
+        try {
+            CSVWriter writer = new CSVWriter(new FileWriter(SERVICE_DOCUMENTATION_FILENAME), '\t');
+            try {
+                writer.writeNext(new String[]{"Service call", "Permission rules checked"});
+            } finally {
+                writer.close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to create csv for service documentation");
+        }
+    }
+
     protected T service;
+
+    private enum InteractionSource {
+        SERVICE,
+        PERMISSION_RULE
+    }
+
+    private List<Pair<InteractionSource, String>> recordedRuleInteractions = new ArrayList<>();
 
     /**
      * @return the service class under test.  Note that in order for Spring Security to be able to read parameter-name
@@ -43,8 +73,6 @@ public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
      */
     protected abstract Class<? extends T> getServiceClass();
 
-    private List<String> recordedRuleInteractions = new ArrayList<>();
-
     /**
      * Register a temporary bean definition for the class under test (as provided by getServiceClass()), and replace
      * all PermissionRules with mocks that can be looked up with getMockPermissionRulesBean().
@@ -53,10 +81,13 @@ public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
     public void setup() {
 
         applicationContext.registerBeanDefinition("beanUndergoingSecurityTesting", new RootBeanDefinition(getServiceClass()));
+
         T serviceBeanWithSpringSecurity = (T) applicationContext.getBean("beanUndergoingSecurityTesting");
+
         service = createRecordingProxy(serviceBeanWithSpringSecurity, getServiceClass(),
                 method -> hasOneAnnotation(method, PreAuthorize.class, PostAuthorize.class, PreFilter.class, PostFilter.class),
-                methodCalled -> recordedRuleInteractions.add("SERVICE CALL: " + getServiceClass().getSimpleName() + "." + methodCalled.getName()));
+                methodCalled -> recordedRuleInteractions.add(Pair.of(InteractionSource.SERVICE, getServiceClass().getInterfaces()[0].getSimpleName() + "." + methodCalled.getName()))
+        );
 
         super.setup();
     }
@@ -64,7 +95,44 @@ public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
     @After
     public void teardown() {
         applicationContext.removeBeanDefinition("beanUndergoingSecurityTesting");
-        recordedRuleInteractions.forEach(interaction -> System.out.println(interaction));
+
+        try {
+            CSVWriter writer = new CSVWriter(new FileWriter(SERVICE_DOCUMENTATION_FILENAME, true), '\t');
+
+            List<Pair<String, Set<String>>> serviceMethodsToPermissionRuleRecordings = new ArrayList<>();
+
+            recordedRuleInteractions.forEach(interaction -> {
+
+                InteractionSource sourceOfRecording = interaction.getLeft();
+
+                if (sourceOfRecording == InteractionSource.SERVICE) {
+                    serviceMethodsToPermissionRuleRecordings.add(Pair.of(interaction.getRight(), new LinkedHashSet<>()));
+                } else {
+                    Pair<String, Set<String>> latestServiceCallRecordings =
+                            serviceMethodsToPermissionRuleRecordings.get(serviceMethodsToPermissionRuleRecordings.size() - 1);
+
+                    latestServiceCallRecordings.getRight().add(interaction.getRight());
+                }
+            });
+
+            try {
+
+                serviceMethodsToPermissionRuleRecordings.forEach(recording -> {
+
+                    String serviceMethod = recording.getLeft();
+                    Set<String> permissionRuleCalls = recording.getRight();
+                    String permissionRuleCallsCombined = simpleJoiner(new ArrayList<>(permissionRuleCalls), "\n");
+
+                    writer.writeNext(new String[] {serviceMethod, permissionRuleCallsCombined});
+                });
+
+            } finally {
+                writer.close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         recordedRuleInteractions.clear();
         super.teardown();
     }
@@ -73,7 +141,8 @@ public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
     protected Object createPermissionRuleMock(Object mock, Class<?> mockClass) {
         return createRecordingProxy(mock, mockClass,
                 method -> hasOneAnnotation(method, PermissionRule.class),
-                methodCalled -> recordedRuleInteractions.add("  RULE CALL: " + mockClass.getSimpleName() + "." + methodCalled.getName()));
+                methodCalled -> recordedRuleInteractions.add(Pair.of(InteractionSource.PERMISSION_RULE, mockClass.getSimpleName() + "." + methodCalled.getName()))
+        );
     }
 
     /**
