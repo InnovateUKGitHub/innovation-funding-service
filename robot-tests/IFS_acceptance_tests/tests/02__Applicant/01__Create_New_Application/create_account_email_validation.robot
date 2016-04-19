@@ -21,27 +21,27 @@ ${invalid_email_no_domain}    joesmith@example
 *** Test Cases ***    email
 Invalid email plaintext
                       [Documentation]                 INFUND-885
-                      [Tags]                          Account
+                      [Tags]
                       ${invalid_email_plain}
 
 Invalid email disallowed symbols
                       [Documentation]                 INFUND-885
-                      [Tags]                          Account
+                      [Tags]
                       ${invalid_email_symbols}
 
 Invalid email no username
                       [Documentation]                 INFUND-885
-                      [Tags]                          Account
+                      [Tags]
                       ${invalid_email_no_username}
 
 Invalid email format
                       [Documentation]                 INFUND-885
-                      [Tags]                          Account
+                      [Tags]
                       ${invalid_email_format}
 
 Invalid email no @ symbol
                       [Documentation]                 INFUND-885
-                      [Tags]                          Account
+                      [Tags]
                       ${invalid_email_no_at}
 
 *** Keywords ***
@@ -52,8 +52,8 @@ Invalid Email Check
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${invalid_email}
-    And the user enters text to a text field    id=password    password
-    And the user enters text to a text field    id=retypedPassword    password
+    And the user enters text to a text field    id=password    Passw0rd123
+    And the user enters text to a text field    id=retypedPassword    Passw0rd123
     And the user submits their information
     Then the user should see an error    We were unable to create your account
     And the user cannot login with the invalid email    ${invalid_email}
@@ -67,10 +67,9 @@ the user cannot login with the invalid email
     [Arguments]    ${invalid_email_addy}
     go to    ${LOGIN_URL}
     Input Text    id=username    ${invalid_email_addy}
-    Input Password    id=password    password
+    Input Password    id=password    Passw0rd123
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    Please enter a valid e-mail address
-
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    Your login was unsuccessful because of the following issue(s)

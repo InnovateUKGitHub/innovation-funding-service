@@ -11,7 +11,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
-${correct_password}    Passw0rd
+${correct_password}    Passw0rd123
 ${incorrect_password}    wrongpassword
 ${long_password}    passwordpasswordpasswordpasswordpasswordpasswordpassword
 ${short_password}    pass
@@ -21,7 +21,7 @@ ${email_already_in_db}    ewan+12@hiveit.co.uk
 *** Test Cases ***
 First name left blank
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    ${EMPTY}
     And the user enters text to a text field    id=lastName    Smith
@@ -37,7 +37,7 @@ First name left blank
 
 Last name left blank
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    ${EMPTY}
@@ -52,7 +52,7 @@ Last name left blank
 
 Phone number left blank
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
@@ -67,7 +67,7 @@ Phone number left blank
 
 Phone number validation
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
@@ -82,7 +82,7 @@ Phone number validation
 
 Phone number too short
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
@@ -97,7 +97,7 @@ Phone number too short
 
 Email left blank
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
@@ -111,7 +111,7 @@ Email left blank
 
 Password left blank
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
@@ -126,7 +126,7 @@ Password left blank
 
 Re-type password left blank
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    ${EMPTY}
     And the user enters text to a text field    id=lastName    Smith
@@ -141,7 +141,7 @@ Re-type password left blank
 
 Password and re-typed password do not match
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
@@ -156,7 +156,7 @@ Password and re-typed password do not match
 
 Password is too short
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
@@ -171,7 +171,7 @@ Password is too short
 
 Password is too long
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations
+    [Tags]
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     Given browser validations have been disabled
     When the user enters text to a text field    id=firstName    John
@@ -187,7 +187,7 @@ Password is too long
 
 Valid account creation
     [Documentation]    -INFUND-885
-    [Tags]    Account    Validations    HappyPath
+    [Tags]    HappyPath
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
@@ -205,7 +205,7 @@ Valid account creation
 
 Email duplication check
     [Documentation]    INFUND-886
-    [Tags]    Account    Validations
+    [Tags]
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
