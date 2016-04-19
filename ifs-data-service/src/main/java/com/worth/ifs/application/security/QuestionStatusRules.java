@@ -48,11 +48,11 @@ public class QuestionStatusRules {
 
     @PermissionRule(value = "UPDATE", description = "users can only update statuses of questions they are assigned to")
     public boolean userCanUpdateQuestionStatusComposite(QuestionApplicationCompositeId ids, UserResource user) {
-        return userIsLeadApplicant(ids.applicationId, user) || (userIsAllowed(ids, user) && userIsAssigned(ids.questionId, ids.applicationId, user));
+        return userIsLeadApplicant(ids.applicationId, user) || (userIsAllowed(ids, user) && userIsConnected(ids.applicationId, user));
     }
 
     private boolean userIsAllowed(final QuestionApplicationCompositeId ids, final UserResource user) {
-        return questionHasMultipleStatuses(ids.questionId) || userIsConnected(ids.applicationId, user);
+        return questionHasMultipleStatuses(ids.questionId) || userIsAssigned(ids.questionId, ids.applicationId, user);
     }
 
     private boolean questionHasMultipleStatuses(final Long questionId) {
