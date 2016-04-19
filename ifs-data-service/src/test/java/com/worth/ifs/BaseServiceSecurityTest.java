@@ -33,23 +33,26 @@ import static java.util.Arrays.asList;
  * A base class for testing services with Spring Security integrated into them.  PermissionRules-annotated beans are
  * made available as mocks so that we can test the effects of calling service methods against the PermissionRule methods
  * that are available.
- * <p>
+ *
+ * Calls for Service methods and the associated Permission Rule methods that are called as a result are recorded and output
+ * to a CSV report as a standard part of the testing process.
+ *
  * Subclasses of this base class are therefore able to test the security annotations of their various methods by verifying
- * that individual PermissionRule methods are being called (on their owning mocks)
+ * that individual PermissionRule methods are being called (on their owning mocks) and the same verifications auto-documented
  */
 public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
 
     public static final String SERVICE_DOCUMENTATION_FILENAME = "build/service-calls-and-permission-rules.csv";
 
+    /**
+     * A static initialization block that will ensure that we start any BaseServiceSecurityTest subclasses with a fresh
+     * CSV report file to append to
+     */
     static {
 
-        try {
-            CSVWriter writer = new CSVWriter(new FileWriter(SERVICE_DOCUMENTATION_FILENAME), '\t');
-            try {
-                writer.writeNext(new String[]{"Service call", "Permission rules checked"});
-            } finally {
-                writer.close();
-            }
+        try (FileWriter fileWriter = new FileWriter(SERVICE_DOCUMENTATION_FILENAME)) {
+            CSVWriter writer = new CSVWriter(fileWriter, '\t');
+            writer.writeNext(new String[]{"Service call", "Permission rules checked"});
         } catch (IOException e) {
             throw new RuntimeException("Unable to create csv for service documentation");
         }
@@ -57,12 +60,20 @@ public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
 
     protected T service;
 
-    private enum InteractionSource {
+    /**
+     * Service calls and their associated Permission Rules calls are recorded as they occur.  This enum allows us to
+     * determine which type of originator (service or permission rule) the method call was from when it was recorded.
+     */
+    private enum RecordingSource {
         SERVICE,
         PERMISSION_RULE
     }
 
-    private List<Pair<InteractionSource, String>> recordedRuleInteractions = new ArrayList<>();
+    /**
+     * This list contains a list of method calls being recorded in the order that they occur, from both services and their
+     * subsequent permission rule calls
+     */
+    private List<Pair<RecordingSource, String>> recordedRuleInteractions = new ArrayList<>();
 
     /**
      * @return the service class under test.  Note that in order for Spring Security to be able to read parameter-name
@@ -74,8 +85,11 @@ public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
     protected abstract Class<? extends T> getServiceClass();
 
     /**
-     * Register a temporary bean definition for the class under test (as provided by getServiceClass()), and replace
+     * Register a temporary bean definition for the Service under test (as provided by getServiceClass()), and replace
      * all PermissionRules with mocks that can be looked up with getMockPermissionRulesBean().
+     *
+     * Additionally wrap the service in a proxy that is able to record method invocations on secured methods, in order
+     * to then marry up the service call to any subsequent permission rule method invocations
      */
     @Before
     public void setup() {
@@ -86,62 +100,91 @@ public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
 
         service = createRecordingProxy(serviceBeanWithSpringSecurity, getServiceClass(),
                 method -> hasOneAnnotation(method, PreAuthorize.class, PostAuthorize.class, PreFilter.class, PostFilter.class),
-                methodCalled -> recordedRuleInteractions.add(Pair.of(InteractionSource.SERVICE, getServiceClass().getInterfaces()[0].getSimpleName() + "." + methodCalled.getName()))
+                methodCalled -> recordedRuleInteractions.add(Pair.of(RecordingSource.SERVICE, getServiceClass().getInterfaces()[0].getSimpleName() + "." + methodCalled.getName()))
         );
 
         super.setup();
     }
 
+    /**
+     * Replace the original rulesMap and lookup strategy on the custom permission evaluator.
+     *
+     * Additionally, revert the temporary bean definition for the Service under test
+     */
     @After
     public void teardown() {
         applicationContext.removeBeanDefinition("beanUndergoingSecurityTesting");
 
-        try {
-            CSVWriter writer = new CSVWriter(new FileWriter(SERVICE_DOCUMENTATION_FILENAME, true), '\t');
+        documentServiceAndPermissionRuleInteractions();
 
-            List<Pair<String, Set<String>>> serviceMethodsToPermissionRuleRecordings = new ArrayList<>();
-
-            recordedRuleInteractions.forEach(interaction -> {
-
-                InteractionSource sourceOfRecording = interaction.getLeft();
-
-                if (sourceOfRecording == InteractionSource.SERVICE) {
-                    serviceMethodsToPermissionRuleRecordings.add(Pair.of(interaction.getRight(), new LinkedHashSet<>()));
-                } else {
-                    Pair<String, Set<String>> latestServiceCallRecordings =
-                            serviceMethodsToPermissionRuleRecordings.get(serviceMethodsToPermissionRuleRecordings.size() - 1);
-
-                    latestServiceCallRecordings.getRight().add(interaction.getRight());
-                }
-            });
-
-            try {
-
-                serviceMethodsToPermissionRuleRecordings.forEach(recording -> {
-
-                    String serviceMethod = recording.getLeft();
-                    Set<String> permissionRuleCalls = recording.getRight();
-                    String permissionRuleCallsCombined = simpleJoiner(new ArrayList<>(permissionRuleCalls), "\n");
-
-                    writer.writeNext(new String[] {serviceMethod, permissionRuleCallsCombined});
-                });
-
-            } finally {
-                writer.close();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        recordedRuleInteractions.clear();
         super.teardown();
     }
 
+    /**
+     * Append the latest set of recorded service-to-permission-rule method calls to the csv report, collating
+     * individual permission rule invocations against the service method invocation that caused them to be called
+     */
+    private void documentServiceAndPermissionRuleInteractions() {
+
+        List<Pair<String, Set<String>>> serviceMethodsToPermissionRuleRecordings = new ArrayList<>();
+
+        recordedRuleInteractions.forEach(recordedMethodCall -> {
+
+            RecordingSource sourceOfRecording = recordedMethodCall.getLeft();
+
+            if (sourceOfRecording == RecordingSource.SERVICE) {
+                serviceMethodsToPermissionRuleRecordings.add(Pair.of(recordedMethodCall.getRight(), new LinkedHashSet<>()));
+            } else {
+                Pair<String, Set<String>> latestServiceCallRecordings =
+                        serviceMethodsToPermissionRuleRecordings.get(serviceMethodsToPermissionRuleRecordings.size() - 1);
+
+                latestServiceCallRecordings.getRight().add(recordedMethodCall.getRight());
+            }
+        });
+
+        writeRecordingsToCsv(serviceMethodsToPermissionRuleRecordings);
+    }
+
+    /**
+     * Given a list of service methods and the various permission rule(s) that are invoked as a result of each service method
+     * being called, append this information to the CSV report
+     *
+     * @param serviceMethodsToPermissionRuleRecordings
+     */
+    private void writeRecordingsToCsv(List<Pair<String, Set<String>>> serviceMethodsToPermissionRuleRecordings) {
+
+        try (FileWriter fileWriter = new FileWriter(SERVICE_DOCUMENTATION_FILENAME, true)) {
+
+            CSVWriter writer = new CSVWriter(fileWriter, '\t');
+
+            serviceMethodsToPermissionRuleRecordings.forEach(recording -> {
+
+                String serviceMethod = recording.getLeft();
+                Set<String> permissionRuleCalls = recording.getRight();
+                String permissionRuleCallsCombined = simpleJoiner(new ArrayList<>(permissionRuleCalls), "\n");
+
+                writer.writeNext(new String[]{serviceMethod, permissionRuleCallsCombined});
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            recordedRuleInteractions.clear();
+        }
+    }
+
+    /**
+     * Wrap any @PermissionRules mocks with a proxy that records their method invocations, in order to then marry up the
+     * permission rule method invocation with the last recorded service call
+     *
+     * @param mock
+     * @param mockClass
+     * @return
+     */
     @Override
     protected Object createPermissionRuleMock(Object mock, Class<?> mockClass) {
         return createRecordingProxy(mock, mockClass,
                 method -> hasOneAnnotation(method, PermissionRule.class),
-                methodCalled -> recordedRuleInteractions.add(Pair.of(InteractionSource.PERMISSION_RULE, mockClass.getSimpleName() + "." + methodCalled.getName()))
+                methodCalled -> recordedRuleInteractions.add(Pair.of(RecordingSource.PERMISSION_RULE, mockClass.getSimpleName() + "." + methodCalled.getName()))
         );
     }
 

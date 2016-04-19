@@ -99,6 +99,16 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
         setLoggedInUser(newUserResource().build());
     }
 
+    /**
+     * Replace the original rulesMap and lookup strategy on the custom permission evaluator
+     */
+    @After
+    public void teardown() {
+        CustomPermissionEvaluator permissionEvaluator = (CustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
+        setRuleMap(permissionEvaluator, originalRulesMap);
+        setLookupStrategyMap(permissionEvaluator, originalLookupStrategyMap);
+    }
+
     private void setLookupStrategyMap(CustomPermissionEvaluator permissionEvaluator, DtoClassToLookupMethod right) {
         setField(permissionEvaluator, "lookupStrategyMap", right);
     }
@@ -135,17 +145,6 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
         }
 
         return Pair.of(mockLookupBeans, newMockLookupMap);
-    }
-
-
-    /**
-     * Revert the temporary bean definitions used for testing, and replace the original rulesMap and lookup strategy on the custom permission evaluator
-     */
-    @After
-    public void teardown() {
-        CustomPermissionEvaluator permissionEvaluator = (CustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
-        setRuleMap(permissionEvaluator, originalRulesMap);
-        setLookupStrategyMap(permissionEvaluator, originalLookupStrategyMap);
     }
 
     /**
