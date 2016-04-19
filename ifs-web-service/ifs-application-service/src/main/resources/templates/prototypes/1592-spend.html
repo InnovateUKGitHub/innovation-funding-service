@@ -263,7 +263,7 @@
 	<div th:unless="${(param.status != null and param.status[0] == 'edit') or (param.status != null and param.status[0] == 'Submitted')}" th:remove="tag">
 
 		<div class="extra-margin">
-			<a href="/prototypes/1592-spend-profile?status=edit#table-forecast" class="button button-secondary">Edit spend profile</a>
+			<a href="/prototypes/1592-spend?status=edit#table-forecast" class="button button-secondary">Edit spend profile</a>
 		</div>
 
 		<p class="extra-margin">When you are satisfied with the profile spend 'Submitting', will allow the project lead to review your project costs, ensuring partner costs align with their project plan before they are submitted to Innovate UK.</p>
@@ -285,7 +285,7 @@
 				<hr />
 	            
             	<div class="alignright-button">
-            		<a href="/prototypes/1592-spend-profile?status=Submitted" class="button">OK</a>
+            		<a href="/prototypes/1592-spend?status=Submitted" class="button">OK</a>
             	</div>
 
 	        </div>
@@ -298,15 +298,15 @@
 		
 		<div class="extra-margin alignright">
 			
-			<a href="/prototypes/1592-spend-profile?status=edit&#38;view=full#table-forecast" th:unless="${param.view != null or param.status[0] == 'full'}">View maximised forecast table</a>
+			<a href="/prototypes/1592-spend?status=edit&#38;view=full#table-forecast" th:unless="${param.view != null or param.status[0] == 'full'}">View maximised forecast table</a>
 
-			<a href="/prototypes/1592-spend-profile?status=edit#table-forecast" th:unless="${param.view == null and param.status[0] != 'full'}">View minimised forecast table</a>
+			<a href="/prototypes/1592-spend?status=edit#table-forecast" th:unless="${param.view == null and param.status[0] != 'full'}">View minimised forecast table</a>
 
 		</div>
 
 		<div class="extra-margin">
 
-			<a href="/prototypes/1592-spend-profile" class="button button-secondary">Save and return to spend profile overview</a>
+			<a href="/prototypes/1592-spend" class="button button-secondary">Save and return to spend profile overview</a>
 
 		</div>
 
