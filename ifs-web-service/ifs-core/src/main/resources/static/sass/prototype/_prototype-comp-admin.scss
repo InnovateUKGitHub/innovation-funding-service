@@ -151,6 +151,7 @@ table{
 	tbody{
 		td{
 			text-align: right;
+			min-width: 50px;
 
 			&.aligncentre{
 				text-align: center;
@@ -204,12 +205,34 @@ table{
 		font-weight: bold;
 		border-right: 12px solid $white;
 
-		&.granted{
+		&.eligible{
 			background: $grey-4;
 		}
+	}
 
-		&.claimed{
-			background: $grey-3;
+	tr{
+		&.error-in-row{
+			@extend .warning-alert;
+			background-position: 4px 50%;
+
+			th{
+				padding-left: 28px;
+			}
+
+			td{
+				background: $highlight-colour;
+				
+				&.total{
+					background: $red;
+					color: $white;
+
+					&.eligible{
+						background: $grey-4;
+						color: $text-colour;
+					}
+				}
+
+			}
 		}
 	}
 
