@@ -13,7 +13,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...               INFUND-1463: As a user with an invitation to collaborate on an application but not registered with IFS I want to be able to confirm my organisation so that I only have to create my account to work on the application
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Invites    Email
+Force Tags        Email
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -60,7 +60,7 @@ Business organisation (accept invitation)
     ...    INFUND-2286
     ...    INFUND-1779
     ...    INFUND-2336
-    [Tags]    HappyPath    Email    Failing
+    [Tags]    HappyPath    Email
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    organisationType    1
@@ -76,7 +76,7 @@ Business organisation (accept invitation)
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 User who accepted the invite should be able to log-in
-    [Tags]    Failing
+    [Tags]
     Given the user clicks the button/link    jQuery=.button:contains("Log in")
     When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
@@ -109,7 +109,7 @@ Collaborator can change the name of their company and this updates throughout th
 
 The collaborator who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
-    [Tags]    HappyPath    Failing
+    [Tags]    HappyPath
     [Setup]    Run keywords    User closes the browser
     ...    AND    Log in as user    &{lead_applicant_credentials}
     When the user navigates to the page    ${PROJECT_SUMMARY_URL}
@@ -118,13 +118,13 @@ The collaborator who accepted the invite should be visible in the assign list
 
 Status of the invited people (Application team page)
     [Documentation]    INFUND-929
-    [Tags]    HappyPath    Failing
+    [Tags]    HappyPath
     Given the user navigates to the page    ${APPLICATION_TEAM_PAGE}
     Then the status of the invited people should be correct in the application team page
 
 Status of the invited people (Manage contributors page)
     [Documentation]    INFUND-928
-    [Tags]    HappyPath    Failing
+    [Tags]    HappyPath
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage Contributors
@@ -132,7 +132,7 @@ Status of the invited people (Manage contributors page)
 
 Invited collaborators are not editable
     [Documentation]    INFUND-929
-    [Tags]    Failing
+    [Tags]
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage Contributors
@@ -144,7 +144,7 @@ The Lead applicant invites a non registered user in the same organisation
     ...    INFUND-1463
     ...
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
-    [Tags]    HappyPath    Failing
+    [Tags]    HappyPath
     [Setup]    Delete the emails from the test mailbox
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
@@ -159,7 +159,7 @@ The user should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
     ...
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
-    [Tags]    Failing
+    [Tags]
     [Setup]    The guest user opens the browser
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user should see the text in the page    Join an application

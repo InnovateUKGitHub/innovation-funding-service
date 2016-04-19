@@ -11,7 +11,7 @@ Documentation     INFUND-1005: As a collaborator I want to select my organisatio
 ...               INFUND-917: As an academic partner i want to input my finances according to the JES field headings, so that i enter my figures into the correct sections
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Create new application    collaboration
+Force Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot

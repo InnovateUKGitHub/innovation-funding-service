@@ -60,7 +60,7 @@ The question is enabled for the assignee
 
 The question is enabled on the summary page for the assignee
     [Documentation]    INFUND-2302
-    [Tags]    Summary
+    [Tags]
     [Setup]    Guest user log-in    &{collaborator1_credentials}
     Given the user navigates to the page    ${SUMMARY_URL}
     When the user clicks the button/link    jQuery=button:contains("Public description")

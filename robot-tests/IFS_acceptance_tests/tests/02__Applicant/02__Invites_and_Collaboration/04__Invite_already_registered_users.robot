@@ -15,7 +15,7 @@ ${INVITE_COLLABORATORS_PAGE_APPL1}    ${SERVER}application/1/contributors/invite
 *** Test Cases ***
 The invited registered user should redirect to the correct page
     [Documentation]    INFUND-1458
-    [Tags]    Failing
+    [Tags]
     [Setup]    Delete the emails from the test mailbox
     Given we create a new user
     Given the lead applicant invites a registered user
@@ -24,7 +24,7 @@ The invited registered user should redirect to the correct page
 
 The user clicks the login link
     [Documentation]    INFUND-1458
-    [Tags]    Failing
+    [Tags]
     When the user clicks the button/link    link=Click here to login
     And the guest user inserts user email & password    worth.email.test+reg2@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
@@ -32,14 +32,14 @@ The user clicks the login link
 
 The user should see the correct content in the confirm page
     [Documentation]    INFUND-1458
-    [Tags]    Failing
+    [Tags]
     Then the user should see the text in the page    INNOVATE LTD
     And the user should see the text in the page    BH14 0HU
     And the user should see the element    link=email the application lead
 
 The continue button should redirect to the overview page
     [Documentation]    INFUND-1458
-    [Tags]    Failing
+    [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Continue to application")
     Then the user should see the text in the page    Application overview
 
