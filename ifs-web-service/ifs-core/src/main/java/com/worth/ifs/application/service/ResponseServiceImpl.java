@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.resource.ResponseResource;
 import com.worth.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,15 +23,15 @@ public class ResponseServiceImpl implements ResponseService {
     ResponseRestService responseRestService;
 
     @Override
-    public List<Response> getByApplication(Long applicationId) {
+    public List<ResponseResource> getByApplication(Long applicationId) {
         return responseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public Map<Long, Response> mapResponsesToQuestion(List<Response> responses) {
-        HashMap<Long, Response> responseMap = new HashMap<>();
-        for (Response response : responses) {
-            responseMap.put(response.getQuestion().getId(), response);
+    public Map<Long, ResponseResource> mapResponsesToQuestion(List<ResponseResource> responses) {
+        HashMap<Long, ResponseResource> responseMap = new HashMap<>();
+        for (ResponseResource response : responses) {
+            responseMap.put(response.getId(), response);
         }
         return responseMap;
     }

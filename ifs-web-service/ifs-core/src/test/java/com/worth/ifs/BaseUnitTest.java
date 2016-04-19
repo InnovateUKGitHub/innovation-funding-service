@@ -79,6 +79,7 @@ import static com.worth.ifs.commons.rest.RestResult.restSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
+import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static com.worth.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -714,13 +715,13 @@ public class BaseUnitTest {
         questionResources.get(20L).setResponses(Arrays.asList(responsResource.getId()));
         questionResources.get(21L).setResponses(Arrays.asList(responsResource2.getId()));
 
-        when(responseService.getByApplication(application.getId())).thenReturn(responses);
+        when(responseService.getByApplication(application.getId())).thenReturn(responseResources);
 
         ArgumentCaptor<Long> argument = ArgumentCaptor.forClass(Long.class);
 
         when(formInputService.getOne(anyLong())).thenAnswer(invocation -> {
             Object[] args = invocation.getArguments();
-            return newFormInput().with(id((Long) args[0])).build();
+            return newFormInputResource().with(id((Long) args[0])).build();
         });
 
         List<Long> formInputIds =  questionResources.get(1L).getFormInputs();

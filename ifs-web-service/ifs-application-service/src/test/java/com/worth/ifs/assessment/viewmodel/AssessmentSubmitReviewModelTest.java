@@ -1,32 +1,26 @@
 package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.BuilderAmendFunctions;
-import com.worth.ifs.application.builder.AssessorFeedbackBuilder;
-import com.worth.ifs.application.builder.ResponseBuilder;
-import com.worth.ifs.application.builder.SectionBuilder;
-import com.worth.ifs.application.builder.SectionResourceBuilder;
+import com.worth.ifs.application.builder.*;
 import com.worth.ifs.application.domain.*;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.user.domain.ProcessRole;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static com.worth.ifs.application.builder.AssessorFeedbackBuilder.newFeedback;
+import static com.worth.ifs.application.builder.AssessorFeedbackResourceBuilder.newAssessorFeedbackResource;
 import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
+import static com.worth.ifs.application.builder.ResponseResourceBuilder.newResponseResource;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -91,33 +85,36 @@ public class AssessmentSubmitReviewModelTest {
             withCompetition(competition.getId()).
             build();
 
-        ResponseBuilder responseBuilder = newResponse().
+        ResponseResourceBuilder responseResourceBuilder = newResponseResource().
                 withApplication(application);
 
-        AssessorFeedbackBuilder feedbackBuilder = newFeedback().
+        AssessorFeedbackResourceBuilder feedbackResourceBuilder = newAssessorFeedbackResource().
                 withAssessor(assessorProcessRole).
                 withAssessmentValue((i, feedback) -> (i + 1) + "");
 
-        List<AssessorFeedback> section1ResponseFeedback = feedbackBuilder.build(2);
-        List<AssessorFeedback> section2ResponseFeedback = feedbackBuilder.build(2);
+        List<AssessorFeedbackResource> section1ResponseFeedback = feedbackResourceBuilder.build(2);
+        List<AssessorFeedbackResource> section2ResponseFeedback = feedbackResourceBuilder.build(2);
 
-        List<Response> section1Responses = responseBuilder.
+        List<ResponseResource> section1Responses = responseResourceBuilder.
                 withFeedback(section1ResponseFeedback).
+                withQuestion(questions.get(0)).
                 build(2);
 
-        List<Response> section2Responses = responseBuilder.
+        List<ResponseResource> section2Responses = responseResourceBuilder.
                 withFeedback(section2ResponseFeedback).
+                withQuestion(questions.get(1)).
                 build(2);
 
         assessorProcessRole.setApplication(application);
-        List<Response> allResponses = combineLists(section1Responses, section2Responses);
+        List<ResponseResource> allResponses = combineLists(section1Responses, section2Responses);
+        Optional<AssessorFeedbackResource> assessorFeedback = null;
 
         //
         // Build the model
         //
         AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, allResponses, applicationResource, competitionResource, null, questions, sectionResources);
 
-        Map<QuestionResource, AssessorFeedback> originalQuestionToFeedback = new HashMap<>();
+        Map<QuestionResource, AssessorFeedbackResource> originalQuestionToFeedback = new HashMap<>();
         IntStream.range(0, section1Questions.size()).forEach(i -> originalQuestionToFeedback.put(section1Questions.get(i), section1ResponseFeedback.get(i)));
         IntStream.range(0, section2Questions.size()).forEach(i -> originalQuestionToFeedback.put(section2Questions.get(i), section2ResponseFeedback.get(i)));
 
@@ -130,7 +127,7 @@ public class AssessmentSubmitReviewModelTest {
 
         originalQuestionToFeedback.entrySet().forEach(entry -> {
             QuestionResource question = entry.getKey();
-            AssessorFeedback feedback = entry.getValue();
+            AssessorFeedbackResource feedback = entry.getValue();
             assertEquals(feedback, model.getFeedbackForQuestion(question));
         });
 
@@ -169,7 +166,7 @@ public class AssessmentSubmitReviewModelTest {
                 assertEquals(originalQuestion.getId(), summaryQuestion.getId());
                 assertEquals(originalQuestion.getName(), summaryQuestion.getName());
 
-                AssessorFeedback originalFeedback = originalQuestionToFeedback.get(originalQuestion);
+                AssessorFeedbackResource originalFeedback = originalQuestionToFeedback.get(originalQuestion);
                 assertEquals(originalFeedback.getAssessmentFeedback(), summaryQuestion.getFeedback().getFeedbackText());
                 assertEquals(originalFeedback.getAssessmentValue(), summaryQuestion.getFeedback().getFeedbackValue());
             });
@@ -216,10 +213,12 @@ public class AssessmentSubmitReviewModelTest {
         Assessment assessment = newAssessment().withProcessRole(assessorProcessRole).build();
 
         assessorProcessRole.setApplication(application);
+        Optional<AssessorFeedbackResource> assessorFeedback = null;
+
         //
         // Build the model
         //
-        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, emptyList(), applicationResource, competitionResource, null, questions, sectionResources);
+        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, assessorFeedback, emptyList(), applicationResource, competitionResource, null, questions, sectionResources);
 
         //
         // test we only see the section marked to be included
@@ -241,15 +240,21 @@ public class AssessmentSubmitReviewModelTest {
         //
         ProcessRole assessorProcessRole = newProcessRole().build();
 
-        QuestionResource scorableQuestion = newQuestionResource().build();
-        QuestionResource nonScorableQuestion = newQuestionResource().withNeedingAssessorScore(false).build();
+        QuestionResource scorableQuestionResource = newQuestionResource().build();
+        QuestionResource nonScorableQuestionResource = newQuestionResource().withNeedingAssessorScore(false).build();
 
-        List<QuestionResource> questions = asList(scorableQuestion, nonScorableQuestion);
+        Question scorableQuestion = newQuestion().build();
+        Question nonScorableQuestion = newQuestion().withNeedingAssessorScore(false).build();
+
+
+        List<QuestionResource> questions = asList(scorableQuestionResource, nonScorableQuestionResource);
 
         List<Section> sections = newSection()
+                .withQuestions(asList(scorableQuestion, nonScorableQuestion))
                 .build(1);
 
         List<SectionResource> sectionResources = newSectionResource()
+                .withQuestions(simpleMap(questions, QuestionResource::getId))
                 .build(1);
 
         Competition competition = newCompetition().withSections(sections).build();
@@ -260,17 +265,17 @@ public class AssessmentSubmitReviewModelTest {
 
         assessorProcessRole.setApplication(application);
 
-        List<AssessorFeedback> feedback = newFeedback().
+        List<AssessorFeedbackResource> feedback = newAssessorFeedbackResource().
                 withAssessor(assessorProcessRole).
                 withAssessmentValue((i, fb) -> (i + 1) + "").
                 build(1);
 
-        List<Response> responses = newResponse().withApplication(application).withFeedback(feedback).build(1);
-
+        List<ResponseResource> responses = newResponseResource().withApplication(application).withFeedback(feedback).build(1);
+        Optional<AssessorFeedbackResource> assessorFeedback = null;
         //
         // Build the model
         //
-        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, responses, applicationResource, competitionResource, null, questions, sectionResources);
+        AssessmentSubmitReviewModel model = new AssessmentSubmitReviewModel(assessment, assessorFeedback, responses, applicationResource, competitionResource, null, questions, sectionResources);
 
         //
         // Test the top-level model attributes

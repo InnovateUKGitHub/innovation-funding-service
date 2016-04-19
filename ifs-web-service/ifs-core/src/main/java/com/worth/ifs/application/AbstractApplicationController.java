@@ -7,10 +7,7 @@ import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -255,7 +252,7 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
     }
 
-    protected List<Response> getResponses(ApplicationResource application) {
+    protected List<ResponseResource> getResponses(ApplicationResource application) {
         return responseService.getByApplication(application.getId());
     }
 

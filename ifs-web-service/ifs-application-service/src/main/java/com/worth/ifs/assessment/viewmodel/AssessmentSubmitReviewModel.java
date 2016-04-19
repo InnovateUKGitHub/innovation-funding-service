@@ -3,9 +3,7 @@ package com.worth.ifs.assessment.viewmodel;
 import com.worth.ifs.application.domain.AssessorFeedback;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.dto.Score;
@@ -43,15 +41,15 @@ public class AssessmentSubmitReviewModel {
     private final List<QuestionResource> questions;
     private final List<QuestionResource> scorableQuestions;
     private final Score score;
-    private final Map<Long, AssessorFeedback> responseIdsAndFeedback;
-    private final Map<Long, Optional<Response>> questionIdsAndResponses;
+    private final Map<Long, AssessorFeedbackResource> responseIdsAndFeedback;
+    private final Map<Long, Optional<ResponseResource>> questionIdsAndResponses;
     private final List<AssessmentSummarySection> assessmentSummarySections;
 
 
     // TODO this logic should live in the data layer and we should return a dto instead.
     // TODO Note there is code commonality with AssessmentHandler.getScore.
     // TODO make these changes when converting to dtos.
-    public AssessmentSubmitReviewModel(Assessment assessment, List<Response> responses, ApplicationResource application, CompetitionResource competition, Score score, List<QuestionResource> questions, List<SectionResource> sections) {
+    public AssessmentSubmitReviewModel(Assessment assessment, List<ResponseResource> responses, ApplicationResource application, CompetitionResource competition, Score score, List<QuestionResource> questions, List<SectionResource> sections) {
         this.assessment = assessment;
         this.application = application;
         this.competition = competition;
@@ -60,45 +58,52 @@ public class AssessmentSubmitReviewModel {
 
         scorableQuestions = questions.stream().filter(QuestionResource::getNeedingAssessorScore).collect(toList());
 
-        List<Pair<QuestionResource, Optional<Response>>> questionsAndResponsePairs = questions.stream().
+        List<Pair<QuestionResource, Optional<ResponseResource>>> questionsAndResponsePairs = questions.stream().
                 map(question -> Pair.of(question, responses.stream().
-                        filter(response -> response.getQuestion().getId().equals(question.getId())).
+                        filter(response -> response.getQuestion().equals(question.getId())).
                         findFirst())).
                 collect(toList());
 
-        Map<QuestionResource, Optional<Response>> questionsAndResponses =
+        Map<QuestionResource, Optional<ResponseResource>> questionsAndResponses =
                 questionsAndResponsePairs.stream().collect(pairsToMap());
 
         questionIdsAndResponses = questionsAndResponses.entrySet().stream().
                 collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
 
-        Map<Response, AssessorFeedback> responsesAndFeedback = responses.stream().
-                map(response -> Pair.of(response, response.getResponseAssessmentForAssessor(assessment.getProcessRole()))).
-                filter(rightPairIsPresent()).
-                collect(toMap(leftPair(), presentRightPair()));
+//        Map<ResponseResource, Long> responsesAndFeedback = responses.stream().
+//                map(response -> Pair.of(response, response.getResponseAssessmentFeedbacks())).
+//                filter(rightPairIsPresent()).
+//                collect(toMap(leftPair(), presentRightPair()));
 
-        responseIdsAndFeedback = responsesAndFeedback.entrySet().stream().
-                collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
+//        responses.forEach(response -> {
+//            response.getResponseAssessmentFeedbacks()
+//            responseIdsAndFeedback.put(response.getId(), )
+//        });
+
+//        responseIdsAndFeedback = ;
+//                responsesAndFeedback.entrySet().stream().
+//                collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
 
 
-        Map<QuestionResource, Optional<AssessorFeedback>> questionsAndFeedback = questionsAndResponses.entrySet().stream().
-                map(e -> Pair.of(e.getKey(), e.getValue().map(feedback -> Optional.ofNullable(responseIdsAndFeedback.get(feedback.getId()))).orElse(empty()))).
-                        collect(pairsToMap());
-
-        Map<Long, List<QuestionResource>> sectionQuestions = simpleToMap(sections,
-                SectionResource::getId,
-                s -> simpleFilter(questions,
-                        q -> s.getQuestions()
-                                .contains(
-                                        q.getId()
-                                )
-                )
-        );
-
-        assessmentSummarySections = sections.stream().
-                filter(SectionResource::isDisplayInAssessmentApplicationSummary).
-                map(section -> new AssessmentSummarySection(section, sectionQuestions.get(section.getId()), questionsAndFeedback)).
-                collect(toList());
+//        Map<QuestionResource, Optional<AssessorFeedbackResource>> questionsAndFeedback =
+//                questionsAndResponses.entrySet().stream().
+//                map(e -> Pair.of(e.getKey(), e.getValue().map(feedback -> Optional.ofNullable(responseIdsAndFeedback.get(feedback.getId()))).orElse(empty()))).
+//                        collect(pairsToMap());
+//
+//        Map<Long, List<QuestionResource>> sectionQuestions = simpleToMap(sections,
+//                SectionResource::getId,
+//                s -> simpleFilter(questions,
+//                        q -> s.getQuestions()
+//                                .contains(
+//                                        q.getId()
+//                                )
+//                )
+//        );
+//
+//        assessmentSummarySections = sections.stream().
+//                filter(SectionResource::isDisplayInAssessmentApplicationSummary).
+//                map(section -> new AssessmentSummarySection(section, sectionQuestions.get(section.getId()), questionsAndFeedback)).
+//                collect(toList());
     }
 
     public Assessment getAssessment() {
@@ -137,8 +142,8 @@ public class AssessmentSubmitReviewModel {
         return assessmentSummarySections;
     }
 
-    public AssessorFeedback getFeedbackForQuestion(QuestionResource question) {
-        Optional<Response> responseOption = questionIdsAndResponses.get(question.getId());
+    public AssessorFeedbackResource getFeedbackForQuestion(QuestionResource question) {
+        Optional<ResponseResource> responseOption = questionIdsAndResponses.get(question.getId());
         return responseOption.map(response -> responseIdsAndFeedback.get(response.getId())).orElse(null);
     }
 

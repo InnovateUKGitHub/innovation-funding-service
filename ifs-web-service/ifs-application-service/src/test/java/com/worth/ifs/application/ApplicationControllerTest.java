@@ -315,7 +315,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(redirectedUrl("/application/1/confirm-submit"));
           
         verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("agreeToTerms"));
-        verifyNoMoreInteractions(userAuthenticationService, applicationService, questionService);
+        verifyNoMoreInteractions(userAuthenticationService, applicationService);
         
     }
     
