@@ -11,7 +11,7 @@ Documentation     INFUND-1005: As a collaborator I want to select my organisatio
 ...               INFUND-917: As an academic partner i want to input my finances according to the JES field headings, so that i enter my figures into the correct sections
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Create new application    collaboration
+Force Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -43,7 +43,7 @@ User cannot continue if an organisation type is not selected
     Given browser validations have been disabled
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    may not be null
-    Given user selects the radio button    organisationType    2
+    Given the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Given browser validations have been disabled
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -52,8 +52,8 @@ User cannot continue if an organisation type is not selected
 User is able to select only one type
     [Documentation]    INFUND-1005
     Given the user navigates to the page    ${SELECT_ORGANISATION}
-    When user selects the radio button    organisationType    2
-    And user selects the radio button    organisationType    1
+    When the user selects the radio button    organisationType    2
+    And the user selects the radio button    organisationType    1
     Then the radio button should have the new selection    1
 
 The type of organisation navigates to the correct page
@@ -61,20 +61,20 @@ The type of organisation navigates to the correct page
     ...
     ...    INFUND-1231
     [Tags]    HappyPath
-    When user selects the radio button    organisationType    1
+    When the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Find your business on Companies House
     When the user goes back to the previous page
-    Given user selects the radio button    organisationType    2
+    Given the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Please select your type of research organisation
     When the user goes back to the previous page
-    Given user selects the radio button    organisationType    3
-    and the user clicks the button/link    jQuery=.button:contains("Continue")
+    Given the user selects the radio button    organisationType    3
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Public Sector
     And the user should see the text in the page    Create your account
     When the user goes back to the previous page
-    Given user selects the radio button    organisationType    4
+    Given the user selects the radio button    organisationType    4
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Charity
     And the user should see the text in the page    Create your account
@@ -82,28 +82,28 @@ The type of organisation navigates to the correct page
 
 The type of the sub organisation navigates to the correct page
     [Documentation]    INFUND-1166
-    Given user selects the radio button    organisationType    2
-    and the user clicks the button/link    jQuery=.button:contains("Continue")
-    When user selects the radio button    organisationType    5
+    Given the user selects the radio button    organisationType    2
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    When the user selects the radio button    organisationType    5
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Find your academic organisation
     When the user goes back to the previous page
-    When user selects the radio button    organisationType    6
+    When the user selects the radio button    organisationType    6
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Non profit distributing Research & Technology Organisation (RTO)
     When the user should see the text in the page    Postcode
     When the user goes back to the previous page
-    When user selects the radio button    organisationType    7
+    When the user selects the radio button    organisationType    7
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Catapult
     When the user should see the text in the page    Postcode
     When the user goes back to the previous page
-    When user selects the radio button    organisationType    8
+    When the user selects the radio button    organisationType    8
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Public sector research establishment
     When the user should see the text in the page    Postcode
     When the user goes back to the previous page
-    When user selects the radio button    organisationType    9
+    When the user selects the radio button    organisationType    9
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Research council institute
     When the user should see the text in the page    Postcode
@@ -112,7 +112,7 @@ The type of the sub organisation navigates to the correct page
 Academic organisations search (empty, invalid & valid inputs)
     [Documentation]    INFUND-1231
     [Tags]    HappyPath
-    When user selects the radio button    organisationType    5
+    When the user selects the radio button    organisationType    5
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see an error    This field cannot be left blank
@@ -133,13 +133,14 @@ Academic organisation (accept invitation flow)
     [Documentation]    INFUND-1166
     ...
     ...    INFUND-917
-    [Tags]    HappyPath    FailingForLocal    Failing
+    ...    INFUND-2450
+    [Tags]    HappyPath    Failing
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${INVITE_LINK_2}
     When the user clicks the button/link    jQuery=.button:contains("Create")
-    And user selects the radio button    organisationType    2
+    And the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    When user selects the radio button    organisationType    5
+    When the user selects the radio button    organisationType    5
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see an error    This field cannot be left blank
@@ -147,7 +148,7 @@ Academic organisation (accept invitation flow)
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    University of Liverpool
     When the user clicks the button/link    link= University of Liverpool
-    and the user enters text to a text field    id=addressForm.postcodeInput    postcode
+    And the user enters text to a text field    id=addressForm.postcodeInput    postcode
     And the user clicks the button/link    id=postcode-lookup
     And the user clicks the button/link    css=#select-address-block > button
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and")
@@ -156,15 +157,58 @@ Academic organisation (accept invitation flow)
     And the user verifies the email
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Log in")
-    And guest user log-in    worth.email.test+invite2@gmail.com    testtest
+    And guest user log-in    worth.email.test+invite2@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=A novel solution to an old problem
-    and the user clicks the button/link    link=Your finances
+    And the user clicks the button/link    link=Your finances
     Then the user should see the text in the page    TSB reference
-    and the user should not see the text in the page    Labour
+    And the user should not see the text in the page    Labour
+    And the user should not see an error in the page
+
+Catapult search (empty, invalid & valid inputs)
+    [Documentation]    INFUND-1230
+    [Tags]    Invite    Catapult
+    Given the user navigates to the page    ${INVITE_LINK}
+    When the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user selects the radio button    organisationType    2
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    Then the user should see the text in the page    Please select your type of research organisation
+    And the user selects the radio button    organisationType    7
+    When the user clicks the button/link    jQuery=.button:contains("Continue")
+    And the user should see the text in the page    Catapult
+    When the user clicks the button/link    jQuery=.button:contains("Continue")
+    Then the user should see the text in the page    This field cannot be left blank
+    When the user enters text to a text field    name=organisationName    Digital Catapult
+    When the user clicks the button/link    jQuery=.button:contains("Find UK address")
+    And the user should see the text in the page    Please enter a UK postcode
+    When the user enters text to a text field    name=addressForm.postcodeInput    BS14NT
+    And the user clicks the button/link    jQuery=.button:contains("Find UK address")
+    And the user clicks the button/link    jQuery=.button:contains("Use selected address")
+    Then the address fields should be filled
+
+Catapult search (accept invitation flow)
+    [Documentation]    INFUND-1230
+    [Tags]    Invite    Catapult    Pending
+    # Pending due to INFUND-2542
+    When the user clicks the button/link    jQuery=.button:contains("Continue")
+    Then the user should see the text in the page    Digital Catapult
+    And the user should see the text in the page    Operating Address
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user fills the create account form    Thierry    Henry
+    And the user opens the mailbox and verifies the email from
+    # And the user verifies the email
+    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    And the user clicks the button/link    jQuery=.button:contains("Log in")
+    And guest user log-in    worth.email.test+invite1@gmail.com    testtest
+    Then the user should be redirected to the correct page    ${DASHBOARD_URL}
+    When the user clicks the button/link    link=A novel solution to an old problem
+    And the user clicks the button/link    link=Your finances
+    Then the user should see the text in the page    TSB reference
+    And the user should not see the text in the page    Labour
+
 
 *** Keywords ***
-user selects the radio button
+the user selects the radio button
     [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
     Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
 

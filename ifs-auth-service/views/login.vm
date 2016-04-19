@@ -180,9 +180,11 @@
                 <li class="list-help-item"><a href="//#springMessageText("ifs.webserver.resources.url", "#")/login/reset-password">#springMessageText("idp.login.forgotPassword", "Forgot your password?")</a></li>
               #end
             </ul>
-          </div>
         </section>
-  </main>
+        </div>
+
+        <p class="user-feedback"><span>Need help with this service?</span> <a href="//#springMessageText('ifs.webserver.resources.url', '#')/info/contact">Contact us</a></p>
+        </main>
 
       <footer class="group js-footer" id="footer" role="contentinfo">
         <div class="footer-wrapper">
@@ -204,8 +206,8 @@
       </footer>
 
     <!-- all CDN's should have a local fallback -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script>window.jQuery || document.write(unescape("%3Cscript src='/js/vendor/jquery/jquery-1.11.3.min.js' type='text/javascript'%3E%3C/script%3E"))</script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write(unescape("%3Cscript src='//#springMessageText('ifs.webserver.resources.url', '#')/js/vendor/jquery/jquery-1.12.2.min.js' type='text/javascript'%3E%3C/script%3E"))</script>
 
     <script src="//#springMessageText('ifs.webserver.resources.url', '#')/js/dest/govuk.min.js" type="text/javascript"></script>
     <script src="//#springMessageText('ifs.webserver.resources.url', '#')/js/namespace.js" type="text/javascript"></script>

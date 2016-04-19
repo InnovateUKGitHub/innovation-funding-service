@@ -50,7 +50,12 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     }
 
     @Override
-    public RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, AddressType type) {
+    public RestResult<OrganisationResource> updateByIdForAnonymousUserFlow(OrganisationResource organisation) {
+        return putWithRestResultAnonymous(organisationRestURL + "/update", organisation, OrganisationResource.class);
+    }
+
+    @Override
+     public RestResult<OrganisationResource> addAddress(OrganisationResource organisation, AddressResource address, AddressType type) {
         return postWithRestResultAnonymous(organisationRestURL + "/addAddress/"+organisation.getId()+"?addressType="+type.name(), address, OrganisationResource.class);
     }
 }

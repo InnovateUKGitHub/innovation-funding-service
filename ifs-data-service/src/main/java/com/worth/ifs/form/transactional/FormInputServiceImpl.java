@@ -75,6 +75,11 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     }
 
     @Override
+    public ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(final Long formInputId, final Long applicationId) {
+        return serviceSuccess(formInputResponsesToResources(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId)));
+    }
+
+    @Override
     public ServiceResult<FormInputResponse> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String htmlUnescapedValue) {
 
         // TODO DW - INFUND-1555 - this should come out and be part of the permissions-checking work
