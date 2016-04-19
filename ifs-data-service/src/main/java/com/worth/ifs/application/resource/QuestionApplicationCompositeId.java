@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
+/**Composite ID consisting of a questionID and an applicationId. for doing permission lookups based on the contained ids where both id's are needed*/
 public class QuestionApplicationCompositeId implements Serializable {
     public final Long questionId;
     public final Long applicationId;

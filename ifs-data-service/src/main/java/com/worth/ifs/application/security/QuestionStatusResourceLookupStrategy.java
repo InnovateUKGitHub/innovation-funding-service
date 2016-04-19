@@ -9,6 +9,7 @@ import com.worth.ifs.security.PermissionEntityLookupStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**Responsible for doing lookups of QuestionStatusResources for permission methods*/
 @Component
 @PermissionEntityLookupStrategies
 public class QuestionStatusResourceLookupStrategy {
