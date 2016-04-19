@@ -27,8 +27,8 @@ public interface CostService {
     @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.finance.domain.Cost', 'UPDATE')")
     ServiceResult<Void> updateCost(@P("costId")Long costId, CostItem newCostItem);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<Void> deleteCost(Long costId);
+    @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.finance.domain.Cost', 'DELETE')")
+    ServiceResult<Void> deleteCost(@P("costId")Long costId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, Long organisationId);

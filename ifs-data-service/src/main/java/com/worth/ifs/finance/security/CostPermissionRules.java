@@ -34,6 +34,15 @@ public class CostPermissionRules {
 
     @PermissionRule(value = "UPDATE", description = "The consortium can update the cost for their application and organisation")
     public boolean consortiumCanUpdateACostForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
+        return isCollaborator(cost, user);
+    }
+
+    @PermissionRule(value = "DELETE", description = "The consortium can update the cost for their application and organisation")
+    public boolean consortiumCanDeleteACostForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
+        return isCollaborator(cost, user);
+    }
+
+    private boolean isCollaborator(final Cost cost, final UserResource user){
         final ApplicationFinanceResource applicationFinance = applicationMapper.mapToResource(applicationFinanceRepository.findOne(cost.getId()));
         final boolean isLead = checkRole(user, applicationFinance.getApplication(), applicationFinance.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
         final boolean isCollaborator = checkRole(user, applicationFinance.getApplication(), applicationFinance.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);

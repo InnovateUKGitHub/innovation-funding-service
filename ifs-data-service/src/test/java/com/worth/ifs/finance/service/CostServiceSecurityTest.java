@@ -134,13 +134,24 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
     }
 
     @Test
-    public void test() {
+    public void testGetCostField() {
         final Long costFieldId = 1L;
         when(costFieldLookupStrategy.getCostField(costFieldId)).thenReturn(newCostFieldResource().with(id(costFieldId)).build());
         assertAccessDenied(
                 () -> service.getCostFieldById(costFieldId),
                 () -> {
                     verify(costFieldPermissionsRules).loggedInUsersCanReadCostFieldReferenceData(isA(CostFieldResource.class), isA(UserResource.class));
+                });
+    }
+
+    @Test
+    public void testDeleteCost() {
+        final Long costId = 1L;
+        when(costLookupStrategy.getCost(costId)).thenReturn(newCost().with(id(costId)).build());
+        assertAccessDenied(
+                () -> service.deleteCost(costId),
+                () -> {
+                    verify(costPermissionsRules).consortiumCanDeleteACostForTheirApplicationAndOrganisation(isA(Cost.class), isA(UserResource.class));
                 });
     }
 
