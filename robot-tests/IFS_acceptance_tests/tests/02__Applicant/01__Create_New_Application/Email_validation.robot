@@ -97,6 +97,32 @@ Invalid email no @ symbol
 User can not login with the invalid email
     Then the user cannot login with the invalid email    ${invalid_email_no_at}
 
+Valid account creation
+    [Documentation]    -INFUND-885
+    [Tags]    HappyPath
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    John
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=password    ${correct_password}
+    And the user enters text to a text field    id=retypedPassword    ${correct_password}
+    And the user submits their information
+
+Email duplication check
+    [Documentation]    INFUND-886
+    [Tags]
+    Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
+    When the user enters text to a text field    id=firstName    John
+    And the user enters text to a text field    id=lastName    Smith
+    And the user enters text to a text field    id=phoneNumber    01141234567
+    And the user enters text to a text field    id=email    ${valid_email}
+    And the user enters text to a text field    id=password    ${correct_password}
+    And the user enters text to a text field    id=retypedPassword    ${correct_password}
+    And the user submits their information
+    Then the user should see an error    Email address is already in use
+    And the user logs out if they are logged in
+
 *** Keywords ***
 the user submits their information
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
