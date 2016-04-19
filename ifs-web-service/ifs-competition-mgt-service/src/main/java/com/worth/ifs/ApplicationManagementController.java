@@ -72,7 +72,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
 
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
-        addOrganisationAndUserFinanceDetails(applicationId, user, model, form);
+        addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
         model.addAttribute("applicationReadyForSubmit", false);
         model.addAttribute("isCompManagementDownload", true);
         return "competition-mgt-application-overview";

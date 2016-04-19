@@ -24,6 +24,7 @@ import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
@@ -165,12 +166,19 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         return incompleteSections;	
     }
 
-    @Override
-    public ServiceResult<SectionResource> findByName(final String name) {
-        return find(sectionRepository.findByName(name), notFoundError(Section.class, name)).
-                andOnSuccessReturn(sectionMapper::mapToResource);
-    }
-
+	@Override
+	public ServiceResult<Long> getFinanceSectionByCompetitionId(final Long competitionId) {
+		return getCompetition(competitionId).andOnSuccessReturn(this::financeSection);
+	}
+	
+	private Long financeSection(Competition competition) {
+		return competition.getSections().stream()
+				.filter(Section::isFinance)
+				.map(Section::getId)
+				.findAny()
+				.orElse(null);
+	}
+	
     // TODO DW - INFUND-1555 - work out the getSuccessObject call
     private ServiceResult<Boolean> isSectionComplete(Section section, Long applicationId, Long organisationId) {
         return isMainSectionComplete(section, applicationId, organisationId, true).andOnSuccess(sectionIsComplete -> {
@@ -223,7 +231,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         List<Section> sections;
         // if no parent defined, just check all sections.
         if(parentSection == null){
-            sections = sectionRepository.findAll();
+            sections = sectionRepository.findByCompetitionId(application.getCompetition().getId());
         }else{
             sections = parentSection.getChildSections();
         }
@@ -315,4 +323,6 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         return find(sectionRepository.findOne(sectionId), notFoundError(Section.class, sectionId)).
                 andOnSuccessReturn(sectionMapper::mapToResource);
     }
+
+
 }

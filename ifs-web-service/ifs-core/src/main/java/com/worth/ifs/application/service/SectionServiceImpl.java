@@ -82,11 +82,6 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public SectionResource getByName(String name) {
-        return sectionRestService.getSection(name).getSuccessObjectOrThrowException();
-    }
-
-    @Override
     public void removeSectionsQuestionsWithType(SectionResource section, String name) {
         section.getChildSections().stream()
                 .map(sectionRestService::getById)
@@ -134,4 +129,9 @@ public class SectionServiceImpl implements SectionService {
     public Set<Long> getQuestionsForSectionAndSubsections(Long sectionId) {
         return sectionRestService.getQuestionsForSectionAndSubsections(sectionId).getSuccessObjectOrThrowException();
     }
+
+	@Override
+	public Long getFinanceSectionForCompetition(Long competitionId) {
+		return sectionRestService.getFinanceSectionForCompetition(competitionId).getSuccessObjectOrThrowException();
+	}
 }

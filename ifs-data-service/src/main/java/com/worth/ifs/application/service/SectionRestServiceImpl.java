@@ -48,11 +48,6 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     }
 
     @Override
-    public RestResult<SectionResource> getSection(String name) {
-        return getWithRestResult(sectionRestURL + "/findByName/" + name, SectionResource.class);
-    }
-
-    @Override
     public RestResult<Boolean> allSectionsMarkedAsComplete(Long applicationId) {
         return getWithRestResult(sectionRestURL + "/allSectionsMarkedAsComplete/" + applicationId, Boolean.class);
     }
@@ -76,4 +71,9 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     public RestResult<Set<Long>> getQuestionsForSectionAndSubsections(Long sectionId) {
         return getWithRestResult(sectionRestURL + "/getQuestionsForSectionAndSubsections/" + sectionId, longsSetType());
     }
+
+	@Override
+	public RestResult<Long> getFinanceSectionForCompetition(Long competitionId) {
+		return getWithRestResult(sectionRestURL + "/getFinanceSectionByCompetitionId/" + competitionId, Long.class);
+	}
 }

@@ -86,18 +86,6 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
     }
 
     @Test
-    public void findByNameTest() throws Exception {
-        SectionResource section = newSectionResource().build();
-        when(sectionService.findByName("testname")).thenReturn(serviceSuccess(section));
-
-        mockMvc.perform(post("/section/findByName/testname")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(section)));
-    }
-
-    @Test
     public void getNextSectionTest() throws Exception {
         Section section = newSection().withCompetitionAndPriority(newCompetition().build(), 1).build();
         SectionResource nextSection = newSectionResource().build();

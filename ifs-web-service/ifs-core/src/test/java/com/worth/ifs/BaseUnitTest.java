@@ -426,7 +426,6 @@ public class BaseUnitTest {
                     s.setQuestionGroup(false);
                     s.setChildSections(new ArrayList<>());
                     when(sectionService.getById(s.getId())).thenReturn(s);
-                    when(sectionService.getByName(s.getName())).thenReturn(s);
                 }
         );
 

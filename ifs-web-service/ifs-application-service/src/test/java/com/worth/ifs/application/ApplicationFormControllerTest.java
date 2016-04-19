@@ -564,7 +564,6 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
         String value = "2015";
 
         when(sectionService.getById(anyLong())).thenReturn(null);
-        when(sectionService.getByName("Your finances")).thenReturn(newSectionResource().with(s -> s.setId(1L)).build());
 
         MvcResult result = mockMvc.perform(
                 post("/application/" + application.getId().toString() + "/form/saveFormElement")
