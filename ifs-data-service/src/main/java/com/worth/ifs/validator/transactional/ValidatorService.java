@@ -14,5 +14,5 @@ public interface ValidatorService {
     BindingResult validateFormInputResponse(Long applicationId, Long formInputId, Long markedAsCompleteById);
 
     @NotSecured("This service is used to validate existing data")
-    List<ValidationMessages> validateCostItem(Long applicationId, String costTypeName, Long questionId, Long markedAsCompleteById);
+    List<ValidationMessages> validateCostItem(Long applicationId, Long questionId, Long markedAsCompleteById);
 }

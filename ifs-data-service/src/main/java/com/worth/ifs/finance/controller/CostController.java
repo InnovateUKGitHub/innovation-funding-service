@@ -5,6 +5,7 @@ import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.transactional.CostService;
+import com.worth.ifs.validator.util.ValidationUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,17 +51,13 @@ public class CostController {
     public RestResult<ValidationMessages> update(@PathVariable("id") final Long id, @Valid @RequestBody final CostItem newCostItem, BindingResult bindingResult) {
         RestResult<Void> updateResult = costService.updateCost(id, newCostItem)
                 .toPutResponse();
+        LOG.info("CostController update: ");
 
         if(updateResult.isFailure()){
             return updateResult.toGetResponse(new ValidationMessages());
         }else{
-            if(bindingResult.hasErrors()){
-                bindingResult.getFieldErrors().stream()
-                        .forEach(fe -> LOG.debug(String.format("Field Error: %s / %s / %s",  fe.getCode(),  fe.getField(),  fe.getDefaultMessage())));
-                return RestResult.restSuccess(new ValidationMessages(id, bindingResult));
-            }else{
-                return RestResult.restSuccess(new ValidationMessages());
-            }
+            ValidationMessages validationMessages = ValidationUtil.validateCostItem(newCostItem);
+            return RestResult.restSuccess(validationMessages);
         }
     }
 

@@ -9,7 +9,9 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
+import com.worth.ifs.validator.GrantClaimValidator;
 import com.worth.ifs.validator.NotEmptyValidator;
+import com.worth.ifs.validator.OtherFundingValidator;
 import com.worth.ifs.validator.transactional.ValidatorService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,16 +28,22 @@ public final class ValidationUtil {
     public final static Log LOG = LogFactory.getLog(ValidationUtil.class);
     public static ValidatorService validatorService;
     public static Validator validator;
+    public static GrantClaimValidator grantClaimValidator;
+    public static OtherFundingValidator otherFundingValidator;
 
     @Autowired
-    private ValidationUtil(ValidatorService validatorService, @Qualifier("basicValidator") Validator validator) {
+    private ValidationUtil(ValidatorService validatorService, @Qualifier("basicValidator") Validator validator, GrantClaimValidator grantClaimValidator, OtherFundingValidator otherFundingValidator) {
         this.validatorService = validatorService;
         this.validator = validator;
+        this.grantClaimValidator = grantClaimValidator;
+        this.otherFundingValidator = otherFundingValidator;
     }
 
     public static BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
+        DataBinder binder = new DataBinder(response);
         if (response == null) {
             LOG.info("response is null");
+            return binder.getBindingResult();
         }
         if (response.getFormInput() == null) {
             LOG.info("response has no formInputs");
@@ -45,7 +53,7 @@ public final class ValidationUtil {
         }
         Set<FormValidator> validators = response.getFormInput().getFormValidators();
 
-        DataBinder binder = new DataBinder(response);
+
 
         // Get validators from the FormInput, and add to binder.
         validators.forEach(
@@ -69,6 +77,7 @@ public final class ValidationUtil {
     }
 
     public static List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
+        LOG.debug("VALIDATE SECTION "+ section.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         boolean allQuestionsValid = true;
         for (Question question : section.fetchAllChildQuestions()) {
@@ -82,12 +91,14 @@ public final class ValidationUtil {
     }
 
     public static List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
+        LOG.debug("==validate question "+ question.getName());
         boolean questionValid = true;
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (question.hasMultipleStatuses()) {
             for (FormInput formInput : question.getFormInputs()) {
                 validationMessages.addAll(isFormInputValid(question, application, markedAsCompleteById, questionValid, formInput));
             }
+//            validationMessages.addAll(validatorService.validateCostItem(application.getId(), question.getId(), markedAsCompleteById));
         } else {
             for (FormInput formInput : question.getFormInputs()) {
                 validationMessages.addAll(isFormInputValid(application, formInput));
@@ -108,6 +119,7 @@ public final class ValidationUtil {
     }
 
     public static List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, boolean questionValid, FormInput formInput) {
+        LOG.debug("====validate form input "+ formInput.getDescription());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (formInput.getFormValidators().isEmpty()) {
             // no validator? question is valid!
@@ -126,7 +138,8 @@ public final class ValidationUtil {
             // not a costtype, which is fine...
         }
         if (costType != null) {
-            validationMessages.addAll(validatorService.validateCostItem(application.getId(), costType.name(), question.getId(), markedAsCompleteById));
+            LOG.debug("====validate cost items");
+            validationMessages.addAll(validatorService.validateCostItem(application.getId(), question.getId(), markedAsCompleteById));
         }
         return validationMessages;
     }
@@ -135,7 +148,6 @@ public final class ValidationUtil {
         if (costItems.isEmpty())
             return Collections.emptyList();
 
-        LOG.debug("validateCostItem list : " + costItems.size());
         List<ValidationMessages> results = costItems.stream()
                 .map(ValidationUtil::validateCostItem)
                 .filter(Objects::nonNull)
@@ -146,14 +158,34 @@ public final class ValidationUtil {
     public static ValidationMessages validateCostItem(CostItem costItem) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
         ValidationUtils.invokeValidator(validator, costItem, bindingResult);
+
+        invokeExtraValidator(costItem, bindingResult);
+
         if (bindingResult.hasErrors()) {
             LOG.debug("validated, with messages: ");
-            bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: " + e.getDefaultMessage()));
+            bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: "+ e.getRejectedValue() + e.getDefaultMessage()));
+            bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Error: "+ e.getObjectName() + e.getDefaultMessage()));
             return new ValidationMessages(costItem.getId(), bindingResult);
         } else {
             LOG.debug("validated, no messages");
             return null;
         }
 
+    }
+
+    private static void invokeExtraValidator(CostItem costItem, BeanPropertyBindingResult bindingResult) {
+        Validator extraValidator = null;
+        switch(costItem.getCostType()){
+            case FINANCE:
+                extraValidator = grantClaimValidator;
+                break;
+            case OTHER_FUNDING:
+                extraValidator = otherFundingValidator;
+                break;
+        }
+        if(extraValidator != null){
+            LOG.info("invoke extra validator: "+ extraValidator.getClass().toString());
+            ValidationUtils.invokeValidator(extraValidator, costItem, bindingResult);
+        }
     }
 }

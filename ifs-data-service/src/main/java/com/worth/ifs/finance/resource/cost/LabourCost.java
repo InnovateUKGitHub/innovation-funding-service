@@ -1,8 +1,12 @@
 package com.worth.ifs.finance.resource.cost;
 
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -12,12 +16,17 @@ import java.math.RoundingMode;
  */
 public class LabourCost implements CostItem {
     private Long id;
+
     private String name;
+
+    @NotBlank
     private String role;
 
     @DecimalMin(value = "0")
     @Digits(integer = MAX_DIGITS, fraction = 0)
     private BigDecimal grossAnnualSalary;
+
+    @NotNull
     @Min(0)
     private Integer labourDays;
     private BigDecimal rate; // calculated field, no validation

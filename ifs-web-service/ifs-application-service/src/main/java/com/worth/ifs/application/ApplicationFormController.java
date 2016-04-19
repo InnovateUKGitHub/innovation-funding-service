@@ -369,8 +369,13 @@ public class ApplicationFormController extends AbstractApplicationController {
                 bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
                 financeErrorsMark.forEach((validationMessage) ->
                         validationMessage.getErrors().stream().forEach(e -> {
-                            LOG.info(String.format("reject value: %s / %s", "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage()));
-                            bindingResult.rejectValue("formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage(), e.getErrorMessage());
+                            LOG.debug(String.format("reject value: %s / %s", "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage()));
+                            if(StringUtils.hasText(e.getErrorKey())){
+                                bindingResult.rejectValue("formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage(), e.getErrorMessage());
+                            }else {
+                                bindingResult.rejectValue("formInput[cost-"+validationMessage.getObjectId()+"]", e.getErrorMessage(), e.getErrorMessage());
+                            }
+
                         })
                 );
             }
@@ -379,10 +384,10 @@ public class ApplicationFormController extends AbstractApplicationController {
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         Map<String, List<String>> financeErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
         financeErrors.forEach((k, errorsList) ->
-                errorsList.forEach(e -> {
-                    LOG.debug("Got validation error: " + k);
-                    bindingResult.rejectValue(k, e, e);
-                }));
+            errorsList.forEach(e -> {
+                LOG.debug("Got validation error: " + k);
+                bindingResult.rejectValue(k, e, e);
+            }));
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
     }

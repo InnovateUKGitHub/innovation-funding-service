@@ -119,6 +119,15 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         });
     }
 
+    @Override
+    public ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, Long questionId) {
+        return getApplicationFinance(applicationFinanceId).andOnSuccessReturn((applicationFinance) -> {
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
+            List<Cost> costs = costRepository.findByApplicationFinanceIdAndQuestionId(applicationFinanceId, questionId);
+            return organisationFinanceHandler.costToCostItem(costs);
+        });
+    }
+
     private ServiceResult<Cost> doUpdate(Long id, CostItem newCostItem) {
         return find(costRepository.findOne(id), notFoundError(Cost.class, id)).andOnSuccessReturn(existingCost -> {
             ApplicationFinance applicationFinance = existingCost.getApplicationFinance();
@@ -220,7 +229,6 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
 
     @Override
     public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
-        LOG.info(String.format("financeDetails %s / %s ", applicationId, organisationId));
         ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
         return getApplicationFinanceForOrganisation(applicationFinanceResourceId);
     }
@@ -235,7 +243,6 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     private ServiceResult<ApplicationFinanceResource> getApplicationFinanceForOrganisation(ApplicationFinanceResourceId applicationFinanceResourceId) {
-        LOG.info("getApplicationFinanceForOrganisation " + applicationFinanceResourceId);
         return serviceSuccess(applicationFinanceHandler.getApplicationOrganisationFinances(applicationFinanceResourceId));
     }
 

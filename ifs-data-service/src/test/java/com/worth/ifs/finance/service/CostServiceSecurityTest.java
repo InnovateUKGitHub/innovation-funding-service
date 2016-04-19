@@ -3,6 +3,7 @@ package com.worth.ifs.finance.service;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.builder.CostFieldResourceBuilder;
+import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
@@ -59,12 +60,32 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         }
 
         @Override
+        public ServiceResult<CostItem> getCostItem(Long costItemId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<CostItem> addCost(Long applicationFinanceId, Long questionId, CostItem newCostItem) {
             return null;
         }
 
         @Override
         public ServiceResult<Void> updateCost(Long id, CostItem newCostItem) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<Cost>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, String costTypeName, Long questionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, Long questionId) {
             return null;
         }
 

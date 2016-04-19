@@ -35,6 +35,9 @@ public interface CostService {
     @NotSecured("TODO")
     ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, String costTypeName, Long questionId);
 
+    @NotSecured("TODO")
+    ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, Long questionId);
+
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<Void> deleteCost(Long costId);
 

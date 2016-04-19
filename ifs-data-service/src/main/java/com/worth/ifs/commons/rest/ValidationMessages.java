@@ -26,6 +26,14 @@ public class ValidationMessages implements Serializable {
             errors.add(error);
             }
         );
+
+        bindingResult.getGlobalErrors().forEach(e->{
+                    String[] codes = e.getCodes();
+                    List<Object> args = Arrays.asList((Object) codes);
+                    Error error = new Error("", e.getDefaultMessage(), args, HttpStatus.NOT_ACCEPTABLE);
+                    errors.add(error);
+                }
+        );
         objectName = bindingResult.getObjectName();
         this.objectId = objectId;
     }

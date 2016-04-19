@@ -48,10 +48,11 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     }
 
     @Override
-    public List<ValidationMessages> validateCostItem(Long applicationId, String costTypeName, Long questionId, Long markedAsCompleteById) {
+    public List<ValidationMessages> validateCostItem(Long applicationId, Long questionId, Long markedAsCompleteById) {
         return getProcessRole(markedAsCompleteById).andOnSuccess(role -> {
             return costService.financeDetails(applicationId, role.getOrganisation().getId()).andOnSuccess(financeDetails -> {
-                return costService.getCostItems(financeDetails.getId(), "", questionId).andOnSuccessReturn(costItems -> {
+                return costService.getCostItems(financeDetails.getId(), questionId).andOnSuccessReturn(costItems -> {
+                    LOG.info("=======Got Cost Items : count 2: "+costItems.size());
                     return ValidationUtil.validateCostItem(costItems);
                 });
             });

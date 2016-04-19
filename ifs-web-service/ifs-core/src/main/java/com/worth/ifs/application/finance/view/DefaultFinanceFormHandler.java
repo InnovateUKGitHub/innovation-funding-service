@@ -250,7 +250,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
             RestResult<ValidationMessages> messages = costService.update(costItem);
             ValidationMessages validationMessages = messages.getSuccessObject();
 
-            if (validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
+            if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
                 LOG.debug("no validation errors on cost items");
                 return messages.getSuccessObject();
             } else {
@@ -275,7 +275,11 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
         Map<Long, ValidationMessages> validationMessagesMap = new HashMap<>();
         costItems.stream().forEach(c -> {
             RestResult<ValidationMessages> messages = costService.update(c);
-            if (messages.getSuccessObject().getErrors() != null && !messages.getSuccessObject().getErrors().isEmpty()) {
+            Optional<ValidationMessages> successObject = messages.getOptionalSuccessObject();
+            if (successObject.isPresent() && successObject.get() != null &&
+                    messages.getSuccessObject().getErrors() != null &&
+                    !messages.getSuccessObject().getErrors().isEmpty()
+            ) {
                 LOG.debug("got validation errors. " + c.getId());
                 validationMessagesMap.put(c.getId(), messages.getSuccessObject());
             } else {

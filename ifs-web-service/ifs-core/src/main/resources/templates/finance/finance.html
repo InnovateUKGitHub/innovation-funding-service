@@ -85,6 +85,7 @@
                     </label>
                     <input type="number"
                            class="form-control"
+                           th:classappend="${#fields.hasErrors('formInput[cost-__${costCategory.workingDaysPerYearCostItem?.id}__]')} ? field-error : ''"
                            th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays'}"
                            th:name="${type + '-workingDays-' + question.id + '-' + costCategory.workingDaysPerYearCostItem?.id}"
                            th:value="${costCategory.workingDaysPerYear}"
@@ -142,10 +143,10 @@
             <td>
                 <input type="text"
                        class="form-control width-full"
-                       th:classappend="${#fields.hasErrors('formInput[cost-__${cost.id}__-labourRole]')} ? field-error : ''"
+                       th:classappend="${#fields.hasErrors('formInput[cost-__${cost.id}__-role]')} ? field-error : ''"
                        aria-labelledby="labour-role"
                        th:name="${type +'-role-' + question.id + '-' + cost.id}"
-                       th:id="${'cost-labour-'+cost.id+'-labourRole'}"
+                       th:id="${'cost-labour-'+cost.id+'-role'}"
                        th:value="${cost.getRole()}"
                        th:readonly="${complete == 'complete'}"
                         />
