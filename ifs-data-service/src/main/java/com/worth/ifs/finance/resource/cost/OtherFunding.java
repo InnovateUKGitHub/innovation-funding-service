@@ -75,4 +75,32 @@ public class OtherFunding implements CostItem {
     public String getName() {
         return name;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setOtherPublicFunding(String otherPublicFunding) {
+        this.otherPublicFunding = otherPublicFunding;
+    }
+
+    public void setFundingSource(String fundingSource) {
+        this.fundingSource = fundingSource;
+    }
+
+    public void setSecuredDate(String securedDate) {
+        this.securedDate = securedDate;
+    }
+
+    public void setFundingAmount(BigDecimal fundingAmount) {
+        this.fundingAmount = fundingAmount;
+    }
+
+    public void setCostType(CostType costType) {
+        this.costType = costType;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

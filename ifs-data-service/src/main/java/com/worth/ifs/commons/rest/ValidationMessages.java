@@ -20,16 +20,14 @@ public class ValidationMessages implements Serializable {
     public ValidationMessages(Long objectId, BindingResult bindingResult) {
         errors = new ArrayList<>();
         bindingResult.getFieldErrors().forEach(e->{
-            String[] codes = e.getCodes();
-            List<Object> args = Arrays.asList((Object) codes);
+            List<Object> args = Arrays.asList();
             Error error = new Error(e.getField(), e.getDefaultMessage(), args, HttpStatus.NOT_ACCEPTABLE);
             errors.add(error);
             }
         );
 
         bindingResult.getGlobalErrors().forEach(e->{
-                    String[] codes = e.getCodes();
-                    List<Object> args = Arrays.asList((Object) codes);
+                    List<Object> args = Arrays.asList();
                     Error error = new Error("", e.getDefaultMessage(), args, HttpStatus.NOT_ACCEPTABLE);
                     errors.add(error);
                 }
