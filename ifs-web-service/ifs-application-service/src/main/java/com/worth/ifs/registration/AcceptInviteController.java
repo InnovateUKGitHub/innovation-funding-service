@@ -11,13 +11,10 @@ import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.invite.service.InviteOrganisationRestService;
 import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.organisation.resource.OrganisationAddressResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.OrganisationTypeRestService;
-import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.util.CookieUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,19 +38,13 @@ public class AcceptInviteController extends BaseController {
     public static final String INVITE_HASH = "invite_hash";
     public static final String ORGANISATION_TYPE = "organisationType";
     private static final Log LOG = LogFactory.getLog(AcceptInviteController.class);
-    Validator validator;
+    private Validator validator;
     @Autowired
     UserAuthenticationService userAuthenticationService;
     @Autowired
     private InviteRestService inviteRestService;
     @Autowired
-    private InviteOrganisationRestService inviteOrganisationRestService;
-    @Autowired
-    private UserService userService;
-    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-    @Autowired
-    private OrganisationTypeRestService organisationTypeRestService;
     @Autowired
     private OrganisationService organisationService;
 
