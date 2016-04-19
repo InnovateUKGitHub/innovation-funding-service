@@ -31,7 +31,7 @@ public class QuestionStatusRules {
     @Autowired
     private QuestionStatusMapper questionStatusMapper;
 
-    @PermissionRule(value = "READ", description = "users can only read statuses of questions they are assigned to")
+    @PermissionRule(value = "READ", description = "users can only read statuses of applications thy are connected to")
     public boolean userCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
         return userIsConnected(questionStatusResource.getApplication(), user);
     }
@@ -54,14 +54,11 @@ public class QuestionStatusRules {
 
     private boolean userIsAssigned(Long questionId, Long applicationId, UserResource user){
         ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), applicationId);
-        QuestionStatusResource questionStatusResource = questionStatusMapper.mapToResource(
-            questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(
+        return questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(
                 questionId,
                 applicationId,
                 processRole.getId()
-            )
-        );
-        return questionStatusResource!=null;
+            ) != null;
     }
 
     private boolean userIsLeadApplicant(Long applicationId, UserResource user){

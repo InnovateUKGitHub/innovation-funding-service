@@ -14,7 +14,7 @@ public class QuestionRules {
         return true;
     }
 
-    @PermissionRule(value = "UPDATE", description = "all users can read the questions")
+    @PermissionRule(value = "UPDATE", description = "no users can currently update questions")
     public static boolean noUserCanUpdateAny(QuestionResource questionResource, UserResource user){
         return false;
     }

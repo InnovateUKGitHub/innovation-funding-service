@@ -44,25 +44,25 @@ public interface QuestionService {
     ServiceResult<Void> updateNotification(final Long questionStatusId,
                             final Boolean notify);
 
-    @NotSecured("Any loggedIn user can get a question")
+    @NotSecured("Any loggedIn user can get any question")
     ServiceResult<List<Question>> findByCompetition(final Long competitionId);
 
-    @NotSecured("Any loggedIn user can get a question")
+    @NotSecured("Any loggedIn user can get any question")
     ServiceResult<Question> getNextQuestion(final Long questionId);
 
-    @NotSecured("Any loggedIn user can get a question")
+    @NotSecured("Any loggedIn user can get any question")
     ServiceResult<Question> getPreviousQuestionBySection(final Long sectionId);
 
-    @NotSecured("Any loggedIn user can get a question")
+    @NotSecured("Any loggedIn user can get any question")
     ServiceResult<Question> getNextQuestionBySection(final Long sectionId);
 
-    @NotSecured("Any loggedIn user can get a question")
+    @NotSecured("Any loggedIn user can get any question")
     ServiceResult<Question> getPreviousQuestion(final Long questionId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Boolean> isMarkedAsComplete(Question question, Long applicationId, Long organisationId);
 
-    @NotSecured("Any loggedIn user can get a question")
+    @NotSecured("Any loggedIn user can get any question")
     ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
