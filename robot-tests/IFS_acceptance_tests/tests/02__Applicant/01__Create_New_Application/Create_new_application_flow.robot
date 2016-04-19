@@ -27,7 +27,7 @@ Non registered users CH route
     ...    INFUND-1904
     ...
     ...    INFUND-1920
-    [Tags]    Create application    HappyPath    Email    Failing
+    [Tags]    HappyPath    Email
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
@@ -53,7 +53,7 @@ Non registered users CH route
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
-    [Tags]    Email    Create application
+    [Tags]    Email
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
@@ -73,7 +73,7 @@ Non registered users non CH route
     ...    INFUND-1904
     ...
     ...    INFUND-1920
-    [Tags]    Create application    HappyPath    Email    Failing
+    [Tags]    HappyPath    Email
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
@@ -97,7 +97,7 @@ Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
-    [Tags]    Applicant    New application    HappyPath    Email    Failing
+    [Tags]    HappyPath    Email
     [Setup]    The guest user opens the browser
     When guest user log-in    worth.email.test+1@gmail.com    Passw0rd123
     And the user edits the competition title
