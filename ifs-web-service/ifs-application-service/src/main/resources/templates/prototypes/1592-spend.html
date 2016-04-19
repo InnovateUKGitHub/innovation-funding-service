@@ -211,7 +211,7 @@
 					<td class="total">21,000</td>
 					<td class="total eligible">21,000</td>
 				</tr>
-				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}">
+				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}" th:class="${(param.spend != null and param.spend[0] == 'high' ? 'error-in-row' : '')}">
 					<th id="sub-contract">Sub-contracting costs</th>
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 sub-contract" id="sub-contract-y1-q1" value="1,000" /><label for="sub-contract-y1-q1" class="visuallyhidden">Sub-contracting costs</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 sub-contract" id="sub-contract-y1-q2" value="3,000" /><label for="sub-contract-y1-q2" class="visuallyhidden">Sub-contracting costs</label></td>
