@@ -1,9 +1,8 @@
 package com.worth.ifs.finance.security;
 
-import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
+import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.resource.ApplicationFinanceResource;
-import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
+import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.security.PermissionEntityLookupStrategies;
 import com.worth.ifs.security.PermissionEntityLookupStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +12,13 @@ import org.springframework.stereotype.Component;
 @PermissionEntityLookupStrategies
 public class CostLookupStrategy {
     @Autowired
-    ApplicationFinanceRepository applicationFinanceRepository;
+    private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Autowired
-    ApplicationFinanceMapper applicationMapper;
+    private CostRepository costRepository;
 
     @PermissionEntityLookupStrategy
-    public ApplicationFinanceResource getApplicationFinance(final ApplicationFinanceResourceId id) {
-        return applicationMapper.mapToResource(applicationFinanceRepository.findByApplicationIdAndOrganisationId(id.getApplicationId(), id.getOrganisationId()));
+    public Cost getCost(final Long costId) {
+        return costRepository.findOne(costId);
     }
 }

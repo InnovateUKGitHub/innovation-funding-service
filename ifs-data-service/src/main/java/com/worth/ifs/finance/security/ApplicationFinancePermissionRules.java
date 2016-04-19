@@ -49,6 +49,13 @@ public class ApplicationFinancePermissionRules {
         return SecurityRuleUtil.isCompAdmin(user);
     }
 
+    @PermissionRule(value = "ADD_COST", description = "The consortium can add a cost to the application finances of their own organisation")
+    public boolean consortiumCanAddACostToApplicationFinanceForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user){
+        final boolean isLeadApplicant = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT);
+        final boolean isCollaborator = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR);
+        return isLeadApplicant || isCollaborator;
+    }
+
     private boolean checkRole(UserResource user, Long applicationId, Long organisationId, UserRoleType userRoleType) {
         final List<Role> roles = roleRepository.findByName(userRoleType.getName());
         final Role role = roles.get(0);

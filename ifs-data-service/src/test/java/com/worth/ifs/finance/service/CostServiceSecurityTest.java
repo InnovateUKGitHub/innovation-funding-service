@@ -5,12 +5,14 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.security.ApplicationLookupStrategy;
 import com.worth.ifs.application.security.ApplicationRules;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.finance.builder.CostBuilder;
+import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
+import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.finance.security.ApplicationFinancePermissionRules;
-import com.worth.ifs.finance.security.CostFieldPermissionsRules;
+import com.worth.ifs.finance.security.*;
 import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -34,16 +36,21 @@ import static org.mockito.Mockito.*;
 public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService> {
 
     private CostFieldPermissionsRules costFieldPermissionsRules;
+    private CostPermissionRules costPermissionsRules;
     private ApplicationFinancePermissionRules applicationFinanceRules;
     private ApplicationRules applicationRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
+    private CostLookupStrategy costLookupStrategy;
+    private ApplicationFinanceLookupStrategy applicationFinanceLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
         costFieldPermissionsRules = getMockPermissionRulesBean(CostFieldPermissionsRules.class);
+        costPermissionsRules = getMockPermissionRulesBean(CostPermissionRules.class);
         applicationFinanceRules = getMockPermissionRulesBean(ApplicationFinancePermissionRules.class);
         applicationRules = getMockPermissionRulesBean(ApplicationRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
+        costLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostLookupStrategy.class);
     }
 
     @Test
@@ -112,6 +119,30 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
                     verify(applicationRules).consortiumCanSeeTheResearchParticipantPercentage(isA(ApplicationResource.class), isA(UserResource.class));
                 });
     }
+
+    @Test
+    public void testUpdateCost() {
+        final Long costId = 1L;
+        when(costLookupStrategy.getCost(costId)).thenReturn(CostBuilder.newCost().with(id(costId)).build());
+        assertAccessDenied(
+                () -> service.updateCost(costId, new AcademicCost()),
+                () -> {
+                    verify(costPermissionsRules).consortiumCanUpdateACostForTheirApplicationAndOrganisation(isA(Cost.class), isA(UserResource.class));
+                });
+    }
+
+//    TODO qqRP
+//    @Test
+//    public void testAddCost() {
+//        final Long applicationFinanceId = 1L;
+//        final Long questionId = 2L;
+//        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+//        assertAccessDenied(
+//                () -> service.addCost(applicationFinanceId, questionId, new AcademicCost()),
+//                () -> {
+//                    verify(applicationFinanceRules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class)));
+//                });
+//    }
 
 
     private void verifyApplicationFinanceResourceReadRulesCalled() {

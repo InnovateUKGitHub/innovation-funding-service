@@ -21,11 +21,11 @@ public interface CostService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CostFieldResource>> findAllCostFields();
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<CostItem> addCost(Long applicationFinanceId, Long questionId, CostItem newCostItem);
+    @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.application.resource.ApplicationResource', 'ADD_COST')")
+    ServiceResult<CostItem> addCost(@P("applicationFinanceId")Long applicationFinanceId, Long questionId, CostItem newCostItem);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<Void> updateCost(Long id, CostItem newCostItem);
+    @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.finance.domain.Cost', 'UPDATE')")
+    ServiceResult<Void> updateCost(@P("costId")Long costId, CostItem newCostItem);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<Void> deleteCost(Long costId);
