@@ -78,7 +78,7 @@ Business organisation (accept invitation)
 User who accepted the invite should be able to log-in
     [Tags]    Failing
     Given the user clicks the button/link    jQuery=.button:contains("Log in")
-    When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd
+    When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
 

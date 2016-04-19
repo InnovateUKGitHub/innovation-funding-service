@@ -15,7 +15,7 @@ ${INVITE_COLLABORATORS_PAGE_APPL1}    ${SERVER}application/1/contributors/invite
 *** Test Cases ***
 The invited registered user should redirect to the correct page
     [Documentation]    INFUND-1458
-    [Tags]      Failing
+    [Tags]    Failing
     [Setup]    Delete the emails from the test mailbox
     Given we create a new user
     Given the lead applicant invites a registered user
@@ -24,22 +24,22 @@ The invited registered user should redirect to the correct page
 
 The user clicks the login link
     [Documentation]    INFUND-1458
-    [Tags]      Failing
+    [Tags]    Failing
     When the user clicks the button/link    link=Click here to login
-    And the guest user inserts user email & password    worth.email.test+reg2@gmail.com    Passw0rd2
+    And the guest user inserts user email & password    worth.email.test+reg2@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Confirm your organisation
 
 The user should see the correct content in the confirm page
     [Documentation]    INFUND-1458
-    [Tags]      Failing
+    [Tags]    Failing
     Then the user should see the text in the page    INNOVATE LTD
     And the user should see the text in the page    BH14 0HU
     And the user should see the element    link=email the application lead
 
 The continue button should redirect to the overview page
     [Documentation]    INFUND-1458
-    [Tags]      Failing
+    [Tags]    Failing
     When the user clicks the button/link    jQuery=.button:contains("Continue to application")
     Then the user should see the text in the page    Application overview
 
@@ -61,7 +61,7 @@ the lead applicant invites a registered user
     And the user opens the mailbox and verifies the email from
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     The user clicks the button/link    jQuery=.button:contains("Log in")
-    The guest user inserts user email & password    worth.email.test+invite2@gmail.com    Passw0rd2
+    The guest user inserts user email & password    worth.email.test+invite2@gmail.com    Passw0rd123
     The guest user clicks the log-in button
     The user clicks the button/link    link=Technology Inspired
     Click Element    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
@@ -70,9 +70,8 @@ the lead applicant invites a registered user
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    worth.email.test+reg2@gmail.com
     And the user clicks the button/link    jQuery=.button:contains("Begin application")
     And the user should see the text in the page    Application overview
-    Wait Until Element Is Visible    link=Logout
-    sleep    4s
-    Click Element    link=Logout
+    User closes the browser
+    The guest user opens the browser
 
 we create a new user
     The user navigates to the page    ${COMPETITION_DETAILS_URL}
@@ -90,6 +89,6 @@ we create a new user
     And the user opens the mailbox and verifies the email from
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     The user clicks the button/link    jQuery=.button:contains("Log in")
-    The guest user inserts user email & password    worth.email.test+reg2@gmail.com    Passw0rd2
+    The guest user inserts user email & password    worth.email.test+reg2@gmail.com    Passw0rd123
     The guest user clicks the log-in button
     user closes the browser

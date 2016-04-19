@@ -12,8 +12,8 @@ The user navigates to the page
     Page Should Contain    BETA
     # "Contact us" checking (INFUND-1289)
     # Pending completion of INFUND-2544, INFUND-2545
-    # Wait Until Page Contains Element   link=Contact Us
-    # Page Should Contain Link        href=${SERVER}/info/contact
+    # Wait Until Page Contains Element    link=Contact Us
+    # Page Should Contain Link    href=${SERVER}/info/contact
 
 The user navigates to the page without the usual headers
     [Arguments]    ${TARGET_URL}
@@ -42,9 +42,8 @@ The user is on the page
     Page Should Contain    BETA
     # "Contact us" checking (INFUND-1289)
     # Pending completion of INFUND-2544, INFUND-2545
-    # Wait Until Page Contains Element   link=Contact Us
-    # Page Should Contain Link        href=${SERVER}/info/contact
-
+    # Wait Until Page Contains Element    link=Contact Us
+    # Page Should Contain Link    href=${SERVER}/info/contact
 
 The user should be redirected to the correct page
     [Arguments]    ${URL}
@@ -93,7 +92,7 @@ The user enters text to a text field
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
-    Wait Until Element Is Visible   ${BUTTON}
+    Wait Until Element Is Visible    ${BUTTON}
     click element    ${BUTTON}
 
 The user should see the text in the page
@@ -231,8 +230,8 @@ the user enters the details and clicks the create account
     Input Text    id=lastName    ANDERSON
     Input Text    id=phoneNumber    23232323
     Input Text    id=email    ${REG_EMAIL}
-    Input Password    id=password    Passw0rd2
-    Input Password    id=retypedPassword    Passw0rd2
+    Input Password    id=password    Passw0rd123
+    Input Password    id=retypedPassword    Passw0rd123
     Select Checkbox    termsAndConditions
     Submit Form
 
@@ -241,11 +240,10 @@ the user fills the create account form
     Input Text    id=firstName    ${NAME}
     Input Text    id=lastName    ${LAST_NAME}
     Input Text    id=phoneNumber    0612121212
-    Input Password    id=password    Passw0rd
-    Input Password    id=retypedPassword    Passw0rd
+    Input Password    id=password    Passw0rd123
+    Input Password    id=retypedPassword    Passw0rd123
     Select Checkbox    termsAndConditions
     Submit Form
-
 
 the address fields should be filled
     # postcode lookup implemented on some machines but not others, so check which is running:
@@ -269,4 +267,4 @@ the address fields should be filled with dummy data
     Textfield Should Contain    id=addressForm.selectedPostcode.postcode    CH64 3RU
 
 the user cannot see a validation error in the page
-    Element Should Not Be Visible       css=.error
+    Element Should Not Be Visible    css=.error

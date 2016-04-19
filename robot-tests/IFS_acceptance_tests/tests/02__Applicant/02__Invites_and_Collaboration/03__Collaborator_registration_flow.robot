@@ -134,7 +134,7 @@ Academic organisation (accept invitation flow)
     ...
     ...    INFUND-917
     ...    INFUND-2450
-    [Tags]    HappyPath     Failing
+    [Tags]    HappyPath    Failing
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${INVITE_LINK_2}
     When the user clicks the button/link    jQuery=.button:contains("Create")
@@ -157,7 +157,7 @@ Academic organisation (accept invitation flow)
     And the user verifies the email
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Log in")
-    And guest user log-in    worth.email.test+invite2@gmail.com    testtest
+    And guest user log-in    worth.email.test+invite2@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=A novel solution to an old problem
     And the user clicks the button/link    link=Your finances
@@ -165,41 +165,38 @@ Academic organisation (accept invitation flow)
     And the user should not see the text in the page    Labour
     And the user should not see an error in the page
 
-
 Catapult search (empty, invalid & valid inputs)
-    [Documentation]     INFUND-1230
-    [Tags]  Invite  Catapult
-    Given the user navigates to the page        ${INVITE_LINK}
+    [Documentation]    INFUND-1230
+    [Tags]    Invite    Catapult
+    Given the user navigates to the page    ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Create")
     And the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Please select your type of research organisation
-    And the user selects the radio button   organisationType    7
-    When the user clicks the button/link        jQuery=.button:contains("Continue")
-    And the user should see the text in the page       Catapult
-    When the user clicks the button/link        jQuery=.button:contains("Continue")
-    Then the user should see the text in the page   This field cannot be left blank
-    When the user enters text to a text field       name=organisationName       Digital Catapult
-    When the user clicks the button/link        jQuery=.button:contains("Find UK address")
-    And the user should see the text in the page        Please enter a UK postcode
-    When the user enters text to a text field           name=addressForm.postcodeInput  BS14NT
-    And the user clicks the button/link         jQuery=.button:contains("Find UK address")
-    And the user clicks the button/link         jQuery=.button:contains("Use selected address")
+    And the user selects the radio button    organisationType    7
+    When the user clicks the button/link    jQuery=.button:contains("Continue")
+    And the user should see the text in the page    Catapult
+    When the user clicks the button/link    jQuery=.button:contains("Continue")
+    Then the user should see the text in the page    This field cannot be left blank
+    When the user enters text to a text field    name=organisationName    Digital Catapult
+    When the user clicks the button/link    jQuery=.button:contains("Find UK address")
+    And the user should see the text in the page    Please enter a UK postcode
+    When the user enters text to a text field    name=addressForm.postcodeInput    BS14NT
+    And the user clicks the button/link    jQuery=.button:contains("Find UK address")
+    And the user clicks the button/link    jQuery=.button:contains("Use selected address")
     Then the address fields should be filled
 
-
-
 Catapult search (accept invitation flow)
-    [Documentation]     INFUND-1230
-    [Tags]  Invite  Catapult    Pending
+    [Documentation]    INFUND-1230
+    [Tags]    Invite    Catapult    Pending
     # Pending due to INFUND-2542
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Digital Catapult
-    And the user should see the text in the page       Operating Address
-    And the user clicks the button/link     jQuery=.button:contains("Save")
-    And the user fills the create account form   Thierry    Henry
+    And the user should see the text in the page    Operating Address
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user fills the create account form    Thierry    Henry
     And the user verifies the email
-    And the user should be redirected to the correct page   ${REGISTRATION_VERIFIED}
+    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Log in")
     And guest user log-in    worth.email.test+invite2@gmail.com    testtest
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
@@ -207,9 +204,6 @@ Catapult search (accept invitation flow)
     And the user clicks the button/link    link=Your finances
     Then the user should see the text in the page    TSB reference
     And the user should not see the text in the page    Labour
-
-
-
 
 *** Keywords ***
 the user selects the radio button
