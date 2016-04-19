@@ -27,7 +27,7 @@ Enter Valid Postcode and see the results in the dropdown
 
 Empty Postcode field
     [Documentation]    INFUND-890
-    [Tags]  Postcode
+    [Tags]    Postcode
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -61,5 +61,3 @@ the user selects the checkbox "The registered address is the same as the operati
 
 the user unselects the checkbox "The registered address is the same as the operating address"
     Unselect Checkbox    id=address-same
-
-
