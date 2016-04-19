@@ -3,7 +3,7 @@ package com.worth.ifs;
 import com.worth.ifs.security.CustomPermissionEvaluator;
 import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToLookupMethod;
 import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods;
-import com.worth.ifs.security.CustomPermissionEvaluator.ListOfMethods;
+import com.worth.ifs.security.CustomPermissionEvaluator.ListOfOwnerAndMethod;
 import com.worth.ifs.security.CustomPermissionEvaluator.PermissionsToPermissionsMethods;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
@@ -173,11 +173,11 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
 
             PermissionsToPermissionsMethods newMockPermissionBeansAndMethodsByPermission = new PermissionsToPermissionsMethods();
 
-            for (Entry<String, ListOfMethods> originalPermissionBeansAndMethods : originalPermissionBeansAndMethodsByPermission.entrySet()) {
+            for (Entry<String, ListOfOwnerAndMethod> originalPermissionBeansAndMethods : originalPermissionBeansAndMethodsByPermission.entrySet()) {
 
                 String originalPermission = originalPermissionBeansAndMethods.getKey();
-                ListOfMethods originalListOfPermissionMethods = originalPermissionBeansAndMethods.getValue();
-                ListOfMethods newRecordingListOfPermissionMethods = new ListOfMethods();
+                ListOfOwnerAndMethod originalListOfPermissionMethods = originalPermissionBeansAndMethods.getValue();
+                ListOfOwnerAndMethod newRecordingListOfPermissionMethods = new ListOfOwnerAndMethod();
 
                 for (Pair<Object, Method> beanAndPermissionMethods : originalListOfPermissionMethods) {
 

@@ -102,12 +102,12 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
         orderedClasses.forEach(clazz -> {
 
-            Map<String, CustomPermissionEvaluator.ListOfMethods> rulesForClass = rulesMap.get(clazz);
+            Map<String, CustomPermissionEvaluator.ListOfOwnerAndMethod> rulesForClass = rulesMap.get(clazz);
             List<String> orderedActions = sort(rulesForClass.keySet());
 
             orderedActions.forEach(actionName -> {
 
-                CustomPermissionEvaluator.ListOfMethods permissionRuleMethodsForThisAction = rulesForClass.get(actionName);
+                CustomPermissionEvaluator.ListOfOwnerAndMethod permissionRuleMethodsForThisAction = rulesForClass.get(actionName);
 
                 permissionRuleMethodsForThisAction.forEach(serviceAndMethod -> {
 

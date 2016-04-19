@@ -7,7 +7,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -26,6 +25,8 @@ import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.apache.commons.lang3.tuple.Pair.of;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 
 @Component
@@ -42,14 +43,14 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     private DtoClassToLookupMethod lookupStrategyMap;
 
-    public static boolean isAnonymous(UserResource user){
+    public static boolean isAnonymous(UserResource user) {
         return user == ANONYMOUS_USER;
     }
 
     @PostConstruct
     void generateRules() {
         Collection<Object> permissionRuleBeans = applicationContext.getBeansWithAnnotation(PermissionRules.class).values();
-        ListOfMethods allRulesMethods = findRules(permissionRuleBeans);
+        ListOfOwnerAndMethod allRulesMethods = findRules(permissionRuleBeans);
 
         List<Pair<Object, Method>> failed = failedPermissionMethodSignatures(allRulesMethods);
         if (!failed.isEmpty()) {
@@ -64,7 +65,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         if (LOG.isDebugEnabled()) {
             rulesMap.values().forEach(permission -> permission.values().forEach(pairs -> pairs.forEach(pair -> {
                 Method permissionMethod = pair.getRight();
-                PermissionRule permissionAnnotation = AnnotationUtils.findAnnotation(permissionMethod, PermissionRule.class);
+                PermissionRule permissionAnnotation = findAnnotation(permissionMethod, PermissionRule.class);
                 LOG.debug("Registered PermissionRule: " + permissionAnnotation.description());
             })));
         }
@@ -73,7 +74,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @PostConstruct
     void generateLookupStrategies() {
         Collection<Object> permissionEntityLookupBeans = applicationContext.getBeansWithAnnotation(PermissionEntityLookupStrategies.class).values();
-        ListOfMethods allLookupStrategyMethods = findLookupStrategies(permissionEntityLookupBeans);
+        ListOfOwnerAndMethod allLookupStrategyMethods = findLookupStrategies(permissionEntityLookupBeans);
 
         List<Pair<Object, Method>> failed = failedLookupMethodSignatures(allLookupStrategyMethods);
         if (!failed.isEmpty()) {
@@ -84,11 +85,11 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
         DtoClassToLookupMethods collectedPermissionLookupMethods = returnTypeToMethods(allLookupStrategyMethods);
         lookupStrategyMap = DtoClassToLookupMethod.from(collectedPermissionLookupMethods.entrySet().stream().
-                map(entry -> Pair.of(entry.getKey(), getOnlyElement(entry.getValue()))).
+                map(entry -> of(entry.getKey(), getOnlyElement(entry.getValue()))).
                 collect(toMap(Pair::getLeft, Pair::getRight)));
     }
 
-    List<Pair<Object, Method>> failedPermissionMethodSignatures(ListOfMethods collectedRulesMethods) {
+    List<Pair<Object, Method>> failedPermissionMethodSignatures(ListOfOwnerAndMethod collectedRulesMethods) {
         return collectedRulesMethods.stream().filter(
                 beanAndMethod -> {
                     Method method = beanAndMethod.getRight();
@@ -104,7 +105,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         ).collect(toList());
     }
 
-    List<Pair<Object, Method>> failedLookupMethodSignatures(ListOfMethods collectedLookupMethods) {
+    List<Pair<Object, Method>> failedLookupMethodSignatures(ListOfOwnerAndMethod collectedLookupMethods) {
         return collectedLookupMethods.stream().filter(
                 beanAndMethod -> {
                     Method method = beanAndMethod.getRight();
@@ -120,41 +121,60 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     }
 
 
-    ListOfMethods findRules(Collection<Object> ruleContainingBeans) {
-        return findAnnotatedMethods(ruleContainingBeans, PermissionRule.class);
+    ListOfOwnerAndMethod findRules(Collection<Object> ruleContainingBeans) {
+        return findAnnotated(ruleContainingBeans, PermissionRule.class);
     }
 
-    ListOfMethods findLookupStrategies(Collection<Object> permissionEntityLookupBeans) {
-        return findAnnotatedMethods(permissionEntityLookupBeans, PermissionEntityLookupStrategy.class);
+    ListOfOwnerAndMethod findLookupStrategies(Collection<Object> permissionEntityLookupBeans) {
+        return findAnnotated(permissionEntityLookupBeans, PermissionEntityLookupStrategy.class);
     }
 
-    ListOfMethods findAnnotatedMethods(Collection<Object> owningBeans, Class<? extends Annotation> annotation) {
-        List<Pair<Object, List<Method>>> beansAndPermissionMethods = owningBeans.stream().
-                map(rulesClassInstance -> Pair.of(rulesClassInstance, asList(rulesClassInstance.getClass().getMethods()))).
-                map(beanAndAllMethods -> {
-                    List<Method> permissionsRuleMethods = beanAndAllMethods.getRight().stream().filter(method -> AnnotationUtils.findAnnotation(method, annotation) != null).collect(toList());
-                    return Pair.of(beanAndAllMethods.getLeft(), permissionsRuleMethods);
-                }).collect(toList());
-        return ListOfMethods.from(beansAndPermissionMethods.stream().flatMap(beanAndPermissionMethods -> {
-            Object bean = beanAndPermissionMethods.getLeft();
-            return beanAndPermissionMethods.getRight().stream().map(method -> Pair.of(bean, method));
-        }).collect(toList()));
 
+    /**
+     * A List of Pairs of owning Objects with Methods for every Method found with the given Annotation.
+     * There maybe multiple Pairs with the same owning Object if the owning  Object has multiple Methods with the given annotation.
+     *
+     * @param owningBeans
+     * @param annotation
+     * @return
+     */
+    private static ListOfOwnerAndMethod findAnnotated(final Collection<Object> owningBeans, Class<? extends Annotation> annotation) {
+        // Generate a List of owning Objects with a List of all of their Methods which have the annotation.
+        final List<Pair<Object, List<Method>>> owningBeansWithAnnotatedMethods = owningBeans.stream()
+                .map(owningBean -> Pair.of(owningBean, findAnnotatedMethods(owningBean, annotation)))
+                .collect(toList());
+        // Flatten this List down so that we have a Pair of owning Object and Method of every Method we have found
+        final List<Pair<Object, Method>> owningBeanAndMethodForAllAnnotated = owningBeansWithAnnotatedMethods.stream()
+                .flatMap(owningBeanAndMethods -> {
+                    final Object owningObject = owningBeanAndMethods.getKey();
+                    final List<Method> methods = owningBeanAndMethods.getValue();
+                    return transformToOwningObjectAndMethod(owningObject, methods).stream();
+                })
+                .collect(toList()); //
+        return ListOfOwnerAndMethod.from(owningBeanAndMethodForAllAnnotated);
+    }
+
+    private static final List<Pair<Object, Method>> transformToOwningObjectAndMethod(final Object owningBean, List<Method> methods) {
+        return methods.stream().map(method -> Pair.of(owningBean, method)).collect(toList());
+    }
+
+    private static List<Method> findAnnotatedMethods(final Object owningBean, final Class<? extends Annotation> annotation) {
+        return asList(owningBean.getClass().getMethods()).stream().filter(method -> findAnnotation(method, annotation) != null).collect(toList());
     }
 
     DtoClassToPermissionsMethods dtoClassToMethods(List<Pair<Object, Method>> allRuleMethods) {
         DtoClassToPermissionsMethods map = new DtoClassToPermissionsMethods();
         for (Pair<Object, Method> methodAndBean : allRuleMethods) {
-            map.putIfAbsent(methodAndBean.getRight().getParameterTypes()[0], new ListOfMethods());
+            map.putIfAbsent(methodAndBean.getRight().getParameterTypes()[0], new ListOfOwnerAndMethod());
             map.get(methodAndBean.getRight().getParameterTypes()[0]).add(methodAndBean);
         }
         return map;
     }
 
-    DtoClassToLookupMethods returnTypeToMethods(ListOfMethods allRuleMethods) {
+    DtoClassToLookupMethods returnTypeToMethods(ListOfOwnerAndMethod allRuleMethods) {
         DtoClassToLookupMethods map = new DtoClassToLookupMethods();
         for (Pair<Object, Method> methodAndBean : allRuleMethods) {
-            map.putIfAbsent(methodAndBean.getRight().getReturnType(), new ListOfMethods());
+            map.putIfAbsent(methodAndBean.getRight().getReturnType(), new ListOfOwnerAndMethod());
             map.get(methodAndBean.getRight().getReturnType()).add(methodAndBean);
         }
         return map;
@@ -163,12 +183,12 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     DtoClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods(DtoClassToPermissionsMethods dtoClassToMethods) {
         DtoClassToPermissionsToPermissionsMethods map = new DtoClassToPermissionsToPermissionsMethods();
-        for (Entry<Class<?>, ListOfMethods> entry : dtoClassToMethods.entrySet()) {
+        for (Entry<Class<?>, ListOfOwnerAndMethod> entry : dtoClassToMethods.entrySet()) {
             for (Pair<Object, Method> methodAndBean : entry.getValue()) {
                 Method method = methodAndBean.getRight();
-                String permission = AnnotationUtils.findAnnotation(method, PermissionRule.class).value();
+                String permission = findAnnotation(method, PermissionRule.class).value();
                 map.putIfAbsent(entry.getKey(), new PermissionsToPermissionsMethods());
-                map.get(entry.getKey()).putIfAbsent(permission, new ListOfMethods());
+                map.get(entry.getKey()).putIfAbsent(permission, new ListOfOwnerAndMethod());
                 map.get(entry.getKey()).get(permission).add(methodAndBean);
             }
         }
@@ -183,7 +203,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
 
         Class<?> dtoClass = targetDomainObject.getClass();
-        ListOfMethods methodsToCheck =
+        ListOfOwnerAndMethod methodsToCheck =
                 rulesMap.getOrDefault(dtoClass, emptyPermissions())
                         .getOrDefault(permission, emptyMethods());
         return methodsToCheck.stream().map(
@@ -270,8 +290,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         ).sorted().collect(toList());
     }
 
-    private static ListOfMethods emptyMethods() {
-        return new ListOfMethods();
+    private static ListOfOwnerAndMethod emptyMethods() {
+        return new ListOfOwnerAndMethod();
     }
 
 
@@ -280,24 +300,28 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     }
 
 
-    public static class ListOfMethods extends ArrayList<Pair<Object, Method>> {
-        public static ListOfMethods from(List<Pair<Object, Method>> list) {
-            ListOfMethods listOfMethods = new ListOfMethods();
+    /**
+     * An Alias for a List of owning Objects and a single Method on the owning Object.
+     * Thus representing a List of callable functions.
+     */
+    public static class ListOfOwnerAndMethod extends ArrayList<Pair<Object, Method>> {
+        public static ListOfOwnerAndMethod from(List<Pair<Object, Method>> list) {
+            ListOfOwnerAndMethod listOfMethods = new ListOfOwnerAndMethod();
             listOfMethods.addAll(list);
             return listOfMethods;
         }
     }
 
-    public static class PermissionsToPermissionsMethods extends HashMap<String, ListOfMethods> {
+    public static class PermissionsToPermissionsMethods extends HashMap<String, ListOfOwnerAndMethod> {
     }
 
     public static class DtoClassToPermissionsToPermissionsMethods extends HashMap<Class<?>, PermissionsToPermissionsMethods> {
     }
 
-    public static class DtoClassToPermissionsMethods extends HashMap<Class<?>, ListOfMethods> {
+    public static class DtoClassToPermissionsMethods extends HashMap<Class<?>, ListOfOwnerAndMethod> {
     }
 
-    public static class DtoClassToLookupMethods extends HashMap<Class<?>, ListOfMethods> {
+    public static class DtoClassToLookupMethods extends HashMap<Class<?>, ListOfOwnerAndMethod> {
     }
 
     public static class DtoClassToLookupMethod extends HashMap<Class<?>, Pair<Object, Method>> {
@@ -307,7 +331,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             return dtoClassToLookupMethod;
         }
     }
-
 
 }
 
