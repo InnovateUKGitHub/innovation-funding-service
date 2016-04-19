@@ -1,8 +1,8 @@
 package com.worth.ifs;
 
 import com.worth.ifs.security.CustomPermissionEvaluator;
-import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToLookupMethod;
-import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods;
+import com.worth.ifs.security.CustomPermissionEvaluator.PermissionedObjectClassesToListOfLookup;
+import com.worth.ifs.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import com.worth.ifs.security.CustomPermissionEvaluator.ListOfOwnerAndMethod;
 import com.worth.ifs.security.CustomPermissionEvaluator.PermissionsToPermissionsMethods;
 import org.apache.commons.lang3.tuple.Pair;
@@ -40,8 +40,8 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
     private Map<Class<?>, Object> mockPermissionRulesBeans;
     private Map<Class<?>, Object> mockPermissionEntityLookupStrategies;
 
-    private DtoClassToPermissionsToPermissionsMethods originalRulesMap;
-    private DtoClassToLookupMethod originalLookupStrategyMap;
+    private PermissionedObjectClassToPermissionsToPermissionsMethods originalRulesMap;
+    private PermissionedObjectClassesToListOfLookup originalLookupStrategyMap;
 
     /**
      * Look up a Mockito mock for a given {@link com.worth.ifs.security.PermissionRules} annotated bean class
@@ -79,59 +79,65 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
         // get the custom permission evaluator from the applicationContext and swap its rulesMap for one containing only
         // Mockito mocks
         CustomPermissionEvaluator permissionEvaluator = (CustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
-            originalRulesMap = (DtoClassToPermissionsToPermissionsMethods) getField(permissionEvaluator, "rulesMap");
+            originalRulesMap = (PermissionedObjectClassToPermissionsToPermissionsMethods) getField(permissionEvaluator, "rulesMap");
 
-        Pair<PermissionRulesClassToMock, DtoClassToPermissionsToPermissionsMethods> mocksAndRecorders =
+        Pair<PermissionRulesClassToMock, PermissionedObjectClassToPermissionsToPermissionsMethods> mocksAndRecorders =
                 generateMockedOutRulesMap(originalRulesMap);
 
         PermissionRulesClassToMock mocks = mocksAndRecorders.getLeft();
-        DtoClassToPermissionsToPermissionsMethods recordingProxies = mocksAndRecorders.getRight();
+        PermissionedObjectClassToPermissionsToPermissionsMethods recordingProxies = mocksAndRecorders.getRight();
 
         mockPermissionRulesBeans = mocks;
         setRuleMap(permissionEvaluator, recordingProxies);
 
-        originalLookupStrategyMap = (DtoClassToLookupMethod) getField(permissionEvaluator, "lookupStrategyMap");
+        originalLookupStrategyMap = (PermissionedObjectClassesToListOfLookup) getField(permissionEvaluator, "lookupStrategyMap");
 
-        Pair<LookupClassToMock, DtoClassToLookupMethod> mockedOut = generateMockedOutLookupMap(originalLookupStrategyMap);
+        Pair<PermissionedObjectClassToMockLookupStrategyClasses, PermissionedObjectClassesToListOfLookup> mockedOut = generateMockedOutLookupMap(originalLookupStrategyMap);
         mockPermissionEntityLookupStrategies = mockedOut.getLeft();
         setLookupStrategyMap(permissionEvaluator, mockedOut.getRight());
 
         setLoggedInUser(newUserResource().build());
     }
 
-    private void setLookupStrategyMap(CustomPermissionEvaluator permissionEvaluator, DtoClassToLookupMethod right) {
+    private void setLookupStrategyMap(CustomPermissionEvaluator permissionEvaluator, PermissionedObjectClassesToListOfLookup right) {
         setField(permissionEvaluator, "lookupStrategyMap", right);
     }
 
-    private void setRuleMap(CustomPermissionEvaluator permissionEvaluator, DtoClassToPermissionsToPermissionsMethods recordingProxies) {
+    private void setRuleMap(CustomPermissionEvaluator permissionEvaluator, PermissionedObjectClassToPermissionsToPermissionsMethods recordingProxies) {
         setField(permissionEvaluator, "rulesMap", recordingProxies);
     }
 
-    protected Pair<LookupClassToMock, DtoClassToLookupMethod> generateMockedOutLookupMap(DtoClassToLookupMethod originalLookupStrategyMap) {
-        LookupClassToMock mockLookupBeans = new LookupClassToMock();
-        DtoClassToLookupMethod newMockLookupMap = new DtoClassToLookupMethod();
+    protected Pair<PermissionedObjectClassToMockLookupStrategyClasses, PermissionedObjectClassesToListOfLookup> generateMockedOutLookupMap(PermissionedObjectClassesToListOfLookup originalLookupStrategyMap) {
+        final PermissionedObjectClassToMockLookupStrategyClasses mockLookupBeans = new PermissionedObjectClassToMockLookupStrategyClasses();
+        final PermissionedObjectClassesToListOfLookup newMockLookupMap = new PermissionedObjectClassesToListOfLookup();
 
-        for (Entry<Class<?>, Pair<Object, Method>> entry : originalLookupStrategyMap.entrySet()) {
-            Class<?> originalDtoClass = entry.getKey();
-            Pair<Object, Method> originalLookupBeansAndMethod = entry.getValue();
-            Object originalLookupBeans = originalLookupBeansAndMethod.getLeft();
-            Method originalLookupMethod = originalLookupBeansAndMethod.getRight();
+        for (Entry<Class<?>, ListOfOwnerAndMethod> entry : originalLookupStrategyMap.entrySet()) {
+            final Class<?> permissionedObjectClass = entry.getKey();
+            final ListOfOwnerAndMethod originalLookups = entry.getValue();
+            for (Pair<Object, Method> originalLookup: originalLookups) {
+                final Object originalLookupBeans = originalLookup.getLeft(); // The owner
+                final Method originalLookupMethod = originalLookup.getRight(); // The method
 
-            if (!mockLookupBeans.containsKey(originalLookupBeans.getClass())) {
-                mockLookupBeans.put(originalLookupBeans.getClass(), mock(originalLookupBeans.getClass()));
+                if (!mockLookupBeans.containsKey(originalLookupBeans.getClass())) { // First time we've come across this owner class - e.g. ApplicationLookupStrategy
+                    mockLookupBeans.put(originalLookupBeans.getClass(), mock(originalLookupBeans.getClass())); // Put this bean into the mockLockupBean along with a Mock implementation of it.
+                }
+                final Object mockLookupBean = mockLookupBeans.get(originalLookupBeans.getClass()); // Now get the Mock ApplicationLookupStrategy
+
+                final String methodName = originalLookupMethod.getName(); // Get the name of the method on the ApplicationLookupStrategy
+                Class<?>[] methodParameters = originalLookupMethod.getParameterTypes(); // Get the parameters on this method
+                final Method mockLookupMethod;
+
+                try {
+                    mockLookupMethod = mockLookupBean.getClass().getMethod(methodName, methodParameters); // Now get the method on the mock that looks like the method on the
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException("Unable to look up same method on mock", e);
+                }
+                if (!newMockLookupMap.containsKey(permissionedObjectClass)) {
+                    newMockLookupMap.put(permissionedObjectClass, new ListOfOwnerAndMethod());
+                }
+                final ListOfOwnerAndMethod mockLookups = newMockLookupMap.get(permissionedObjectClass);
+                mockLookups.add(Pair.of(mockLookupBean, mockLookupMethod));
             }
-            Object mockLookupBean = mockLookupBeans.get(originalLookupBeans.getClass());
-
-            String methodName = originalLookupMethod.getName();
-            Class<?>[] methodParameters = originalLookupMethod.getParameterTypes();
-            final Method mockLookupMethod;
-
-            try {
-                mockLookupMethod = mockLookupBean.getClass().getMethod(methodName, methodParameters);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException("Unable to look up same method on mock", e);
-            }
-            newMockLookupMap.put(originalDtoClass, Pair.of(mockLookupBean, mockLookupMethod));
         }
 
         return Pair.of(mockLookupBeans, newMockLookupMap);
@@ -158,13 +164,13 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
      * @param originalRulesMap
      * @return
      */
-    protected Pair<PermissionRulesClassToMock, DtoClassToPermissionsToPermissionsMethods> generateMockedOutRulesMap(
-            DtoClassToPermissionsToPermissionsMethods originalRulesMap) {
+    protected Pair<PermissionRulesClassToMock, PermissionedObjectClassToPermissionsToPermissionsMethods> generateMockedOutRulesMap(
+            PermissionedObjectClassToPermissionsToPermissionsMethods originalRulesMap) {
 
         PermissionRulesClassToMock mockPermissionRulesBeans = new PermissionRulesClassToMock();
         PermissionRulesClassToMock recordingPermissionRulesBeans = new PermissionRulesClassToMock();
 
-        DtoClassToPermissionsToPermissionsMethods newMockRulesMap = new DtoClassToPermissionsToPermissionsMethods();
+        PermissionedObjectClassToPermissionsToPermissionsMethods newMockRulesMap = new PermissionedObjectClassToPermissionsToPermissionsMethods();
 
         for (Entry<Class<?>, PermissionsToPermissionsMethods> entry : originalRulesMap.entrySet()) {
 
@@ -229,6 +235,5 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
 
     public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {}
 
-    public static class LookupClassToMock extends HashMap<Class<?>, Object> {}
-
+    public static class PermissionedObjectClassToMockLookupStrategyClasses extends HashMap<Class<?>, Object> {}
 }

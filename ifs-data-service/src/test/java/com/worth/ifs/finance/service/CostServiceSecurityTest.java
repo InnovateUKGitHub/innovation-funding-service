@@ -53,6 +53,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
         costLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostLookupStrategy.class);
         costFieldLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CostFieldLookupStrategy.class);
+        applicationFinanceLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationFinanceLookupStrategy.class);
     }
 
     @Test
@@ -155,18 +156,18 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
                 });
     }
 
-//    TODO qqRP
-//    @Test
-//    public void testAddCost() {
-//        final Long applicationFinanceId = 1L;
-//        final Long questionId = 2L;
-//        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
-//        assertAccessDenied(
-//                () -> service.addCost(applicationFinanceId, questionId, new AcademicCost()),
-//                () -> {
-//                    verify(applicationFinanceRules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class)));
-//                });
-//    }
+
+    @Test
+    public void testAddCost() {
+        final Long applicationFinanceId = 1L;
+        final Long questionId = 2L;
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.addCost(applicationFinanceId, questionId, new AcademicCost()),
+                () -> {
+                    verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
 
 
     private void verifyApplicationFinanceResourceReadRulesCalled() {

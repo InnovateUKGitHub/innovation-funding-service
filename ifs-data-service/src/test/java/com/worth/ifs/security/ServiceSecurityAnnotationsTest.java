@@ -94,8 +94,8 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
         List<String[]> permissionRuleRows = new ArrayList<>();
 
-        CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods rulesMap =
-                (CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(evaluator, "rulesMap");
+        CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap =
+                (CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(evaluator, "rulesMap");
 
         Comparator<Class<?>> simpleNameComparator = (clazz1, clazz2) -> clazz1.getSimpleName().compareTo(clazz2.getSimpleName());
         List<Class<?>> orderedClasses = sort(rulesMap.keySet(), simpleNameComparator);

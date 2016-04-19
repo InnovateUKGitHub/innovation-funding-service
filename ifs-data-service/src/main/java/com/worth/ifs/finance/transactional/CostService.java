@@ -21,7 +21,7 @@ public interface CostService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CostFieldResource>> findAllCostFields();
 
-    @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.application.resource.ApplicationResource', 'ADD_COST')")
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
     ServiceResult<CostItem> addCost(@P("applicationFinanceId")Long applicationFinanceId, Long questionId, CostItem newCostItem);
 
     @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.finance.domain.Cost', 'UPDATE')")

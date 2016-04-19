@@ -21,11 +21,9 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;
 
-import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-import static org.apache.commons.lang3.tuple.Pair.of;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 
@@ -39,9 +37,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Autowired
     private ApplicationContext applicationContext;
 
-    private DtoClassToPermissionsToPermissionsMethods rulesMap;
+    private PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap;
 
-    private DtoClassToLookupMethod lookupStrategyMap;
+    private PermissionedObjectClassesToListOfLookup lookupStrategyMap;
 
     public static boolean isAnonymous(UserResource user) {
         return user == ANONYMOUS_USER;
@@ -59,7 +57,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             throw new IllegalStateException(error); // Fail fast
         }
 
-        DtoClassToPermissionsMethods collectedRulesMethods = dtoClassToMethods(allRulesMethods);
+        PermissionedObjectClassToPermissionsMethods collectedRulesMethods = dtoClassToMethods(allRulesMethods);
         rulesMap = dtoClassToPermissionToMethods(collectedRulesMethods);
 
         if (LOG.isDebugEnabled()) {
@@ -73,20 +71,11 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     @PostConstruct
     void generateLookupStrategies() {
-        Collection<Object> permissionEntityLookupBeans = applicationContext.getBeansWithAnnotation(PermissionEntityLookupStrategies.class).values();
-        ListOfOwnerAndMethod allLookupStrategyMethods = findLookupStrategies(permissionEntityLookupBeans);
-
-        List<Pair<Object, Method>> failed = failedLookupMethodSignatures(allLookupStrategyMethods);
-        if (!failed.isEmpty()) {
-            String error = "Lookup methods: " + Arrays.toString(failed.toArray()) + " have an incorrect signature";
-            LOG.error(error);
-            throw new IllegalStateException(error); // Fail fast
-        }
-
-        DtoClassToLookupMethods collectedPermissionLookupMethods = returnTypeToMethods(allLookupStrategyMethods);
-        lookupStrategyMap = DtoClassToLookupMethod.from(collectedPermissionLookupMethods.entrySet().stream().
-                map(entry -> of(entry.getKey(), getOnlyElement(entry.getValue()))).
-                collect(toMap(Pair::getLeft, Pair::getRight)));
+        final Collection<Object> permissionEntityLookupBeans = applicationContext.getBeansWithAnnotation(PermissionEntityLookupStrategies.class).values();
+        final ListOfOwnerAndMethod allLookupStrategyMethods = findLookupStrategies(permissionEntityLookupBeans);
+        final PermissionedObjectClassToLookupMethods collectedPermissionLookupMethods = returnTypeToMethods(allLookupStrategyMethods);
+        lookupStrategyMap = PermissionedObjectClassesToListOfLookup.from(collectedPermissionLookupMethods);
+        validate(lookupStrategyMap); // Fail Fast
     }
 
     List<Pair<Object, Method>> failedPermissionMethodSignatures(ListOfOwnerAndMethod collectedRulesMethods) {
@@ -105,21 +94,53 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         ).collect(toList());
     }
 
-    List<Pair<Object, Method>> failedLookupMethodSignatures(ListOfOwnerAndMethod collectedLookupMethods) {
-        return collectedLookupMethods.stream().filter(
-                beanAndMethod -> {
-                    Method method = beanAndMethod.getRight();
-                    if (method.getParameterTypes().length == 1) {
-                        Class<?> firstParameterClass = method.getParameterTypes()[0];
-                        if (Serializable.class.isAssignableFrom(firstParameterClass)) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-        ).collect(toList());
+
+    private static final void validate(final PermissionedObjectClassesToListOfLookup lookupsStrategyMap) {
+        for (final Entry<Class<?>, ListOfOwnerAndMethod> permissionedObjectClassTolookupsStrategies : lookupsStrategyMap.entrySet()) {
+            if (!lookupsWithMethodsThatDoNotHaveASingleParameter(permissionedObjectClassTolookupsStrategies.getValue()).isEmpty()){
+                final String error = "Lookups must have a single parameter";
+                LOG.error(error);
+                throw new IllegalArgumentException(error);
+            }
+            if (!lookupsWithMethodsThatDoNotHaveASerializableParameter(permissionedObjectClassTolookupsStrategies.getValue()).isEmpty()){
+                final String error = "Lookups must have a serializable parameter";
+                LOG.error(error);
+                throw new IllegalArgumentException(error);
+            }
+            if (!lookupsWithMethodsThatHaveDuplicateLookupKeyParameter(permissionedObjectClassTolookupsStrategies.getValue()).isEmpty()){
+                final String error = "There must not be any duplicates";
+                LOG.error(error);
+                throw new IllegalArgumentException(error);
+            }
+        }
     }
 
+    private static final ListOfOwnerAndMethod lookupsWithMethodsThatDoNotHaveASingleParameter(final ListOfOwnerAndMethod toCheck) {
+        final List<Pair<Object, Method>> matching = toCheck.stream().
+                filter(ownerAndMethod -> ownerAndMethod.getValue().getParameterTypes().length != 1)
+                .collect(toList());
+        return ListOfOwnerAndMethod.from(matching);
+    }
+
+    private static final ListOfOwnerAndMethod lookupsWithMethodsThatDoNotHaveASerializableParameter(final ListOfOwnerAndMethod toCheck) {
+        final List<Pair<Object, Method>> matching = toCheck.stream().
+                filter(ownerAndMethod -> {
+                    final Class<?>[] parameterTypes = ownerAndMethod.getValue().getParameterTypes();
+                    return parameterTypes.length == 1 && !Serializable.class.isAssignableFrom(parameterTypes[0]);
+                })
+                .collect(toList());
+        return ListOfOwnerAndMethod.from(matching);
+    }
+
+    private static final ListOfOwnerAndMethod lookupsWithMethodsThatHaveDuplicateLookupKeyParameter(final ListOfOwnerAndMethod toCheck) {
+        final Map<? extends Class<?>, List<Pair<Object, Method>>> keyParameterToLookup = toCheck.stream().
+                filter(ownerAndMethod -> ownerAndMethod.getRight().getParameterTypes().length == 1).
+                collect(groupingBy(ownerAndMethod -> ownerAndMethod.getRight().getParameterTypes()[0], toList()));
+        final List<Pair<Object, Method>> duplicates = keyParameterToLookup.entrySet().stream()
+                .filter(entry -> entry.getValue().size() > 1)
+                .flatMap(entry -> entry.getValue().stream()).collect(toList());
+        return ListOfOwnerAndMethod.from(duplicates);
+    }
 
     ListOfOwnerAndMethod findRules(Collection<Object> ruleContainingBeans) {
         return findAnnotated(ruleContainingBeans, PermissionRule.class);
@@ -162,8 +183,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         return asList(owningBean.getClass().getMethods()).stream().filter(method -> findAnnotation(method, annotation) != null).collect(toList());
     }
 
-    DtoClassToPermissionsMethods dtoClassToMethods(List<Pair<Object, Method>> allRuleMethods) {
-        DtoClassToPermissionsMethods map = new DtoClassToPermissionsMethods();
+    PermissionedObjectClassToPermissionsMethods dtoClassToMethods(List<Pair<Object, Method>> allRuleMethods) {
+        PermissionedObjectClassToPermissionsMethods map = new PermissionedObjectClassToPermissionsMethods();
         for (Pair<Object, Method> methodAndBean : allRuleMethods) {
             map.putIfAbsent(methodAndBean.getRight().getParameterTypes()[0], new ListOfOwnerAndMethod());
             map.get(methodAndBean.getRight().getParameterTypes()[0]).add(methodAndBean);
@@ -171,8 +192,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         return map;
     }
 
-    DtoClassToLookupMethods returnTypeToMethods(ListOfOwnerAndMethod allRuleMethods) {
-        DtoClassToLookupMethods map = new DtoClassToLookupMethods();
+    PermissionedObjectClassToLookupMethods returnTypeToMethods(ListOfOwnerAndMethod allRuleMethods) {
+        PermissionedObjectClassToLookupMethods map = new PermissionedObjectClassToLookupMethods();
         for (Pair<Object, Method> methodAndBean : allRuleMethods) {
             map.putIfAbsent(methodAndBean.getRight().getReturnType(), new ListOfOwnerAndMethod());
             map.get(methodAndBean.getRight().getReturnType()).add(methodAndBean);
@@ -181,8 +202,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     }
 
 
-    DtoClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods(DtoClassToPermissionsMethods dtoClassToMethods) {
-        DtoClassToPermissionsToPermissionsMethods map = new DtoClassToPermissionsToPermissionsMethods();
+    PermissionedObjectClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods(PermissionedObjectClassToPermissionsMethods dtoClassToMethods) {
+        PermissionedObjectClassToPermissionsToPermissionsMethods map = new PermissionedObjectClassToPermissionsToPermissionsMethods();
         for (Entry<Class<?>, ListOfOwnerAndMethod> entry : dtoClassToMethods.entrySet()) {
             for (Pair<Object, Method> methodAndBean : entry.getValue()) {
                 Method method = methodAndBean.getRight();
@@ -214,17 +235,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     }
 
     public boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission) {
-        Pair<Object, Method> lookupMethod = lookupStrategyMap.get(targetType);
-
-        if (lookupMethod == null || lookupMethod.getRight() == null) {
-            throw new IllegalArgumentException("Could not find lookup mechanism for type " + targetType + ".  Should be a method annotated " +
-                    "with @PermissionEntityLookupStrategy within a class annotated with @PermissionEntityLookupStrategies");
-        }
-
+        final Pair<Object, Method> lookup = lookup(targetId, targetType);
         final Object permissionEntity;
-
         try {
-            permissionEntity = lookupMethod.getRight().invoke(lookupMethod.getLeft(), targetId);
+            permissionEntity = lookup.getRight().invoke(lookup.getLeft(), targetId);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new AccessDeniedException("Could not successfully call permission entity lookup method", e);
         }
@@ -234,6 +248,31 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
 
         return hasPermission(authentication, permissionEntity, permission);
+    }
+
+    private Pair<Object, Method> lookup(final Serializable targetId, final Class<?> targetType) {
+        final List<Pair<Object, Method>> allLookupsForTargetClass = lookupStrategyMap.get(targetType);
+        if (allLookupsForTargetClass == null) {
+            final String error = "No lookups at all found for target class " + targetType + " with target id: " + targetId;
+            LOG.error(error);
+            throw new IllegalArgumentException(error);
+        }
+        final List<Pair<Object, Method>> lookupsForTargetClassAndTargetIdClass = allLookupsForTargetClass.stream()
+                .filter(lookupForTargetClass -> {
+                    final Method method = lookupForTargetClass.getValue();
+                    final boolean methodAcceptsTargetId = method.getParameterTypes()[0].isAssignableFrom(targetId.getClass());
+                    return methodAcceptsTargetId;
+                }).collect(toList());
+        if (lookupsForTargetClassAndTargetIdClass.isEmpty()) {
+            final String error = "No lookup found for target class " + targetType + " with target id: " + targetId;
+            LOG.error(error);
+            throw new IllegalArgumentException(error);
+        } else if (lookupsForTargetClassAndTargetIdClass.size() > 1) {
+            final String error = "Multiple lookups found for target class " + targetType + " with target id: " + targetId;
+            LOG.error(error);
+            throw new IllegalArgumentException(error);
+        }
+        return lookupsForTargetClassAndTargetIdClass.get(0);
     }
 
     @Override
@@ -315,18 +354,18 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     public static class PermissionsToPermissionsMethods extends HashMap<String, ListOfOwnerAndMethod> {
     }
 
-    public static class DtoClassToPermissionsToPermissionsMethods extends HashMap<Class<?>, PermissionsToPermissionsMethods> {
+    public static class PermissionedObjectClassToPermissionsToPermissionsMethods extends HashMap<Class<?>, PermissionsToPermissionsMethods> {
     }
 
-    public static class DtoClassToPermissionsMethods extends HashMap<Class<?>, ListOfOwnerAndMethod> {
+    public static class PermissionedObjectClassToPermissionsMethods extends HashMap<Class<?>, ListOfOwnerAndMethod> {
     }
 
-    public static class DtoClassToLookupMethods extends HashMap<Class<?>, ListOfOwnerAndMethod> {
+    public static class PermissionedObjectClassToLookupMethods extends HashMap<Class<?>, ListOfOwnerAndMethod> {
     }
 
-    public static class DtoClassToLookupMethod extends HashMap<Class<?>, Pair<Object, Method>> {
-        public static DtoClassToLookupMethod from(Map<Class<?>, Pair<Object, Method>> map) {
-            DtoClassToLookupMethod dtoClassToLookupMethod = new DtoClassToLookupMethod();
+    public static class PermissionedObjectClassesToListOfLookup extends HashMap<Class<?>, ListOfOwnerAndMethod> {
+        public static PermissionedObjectClassesToListOfLookup from(Map<Class<?>, ListOfOwnerAndMethod> map) {
+            final PermissionedObjectClassesToListOfLookup dtoClassToLookupMethod = new PermissionedObjectClassesToListOfLookup();
             dtoClassToLookupMethod.putAll(map);
             return dtoClassToLookupMethod;
         }

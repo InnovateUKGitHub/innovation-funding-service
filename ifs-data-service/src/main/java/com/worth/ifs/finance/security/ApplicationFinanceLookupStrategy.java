@@ -23,9 +23,9 @@ public class ApplicationFinanceLookupStrategy {
         return applicationMapper.mapToResource(applicationFinanceRepository.findByApplicationIdAndOrganisationId(id.getApplicationId(), id.getOrganisationId()));
     }
 
-//    TODO qqRP make take multiple strategies
-//    @PermissionEntityLookupStrategy
-//    public ApplicationFinanceResource getApplicationFinance(final Long id) {
-//        return applicationMapper.mapToResource(applicationFinanceRepository.findOne(id));
-//    }
+
+    @PermissionEntityLookupStrategy
+    public ApplicationFinanceResource getApplicationFinance(final Long id) {
+        return applicationMapper.mapToResource(applicationFinanceRepository.findOne(id));
+    }
 }
