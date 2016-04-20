@@ -43,7 +43,7 @@ public class CostPermissionRules {
     }
 
     private boolean isCollaborator(final Cost cost, final UserResource user){
-        final ApplicationFinanceResource applicationFinance = applicationMapper.mapToResource(applicationFinanceRepository.findOne(cost.getId()));
+        final ApplicationFinanceResource applicationFinance = applicationMapper.mapToResource(applicationFinanceRepository.findOne(cost.getApplicationFinance().getId()));
         final boolean isLead = checkRole(user, applicationFinance.getApplication(), applicationFinance.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
         final boolean isCollaborator = checkRole(user, applicationFinance.getApplication(), applicationFinance.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
         return isLead || isCollaborator;
