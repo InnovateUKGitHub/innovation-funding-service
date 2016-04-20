@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,6 +24,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Optional.of;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -95,8 +98,8 @@ public class UserController {
                 .toPutResponse();
     }
 
-    @RequestMapping("/" + URL_PASSWORD_RESET + "/{hash}/{password}")
-    public RestResult<Void> resetPassword(@PathVariable("hash") final String hash, @PathVariable("password") final String password) {
+    @RequestMapping(value = "/" + URL_PASSWORD_RESET + "/{hash}", method = POST)
+    public RestResult<Void> resetPassword(@PathVariable("hash") final String hash, @RequestBody final String password) {
         return userService.changePassword(hash, password)
                 .toPutResponse();
     }
@@ -133,7 +136,7 @@ public class UserController {
         return registrationService.createApplicantUser(organisationId, of(competitionId), userResource).toPostCreateResponse();
     }
 
-    @RequestMapping("/updateDetails")
+    @RequestMapping(value = "/updateDetails", method = POST)
     public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
         return userProfileService.updateProfile(userResource).toPutResponse();
     }

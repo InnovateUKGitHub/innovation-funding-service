@@ -140,9 +140,6 @@ public class AssessmentSubmitReviewModelTest {
         List<Question> allQuestions = combineLists(section1Questions, section2Questions);
         assertEquals(allQuestions, model.getQuestions());
         assertEquals(allQuestions, model.getScorableQuestions());
-        // TODO qqRP assertEquals(1 + 2 + 1 + 2, model.getTotalScore());
-        // TODO qqRP assertEquals(10 * 2 * 2, model.getPossibleScore());
-        // TODO qqRP assertEquals(15, model.getScorePercentage());
         allQuestions.forEach(question -> assertNotNull(model.getFeedbackForQuestion(question)));
 
         //
@@ -281,9 +278,6 @@ public class AssessmentSubmitReviewModelTest {
         //
         assertEquals(2, model.getQuestions().size());
         assertEquals(1, model.getScorableQuestions().size());
-        // qqRP TODO assertEquals(1, model.getTotalScore());
-        // qqRP TODO assertEquals(10 * 1 * 1, model.getPossibleScore());
-        // qqRP TODO assertEquals(10, model.getScorePercentage());
 
         //
         // test the section details - in particular, test that only the scorable question is in the Section

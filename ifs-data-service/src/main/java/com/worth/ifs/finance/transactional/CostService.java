@@ -7,27 +7,23 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.security.NotSecured;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
 public interface CostService {
 
-    @NotSecured("TODO")
-    ServiceResult<CostField> getCostFieldById(Long id);
+    @PreAuthorize("hasPermission(#costFieldId, 'com.worth.ifs.finance.resource.CostFieldResource', 'READ')")
+    ServiceResult<CostField> getCostFieldById(@P("costFieldId")Long costFieldId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CostFieldResource>> findAllCostFields();
 
     @NotSecured("TODO")
     ServiceResult<CostItem> getCostItem(Long costItemId);
-
-    @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<CostItem> addCost(Long applicationFinanceId, Long questionId, CostItem newCostItem);
-
-    @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<CostItem> updateCost(Long id, CostItem newCostItem);
 
     @NotSecured("TODO")
     ServiceResult<List<Cost>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId);
@@ -38,17 +34,23 @@ public interface CostService {
     @NotSecured("TODO")
     ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, Long questionId);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<Void> deleteCost(Long costId);
+    @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
+    ServiceResult<CostItem> addCost(@P("applicationFinanceId")Long applicationFinanceId, Long questionId, CostItem newCostItem);
+
+    @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.finance.domain.Cost', 'UPDATE')")
+    ServiceResult<CostItem> updateCost(@P("costId")Long costId, CostItem newCostItem);
+
+    @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.finance.domain.Cost', 'DELETE')")
+    ServiceResult<Void> deleteCost(@P("costId")Long costId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, Long organisationId);
 
-    @PostFilter("hasPermission(returnObject, 'READ')")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationFinanceResource>> findApplicationFinanceByApplication(Long applicationId);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<Double> getResearchParticipationPercentage(Long applicationId);
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
+    ServiceResult<Double> getResearchParticipationPercentage(@P("applicationId")Long applicationId);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<ApplicationFinanceResource> addCost(Long applicationId, Long organisationId);
@@ -62,6 +64,6 @@ public interface CostService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId);
 
-    @PostFilter("hasPermission(returnObject, 'READ')")
-    ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId);
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
+    ServiceResult<List<ApplicationFinanceResource>> financeTotals(@P("applicationId")Long applicationId);
 }

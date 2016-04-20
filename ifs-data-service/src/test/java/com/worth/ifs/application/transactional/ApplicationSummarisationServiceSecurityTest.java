@@ -1,20 +1,19 @@
 package com.worth.ifs.application.transactional;
 
+import com.worth.ifs.BaseServiceSecurityTest;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.user.resource.RoleResource;
+import org.junit.Test;
+import org.springframework.security.access.AccessDeniedException;
+
+import java.math.BigDecimal;
+
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.fail;
-
-import java.math.BigDecimal;
-
-import org.junit.Test;
-import org.springframework.security.access.AccessDeniedException;
-
-import com.worth.ifs.BaseServiceSecurityTest;
-import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.user.resource.RoleResource;
 
 public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecurityTest<ApplicationSummarisationService> {
 
@@ -85,7 +84,7 @@ public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecu
 		return TestApplicationSummarisationService.class;
 	}
 
-	private static class TestApplicationSummarisationService implements ApplicationSummarisationService {
+	public static class TestApplicationSummarisationService implements ApplicationSummarisationService {
 
 		@Override
 		public ServiceResult<BigDecimal> getTotalProjectCost(Application application) {

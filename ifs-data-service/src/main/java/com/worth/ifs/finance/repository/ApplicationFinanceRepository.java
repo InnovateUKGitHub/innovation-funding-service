@@ -14,5 +14,4 @@ import java.util.List;
 public interface ApplicationFinanceRepository extends PagingAndSortingRepository<ApplicationFinance, Long> {
     ApplicationFinance findByApplicationIdAndOrganisationId(@Param("applicationId") Long applicationId, @Param("organisationId") Long organisationId);
     List<ApplicationFinance> findByApplicationId(@Param("applicationId") Long applicationId);
-
 }
