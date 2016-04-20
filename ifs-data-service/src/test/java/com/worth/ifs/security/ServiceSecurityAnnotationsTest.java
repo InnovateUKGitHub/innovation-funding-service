@@ -5,13 +5,11 @@ import com.worth.ifs.BaseIntegrationTest;
 import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.file.transactional.FileServiceImpl;
-import com.worth.ifs.util.TriConsumer;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,13 +18,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
 import static com.worth.ifs.util.CollectionFunctions.*;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
  * Tests around the Spring Security annotations on the Services and the Permission Rule framework as used by the CustomPermissionEvaluator
@@ -37,14 +39,14 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
     private ApplicationContext context;
 
     List<Class<?>> excludedClasses
-            = Arrays.asList(
+            = asList(
                     UidAuthenticationService.class,
                     StatelessAuthenticationFilter.class,
                     FileServiceImpl.class
             );
 
     List<Class<? extends Annotation>> securityAnnotations
-            = Arrays.asList(
+            = asList(
                 PreAuthorize.class,
                 PreFilter.class,
                 PostAuthorize.class,
@@ -54,7 +56,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
     @Test
     public void testServiceMethodsHaveSecurityAnnotations() throws Exception {
-        Collection<Object> services = simpleFilter(unwrapProxies(servicesToTest()), service -> !BaseRestService.class.isAssignableFrom(service.getClass()));
+        Collection<Object> services = getApplicableServices();
 
         // Assert that we actually have some services.
         assertNotNull(services);
@@ -92,66 +94,152 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
         CustomPermissionEvaluator evaluator = (CustomPermissionEvaluator) context.getBean("customPermissionEvaluator");
 
+        List<String[]> permissionRuleSecuredRows = getPermissionRulesBasedSecurity(evaluator);
+        List<String[]> simpleSpringSecuritySecuredRows = getSimpleSpringSecurityBasedSecurity();
+        List<String[]> notSecuredRows = getNotSecuredMethods();
+        List<String[]> allSecuredRows = combineLists(permissionRuleSecuredRows, simpleSpringSecuritySecuredRows, notSecuredRows);
+
+        allSecuredRows.sort((row1, row2) -> {
+            int column1Compare = row1[0].compareTo(row2[0]);
+            if (column1Compare != 0) {
+                return column1Compare;
+            }
+            int column2Compare = row1[1].compareTo(row2[1]);
+            return column2Compare;
+        });
+
+        // output a simple csv of rule information
+        String[] simpleHeaders = {"Entity", "Action", "Rule description"};
+        List<String[]> simpleRows = simpleMap(allSecuredRows, row -> new String[]{row[0], row[1], row[2]});
+        writeCsv("build/permission-rules-summary.csv", simpleHeaders, simpleRows);
+
+        // output a more complex csv of rule information
+        String[] fullHeaders = {"Entity", "Action", "Rule description", "Rule method", "Additional rule comments"};
+        writeCsv("build/permission-rules-full.csv", fullHeaders, allSecuredRows);
+    }
+
+    private List<String[]> getSimpleSpringSecurityBasedSecurity() {
+
+        List<Object> services = getApplicableServices();
+
+        List<List<String[]>> securedMethodRowsByService = simpleMap(services, service -> {
+
+            List<Method> serviceMethods = asList(service.getClass().getMethods());
+            List<Method> springSecurityAnnotatedMethods = simpleFilter(serviceMethods, method -> hasOneOf(method, singletonList(SecuredBySpring.class)));
+
+            return simpleMap(springSecurityAnnotatedMethods, method -> {
+                SecuredBySpring securityAnnotation = findAnnotation(method, SecuredBySpring.class);
+                String entity = securityAnnotation.securedType().equals(Void.class) ? "" : cleanEntityName(securityAnnotation.securedType());
+                String action = securityAnnotation.value();
+                String ruleDescription = securityAnnotation.description();
+                String ruleMethod = getMethodCallDescription(method);
+                String ruleComments = securityAnnotation.additionalComments();
+                String[] securedMethodRow = new String[] {entity, action, ruleDescription, ruleMethod, ruleComments};
+                return securedMethodRow;
+            });
+        });
+
+        return flattenLists(securedMethodRowsByService);
+    }
+
+    private List<String[]> getNotSecuredMethods() {
+
+        List<Object> services = getApplicableServices();
+
+        List<List<String[]>> nonSecuredMethodRowsByService = simpleMap(services, service -> {
+
+            List<Method> serviceMethods = asList(service.getClass().getMethods());
+            List<Method> springSecurityAnnotatedMethods = simpleFilter(serviceMethods, method -> hasOneOf(method, singletonList(NotSecured.class)));
+
+            return simpleMap(springSecurityAnnotatedMethods, method -> {
+                NotSecured notSecuredAnnotation = findAnnotation(method, NotSecured.class);
+                String entity = ""; //notSecuredAnnotation.securedType().equals(Void.class) ? "" : cleanEntityName(notSecuredAnnotation.securedType());
+                String action = ""; //notSecuredAnnotation.value();
+                String ruleDescription = notSecuredAnnotation.value(); //notSecuredAnnotation.description();
+                String ruleMethod = getMethodCallDescription(method);
+                String ruleComments = ""; //notSecuredAnnotation.additionalComments();
+                String[] nonSecuredMethodRow = new String[] {entity, action, ruleDescription, ruleMethod, ruleComments};
+                return nonSecuredMethodRow;
+            });
+        });
+
+        return flattenLists(nonSecuredMethodRowsByService);
+    }
+
+    private List<Object> getApplicableServices() {
+        return simpleFilter(unwrapProxies(servicesToTest()), service -> !BaseRestService.class.isAssignableFrom(service.getClass()));
+    }
+
+    private List<String[]> getPermissionRulesBasedSecurity(CustomPermissionEvaluator evaluator) {
         List<String[]> permissionRuleRows = new ArrayList<>();
 
         CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap =
                 (CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(evaluator, "rulesMap");
 
-        Comparator<Class<?>> simpleNameComparator = (clazz1, clazz2) -> clazz1.getSimpleName().compareTo(clazz2.getSimpleName());
-        List<Class<?>> orderedClasses = sort(rulesMap.keySet(), simpleNameComparator);
+        Set<Class<?>> securedEntities = rulesMap.keySet();
 
-        orderedClasses.forEach(clazz -> {
+        securedEntities.forEach(clazz -> {
 
-            Map<String, CustomPermissionEvaluator.ListOfOwnerAndMethod> rulesForClass = rulesMap.get(clazz);
-            List<String> orderedActions = sort(rulesForClass.keySet());
 
-            orderedActions.forEach(actionName -> {
+            Map<String, CustomPermissionEvaluator.ListOfOwnerAndMethod> rulesForSecuringEntity = rulesMap.get(clazz);
+            Set<String> actionsSecuredForEntity = rulesForSecuringEntity.keySet();
 
-                CustomPermissionEvaluator.ListOfOwnerAndMethod permissionRuleMethodsForThisAction = rulesForClass.get(actionName);
+
+            actionsSecuredForEntity.forEach(actionName -> {
+
+
+                CustomPermissionEvaluator.ListOfOwnerAndMethod permissionRuleMethodsForThisAction = rulesForSecuringEntity.get(actionName);
+
 
                 permissionRuleMethodsForThisAction.forEach(serviceAndMethod -> {
 
                     Method ruleMethod = serviceAndMethod.getValue();
                     PermissionRule permissionRule = ruleMethod.getDeclaredAnnotation(PermissionRule.class);
 
-                    final String finalClassName;
-                    if (clazz.getSimpleName().endsWith("Resource")) {
-                        finalClassName = clazz.getSimpleName().substring(0, clazz.getSimpleName().length() - "Resource".length());
-                    } else {
-                        finalClassName = clazz.getSimpleName();
-                    }
+                    final String finalClassName = cleanEntityName(clazz);
 
                     permissionRuleRows.add(new String[] {finalClassName, actionName, permissionRule.description(),
-                            ruleMethod.getDeclaringClass().getSimpleName() + "." + ruleMethod.getName(), permissionRule.additionalComments()});
+                            getMethodCallDescription(ruleMethod), permissionRule.additionalComments()});
                 });
             });
         });
+        return permissionRuleRows;
+    }
 
-        TriConsumer<String, String[], List<String[]>> fileWriter = (filename, headers, rows) -> {
+    private String getMethodCallDescription(Method ruleMethod) {
+        Class<?>[] interfaces = ruleMethod.getDeclaringClass().getInterfaces();
+        Class<?> owningClass = interfaces.length > 0 ? interfaces[0] : ruleMethod.getDeclaringClass();
+        return owningClass.getSimpleName() + "." + ruleMethod.getName();
+    }
 
-            CSVWriter writer = new CSVWriter(new FileWriter(filename), '\t');
-            try {
+    private String cleanEntityName(Class<?> clazz) {
+        final String finalClassName;
+        if (clazz.getSimpleName().endsWith("Resource")) {
+            finalClassName = clazz.getSimpleName().substring(0, clazz.getSimpleName().length() - "Resource".length());
+        } else {
+            finalClassName = clazz.getSimpleName();
+        }
+        return finalClassName;
+    }
+
+    private void writeCsv(String filename, String[] headers, List<String[]> rows) {
+
+        try {
+            try (FileWriter fileWriter = new FileWriter(filename)) {
+
+                CSVWriter writer = new CSVWriter(fileWriter, '\t');
                 writer.writeNext(headers);
                 rows.forEach(writer::writeNext);
-            } finally {
-                writer.close();
             }
-        };
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        // output a simple csv of rule information
-        String[] simpleHeaders = {"Entity", "Action", "Rule description"};
-        List<String[]> simpleRows = simpleMap(permissionRuleRows, row -> new String[]{row[0], row[1], row[2]});
-        fileWriter.apply("build/permission-rules-summary.csv", simpleHeaders, simpleRows);
-
-        // output a more complex csv of rule information
-        String[] fullHeaders = {"Entity", "Action", "Rule description", "Rule method", "Additional rule comments"};
-        fileWriter.apply("build/permission-rules-full.csv", fullHeaders, permissionRuleRows);
-
-    }
+    };
 
     private boolean hasOneOf(Method method, List<Class<? extends Annotation>> annotations) {
         for (Class<? extends Annotation> clazz : annotations) {
-            if (AnnotationUtils.findAnnotation(method, clazz) != null) {
+            if (findAnnotation(method, clazz) != null) {
                 return true;
             }
         }
@@ -171,18 +259,22 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
     private Object unwrapProxy(Object services) {
         try {
-            return unwrapProxies(Arrays.asList(services)).get(0);
+            return unwrapProxies(asList(services)).get(0);
         }
         catch (Exception e){
             throw new RuntimeException(e);
         }
     }
 
-    private List<Object> unwrapProxies(Collection<Object> services) throws Exception {
+    private List<Object> unwrapProxies(Collection<Object> services) {
         List<Object> unwrappedProxies = new ArrayList<>();
         for (Object service : services) {
             if (AopUtils.isJdkDynamicProxy(service)) {
-                unwrappedProxies.add(((Advised) service).getTargetSource().getTarget());
+                try {
+                    unwrappedProxies.add(((Advised) service).getTargetSource().getTarget());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             } else {
                 unwrappedProxies.add(service);
             }

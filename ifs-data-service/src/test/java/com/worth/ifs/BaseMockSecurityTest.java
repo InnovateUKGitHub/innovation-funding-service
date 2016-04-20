@@ -99,6 +99,16 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
         setLoggedInUser(newUserResource().build());
     }
 
+    /**
+     * Replace the original rulesMap and lookup strategy on the custom permission evaluator
+     */
+    @After
+    public void teardown() {
+        CustomPermissionEvaluator permissionEvaluator = (CustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
+        setRuleMap(permissionEvaluator, originalRulesMap);
+        setLookupStrategyMap(permissionEvaluator, originalLookupStrategyMap);
+    }
+
     private void setLookupStrategyMap(CustomPermissionEvaluator permissionEvaluator, PermissionedObjectClassesToListOfLookup right) {
         setField(permissionEvaluator, "lookupStrategyMap", right);
     }
@@ -115,20 +125,20 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
             final Class<?> permissionedObjectClass = entry.getKey();
             final ListOfOwnerAndMethod originalLookups = entry.getValue();
             for (Pair<Object, Method> originalLookup: originalLookups) {
-                final Object originalLookupBeans = originalLookup.getLeft(); // The owner
-                final Method originalLookupMethod = originalLookup.getRight(); // The method
+                final Object originalLookupBeans = originalLookup.getLeft();
+                final Method originalLookupMethod = originalLookup.getRight();
 
-                if (!mockLookupBeans.containsKey(originalLookupBeans.getClass())) { // First time we've come across this owner class - e.g. ApplicationLookupStrategy
-                    mockLookupBeans.put(originalLookupBeans.getClass(), mock(originalLookupBeans.getClass())); // Put this bean into the mockLockupBean along with a Mock implementation of it.
+                if (!mockLookupBeans.containsKey(originalLookupBeans.getClass())) {
+                    mockLookupBeans.put(originalLookupBeans.getClass(), mock(originalLookupBeans.getClass()));
                 }
-                final Object mockLookupBean = mockLookupBeans.get(originalLookupBeans.getClass()); // Now get the Mock ApplicationLookupStrategy
+                final Object mockLookupBean = mockLookupBeans.get(originalLookupBeans.getClass());
 
-                final String methodName = originalLookupMethod.getName(); // Get the name of the method on the ApplicationLookupStrategy
-                Class<?>[] methodParameters = originalLookupMethod.getParameterTypes(); // Get the parameters on this method
+                final String methodName = originalLookupMethod.getName();
+                Class<?>[] methodParameters = originalLookupMethod.getParameterTypes();
                 final Method mockLookupMethod;
 
                 try {
-                    mockLookupMethod = mockLookupBean.getClass().getMethod(methodName, methodParameters); // Now get the method on the mock that looks like the method on the
+                    mockLookupMethod = mockLookupBean.getClass().getMethod(methodName, methodParameters);
                 } catch (NoSuchMethodException e) {
                     throw new RuntimeException("Unable to look up same method on mock", e);
                 }
@@ -141,17 +151,6 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
         }
 
         return Pair.of(mockLookupBeans, newMockLookupMap);
-    }
-
-
-    /**
-     * Revert the temporary bean definitions used for testing, and replace the original rulesMap and lookup strategy on the custom permission evaluator
-     */
-    @After
-    public void teardown() {
-        CustomPermissionEvaluator permissionEvaluator = (CustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
-        setRuleMap(permissionEvaluator, originalRulesMap);
-        setLookupStrategyMap(permissionEvaluator, originalLookupStrategyMap);
     }
 
     /**

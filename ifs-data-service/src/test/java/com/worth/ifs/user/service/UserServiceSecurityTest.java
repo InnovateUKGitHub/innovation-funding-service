@@ -140,7 +140,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         return TestUserService.class;
     }
 
-    private static class TestUserService implements UserService {
+    /**
+     * Test class for use in Service Security tests.
+     */
+    public static class TestUserService implements UserService {
 
         @Override
         public ServiceResult<UserResource> getUserResourceByUid(String uid) {
