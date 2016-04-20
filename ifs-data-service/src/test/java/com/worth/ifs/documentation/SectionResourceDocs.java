@@ -20,7 +20,8 @@ public class SectionResourceDocs {
             fieldWithPath("questions").description("list of questions belonging to the section"),
             fieldWithPath("parentSection").description("parent section of this section"),
             fieldWithPath("childSections").description("list of child sections"),
-            fieldWithPath("displayInAssessmentApplicationSummary").description("wether to display this section in the assessment summary")
+            fieldWithPath("displayInAssessmentApplicationSummary").description("whether to display this section in the assessment summary"),
+            fieldWithPath("finance").description("flags the section as the finance section")
     };
 
     public static final SectionResourceBuilder sectionResourceBuilder = newSectionResource()

@@ -64,11 +64,6 @@ public class SectionController {
         return sectionService.getIncompleteSections(applicationId).toGetResponse();
     }
 
-    @RequestMapping("findByName/{name}")
-    public RestResult<SectionResource> findByName(@PathVariable("name") final String name) {
-        return sectionService.findByName(name).toGetResponse();
-    }
-
     @RequestMapping("/getNextSection/{sectionId}")
     public RestResult<SectionResource> getNextSection(@PathVariable("sectionId") final Long sectionId) {
         return sectionService.getNextSection(sectionId).toGetResponse();
@@ -87,5 +82,10 @@ public class SectionController {
     @RequestMapping("/getQuestionsForSectionAndSubsections/{sectionId}")
     public RestResult<Set<Long>> getQuestionsForSectionAndSubsections(@PathVariable("sectionId") final Long sectionId){
         return sectionService.getQuestionsForSectionAndSubsections(sectionId).toGetResponse();
+    }
+    
+    @RequestMapping("/getFinanceSectionByCompetitionId/{competitionId}")
+    public RestResult<SectionResource> getFinanceSectionByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
+    	return sectionService.getFinanceSectionByCompetitionId(competitionId).toGetResponse();
     }
 }
