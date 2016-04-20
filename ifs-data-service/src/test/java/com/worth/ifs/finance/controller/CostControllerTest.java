@@ -2,7 +2,6 @@ package com.worth.ifs.finance.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
@@ -12,15 +11,12 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -118,7 +114,7 @@ public class CostControllerTest extends BaseControllerMockMVCTest<CostController
     public void updateShouldReturnIsCorrectOnCorrectValues() throws Exception {
 
         GrantClaim costItem = new GrantClaim();
-        when(costServiceMock.updateCost(eq(123L), isA(CostItem.class))).thenReturn(serviceSuccess());
+        when(costServiceMock.updateCost(eq(123L), isA(CostItem.class))).thenReturn(serviceSuccess(costItem));
 
         mockMvc.perform(post("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)

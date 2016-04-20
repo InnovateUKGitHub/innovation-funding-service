@@ -16,6 +16,7 @@ dependencies {
     compile "org.springframework.plugin:spring-plugin-core"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "com.google.guava:guava:16.0.1"
+    compile "commons-io:commons-io:2.4"
     compile project(':ifs-web-service:ifs-core')
 
     testCompile files('../libs/ifs-data-service-tests-1.0-SNAPSHOT.jar')
@@ -31,6 +32,21 @@ processResources {
     if (project.hasProperty("profile") && project.profile == "automated") {
         exclude '**/application.properties'
     }
+}
+
+task copyTemplatesInPlace(type: Copy) {
+    into "$tomcatWebAppsDir/management/WEB-INF/classes/templates"
+    from 'src/main/resources/templates'
+}
+
+task copyCssInPlace(type: Copy) {
+    into "$tomcatWebAppsDir/management/WEB-INF/classes/static/css"
+    from 'src/main/resources/static/css'
+}
+
+task copyJsInPlace(type: Copy) {
+    into "$tomcatWebAppsDir/management/WEB-INF/classes/static/js/dest"
+    from 'src/main/resources/static/js/dest'
 }
 
 

@@ -1,7 +1,13 @@
 package com.worth.ifs.security;
 
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
+
+import java.util.List;
 
 import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.user.domain.UserRoleType.SYSTEM_REGISTRATION_USER;
@@ -18,5 +24,18 @@ public class SecurityRuleUtil {
 
     private static boolean hasRole(UserResource user, UserRoleType type) {
         return user.hasRole(type);
+    }
+
+
+    public static boolean checkRole(final UserResource user,
+                              final Long applicationId,
+                              final Long organisationId,
+                              final UserRoleType userRoleType,
+                              final RoleRepository roleRepository,
+                              final ProcessRoleRepository processRoleRepository) {
+        final List<Role> roles = roleRepository.findByName(userRoleType.getName());
+        final Role role = roles.get(0);
+        final ProcessRole processRole = processRoleRepository.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(user.getId(), role.getId(), applicationId, organisationId);
+        return processRole != null;
     }
 }

@@ -65,6 +65,7 @@ configurations {
 
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "org.hibernate:hibernate-validator:5.2.4.Final"
     compile "org.springframework.security:spring-security-crypto"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "mysql:mysql-connector-java"
@@ -86,6 +87,7 @@ dependencies {
     compile 'javax.mail:mail:1.4.7'
     compile "org.apache.httpcomponents:httpasyncclient"
     compile "com.google.guava:guava:19.0"
+    compile "commons-io:commons-io:2.4"
 
     //providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile fileTree(dir: "libs", include: "*.jar")
