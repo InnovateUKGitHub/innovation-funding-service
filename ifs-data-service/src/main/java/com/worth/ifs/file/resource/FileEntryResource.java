@@ -22,7 +22,7 @@ public class FileEntryResource {
     public FileEntryResource(Long id, String name, String mediaType, long filesizeBytes) {
         this.id = id;
         this.name = name;
-        this.mediaType = mediaType.toString();
+        this.mediaType = mediaType;
         this.filesizeBytes = filesizeBytes;
     }
 
