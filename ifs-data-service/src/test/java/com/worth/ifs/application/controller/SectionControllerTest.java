@@ -143,9 +143,21 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         when(sectionService.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(new ArrayList<>()));
 
 
-        mockMvc.perform(get(String.format("/section/markAsComplete/%s/%s/%s", section.getId(), applicationId, processRoleId)))
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/section/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
-                .andExpect(content().string("[]"));
+                .andExpect(content().string("[]"))
+                .andDo(
+                        document(
+                                "section/mark-as-complete",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("sectionId").description("id of section to mark as complete"),
+                                        parameterWithName("applicationId").description("id of the application to mark the section as complete on"),
+                                        parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
+                                )
+                        )
+                );;
     }
 
     @Test
@@ -166,9 +178,10 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
                 .andExpect(status().isOk())
                 .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"\",\"arguments\":[],\"errorMessage\":\"this section should contains at least 1 row\"}]}]"))
                 .andDo(
-                        document("section/mark-as-complete-invalid",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
+                        document(
+                            "section/mark-as-complete-invalid",
+                            preprocessRequest(prettyPrint()),
+                            preprocessResponse(prettyPrint()),
                             pathParameters(
                                     parameterWithName("sectionId").description("id of section to mark as complete"),
                                     parameterWithName("applicationId").description("id of the application to mark the section as complete on"),

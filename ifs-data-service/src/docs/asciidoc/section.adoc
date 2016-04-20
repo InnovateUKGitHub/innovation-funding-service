@@ -106,16 +106,29 @@ include::{snippets}/section/get-questions-for-section-and-subsections/response-f
 ==== Curl Example
 include::{snippets}/section/get-questions-for-section-and-subsections/curl-request.adoc[]
 
-
 === Mark Section as complete
+With this request a user can mark a section as complete.
+
+==== Request
+include::{snippets}/section/mark-as-complete/http-request.adoc[]
+include::{snippets}/section/mark-as-complete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/section/mark-as-complete/http-response.adoc[]
+include::{snippets}/section/mark-as-complete/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/section/mark-as-complete/curl-request.adoc[]
+
+=== Mark Section as complete (invalid)
 With this request a user can mark a section as complete. When there are validation messages, the section is NOT marked as complete.
+
 ==== Request
 include::{snippets}/section/mark-as-complete-invalid/http-request.adoc[]
 include::{snippets}/section/mark-as-complete-invalid/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/section/mark-as-complete-invalid/http-response.adoc[]
-include::{snippets}/section/mark-as-complete-invalid/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/section/mark-as-complete-invalid/curl-request.adoc[]
