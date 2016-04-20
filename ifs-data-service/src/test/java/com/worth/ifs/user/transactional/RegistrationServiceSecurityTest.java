@@ -11,10 +11,7 @@ import org.junit.Test;
 import java.util.Optional;
 
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing how this service integrates with Spring Security
@@ -70,7 +67,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         return TestRegistrationService.class;
     }
 
-    private static class TestRegistrationService implements RegistrationService {
+    public static class TestRegistrationService implements RegistrationService {
 
         @Override
         public ServiceResult<UserResource> createApplicantUser(Long organisationId, UserResource userResource) {

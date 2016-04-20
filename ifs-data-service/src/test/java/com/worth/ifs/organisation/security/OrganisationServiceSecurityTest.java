@@ -122,7 +122,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
      * Dummy implementation (for satisfying Spring Security's need to read parameter information from
      * methods, which is lost when using mocks)
      */
-    private static class TestOrganisationService implements OrganisationService {
+    public static class TestOrganisationService implements OrganisationService {
 
         @Override
         public ServiceResult<Set<OrganisationResource>> findByApplicationId(Long applicationId) {
