@@ -13,7 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 /**
- * This class validates the FormInputResponse, it checks if the maximum word count has been exceeded.
+ * This class validates the GrantClaim.
  */
 @Component
 public class GrantClaimValidator implements Validator {

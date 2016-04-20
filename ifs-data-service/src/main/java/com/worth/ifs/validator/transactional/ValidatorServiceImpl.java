@@ -51,7 +51,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         return getProcessRole(markedAsCompleteById).andOnSuccess(role -> {
             return costService.financeDetails(applicationId, role.getOrganisation().getId()).andOnSuccess(financeDetails -> {
                 return costService.getCostItems(financeDetails.getId(), questionId).andOnSuccessReturn(costItems -> {
-                    LOG.info("=======Got Cost Items : count 2: "+costItems.size());
+                    LOG.debug("=======Got Cost Items : count 2: "+costItems.size());
                     return ValidationUtil.validateCostItem(costItems);
                 });
             });

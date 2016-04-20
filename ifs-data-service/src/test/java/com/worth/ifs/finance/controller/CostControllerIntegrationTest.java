@@ -60,7 +60,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Rollback
     @Test
     public void testValidationLabour(){
-        RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost, bindingResult);
+        RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost);
         assertTrue(validationMessages.isSuccess());
         assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
     }
@@ -71,7 +71,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         labourCost.setRole("");
         labourCost.setLabourDays(-50);
         labourCost.setGrossAnnualSalary(new BigDecimal(-500000));
-        RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost, bindingResult);
+        RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost);
         assertTrue(validationMessages.isSuccess());
         assertNotNull(validationMessages.getOptionalSuccessObject().get());
 
@@ -101,7 +101,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Rollback
     @Test
     public void testValidationMaterial(){
-        RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials, bindingResult);
+        RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
         assertTrue(validationMessages.isSuccess());
         assertFalse(validationMessages.getOptionalSuccessObject().isPresent());
     }
@@ -109,7 +109,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     @Rollback
     @Test
     public void testValidationOtherFundingUpdate(){
-        RestResult<ValidationMessages> validationMessages = controller.update(otherFunding.getId(), otherFunding, bindingResult);
+        RestResult<ValidationMessages> validationMessages = controller.update(otherFunding.getId(), otherFunding);
         ValidationMessages messages = validationMessages.getSuccessObject();
         assertEquals(1, messages.getErrors().size());
         assertEquals(otherFunding.getId(), messages.getObjectId());
@@ -130,7 +130,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         materials.setQuantity(-5);
 
 
-        RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials, bindingResult);
+        RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
         ValidationMessages messages = validationMessages.getSuccessObject();
         assertEquals(3, messages.getErrors().size());
         assertEquals(materials.getId(), messages.getObjectId());

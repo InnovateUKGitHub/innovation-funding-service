@@ -45,15 +45,7 @@ public final class ValidationUtil {
             LOG.info("response is null");
             return binder.getBindingResult();
         }
-        if (response.getFormInput() == null) {
-            LOG.info("response has no formInputs");
-        }
-        if (response.getFormInput().getFormValidators() == null) {
-            LOG.info("response has no formValidators");
-        }
         Set<FormValidator> validators = response.getFormInput().getFormValidators();
-
-
 
         // Get validators from the FormInput, and add to binder.
         validators.forEach(
@@ -61,6 +53,7 @@ public final class ValidationUtil {
                 {
                     Validator validator = null;
                     try {
+                        // Sometimes we want to allow the user to enter a empty response. Then we can ignore the NotEmptyValidator .
                         if (!(ignoreEmpty && v.getClazzName().equals(NotEmptyValidator.class.getName()))) {
                             validator = (Validator) Class.forName(v.getClazzName()).getConstructor().newInstance();
                             binder.addValidators(validator);
@@ -136,15 +129,11 @@ public final class ValidationUtil {
     }
 
     private static void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {
-        CostType costType = null;
         try {
-            costType = CostType.fromString(formInput.getFormInputType().getTitle());
+            CostType costType = CostType.fromString(formInput.getFormInputType().getTitle()); // this checks if formInput is CostType related.
+            validationMessages.addAll(validatorService.validateCostItem(application.getId(), question.getId(), markedAsCompleteById));
         } catch (IllegalArgumentException e) {
             // not a costtype, which is fine...
-        }
-        if (costType != null) {
-            LOG.debug("====validate cost items");
-            validationMessages.addAll(validatorService.validateCostItem(application.getId(), question.getId(), markedAsCompleteById));
         }
     }
 
@@ -166,9 +155,11 @@ public final class ValidationUtil {
         invokeExtraValidator(costItem, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            LOG.debug("validated, with messages: ");
-            bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: "+ e.getRejectedValue() + e.getDefaultMessage()));
-            bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Error: "+ e.getObjectName() + e.getDefaultMessage()));
+            if(LOG.isDebugEnabled()){
+                LOG.debug("validated, with messages: ");
+                bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: "+ e.getRejectedValue() + e.getDefaultMessage()));
+                bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Error: "+ e.getObjectName() + e.getDefaultMessage()));
+            }
             return new ValidationMessages(costItem.getId(), bindingResult);
         } else {
             LOG.debug("validated, no messages");
