@@ -12,10 +12,16 @@ import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.worth.ifs.finance.resource.cost.CostItem;
+
 import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
 import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
 
+
+/**
+ * Permission rules for {@link Cost} and {@link CostItem} for permissioning
+ */
 @Component
 @PermissionRules
 public class CostPermissionRules {
@@ -42,7 +48,7 @@ public class CostPermissionRules {
         return isCollaborator(cost, user);
     }
 
-    private boolean isCollaborator(final Cost cost, final UserResource user){
+    private boolean isCollaborator(final Cost cost, final UserResource user) {
         final ApplicationFinanceResource applicationFinance = applicationMapper.mapToResource(applicationFinanceRepository.findOne(cost.getApplicationFinance().getId()));
         final boolean isLead = checkRole(user, applicationFinance.getApplication(), applicationFinance.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
         final boolean isCollaborator = checkRole(user, applicationFinance.getApplication(), applicationFinance.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
