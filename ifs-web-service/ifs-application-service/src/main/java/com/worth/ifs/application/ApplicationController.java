@@ -6,11 +6,9 @@ import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
@@ -97,12 +95,20 @@ public class ApplicationController extends AbstractApplicationController {
     }
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)
-    public String applicationSummarySubmit(@RequestParam(MARK_AS_COMPLETE) Long markQuestionCompleteId, @PathVariable("applicationId") final Long applicationId,
+    public String applicationSummarySubmit(@PathVariable("applicationId") final Long applicationId,
                                            HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        if(markQuestionCompleteId!=null) {
-            questionService.markAsComplete(markQuestionCompleteId, applicationId, user.getId());
+
+        Map<String, String[]> params = request.getParameterMap();
+        if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
+            assignQuestion(request, applicationId);
+        } else if (params.containsKey(MARK_AS_COMPLETE)) {
+            Long markQuestionCompleteId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
+            if (markQuestionCompleteId != null) {
+                questionService.markAsComplete(markQuestionCompleteId, applicationId, user.getId());
+            }
         }
+
         return "redirect:/application/" + applicationId + "/summary";
     }
     @ProfileExecution
