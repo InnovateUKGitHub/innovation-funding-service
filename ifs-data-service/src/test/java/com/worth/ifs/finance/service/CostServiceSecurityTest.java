@@ -70,7 +70,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         }
 
         @Override
-        public ServiceResult<Void> updateCost(Long id, CostItem newCostItem) {
+        public ServiceResult<CostItem> updateCost(Long id, CostItem newCostItem) {
             return null;
         }
 

@@ -7,7 +7,6 @@ import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -135,18 +134,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 });
             } else {
                 LOG.debug("======= SECTION IS INVALID =======   " + sectionIsValid.size());
-                for (ValidationMessages validationMessages : sectionIsValid) {
-                    if (validationMessages.getErrors() == null) {
-                        LOG.debug("errors: " + validationMessages.getErrors().size());
-                    } else {
-                        LOG.debug("errors: " + validationMessages.getErrors().size());
-                        for (Error error : validationMessages.getErrors()) {
-                            LOG.debug(String.format("validation failed: %s / %s / %s", validationMessages.getObjectName(), error.getErrorKey(), error.getErrorMessage()));
-                        }
-                    }
-                }
             }
-            LOG.debug("Mark as complete done");
             return serviceSuccess(sectionIsValid);
         });
     }
@@ -154,12 +142,12 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     @Override
     public ServiceResult<Void> markSectionAsInComplete(final Long sectionId,
                                                        final Long applicationId,
-                                                       final Long markedAsCompleteById) {
+                                                       final Long markedAsInCompleteById) {
         Section section = sectionRepository.findOne(sectionId);
         Set<Long> questions = collectAllQuestionFrom(section);
 
         questions.forEach(q -> {
-            questionService.markAsInComplete(q, applicationId, markedAsCompleteById);
+            questionService.markAsInComplete(q, applicationId, markedAsInCompleteById);
         });
 
         return serviceSuccess();

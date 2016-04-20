@@ -27,7 +27,7 @@ public interface CostService {
     ServiceResult<CostItem> addCost(Long applicationFinanceId, Long questionId, CostItem newCostItem);
 
     @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<Void> updateCost(Long id, CostItem newCostItem);
+    ServiceResult<CostItem> updateCost(Long id, CostItem newCostItem);
 
     @NotSecured("TODO")
     ServiceResult<List<Cost>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId);

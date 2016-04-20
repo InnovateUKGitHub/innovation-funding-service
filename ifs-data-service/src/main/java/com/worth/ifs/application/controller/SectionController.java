@@ -47,11 +47,11 @@ public class SectionController {
         return sectionService.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById).toGetResponse();
     }
 
-    @RequestMapping("/markAsInComplete/{sectionId}/{applicationId}/{markedAsCompleteById}")
+    @RequestMapping("/markAsInComplete/{sectionId}/{applicationId}/{markedAsInCompleteById}")
     public RestResult<Void> markAsInComplete(@PathVariable("sectionId") final Long sectionId,
                                            @PathVariable("applicationId") final Long applicationId,
-                                           @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
-        return sectionService.markSectionAsInComplete(sectionId, applicationId, markedAsCompleteById).toPutResponse();
+                                           @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById) {
+        return sectionService.markSectionAsInComplete(sectionId, applicationId, markedAsInCompleteById).toPutResponse();
     }
 
     @RequestMapping("/allSectionsMarkedAsComplete/{applicationId}")

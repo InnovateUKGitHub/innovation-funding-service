@@ -691,7 +691,6 @@ public class ApplicationFormController extends AbstractApplicationController {
             if(validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()){
                 LOG.debug("no errors");
             }else{
-                LOG.info(String.format("get %s errors", validationMessages.getErrors().size()));
                 errors = validationMessages.getErrors().stream().map(e -> e.getErrorMessage()).collect(Collectors.toList());
             }
         } else {

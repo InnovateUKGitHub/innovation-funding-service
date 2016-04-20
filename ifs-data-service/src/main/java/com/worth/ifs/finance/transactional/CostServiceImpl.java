@@ -100,8 +100,11 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     @Override
-    public ServiceResult<Void> updateCost(final Long id, final CostItem newCostItem) {
-        return doUpdate(id, newCostItem).andOnSuccessReturnVoid();
+    public ServiceResult<CostItem> updateCost(final Long id, final CostItem newCostItem) {
+        return doUpdate(id, newCostItem).andOnSuccessReturn(cost -> {
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(cost.getApplicationFinance().getOrganisation().getOrganisationType().getName());
+            return organisationFinanceHandler.costToCostItem(cost);
+        });
     }
 
     @Override

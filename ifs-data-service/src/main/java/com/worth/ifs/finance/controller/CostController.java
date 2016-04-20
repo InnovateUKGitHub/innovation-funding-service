@@ -9,13 +9,10 @@ import com.worth.ifs.validator.util.ValidationUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -48,15 +45,13 @@ public class CostController {
      * @return ValidationMessages resource object to store validation messages about invalid user input.
      */
     @RequestMapping("/update/{id}")
-    public RestResult<ValidationMessages> update(@PathVariable("id") final Long id, @Valid @RequestBody final CostItem newCostItem, BindingResult bindingResult) {
-        RestResult<Void> updateResult = costService.updateCost(id, newCostItem)
-                .toPutResponse();
-        LOG.info("CostController update: ");
+    public RestResult<ValidationMessages> update(@PathVariable("id") final Long id, @RequestBody final CostItem newCostItem) {
+        RestResult<CostItem> updateResult = costService.updateCost(id, newCostItem).toGetResponse();
 
         if(updateResult.isFailure()){
-            return updateResult.toGetResponse(new ValidationMessages());
+            return RestResult.restFailure(updateResult.getFailure());
         }else{
-            ValidationMessages validationMessages = ValidationUtil.validateCostItem(newCostItem);
+            ValidationMessages validationMessages = ValidationUtil.validateCostItem(updateResult.getSuccessObject());
             return RestResult.restSuccess(validationMessages);
         }
     }

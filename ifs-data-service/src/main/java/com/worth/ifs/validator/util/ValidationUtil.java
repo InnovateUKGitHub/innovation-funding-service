@@ -131,6 +131,11 @@ public final class ValidationUtil {
             }
         }
 
+        validationCostItem(question, application, markedAsCompleteById, formInput, validationMessages);
+        return validationMessages;
+    }
+
+    private static void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {
         CostType costType = null;
         try {
             costType = CostType.fromString(formInput.getFormInputType().getTitle());
@@ -141,7 +146,6 @@ public final class ValidationUtil {
             LOG.debug("====validate cost items");
             validationMessages.addAll(validatorService.validateCostItem(application.getId(), question.getId(), markedAsCompleteById));
         }
-        return validationMessages;
     }
 
     public static List<ValidationMessages> validateCostItem(List<CostItem> costItems) {

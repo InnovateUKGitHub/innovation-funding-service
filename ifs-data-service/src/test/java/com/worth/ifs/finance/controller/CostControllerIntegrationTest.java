@@ -160,7 +160,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertEquals(OrganisationSize.SMALL, applicationFinance.getOrganisationSize());
         grantClaim.setGrantClaimPercentage(80);
 
-        RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim, bindingResult);
+        RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccessObject();
         assertEquals(1, messages.getErrors().size());
         assertEquals(grantClaim.getId(), messages.getObjectId());

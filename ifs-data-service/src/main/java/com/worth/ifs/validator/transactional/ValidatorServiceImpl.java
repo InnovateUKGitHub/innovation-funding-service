@@ -31,12 +31,10 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     public List<BindingResult> validateFormInputResponse(Long applicationId, Long formInputId){
         List<BindingResult> results = new ArrayList<>();
         List<FormInputResponse> response = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId);
-        if(response.size() > 1){
+        if(!response.isEmpty()) {
             for (FormInputResponse formInputResponse : response) {
                 results.add(ValidationUtil.validateResponse(formInputResponse, false));
             }
-        } else {
-            results.add(ValidationUtil.validateResponse(response.get(0), false));
         }
         return results;
     }
@@ -46,6 +44,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         FormInputResponse response = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, markedAsCompleteById, formInputId);
         return ValidationUtil.validateResponse(response, false);
     }
+
 
     @Override
     public List<ValidationMessages> validateCostItem(Long applicationId, Long questionId, Long markedAsCompleteById) {
