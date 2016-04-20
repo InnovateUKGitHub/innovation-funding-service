@@ -21,13 +21,13 @@
           </div>
       </div>
   </section>
-  <section>
+  <section th:if="${hasFinanceSection}">
       <h2 class="heading-medium">Finance</h2>
       <div class="collapsible">
           <h3>Finances Summary
               <div th:remove="tag" th:if="${currentApplication.isOpen()}">
-                  <div class="section-status section-complete" th:if="${sectionsMarkedAsComplete.contains(7L)}">Complete</div>
-                  <div class="section-status section-incomplete" th:unless="${sectionsMarkedAsComplete.contains(7L)}">Incomplete</div>
+                  <div class="section-status section-complete" th:if="${sectionsMarkedAsComplete.contains(financeSectionId)}">Complete</div>
+                  <div class="section-status section-incomplete" th:unless="${sectionsMarkedAsComplete.contains(financeSectionId)}">Incomplete</div>
               </div>
           </h3>
           <div class="question">

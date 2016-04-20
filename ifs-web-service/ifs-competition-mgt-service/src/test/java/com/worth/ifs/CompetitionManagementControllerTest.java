@@ -64,7 +64,7 @@ public class CompetitionManagementControllerTest  {
 
     	mockMvc.perform(get("/competition/123"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt"))
+                .andExpect(view().name("comp-mgt-open"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("results", resource))
                 .andExpect(model().attribute("activeSortField", "sortfield"));
@@ -87,7 +87,7 @@ public class CompetitionManagementControllerTest  {
 
     	mockMvc.perform(get("/competition/123?page=3"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt"))
+                .andExpect(view().name("comp-mgt-open"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("results", resource))
                 .andExpect(model().attribute("activeSortField", "sortfield"));
@@ -110,7 +110,7 @@ public class CompetitionManagementControllerTest  {
 
     	mockMvc.perform(get("/competition/123?sort=lead"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt"))
+                .andExpect(view().name("comp-mgt-open"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("results", resource))
                 .andExpect(model().attribute("activeSortField", "properSort"));

@@ -154,7 +154,6 @@ public class AssessmentControllerTest extends BaseUnitTest {
         when(applicationService.getById(anyLong())).thenReturn(application);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         when(sectionService.getById(anyLong())).thenReturn(null);
-        when(sectionService.getByName("Your finances")).thenReturn(sectionResources.get(0));
 
         log.info("assessment status: " + assessment.getProcessStatus());
         log.info("Application we use for assessment test: " + application.getId());

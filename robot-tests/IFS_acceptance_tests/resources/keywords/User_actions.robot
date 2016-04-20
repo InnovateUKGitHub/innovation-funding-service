@@ -212,9 +212,11 @@ the user opens the mailbox and accepts the invitation to collaborate
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
     log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    2
-    log    ${VERIFY_EMAIL}
-    go to    ${VERIFY_EMAIL}
+    ${CONTACT_LEAD}=    Get From List    ${LINK}    1
+    Should Contain    ${CONTACT_LEAD}    mailto:
+    ${ACCEPT_INVITE}=    Get From List    ${LINK}    2
+    log    ${ACCEPT_INVITE}
+    go to    ${ACCEPT_INVITE}
     Capture Page Screenshot
     Delete All Emails
     close mailbox
@@ -271,6 +273,7 @@ the user cannot see a validation error in the page
 
 the user submits their information
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+    Select Checkbox    termsAndConditions
     Select Checkbox    termsAndConditions
     Submit Form
 
