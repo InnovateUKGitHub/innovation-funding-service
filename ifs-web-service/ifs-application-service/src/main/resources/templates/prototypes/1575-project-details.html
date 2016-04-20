@@ -17,7 +17,7 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Project details'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project details'})" th:remove="tag" />
 	
 	<p>Please supply the following details about your project and the team so that we can conduct the necessary finance checks before the project begins.</p>
 
@@ -91,8 +91,8 @@
 		<tbody>
 			<tr>
 				<td>
-					<a href="/prototypes/1575-finance-contact" th:unless="${param.user != null and param.user[0] == 'nonLead'}" >Worth systems</a>
-					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Worth systems</span>
+					<a href="/prototypes/1575-finance-contact" th:unless="${param.user != null and param.user[0] == 'nonLead'}" >Aptrans Ltd</a>
+					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Aptrans Ltd</span>
 				</td>
 				<td>
 					<span id="finance-contact">John Smith</span>
@@ -103,8 +103,8 @@
 			</tr>
 			<tr>
 				<td>
-					<span th:unless="${param.user != null and param.user[0] == 'nonLead'}">Nomensa</span>
-					<a href="/prototypes/1575-finance-contact?user=nonLead" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Nomensa</a>
+					<span th:unless="${param.user != null and param.user[0] == 'nonLead'}">Biotech Corp</span>
+					<a href="/prototypes/1575-finance-contact?user=nonLead" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Biotech Corp</a>
 				</td>
 				<td>
 					<span id="finance-partner-contact">-</span>
@@ -115,10 +115,10 @@
 			</tr>
 			<tr>
 				<td>
-					C@C
+					University of Cardiff
 				</td>
 				<td>
-					David Evans
+					Paula Moore
 				</td>
 				<td>
 					<span id="finance-partner2-contact-status">Pending</span>
@@ -130,7 +130,7 @@
 	<p class="extra-margin">Any new team members invited at this stage are required to join this project before this section can be marked as complete.</p>
 
 	<div class="extra-margin">
-		<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1588-project-status?user=nonLead' :'/prototypes/1588-project-status'}" class="button-secondary">Save and return to project setup status</a>
+		<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1588-project-status?user=nonLead?stage=level2' :'/prototypes/1588-project-status?stage=level2'}" class="button">Save and return to project setup status</a>
 	</div>
 
 	
