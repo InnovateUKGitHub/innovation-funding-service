@@ -272,6 +272,7 @@ the user cannot see a validation error in the page
 the user submits their information
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Select Checkbox    termsAndConditions
+    Select Checkbox    termsAndConditions
     Submit Form
 
 the user logs out if they are logged in
