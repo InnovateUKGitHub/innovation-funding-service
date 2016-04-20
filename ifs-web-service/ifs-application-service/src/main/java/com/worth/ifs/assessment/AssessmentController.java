@@ -195,7 +195,7 @@ public class AssessmentController extends AbstractApplicationController {
         Map<Long, Response> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
         model.addAttribute("processRole", assessorProcessRole);
         model.addAttribute("questionResponses", questionResponsesMap);
-        financeOverviewModelManager.addFinanceDetails(model, application.getId());
+        financeOverviewModelManager.addFinanceDetails(model, competition.getId(), application.getId());
         return assessmentDetails;
     }
 

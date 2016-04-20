@@ -31,7 +31,7 @@ public class Competition {
             return CompetitionResource.Status.IN_ASSESSMENT;
         }
 
-        return null;
+        return CompetitionResource.Status.FUNDERS_PANEL;
     }
 
     @Id

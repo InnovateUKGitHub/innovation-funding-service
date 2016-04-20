@@ -25,10 +25,10 @@ public interface SectionService {
     Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId);
     Boolean allSectionsMarkedAsComplete(Long applicationId);
     List<SectionResource> filterParentSections(List<Long> sections);
-    SectionResource getByName(String name);
     void removeSectionsQuestionsWithType(SectionResource section, String name);
     Future<SectionResource> getPreviousSection(Optional<SectionResource> sectionId);
     Future<SectionResource> getNextSection(Optional<SectionResource> sectionId);
     SectionResource getSectionByQuestionId(Long questionId);
     Set<Long> getQuestionsForSectionAndSubsections(Long sectionId);
+	SectionResource getFinanceSectionForCompetition(Long competitionId);
 }

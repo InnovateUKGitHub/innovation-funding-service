@@ -140,7 +140,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-        addOrganisationAndUserFinanceDetails(applicationId, user, model, form);
+        addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
 
         addNavigation(section, applicationId, model);
 
@@ -488,7 +488,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         if(bindingResult.hasErrors()){
             SectionResource section = sectionService.getById(sectionId);
             addApplicationAndSections(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-            addOrganisationAndUserFinanceDetails(application.getId(), user, model, form);
+            addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId);

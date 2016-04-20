@@ -20,10 +20,10 @@ public interface SectionRestService {
     RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(Long applicationId);
     RestResult<List<Long>> getCompletedSectionIds(Long applicationId, Long organisationId);
     RestResult<List<Long>> getIncompletedSectionIds(Long applicationId);
-    RestResult<SectionResource> getSection(String name);
     RestResult<Boolean> allSectionsMarkedAsComplete(Long applicationId);
     Future<RestResult<SectionResource>> getPreviousSection(Long sectionId);
     Future<RestResult<SectionResource>> getNextSection(Long sectionId);
     RestResult<SectionResource> getSectionByQuestionId(Long questionId);
     RestResult<Set<Long>> getQuestionsForSectionAndSubsections(Long sectionId);
+    RestResult<SectionResource> getFinanceSectionForCompetition(Long competitionId);
 }
