@@ -8,7 +8,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-2375: Error message needed on contributors invite if user tries to add duplicate email address
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        collaboration
+Force Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot

@@ -205,7 +205,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                 .header("referer", "/organisation/create/find-organisation/")
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name(String.format("redirect:/organisation/create/find-organisation/%s/0", POSTCODE_LOOKUP)));
+                .andExpect(MockMvcResultMatchers.view().name(String.format("redirect:/organisation/create/find-organisation/%s/0", POSTCODE_LOOKUP_URL_ENCODED)));
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(String.format("/organisation/create/find-organisation/%s/0", POSTCODE_LOOKUP))
                 .cookie(organisationTypeBusiness)
@@ -445,7 +445,7 @@ public class OrganisationCreationControllerTest  extends BaseUnitTest {
                         .header("referer", "/organisation/create/selected-organisation/")
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name(String.format("redirect:/organisation/create/selected-organisation/%s/%s/%s", COMPANY_ID, POSTCODE_LOOKUP, "0")));
+                .andExpect(MockMvcResultMatchers.view().name(String.format("redirect:/organisation/create/selected-organisation/%s/%s/%s", COMPANY_ID, POSTCODE_LOOKUP_URL_ENCODED, "0")));
 
         mockMvc.perform(MockMvcRequestBuilders.get(String.format("/organisation/create/selected-organisation/%s/%s/%s", COMPANY_ID, POSTCODE_LOOKUP, "0"))
                 .cookie(organisationTypeBusiness)

@@ -17,7 +17,7 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Project address'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project address'})" th:remove="tag" />
 	
 	<form action="#">
 
@@ -54,7 +54,7 @@
 
 		function updateFields(addressType){
 
-			var street = (addressType == 'org') ? 'Nomensa' : 'Worth IT';
+			var street = (addressType == 'org') ? 'Aptrans Ltd' : 'Aptrans Ltd';
 			var street2 = (addressType == 'org') ? '13 Queens Square' : 'North Star House';
 			var street3 = (addressType == 'org') ? '' : 'North Star Avenue';
 			var county = (addressType == 'org') ? 'Avon' : 'Wiltshire';
