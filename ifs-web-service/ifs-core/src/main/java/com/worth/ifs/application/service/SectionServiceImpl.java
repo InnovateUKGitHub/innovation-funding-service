@@ -131,7 +131,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
 	@Override
-	public Long getFinanceSectionForCompetition(Long competitionId) {
+	public SectionResource getFinanceSectionForCompetition(Long competitionId) {
 		return sectionRestService.getFinanceSectionForCompetition(competitionId).getSuccessObjectOrThrowException();
 	}
 }

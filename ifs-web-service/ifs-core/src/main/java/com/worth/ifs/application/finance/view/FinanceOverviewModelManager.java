@@ -53,13 +53,12 @@ public class FinanceOverviewModelManager {
     }
 
     private void addFinanceSections(Long competitionId, Model model) {
-    	Long sectionId = sectionService.getFinanceSectionForCompetition(competitionId);
+    	SectionResource section = sectionService.getFinanceSectionForCompetition(competitionId);
     	
-    	if(sectionId == null) {
+    	if(section == null) {
     		return;
     	}
     	
-        SectionResource section = sectionService.getById(sectionId);
         sectionService.removeSectionsQuestionsWithType(section, "empty");
 
         model.addAttribute("financeSection", section);

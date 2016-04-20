@@ -428,6 +428,7 @@ public class BaseUnitTest {
                     when(sectionService.getById(s.getId())).thenReturn(s);
                 }
         );
+        when(sectionService.getFinanceSectionForCompetition(1L)).thenReturn(sectionResource7);
 
         ArrayList<Question> questionList = new ArrayList<>();
         for (Section section : sections) {

@@ -73,7 +73,7 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     }
 
 	@Override
-	public RestResult<Long> getFinanceSectionForCompetition(Long competitionId) {
-		return getWithRestResult(sectionRestURL + "/getFinanceSectionByCompetitionId/" + competitionId, Long.class);
+	public RestResult<SectionResource> getFinanceSectionForCompetition(Long competitionId) {
+		return getWithRestResult(sectionRestURL + "/getFinanceSectionByCompetitionId/" + competitionId, SectionResource.class);
 	}
 }

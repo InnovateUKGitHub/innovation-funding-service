@@ -396,8 +396,14 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
         
-        Long financeSectionId = sectionService.getFinanceSectionForCompetition(application.getCompetition());
-        boolean hasFinanceSection = financeSectionId != null;
+        SectionResource financeSection = sectionService.getFinanceSectionForCompetition(application.getCompetition());
+        boolean hasFinanceSection = financeSection != null;
+        Long financeSectionId;
+        if(hasFinanceSection) {
+        	financeSectionId = financeSection.getId();
+        } else {
+        	financeSectionId = null;
+        }
         
         model.addAttribute("hasFinanceSection", hasFinanceSection);
         model.addAttribute("financeSectionId", financeSectionId);
@@ -458,8 +464,8 @@ public abstract class AbstractApplicationController extends BaseController {
                                                         Model model, ApplicationForm form) {
         model.addAttribute("currentUser", user);
         
-        Long financeSectionId = sectionService.getFinanceSectionForCompetition(competitionId);
-        boolean hasFinanceSection = financeSectionId != null;
+        SectionResource financeSection = sectionService.getFinanceSectionForCompetition(competitionId);
+        boolean hasFinanceSection = financeSection != null;
         
         if(hasFinanceSection) {
         

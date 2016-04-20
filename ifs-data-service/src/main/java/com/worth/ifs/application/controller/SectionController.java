@@ -70,7 +70,7 @@ public class SectionController {
     }
     
     @RequestMapping("/getFinanceSectionByCompetitionId/{competitionId}")
-    public RestResult<Long> getFinanceSectionByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
+    public RestResult<SectionResource> getFinanceSectionByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
     	return sectionService.getFinanceSectionByCompetitionId(competitionId).toGetResponse();
     }
 }

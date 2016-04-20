@@ -1,11 +1,11 @@
 
-INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (4,'Eveleigh House','Grove Street','','Bath','BA1 5LR','Avon');
-INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (5,'Eveleigh House','Grove Street','','Bath','BA1 5LR','Avon');
-INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (6,'Eveleigh House','Grove Street','','Bath','BA1 5LR','Avon');
-INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (7,'Eveleigh House','Grove Street','','Bath','BA1 5LR','Avon');
-INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (8,'Eveleigh House','Grove Street','','Bath','BA1 5LR','Avon');
-INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (9,'Eveleigh House','Grove Street','','Bath','BA1 5LR','Avon');
-INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (10,'Eveleigh House','Grove Street','','Bath','BA1 5LR','Avon');
+INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (4,'1','Juggle Street','','Bath','BA1 5LR','Bath');
+INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (5,'2','Juggle Road','','Bristol','BS1 5LR','Bristol');
+INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (6,'3','Juggle Avenue','','Cardiff','CF1 5LR','Cardiff');
+INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (7,'4','Juggle Crescent','','Norwich','NW1 5LR','Norwich');
+INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (8,'5','Juggle Way','','London','E1 5LR','London');
+INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (9,'6','Juggle Close','','Sheffield','LS1 5LR','Sheffield');
+INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (10,'7','Juggle Grove','','Leeds','LS2 5LR','Leeds');
 INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (11,'Cardiff University','','','Cardiff','CF10 3AT','South Glamorgan');
 INSERT INTO `address` (`id`, `address_line1`, `address_line2`, `address_line3`, `town`, `postcode`, `county`) VALUES (12,'Tyndall Avenue','','','Bristol','BS8 1TH','Bristol');
 
@@ -17,13 +17,13 @@ INSERT INTO `application` (`id`, `duration_in_months`, `name`, `start_date`, `ap
 INSERT INTO `application` (`id`, `duration_in_months`, `name`, `start_date`, `application_status_id`, `competition`, `submitted_date`) VALUES (13,3,'Better living through juggling','2016-04-19',5,2,NULL);
 INSERT INTO `application` (`id`, `duration_in_months`, `name`, `start_date`, `application_status_id`, `competition`, `submitted_date`) VALUES (14,3,'Juggling is a word that sounds funny to say','2016-04-19',5,2,NULL);
 
-INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (12,'IPL GROUP LIMITED','06477798',NULL,1);
-INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (13,'IPL GROUP LIMITED','06477798',NULL,1);
-INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (14,'IPL GROUP LIMITED','06477798',NULL,1);
-INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (15,'IPL GROUP LIMITED','06477798',NULL,1);
-INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (16,'IPL GROUP LIMITED','06477798',NULL,1);
-INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (17,'IPL GROUP LIMITED','06477798',NULL,1);
-INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (18,'IPL GROUP LIMITED','06477798',NULL,1);
+INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (12,'The Best Juggling Company','06477798',NULL,1);
+INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (13,'Juggle Ltd','06477798',NULL,1);
+INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (14,'Jugglez Ltd','06477798',NULL,1);
+INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (15,'Juggling Balls Ltd','06477798',NULL,1);
+INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (16,'Infinite Juggling Ltd','06477798',NULL,1);
+INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (17,'Everyday Im Juggling Ltd','06477798',NULL,1);
+INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (18,'Mo Juggling Mo Problems Ltd','06477798',NULL,1);
 INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (19,'Cardiff University',NULL,NULL,5);
 INSERT INTO `organisation` (`id`, `name`, `company_house_number`, `organisation_size`, `organisation_type_id`) VALUES (20,'University of Bristol',NULL,NULL,5);
 

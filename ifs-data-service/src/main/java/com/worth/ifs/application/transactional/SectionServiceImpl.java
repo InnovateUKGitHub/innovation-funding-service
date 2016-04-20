@@ -167,15 +167,15 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
 	@Override
-	public ServiceResult<Long> getFinanceSectionByCompetitionId(final Long competitionId) {
+	public ServiceResult<SectionResource> getFinanceSectionByCompetitionId(final Long competitionId) {
 		return getCompetition(competitionId).andOnSuccessReturn(this::financeSection);
 	}
 	
-	private Long financeSection(Competition competition) {
+	private SectionResource financeSection(Competition competition) {
 		return competition.getSections().stream()
 				.filter(Section::isFinance)
-				.map(Section::getId)
 				.findAny()
+				.map(sectionMapper::mapToResource)
 				.orElse(null);
 	}
 	

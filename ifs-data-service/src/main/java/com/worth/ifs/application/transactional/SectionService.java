@@ -34,7 +34,7 @@ public interface SectionService {
     ServiceResult<List<Long>> getIncompleteSections(final Long applicationId);
 
     @NotSecured("Any loggedIn user can find finance section for a given competition")
-	ServiceResult<Long> getFinanceSectionByCompetitionId(Long competitionId);
+	ServiceResult<SectionResource> getFinanceSectionByCompetitionId(Long competitionId);
     
     /**
      * get questions for the sections and filter out the ones that have marked as completed turned on

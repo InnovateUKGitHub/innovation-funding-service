@@ -24,5 +24,5 @@ public interface SectionService {
     Future<SectionResource> getNextSection(Optional<SectionResource> sectionId);
     SectionResource getSectionByQuestionId(Long questionId);
     Set<Long> getQuestionsForSectionAndSubsections(Long sectionId);
-	Long getFinanceSectionForCompetition(Long competitionId);
+	SectionResource getFinanceSectionForCompetition(Long competitionId);
 }

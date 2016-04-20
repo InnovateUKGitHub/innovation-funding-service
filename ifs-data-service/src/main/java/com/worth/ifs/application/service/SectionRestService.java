@@ -22,5 +22,5 @@ public interface SectionRestService {
     Future<RestResult<SectionResource>> getNextSection(Long sectionId);
     RestResult<SectionResource> getSectionByQuestionId(Long questionId);
     RestResult<Set<Long>> getQuestionsForSectionAndSubsections(Long sectionId);
-    RestResult<Long> getFinanceSectionForCompetition(Long competitionId);
+    RestResult<SectionResource> getFinanceSectionForCompetition(Long competitionId);
 }
