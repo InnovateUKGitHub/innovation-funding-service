@@ -51,4 +51,5 @@ public class ApplicationFinancePermissionRules {
         final boolean isCollaborator = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
         return isLeadApplicant || isCollaborator;
     }
+
 }

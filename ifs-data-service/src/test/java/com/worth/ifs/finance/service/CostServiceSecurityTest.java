@@ -104,10 +104,13 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
     @Test
     public void testFinanceTotals() {
         final Long applicationId = 1L;
-        final Long organisationId = 1L;
-        ServiceResult<List<ApplicationFinanceResource>> listServiceResult = service.financeTotals(applicationId);
-        assertTrue(listServiceResult.getSuccessObject().isEmpty());
-        verifyApplicationFinanceResourceReadRulesCalled(ARRAY_SIZE_FOR_POST_FILTER_TESTS);
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().with(id(applicationId)).build());
+        assertAccessDenied(
+                () -> service.financeTotals(applicationId),
+                () -> {
+                    verify(applicationRules).compAdminCanSeeApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules).consortiumCanSeeTheApplicationFinanceTotals(isA(ApplicationResource.class), isA(UserResource.class));
+                });
     }
 
     @Test

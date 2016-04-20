@@ -51,6 +51,6 @@ public interface CostService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId);
+    @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
+    ServiceResult<List<ApplicationFinanceResource>> financeTotals(@P("applicationId")Long applicationId);
 }
