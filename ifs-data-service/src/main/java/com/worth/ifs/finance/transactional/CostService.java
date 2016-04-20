@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
@@ -21,11 +22,23 @@ public interface CostService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CostFieldResource>> findAllCostFields();
 
+    @NotSecured("TODO")
+    ServiceResult<CostItem> getCostItem(Long costItemId);
+
+    @NotSecured("TODO")
+    ServiceResult<List<Cost>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId);
+
+    @NotSecured("TODO")
+    ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, String costTypeName, Long questionId);
+
+    @NotSecured("TODO")
+    ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, Long questionId);
+
     @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
     ServiceResult<CostItem> addCost(@P("applicationFinanceId")Long applicationFinanceId, Long questionId, CostItem newCostItem);
 
     @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.finance.domain.Cost', 'UPDATE')")
-    ServiceResult<Void> updateCost(@P("costId")Long costId, CostItem newCostItem);
+    ServiceResult<CostItem> updateCost(@P("costId")Long costId, CostItem newCostItem);
 
     @PreAuthorize("hasPermission(#costId, 'com.worth.ifs.finance.domain.Cost', 'DELETE')")
     ServiceResult<Void> deleteCost(@P("costId")Long costId);

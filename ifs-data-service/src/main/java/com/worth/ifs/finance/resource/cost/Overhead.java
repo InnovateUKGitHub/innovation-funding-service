@@ -2,15 +2,18 @@ package com.worth.ifs.finance.resource.cost;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 
 /**
  * {@code Overhead} implements {@link CostItem}
+ *
  */
 public class Overhead implements CostItem {
     private Long id;
     @Enumerated(EnumType.STRING)
     private OverheadRateType rateType;
+    @Min(0)
     private Integer rate;
     private CostType costType;
     private String name;
