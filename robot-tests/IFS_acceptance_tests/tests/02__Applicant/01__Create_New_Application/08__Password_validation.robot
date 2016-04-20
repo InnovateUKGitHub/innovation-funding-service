@@ -30,7 +30,8 @@ Invalid password (from the blacklist)
 
 Invalid password (all lower case)
     [Documentation]    INFUND-1147
-    [Tags]
+    [Tags]    Pending
+    #due to INFUND-2568
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
@@ -39,13 +40,14 @@ Invalid password (all lower case)
     And the user enters text to a text field    id=password    ${lower_case_password}
     And the user enters text to a text field    id=retypedPassword    ${lower_case_password}
     And the user submits their information
-     #due to INFUND-2567    Then the user should see an error    Password must contain at least one lower case letter
+     #due to INFUND-2567    Then the user should see an error    Password must contain at least one upper case letter
     And The user should see the text in the page    We were unable to create your account
-    And The user should see the text in the page    Password must contain at least one lower case letter
+    And The user should see the text in the page    Password must contain at least one upper case letter
 
 Invalid password (all upper case)
     [Documentation]    INFUND-1147
-    [Tags]
+    [Tags]    Pending
+    #due to INFUND-2568
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
     And the user enters text to a text field    id=lastName    Smith
@@ -54,9 +56,9 @@ Invalid password (all upper case)
     And the user enters text to a text field    id=password    ${upper_case_password}
     And the user enters text to a text field    id=retypedPassword    ${upper_case_password}
     And the user submits their information
-     #due to INFUND-2567    Then the user should see an error    Password must contain at least one upper case letter
+     #due to INFUND-2567    Then the user should see an error    Password must contain at least one lower case letter
     And The user should see the text in the page    We were unable to create your account
-    And The user should see the text in the page    Password must contain at least one upper case letter
+    And The user should see the text in the page    Password must contain at least one lower case letter
 
 Invalid password (no numbers)
     [Documentation]    INFUND-1147
