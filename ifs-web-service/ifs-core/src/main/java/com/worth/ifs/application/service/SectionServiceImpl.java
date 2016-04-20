@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.application.service.Futures.adapt;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.stream.Collectors.toList;
 
@@ -108,25 +109,29 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public void removeSectionsQuestionsWithType(SectionResource section, String name) {
+        List<Question> questions = questionService.findByCompetition(section.getCompetition());
         section.getChildSections().stream()
                 .map(sectionRestService::getById)
                 .map(result -> result.getSuccessObject())
                 .forEach(
                 s -> s.setQuestions(
-                        s.getQuestions()
-                                .stream()
-                                .map(questionService::getById)
-                                .filter(
-                                        q -> q != null &&
-                                                !q.getFormInputs().stream()
-                                                .anyMatch(
-                                                        input -> input.getFormInputType().getTitle().equals(name)
-                                                )
-                                )
-                                .map(Question::getId)
-                                .collect(toList())
+                        getQuestionsBySection(s.getQuestions(), questions)
+                        .stream()
+                        .filter(
+                                q -> q != null &&
+                                !q.getFormInputs().stream()
+                                    .anyMatch(
+                                        input -> input.getFormInputType().getTitle().equals(name)
+                                    )
+                        )
+                        .map(Question::getId)
+                        .collect(toList())
                 )
         );
+    }
+
+    private List<Question> getQuestionsBySection(final List<Long> questionIds, final List<Question> questions) {
+        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
     @Override
