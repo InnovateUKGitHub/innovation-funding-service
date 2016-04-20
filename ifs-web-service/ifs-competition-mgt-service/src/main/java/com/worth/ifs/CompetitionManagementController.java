@@ -51,10 +51,14 @@ public class CompetitionManagementController {
     	model.addAttribute("competitionSummary", competitionSummary);
     	 
     	switch(competitionSummary.getCompetitionStatus()) {
+    		case NOT_STARTED:
+    			return "comp-mgt-not-started";
 	    	case OPEN:
 	    		return openCompetition(model, competitionId, queryForm, bindingResult);
 	    	case IN_ASSESSMENT:
 	    		return inAssessmentCompetition(model, competitionId, queryForm, bindingResult);
+	    	case FUNDERS_PANEL:
+	    		return "comp-mgt-funders-panel";
 			default:
 				return "redirect:/login";
     	}
@@ -70,7 +74,7 @@ public class CompetitionManagementController {
 		model.addAttribute("activeSortField", sort);
 
         LOG.warn("Show open competition info");
-        return "comp-mgt";
+        return "comp-mgt-open";
 	}
 
 	private String inAssessmentCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
