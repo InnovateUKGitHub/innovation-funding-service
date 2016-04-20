@@ -1,6 +1,9 @@
 package com.worth.ifs.finance.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.domain.ApplicationFinance;
@@ -11,6 +14,9 @@ import com.worth.ifs.finance.resource.cost.LabourCost;
 import com.worth.ifs.finance.resource.cost.Materials;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.mapper.UserMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -19,7 +25,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
 import static org.junit.Assert.*;
 
 @Rollback
@@ -38,6 +47,13 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
     CostRepository costRepository;
     private Cost grandClaimCost;
     private ApplicationFinance applicationFinance;
+    private long leadApplicantId;
+    private long leadApplicantProcessRole;
+    public static final long APPLICATION_ID = 1L;
+
+    @Autowired
+    UserMapper userMapper;
+
 
     @Override
     @Autowired
@@ -51,10 +67,33 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         applicationFinance = grandClaimCost.getApplicationFinance();
 
         grantClaim = (GrantClaim) controller.get(48L).getSuccessObject();
-        materials = (Materials) controller.get(18L).getSuccessObject();
-        labourCost = (LabourCost) controller.get(36L).getSuccessObject();
+        materials = (Materials) controller.get(12L).getSuccessObject();
+        labourCost = (LabourCost) controller.get(4L).getSuccessObject();
         labourCostDaysPerYear = (LabourCost) controller.get(1L).getSuccessObject();
         otherFunding = (OtherFunding) controller.get(54L).getSuccessObject();
+
+        leadApplicantId = 1L;
+        leadApplicantProcessRole = 1L;
+        List<ProcessRole> proccessRoles = new ArrayList<>();
+        proccessRoles.add(
+                new ProcessRole(
+                        leadApplicantProcessRole,
+                        null,
+                        new Application(
+                                APPLICATION_ID,
+                                "",
+                                new ApplicationStatus(
+                                        ApplicationStatusConstants.CREATED.getId(),
+                                        ApplicationStatusConstants.CREATED.getName()
+                                )
+                        ),
+                        null,
+                        null
+                )
+        );
+        User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", proccessRoles, "123abc");
+        proccessRoles.get(0).setUser(user);
+        swapOutForUser(userMapper.mapToResource(user));
     }
 
     @Rollback
