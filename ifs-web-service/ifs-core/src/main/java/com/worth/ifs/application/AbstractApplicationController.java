@@ -1,5 +1,21 @@
 package com.worth.ifs.application;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.worth.ifs.BaseController;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
@@ -10,7 +26,12 @@ import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.service.*;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.application.service.ResponseService;
+import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -28,6 +49,7 @@ import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +57,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import static com.worth.ifs.application.service.Futures.call;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -345,22 +361,24 @@ public abstract class AbstractApplicationController extends BaseController {
 
         userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
 
+        List<Question> questions = questionService.findByCompetition(competition.getId());
+
         model.addAttribute("sections", sections);
         Map<Long, List<Question>> sectionQuestions = sectionsList.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId,
-                        s -> simpleMap(s.getQuestions(), questionService::getById)
+                        s -> getQuestionsBySection(s, questions)
                 ));
         model.addAttribute("sectionQuestions", sectionQuestions);
 
         if(currentSection.isPresent()){
             Map<Long, List<SectionResource>>  subSections = new HashMap<>();
-            subSections.put(currentSection.get().getId(), currentSection.get().getChildSections().stream().map(sectionService::getById).collect(Collectors.toList()));
+            subSections.put(currentSection.get().getId(), simpleMap(currentSection.get().getChildSections(), sectionService::getById));
 
             model.addAttribute("subSections", subSections);
             Map<Long, List<Question>> subsectionQuestions = subSections.get(currentSection.get().getId()).stream()
                     .collect(Collectors.toMap(SectionResource::getId,
-                            ss -> simpleMap(ss.getQuestions(), questionService::getById)
+                            ss -> getQuestionsBySection(ss, questions)
                     ));
             model.addAttribute("subsectionQuestions", subsectionQuestions);
         }else{
@@ -371,11 +389,15 @@ public abstract class AbstractApplicationController extends BaseController {
             model.addAttribute("subSections", subSections);
             Map<Long, List<Question>> subsectionQuestions = sectionsList.stream()
                     .collect(Collectors.toMap(SectionResource::getId,
-                            ss -> simpleMap(ss.getQuestions(), questionService::getById)
+                            ss -> getQuestionsBySection(ss, questions)
                     ));
             model.addAttribute("subsectionQuestions", subsectionQuestions);
         }
 
+    }
+
+    private List<Question> getQuestionsBySection(final SectionResource section, final List<Question> questions) {
+        return simpleFilter(questions, q -> section.getQuestions().contains(q.getId()));
     }
 
     private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, List<ProcessRole> userApplicationRoles) {
