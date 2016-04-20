@@ -2,13 +2,13 @@ package com.worth.ifs;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.worth.ifs.security.PermissionRule;
+import com.worth.ifs.security.SecuredBySpring;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +28,7 @@ import java.util.function.Predicate;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
 import static java.util.Arrays.asList;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
  * A base class for testing services with Spring Security integrated into them.  PermissionRules-annotated beans are
@@ -100,10 +101,25 @@ public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
 
         service = createRecordingProxy(serviceBeanWithSpringSecurity, getServiceClass(),
                 method -> hasOneAnnotation(method, PreAuthorize.class, PostAuthorize.class, PreFilter.class, PostFilter.class),
-                methodCalled -> recordedRuleInteractions.add(Pair.of(RecordingSource.SERVICE, getServiceClass().getInterfaces()[0].getSimpleName() + "." + methodCalled.getName()))
+                methodCalled -> recordServiceMethodCall(methodCalled)
         );
 
         super.setup();
+    }
+
+    private void recordPermissionRuleMethodCall(Method methodCalled, Class<?> permissionRuleClass) {
+        recordedRuleInteractions.add(Pair.of(RecordingSource.PERMISSION_RULE, permissionRuleClass.getSimpleName() + "." + methodCalled.getName()));
+    }
+
+    private void recordServiceMethodCall(Method methodCalled) {
+
+        Class<?> serviceInterface = getServiceClass().getInterfaces()[0];
+        recordedRuleInteractions.add(Pair.of(RecordingSource.SERVICE, serviceInterface.getSimpleName() + "." + methodCalled.getName()));
+
+        SecuredBySpring simpleSecuredAnnotation = findAnnotation(methodCalled, SecuredBySpring.class);
+        if (simpleSecuredAnnotation != null) {
+            recordedRuleInteractions.add(Pair.of(RecordingSource.PERMISSION_RULE, serviceInterface.getSimpleName() + "." + methodCalled.getName()));
+        }
     }
 
     /**
@@ -184,7 +200,7 @@ public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
     protected Object createPermissionRuleMock(Object mock, Class<?> mockClass) {
         return createRecordingProxy(mock, mockClass,
                 method -> hasOneAnnotation(method, PermissionRule.class),
-                methodCalled -> recordedRuleInteractions.add(Pair.of(RecordingSource.PERMISSION_RULE, mockClass.getSimpleName() + "." + methodCalled.getName()))
+                methodCalled -> recordPermissionRuleMethodCall(methodCalled, mockClass)
         );
     }
 
@@ -221,6 +237,6 @@ public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
     }
 
     private boolean hasOneAnnotation(Method method, Class<? extends Annotation>... annotations) {
-        return asList(annotations).stream().anyMatch(annotation -> AnnotationUtils.findAnnotation(method, annotation) != null);
+        return asList(annotations).stream().anyMatch(annotation -> findAnnotation(method, annotation) != null);
     }
 }
