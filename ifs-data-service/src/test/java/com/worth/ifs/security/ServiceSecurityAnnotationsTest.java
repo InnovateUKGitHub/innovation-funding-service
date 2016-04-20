@@ -173,19 +173,23 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
     private List<String[]> getPermissionRulesBasedSecurity(CustomPermissionEvaluator evaluator) {
         List<String[]> permissionRuleRows = new ArrayList<>();
 
-        CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods rulesMap =
-                (CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(evaluator, "rulesMap");
+        CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap =
+                (CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods) ReflectionTestUtils.getField(evaluator, "rulesMap");
 
         Set<Class<?>> securedEntities = rulesMap.keySet();
 
         securedEntities.forEach(clazz -> {
 
-            Map<String, CustomPermissionEvaluator.ListOfMethods> rulesForSecuringEntity = rulesMap.get(clazz);
+
+            Map<String, CustomPermissionEvaluator.ListOfOwnerAndMethod> rulesForSecuringEntity = rulesMap.get(clazz);
             Set<String> actionsSecuredForEntity = rulesForSecuringEntity.keySet();
+
 
             actionsSecuredForEntity.forEach(actionName -> {
 
-                CustomPermissionEvaluator.ListOfMethods permissionRuleMethodsForThisAction = rulesForSecuringEntity.get(actionName);
+
+                CustomPermissionEvaluator.ListOfOwnerAndMethod permissionRuleMethodsForThisAction = rulesForSecuringEntity.get(actionName);
+
 
                 permissionRuleMethodsForThisAction.forEach(serviceAndMethod -> {
 
