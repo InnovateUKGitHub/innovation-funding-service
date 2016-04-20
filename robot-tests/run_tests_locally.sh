@@ -203,7 +203,7 @@ unset opt
 unset quickTest
 unset testScrub
 unset happyPath
-useXvfb=false
+useXvfb=true
 unset remoteRun
 
 
