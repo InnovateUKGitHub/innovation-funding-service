@@ -11,8 +11,6 @@ import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,16 +23,15 @@ import static com.worth.ifs.user.domain.UserRoleType.*;
 @PermissionRules
 @Component
 public class ApplicationRules {
-    private static final Log LOG = LogFactory.getLog(ApplicationRules.class);
 
     @Autowired
-    ApplicationRepository applicationRepository;
+    private ApplicationRepository applicationRepository;
 
     @Autowired
-    ProcessRoleRepository processRoleRepository;
+    private ProcessRoleRepository processRoleRepository;
 
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
     public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {

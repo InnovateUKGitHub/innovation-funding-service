@@ -104,12 +104,12 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void addShouldReturnApplicationByApplicationIdAndOrganisationId() throws Exception {
 
-        when(costServiceMock.addCost(new ApplicationFinanceResourceId(123L, 456L))).thenReturn(serviceSuccess(applicationFinanceResource));
+        when(costServiceMock.addCost(any(ApplicationFinanceResourceId.class))).thenReturn(serviceSuccess(applicationFinanceResource));
 
         mockMvc.perform(get("/applicationfinance/add/{applicationId}/{organisationId}", "123", "456"))
                 .andExpect(status().isCreated());
 
-        verify(costServiceMock, times(1)).addCost(new ApplicationFinanceResourceId(123L, 456L));
+        verify(costServiceMock, times(1)).addCost(any(ApplicationFinanceResourceId.class));
     }
 
     @Test

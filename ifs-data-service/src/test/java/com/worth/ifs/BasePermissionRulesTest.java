@@ -11,6 +11,7 @@ import java.util.List;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
 import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.user.domain.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
@@ -39,6 +40,10 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected UserResource compAdminUser() {
         return getUserWithRole(COMP_ADMIN);
+    }
+
+    protected UserResource assessorUser() {
+        return getUserWithRole(ASSESSOR);
     }
 
     protected RoleResource systemRegistrationRole() {
