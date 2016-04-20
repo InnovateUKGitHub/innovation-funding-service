@@ -7,7 +7,11 @@ import com.worth.ifs.security.PermissionEntityLookupStrategies;
 import com.worth.ifs.security.PermissionEntityLookupStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.worth.ifs.finance.resource.cost.CostItem;
 
+ /**
+ * Lookup strategies for {@link Cost} and {@link CostItem} for permissioning
+ */
 @Component
 @PermissionEntityLookupStrategies
 public class CostLookupStrategy {

@@ -96,7 +96,14 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void compAdminCanSeeApplicationFinancesForOrganisations() {
-        assertTrue(rules.compAdminCanSeeApplicationFinancesForOrganisations(applicationFinance, compAdmin));
-        assertTrue(rules.compAdminCanSeeApplicationFinancesForOrganisations(otherApplicationFinance, compAdmin));
+        allRoleUsers.forEach(user -> {
+            allRoleUsers.forEach(otherUser -> {
+                if (user.equals(compAdminUser())) {
+                    assertTrue(rules.compAdminCanSeeApplicationFinancesForOrganisations(applicationFinance, user));
+                } else {
+                    assertFalse(rules.compAdminCanSeeApplicationFinancesForOrganisations(applicationFinance, user));
+                }
+            });
+        });
     }
 }
