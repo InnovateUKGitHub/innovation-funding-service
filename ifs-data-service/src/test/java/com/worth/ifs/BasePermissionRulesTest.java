@@ -1,5 +1,6 @@
 package com.worth.ifs;
 
+import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.RoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -7,6 +8,7 @@ import org.mockito.InjectMocks;
 
 import java.util.List;
 
+import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
@@ -15,6 +17,7 @@ import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * A base class for testing @PermissionRules-annotated classes
@@ -24,12 +27,14 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     @InjectMocks
     protected T rules = supplyPermissionRulesUnderTest();
 
-    protected List<RoleResource> allRoles = newRoleResource().withType(UserRoleType.values()).build(UserRoleType.values().length);
+    protected List<Role> allRoles =  newRole().withType(UserRoleType.values()).build(UserRoleType.values().length);
 
-    protected List<UserResource> allRoleUsers = simpleMap(allRoles, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
+    protected List<RoleResource> allRolesResources = allRoles.stream().map(role -> newRoleResource().withType(UserRoleType.fromName(role.getName())).build()).collect(toList());
+
+    protected List<UserResource> allRoleUsers = simpleMap(allRolesResources, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
 
     protected RoleResource compAdminRole() {
-        return getRole(COMP_ADMIN);
+        return getRoleResource(COMP_ADMIN);
     }
 
     protected UserResource compAdminUser() {
@@ -37,7 +42,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     }
 
     protected RoleResource systemRegistrationRole() {
-        return getRole(SYSTEM_REGISTRATION_USER);
+        return getRoleResource(SYSTEM_REGISTRATION_USER);
     }
 
     protected UserResource systemRegistrationUser() {
@@ -45,7 +50,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     }
 
     private UserResource createUserWithRoles(UserRoleType... types) {
-        List<RoleResource> roles = simpleMap(asList(types), this::getRole);
+        List<RoleResource> roles = simpleMap(asList(types), this::getRoleResource);
         return newUserResource().withRolesGlobal(roles).build();
     }
 
@@ -53,7 +58,11 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return simpleFilter(allRoleUsers, user -> simpleMap(user.getRoles(), RoleResource::getName).contains(type.getName())).get(0);
     }
 
-    private RoleResource getRole(UserRoleType type) {
+    private RoleResource getRoleResource(UserRoleType type) {
+        return simpleFilter(allRolesResources, role -> role.getName().equals(type.getName())).get(0);
+    }
+
+    protected Role getRole(UserRoleType type) {
         return simpleFilter(allRoles, role -> role.getName().equals(type.getName())).get(0);
     }
 
