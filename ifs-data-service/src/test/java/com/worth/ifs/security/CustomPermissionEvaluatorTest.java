@@ -3,9 +3,9 @@ package com.worth.ifs.security;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.commons.security.UserAuthentication;
-import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToPermissionsMethods;
-import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.security.CustomPermissionEvaluator.ListOfOwnerAndMethod;
+import com.worth.ifs.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsMethods;
+import com.worth.ifs.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -180,7 +179,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     public void test_simpledDtoClassToMethods() {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans1));
         // Method under test
-        DtoClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
+        PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
         assertEquals(1, dtoClassToMethods.size());
         assertEquals(1, dtoClassToMethods.get(String.class).size());
     }
@@ -189,7 +188,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     public void test_complexDtoClassToMethods() {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans2));
         // Method under test
-        DtoClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
+        PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
         assertEquals(2, dtoClassToMethods.size());
         assertEquals(3, dtoClassToMethods.get(String.class).size());
         assertEquals(1, dtoClassToMethods.get(Integer.class).size());
@@ -198,10 +197,10 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     @Test
     public void test_simpleDtoClassToPermissionToMethods() {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans1));
-        DtoClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
+        PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
 
         // Method under test
-        DtoClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods = permissionEvaluator.dtoClassToPermissionToMethods(dtoClassToMethods);
+        PermissionedObjectClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods = permissionEvaluator.dtoClassToPermissionToMethods(dtoClassToMethods);
         assertEquals(1, dtoClassToPermissionToMethods.size());
         assertNotNull(dtoClassToPermissionToMethods.get(String.class));
         assertEquals(1, dtoClassToPermissionToMethods.get(String.class).size());
@@ -212,10 +211,10 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     @Test
     public void test_complexDtoClassToPermissionToMethods() {
         List<Pair<Object, Method>> rules = permissionEvaluator.findRules(singletonList(rulesBeans2));
-        DtoClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
+        PermissionedObjectClassToPermissionsMethods dtoClassToMethods = permissionEvaluator.dtoClassToMethods(rules);
 
         // Method under test
-        DtoClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods = permissionEvaluator.dtoClassToPermissionToMethods(dtoClassToMethods);
+        PermissionedObjectClassToPermissionsToPermissionsMethods dtoClassToPermissionToMethods = permissionEvaluator.dtoClassToPermissionToMethods(dtoClassToMethods);
 
         assertEquals(2, dtoClassToPermissionToMethods.size());
 
@@ -336,7 +335,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
         permissionEvaluator.generateLookupStrategies();
 
-        Map<Class<?>, Pair<Object, Method>> permissionLookupStrategyMap = getPermissionLookupStrategyMap();
+        Map<Class<?>, ListOfOwnerAndMethod> permissionLookupStrategyMap = getPermissionLookupStrategyMap();
 
         // test that we have picked up and set the values for Strings, Integers and Longs
         {
@@ -347,19 +346,19 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
 
         // test the lookup strategies against Strings
         {
-            Pair<Object, Method> lookupStrategy = permissionLookupStrategyMap.get(String.class);
+            Pair<Object, Method> lookupStrategy = permissionLookupStrategyMap.get(String.class).get(0);
             assertEquals("A string 123", lookupStrategy.getRight().invoke(lookupStrategy.getLeft(), 123L));
         }
 
         // test the lookup strategies against Longs
         {
-            Pair<Object, Method> lookupStrategy = permissionLookupStrategyMap.get(Long.class);
+            Pair<Object, Method> lookupStrategy = permissionLookupStrategyMap.get(Long.class).get(0);
             assertEquals(105L, lookupStrategy.getRight().invoke(lookupStrategy.getLeft(), 5L));
         }
 
         // test the lookup strategies against Integers
         {
-            Pair<Object, Method> lookupStrategy = permissionLookupStrategyMap.get(Integer.class);
+            Pair<Object, Method> lookupStrategy = permissionLookupStrategyMap.get(Integer.class).get(0);
             assertEquals(206, lookupStrategy.getRight().invoke(lookupStrategy.getLeft(), 6L));
         }
     }
@@ -473,8 +472,8 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
         return (Map<Class<?>, Map<String, List<Pair<Object, Method>>>>) getField(permissionEvaluator, "rulesMap");
     }
 
-    private Map<Class<?>, Pair<Object, Method>> getPermissionLookupStrategyMap() {
-        return (Map<Class<?>, Pair<Object, Method>>) getField(permissionEvaluator, "lookupStrategyMap");
+    private Map<Class<?>, ListOfOwnerAndMethod> getPermissionLookupStrategyMap() {
+        return (Map<Class<?>, ListOfOwnerAndMethod>) getField(permissionEvaluator, "lookupStrategyMap");
     }
 
 }
