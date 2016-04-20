@@ -353,7 +353,7 @@ public abstract class AbstractApplicationController extends BaseController {
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                             Optional<SectionResource> currentSection,
                                             Optional<OrganisationResource> userOrganisation) {
-        List<SectionResource> sectionsList = sectionService.filterParentSections(competition.getSections());
+        List<SectionResource> sectionsList = sectionService.filterParentSections(sectionService.getAllByCompetitionId(competition.getId()));
 
         Map<Long, SectionResource> sections =
                 sectionsList.stream().collect(Collectors.toMap(SectionResource::getId,
@@ -367,7 +367,7 @@ public abstract class AbstractApplicationController extends BaseController {
         Map<Long, List<Question>> sectionQuestions = sectionsList.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId,
-                        s -> getQuestionsBySection(s, questions)
+                        s -> getQuestionsBySection(s.getQuestions(), questions)
                 ));
         model.addAttribute("sectionQuestions", sectionQuestions);
 
@@ -378,7 +378,7 @@ public abstract class AbstractApplicationController extends BaseController {
             model.addAttribute("subSections", subSections);
             Map<Long, List<Question>> subsectionQuestions = subSections.get(currentSection.get().getId()).stream()
                     .collect(Collectors.toMap(SectionResource::getId,
-                            ss -> getQuestionsBySection(ss, questions)
+                            ss -> getQuestionsBySection(ss.getQuestions(), questions)
                     ));
             model.addAttribute("subsectionQuestions", subsectionQuestions);
         }else{
@@ -389,15 +389,15 @@ public abstract class AbstractApplicationController extends BaseController {
             model.addAttribute("subSections", subSections);
             Map<Long, List<Question>> subsectionQuestions = sectionsList.stream()
                     .collect(Collectors.toMap(SectionResource::getId,
-                            ss -> getQuestionsBySection(ss, questions)
+                            ss -> getQuestionsBySection(ss.getQuestions(), questions)
                     ));
             model.addAttribute("subsectionQuestions", subsectionQuestions);
         }
 
     }
 
-    private List<Question> getQuestionsBySection(final SectionResource section, final List<Question> questions) {
-        return simpleFilter(questions, q -> section.getQuestions().contains(q.getId()));
+    private List<Question> getQuestionsBySection(final List<Long> questionIds, final List<Question> questions) {
+        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
     private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, List<ProcessRole> userApplicationRoles) {
@@ -435,7 +435,7 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("currentSectionId", currentSection.map(SectionResource::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
         if(currentSection.isPresent()) {
-            List<Question> questions = simpleMap(currentSection.get().getQuestions(), questionService::getById);
+            List<Question> questions = getQuestionsBySection(currentSection.get().getQuestions(), questionService.findByCompetition(currentSection.get().getCompetition()));
             Map<Long, List<Question>> sectionQuestions = new HashMap<>();
             sectionQuestions.put(currentSection.get().getId(), questions);
 
@@ -444,9 +444,9 @@ public abstract class AbstractApplicationController extends BaseController {
         }
     }
 
-    protected Optional<SectionResource> getSectionByIds(List<Long> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
-        List<SectionResource> sectionObjects = sections.stream().map(sectionService::getById).collect(Collectors.toList());
-        return getSection(sectionObjects, sectionId, selectFirstSectionIfNoneCurrentlySelected);
+    protected Optional<SectionResource> getSectionByIds(Long competitionId, List<Long> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
+        return getSection(allSections, sectionId, selectFirstSectionIfNoneCurrentlySelected);
     }
 
     protected Optional<SectionResource> getSection(List<SectionResource> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {

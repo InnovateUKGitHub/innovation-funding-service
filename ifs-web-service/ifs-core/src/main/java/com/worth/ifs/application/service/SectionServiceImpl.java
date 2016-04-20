@@ -1,17 +1,22 @@
 package com.worth.ifs.application.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.Future;
+
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.concurrent.Future;
 
 import static com.worth.ifs.application.service.Futures.adapt;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -71,12 +76,11 @@ public class SectionServiceImpl implements SectionService {
 
     /**
      * Get Sections that have no parent section.
-     * @param sectionIds
+     * @param sections
      * @return the list of sections without a parent section.
      */
     @Override
-    public List<SectionResource> filterParentSections(List<Long> sectionIds) {
-        List<SectionResource> sections = simpleMap(sectionIds, this::getById);
+    public List<SectionResource> filterParentSections(List<SectionResource> sections) {
         List<SectionResource> childSections = new ArrayList<>();
         getChildSections(sections, childSections);
         sections = sections.stream()
@@ -86,6 +90,11 @@ public class SectionServiceImpl implements SectionService {
         sections.stream()
                 .filter(s -> s.getChildSections()!=null);
         return sections;
+    }
+
+    @Override
+    public List<SectionResource> getAllByCompetitionId(final Long competitionId) {
+        return sectionRestService.getByCompetition(competitionId).getSuccessObjectOrThrowException();
     }
 
     private List<SectionResource> getChildSections(List<SectionResource> sections, List<SectionResource>children) {
