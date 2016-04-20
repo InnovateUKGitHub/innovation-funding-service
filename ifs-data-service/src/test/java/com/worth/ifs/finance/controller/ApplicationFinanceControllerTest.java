@@ -4,6 +4,7 @@ import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.user.domain.Organisation;
 import org.junit.Before;
@@ -103,12 +104,12 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void addShouldReturnApplicationByApplicationIdAndOrganisationId() throws Exception {
 
-        when(costServiceMock.addCost(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
+        when(costServiceMock.addCost(new ApplicationFinanceResourceId(123L, 456L))).thenReturn(serviceSuccess(applicationFinanceResource));
 
         mockMvc.perform(get("/applicationfinance/add/{applicationId}/{organisationId}", "123", "456"))
                 .andExpect(status().isCreated());
 
-        verify(costServiceMock, times(1)).addCost(123L, 456L);
+        verify(costServiceMock, times(1)).addCost(new ApplicationFinanceResourceId(123L, 456L));
     }
 
     @Test

@@ -29,9 +29,7 @@ public class ApplicationFinancePermissionRules {
 
     @PermissionRule(value = "READ", description = "The consortium can see the application finances of their own organisation")
     public boolean consortiumCanSeeTheApplicationFinancesForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        final boolean isLeadApplicant = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
-        final boolean isCollaborator = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
-        return isLeadApplicant || isCollaborator;
+        return isAConsortiumMember(applicationFinanceResource, user);
     }
 
     @PermissionRule(value = "READ", description = "An assessor can see the application finances for organisations in the applications they assess")
@@ -47,6 +45,15 @@ public class ApplicationFinancePermissionRules {
 
     @PermissionRule(value = "ADD_COST", description = "The consortium can add a cost to the application finances of their own organisation")
     public boolean consortiumCanAddACostToApplicationFinanceForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user){
+        return isAConsortiumMember(applicationFinanceResource, user);
+    }
+
+    @PermissionRule(value = "UPDATE_COST", description = "The consortium can update a cost to the application finances of their own organisation")
+    public boolean consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user){
+        return isAConsortiumMember(applicationFinanceResource, user);
+    }
+
+    private final boolean isAConsortiumMember(final ApplicationFinanceResource applicationFinanceResource, final UserResource user){
         final boolean isLeadApplicant = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
         final boolean isCollaborator = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
         return isLeadApplicant || isCollaborator;

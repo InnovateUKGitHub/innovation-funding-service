@@ -157,7 +157,9 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     }
 
     @Override
-    public ServiceResult<ApplicationFinanceResource> addCost(Long applicationId, Long organisationId) {
+    public ServiceResult<ApplicationFinanceResource> addCost(final ApplicationFinanceResourceId applicationFinanceResourceId ) {
+        final Long applicationId = applicationFinanceResourceId.getApplicationId();
+        final Long organisationId = applicationFinanceResourceId.getOrganisationId();
         ApplicationFinance existingFinances = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
         if(existingFinances != null){
             return serviceSuccess(new ApplicationFinanceResource(existingFinances));
