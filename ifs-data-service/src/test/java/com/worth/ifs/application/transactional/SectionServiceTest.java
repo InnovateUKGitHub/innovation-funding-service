@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static com.worth.ifs.BuilderAmendFunctions.name;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -29,16 +28,6 @@ public class SectionServiceTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     protected SectionService sectionService = new SectionServiceImpl();
-
-    @Test
-    public void findByNameTest() throws Exception {
-        Section section = newSection().with(name("testname")).build();
-        SectionResource sectionResource = newSectionResource().with(name("testname")).build();
-        when(sectionRepositoryMock.findByName(section.getName())).thenReturn(section);
-        when(sectionMapper.mapToResource(section)).thenReturn(sectionResource);
-
-        assertEquals(sectionResource, sectionService.findByName(section.getName()).getSuccessObject());
-    }
 
     @Test
     public void getNextSectionTest() throws Exception {
