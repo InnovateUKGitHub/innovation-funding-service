@@ -1,20 +1,23 @@
 package com.worth.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worth.ifs.file.resource.FileEntryResource;
 import org.apache.commons.io.FileUtils;
 
-public class AppendixResource {
+/**
+ * This is used for displaying a list of appendix files at the bottom of comp admin read only application view
+ * See INFUND-2283 and prototype page 1968-admin-readonly-application
+ */
+public class AppendixResource extends FileEntryResource {
     private Long applicationId;
     private String title;
     private Long formInputId;
-    private String name;
-    private Long fileSizeInBytes;
 
-    public AppendixResource(Long applicationId, Long formInputId, String title, String name, Long fileSizeInBytes) {
+    public AppendixResource(Long applicationId, Long formInputId, String title, FileEntryResource fileEntryResource) {
+        super(fileEntryResource.getId(), fileEntryResource.getName(), fileEntryResource.getMediaType(), fileEntryResource.getFilesizeBytes());
+        this.applicationId = applicationId;
         this.title = title;
         this.formInputId = formInputId;
-        this.name = name;
-        this.fileSizeInBytes = fileSizeInBytes;
     }
 
     public String getTitle() {
@@ -29,10 +32,6 @@ public class AppendixResource {
         this.formInputId = formInputId;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public Long getApplicationId() {
         return applicationId;
     }
@@ -44,7 +43,7 @@ public class AppendixResource {
 
     @JsonIgnore
     public String getHumanReadableFileSize() {
-        return FileUtils.byteCountToDisplaySize(fileSizeInBytes);
+        return FileUtils.byteCountToDisplaySize(getFilesizeBytes());
     }
 
     public void setApplicationId(Long applicationId) {
@@ -53,17 +52,5 @@ public class AppendixResource {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getFileSizeInBytes() {
-        return fileSizeInBytes;
-    }
-
-    public void setFileSizeInBytes(Long fileSizeInBytes) {
-        this.fileSizeInBytes = fileSizeInBytes;
     }
 }

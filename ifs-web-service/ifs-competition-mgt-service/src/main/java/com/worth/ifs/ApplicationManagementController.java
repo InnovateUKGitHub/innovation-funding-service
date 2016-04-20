@@ -123,7 +123,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
                     FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccessObject();
                     FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccessObject();
                     String title = formInputResource.getDescription() != null ? formInputResource.getDescription() : fileEntryResource.getName();
-                    return new AppendixResource(applicationId, formInputResource.getId(), title, fileEntryResource.getName(), fileEntryResource.getFilesizeBytes());
+                    return new AppendixResource(applicationId, formInputResource.getId(), title, fileEntryResource);
                 }).
                 collect(Collectors.toList());
         model.addAttribute("appendices", appendices);
