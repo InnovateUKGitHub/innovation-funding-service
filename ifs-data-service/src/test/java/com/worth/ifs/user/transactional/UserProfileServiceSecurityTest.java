@@ -3,7 +3,6 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.security.UserLookupStrategies;
 import com.worth.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +38,7 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         return TestUserProfileService.class;
     }
 
-    private static class TestUserProfileService implements UserProfileService {
+    public static class TestUserProfileService implements UserProfileService {
 
         @Override
         public ServiceResult<Void> updateProfile(@P("userBeingUpdated") UserResource userBeingUpdated) {

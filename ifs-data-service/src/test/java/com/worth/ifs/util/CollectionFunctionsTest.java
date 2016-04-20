@@ -444,5 +444,26 @@ public class CollectionFunctionsTest {
         asList("a", "b", "c", "e").forEach(token -> expectedNewSet.add(token));
         assertEquals(asList("a", "b", "c", "b", "e", "c"), tokens);
     }
+
+    @Test
+    public void test_sort() {
+        assertEquals(asList("a", "b", "c"), CollectionFunctions.sort(asList("b", "c", "a")));
+    }
+
+    @Test
+    public void test_sort_nullSafe() {
+        assertEquals(emptyList(), CollectionFunctions.sort(null));
+    }
+
+    @Test
+    public void test_sortWithComparator() {
+        assertEquals(asList("c", "b", "a"), CollectionFunctions.sort(asList("b", "c", "a"), (s1, s2) -> s2.compareTo(s1)));
+    }
+
+    @Test
+    public void test_sortWithComparator_nullSafe() {
+        assertEquals(emptyList(), CollectionFunctions.sort((List<String>) null, (s1, s2) -> s2.compareTo(s1)));
+    }
+
 }
 
