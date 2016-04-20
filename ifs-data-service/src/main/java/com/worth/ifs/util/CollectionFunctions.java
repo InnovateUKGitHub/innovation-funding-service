@@ -188,7 +188,7 @@ public final class CollectionFunctions {
      */
     public static <T, R> List<R> simpleMap(List<T> list, Function<T, R> mappingFn) {
         if (list == null || list.isEmpty()) {
-            return Collections.emptyList();
+            return emptyList();
         }
         return list.stream().map(mappingFn).collect(toList());
     }
@@ -220,9 +220,43 @@ public final class CollectionFunctions {
      */
     public static <T, R> List<R> simpleMap(Set<T> set, Function<T, R> mappingFn) {
         if (set == null || set.isEmpty()) {
-            return Collections.emptyList();
+            return emptyList();
         }
         return set.stream().map(mappingFn).collect(toList());
+    }
+
+    /**
+     * A shortcut to sort a list by natural order
+     *
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static <T extends Comparable> List<T> sort(Collection<T> list) {
+        if (list == null || list.isEmpty()) {
+            return emptyList();
+        }
+
+        List<T> sorted = new ArrayList<>(list);
+        Collections.sort(sorted);
+        return sorted;
+    }
+
+    /**
+     * A shortcut to sort a list by natural order
+     *
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> sort(Collection<T> list, Comparator<T> comparator) {
+        if (list == null || list.isEmpty()) {
+            return emptyList();
+        }
+
+        List<T> sorted = new ArrayList<>(list);
+        sorted.sort(comparator);
+        return sorted;
     }
 
     /**
@@ -307,7 +341,7 @@ public final class CollectionFunctions {
      */
     public static <T> List<T> simpleFilter(List<T> list, Predicate<T> filterFn) {
         if (list == null || list.isEmpty()) {
-            return Collections.emptyList();
+            return emptyList();
         }
         return list.stream().filter(filterFn).collect(toList());
     }

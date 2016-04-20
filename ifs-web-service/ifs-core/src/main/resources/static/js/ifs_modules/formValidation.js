@@ -21,8 +21,19 @@ IFS.formValidation = (function(){
                 messageInvalid : 'Passwords must match'
             },
             passwordPolicy : {
-                fields : '[name="password"],[name="retypedPassword"]',
-                messageInvalid : 'Your password should contain a number, a lower and uppercase character'
+                fields : {
+                  password : '[name="password"],[name="retypedPassword"]',
+                  firstname : '#firstName',
+                  lastname : '#lastName'
+                },
+                messageInvalid : {
+                  lowercase : 'Password must contain at least one lower case letter',
+                  uppercase : 'Password must contain at least one upper case letter',
+                  number : 'Password must contain at least one number',
+                  firstname : 'Password should not contain your first name',
+                  lastname : 'Password should not contain your last name',
+                  organisation : 'Password should not contain your organisation name'
+                }
             },
             email : {
                 fields : '[type="email"]',
@@ -59,7 +70,7 @@ IFS.formValidation = (function(){
                       IFS.formValidation.checkEqualPasswords();
                 }
             });
-            jQuery('body').on('change',s.passwordPolicy.fields, function(){IFS.formValidation.checkPasswordPolicy(jQuery(this));});
+            jQuery('body').on('change', s.passwordPolicy.fields.password, function(){IFS.formValidation.checkPasswordPolicy(jQuery(this));});
             jQuery('body').on('change', s.email.fields , function(){IFS.formValidation.checkEmail(jQuery(this));});
             jQuery('body').on('change', s.number.fields , function(){IFS.formValidation.checkNumber(jQuery(this));});
             jQuery('body').on('change', s.min.fields , function(){IFS.formValidation.checkMin(jQuery(this));});
@@ -88,17 +99,51 @@ IFS.formValidation = (function(){
         },
         checkPasswordPolicy : function(field){
             var password = field.val();
-            var re = /(?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9])/;
-            var errorMessage = IFS.formValidation.getErrorMessage(field,'passwordPolicy');
-            var pwConfirmsToPolciy = re.test(password);
-            if(!pwConfirmsToPolciy){
-              IFS.formValidation.setInvalid(field,errorMessage);
-              return false;
+            var confirmsToPasswordPolicy = true;
+            //we only check for the policies if there is something filled in
+            if(password.length){
+              var uppercase = /(?=\S*?[A-Z])/;
+              if(uppercase.test(password) === false){
+                  IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.uppercase);
+                  confirmsToPasswordPolicy = false;
+              }
+              else {
+                  IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid.uppercase);
+              }
+
+              var lowercase = /(?=\S*?[a-z])/;
+              if(lowercase.test(password) === false){
+                  IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.lowercase);
+                  confirmsToPasswordPolicy = false;
+              }
+              else {
+                  IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid.lowercase);
+              }
+
+              var number = /(?=\S*?[0-9])/;
+              if(number.test(password) === false){
+                  IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid.number);
+                  confirmsToPasswordPolicy = false;
+              }
+              else {
+                  IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid.number);
+              }
+
+              var nameCheck = ['firstname','lastname'];
+              jQuery(nameCheck).each(function(index,value){
+                var name = jQuery(s.passwordPolicy.fields[value]).val();
+                if(name.replace(' ','').length){
+                  if(password.toLowerCase().indexOf(name.toLowerCase()) > -1){
+                    IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid[value]);
+                    confirmsToPasswordPolicy = false;
+                  }
+                  else {
+                    IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid[value]);
+                  }
+                }
+              });
             }
-            else {
-              IFS.formValidation.setValid(field,errorMessage);
-              return true;
-            }
+            return confirmsToPasswordPolicy;
         },
         checkEmail : function(field){
             //checks if the email is valid, the almost rfc compliant check. The same as the java check, see http://www.regular-expressions.info/email.html
@@ -268,7 +313,6 @@ IFS.formValidation = (function(){
                    field.removeClass('field-error');
                }
             }
-
             if(jQuery('.error-summary-list li:contains('+message+')').length){
               jQuery('.error-summary-list li:contains('+message+')').remove();
             }
@@ -277,7 +321,6 @@ IFS.formValidation = (function(){
               jQuery('.error-summary').attr('aria-hidden',true);
             }
             jQuery(window).trigger('updateWysiwygPosition');
-
         }
     };
 })();

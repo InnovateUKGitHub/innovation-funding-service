@@ -1,9 +1,5 @@
 package com.worth.ifs.assessment.transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.dto.Feedback;
@@ -13,11 +9,14 @@ import com.worth.ifs.assessment.security.FeedbackLookupStrategy;
 import com.worth.ifs.assessment.security.FeedbackRules;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Optional.empty;
 import static org.junit.Assert.fail;
@@ -145,7 +144,7 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
      * Dummy AssessmentService implementation (for satisfying Spring Security's need to read parameter information from
      * methods, which is lost when using mocks)
      */
-    private static class TestAssessmentService implements AssessorService {
+    public static class TestAssessmentService implements AssessorService {
 
         @Override
         public ServiceResult<Feedback> updateAssessorFeedback(@P("id") Id feedbackId, Optional<String> feedbackValue, Optional<String> feedbackText) {

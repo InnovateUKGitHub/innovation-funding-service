@@ -60,7 +60,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     private Cookie inviteHashCookie;
 
     private Cookie usedInviteHashCookie;
-    
+
     @Override
     protected RegistrationController supplyControllerUnderTest() {
         return new RegistrationController();
@@ -117,7 +117,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(model().attribute("invitee", true))
         ;
     }
-    
+
     @Test
     public void onGetRequestRegistrationViewIsReturnedWithUsedInviteEmail() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
@@ -262,7 +262,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
         ;
     }
-    
+
     @Test
     public void invalidCharactersInEmailShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
@@ -276,7 +276,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(view().name("registration-register"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
         ;
-        
+
         verifyNoMoreInteractions(userService);
     }
 
@@ -334,7 +334,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
 
         UserResource userResource = newUserResource()
-                .withPassword("password")
+                .withPassword("password123")
                 .withFirstName("firstName")
                 .withLastName("lastName")
                 .withTitle("Mr")
