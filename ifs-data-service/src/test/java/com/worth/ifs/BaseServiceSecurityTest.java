@@ -1,50 +1,80 @@
 package com.worth.ifs;
 
-import com.worth.ifs.security.CustomPermissionEvaluator;
-import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToLookupMethod;
-import com.worth.ifs.security.CustomPermissionEvaluator.DtoClassToPermissionsToPermissionsMethods;
-import com.worth.ifs.security.CustomPermissionEvaluator.ListOfMethods;
-import com.worth.ifs.security.CustomPermissionEvaluator.PermissionsToPermissionsMethods;
+import au.com.bytecode.opencsv.CSVWriter;
+import com.worth.ifs.security.PermissionRule;
+import com.worth.ifs.security.SecuredBySpring;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.After;
 import org.junit.Before;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.springframework.test.util.ReflectionTestUtils.getField;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
+import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
+import static java.util.Arrays.asList;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
  * A base class for testing services with Spring Security integrated into them.  PermissionRules-annotated beans are
  * made available as mocks so that we can test the effects of calling service methods against the PermissionRule methods
  * that are available.
- * <p>
+ *
+ * Calls for Service methods and the associated Permission Rule methods that are called as a result are recorded and output
+ * to a CSV report as a standard part of the testing process.
+ *
  * Subclasses of this base class are therefore able to test the security annotations of their various methods by verifying
- * that individual PermissionRule methods are being called (on their owning mocks)
+ * that individual PermissionRule methods are being called (on their owning mocks) and the same verifications auto-documented
  */
-public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
+public abstract class BaseServiceSecurityTest<T> extends BaseMockSecurityTest {
 
-    @Autowired
-    private GenericApplicationContext applicationContext;
+    public static final String SERVICE_DOCUMENTATION_FILENAME = "build/service-calls-and-permission-rules.csv";
+
+    /**
+     * A static initialization block that will ensure that we start any BaseServiceSecurityTest subclasses with a fresh
+     * CSV report file to append to
+     */
+    static {
+
+        try (FileWriter fileWriter = new FileWriter(SERVICE_DOCUMENTATION_FILENAME)) {
+            CSVWriter writer = new CSVWriter(fileWriter, '\t');
+            writer.writeNext(new String[]{"Service call", "Permission rules checked"});
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to create csv for service documentation");
+        }
+    }
 
     protected T service;
 
-    private Map<Class<?>, Object> mockPermissionRulesBeans;
-    private Map<Class<?>, Object> mockPermissionEntityLookupStrategies;
+    /**
+     * Service calls and their associated Permission Rules calls are recorded as they occur.  This enum allows us to
+     * determine which type of originator (service or permission rule) the method call was from when it was recorded.
+     */
+    private enum RecordingSource {
+        SERVICE,
+        PERMISSION_RULE
+    }
 
-    private DtoClassToPermissionsToPermissionsMethods originalRulesMap;
-    private DtoClassToLookupMethod originalLookupStrategyMap;
+    /**
+     * This list contains a list of method calls being recorded in the order that they occur, from both services and their
+     * subsequent permission rule calls
+     */
+    private List<Pair<RecordingSource, String>> recordedRuleInteractions = new ArrayList<>();
 
     /**
      * @return the service class under test.  Note that in order for Spring Security to be able to read parameter-name
@@ -56,186 +86,157 @@ public abstract class BaseServiceSecurityTest<T> extends BaseIntegrationTest {
     protected abstract Class<? extends T> getServiceClass();
 
     /**
-     * Look up a Mockito mock for a given {@link com.worth.ifs.security.PermissionRules} annotated bean class
-     *
-     * @param clazz
-     * @param <T>
-     * @return
-     */
-    protected <T> T getMockPermissionRulesBean(Class<T> clazz) {
-        return (T) mockPermissionRulesBeans.get(clazz);
-    }
-
-
-    /**
-     * Look up a Mockito mock for a given {@link com.worth.ifs.security.PermissionEntityLookupStrategies} annotated bean class
-     *
-     * @param clazz
-     * @param <T>
-     * @return
-     */
-    protected <T> T getMockPermissionEntityLookupStrategiesBean(Class<T> clazz) {
-        return (T) mockPermissionEntityLookupStrategies.get(clazz);
-    }
-
-    /**
-     * Register a temporary bean definition for the class under test (as provided by getServiceClass()), and replace
+     * Register a temporary bean definition for the Service under test (as provided by getServiceClass()), and replace
      * all PermissionRules with mocks that can be looked up with getMockPermissionRulesBean().
+     *
+     * Additionally wrap the service in a proxy that is able to record method invocations on secured methods, in order
+     * to then marry up the service call to any subsequent permission rule method invocations
      */
     @Before
     public void setup() {
 
         applicationContext.registerBeanDefinition("beanUndergoingSecurityTesting", new RootBeanDefinition(getServiceClass()));
-        service = (T) applicationContext.getBean("beanUndergoingSecurityTesting");
 
-        // Process mock annotations
-        MockitoAnnotations.initMocks(this);
+        T serviceBeanWithSpringSecurity = (T) applicationContext.getBean("beanUndergoingSecurityTesting");
 
-        // get the custom permission evaluator from the applicationContext and swap its rulesMap for one containing only
-        // Mockito mocks
-        CustomPermissionEvaluator permissionEvaluator = (CustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
+        service = createRecordingProxy(serviceBeanWithSpringSecurity, getServiceClass(),
+                method -> hasOneAnnotation(method, PreAuthorize.class, PostAuthorize.class, PreFilter.class, PostFilter.class),
+                methodCalled -> recordServiceMethodCall(methodCalled)
+        );
 
-        {
-            originalRulesMap = (DtoClassToPermissionsToPermissionsMethods) getField(permissionEvaluator, "rulesMap");
-
-            Pair<PermissionRulesClassToMock, DtoClassToPermissionsToPermissionsMethods> mockedOut = generateMockedOutRulesMap(originalRulesMap);
-
-            mockPermissionRulesBeans = mockedOut.getLeft();
-
-            setField(permissionEvaluator, "rulesMap", mockedOut.getRight());
-        }
-        {
-            originalLookupStrategyMap = (DtoClassToLookupMethod) getField(permissionEvaluator, "lookupStrategyMap");
-
-            Pair<LookupClassToMock, DtoClassToLookupMethod> mockedOut = generateMockedOutLookupMap(originalLookupStrategyMap);
-
-            mockPermissionEntityLookupStrategies = mockedOut.getLeft();
-
-            setField(permissionEvaluator, "lookupStrategyMap", mockedOut.getRight());
-        }
-
-
-        setLoggedInUser(newUserResource().build());
+        super.setup();
     }
 
-
-    protected Pair<LookupClassToMock, DtoClassToLookupMethod> generateMockedOutLookupMap(DtoClassToLookupMethod originalLookupStrategyMap) {
-        LookupClassToMock mockLookupBeans = new LookupClassToMock();
-        DtoClassToLookupMethod newMockLookupMap = new DtoClassToLookupMethod();
-
-        for (Entry<Class<?>, Pair<Object, Method>> entry : originalLookupStrategyMap.entrySet()) {
-            Class<?> originalDtoClass = entry.getKey();
-            Pair<Object, Method> originalLookupBeansAndMethod = entry.getValue();
-            Object originalLookupBeans = originalLookupBeansAndMethod.getLeft();
-            Method originalLookupMethod = originalLookupBeansAndMethod.getRight();
-
-            if (!mockLookupBeans.containsKey(originalLookupBeans.getClass())) {
-                mockLookupBeans.put(originalLookupBeans.getClass(), mock(originalLookupBeans.getClass()));
-            }
-            Object mockLookupBean = mockLookupBeans.get(originalLookupBeans.getClass());
-
-            String methodName = originalLookupMethod.getName();
-            Class<?>[] methodParameters = originalLookupMethod.getParameterTypes();
-            final Method mockLookupMethod;
-
-            try {
-                mockLookupMethod = mockLookupBean.getClass().getMethod(methodName, methodParameters);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException("Unable to look up same method on mock", e);
-            }
-            newMockLookupMap.put(originalDtoClass, Pair.of(mockLookupBean, mockLookupMethod));
-        }
-
-        return Pair.of(mockLookupBeans, newMockLookupMap);
+    private void recordPermissionRuleMethodCall(Method methodCalled, Class<?> permissionRuleClass) {
+        recordedRuleInteractions.add(Pair.of(RecordingSource.PERMISSION_RULE, permissionRuleClass.getSimpleName() + "." + methodCalled.getName()));
     }
 
+    private void recordServiceMethodCall(Method methodCalled) {
+
+        Class<?> serviceInterface = getServiceClass().getInterfaces()[0];
+        recordedRuleInteractions.add(Pair.of(RecordingSource.SERVICE, serviceInterface.getSimpleName() + "." + methodCalled.getName()));
+
+        SecuredBySpring simpleSecuredAnnotation = findAnnotation(methodCalled, SecuredBySpring.class);
+        if (simpleSecuredAnnotation != null) {
+            recordedRuleInteractions.add(Pair.of(RecordingSource.PERMISSION_RULE, serviceInterface.getSimpleName() + "." + methodCalled.getName()));
+        }
+    }
 
     /**
-     * Revert the temporary bean definitions used for testing, and replace the original rulesMap and lookup strategy on the custom permission evaluator
+     * Replace the original rulesMap and lookup strategy on the custom permission evaluator.
+     *
+     * Additionally, revert the temporary bean definition for the Service under test
      */
     @After
     public void teardown() {
         applicationContext.removeBeanDefinition("beanUndergoingSecurityTesting");
-        CustomPermissionEvaluator permissionEvaluator = (CustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
-        setField(permissionEvaluator, "rulesMap", originalRulesMap);
-        setField(permissionEvaluator, "lookupStrategyMap", originalLookupStrategyMap);
+
+        documentServiceAndPermissionRuleInteractions();
+
+        super.teardown();
     }
 
     /**
-     * Given the rulesMap from the CustomPermissionEvaluator, this method replaces all of the original @PermissionRules-annotated beans
-     * with Mockito mocks, and all of the @PermissionRule-annotated methods on those beans with the equivalent methods from the mocks.
-     * <p>
-     * This method then returns all of the mocks that it has created (so for each original @PermissionRules class, there will be an
-     * equivalent mock) and the new rulesMap containing the mock replacements.
+     * Append the latest set of recorded service-to-permission-rule method calls to the csv report, collating
+     * individual permission rule invocations against the service method invocation that caused them to be called
+     */
+    private void documentServiceAndPermissionRuleInteractions() {
+
+        List<Pair<String, Set<String>>> serviceMethodsToPermissionRuleRecordings = new ArrayList<>();
+
+        recordedRuleInteractions.forEach(recordedMethodCall -> {
+
+            RecordingSource sourceOfRecording = recordedMethodCall.getLeft();
+
+            if (sourceOfRecording == RecordingSource.SERVICE) {
+                serviceMethodsToPermissionRuleRecordings.add(Pair.of(recordedMethodCall.getRight(), new LinkedHashSet<>()));
+            } else {
+                Pair<String, Set<String>> latestServiceCallRecordings =
+                        serviceMethodsToPermissionRuleRecordings.get(serviceMethodsToPermissionRuleRecordings.size() - 1);
+
+                latestServiceCallRecordings.getRight().add(recordedMethodCall.getRight());
+            }
+        });
+
+        writeRecordingsToCsv(serviceMethodsToPermissionRuleRecordings);
+    }
+
+    /**
+     * Given a list of service methods and the various permission rule(s) that are invoked as a result of each service method
+     * being called, append this information to the CSV report
      *
-     * @param originalRulesMap
+     * @param serviceMethodsToPermissionRuleRecordings
+     */
+    private void writeRecordingsToCsv(List<Pair<String, Set<String>>> serviceMethodsToPermissionRuleRecordings) {
+
+        try (FileWriter fileWriter = new FileWriter(SERVICE_DOCUMENTATION_FILENAME, true)) {
+
+            CSVWriter writer = new CSVWriter(fileWriter, '\t');
+
+            serviceMethodsToPermissionRuleRecordings.forEach(recording -> {
+
+                String serviceMethod = recording.getLeft();
+                Set<String> permissionRuleCalls = recording.getRight();
+                String permissionRuleCallsCombined = simpleJoiner(new ArrayList<>(permissionRuleCalls), "\n");
+
+                writer.writeNext(new String[]{serviceMethod, permissionRuleCallsCombined});
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            recordedRuleInteractions.clear();
+        }
+    }
+
+    /**
+     * Wrap any @PermissionRules mocks with a proxy that records their method invocations, in order to then marry up the
+     * permission rule method invocation with the last recorded service call
+     *
+     * @param mock
+     * @param mockClass
      * @return
      */
-    private Pair<PermissionRulesClassToMock, DtoClassToPermissionsToPermissionsMethods> generateMockedOutRulesMap(
-            DtoClassToPermissionsToPermissionsMethods originalRulesMap) {
+    @Override
+    protected Object createPermissionRuleMock(Object mock, Class<?> mockClass) {
+        return createRecordingProxy(mock, mockClass,
+                method -> hasOneAnnotation(method, PermissionRule.class),
+                methodCalled -> recordPermissionRuleMethodCall(methodCalled, mockClass)
+        );
+    }
 
-        PermissionRulesClassToMock mockPermissionRulesBeans = new PermissionRulesClassToMock();
+    /**
+     * Create a pass-through proxy that is able to record interactions with mock objects in a similar way that Mockito does
+     * (Mockito does not expose its recordings and so it is necessary to do this manually if you want a list of interactions available)
+     *
+     * @param instance
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> T createRecordingProxy(Object instance, Class<T> clazz, Predicate<Method> proxyMethodFilter, Consumer<Method> methodCallHandler) {
 
-        DtoClassToPermissionsToPermissionsMethods newMockRulesMap = new DtoClassToPermissionsToPermissionsMethods();
+        ProxyFactory factory = new ProxyFactory();
+        factory.setSuperclass(clazz);
+        factory.setFilter(proxyMethodFilter::test);
 
-        for (Entry<Class<?>, PermissionsToPermissionsMethods> entry : originalRulesMap.entrySet()) {
-
-            Class<?> originalDtoClass = entry.getKey();
-            PermissionsToPermissionsMethods originalPermissionBeansAndMethodsByPermission = entry.getValue();
-
-            PermissionsToPermissionsMethods newMockPermissionBeansAndMethodsByPermission = new PermissionsToPermissionsMethods();
-
-            for (Entry<String, ListOfMethods> originalPermissionBeansAndMethods : originalPermissionBeansAndMethodsByPermission.entrySet()) {
-
-                String originalPermission = originalPermissionBeansAndMethods.getKey();
-                ListOfMethods originalListOfPermissionMethods = originalPermissionBeansAndMethods.getValue();
-                ListOfMethods newMockListOfPermissionMethods = new ListOfMethods();
-
-                for (Pair<Object, Method> beanAndPermissionMethods : originalListOfPermissionMethods) {
-
-                    Object originalPermissionRulesBean = beanAndPermissionMethods.getKey();
-
-                    if (!mockPermissionRulesBeans.containsKey(originalPermissionRulesBean.getClass())) {
-                        mockPermissionRulesBeans.put(originalPermissionRulesBean.getClass(), mock(originalPermissionRulesBean.getClass()));
-                    }
-
-                    final Object mockPermissionsRulesBean = mockPermissionRulesBeans.get(originalPermissionRulesBean.getClass());
-                    Method originalPermissionMethod = beanAndPermissionMethods.getRight();
-                    String methodName = originalPermissionMethod.getName();
-                    Class<?>[] methodParameters = originalPermissionMethod.getParameterTypes();
-                    final Method mockPermissionMethod;
-
-                    try {
-                        mockPermissionMethod = mockPermissionsRulesBean.getClass().getMethod(methodName, methodParameters);
-                    } catch (NoSuchMethodException e) {
-                        throw new RuntimeException("Unable to look up same method on mock", e);
-                    }
-
-                    newMockListOfPermissionMethods.add(Pair.of(mockPermissionsRulesBean, mockPermissionMethod));
-                }
-
-                newMockPermissionBeansAndMethodsByPermission.put(originalPermission, newMockListOfPermissionMethods);
+        MethodHandler handler = (self, thisMethod, proceed, args) -> {
+            Method originalMethod = instance.getClass().getMethod(thisMethod.getName(), thisMethod.getParameterTypes());
+            methodCallHandler.accept(originalMethod);
+            try {
+                return originalMethod.invoke(instance, args);
+            } catch (InvocationTargetException e) {
+                throw e.getCause();
             }
+        };
 
-            newMockRulesMap.put(originalDtoClass, newMockPermissionBeansAndMethodsByPermission);
-        }
-
-        return Pair.of(mockPermissionRulesBeans, newMockRulesMap);
-
-
-    }
-
-    protected void assertAccessDenied(Runnable serviceCall, Runnable verifications) {
         try {
-            serviceCall.run();
-            fail("Expected an AccessDeniedException");
-        } catch (AccessDeniedException e) {
-            verifications.run();
+            return (T) factory.create(new Class<?>[0], new Object[0], handler);
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {}
-
-    public static class LookupClassToMock extends HashMap<Class<?>, Object> {}
-
+    private boolean hasOneAnnotation(Method method, Class<? extends Annotation>... annotations) {
+        return asList(annotations).stream().anyMatch(annotation -> findAnnotation(method, annotation) != null);
+    }
 }

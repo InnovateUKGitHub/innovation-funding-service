@@ -77,8 +77,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(StringUtils.isEmpty(hash))
             return restFailure(badRequestError("Missing the hash to reset the password with"));
 
-        LOG.warn("resetPassword 2 " + userRestURL + "/"+ UserController.URL_PASSWORD_RESET+"/"+hash+"/"+password);
-        return getWithRestResultAnonymous(String.format("%s/%s/%s/%s", userRestURL, UserController.URL_PASSWORD_RESET, hash, password), Void.class);
+        LOG.warn("resetPassword 2 " + userRestURL + "/"+ UserController.URL_PASSWORD_RESET+"/"+hash+" body: "+password);
+        return postWithRestResultAnonymous(String.format("%s/%s/%s", userRestURL, UserController.URL_PASSWORD_RESET, hash), password,  Void.class);
     }
 
     @Override

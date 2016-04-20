@@ -22,4 +22,10 @@ public class ApplicationFinanceLookupStrategy {
     public ApplicationFinanceResource getApplicationFinance(final ApplicationFinanceResourceId id) {
         return applicationMapper.mapToResource(applicationFinanceRepository.findByApplicationIdAndOrganisationId(id.getApplicationId(), id.getOrganisationId()));
     }
+
+
+    @PermissionEntityLookupStrategy
+    public ApplicationFinanceResource getApplicationFinance(final Long id) {
+        return applicationMapper.mapToResource(applicationFinanceRepository.findOne(id));
+    }
 }
