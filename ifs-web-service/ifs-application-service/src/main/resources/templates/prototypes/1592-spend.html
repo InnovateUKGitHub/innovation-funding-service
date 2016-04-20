@@ -69,9 +69,9 @@
 					<td>25,000</td>
 					<td>25,000</td>
 					<td>25,000</td>
-					<td class="separate-cell">16,666</td>
+					<td class="separate-cell" th:text="${(param.spend != null and param.spend[0] == 'high' ? '18,666' : '16,666')}">16,666</td>
 
-					<td class="total">175,000</td>
+					<td class="total" th:text="${(param.spend != null and param.spend[0] == 'high' ? '177,000' : '175,000')}">175,000</td>
 					<td class="total eligible">175,000</td>
 				</tr>
 			</tfoot>
@@ -221,9 +221,9 @@
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q1 sub-contract" id="sub-contract-y2-q1" value="3,000" /><label for="sub-contract-y2-q1" class="visuallyhidden">Sub-contracting costs</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q2 sub-contract" id="sub-contract-y2-q2" value="3,000" /><label for="sub-contract-y2-q2" class="visuallyhidden">Sub-contracting costs</label></td>
 					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q3 sub-contract" id="sub-contract-y2-q3" value="3,000" /><label for="sub-contract-y2-q3" class="visuallyhidden">Sub-contracting costs</label></td>
-					<td class="separate-cell"><input type="text" class="form-control" aria-labelledby="year-2 y2-q4 sub-contract" id="sub-contract-y2-q4" value="2,000" /><label for="sub-contract-y2-q4" class="visuallyhidden">Sub-contracting costs</label></td>
+					<td class="separate-cell"><input type="text" class="form-control" aria-labelledby="year-2 y2-q4 sub-contract" id="sub-contract-y2-q4" th:value="${(param.spend != null and param.spend[0] == 'high' ? '4,000' : '2,000')}" /><label for="sub-contract-y2-q4" class="visuallyhidden">Sub-contracting costs</label></td>
 
-					<td class="total">21,000</td>
+					<td class="total" th:text="${(param.spend != null and param.spend[0] == 'high' ? '23,000' : '21,000')}">21,000</td>
 					<td class="total eligible">21,000</td>
 				</tr>
 				<tr th:unless="${param.status != null and param.status[0] == 'edit'}">
