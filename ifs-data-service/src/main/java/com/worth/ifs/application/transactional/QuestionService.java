@@ -1,6 +1,8 @@
 package com.worth.ifs.application.transactional;
 
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
