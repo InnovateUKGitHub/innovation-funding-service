@@ -695,7 +695,11 @@ public class ApplicationFormController extends AbstractApplicationController {
             if(validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()){
                 LOG.debug("no errors");
             }else{
-                errors = validationMessages.getErrors().stream().map(e -> e.getErrorMessage()).collect(Collectors.toList());
+                errors = validationMessages.getErrors()
+                        .stream()
+                        .filter(e -> fieldName.contains(e.getErrorKey())) // filter out the messages that are related to other fields.
+                        .map(e -> e.getErrorMessage())
+                        .collect(Collectors.toList());
             }
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
