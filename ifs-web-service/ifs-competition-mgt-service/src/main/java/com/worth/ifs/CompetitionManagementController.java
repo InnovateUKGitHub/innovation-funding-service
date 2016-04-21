@@ -1,12 +1,10 @@
 package com.worth.ifs;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.service.ApplicationSummaryService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -19,11 +17,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.service.ApplicationSummaryService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequestMapping("/competition")
@@ -72,6 +70,7 @@ public class CompetitionManagementController {
 		ApplicationSummaryPageResource applicationSummary = applicationSummaryService.findByCompetitionId(competitionId, queryForm.getPage() - 1, sort);
 		model.addAttribute("results", applicationSummary);
 		model.addAttribute("activeSortField", sort);
+		model.addAttribute("activeTab", "allApplications");
 
         LOG.warn("Show open competition info");
         return "comp-mgt-open";

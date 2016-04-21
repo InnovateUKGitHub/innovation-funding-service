@@ -7,8 +7,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -24,18 +28,25 @@ public abstract class CostHandler {
     public CostHandler() {
     }
 
-    protected BigDecimal getBigDecimalValue(String value, Double defaultValue) {
+    public BigDecimal getBigDecimalValue(String value, Double defaultValue) {
+        NumberFormat nf = DecimalFormat.getInstance(Locale.UK);
         try {
-            return new BigDecimal(value);
+            return new BigDecimal(nf.parse(value).toString());
         } catch (NumberFormatException nfe) {
+            return new BigDecimal(defaultValue);
+        } catch (ParseException e) {
             return new BigDecimal(defaultValue);
         }
     }
 
-    protected Integer getIntegerValue(String value, Integer defaultValue) {
+    public Integer getIntegerValue(String value, Integer defaultValue) {
+        NumberFormat nf = DecimalFormat.getInstance(Locale.UK);
+        nf.setParseIntegerOnly(true);
         try {
-            return Integer.valueOf(value);
+            return Integer.valueOf(nf.parse(value).toString());
         } catch (NumberFormatException nfe) {
+            return defaultValue;
+        } catch (ParseException e) {
             return defaultValue;
         }
     }
