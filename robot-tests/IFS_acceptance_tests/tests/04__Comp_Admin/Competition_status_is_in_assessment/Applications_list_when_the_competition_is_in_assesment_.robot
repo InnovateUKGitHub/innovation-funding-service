@@ -1,4 +1,7 @@
 *** Settings ***
+Documentation     INFUND-1987
+...
+...               INFUND-2307 Acceptance test: List of applications which are in assessment
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    User closes the browser
 Force Tags
@@ -10,11 +13,13 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
 Competition status should be correct
+    [Documentation]    INFUND-2307
     Given the user navigates to the page    ${COMP_ADMINISTRATOR_IN_ASSESSMENT}
     Then the user should see the text in the page    In assessment
     Then the user should not see the text in the page    Competition open
 
 The correct columns show for the submitted applications
+    [Documentation]    INFUND-2307
     Then the user should see the text in the page    Application no
     And the user should see the text in the page    Project title
     And the user should see the text in the page    Lead
@@ -24,17 +29,21 @@ The correct columns show for the submitted applications
     And the user should see the text in the page    Duration (months)
 
 Summary of the applications submitted
+    [Documentation]    INFUND-2307
     Then The calculations should be correct    css=.info-area p:nth-child(2) span
     And Both calculations in the page should show the same    css=.info-area p:nth-child(2) span
 
 The applications can be sorted by Lead
+    [Documentation]    INFUND-2307
     When The application list is sorted by    Lead
     Then The applications should be sorted by column    3
 
 Excel download button should be visible
+    [Documentation]    INFUND-2307
     Then the user should see the element     link=Export application data (.xls)
 
 The correct columns show for the not submitted applications
+    [Documentation]    INFUND-2307
     When the user clicks the button/link    link=Applications not submitted
     Then the user should see the text in the page    Application no
     And the user should see the text in the page    Project title
@@ -42,10 +51,12 @@ The correct columns show for the not submitted applications
     And the user should see the text in the page    Percentage complete
 
 Summary of the applications not submitted
+    [Documentation]    INFUND-2307
     Then The calculations should be correct    css=.info-area p:nth-child(3) span
     And Both calculations in the page should show the same    css=.info-area p:nth-child(3) span
 
 The applications can be sorted by percentage
+    [Documentation]    INFUND-2307
     When The application list is sorted by    Project title
     Then The applications should be sorted by column    2
 

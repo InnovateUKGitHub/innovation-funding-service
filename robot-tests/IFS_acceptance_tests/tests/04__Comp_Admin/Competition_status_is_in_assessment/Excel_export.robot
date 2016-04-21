@@ -1,4 +1,5 @@
 *** Settings ***
+Documentation     INFUND-1987
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    User closes the browser
 Force Tags        FailingForDev
