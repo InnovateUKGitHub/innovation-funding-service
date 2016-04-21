@@ -55,6 +55,26 @@
 	
 	<p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed profile spend for the Technology Inspired Project.</p>
 
+	<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
+		
+		<div class="extra-margin alignright" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
+			
+			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;view=full&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit&#38;view=full#table-forecast')}" th:unless="${param.view != null or param.status[0] == 'full'}" class="button-secondary">View wide screen  table</a>
+
+			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit#table-forecast')}" th:unless="${param.view == null and param.status[0] != 'full'}" class="button-secondary">View standard size table</a>
+
+		</div>
+
+		<div class="extra-margin alignright" th:unless="${param.user == null}">
+			
+			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;view=full&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;view=full&#38;user=nonLead#table-forecast')}" th:unless="${param.view != null or param.status[0] == 'full'}" class="button-secondary">View wide screen table</a>
+
+			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;user=nonLead#table-forecast')}" th:unless="${param.view == null and param.status[0] != 'full'}" class="button-secondary">View standard table</a>
+
+		</div>
+
+	</div>
+
 
 	<div class="table-overflow">
 		<table id="table-forecast">
@@ -333,29 +353,11 @@
 
 	<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
 		
-		<div class="extra-margin alignright" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
-			
-			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;view=full&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit&#38;view=full#table-forecast')}" th:unless="${param.view != null or param.status[0] == 'full'}">View maximised forecast table</a>
-
-			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit#table-forecast')}" th:unless="${param.view == null and param.status[0] != 'full'}">View minimised forecast table</a>
-
-		</div>
-
-		<div class="extra-margin alignright" th:unless="${param.user == null}">
-			
-			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;view=full&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;view=full&#38;user=nonLead#table-forecast')}" th:unless="${param.view != null or param.status[0] == 'full'}">View maximised forecast table</a>
-
-			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;user=nonLead#table-forecast')}" th:unless="${param.view == null and param.status[0] != 'full'}">View minimised forecast table</a>
-
-		</div>
-
 		<div class="extra-margin">
 
 			<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?user=nonLead':'/prototypes/1592-spend'}" class="button button-secondary">Save and return to spend profile overview</a>
 
 		</div>
-
-
 
 	</div>
 
