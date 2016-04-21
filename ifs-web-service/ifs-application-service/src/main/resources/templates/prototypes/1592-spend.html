@@ -13,13 +13,13 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${'/prototypes/1588-project-status'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1588-project-status?user=nonLead' :'/prototypes/1588-project-status')})" th:remove="tag" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Spend profile'})" th:remove="tag" />
 
-	<p>The Profile Spend enables the entry of planned project costs for section of the proposed project. The profile spend should not be developed in isolation, but developed collaboratively with the project partners. Your profile spend has been developed from the information provided in the initial application and finalised with InnovateUK during your finance check.</p>
+	<p>The Profile Spend enables the entry of planned project costs for section of the proposed project. The profile spend should not be developed in isolation, but developed collaboratively with the project partners. Your profile spend has been developed from the information provided in the initial application and finalised with Innovate UK during your finance check.</p>
 
 	<dl class="standard-definition-list">
 		<dt>Project start date</dt>
@@ -27,16 +27,34 @@
 
 		<dt>Duration</dt>
 		<dd>21 Months</dd>
+
+		<div th:if="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
+
+			<dt>Finance contact</dt>
+			<dd>
+				Dave Normen, 
+				<a href="mailto:dave@normen.com">dave@normen.com</a>
+			</dd>
+
+		</div>
+
 	</dl>
 
-	<div class="extra-margin">
+
+	<div class="extra-margin" th:unless="${param.task != null and param.task[0] == 'reviewProject'}">
 		<a href="#">Review finances</a>
 	</div>
 
+	<h2 class="heading-medium" th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" >Spend profile</h2>
 
-	<h2 class="heading-medium">Spend profile</h2>
+	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
+		<h2 class="heading-medium">Project - Spend profile</h2>
+	</div>
 
-	<p>This is the project cost taken form funding grant that has been approved by Innovate UK. Initially set as a flat profile spend, for review. This profile spend can edited to suit the project requirements and timeline</p>
+	<p th:unless="${param.task != null and param.task[0] == 'reviewProject'}">This is the project cost taken form funding grant that has been approved by Innovate UK. Initially set as a flat profile spend, for review. This profile spend can edited to suit the project requirements and timeline</p>
+	
+	<p th:unless="${param.task == null or param.task[0] != 'reviewProject'}">This is the proposed profile spend for the Technology Inspired Project.</p>
+
 
 	<div class="table-overflow">
 		<table id="table-forecast">
@@ -106,7 +124,7 @@
 					<td class="total">87,500</td>
 					<td class="total eligible">87,500</td>
 				</tr>
-				<tr th:unless="${param.status != null and param.status[0] == 'edit'}">
+				<tr>
 					<th id="admin">Admin support costs</th>
 					<td>833</td>
 					<td>2,500</td>
@@ -117,21 +135,6 @@
 					<td>2,500</td>
 					<td>2,500</td>
 					<td class="separate-cell">1,667</td>
-
-					<td class="total">17,500</td>
-					<td class="total eligible">17,500</td>
-				</tr>
-				<tr class="edit" th:unless="${param.status == null or param.status[0] != 'edit'}">
-					<th id="admin">Admin support costs</th>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q1 admin" id="admin-y1-q1" value="833" /><label for="admin-y1-q1" class="visuallyhidden">Admin</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q2 admin" id="admin-y1-q2" value="2,500" /><label for="admin-y1-q2" class="visuallyhidden">Admin</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-1 y1-q3 admin" id="admin-y1-q3" value="2,500" /><label for="admin-y1-q3" class="visuallyhidden">Admin</label></td>
-					<td class="separate-cell"><input type="text" class="form-control" aria-labelledby="year-1 y1-q4 admin" id="admin-y1-q4" value="2,500" /><label for="admin-y1-q4" class="visuallyhidden">Admin</label></td>
-
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q1 admin" id="admin-y2-q1" value="2,500" /><label for="admin-y2-q1" class="visuallyhidden">Admin</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q2 admin" id="admin-y2-q2" value="2,500" /><label for="admin-y2-q2" class="visuallyhidden">Admin</label></td>
-					<td><input type="text" class="form-control" aria-labelledby="year-2 y2-q3 admin" id="admin-y2-q3" value="2,500" /><label for="admin-y2-q3" class="visuallyhidden">Admin</label></td>
-					<td class="separate-cell"><input type="text" class="form-control" aria-labelledby="year-2 y2-q4 admin" id="admin-y2-q4" value="1,667" /><label for="admin-y2-q4" class="visuallyhidden">Admin</label></td>
 
 					<td class="total">17,500</td>
 					<td class="total eligible">17,500</td>
@@ -260,43 +263,77 @@
 		</table>
 	</div>
 
-	<div th:unless="${(param.status != null and param.status[0] == 'edit') or (param.status != null and param.status[0] == 'Submitted')}" th:remove="tag">
+	<div th:unless="${(param.status != null and param.status[0] == 'edit') or (param.status != null and param.status[0] == 'Submitted') or (param.task != null and param.task[0] == 'reviewProject')}" th:remove="tag">
 
-		<div class="extra-margin">
+		<div class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit#table-forecast')}" class="button button-secondary">Edit spend profile</a>
+		</div>
+
+		<div class="extra-margin" th:unless="${param.user == null}">
+			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;user=nonLead#table-forecast')}" class="button button-secondary">Edit spend profile</a>
 		</div>
 
 		<p class="extra-margin">When you are satisfied with the profile spend 'Submitting', will allow the project lead to review your project costs, ensuring partner costs align with their project plan before they are submitted to Innovate UK.</p>
 
-		<p>Depending on review by the lead or by InnovateUK the profile spend submitted may need to be modified. If you are requested to modify costs dased on review by InnovateUK you will also be supplied with feedback.</p>
+		<p>Depending on review by the lead or by Innovate UK the profile spend submitted may need to be modified. If you are requested to modify costs dased on review by Innovate UK you will also be supplied with feedback.</p>
 
-		<div class="extra-margin">
-			<a href="#" class="button button-large" data-js-modal="modal-send-to-lead">Send to lead</a>
-		</div>
 
-		<div class="modal-send-to-lead" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-	        <button class="js-close close" aria-label="Close Popup">X</button>
-	        <div>
-				
-				<h2 class="heading-medium no-margin">Send to lead</h2>
+		<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 
-				<p>Your profile spend has now been ade available to <strong>[lead organisation]</strong>. They may contact you if it requires change.</p>
+			<div class="extra-margin">
+				<a href="#" class="button button-large" data-js-modal="modal-send-to-lead">Send to lead</a>
+			</div>
 
-				<hr />
-	            
-            	<div class="alignright-button">
-            		<a href="/prototypes/1592-spend?status=Submitted" class="button">OK</a>
-            	</div>
+			<div class="modal-send-to-lead" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		        <button class="js-close close" aria-label="Close Popup">X</button>
+		        <div>
+					
+					<h2 class="heading-medium no-margin">Send to lead</h2>
 
-	        </div>
-	    </div>
+					<p>Your profile spend has now been made available to <strong>Aptrans Ltd</strong>. They may contact you if it requires change.</p>
+
+					<hr />
+		            
+	            	<div class="alignright-button">
+	            		<a href="/prototypes/1592-spend?status=Submitted&#38;user=nonLead" class="button">OK</a>
+	            	</div>
+
+		        </div>
+		    </div>
+
+	 	</div>
+
+	 	<div th:if="${param.user == null or param.user[0] != 'nonLead'}" th:remove="tag">
+			
+			<div class="extra-margin">
+				<a href="#" class="button button-large" data-js-modal="modal-complete">Complete</a>
+			</div>
+
+			<div class="modal-complete" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+		        <button class="js-close close" aria-label="Close Popup">X</button>
+		        <div>
+					
+					<h2 class="heading-medium no-margin">Spend profile complete</h2>
+
+					<p><strong>Aptrans Ltd's</strong> spend profile has now been marked as complete. You can return edit the spend profile, but it must be marked as complete before the project spend profile can be submitted.</p>
+
+					<hr />
+		            
+	            	<div class="alignright-button">
+	            		<a href="/prototypes/1592-spend?status=Submitted" class="button">OK</a>
+	            	</div>
+
+		        </div>
+		    </div>
+
+	 	</div>
 
 
 	</div>
 
 	<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
 		
-		<div class="extra-margin alignright">
+		<div class="extra-margin alignright" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
 			
 			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;view=full&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit&#38;view=full#table-forecast')}" th:unless="${param.view != null or param.status[0] == 'full'}">View maximised forecast table</a>
 
@@ -304,14 +341,74 @@
 
 		</div>
 
+		<div class="extra-margin alignright" th:unless="${param.user == null}">
+			
+			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;view=full&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;view=full&#38;user=nonLead#table-forecast')}" th:unless="${param.view != null or param.status[0] == 'full'}">View maximised forecast table</a>
+
+			<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;user=nonLead#table-forecast')}" th:unless="${param.view == null and param.status[0] != 'full'}">View minimised forecast table</a>
+
+		</div>
+
 		<div class="extra-margin">
 
-			<a href="/prototypes/1592-spend" class="button button-secondary">Save and return to spend profile overview</a>
+			<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?user=nonLead':'/prototypes/1592-spend'}" class="button button-secondary">Save and return to spend profile overview</a>
 
 		</div>
 
 
 
+	</div>
+
+	<div th:if="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
+		<p>If required you can allow edits to be made to this profile spend. this will return access enabling them to make the changes required.  It will not be possible to submit the profile spend until it is resubmitted.</p>
+
+		<div class="extra-margin">
+			<a href="#" class="button button-large" data-js-modal="modal-allow-edits">Allow edits</a>
+		</div>
+
+		<div class="modal-allow-edits" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+	        <button class="js-close close" aria-label="Close Popup">X</button>
+	        <div>
+				
+				<h2 class="heading-medium no-margin">Allow edits</h2>
+
+				<p><strong>Biotech Corp's</strong> profile spend has been handed back to them, they have been informaed of by email, if there are any specific changes required please contact them.</p>
+
+				<hr />
+	            
+            	<div class="alignright-button">
+            		<a href="/prototypes/2472-spend-lead-overview" class="button">OK</a>
+            	</div>
+
+	        </div>
+	    </div>
+	</div>
+
+
+
+	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
+		<p>The Project profile spend is submitted to both InnovateUK and to the Monitoring officer assigned to this Project, it will be kept for review and reference..</p>
+
+		<div class="extra-margin" th:unless="${param.status != null and param.status[0] == 'Submitted'}">
+			<a href="#" class="button button-large" data-js-modal="modal-submit-spend">Submit project spend profile</a>
+		</div>
+
+		<div class="modal-submit-spend" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+	        <button class="js-close close" aria-label="Close Popup">X</button>
+	        <div>
+				
+				<h2 class="heading-medium no-margin">Submit project profile spend</h2>
+
+				<p>The Project profile spend will be submitted to both InnovateUK and the Monitiring officer assigned to this project. This will be used for reference and the base for progress.</p>
+
+				<hr />
+	            
+            	<div class="alignright-button">
+            		<a href="/prototypes/1592-spend?status=Submitted&#38;task=edit " class="button">Submit</a>
+            	</div>
+
+	        </div>
+	    </div>
 	</div>
 
 	

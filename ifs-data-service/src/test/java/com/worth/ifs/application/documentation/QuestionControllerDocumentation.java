@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.controller.QuestionController;
+import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.transactional.QuestionService;
 
 import org.junit.Before;
@@ -65,7 +66,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         Long applicationId = 2L;
         Long markedAsCompleteById = 3L;
 
-        when(questionService.markAsComplete(questionId, applicationId, markedAsCompleteById)).thenReturn(serviceSuccess(null));
+        when(questionService.markAsComplete(new QuestionApplicationCompositeId(questionId, applicationId), markedAsCompleteById)).thenReturn(serviceSuccess(null));
 
         mockMvc.perform(get("/question/markAsComplete/{questionId}/{applicationId}/{markedAsCompleteById}", questionId, applicationId, markedAsCompleteById))
                 .andDo(this.document.snippets(
@@ -83,7 +84,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         Long applicationId = 2L;
         Long markedAsCompleteById = 3L;
 
-        when(questionService.markAsInComplete(questionId, applicationId, markedAsCompleteById)).thenReturn(serviceSuccess(null));
+        when(questionService.markAsInComplete(new QuestionApplicationCompositeId(questionId, applicationId), markedAsCompleteById)).thenReturn(serviceSuccess(null));
 
 
         mockMvc.perform(get("/question/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}", questionId, applicationId, markedAsCompleteById))
@@ -103,7 +104,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         Long assignedTo = 3L;
         Long assignedBy = 4L;
 
-        when(questionService.assign(questionId, applicationId, assignedTo, assignedBy)).thenReturn(serviceSuccess(null));
+        when(questionService.assign(new QuestionApplicationCompositeId(questionId, applicationId), assignedTo, assignedBy)).thenReturn(serviceSuccess(null));
 
 
         mockMvc.perform(get("/question/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}", questionId, applicationId, assignedTo, assignedBy))
