@@ -229,7 +229,7 @@ Delete the emails from the test mailbox
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
     Wait Until Page Contains Element    link=terms and conditions
-    Page Should Contain Link    href=${SERVER}/info/terms-and-conditions
+    Page Should Contain Element     xpath=//a[contains(@href, '/info/terms-and-conditions')]
     Input Text    id=firstName    Stuart
     Input Text    id=lastName    ANDERSON
     Input Text    id=phoneNumber    23232323
