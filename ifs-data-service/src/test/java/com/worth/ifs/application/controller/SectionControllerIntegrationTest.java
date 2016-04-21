@@ -6,6 +6,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.application.transactional.SectionService;
@@ -105,8 +106,8 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         assertEquals(8, controller.getCompletedSections(applicationId, 3L).getSuccessObject().size());
 
         // Mark one question as incomplete.
-        questionService.markAsInComplete(28L, applicationId, leadApplicantProcessRole);
-        Question question = questionService.getQuestionById(21L).andOnSuccessReturn(questionMapper::mapToDomain).getSuccessObject();
+        questionService.markAsInComplete(new QuestionApplicationCompositeId(28L, applicationId), leadApplicantProcessRole);
+	Question question = questionService.getQuestionById(21L).andOnSuccessReturn(questionMapper::mapToDomain).getSuccessObject();
         assertFalse(questionService.isMarkedAsComplete(question, applicationId, leadApplicantOrganisationId).getSuccessObject());
 
         assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());

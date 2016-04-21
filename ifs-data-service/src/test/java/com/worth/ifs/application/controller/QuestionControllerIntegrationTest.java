@@ -11,6 +11,7 @@ import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.transactional.QuestionService;
+import com.worth.ifs.security.SecuritySetter;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -38,7 +39,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     QuestionMapper questionMapper;
 
 
-    private final Long userId = 1L;
+    private final Long userId = SecuritySetter.basicSecurityUser.getId();
     private final Long applicationId = 1L;
     private final Long questionId = 13L;
     private QuestionResource questionResource;
@@ -104,7 +105,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
         List<QuestionStatus> statuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
 
-        statuses.forEach(
+         statuses.forEach(
                 s -> assertEquals(newAssigneeProcessRoleId, s.getAssignee().getId())
         );
     }

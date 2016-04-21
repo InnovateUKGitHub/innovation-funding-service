@@ -15,6 +15,7 @@ import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.mapper.SectionMapper;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -137,9 +138,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
             if (sectionIsValid.isEmpty()) {
                 LOG.debug("======= SECTION IS VALID =======");
                 questions.forEach(q -> {
-                    questionService.markAsComplete(q, applicationId, markedAsCompleteById);
+                    questionService.markAsComplete(new QuestionApplicationCompositeId(q, applicationId), markedAsCompleteById);
                     // Assign back to lead applicant.
-                    questionService.assign(q, applicationId, application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
+                    questionService.assign(new QuestionApplicationCompositeId(q, applicationId), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
                 });
             } else {
                 LOG.debug("======= SECTION IS INVALID =======   " + sectionIsValid.size());
@@ -156,7 +157,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         Set<Long> questions = collectAllQuestionFrom(section);
 
         questions.forEach(q -> {
-            questionService.markAsInComplete(q, applicationId, markedAsInCompleteById);
+            questionService.markAsInComplete(new QuestionApplicationCompositeId(q, applicationId), markedAsInCompleteById);
         });
 
         return serviceSuccess();
