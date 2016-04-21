@@ -18,7 +18,9 @@ public class AcademicCost implements CostItem {
         this();
         this.id = id;
         this.name = name;
-        this.cost = cost.setScale(2, BigDecimal.ROUND_HALF_UP);
+        if(cost != null){
+            this.cost = cost.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
         this.item = item;
     }
 
