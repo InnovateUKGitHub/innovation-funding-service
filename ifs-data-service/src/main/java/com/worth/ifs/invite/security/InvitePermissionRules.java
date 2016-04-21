@@ -1,12 +1,10 @@
 package com.worth.ifs.invite.security;
 
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
-import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
-import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.invite.domain.InviteOrganisation;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
+import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
@@ -14,12 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
-import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
-import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
 
 
 /**
- * Permission rules for {@link Cost} and {@link CostItem} for permissioning
+ * TODO
  */
 @Component
 @PermissionRules
@@ -27,33 +23,42 @@ public class InvitePermissionRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
-
     @Autowired
     private RoleRepository roleRepository;
 
-    @Autowired
-    private ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Autowired
-    private ApplicationFinanceMapper applicationMapper;
-
-    @PermissionRule(value = "UPDATE", description = "The consortium can update the cost for their application and organisation")
-    public boolean consortiumCanUpdateACostForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
-        return isCollaborator(cost, user);
+    @PermissionRule(value = "SEND", description = "lead applicant can invite to the application")
+    public boolean leadApplicantCanInviteToTheApplication(final Invite invite, final UserResource user) {
+        return isLeadForInvite(invite, user);
     }
 
-    @PermissionRule(value = "DELETE", description = "The consortium can update the cost for their application and organisation")
-    public boolean consortiumCanDeleteACostForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
-        return isCollaborator(cost, user);
+    @PermissionRule(value = "SEND", description = "collaborator can invite to the application for thier organisation")
+    public boolean collaboratorCanInviteToApplicantForTheirOrganisation(final Invite invite, final UserResource user) {
+        return isCollaboratorOnInvite(invite, user);
     }
 
-    private boolean isCollaborator(final Cost cost, final UserResource user) {
-        final ApplicationFinance applicationFinance = cost.getApplicationFinance();
-        final Long applicationId = applicationFinance.getApplication().getId();
-        final Long organisationId = applicationFinance.getOrganisation().getId();
-        final boolean isLead = checkRole(user, applicationId, organisationId, LEADAPPLICANT, roleRepository, processRoleRepository);
-        final boolean isCollaborator = checkRole(user, applicationId, organisationId, COLLABORATOR, roleRepository, processRoleRepository);
-        return isLead || isCollaborator;
+    @PermissionRule(value = "READ", description = "collaborator can view an invite to the application on for their organisation")
+    public boolean collaboratorCanReadInviteForTheirApplicationForTheirOrganisation(final Invite invite, final UserResource user) {
+        return isCollaboratorOnInvite(invite, user);
     }
 
+    @PermissionRule(value = "SEND", description = "lead applicant can view an invite to the application")
+    public boolean leadApplicantReadInviteToTheApplication(final Invite invite, final UserResource user) {
+        return isLeadForInvite(invite, user);
+    }
+
+    private boolean isCollaboratorOnInvite(final Invite invite, final UserResource user) {
+        final long applicationId = invite.getApplication().getId();
+        final InviteOrganisation inviteOrganisation = invite.getInviteOrganisation(); // Not an actual organisation.
+        if (inviteOrganisation != null && inviteOrganisation.getOrganisation() != null) {
+            long organisationId = inviteOrganisation.getOrganisation().getId();
+            final boolean isCollaborator = checkRole(user, applicationId, organisationId, UserRoleType.LEADAPPLICANT, roleRepository, processRoleRepository);
+            return isCollaborator;
+        }
+        return false;
+    }
+
+    private boolean isLeadForInvite(final Invite invite, final UserResource user) {
+        final long applicationId = invite.getApplication().getId();
+        return checkRole(user, invite.getApplication().getId(), UserRoleType.LEADAPPLICANT, processRoleRepository);
+    }
 }

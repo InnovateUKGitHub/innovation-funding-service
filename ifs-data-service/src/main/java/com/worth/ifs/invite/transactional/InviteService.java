@@ -6,41 +6,57 @@ import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.resource.InviteResultsResource;
 import com.worth.ifs.notifications.resource.Notification;
-import com.worth.ifs.security.NotSecured;
+import com.worth.ifs.security.SecuredBySpring;
 import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
 
 import java.util.List;
 import java.util.Set;
 
 public interface InviteService {
 
-    @NotSecured("TODO")
-    List<ServiceResult<Notification>> inviteCollaborators(String baseUrl, List<Invite> invites);
+    @PreFilter(filterTarget = "invites", value = "hasPermission(filterObject, 'SEND')")
+    List<ServiceResult<Notification>> inviteCollaborators(String baseUrl, @P("invites")List<Invite> invites);
 
-    @NotSecured("TODO")
-    ServiceResult<Notification> inviteCollaboratorToApplication(String baseUrl, Invite invite);
+    @PreAuthorize("hasPermission(#invite, 'SEND')")
+    ServiceResult<Notification> inviteCollaboratorToApplication(String baseUrl, @P("invite") Invite invite);
 
-    @NotSecured("TODO")
+    @PostAuthorize("hasPermission(#invite, 'READ')")
     ServiceResult<Invite> findOne(Long id);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
-    ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource);
+    @PreAuthorize("hasPermission(#inviteOrganisationResource, 'SEND')")
+    ServiceResult<InviteResultsResource> createApplicationInvites(@P("inviteOrganisationResource") final InviteOrganisationResource inviteOrganisationResource);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "READ_INVITE_ORGANISATION_ON_HASH",
+            description = "The System Registration user can view an organisation invitation when looked up by hash",
+            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PreFilter(filterTarget = "invites", value="hasPermission(filterObject, 'SAVE')")
     ServiceResult<InviteResultsResource> saveInvites(List<InviteResource> inviteResources);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "ACCEPT_INVITE",
+            description = "The System Registration user can accept an invite for a given hash",
+            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<Void> acceptInvite(String inviteHash, Long userId);
 
-    @NotSecured("TODO DW - implement when permissions matrix available")
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "READ_INVITE_ON_HASH",
+            description = "The System Registration user can read an invite for a given hash",
+            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<InviteResource> getInviteByHash(String hash);
 
-    @NotSecured("We need to check if there is already a user with the invited email address")
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "CHECK_EXISTENCE_OF_INVITE_ON_HASH",
+            description = "The System Registration user can check to see if there is an invite for a given hash",
+            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<Void> checkUserExistingByInviteHash(@P("hash") String hash);
 }
