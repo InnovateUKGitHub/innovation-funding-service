@@ -3,35 +3,28 @@ package com.worth.ifs.invite.security;
 
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
+import com.worth.ifs.invite.domain.Invite;
+import com.worth.ifs.invite.domain.InviteOrganisation;
+import com.worth.ifs.user.builder.OrganisationBuilder;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
-import static com.worth.ifs.finance.builder.CostBuilder.newCost;
-import static com.worth.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static com.worth.ifs.invite.builder.InviteBuilder.newInvite;
+import static com.worth.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
-import static java.util.Arrays.asList;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class InvitePermissionRulesTest extends BasePermissionRulesTest<InvitePermissionRules> {
 
-    private Cost cost;
-    private Cost otherCost;
     private UserResource leadApplicant;
-    private UserResource collaborator;
-    private UserResource compAdmin;
-    private UserResource assessor;
-    private UserResource otherLeadApplicant;
+    private Invite invite;
+
 
     @Override
     protected InvitePermissionRules supplyPermissionRulesUnderTest() {
@@ -40,58 +33,44 @@ public class InvitePermissionRulesTest extends BasePermissionRulesTest<InvitePer
 
     @Before
     public void setup() throws Exception {
+        leadApplicant = newUserResource().build();
+        final Application application = newApplication().build();
+        final Organisation organisation = OrganisationBuilder.newOrganisation().build();
+        final InviteOrganisation inviteOrganisation = newInviteOrganisation().withOrganisation(organisation).build();
+        invite = newInvite().withApplication(application).withInviteOrganisation(inviteOrganisation).build();
 
-        // Create a compAdmin
-        compAdmin = compAdminUser();
-
-        // Set up global role method mocks
-        for (Role role : allRoles) {
-            when(roleRepositoryMock.findByName(role.getName())).thenReturn(asList(role));
-        }
-        {
-            // Set up users on an organisation and application
-            final Long applicationId = 1L;
-            final Long organisationId = 2L;
-            final Application application = newApplication().with(id(applicationId)).build();
-            final Organisation organisation = newOrganisation().with(id(organisationId)).build();
-            final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
-            cost = newCost().withApplicationFinance(applicationFinance).build();
-
-            leadApplicant = newUserResource().build();
-            collaborator = newUserResource().build();
-
-            when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(leadApplicant.getId(), getRole(LEADAPPLICANT).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
-            when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaborator.getId(), getRole(COLLABORATOR).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
-        }
-        {
-            // Set up different users on an organisation and application to check that there is no bleed through of permissions
-            final long otherApplicationId = 3l;
-            final long otherOrganisationId = 4l;
-            final Organisation otherOrganisation = newOrganisation().with(id(otherOrganisationId)).build();
-            final Application otherApplication = newApplication().with(id(otherApplicationId)).build();
-            final ApplicationFinance otherApplicationFinance = newApplicationFinance().withOrganisation(otherOrganisation).withApplication(otherApplication).build();
-            otherCost = newCost().withApplicationFinance(otherApplicationFinance).build();
-            otherLeadApplicant = newUserResource().build();
-            when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), getRole(LEADAPPLICANT).getId(), otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
-        }
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicant.getId(), application.getId())).thenReturn(newProcessRole().withRole(getRole(LEADAPPLICANT)).build());
     }
 
     @Test
-    public void testConsortiumCanDeleteACostForTheirApplicationAndOrganisation() {
-//        assertTrue(rules.consortiumCanInviteToTheApplication()
-//        assertTrue(rules.consortiumCanDeleteACostForTheirApplicationAndOrganisation(cost, collaborator));
-//
-//        assertFalse(rules.consortiumCanDeleteACostForTheirApplicationAndOrganisation(cost, otherLeadApplicant));
-//        assertFalse(rules.consortiumCanDeleteACostForTheirApplicationAndOrganisation(cost, compAdmin));
+    public void testLeadApplicantCanInviteToTheApplication() {
+        assertTrue(rules.leadApplicantCanInviteToTheApplication(invite, leadApplicant));
     }
 
     @Test
-    public void testConsortiumCanUpdateACostForTheirApplicationAndOrganisation() {
-//        assertTrue(rules.consortiumCanUpdateACostForTheirApplicationAndOrganisation(cost, leadApplicant));
-//        assertTrue(rules.consortiumCanUpdateACostForTheirApplicationAndOrganisation(cost, collaborator));
-//
-//        assertFalse(rules.consortiumCanUpdateACostForTheirApplicationAndOrganisation(cost, otherLeadApplicant));
-//        assertFalse(rules.consortiumCanUpdateACostForTheirApplicationAndOrganisation(cost, compAdmin));
+    public void testCollaboratorCanInviteToApplicantForTheirOrganisation() {
+
     }
+
+    @Test
+    public void testLeadApplicantCanSaveInviteToTheApplication() {
+
+    }
+
+    @Test
+    public void testCollaboratorCanSaveInviteToApplicantForTheirOrganisation() {
+
+    }
+
+    @Test
+    public void testCollaboratorCanReadInviteForTheirApplicationForTheirOrganisation() {
+
+    }
+
+    @Test
+    public void testLeadApplicantReadInviteToTheApplication() {
+
+    }
+
 
 }

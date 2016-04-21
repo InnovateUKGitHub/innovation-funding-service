@@ -24,7 +24,7 @@ public interface InviteService {
     @PreAuthorize("hasPermission(#invite, 'SEND')")
     ServiceResult<Notification> inviteCollaboratorToApplication(String baseUrl, @P("invite") Invite invite);
 
-    @PostAuthorize("hasPermission(#invite, 'READ')")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<Invite> findOne(Long id);
 
     @PreAuthorize("hasPermission(#inviteOrganisationResource, 'SEND')")
@@ -39,8 +39,8 @@ public interface InviteService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId);
 
-    @PreFilter(filterTarget = "invites", value="hasPermission(filterObject, 'SAVE')")
-    ServiceResult<InviteResultsResource> saveInvites(List<InviteResource> inviteResources);
+    @PreFilter(filterTarget = "inviteResources", value="hasPermission(filterObject, 'SAVE')")
+    ServiceResult<InviteResultsResource> saveInvites(@P("inviteResources")List<InviteResource> inviteResources);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "ACCEPT_INVITE",
