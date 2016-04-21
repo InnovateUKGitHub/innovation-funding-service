@@ -18,6 +18,7 @@ import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.form.domain.FormInput;
+import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -87,13 +88,14 @@ public class ApplicationFormController extends AbstractApplicationController {
                                HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         QuestionResource question = questionService.getById(questionId);
+        List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
         SectionResource section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
         this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
-                Optional.ofNullable(question), userApplicationRoles);
+                Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
         this.addUserDetails(model, application, user.getId());
         model.addAttribute("currentUser", user);
         form.setBindingResult(bindingResult);
@@ -160,10 +162,12 @@ public class ApplicationFormController extends AbstractApplicationController {
                                    Optional<SectionResource> section,
                                    Long userId, Model model,
                                    ApplicationForm form, Optional<QuestionResource> question,
+                                   Optional<List<FormInputResource>> formInputs,
                                    List<ProcessRole> userApplicationRoles){
         addApplicationDetails(application, competition, userId, section, question.map(q -> q.getId()), model, form, userApplicationRoles);
         addNavigation(question.orElse(null), application.getId(), model);
         model.addAttribute("currentQuestion", question.orElse(null));
+        model.addAttribute("questionFormInputs", formInputs.orElse(null));
         if(question.isPresent()) {
             model.addAttribute("title", question.get().getShortName());
         }
@@ -197,7 +201,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             ApplicationResource application = applicationService.getById(applicationId);
             CompetitionResource competition = competitionService.getById(application.getCompetition());
             List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-
+            List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
             /* Start save action */
             saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
 
@@ -212,7 +216,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
             if (bindingResult.hasErrors()) {
                 this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
-                        Optional.ofNullable(question), userApplicationRoles);
+                        Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
                 return APPLICATION_FORM;
             } else {
                 return getRedirectUrl(request, applicationId);

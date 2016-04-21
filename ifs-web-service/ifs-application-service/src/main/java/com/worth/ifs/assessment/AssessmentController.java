@@ -268,7 +268,7 @@ public class AssessmentController extends AbstractApplicationController {
 
         Optional<AssessorFeedbackResource> assessorFeedback = assessorFeedbackRestService.findByAssessorId(assessment.getProcessRole().getId()).getOptionalSuccessObject();
 
-        AssessmentSubmitReviewModel viewModel = new AssessmentSubmitReviewModel(assessment, assessorFeedback, responses, application, competition, score, questions, sections);
+        AssessmentSubmitReviewModel viewModel = new AssessmentSubmitReviewModel(assessment, responses, application, competition, score, questions, sections);
 
         return new ModelAndView(assessmentSubmitReview, "model", viewModel);
     }

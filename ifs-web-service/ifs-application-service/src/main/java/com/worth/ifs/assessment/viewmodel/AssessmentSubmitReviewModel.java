@@ -8,10 +8,12 @@ import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.RecommendedValue;
 import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -69,6 +71,8 @@ public class AssessmentSubmitReviewModel {
 
         questionIdsAndResponses = questionsAndResponses.entrySet().stream().
                 collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
+        responseIdsAndFeedback = new HashedMap<>();
+        assessmentSummarySections = new ArrayList<>();
 
 //        Map<ResponseResource, Long> responsesAndFeedback = responses.stream().
 //                map(response -> Pair.of(response, response.getResponseAssessmentFeedbacks())).

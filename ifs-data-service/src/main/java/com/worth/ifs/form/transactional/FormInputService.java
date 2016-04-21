@@ -18,6 +18,9 @@ public interface FormInputService {
     @NotSecured("anyone can see a form input")
     ServiceResult<FormInputResource> findFormInput(Long id);
 
+    @NotSecured("anyone can see a form input")
+    ServiceResult<List<FormInputResource>> findByQuestionId(Long questionId);
+
     @PostFilter("hasPermission(returnObject, 'READ')")
     ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(Long applicationId);
 

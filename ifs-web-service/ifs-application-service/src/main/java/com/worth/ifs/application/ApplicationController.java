@@ -8,6 +8,7 @@ import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -239,6 +240,7 @@ public class ApplicationController extends AbstractApplicationController {
         }else{
             sectionQuestions.put(currentSection.get().getId(), currentSection.get().getQuestions().stream().map(questionService::getById).collect(Collectors.toList()));
         }
+
         model.addAttribute("sectionQuestions", sectionQuestions);
         List<SectionResource> childSections = simpleMap(currentSection.get().getChildSections(), sectionService::getById);
         model.addAttribute("childSections", childSections);

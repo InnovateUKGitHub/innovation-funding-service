@@ -46,14 +46,6 @@ public class QuestionResource {
         return this.shortName;
     }
 
-    public void setSection(Section section) {
-        this.section = section.getId();
-    }
-
-    public void setCompetition(Competition competition) {
-        this.competition = competition.getId();
-    }
-
     public Long getId() {
         return this.id;
     }

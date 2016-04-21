@@ -15,6 +15,7 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.form.domain.FormInputResponse;
+import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.user.domain.ProcessRole;
@@ -80,6 +81,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<QuestionStatusResource>> questionStatusResourceListType() {
         return new ParameterizedTypeReference<List<QuestionStatusResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<FormInputResource>> formInputResourceListType() {
+        return new ParameterizedTypeReference<List<FormInputResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<ResponseResource>> responseResourceListType() {

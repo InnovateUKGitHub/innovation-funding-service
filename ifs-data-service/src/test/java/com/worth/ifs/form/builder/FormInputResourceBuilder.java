@@ -32,12 +32,20 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
                 .with(idBasedDescriptions("Description "));
     }
 
+    public FormInputResourceBuilder withId(Long... ids) {
+        return withArray((id, formInput) -> formInput.setId(id), ids);
+    }
+
     public FormInputResourceBuilder withWordCount(Integer... wordCount) {
         return withArray((id, formInput) -> setField("wordCount", id, formInput), wordCount);
     }
 
     public FormInputResourceBuilder withFormInputType(Long formInputType) {
         return with(formInput -> formInput.setFormInputType(formInputType));
+    }
+
+    public FormInputResourceBuilder withFormInputTypeTitle(String formInputTypeTitle) {
+        return with(formInput -> formInput.setFormInputTypeTitle(formInputTypeTitle));
     }
 
     @Override
