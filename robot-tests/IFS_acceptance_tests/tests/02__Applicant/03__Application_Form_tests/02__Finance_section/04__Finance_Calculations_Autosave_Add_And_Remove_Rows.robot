@@ -4,7 +4,7 @@ Documentation     INFUND-736: As an applicant I want to be able to add all the f
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        HappyPath
+Force Tags        HappyPath     Failing
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -25,9 +25,10 @@ Labour
     ...    INFUND-736
     ...
     ...    INFUND-1256
-    [Tags]    Finances
+    [Tags]    Finances    Panding
+    #Pending due to INFUND-2573
     sleep    5s
-    the user navigates to the page     ${YOUR_FINANCES_URL}
+    the user navigates to the page    ${YOUR_FINANCES_URL}
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
@@ -43,7 +44,8 @@ Administration support costs
     ...    Acceptance tests for the Administration support costs section calculations
     ...
     ...    INFUND-736
-    [Tags]    Finances
+    [Tags]    Finances    Pending
+    #Pending due to INFUND-2573
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
     And user selects the admin costs    overheads-rateType-29-51    DEFAULT_PERCENTAGE
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600

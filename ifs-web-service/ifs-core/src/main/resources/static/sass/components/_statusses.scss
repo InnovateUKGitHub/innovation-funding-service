@@ -152,6 +152,14 @@ Status is displayed in the collapsible header area.
 	.section-incomplete{
 		@extend %icon-incomplete;
 	}
+	@include media-down(mobile){
+		div.section-status{
+			float:none;
+			padding-left:25px;
+			padding-right:0;
+			background-position: left 50%;
+		}
+	}
 }
 
 

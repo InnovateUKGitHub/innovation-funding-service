@@ -1,5 +1,15 @@
 package com.worth.ifs.application;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.form.ApplicationForm;
@@ -11,16 +21,16 @@ import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
@@ -224,10 +234,7 @@ public class ApplicationController extends AbstractApplicationController {
 
         CompetitionResource  competition = competitionService.getById(application.getCompetition());
 
-        Optional<SectionResource> currentSection = getSectionByIds(competition.getSections(), sectionId, false);
-
-//        addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
-//        addOrganisationAndUserFinanceDetails(applicationId, user, model, form);
+        Optional<SectionResource> currentSection = getSectionByIds(competition.getId(), competition.getSections(), sectionId, false);
 
         Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
         Optional<Question> question = getQuestion(currentSection, questionId);
