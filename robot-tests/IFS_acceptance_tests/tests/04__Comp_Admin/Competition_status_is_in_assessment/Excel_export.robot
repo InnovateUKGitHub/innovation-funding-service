@@ -11,9 +11,9 @@ Resource          ../../../resources/keywords/User_actions.robot
 *** Test Cases ***
 Excel export
     [Documentation]    INFUND-1987
-    [Tags]    HappyPath         Pending
+    [Tags]    HappyPath    Pending
     # we need to adjust this test in sprint 8 when the new competition will be ready. For now we are using the download url. And add an extra check to see if we have the correct number of rows
-    Given the user navigates to the page    ${COMP_ADMINISTRATOR}
+    Given the user navigates to the page    ${COMP_ADMINISTRATOR_OPEN}
     When the admin downloads the excel
     And user opens the excel and checks the content
     [Teardown]    Empty the download directory
