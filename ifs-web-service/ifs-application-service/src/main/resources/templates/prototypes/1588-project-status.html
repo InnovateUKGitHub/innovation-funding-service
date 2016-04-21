@@ -49,7 +49,7 @@
 			<span>
 				<h2 class="heading-medium"><a th:href="${(param.stage == null or param.stage[0] == 'level1' ? '/prototypes/2484-mo-partner?status=noMo' : '/prototypes/2484-mo-partner')}">Monitoring officer</a></h2> 
 
-				<p th:unless="${param.stage == null or param.stage[0] == 'level1'}">Your monitoring officer for this project is <a href="#">Tom Evans</a>.</p>
+				<p th:unless="${param.stage == null or param.stage[0] == 'level1'}">Your monitoring officer for this project is Tom Evans.</p>
 
 				<p th:unless="${param.stage != null and param.stage[0] != 'level1'}">
 					Innovate UK will assign you a monitoring officer

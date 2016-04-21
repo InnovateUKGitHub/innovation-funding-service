@@ -90,17 +90,11 @@
 	@include border-radius(15px 0 0 15px);
 	text-indent:-9999px;
 
-	&[aria-valuenow="1"]:after,
-	&[aria-valuenow="2"]:after,
-	&[aria-valuenow="3"]:after,
-	&[aria-valuenow="4"]:after,
-	&[aria-valuenow="5"]:after{
-			content: '';
-			background: $grey-2;
-			width:400%;
-			left:100%;
-			height: 100%;
-			position: absolute;
+	&[aria-valuenow="1"],
+	&[aria-valuenow="2"],
+	&[aria-valuenow="3"],
+	&[aria-valuenow="4"]{
+		width: 4% !important;
 	}
 	&[aria-valuenow="95"],
 	&[aria-valuenow="96"],
