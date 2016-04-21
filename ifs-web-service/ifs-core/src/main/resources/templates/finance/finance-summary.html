@@ -210,7 +210,7 @@
     <!-- ===========================Form: finances incomplete =========================== -->
 
     <div th:fragment="application_finances_incomplete_warning">
-        <div th:if="${currentApplication.isOpen() and !sectionsMarkedAsComplete.contains(7L)}" class="warning-alert">
+        <div th:if="${hasFinanceSection and currentApplication.isOpen() and !sectionsMarkedAsComplete.contains(financeSectionId)}" class="warning-alert">
             <h2 class="heading-small no-margin">The following organisations have not marked their finances as complete:</h2>
             <ul class="list-bullet">
                 <div th:remove="tag" th:each="applicationOrganisation : ${applicationOrganisations}">

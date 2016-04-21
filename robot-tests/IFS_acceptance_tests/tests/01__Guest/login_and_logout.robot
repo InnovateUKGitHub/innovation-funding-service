@@ -62,7 +62,7 @@ Valid login as Comp Admin
     When the guest user enters the log in credentials    john.doe@innovateuk.test    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the Applicant is logged-in
-    And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR}
+    And the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_OPEN}
     [Teardown]    Logout as user
 
 Reset password (psw does not match)

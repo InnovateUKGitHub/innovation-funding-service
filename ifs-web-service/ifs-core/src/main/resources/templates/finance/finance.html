@@ -85,6 +85,7 @@
                     </label>
                     <input type="number"
                            class="form-control"
+                           th:classappend="${#fields.hasErrors('formInput[cost-__${costCategory.workingDaysPerYearCostItem?.id}__]')} ? field-error : ''"
                            th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-workingDays'}"
                            th:name="${type + '-workingDays-' + question.id + '-' + costCategory.workingDaysPerYearCostItem?.id}"
                            th:value="${costCategory.workingDaysPerYear}"
@@ -132,13 +133,20 @@
 
     <div th:fragment="labour_row" th:remove="tag">
 
+        <tr>
+            <td colspan="4">
+                <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id})" th:remove="tag" />
+            </td>
+        </tr>
+
         <tr th:attr="data-repeatable-row=${cost.id}">
             <td>
                 <input type="text"
                        class="form-control width-full"
+                       th:classappend="${#fields.hasErrors('formInput[cost-__${cost.id}__-role]')} ? field-error : ''"
                        aria-labelledby="labour-role"
                        th:name="${type +'-role-' + question.id + '-' + cost.id}"
-                       th:id="${'cost-labour-'+cost.id+'-labourRole'}"
+                       th:id="${'cost-labour-'+cost.id+'-role'}"
                        th:value="${cost.getRole()}"
                        th:readonly="${complete == 'complete'}"
                         />
@@ -147,6 +155,7 @@
                 <input type="number"
                        aria-labelledby="labour-salary"
                        class="form-control width-full"
+                       th:classappend="${#fields.hasErrors('formInput[cost-__${cost.id}__-grossAnnualSalary]')} ? field-error : ''"
                        th:name="${type +'-grossAnnualSalary-' + question.id + '-' + cost.id}"
                        th:id="${'cost-labour-'+cost.id+'-labourGrossSalary'}"
                        th:readonly="${complete == 'complete'}"
@@ -168,6 +177,7 @@
                 <input type="number"
                        aria-labelledby="labour-days"
                        class="form-control width-full"
+                       th:classappend="${#fields.hasErrors('formInput[cost-__${cost.id}__-labourDays]')} ? field-error : ''"
                        th:readonly="${complete == 'complete'}"
                        th:id="${'cost-labour-'+cost.id+'-labourDays'}"
                        th:name="${type + '-labourDays-' + question.id + '-' + cost.id}"

@@ -20,6 +20,7 @@ public class SectionResource {
     private Long parentSection;
     private List<Long> childSections;
     private Boolean displayInAssessmentApplicationSummary = false;
+    private Boolean finance;
 
     public SectionResource(long id, Competition competition, List<Question> questions, String name, Long parentSection) {
         this.id = id;
@@ -120,4 +121,12 @@ public class SectionResource {
     public Boolean isDisplayInAssessmentApplicationSummary() {
         return this.displayInAssessmentApplicationSummary;
     }
+    
+    public Boolean isFinance() {
+		return finance;
+	}
+    
+    public void setFinance(Boolean finance) {
+		this.finance = finance;
+	}
 }

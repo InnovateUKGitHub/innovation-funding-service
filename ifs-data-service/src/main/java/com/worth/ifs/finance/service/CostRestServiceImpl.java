@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.service;
 
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.cost.CostItem;
@@ -33,8 +34,8 @@ public class CostRestServiceImpl extends BaseRestService implements CostRestServ
     }
 
     @Override
-    public RestResult<Void> update(CostItem costItem) {
-        return putWithRestResult(costRestURL + "/update/" + costItem.getId(), costItem, Void.class);
+    public RestResult<ValidationMessages> update(CostItem costItem) {
+        return putWithRestResult(costRestURL + "/update/" + costItem.getId(), costItem, ValidationMessages.class);
     }
 
     @Override

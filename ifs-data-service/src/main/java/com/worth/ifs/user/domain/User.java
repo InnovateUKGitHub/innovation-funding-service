@@ -40,16 +40,16 @@ public class User {
     @Column(unique=true)
     private String email;
 
-    @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="user")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name="user_organisation",
             joinColumns={@JoinColumn(name="user_id", referencedColumnName = "id")},
             inverseJoinColumns={@JoinColumn(name="organisation_id", referencedColumnName = "id")})
     private List<Organisation> organisations = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name="user_role",
             joinColumns={@JoinColumn(name="user_id", referencedColumnName = "id")},
             inverseJoinColumns={@JoinColumn(name="role_id", referencedColumnName = "id")})

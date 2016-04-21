@@ -3,6 +3,7 @@ package com.worth.ifs.application.controller;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,20 @@ public class SectionController {
         return sectionService.getCompletedSections(applicationId, organisationId).toGetResponse();
     }
 
+    @RequestMapping("/markAsComplete/{sectionId}/{applicationId}/{markedAsCompleteById}")
+    public RestResult<List<ValidationMessages>> markAsComplete(@PathVariable("sectionId") final Long sectionId,
+                                                               @PathVariable("applicationId") final Long applicationId,
+                                                               @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
+        return sectionService.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById).toGetResponse();
+    }
+
+    @RequestMapping("/markAsInComplete/{sectionId}/{applicationId}/{markedAsInCompleteById}")
+    public RestResult<Void> markAsInComplete(@PathVariable("sectionId") final Long sectionId,
+                                           @PathVariable("applicationId") final Long applicationId,
+                                           @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById) {
+        return sectionService.markSectionAsInComplete(sectionId, applicationId, markedAsInCompleteById).toPutResponse();
+    }
+
     @RequestMapping("/allSectionsMarkedAsComplete/{applicationId}")
     public RestResult<Boolean> getCompletedSections(@PathVariable("applicationId") final Long applicationId) {
         return sectionService.childSectionsAreCompleteForAllOrganisations(null, applicationId, null).toGetResponse();
@@ -47,11 +62,6 @@ public class SectionController {
     @RequestMapping("/getIncompleteSections/{applicationId}")
     public RestResult<List<Long>> getIncompleteSections(@PathVariable("applicationId") final Long applicationId) {
         return sectionService.getIncompleteSections(applicationId).toGetResponse();
-    }
-
-    @RequestMapping("findByName/{name}")
-    public RestResult<SectionResource> findByName(@PathVariable("name") final String name) {
-        return sectionService.findByName(name).toGetResponse();
     }
 
     @RequestMapping("/getNextSection/{sectionId}")
@@ -72,5 +82,10 @@ public class SectionController {
     @RequestMapping("/getQuestionsForSectionAndSubsections/{sectionId}")
     public RestResult<Set<Long>> getQuestionsForSectionAndSubsections(@PathVariable("sectionId") final Long sectionId){
         return sectionService.getQuestionsForSectionAndSubsections(sectionId).toGetResponse();
+    }
+    
+    @RequestMapping("/getFinanceSectionByCompetitionId/{competitionId}")
+    public RestResult<SectionResource> getFinanceSectionByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
+    	return sectionService.getFinanceSectionByCompetitionId(competitionId).toGetResponse();
     }
 }

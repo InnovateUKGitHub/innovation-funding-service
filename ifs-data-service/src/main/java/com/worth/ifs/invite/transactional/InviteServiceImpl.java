@@ -2,6 +2,7 @@ package com.worth.ifs.invite.transactional;
 
 import com.google.common.collect.Sets;
 import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.BaseEitherBackedResult;
 import com.worth.ifs.commons.service.ServiceFailure;
@@ -255,7 +256,13 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     public ServiceResult<Void> checkUserExistingByInviteHash(@P("hash") String hash) {
         return getByHash(hash)
                 .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()))
-                .andOnSuccessReturn(u -> u.get())
+                .andOnSuccess(u -> {
+                    if(u.isPresent()){
+                        return serviceSuccess();
+                    }else{
+                        return serviceFailure(CommonErrors.notFoundError(Invite.class, hash));
+                    }
+                })
                 .andOnSuccessReturnVoid();
     }
 
