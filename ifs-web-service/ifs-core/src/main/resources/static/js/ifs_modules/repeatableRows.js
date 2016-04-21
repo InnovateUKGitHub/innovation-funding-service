@@ -19,7 +19,7 @@ IFS.repeatableRows = (function() {
             var url = IFS.repeatableRows.getAjaxUrl(el);
             if(url.length){
               event.preventDefault();
-              jQuery.ajax({
+              jQuery.ajaxProtected({
                   url : url,
                   beforeSend : function(){
                       jQuery(el).before('<span class="form-hint">Adding a new row</span>');
@@ -41,7 +41,7 @@ IFS.repeatableRows = (function() {
             var url = IFS.repeatableRows.getAjaxUrl(el);
             if(url.length){
               event.preventDefault();
-              jQuery.ajax({
+              jQuery.ajaxProtected({
                   url : url
               }).done(function(data){
                   data = jQuery.parseJSON(data);
