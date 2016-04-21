@@ -17,7 +17,7 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'194741: Machine learning in robots'}, ${'Project setup status'})" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project setup status'})" th:remove="tag" />
 
 	<p class="form-hint">You need to complete the following steps before this project can begin.</p>
 
@@ -37,7 +37,7 @@
 			</span>
 		</li>
 
-		<li th:class="${(param.user != null and param.user[0] == 'nonLead' ? 'complete' : 'require-action')}">
+		<li th:class="${(param.stage == null or param.stage[0] == 'level1' ? 'require-action' : 'complete')}">
 			<span>
 				<h2 class="heading-medium">
 					<a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1575-project-details?user=nonLead' : '/prototypes/1575-project-details')}">Project details</a></h2>  
@@ -45,35 +45,48 @@
 			</span>
 		</li>
 
-		<li th:class="${(param.user != null and param.user[0] == 'nonLead' ? 'complete' : 'waiting')}">
+		<li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'complete')}">
 			<span>
-				<h2 class="heading-medium"><a href="/prototypes/2484-mo-partner">Monitoring officer assigned</a></h2> 
-				<p>Your monitoring officer for this project is <a href="#">Tom Evans</a>.</p>
+				<h2 class="heading-medium"><a th:href="${(param.stage == null or param.stage[0] == 'level1' ? '/prototypes/2484-mo-partner?status=noMo' : '/prototypes/2484-mo-partner')}">Monitoring officer</a></h2> 
+
+				<p th:unless="${param.stage == null or param.stage[0] == 'level1'}">Your monitoring officer for this project is <a href="#">Tom Evans</a>.</p>
+
+				<p th:unless="${param.stage != null and param.stage[0] != 'level1'}">
+					Innovate UK will assign you a monitoring officer
+				</p>
+
 			</span>
 		</li>
 
-		<li class="require-action">
+		<li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'require-action')}" th:unless="${param.stage != null and param.stage[0] == 'level3'}">
 			<span>
 				<h2 class="heading-medium"><a href="/prototypes/1578-bank-details">Bank details</a></h2>
 				<p>We need bank details for each consortium member so that we can pay the grant.</p>
 			</span>
 		</li>
 
-		<li class="waiting">
+		<li th:if="${param.stage != null and param.stage[0] == 'level3'}" class="complete" >
+			<span>
+				<h2 class="heading-medium"><a href="/prototypes/1578-bank-details">Bank details</a></h2>
+				<p>We need bank details for each consortium member so that we can pay the grant.</p>
+			</span>
+		</li>
+
+		<li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'waiting')}">
 			<span>
 				<h2 class="heading-medium"><a href="#">Finance checks</a></h2>
 				<p>We will review all project costs and contact you if we have any queries.</p>
 			</span>
 		</li>
 
-		<li>
+		<li th:class="${(param.stage != null and param.stage[0] == 'level3' ? 'require-action' : '')}">
 			<span>
-				<h2 class="heading-medium"><a href="/prototypes/1591-forecast">Forecasts</a></h2>
-				<p>Once we have approved your financial information, we will produce a financial forecast.</p>
+				<h2 class="heading-medium"><a href="/prototypes/1592-spend">Spend profile</a></h2>
+				<p>Once we have approved your financial information, we will produce a spend profile.</p>
 			</span>
 		</li>
 
-		<li th:class="${(param.user != null and param.user[0] == 'nonLead' ? 'waiting' : 'require-action')}">
+		<li th:class="${(param.stage == null or param.stage[0] == 'level1' ? '' : 'require-action')}">
 			<span>
 				
 				<div th:unless="${param.user != null}" th:remove="tag">
@@ -106,6 +119,11 @@
 		</li>
 
 	</ul>
+	
+	<hr />
+	
+	<strong><a href="/prototypes/1589-team-status">What's the status of each of my partners</a></strong>
+
 
 	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

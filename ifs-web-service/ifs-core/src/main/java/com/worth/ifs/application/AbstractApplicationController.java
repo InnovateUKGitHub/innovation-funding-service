@@ -395,6 +395,18 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
+        
+        SectionResource financeSection = sectionService.getFinanceSectionForCompetition(application.getCompetition());
+        boolean hasFinanceSection = financeSection != null;
+        Long financeSectionId;
+        if(hasFinanceSection) {
+        	financeSectionId = financeSection.getId();
+        } else {
+        	financeSectionId = null;
+        }
+        
+        model.addAttribute("hasFinanceSection", hasFinanceSection);
+        model.addAttribute("financeSectionId", financeSectionId);
     }
 
     protected void addSectionDetails(Model model, Optional<SectionResource> currentSection) {
@@ -448,13 +460,20 @@ public abstract class AbstractApplicationController extends BaseController {
         return application;
     }
 
-    protected void addOrganisationAndUserFinanceDetails(Long applicationId, UserResource user,
+    protected void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, UserResource user,
                                                         Model model, ApplicationForm form) {
         model.addAttribute("currentUser", user);
-        financeOverviewModelManager.addFinanceDetails(model, applicationId);
-        if(!form.isAdminMode()){
-            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-            financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, user.getId(), form);
+        
+        SectionResource financeSection = sectionService.getFinanceSectionForCompetition(competitionId);
+        boolean hasFinanceSection = financeSection != null;
+        
+        if(hasFinanceSection) {
+        
+	        financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
+	        if(!form.isAdminMode()){
+	            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+	            financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, user.getId(), form);
+	        }
         }
     }
 

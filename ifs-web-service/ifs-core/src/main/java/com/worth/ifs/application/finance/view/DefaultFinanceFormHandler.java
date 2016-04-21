@@ -5,6 +5,7 @@ import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.item.*;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
@@ -42,21 +43,30 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
 
     @Override
     public Map<String, List<String>> update(HttpServletRequest request, Long userId, Long applicationId) {
+        Map<String, List<String>> errors = new HashMap<>();
+
+
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
-        if (applicationFinanceResource == null){
+        if (applicationFinanceResource == null) {
             applicationFinanceResource = financeService.addApplicationFinance(userId, applicationId);
         }
 
         storeFinancePosition(request, applicationFinanceResource.getId());
         List<CostItem> costItems = getCostItems(request);
-        storeCostItems(costItems);
-
+        storeCostItems(costItems).forEach((costId, validationMessages) -> {
+            List<String> errorList = validationMessages.getErrors().stream().map(error -> error.getErrorMessage()).collect(Collectors.toList());
+            validationMessages.getErrors().stream().forEach(e -> {
+                errors.put("formInput[cost-" + costId + "-" + e.getErrorKey() + "]", Arrays.asList(e.getErrorKey() + " " + e.getErrorMessage()));
+            });
+            errors.put("formInput[cost-" + costId + "]", errorList);
+        });
         addRemoveCostRows(request, applicationId, userId);
-        return new HashMap<>();
+
+        return errors;
     }
 
     @Override
-    public void storeCost(Long userId, Long applicationId, String fieldName, String value) {
+    public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value) {
         if (fieldName != null && value != null) {
             String cleanedFieldName = fieldName;
             if (fieldName.startsWith("cost-")) {
@@ -65,8 +75,9 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
                 cleanedFieldName = fieldName.replace("formInput[", "").replace("]", "");
             }
             LOG.info("store field: " + cleanedFieldName + " val: " + value);
-            storeField(cleanedFieldName, value, userId, applicationId);
+            return storeField(cleanedFieldName, value, userId, applicationId);
         }
+        return null;
     }
 
     @Override
@@ -182,7 +193,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
         return costItems;
     }
 
-    private void storeField(String fieldName, String value, Long userId, Long applicationId) {
+    private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {
         FinanceFormField financeFormField = getCostFormField(fieldName, value);
         CostType costType = CostType.fromString(financeFormField.getKeyType());
         CostHandler costHandler = getCostItemHandler(costType);
@@ -191,7 +202,7 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
         CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(financeFormField));
-        storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+        return storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
     }
 
     private FinanceFormField getCostFormField(String costTypeKey, String value) {
@@ -232,12 +243,23 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
         }
     }
 
-    private void storeCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
+    private ValidationMessages storeCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
         if (costItem.getId().equals(0L)) {
             addCostItem(costItem, userId, applicationId, question);
         } else {
-            costService.update(costItem);
+            RestResult<ValidationMessages> messages = costService.update(costItem);
+            ValidationMessages validationMessages = messages.getSuccessObject();
+
+            if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
+                LOG.debug("no validation errors on cost items");
+                return messages.getSuccessObject();
+            } else {
+                messages.getSuccessObject().getErrors().stream()
+                        .peek(e -> LOG.debug(String.format("Got cost item Field error: %s  / %s", e.getErrorKey(), e.getErrorMessage())));
+                return messages.getSuccessObject();
+            }
         }
+        return null;
     }
 
     private void addCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
@@ -249,8 +271,22 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
         }
     }
 
-    private void storeCostItems(List<CostItem> costItems) {
-        costItems.stream().forEach(c -> costService.update(c));
+    private Map<Long, ValidationMessages> storeCostItems(List<CostItem> costItems) {
+        Map<Long, ValidationMessages> validationMessagesMap = new HashMap<>();
+        costItems.stream().forEach(c -> {
+            RestResult<ValidationMessages> messages = costService.update(c);
+            Optional<ValidationMessages> successObject = messages.getOptionalSuccessObject();
+            if (successObject.isPresent() && successObject.get() != null &&
+                    messages.getSuccessObject().getErrors() != null &&
+                    !messages.getSuccessObject().getErrors().isEmpty()
+            ) {
+                LOG.debug("got validation errors. " + c.getId());
+                validationMessagesMap.put(c.getId(), messages.getSuccessObject());
+            } else {
+                LOG.debug("No validation errors.");
+            }
+        });
+        return validationMessagesMap;
     }
 
     @Override

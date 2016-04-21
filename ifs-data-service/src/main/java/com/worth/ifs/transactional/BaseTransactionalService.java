@@ -3,9 +3,11 @@ package com.worth.ifs.transactional;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.ApplicationStatusRepository;
 import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.repository.CompetitionRepository;
@@ -50,6 +52,8 @@ public abstract class BaseTransactionalService  {
 
     @Autowired
     protected ApplicationRepository applicationRepository;
+    @Autowired
+    protected SectionRepository sectionRepository;
 
     @Autowired
     protected OrganisationRepository organisationRepository;
@@ -70,12 +74,19 @@ public abstract class BaseTransactionalService  {
         return find(processRoleRepository.findOne(processRoleId), notFoundError(ProcessRole.class, processRoleId));
     }
 
+    protected Supplier<ServiceResult<Section>> section(final Long id) {
+        return () -> getSection(id);
+    }
+
     protected Supplier<ServiceResult<Application>> application(final Long id) {
         return () -> getApplication(id);
     }
 
     protected ServiceResult<Application> getApplication(final Long id) {
         return find(applicationRepository.findOne(id), notFoundError(Application.class, id));
+    }
+    protected ServiceResult<Section> getSection(final Long id) {
+        return find(sectionRepository.findOne(id), notFoundError(Section.class, id));
     }
 
     protected Supplier<ServiceResult<User>> user(final Long id) {

@@ -52,16 +52,4 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
         assertEquals(returnedResponse, response);
     }
 
-    @Test
-    public void test_getSection() {
-
-        String expectedUrl = sectionRestUrl + "/findByName/Section 1";
-        SectionResource returnedResponse = newSectionResource().build();
-
-        setupGetWithRestResultExpectations(expectedUrl, SectionResource.class, returnedResponse);
-
-        // now run the method under test
-        SectionResource response = service.getSection("Section 1").getSuccessObject();
-        assertEquals(returnedResponse, response);
-    }
 }

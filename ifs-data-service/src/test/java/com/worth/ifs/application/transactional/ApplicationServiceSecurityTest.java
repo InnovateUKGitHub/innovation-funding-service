@@ -273,7 +273,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
      * Dummy implementation (for satisfying Spring Security's need to read parameter information from
      * methods, which is lost when using mocks)
      */
-    private static class TestApplicationService implements ApplicationService {
+    public static class TestApplicationService implements ApplicationService {
 
         @Override
         public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {

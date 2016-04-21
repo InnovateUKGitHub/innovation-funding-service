@@ -4,6 +4,9 @@ import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +24,25 @@ import static java.util.stream.Collectors.toList;
 // TODO DW - INFUND-1555 - return RestResults
 @Service
 public class SectionServiceImpl implements SectionService {
+    private static final Log LOG = LogFactory.getLog(SectionServiceImpl.class);
 
     @Autowired
     private SectionRestService sectionRestService;
 
     @Autowired
     private QuestionService questionService;
+
+    @Override
+    public List<ValidationMessages> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+        LOG.debug(String.format("mark section as complete %s / %s /%s ", sectionId, applicationId, markedAsCompleteById));
+        return sectionRestService.markAsComplete(sectionId, applicationId, markedAsCompleteById).getSuccessObject();
+    }
+
+    @Override
+    public void markAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById) {
+        LOG.debug(String.format("mark section as incomplete %s / %s /%s ", sectionId, applicationId, markedAsInCompleteById));
+        sectionRestService.markAsInComplete(sectionId, applicationId, markedAsInCompleteById);
+    }
 
     @Override
     public SectionResource getById(Long sectionId) {
@@ -82,11 +98,6 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public SectionResource getByName(String name) {
-        return sectionRestService.getSection(name).getSuccessObjectOrThrowException();
-    }
-
-    @Override
     public void removeSectionsQuestionsWithType(SectionResource section, String name) {
         section.getChildSections().stream()
                 .map(sectionRestService::getById)
@@ -134,4 +145,9 @@ public class SectionServiceImpl implements SectionService {
     public Set<Long> getQuestionsForSectionAndSubsections(Long sectionId) {
         return sectionRestService.getQuestionsForSectionAndSubsections(sectionId).getSuccessObjectOrThrowException();
     }
+
+	@Override
+	public SectionResource getFinanceSectionForCompetition(Long competitionId) {
+		return sectionRestService.getFinanceSectionForCompetition(competitionId).getSuccessObjectOrThrowException();
+	}
 }
