@@ -235,66 +235,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
-    private void addNavigation(SectionResource section, Long applicationId, Model model) {
-        if (section == null) {
-            return;
-        }
-        Optional<Question> previousQuestion = questionService.getPreviousQuestionBySection(section.getId());
-        addPreviousQuestionToModel(previousQuestion, applicationId, model);
-        Optional<Question> nextQuestion = questionService.getNextQuestionBySection(section.getId());
-        addNextQuestionToModel(nextQuestion, applicationId, model);
-    }
 
-    private void addNavigation(Question question, Long applicationId, Model model) {
-        if (question == null) {
-            return;
-        }
-
-        Optional<Question> previousQuestion = questionService.getPreviousQuestion(question.getId());
-        addPreviousQuestionToModel(previousQuestion, applicationId, model);
-        Optional<Question> nextQuestion = questionService.getNextQuestion(question.getId());
-        addNextQuestionToModel(nextQuestion, applicationId, model);
-    }
-
-    private void addPreviousQuestionToModel(Optional<Question> previousQuestionOptional, Long applicationId, Model model) {
-        String previousUrl;
-        String previousText;
-
-        if (previousQuestionOptional.isPresent()) {
-            Question previousQuestion = previousQuestionOptional.get();
-            SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
-            if (previousSection.isQuestionGroup()) {
-                previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + previousSection.getId();
-                previousText = previousSection.getName();
-            } else {
-                previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + previousQuestion.getId();
-                previousText = previousQuestion.getShortName();
-            }
-            model.addAttribute("previousUrl", previousUrl);
-            model.addAttribute("previousText", previousText);
-        }
-    }
-
-    private void addNextQuestionToModel(Optional<Question> nextQuestionOptional, Long applicationId, Model model) {
-        String nextUrl;
-        String nextText;
-
-        if (nextQuestionOptional.isPresent()) {
-            Question nextQuestion = nextQuestionOptional.get();
-            SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
-
-            if (nextSection.isQuestionGroup()) {
-                nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + nextSection.getId();
-                nextText = nextSection.getName();
-            } else {
-                nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + nextQuestion.getId();
-                nextText = nextQuestion.getShortName();
-            }
-
-            model.addAttribute("nextUrl", nextUrl);
-            model.addAttribute("nextText", nextText);
-        }
-    }
 
     @RequestMapping(value = "/add_cost/{"+QUESTION_ID+"}")
     public String addCostRow(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form, Model model,

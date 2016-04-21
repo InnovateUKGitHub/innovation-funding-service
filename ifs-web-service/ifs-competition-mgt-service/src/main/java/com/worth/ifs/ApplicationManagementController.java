@@ -4,6 +4,7 @@ import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.AppendixResource;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.service.ApplicationSummaryRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -15,6 +16,7 @@ import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputRestService;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;
@@ -42,39 +44,32 @@ public class ApplicationManagementController extends AbstractApplicationControll
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(ApplicationManagementController.class);
     @Autowired
+    protected UserAuthenticationService userAuthenticationService;
+    @Autowired
+    protected ProcessRoleService processRoleService;
+    @Autowired
+    protected FormInputRestService formInputRestService;
+    @Autowired
     CompetitionService competitionService;
-
     @Autowired
     ApplicationSummaryRestService applicationSummaryRestService;
-
     @Autowired
     FormInputResponseService formInputResponseService;
-
     @Autowired
     FileEntryRestService fileEntryRestService;
 
-    @Autowired
-    protected UserAuthenticationService userAuthenticationService;
-
-    @Autowired
-    protected ProcessRoleService processRoleService;
-
-    @Autowired
-    protected FormInputRestService formInputRestService;
-
-    @RequestMapping(value= "/{applicationId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{applicationId}", method = RequestMethod.GET)
     public String displayApplicationForCompetitionAdministrator(@PathVariable("competitionId") final String competitionId,
                                                                 @PathVariable("applicationId") final String applicationIdString,
                                                                 @ModelAttribute("form") ApplicationForm form,
                                                                 Model model,
                                                                 HttpServletRequest request
-    ){
+    ) {
         UserResource user = getLoggedUser(request);
         Long applicationId = Long.valueOf(applicationIdString);
         form.setAdminMode(true);
 
         List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
-//        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
 
         ApplicationResource application = applicationService.getById(applicationId);
@@ -91,15 +86,58 @@ public class ApplicationManagementController extends AbstractApplicationControll
         return "competition-mgt-application-overview";
     }
 
+    @RequestMapping(value = "/{applicationId}/finances/{organisationId}", method = RequestMethod.GET)
+    public String displayApplicationForCompetitionAdministrator(@PathVariable("competitionId") final String competitionId,
+                                                                @PathVariable("applicationId") final String applicationIdString,
+                                                                @PathVariable("organisationId") final String organisationId,
+                                                                @ModelAttribute("form") ApplicationForm form,
+                                                                Model model
+    ) throws ExecutionException, InterruptedException {
+        Long applicationId = Long.valueOf(applicationIdString);
+        ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        SectionResource financeSection = sectionService.getFinanceSectionForCompetition(competition.getId());
+        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
+        UserResource impersonatingUser = getImpersonateUserByOrganisationId(organisationId, form, applicationId);
+
+        // so the mode is viewonly
+        form.setAdminMode(true);
+        application.enableViewMode();
+        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
+
+        addApplicationAndSections(application, competition, impersonatingUser.getId(), Optional.ofNullable(financeSection), Optional.empty(), model, form);
+        addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, impersonatingUser, model, form);
+
+        model.addAttribute("applicationReadyForSubmit", false);
+        return "comp-mgt-application-finances";
+    }
+
+    private UserResource getImpersonateUserByOrganisationId(@PathVariable("organisationId") String organisationId, @ModelAttribute("form") ApplicationForm form, Long applicationId) throws InterruptedException, ExecutionException {
+        UserResource user;
+        form.setImpersonateOrganisationId(Long.valueOf(organisationId));
+        List<ProcessRole> processRoles = processRoleService.findAssignableProcessRoles(applicationId).get();
+        Optional<User> impersonateOptionalUser = processRoles.stream()
+                .filter(p -> p.getOrganisation().getId().equals(Long.valueOf(organisationId)))
+                .map(p -> p.getUser())
+                .findAny();
+
+        if (!impersonateOptionalUser.isPresent()) {
+            LOG.error("Found no user to impersonate.");
+            return null;
+        }
+        User impersonateUser = impersonateOptionalUser.get();
+        user = userService.retrieveUserById(impersonateUser.getId()).getSuccessObject();
+        return user;
+    }
+
     @RequestMapping(value = "/{applicationId}/forminput/{formInputId}/download", method = RequestMethod.GET)
-    public @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadQuestionFile(
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
             HttpServletRequest request) throws ExecutionException, InterruptedException {
         final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRole processRole;
-        if(user.hasRole(UserRoleType.COMP_ADMIN)){
+        if (user.hasRole(UserRoleType.COMP_ADMIN)) {
             long processRoleId = formInputResponseService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();
         } else {

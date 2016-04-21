@@ -146,6 +146,12 @@
                             <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}">
                                 <small>Partner</small>
                             </div>
+
+                            <a th:if="${form.isAdminMode()}"
+                               th:href="@{'/competition/'+${currentCompetition.id}+'/application/'+${currentApplication.id}+'/finances/'+${applicationOrganisation.id}}">
+                                Organisation Finance Details
+                            </a>
+
                             <div th:remove="tag" th:if="${currentApplication.isOpen()}">
                               <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/tick-icon.png')}"
                                    th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" alt="has marked the Finances as complete"/>

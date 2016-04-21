@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Finances'"  th:remove="tag" />
+</head>
+<body class="app-form">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<!-- Application Finances for Competition MGT -->
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}" th:remove="tag" />
+
+
+	<div class="page-title">
+            <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
+            <h1 class="heading-xlarge"  th:text="${title}" />
+        </div>
+        <form action="#"  method="post" th:object="${form}" enctype="multipart/form-data"
+                th:with="appIsClosed=${!currentApplication.isOpen()}, readonly=${!currentApplication.isOpen()}">
+
+            <div class="question" th:each="formInput, status : ${currentQuestion?.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
+                 th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}), question=(${currentQuestion}),questionAssignee=(${questionAssignees.get(currentQuestion.getId())})">
+                <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
+            </div>
+
+            <div th:if="${currentSection}" th:remove="tag">
+                <p class="subtitle" th:if="${currentSection.getDescription()}" th:text="${currentSection.getDescription()}" />
+                <div th:each="question : ${sectionQuestions.get(currentSection.id)}" th:remove="tag">
+                    <div class="question" th:each="formInput, status : ${question.getFormInputs()}" th:id="'form-input-'+${formInput.getId()}"
+                         th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.getId())}),questionAssignee=(${questionAssignees.get(question.getId())})">
+                        <div th:replace="question-type/types :: ${formInput.getFormInputType().getTitle()}" />
+                        <div th:replace="'finance/'+${financeView} :: ${formInput.getFormInputType().getTitle()}" />
+                        <div th:replace="finance/finance-summary :: ${formInput.getFormInputType().getTitle()}" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

@@ -96,6 +96,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public RestResult<UserResource> retrieveUserById(Long id) {
+        return userRestService.retrieveUserById(id);
+    }
+
+    @Override
     public RestResult<Void> sendPasswordResetNotification(String email) {
         return userRestService.sendPasswordResetNotification(email);
     }

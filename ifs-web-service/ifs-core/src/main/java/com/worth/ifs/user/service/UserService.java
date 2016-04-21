@@ -17,6 +17,9 @@ public interface UserService {
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
     ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application);
     RestResult<Void> verifyEmail(String hash);
+
+    RestResult<UserResource> retrieveUserById(Long id);
+
     RestResult<Void> sendPasswordResetNotification(String email);
     RestResult<Void> checkPasswordResetHash(String hash);
     RestResult<Void> resetPassword(String hash, String password);
