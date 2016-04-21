@@ -44,7 +44,7 @@
 <div th:fragment="competition-deadline">
     <div class="competition-deadline">
         <div class="day">
-          <div th:include="fragments/elements :: ordinal-day (date=${endDate})" th:remove="tag" />
+            <div th:include="fragments/elements :: ordinal-day (date=${endDate})" th:remove="tag" />
         </div>
         <div class="month" th:text="${#temporals.monthName(endDate)}+' deadline'" />
     </div>
@@ -54,14 +54,14 @@
 
 <div th:fragment="ordinal-day (date)">
   <span th:switch="${#temporals.day(date)}" th:remove="tag">
-      <span th:case="'1'" th:remove="tag" th:text="${#temporals.day(date)}+'st'" />
-      <span th:case="'21'" th:remove="tag" th:text="${#temporals.day(date)}+'st'" />
-      <span th:case="'31'" th:remove="tag" th:text="${#temporals.day(date)}+'st'" />
-      <span th:case="'2'" th:remove="tag" th:text="${#temporals.day(date)}+'nd'" />
-      <span th:case="'22'" th:remove="tag" th:text="${#temporals.day(date)}+'nd'" />
-      <span th:case="'3'" th:remove="tag" th:text="${#temporals.day(date)}+'rd'" />
-      <span th:case="'23'" th:remove="tag" th:text="${#temporals.day(date)}+'rd'" />
-      <span th:case="*" th:remove="tag" th:text="${#temporals.day(date)}+'th'" />
+      <span th:case="'1'" th:remove="tag"><span th:remove="tag" th:text="${#temporals.day(date)}" /><span>st</span></span>
+      <span th:case="'21'" th:remove="tag"><span th:remove="tag" th:text="${#temporals.day(date)}" /><span>st</span></span>
+      <span th:case="'31'" th:remove="tag"><span th:remove="tag" th:text="${#temporals.day(date)}" /><span>st</span></span>
+      <span th:case="'2'" th:remove="tag"><span th:remove="tag" th:text="${#temporals.day(date)}" /><span>nd</span></span>
+      <span th:case="'22'" th:remove="tag"><span th:remove="tag" th:text="${#temporals.day(date)}" /><span>nd</span></span>
+      <span th:case="'3'" th:remove="tag"><span th:remove="tag" th:text="${#temporals.day(date)}" /><span>rd</span></span>
+      <span th:case="'23'" th:remove="tag"><span th:remove="tag" th:text="${#temporals.day(date)}" /><span>rd</span></span>
+      <span th:case="*" th:remove="tag"><span th:remove="tag" th:text="${#temporals.day(date)}" /><span>th</span></span>
   </span>
 </div>
 

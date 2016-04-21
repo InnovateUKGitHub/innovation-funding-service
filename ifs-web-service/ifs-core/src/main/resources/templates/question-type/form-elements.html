@@ -17,7 +17,7 @@
 </div>
 <!-- =========================== Form validation messages =========================== -->
 <div th:fragment="form-validation-messages (id)">
-    <div th:with="validationId='formInput['+${id}+']'" th:remove="tag">
+    <div th:with="validationId='${form.formInput['+${id}+']}'" th:remove="tag">
         <span class="error-message" th:if="${#fields.hasErrors(validationId)}" th:errors="*{__${validationId}__}"></span>
     </div>
 </div>
