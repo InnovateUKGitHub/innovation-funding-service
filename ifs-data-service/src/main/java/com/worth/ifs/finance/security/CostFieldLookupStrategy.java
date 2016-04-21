@@ -6,8 +6,12 @@ import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.security.PermissionEntityLookupStrategies;
 import com.worth.ifs.security.PermissionEntityLookupStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.worth.ifs.finance.domain.CostField;
 import org.springframework.stereotype.Component;
 
+/**
+ * Lookup strategies for {@link CostFieldResource} and {@link CostField} for permissioning
+ */
 @Component
 @PermissionEntityLookupStrategies
 public class CostFieldLookupStrategy {

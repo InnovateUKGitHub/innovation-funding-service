@@ -2,13 +2,18 @@ package com.worth.ifs;
 
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.form.ApplicationForm;
+import com.worth.ifs.application.resource.AppendixResource;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationSummaryRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.file.resource.FileEntryResource;
+import com.worth.ifs.file.service.FileEntryRestService;
+import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.form.service.FormInputRestService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.UserResource;
@@ -29,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
@@ -45,10 +51,16 @@ public class ApplicationManagementController extends AbstractApplicationControll
     FormInputResponseService formInputResponseService;
 
     @Autowired
+    FileEntryRestService fileEntryRestService;
+
+    @Autowired
     protected UserAuthenticationService userAuthenticationService;
 
     @Autowired
     protected ProcessRoleService processRoleService;
+
+    @Autowired
+    protected FormInputRestService formInputRestService;
 
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.GET)
     public String displayApplicationForCompetitionAdministrator(@PathVariable("competitionId") final String competitionId,
@@ -69,10 +81,11 @@ public class ApplicationManagementController extends AbstractApplicationControll
         // so the mode is viewonly
         application.enableViewMode();
 
-
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
-        addOrganisationAndUserFinanceDetails(applicationId, user, model, form);
+        addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+        addAppendices(applicationId, responses, model);
+
         model.addAttribute("applicationReadyForSubmit", false);
         model.addAttribute("isCompManagementDownload", true);
         return "competition-mgt-application-overview";
@@ -102,5 +115,17 @@ public class ApplicationManagementController extends AbstractApplicationControll
         httpHeaders.setContentLength(resource.contentLength());
         httpHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
         return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
+    }
+
+    private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {
+        final List<AppendixResource> appendices = responses.stream().filter(fir -> fir.getFileEntry() != null).
+                map(fir -> {
+                    FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccessObject();
+                    FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccessObject();
+                    String title = formInputResource.getDescription() != null ? formInputResource.getDescription() : fileEntryResource.getName();
+                    return new AppendixResource(applicationId, formInputResource.getId(), title, fileEntryResource);
+                }).
+                collect(Collectors.toList());
+        model.addAttribute("appendices", appendices);
     }
 }

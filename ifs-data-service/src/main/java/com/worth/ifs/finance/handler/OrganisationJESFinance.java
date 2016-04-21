@@ -1,18 +1,7 @@
 package com.worth.ifs.finance.handler;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.finance.resource.category.GrantClaimCategory;
-import com.worth.ifs.finance.resource.cost.GrantClaim;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
@@ -22,9 +11,19 @@ import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.category.DefaultCostCategory;
+import com.worth.ifs.finance.resource.category.GrantClaimCategory;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
+import com.worth.ifs.finance.resource.cost.GrantClaim;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class OrganisationJESFinance implements OrganisationFinanceHandler {
@@ -122,5 +121,15 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     public CostItem costToCostItem(Cost cost) {
         CostHandler costHandler = new JESCostHandler();
         return costHandler.toCostItem(cost);
+    }
+
+    @Override
+    public List<CostItem> costToCostItem(List<Cost> costs) {
+        return costs.stream().map(c -> costToCostItem(c)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Cost> costItemsToCost(List<CostItem> costItems) {
+        return costItems.stream().map(c -> costItemToCost(c)).collect(Collectors.toList());
     }
 }

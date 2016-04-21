@@ -201,7 +201,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     }
 
     public static <T> RestResult<T> restFailure(List<Error> errors) {
-        return new RestResult<>(left(RestFailure.error(errors)), null);
+        return new RestResult<>(left(RestFailure.error(errors)), HttpStatus.NOT_ACCEPTABLE);
     }
 
     public static <T> RestResult<T> restFailure(List<Error> errors, HttpStatus statusCode) {

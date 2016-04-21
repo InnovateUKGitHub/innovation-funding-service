@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
-
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.worth.ifs.security.NotSecured;
 
 /**
  * Transactional and secure service for Section processing work
@@ -30,12 +31,22 @@ public interface SectionService {
     @PreAuthorize("hasPermission(#sectionId, 'com.worth.ifs.application.resource.SectionResource', 'READ')")
     ServiceResult<Set<Long>> getQuestionsForSectionAndSubsections(final Long sectionId);
 
+    @NotSecured("TODO")
+    ServiceResult<List<ValidationMessages>> markSectionAsComplete(Long sectionId,
+                                                                  Long applicationId,
+                                                                  Long markedAsCompleteById);
+
+    @NotSecured("TODO")
+    ServiceResult<Void> markSectionAsInComplete(Long sectionId,
+                                                Long applicationId,
+                                                Long markedAsInCompleteById);
+
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<Long>> getIncompleteSections(final Long applicationId);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<SectionResource> findByName(final String name);
-
+    @NotSecured("Any loggedIn user can find finance section for a given competition")
+	ServiceResult<SectionResource> getFinanceSectionByCompetitionId(Long competitionId);
+    
     /**
      * get questions for the sections and filter out the ones that have marked as completed turned on
      */

@@ -54,15 +54,19 @@ public class ApplicationRules {
         return isCompAdmin(user);
     }
 
-    @PermissionRule(value = "READ_FINANCE_TOTALS", description = "The consortium can see the application finance totals")
+    @PermissionRule(value = "READ_FINANCE_TOTALS",
+            description = "The consortium can see the application finance totals",
+            additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
     public boolean consortiumCanSeeTheApplicationFinanceTotals(final ApplicationResource applicationResource, final UserResource user) {
         final boolean isLeadApplicant = checkRole(user, applicationResource.getId(), LEADAPPLICANT);
         final boolean isCollaborator = checkRole(user, applicationResource.getId(), COLLABORATOR);
         return isLeadApplicant || isCollaborator;
     }
 
-    @PermissionRule(value = "READ_FINANCE_TOTALS", description = "A comp admin can see application finances for organisations")
-    public boolean compAdminCanSeeApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user){
+    @PermissionRule(value = "READ_FINANCE_TOTALS",
+            description = "A comp admin can see application finances for organisations",
+            additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
+    public boolean compAdminCanSeeApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
         return SecurityRuleUtil.isCompAdmin(user);
     }
 

@@ -204,12 +204,32 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         }
 
         @Override
+        public ServiceResult<CostItem> getCostItem(Long costItemId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<CostItem> addCost(Long applicationFinanceId, Long questionId, CostItem newCostItem) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> updateCost(Long id, CostItem newCostItem) {
+        public ServiceResult<CostItem> updateCost(Long id, CostItem newCostItem) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<Cost>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, String costTypeName, Long questionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, Long questionId) {
             return null;
         }
 

@@ -134,21 +134,6 @@ public class SectionControllerDocumentation extends BaseControllerMockMVCTest<Se
     }
 
     @Test
-    public void findByName() throws Exception {
-        final String name = "SectionName";
-
-        when(sectionService.findByName(name)).thenReturn(serviceSuccess(sectionResourceBuilder.build()));
-
-        mockMvc.perform(get(baseURI + "/findByName/{name}", name))
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("name").description("name of the Section to be retrieved")
-                        ),
-                        responseFields(sectionResourceFields)
-                ));
-    }
-
-    @Test
     public void getNextSection() throws Exception {
         final Long sectionId = 1L;
 

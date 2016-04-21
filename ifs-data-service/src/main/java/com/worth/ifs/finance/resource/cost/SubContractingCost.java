@@ -1,7 +1,7 @@
 package com.worth.ifs.finance.resource.cost;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
 /**
@@ -9,6 +9,8 @@ import java.math.BigDecimal;
  */
 public class SubContractingCost implements CostItem {
     private Long id;
+    @DecimalMin(value = "0")
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     private BigDecimal cost;
     private String country;
     private String name;

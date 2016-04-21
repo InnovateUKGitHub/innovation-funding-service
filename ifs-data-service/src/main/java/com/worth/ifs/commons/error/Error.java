@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
@@ -16,7 +17,7 @@ import static java.util.Collections.emptyList;
  * A class for holding information about an error case, including a well-known key, a set of arguments that provide additional
  * contextual information about the error case, and an optional "human readable" error message.
  */
-public class Error {
+public class Error implements Serializable {
 
     private String errorKey;
     private List<Object> arguments;
