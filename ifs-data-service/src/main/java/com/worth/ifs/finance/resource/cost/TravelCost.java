@@ -1,7 +1,8 @@
 package com.worth.ifs.finance.resource.cost;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 
 /**
@@ -10,7 +11,10 @@ import java.math.BigDecimal;
 public class TravelCost implements CostItem {
     private Long id;
     private String item;
+    @DecimalMin(value = "0")
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     private BigDecimal cost;
+    @Min(0)
     private Integer quantity;
     private CostType costType;
     private String name;

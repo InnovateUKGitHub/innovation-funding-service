@@ -6,9 +6,12 @@ import java.util.Set;
 
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.security.NotSecured;
 
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -30,12 +33,22 @@ public interface SectionService {
     @PreAuthorize("hasPermission(#sectionId, 'com.worth.ifs.application.resource.SectionResource', 'READ')")
     ServiceResult<Set<Long>> getQuestionsForSectionAndSubsections(final Long sectionId);
 
+    @NotSecured("TODO")
+    ServiceResult<List<ValidationMessages>> markSectionAsComplete(Long sectionId,
+                                                                  Long applicationId,
+                                                                  Long markedAsCompleteById);
+
+    @NotSecured("TODO")
+    ServiceResult<Void> markSectionAsInComplete(Long sectionId,
+                                                Long applicationId,
+                                                Long markedAsInCompleteById);
+
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<Long>> getIncompleteSections(final Long applicationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<SectionResource> findByName(final String name);
-
+	ServiceResult<SectionResource> getFinanceSectionByCompetitionId(Long competitionId);
+    
     /**
      * get questions for the sections and filter out the ones that have marked as completed turned on
      */
@@ -60,5 +73,8 @@ public interface SectionService {
 
     @PreAuthorize("hasPermission(#questionId, 'com.worth.ifs.application.resource.QuestionResource', 'READ')")
     ServiceResult<SectionResource> getSectionByQuestionId(final Long questionId);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<SectionResource>> getByCompetionId(final Long CompetitionId);
 
 }

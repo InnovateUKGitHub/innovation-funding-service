@@ -27,6 +27,8 @@ Non registered users CH route
     ...    INFUND-1904
     ...
     ...    INFUND-1920
+    ...
+    ...    INFUND-1785
     [Tags]    HappyPath    Email
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}

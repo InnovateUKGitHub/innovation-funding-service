@@ -8,9 +8,6 @@ import static com.worth.ifs.address.builder.AddressResourceBuilder.newAddressRes
 import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-/**
- * Created by worthsystems on 15/03/16.
- */
 public class AddressDocs {
     public static final FieldDescriptor[] addressResourceFields = {
         fieldWithPath("id").description("id of the address"),

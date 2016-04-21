@@ -54,6 +54,9 @@ public class Section implements Comparable<Section> {
 
     @Column(nullable = false)
     private boolean displayInAssessmentApplicationSummary = false;
+    
+    @Column(nullable = false)
+    private boolean finance = false;
 
     public Section(long id, Competition competition, List<Question> questions, String name, Section parentSection) {
         this.id = id;
@@ -144,6 +147,9 @@ public class Section implements Comparable<Section> {
 
     public String getAssessorGuidanceDescription() { return assessorGuidanceDescription; }
 
+    public boolean isFinance() {
+		return finance;
+	}
     public void setAssessorGuidanceDescription(String assessorGuidanceDescription) { this.assessorGuidanceDescription = assessorGuidanceDescription; }
 
     public boolean isDisplayInAssessmentApplicationSummary() {
@@ -177,6 +183,10 @@ public class Section implements Comparable<Section> {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    public void setFinance(boolean finance) {
+		this.finance = finance;
+	}
 
     @Override
     public boolean equals(Object obj) {
@@ -200,6 +210,7 @@ public class Section implements Comparable<Section> {
             .append(this.questions, rhs.questions)
             .append(this.childSections, rhs.childSections)
             .append(this.displayInAssessmentApplicationSummary, rhs.displayInAssessmentApplicationSummary)
+            .append(this.finance, rhs.finance)
             .isEquals();
     }
 
@@ -215,6 +226,7 @@ public class Section implements Comparable<Section> {
             .append(questions)
             .append(childSections)
             .append(displayInAssessmentApplicationSummary)
+            .append(finance)
             .toHashCode();
     }
 }

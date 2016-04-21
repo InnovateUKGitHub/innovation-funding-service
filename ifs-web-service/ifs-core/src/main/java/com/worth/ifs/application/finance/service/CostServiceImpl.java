@@ -1,5 +1,7 @@
 package com.worth.ifs.application.finance.service;
 
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.service.CostFieldRestService;
@@ -28,8 +30,9 @@ public class CostServiceImpl implements CostService {
     }
 
     @Override
-    public void update(CostItem costItem) {
-        costRestService.update(costItem);
+    public RestResult<ValidationMessages> update(CostItem costItem) {
+        RestResult<ValidationMessages> validationMessages = costRestService.update(costItem);
+        return validationMessages;
     }
 
     @Override

@@ -212,9 +212,11 @@ the user opens the mailbox and accepts the invitation to collaborate
     log    ${HTML}
     ${LINK}=    Get Links From Email    ${LATEST}
     log    ${LINK}
-    ${VERIFY_EMAIL}=    Get From List    ${LINK}    2
-    log    ${VERIFY_EMAIL}
-    go to    ${VERIFY_EMAIL}
+    ${CONTACT_LEAD}=    Get From List    ${LINK}    1
+    Should Contain    ${CONTACT_LEAD}    mailto:
+    ${ACCEPT_INVITE}=    Get From List    ${LINK}    2
+    log    ${ACCEPT_INVITE}
+    go to    ${ACCEPT_INVITE}
     Capture Page Screenshot
     Delete All Emails
     close mailbox
@@ -226,6 +228,8 @@ Delete the emails from the test mailbox
 
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
+    Wait Until Page Contains Element    link=terms and conditions
+    Page Should Contain Element     xpath=//a[contains(@href, '/info/terms-and-conditions')]
     Input Text    id=firstName    Stuart
     Input Text    id=lastName    ANDERSON
     Input Text    id=phoneNumber    23232323
@@ -271,6 +275,7 @@ the user cannot see a validation error in the page
 
 the user submits their information
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+    Select Checkbox    termsAndConditions
     Select Checkbox    termsAndConditions
     Submit Form
 

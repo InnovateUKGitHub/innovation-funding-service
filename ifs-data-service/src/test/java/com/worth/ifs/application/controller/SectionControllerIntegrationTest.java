@@ -4,10 +4,12 @@ import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.application.transactional.SectionService;
-
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.security.SecuritySetter;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -15,11 +17,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
+import java.util.List;
+
 import static com.worth.ifs.security.SecuritySetter.addBasicSecurityUser;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @Rollback
 public class SectionControllerIntegrationTest extends BaseControllerIntegrationTest<SectionController> {
@@ -100,7 +102,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         assertEquals(8, controller.getCompletedSections(applicationId, 3L).getSuccessObject().size());
 
         // Mark one question as incomplete.
-        questionService.markAsInComplete(28L, applicationId, leadApplicantProcessRole);
+        questionService.markAsInComplete(new QuestionApplicationCompositeId(28L, applicationId), leadApplicantProcessRole);
         assertFalse(questionService.isMarkedAsComplete(questionService.getQuestionById(21L).getSuccessObject(), applicationId, leadApplicantOrganisationId).getSuccessObject());
 
         assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());
@@ -113,5 +115,32 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         section = sectionRepository.findOne(11L);
         assertEquals("Materials", section.getName());
         assertFalse(section.hasChildSections());
+    }
+
+    @Test
+    @Rollback
+    public void testMarkAsComplete(){
+        RestResult<List<ValidationMessages>> result = controller.markAsComplete(sectionIdYourFinances, applicationId, leadApplicantProcessRole);
+        assertTrue(result.isSuccess());
+        List<ValidationMessages> validationMessages = result.getSuccessObject();
+        assertEquals(2, validationMessages.size());
+
+        ValidationMessages messages = validationMessages.get(0);
+        assertEquals(1, messages.getErrors().size());
+        assertEquals(new Long(54), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        assertTrue(messages.getErrors().stream()
+                .filter(e -> "".equals(e.getErrorKey()))
+                .filter(e -> "You should provide at least one Source of funding".equals(e.getErrorMessage()))
+                .findAny().isPresent());
+
+        messages = validationMessages.get(1);
+        assertEquals(1, messages.getErrors().size());
+        assertEquals(new Long(1), messages.getObjectId());
+        assertEquals("costItem", messages.getObjectName());
+        assertTrue(messages.getErrors().stream()
+                .filter(e -> "role".equals(e.getErrorKey()))
+                .filter(e -> "may not be empty".equals(e.getErrorMessage()))
+                .findAny().isPresent());
     }
 }

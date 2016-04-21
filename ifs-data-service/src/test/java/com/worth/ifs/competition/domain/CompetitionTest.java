@@ -84,4 +84,12 @@ public class CompetitionTest {
         competition.setAssessmentStartDate(LocalDateTime.now().minusDays(1));
         assertEquals(CompetitionResource.Status.IN_ASSESSMENT, competition.getCompetitionStatus());
     }
+    
+    @Test
+    public void competitionStatusFundersPanel(){
+        competition.setEndDate(LocalDateTime.now().minusDays(3));
+        competition.setAssessmentStartDate(LocalDateTime.now().minusDays(2));
+        competition.setAssessmentEndDate(LocalDateTime.now().minusDays(1));
+        assertEquals(CompetitionResource.Status.FUNDERS_PANEL, competition.getCompetitionStatus());
+    }
 }
