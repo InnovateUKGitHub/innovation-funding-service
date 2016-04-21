@@ -11,12 +11,14 @@ public class AcademicCost implements CostItem {
 
     public AcademicCost() {
     	// no-arg constructor
+        costType = CostType.ACADEMIC;
     }
 
     public AcademicCost(Long id, String name, BigDecimal cost, String item) {
+        this();
         this.id = id;
         this.name = name;
-        this.cost = cost;
+        this.cost = cost.setScale(2, BigDecimal.ROUND_HALF_UP);
         this.item = item;
     }
 
@@ -32,7 +34,7 @@ public class AcademicCost implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return CostType.ACADEMIC;
     }
 
     public String getItem() {
