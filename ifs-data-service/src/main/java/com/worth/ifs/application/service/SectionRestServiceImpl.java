@@ -1,18 +1,19 @@
 package com.worth.ifs.application.service;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Future;
+
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.BaseRestService;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Future;
 
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsSetType;
@@ -41,6 +42,10 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     @Override
     public RestResult<SectionResource> getById(Long sectionId) {
         return getWithRestResult(sectionRestURL + "/" + sectionId, SectionResource.class);
+    }
+
+    @Override public RestResult<List<SectionResource>> getByCompetition(final Long competitionId) {
+        return getWithRestResult(sectionRestURL + "/getByCompetition/" + competitionId, new ParameterizedTypeReference<List<SectionResource>>() {});
     }
 
     @Override

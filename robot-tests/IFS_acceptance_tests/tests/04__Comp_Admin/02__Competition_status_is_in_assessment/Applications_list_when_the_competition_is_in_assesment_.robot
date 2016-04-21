@@ -40,7 +40,11 @@ The applications can be sorted by Lead
 
 Excel download button should be visible
     [Documentation]    INFUND-2307
-    Then the user should see the element     link=Export application data (.xls)
+    Then the user should see the element    link=Export application data (.xls)
+
+Submitted applications from a different competition should not be visible
+    [Documentation]    INFUND-2311
+    Then the user should not see the element    link=00000005
 
 The correct columns show for the not submitted applications
     [Documentation]    INFUND-2307
@@ -60,6 +64,10 @@ The applications can be sorted by percentage
     When The application list is sorted by    Project title
     Then The applications should be sorted by column    2
 
+Not submitted applications from different competitions should not be visible
+    [Documentation]    INFUND-2311
+    Then the user should not see the element    link=00000001
+
 *** Keywords ***
 The application list is sorted by
     [Arguments]    ${sorting_factor}
@@ -69,7 +77,7 @@ The applications should be sorted by column
     [Arguments]    ${column_number}
     ${row_count}=    get matching xpath count    //*[td]
     @{sorted_column_contents}=    Create List
-    :FOR    ${row}    IN RANGE    2    ${row_count}
+    : FOR    ${row}    IN RANGE    2    ${row_count}
     \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
     \    append to list    ${sorted_column_contents}    ${cell_contents}
     ${test_sorting_list}=    Copy List    ${sorted_column_contents}
