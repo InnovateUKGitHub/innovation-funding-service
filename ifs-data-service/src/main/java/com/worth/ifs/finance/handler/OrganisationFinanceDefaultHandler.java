@@ -141,6 +141,15 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return costHandler.toCostItem(cost);
     }
 
+    @Override
+    public List<CostItem> costToCostItem(List<Cost> costs) {
+        List<CostItem> costItems = new ArrayList<>();
+        costs.stream()
+                .forEach(cost -> costItems.add(costToCostItem(cost)));
+        return costItems;
+    }
+
+    @Override
     public List<Cost> costItemsToCost(List<CostItem> costItems) {
         List<Cost> costs = new ArrayList<>();
         costItems.stream()

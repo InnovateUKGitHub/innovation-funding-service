@@ -1,22 +1,25 @@
 package com.worth.ifs.application.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.SectionService;
+import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.domain.Competition;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.SectionBuilder.newSection;
@@ -26,6 +29,12 @@ import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetitio
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -36,6 +45,8 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
 
     @Mock
     protected SectionService sectionService;
+    @Mock
+    private BindingResult bindingResult;
 
     @Override
     protected SectionController supplyControllerUnderTest() {
@@ -86,18 +97,6 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
     }
 
     @Test
-    public void findByNameTest() throws Exception {
-        SectionResource section = newSectionResource().build();
-        when(sectionService.findByName("testname")).thenReturn(serviceSuccess(section));
-
-        mockMvc.perform(post("/section/findByName/testname")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(section)));
-    }
-
-    @Test
     public void getNextSectionTest() throws Exception {
         Section section = newSection().withCompetitionAndPriority(newCompetition().build(), 1).build();
         SectionResource nextSection = newSectionResource().build();
@@ -121,5 +120,70 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(new ObjectMapper().writeValueAsString(previousSection)));
+    }
+
+    @Test
+    public void markSectionAsComplete() throws Exception {
+        Section section = newSection().withId(7L).withCompetitionAndPriority(newCompetition().build(), 1).build();
+        Long processRoleId = 1L;
+        Long applicationId = 1L;
+
+        when(sectionService.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(new ArrayList<>()));
+
+
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/section/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("[]"))
+                .andDo(
+                        document(
+                                "section/mark-as-complete",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("sectionId").description("id of section to mark as complete"),
+                                        parameterWithName("applicationId").description("id of the application to mark the section as complete on"),
+                                        parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
+                                )
+                        )
+                );;
+    }
+
+    @Test
+    public void markSectionAsCompleteInvalid() throws Exception {
+        Section section = newSection().withId(7L).withCompetitionAndPriority(newCompetition().build(), 1).build();
+        Long processRoleId = 1L;
+        Long applicationId = 1L;
+
+        ArrayList<ValidationMessages> validationMessages = new ArrayList<>();
+        bindingResult = new BeanPropertyBindingResult(section, "costItem");
+        bindingResult.reject("MinimumRows", "this section should contains at least 1 row");
+        ValidationMessages messages = new ValidationMessages(1L, bindingResult);
+        validationMessages.add(messages);
+        when(sectionService.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(validationMessages));
+
+
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/section/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"\",\"arguments\":[],\"errorMessage\":\"this section should contains at least 1 row\"}]}]"))
+                .andDo(
+                        document(
+                            "section/mark-as-complete-invalid",
+                            preprocessRequest(prettyPrint()),
+                            preprocessResponse(prettyPrint()),
+                            pathParameters(
+                                    parameterWithName("sectionId").description("id of section to mark as complete"),
+                                    parameterWithName("applicationId").description("id of the application to mark the section as complete on"),
+                                    parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
+                            ),
+                            responseFields(
+                                    fieldWithPath("[0].objectName").description("name of the object type"),
+                                    fieldWithPath("[0].objectId").description("identifier of the object, for example the Cost.id"),
+                                    fieldWithPath("[0].errors").description("list of Error objects, containing the validation messages"),
+                                    fieldWithPath("[0].errors[0].errorKey").description("the key to identity the type of validation message"),
+                                    fieldWithPath("[0].errors[0].arguments").description("array of arguments used to validate this object"),
+                                    fieldWithPath("[0].errors[0].errorMessage").description("The message describing the invalidate input and how to fix it")
+                            )
+                        )
+                );
     }
 }

@@ -1,15 +1,11 @@
 
 package com.worth.ifs;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.service.ApplicationSummaryService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,11 +15,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.service.ApplicationSummaryService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionManagementControllerTest  {
@@ -64,10 +58,11 @@ public class CompetitionManagementControllerTest  {
 
     	mockMvc.perform(get("/competition/123"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt"))
+                .andExpect(view().name("comp-mgt-open"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("results", resource))
-                .andExpect(model().attribute("activeSortField", "sortfield"));
+                .andExpect(model().attribute("activeSortField", "sortfield"))
+                .andExpect(model().attribute("activeTab", "allApplications"));
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, 0, "sortfield");
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
@@ -87,10 +82,11 @@ public class CompetitionManagementControllerTest  {
 
     	mockMvc.perform(get("/competition/123?page=3"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt"))
+                .andExpect(view().name("comp-mgt-open"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("results", resource))
-                .andExpect(model().attribute("activeSortField", "sortfield"));
+                .andExpect(model().attribute("activeSortField", "sortfield"))
+                .andExpect(model().attribute("activeTab", "allApplications"));
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, 2, "sortfield");
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
@@ -110,10 +106,11 @@ public class CompetitionManagementControllerTest  {
 
     	mockMvc.perform(get("/competition/123?sort=lead"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt"))
+                .andExpect(view().name("comp-mgt-open"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("results", resource))
-                .andExpect(model().attribute("activeSortField", "properSort"));
+                .andExpect(model().attribute("activeSortField", "properSort"))
+                .andExpect(model().attribute("activeTab", "allApplications"));
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, 0, "properSort");
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
@@ -138,7 +135,6 @@ public class CompetitionManagementControllerTest  {
                 .andExpect(model().attribute("results", summary))
                 .andExpect(model().attribute("activeTab", "submitted"))
     			.andExpect(model().attribute("activeSortField", "sortfield"));
-    	
     	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, 0, "sortfield");
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
@@ -162,7 +158,6 @@ public class CompetitionManagementControllerTest  {
                 .andExpect(model().attribute("results", summary))
                 .andExpect(model().attribute("activeTab", "submitted"))
     			.andExpect(model().attribute("activeSortField", "sortfield"));
-    	
     	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, 0, "sortfield");
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }

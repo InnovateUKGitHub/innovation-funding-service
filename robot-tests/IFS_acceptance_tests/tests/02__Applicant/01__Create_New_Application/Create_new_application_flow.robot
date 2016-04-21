@@ -27,7 +27,9 @@ Non registered users CH route
     ...    INFUND-1904
     ...
     ...    INFUND-1920
-    [Tags]    Create application    HappyPath    Email      Failing
+    ...
+    ...    INFUND-1785
+    [Tags]    HappyPath    Email
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
@@ -44,7 +46,7 @@ Non registered users CH route
     And the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Log in")
-    And the guest user inserts user email & password    worth.email.test+1@gmail.com    Passw0rd2
+    And the guest user inserts user email & password    worth.email.test+1@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=Technology Inspired
@@ -52,9 +54,9 @@ Non registered users CH route
     And the user should see the text in the page    Application overview
 
 The email address does not stay in the cookie
-    [Documentation]     INFUND_2510
-    [Tags]  Email       Create application
-    [Setup]     The guest user opens the browser
+    [Documentation]    INFUND_2510
+    [Tags]    Email
+    [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Sign in to apply")
@@ -65,8 +67,7 @@ The email address does not stay in the cookie
     Select Checkbox    id=address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should not see the text in the page       worth.email.test+1@gmail.com
-
+    Then the user should not see the text in the page    worth.email.test+1@gmail.com
 
 Non registered users non CH route
     [Documentation]    INFUND-669
@@ -74,7 +75,7 @@ Non registered users non CH route
     ...    INFUND-1904
     ...
     ...    INFUND-1920
-    [Tags]    Create application    HappyPath    Email  Failing
+    [Tags]    HappyPath    Email
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     When the user clicks the button/link    jQuery=.column-third .button:contains("Apply now")
@@ -87,7 +88,7 @@ Non registered users non CH route
     # And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user opens the mailbox and verifies the email from
     And the user clicks the button/link    jQuery=.button:contains("Log in")
-    The guest user inserts user email & password    worth.email.test+2@gmail.com    Passw0rd2
+    The guest user inserts user email & password    worth.email.test+2@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=Technology Inspired
@@ -98,9 +99,9 @@ Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
-    [Tags]    Applicant    New application    HappyPath    Email    Failing
+    [Tags]    HappyPath    Email
     [Setup]    The guest user opens the browser
-    When guest user log-in    worth.email.test+1@gmail.com    Passw0rd2
+    When guest user log-in    worth.email.test+1@gmail.com    Passw0rd123
     And the user edits the competition title
     Then the user should see the text in the page    test title
     And the progress indicator should show 0
@@ -114,7 +115,7 @@ Verify the name of the new application
 *** Keywords ***
 the new application should be visible in the dashboard page
     Click Link    link= My dashboard
-    sleep    1s
+    sleep    500ms
     Wait Until Page Contains    test title
     Page Should Contain    Application number: 0000
 
@@ -131,7 +132,7 @@ the user clicks the Not on company house link
 
 the user edits the competition title
     click link    Technology Inspired
-    sleep    2s
+    Wait Until Element Is Visible    link=Application details
     click link    Application details
     Input Text    id=application_details-title    test title
     Click Element    jQuery=button:contains("Save and return")

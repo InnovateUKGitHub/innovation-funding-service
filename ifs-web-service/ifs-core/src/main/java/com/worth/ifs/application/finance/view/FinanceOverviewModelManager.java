@@ -38,8 +38,8 @@ public class FinanceOverviewModelManager {
     }
 
     // TODO DW - INFUND-1555 - handle rest results
-    public void addFinanceDetails(Model model, Long applicationId) {
-        addFinanceSections(model);
+    public void addFinanceDetails(Model model, Long competitionId, Long applicationId) {
+        addFinanceSections(competitionId, model);
         OrganisationFinanceOverview organisationFinanceOverview = new OrganisationFinanceOverview(financeService, fileEntryRestService, applicationId);
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
@@ -53,8 +53,13 @@ public class FinanceOverviewModelManager {
 
     }
 
-    private void addFinanceSections(Model model) {
-        SectionResource section = sectionService.getByName("Your finances");
+    private void addFinanceSections(Long competitionId, Model model) {
+    	SectionResource section = sectionService.getFinanceSectionForCompetition(competitionId);
+    	
+    	if(section == null) {
+    		return;
+    	}
+    	
         sectionService.removeSectionsQuestionsWithType(section, "empty");
 
         model.addAttribute("financeSection", section);

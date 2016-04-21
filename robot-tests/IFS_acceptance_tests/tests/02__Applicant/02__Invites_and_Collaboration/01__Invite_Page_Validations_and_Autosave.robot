@@ -3,9 +3,12 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 ...
 ...               INFUND-896: As a lead applicant i want to invite partner organisations to collaborate on line in my application, so that i can create the consortium needed to complete the proposed project
+...
+...
+...               INFUND-2375: Error message needed on contributors invite if user tries to add duplicate email address
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        collaboration
+Force Tags
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -37,14 +40,13 @@ Validations for the Email field
     [Tags]
     When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add person')
     And the applicant fills the lead organisation fields    Collaborator01    @hiveit.co.uk
-    Then The user should see the text in the page    Inviting Contributors
+    Then the user should see an error    not a well-formed email address
 
 Validations for the name field
     [Documentation]    INFUND-901
     [Tags]
     When the applicant fills the lead organisation fields    ${EMPTY}    ewan+5@hiveit.co.uk
-    Then The user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) .field-error
-    And The user should see the text in the page    Inviting Contributors
+    Then the user should see an error    This field cannot be left blank
 
 Link to remove partner organisation
     [Documentation]    INFUND-1039
@@ -66,39 +68,33 @@ Applicant inputsshould be autosaved (in cookie)
 Blank organisation name is not allowed
     [Documentation]    INFUND-896
     [Tags]
+    Given the user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    MR Tester
     When the applicant fills the Partner organisation fields    1    ${EMPTY}    Collaborator 7    ewan+6@hiveit.co.uk
-    And The user clicks the button/link    jquery=button:contains('Begin application')
-    Then a validation error is shown on organisation name    1
+    Then the user should see an error    This field cannot be left blank
 
 Blank person name is not allowed
     [Documentation]    INFUND-896
     [Tags]
     When the applicant fills the Partner organisation fields    1    Fannie May    ${EMPTY}    ewan+7@hiveit.co.uk
-    And The user clicks the button/link    jquery=button:contains('Begin application')
-    #user should get validation error
-    Then The user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input.field-error
+    Then the user should see an error    This field cannot be left blank
 
 Blank email is not allowed
     [Documentation]    INFUND-896
     [Tags]
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ${EMPTY}
+    And browser validations have been disabled
     And The user clicks the button/link    jquery=button:contains('Begin application')
-    #user should get validation error
-    Then The user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
+    Then the user should see an error    This field cannot be left blank
 
 Invalid email address is not allowed
     [Documentation]    INFUND-896
     [Tags]
-    And the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    collaborator10_invalid_email
-    And The user clicks the button/link    jquery=button:contains('Begin application')
-    #user should get validation error
-    Then The user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
+    When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    collaborator10_invalid_email
+    Then the user should see an error    not a well-formed email address
 
 Already invite email should is not allowed
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ewan+5@hiveit.co.uk
-    And The user clicks the button/link    jquery=button:contains('Begin application')
-    #user should get validation error
-    Then The user should see the element    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input.field-error
+    Then the user should see an error    You have already added this email address
 
 Link to add multiple partner organisation
     [Tags]
@@ -154,6 +150,7 @@ the applicant fills the lead organisation fields
     # the following keyword disables the browser's validation
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Focus    jquery=button:contains("Begin application")
+    browser validations have been disabled
     Click Element    jquery=button:contains("Begin application")
     sleep    1s
 
@@ -187,11 +184,14 @@ the applicant inputs details
 
 the applicant fills the Partner organisation fields
     [Arguments]    ${group_number}    ${PARTNER_ORG_NAME}    ${ORG_NAME}    ${EMAIL_NAME}
+    browser validations have been disabled
     Input Text    name=organisations[${group_number}].organisationName    ${PARTNER_ORG_NAME}
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    ${ORG_NAME}
     Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_NAME}
     # the following keyword disables the browser's validation
-    Execute Javascript    jQuery('form').attr('novalidate','novalidate');
+    Focus    jquery=button:contains("Begin application")
+    Click Element    jquery=button:contains("Begin application")
+    sleep    1s
 
 a validation error is shown on organisation name
     [Arguments]    ${group_number}

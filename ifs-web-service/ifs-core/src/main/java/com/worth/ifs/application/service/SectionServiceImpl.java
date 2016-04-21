@@ -1,18 +1,28 @@
 package com.worth.ifs.application.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.Future;
+
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import com.worth.ifs.form.service.FormInputService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.concurrent.Future;
-
 import static com.worth.ifs.application.service.Futures.adapt;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.stream.Collectors.toList;
 
@@ -23,6 +33,7 @@ import static java.util.stream.Collectors.toList;
 // TODO DW - INFUND-1555 - return RestResults
 @Service
 public class SectionServiceImpl implements SectionService {
+    private static final Log LOG = LogFactory.getLog(SectionServiceImpl.class);
 
     @Autowired
     private SectionRestService sectionRestService;
@@ -32,6 +43,18 @@ public class SectionServiceImpl implements SectionService {
 
     @Autowired
     private QuestionService questionService;
+
+    @Override
+    public List<ValidationMessages> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+        LOG.debug(String.format("mark section as complete %s / %s /%s ", sectionId, applicationId, markedAsCompleteById));
+        return sectionRestService.markAsComplete(sectionId, applicationId, markedAsCompleteById).getSuccessObject();
+    }
+
+    @Override
+    public void markAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById) {
+        LOG.debug(String.format("mark section as incomplete %s / %s /%s ", sectionId, applicationId, markedAsInCompleteById));
+        sectionRestService.markAsInComplete(sectionId, applicationId, markedAsInCompleteById);
+    }
 
     @Override
     public SectionResource getById(Long sectionId) {
@@ -60,12 +83,11 @@ public class SectionServiceImpl implements SectionService {
 
     /**
      * Get Sections that have no parent section.
-     * @param sectionIds
+     * @param sections
      * @return the list of sections without a parent section.
      */
     @Override
-    public List<SectionResource> filterParentSections(List<Long> sectionIds) {
-        List<SectionResource> sections = simpleMap(sectionIds, this::getById);
+    public List<SectionResource> filterParentSections(List<SectionResource> sections) {
         List<SectionResource> childSections = new ArrayList<>();
         getChildSections(sections, childSections);
         sections = sections.stream()
@@ -75,6 +97,11 @@ public class SectionServiceImpl implements SectionService {
         sections.stream()
                 .filter(s -> s.getChildSections()!=null);
         return sections;
+    }
+
+    @Override
+    public List<SectionResource> getAllByCompetitionId(final Long competitionId) {
+        return sectionRestService.getByCompetition(competitionId).getSuccessObjectOrThrowException();
     }
 
     private List<SectionResource> getChildSections(List<SectionResource> sections, List<SectionResource>children) {
@@ -87,31 +114,30 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public SectionResource getByName(String name) {
-        return sectionRestService.getSection(name).getSuccessObjectOrThrowException();
-    }
-
-    @Override
     public void removeSectionsQuestionsWithType(SectionResource section, String name) {
+        List<QuestionResource> questions = questionService.findByCompetition(section.getCompetition());
         section.getChildSections().stream()
                 .map(sectionRestService::getById)
                 .map(result -> result.getSuccessObject())
                 .forEach(
                 s -> s.setQuestions(
-                        s.getQuestions()
-                                .stream()
-                                .map(questionService::getById)
-                                .filter(
-                                        q -> q != null &&
-                                                !q.getFormInputs().stream()
-                                                        .anyMatch(
-                                                                input -> formInputService.getOne(input).getFormInputTypeTitle().equals(name)
-                                                        )
-                                )
-                                .map(QuestionResource::getId)
-                                .collect(toList())
+                        getQuestionsBySection(s.getQuestions(), questions)
+                        .stream()
+                        .filter(
+                                q -> q != null &&
+                                !q.getFormInputs().stream()
+                                    .anyMatch(
+                                        input -> formInputService.getOne(input).getFormInputTypeTitle().equals(name)
+                                    )
+                        )
+                        .map(QuestionResource::getId)
+                        .collect(toList())
                 )
         );
+    }
+
+    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
+        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
     @Override
@@ -139,4 +165,9 @@ public class SectionServiceImpl implements SectionService {
     public Set<Long> getQuestionsForSectionAndSubsections(Long sectionId) {
         return sectionRestService.getQuestionsForSectionAndSubsections(sectionId).getSuccessObjectOrThrowException();
     }
+
+	@Override
+	public SectionResource getFinanceSectionForCompetition(Long competitionId) {
+		return sectionRestService.getFinanceSectionForCompetition(competitionId).getSuccessObjectOrThrowException();
+	}
 }

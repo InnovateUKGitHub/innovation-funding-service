@@ -1,17 +1,16 @@
 package com.worth.ifs.application.transactional;
 
-import java.util.List;
-import java.util.Set;
-
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
-
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Transactional and secure service for Question processing work
@@ -27,12 +26,12 @@ public interface QuestionService {
                         final Long markedAsCompleteById);
 
 
-    @NotSecured("TODO")
+    @NotSecured("TODO") // also secure section service mark as complete methods
     ServiceResult<Void> markAsInComplete(final Long questionId,
                           final Long applicationId,
                           final Long markedAsInCompleteById);
 
-    @NotSecured("TODO")
+    @NotSecured("TODO") // also secure section service mark as complete methods
     ServiceResult<Void> assign(final Long questionId,
                 final Long applicationId,
                 final Long assigneeId,
