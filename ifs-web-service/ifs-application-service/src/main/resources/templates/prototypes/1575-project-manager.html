@@ -47,9 +47,12 @@
 					<input id="pm-name-invite" type="radio" name="pm-name-group" value="" />
 					<span id="pm-name">Ann Jones (pending)</span>
 				</label>
+
+				<label for="add-pm" class="block-label">
+					<input id="add-pm" type="radio" name="pm-name-group" value="Add new team member" />
+					Add new team member
+				</label>
 			</div>
-			
-			<button class="buttonlink" id="add-pm">Add new team member</button>	
 
 		</fieldset>
 
@@ -73,8 +76,12 @@
 	jQuery(document).ready(function(){
 
 		jQuery('#add-pm').on('click',function(e){ 
-			e.preventDefault();
-			jQuery('#pm-table').show();
+
+			if(jQuery(this).is(':checked')){
+				jQuery('#pm-table').show();
+			}else{
+				jQuery('#pm-table').hide();
+			}
 		});
 
 		jQuery('#invite-pm').on('click',function(e){ 
@@ -98,6 +105,10 @@
 					jQuery('#pm-cta').text('Save');
 				}else{
 					jQuery('#pm-cta').text('Send invitation');
+				}
+
+				if(jQuery(this).attr('id') != 'add-pm'){
+					jQuery('#pm-table').hide();
 				}
 				
 				jQuery('#pm-cta').show();

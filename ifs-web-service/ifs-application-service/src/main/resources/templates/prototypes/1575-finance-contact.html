@@ -48,11 +48,15 @@
 						<span id="finance-name">Ann Jones (pending)</span>
 					</label>
 
+					<label for="add-finance-contact" class="block-label">
+						<input id="add-finance-contact" type="radio" name="finances-name-group" value="Add new team member" />
+						Add new team member
+					</label>
+
 					<input type="hidden" name="user" th:value="${param.user[0]}" th:unless="${param.user == null}" />
 					
 				</div>
-				
-				<button class="buttonlink" id="add-finance-contact">Add new team member</button>
+			
 
 		</fieldset>
 
@@ -76,9 +80,12 @@
 	jQuery(document).ready(function(){
 
 		jQuery('#add-finance-contact').on('click',function(e){ 
-			e.preventDefault();
-			jQuery('#finance-contact-table').show();
 
+			if(jQuery(this).is(':checked')){
+				jQuery('#finance-contact-table').show();
+			}else{
+				jQuery('#finance-contact-table').hide();
+			}
 		});
 
 		jQuery('#invite-finance-contact').on('click',function(e){ 
@@ -103,6 +110,10 @@
 					jQuery('#finance-cta').text('Save');
 				}else{
 					jQuery('#finance-cta').text('Send invitation');
+				}
+
+				if(jQuery(this).attr('id') != 'add-finance-contact'){
+					jQuery('#finance-contact-table').hide();
 				}
 				
 				jQuery('#finance-cta').show();
