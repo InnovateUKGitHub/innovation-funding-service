@@ -13,7 +13,8 @@ public enum CostType {
     OTHER_COSTS("other_costs"),
     YOUR_FINANCE("your_finance"),
     FINANCE("finance"),
-    OTHER_FUNDING("other_funding");
+    OTHER_FUNDING("other_funding"),
+    ACADEMIC("academic");
 
     private String type;
 

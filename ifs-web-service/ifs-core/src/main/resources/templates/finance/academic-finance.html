@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-    <div th:fragment="your_finance" th:remove="tag">
-        <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}" />
-        <p th:utext="${question.description}" />
-        <div class="academic">
-            <input type="hidden" name="questionId" value="${question.id}"/>
-            <input type="hidden" name="applicationFinanceId" value="${applicationFinance.id}"/>
+<div th:fragment="your_finance" th:remove="tag">
+    <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}"/>
+    <p th:utext="${question.description}"/>
+    <div class="academic">
+        <input type="hidden" name="questionId" value="${question.id}"/>
+        <input type="hidden" name="applicationFinanceId" value="${applicationFinance.id}"/>
 
         <fieldset>
             <h2 class="heading-medium">Innovate UK funding</h2>
             <legend class="visuallyhidden">Innovate UK (TSB) contribution</legend>
             <p>Innovate UK is the new name for the Technology Strategy Board (TSB)</p>
 
-            <p>To receive Innovate UK funding, your academic organisation must apply for funding through the JeS system. To gain a better understanding of the Je-S equirements and process please go to the <a href="https://je-s.rcuk.ac.uk/" rel="external">Je-S website</a></p>
+            <p>To receive Innovate UK funding, your academic organisation must apply for funding through the JeS system. To gain a better understanding of the
+                Je-S equirements and process please go to the <a href="https://je-s.rcuk.ac.uk/" rel="external">Je-S website</a></p>
 
-            <p>All finances need to be provided before this application can be submitted. If there are any finances outstanding at the competition deadline this application will not be submitted into this competition.</p>
+            <p>All finances need to be provided before this application can be submitted. If there are any finances outstanding at the competition deadline this
+                application will not be submitted into this competition.</p>
 
             <h3 class="heading-small">Your project costs</h3>
 
-            <p>Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate UK</p>
+            <p>Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate
+                UK</p>
             <p>Enter the figures from the following fields on the Je-S form:</p>
             <div class="form-group">
                 <label class="form-label" for="tsb-ref">
@@ -27,7 +30,9 @@
 		    		</span>
 
                 </label>
-                <input class="form-control" id="tsb-ref" type="text" th:name="cost- + ${academicFinance.tsbReference?.id} + -tsb_reference" th:value="${academicFinance.tsbReference?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                <input class="form-control" id="tsb-ref" type="text" th:name="cost- + ${academicFinance.tsbReference?.id} + -tsb_reference"
+                       th:value="${academicFinance.tsbReference?.value}"
+                       th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
             </div>
         </fieldset>
         <fieldset>
@@ -36,23 +41,23 @@
             <p>Please enter the following costs from the TSB Contribution column</p>
 
             <div class="grid-row">
-                    <div class="column-third"><strong>Directly incurred</strong></div>
-                    <div class="column-two-thirds"><strong>TSB Contribution</strong></div>
+                <div class="column-third"><strong>Directly incurred</strong></div>
+                <div class="column-two-thirds"><strong>TSB Contribution</strong></div>
             </div>
             <hr class="underline"/>
 
             <div class="grid-row">
                 <div class="form-group">
-                <label class="form-label column-third" for="incurred-staff">
-                    <span>Staff</span>
-                </label>
+                    <label class="form-label column-third" for="incurred-staff">
+                        <span>Staff</span>
+                    </label>
                     <div class="column-two-thirds">
-                      <input type="number"
-                             class="form-control width-full"
-                             id="incurred-staff"
-                             th:name="cost- + ${academicFinance.incurredStaff?.id} + -incurred_staff"
-                             th:value="${academicFinance.incurredStaff?.value}"
-                             th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
+                        <input type="text"
+                               class="form-control width-full"
+                               id="incurred-staff"
+                               th:name="cost- + ${academicFinance.incurredStaff?.id} + -incurred_staff"
+                               th:value="${academicFinance.incurredStaff?.numberValue}"
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                     </div>
                 </div>
             </div>
@@ -62,30 +67,41 @@
                         <span>Travel &amp; subsistence </span>
                     </label>
                     <div class="column-two-thirds">
-                      <input class="form-control width-full" id="travel" th:name="cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -incurred_travel_subsistence" type="number" th:value="${academicFinance.incurredTravelAndSubsistence?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                        <input class="form-control width-full"
+                               id="travel"
+                               th:name="cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -incurred_travel_subsistence"
+                               type="text"
+                               th:value="${academicFinance.incurredTravelAndSubsistence?.numberValue}"
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                     </div>
                 </div>
             </div>
             <div class="grid-row">
-              <div class="form-group">
-                  <label class="form-label column-third" for="other">
-                      <span>Other costs</span>
-                  </label>
-                  <div class="column-two-thirds">
-                    <input class="form-control width-full" id="other" th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -incurred_other_costs" type="number" th:value="${academicFinance.incurredOtherCosts?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
-                  </div>
-              </div>
+                <div class="form-group">
+                    <label class="form-label column-third" for="other">
+                        <span>Other costs</span>
+                    </label>
+                    <div class="column-two-thirds">
+                        <input class="form-control width-full"
+                               id="other"
+                               th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -incurred_other_costs"
+                               type="text"
+                               th:value="${academicFinance.incurredOtherCosts?.numberValue}"
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                    </div>
+                </div>
             </div>
             <div class="grid-row">
-              <div class="form-group">
-                  <label class="form-label column-third" for="subtotal-resources">
-                      <span class="form-label-bold">Subtotal</span>
-                  </label>
-                  <div class="column-two-thirds">
-                    <input class="form-control width-full" id="subtotal-resources"  data-calculation-fields="#incurred-staff,#travel,#other"  data-calculation-operations="+" type="text" readonly="readonly"
-                           th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalIncurred(),0, 'COMMA', 0, 'POINT')}" />
-                  </div>
-              </div>
+                <div class="form-group">
+                    <label class="form-label column-third" for="subtotal-resources">
+                        <span class="form-label-bold">Subtotal</span>
+                    </label>
+                    <div class="column-two-thirds">
+                        <input class="form-control width-full" id="subtotal-resources" data-calculation-fields="#incurred-staff,#travel,#other"
+                               data-calculation-operations="+" type="text" readonly="readonly"
+                               th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalIncurred(),0, 'COMMA', 0, 'POINT')}"/>
+                    </div>
+                </div>
             </div>
         </fieldset>
 
@@ -93,39 +109,48 @@
         <fieldset>
 
             <legend class="visuallyhidden">Directly allocated</legend>
-            <strong >Directly allocated</strong>
+            <strong>Directly allocated</strong>
             <hr class="underline"/>
 
 
             <div class="grid-row">
                 <div class="form-group">
                     <label class="form-label column-third" for="investigators">
-                      <span>Investigators</span>
+                        <span>Investigators</span>
                     </label>
                     <div class="column-two-thirds">
-                      <input class="form-control width-full" id="investigators" th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="number" th:value="${academicFinance.allocatedInvestigators?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                        <input class="form-control width-full" id="investigators"
+                               th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="text"
+                               th:value="${academicFinance.allocatedInvestigators?.numberValue}"
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
                     </div>
                 </div>
             </div>
             <div class="grid-row">
-              <div class="form-group">
-                  <label class="form-label column-third" for="estates">
-                      <span>Estates Costs</span>
-                  </label>
-                  <div class="column-two-thirds">
-                      <input class="form-control width-full" id="estates" th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="number" th:value="${academicFinance.allocatedEstatesCosts?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
-                  </div>
-              </div>
+                <div class="form-group">
+                    <label class="form-label column-third" for="estates">
+                        <span>Estates Costs</span>
+                    </label>
+                    <div class="column-two-thirds">
+                        <input class="form-control width-full" id="estates"
+                               th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="text"
+                               th:value="${academicFinance.allocatedEstatesCosts?.numberValue}"
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                    </div>
+                </div>
             </div>
             <div class="grid-row">
-              <div class="form-group">
-                  <label class="form-label column-third" for="other-direct">
-                      <span>Other costs</span>
-                  </label>
-                  <div class="column-two-thirds">
-                    <input class="form-control width-full" id="other-direct" th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="number" th:value="${academicFinance.allocatedOtherCosts?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
-                  </div>
-              </div>
+                <div class="form-group">
+                    <label class="form-label column-third" for="other-direct">
+                        <span>Other costs</span>
+                    </label>
+                    <div class="column-two-thirds">
+                        <input class="form-control width-full" id="other-direct"
+                               th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="text"
+                               th:value="${academicFinance.allocatedOtherCosts?.numberValue}"
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                    </div>
+                </div>
             </div>
             <div class="grid-row">
                 <div class="form-group">
@@ -133,25 +158,29 @@
                         <span class="form-label-bold">Subtotal</span>
                     </label>
                     <div class="column-two-thirds">
-                      <input class="form-control width-full" data-calculation-fields="#investigators,#estates,#other-direct"  data-calculation-operations="+"  readonly="readonly" id="subtotal-directly-allocated"
-                             th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalAllocated(),0, 'COMMA', 0, 'POINT')}" />
+                        <input class="form-control width-full" data-calculation-fields="#investigators,#estates,#other-direct" data-calculation-operations="+"
+                               readonly="readonly" id="subtotal-directly-allocated"
+                               th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalAllocated(),0, 'COMMA', 0, 'POINT')}"/>
                     </div>
                 </div>
             </div>
         </fieldset>
-        <hr class="underline" />
+        <hr class="underline"/>
 
         <fieldset>
             <legend class="visuallyhidden">Indirect costs</legend>
             <div class="grid-row">
-              <div class="form-group border-top">
-                  <label class="form-label column-third" for="indirect">
-                      <span class="form-label-bold">Indirect costs </span>
-                  </label>
-                  <div class="column-two-thirds">
-                    <input class="form-control width-full" id="indirect" th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs" type="number" th:value="${academicFinance.indirectCosts?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
-                  </div>
-              </div>
+                <div class="form-group border-top">
+                    <label class="form-label column-third" for="indirect">
+                        <span class="form-label-bold">Indirect costs </span>
+                    </label>
+                    <div class="column-two-thirds">
+                        <input class="form-control width-full" id="indirect" th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs"
+                               type="text"
+                               th:value="${academicFinance.indirectCosts?.numberValue}"
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                    </div>
+                </div>
             </div>
         </fieldset>
 
@@ -159,60 +188,69 @@
             <legend class="visuallyhidden">Exceptions</legend>
 
             <strong>Exceptions</strong>
-            <hr class="underline" />
+            <hr class="underline"/>
 
             <div class="grid-row">
-              <div class="form-group">
-                  <label class="form-label column-third" for="exceptions-staff">
-                      <span>Staff</span>
-                  </label>
-                  <div class="column-two-thirds">
-                    <input class="form-control width-full" id="exceptions-staff" th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="number" th:value="${academicFinance.exceptionsStaff?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
-                  </div>
-              </div>
+                <div class="form-group">
+                    <label class="form-label column-third" for="exceptions-staff">
+                        <span>Staff</span>
+                    </label>
+                    <div class="column-two-thirds">
+                        <input class="form-control width-full" id="exceptions-staff"
+                               th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="text"
+                               th:value="${academicFinance.exceptionsStaff?.numberValue}"
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                    </div>
+                </div>
             </div>
             <div class="grid-row">
-              <div class="form-group">
-                  <label class="form-label column-third" for="exceptions-other-direct">
-                      <span>Other costs</span>
-                  </label>
-                  <div class="column-two-thirds">
-                    <input class="form-control width-full" id="exceptions-other-direct" th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs" type="number" th:value="${academicFinance.exceptionsOtherCosts?.value}" th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}" />
-                  </div>
-              </div>
+                <div class="form-group">
+                    <label class="form-label column-third" for="exceptions-other-direct">
+                        <span>Other costs</span>
+                    </label>
+                    <div class="column-two-thirds">
+                        <input class="form-control width-full" id="exceptions-other-direct"
+                               th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs" type="text"
+                               th:value="${academicFinance.exceptionsOtherCosts?.numberValue}"
+                               th:readonly="${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}"/>
+                    </div>
+                </div>
             </div>
             <div class="grid-row">
-              <div class="form-group">
-                  <label class="form-label column-third" for="subtotal-exceptions">
-                      <span class="form-label-bold">Subtotal</span>
-                  </label>
-                  <div class="column-two-thirds">
-                    <input id="subtotal-exceptions" class="form-control width-full" data-calculation-fields="#exceptions-staff,#exceptions-other-direct" data-calculation-operations="+"  readonly="readonly"
-                           th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalExceptions(),0, 'COMMA', 0, 'POINT')}" />
-                  </div>
-              </div>
+                <div class="form-group">
+                    <label class="form-label column-third" for="subtotal-exceptions">
+                        <span class="form-label-bold">Subtotal</span>
+                    </label>
+                    <div class="column-two-thirds">
+                        <input id="subtotal-exceptions" class="form-control width-full" data-calculation-fields="#exceptions-staff,#exceptions-other-direct"
+                               data-calculation-operations="+" readonly="readonly"
+                               th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalExceptions(),0, 'COMMA', 0, 'POINT')}"/>
+                    </div>
+                </div>
             </div>
             <div class="grid-row">
-              <div class="form-group totals">
-                  <label class="form-label column-third" for="total">
-                      <span class="form-label-bold">Total</span>
-                  </label>
-                  <div class="column-two-thirds">
-                    <input class="form-control width-full"  data-calculation-fields="#subtotal-resources,#indirect,#subtotal-directly-allocated,#subtotal-exceptions" data-calculation-operations="+" id="total" readonly="readonly"
-                           th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotal(),0, 'COMMA', 0, 'POINT')}" />
-                  </div>
-              </div>
+                <div class="form-group totals">
+                    <label class="form-label column-third" for="total">
+                        <span class="form-label-bold">Total</span>
+                    </label>
+                    <div class="column-two-thirds">
+                        <input class="form-control width-full"
+                               data-calculation-fields="#subtotal-resources,#indirect,#subtotal-directly-allocated,#subtotal-exceptions"
+                               data-calculation-operations="+" id="total" readonly="readonly"
+                               th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotal(),0, 'COMMA', 0, 'POINT')}"/>
+                    </div>
+                </div>
             </div>
         </fieldset>
-      </div>
     </div>
+</div>
 
-    <!-- ===========================Form: Fileupload =========================== -->
-    <div th:fragment="finance_upload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[jes-upload]')} ? error : ''"
-         th:with="currentUser=${#authentication.getDetails()},validationId='formInput[\'jes-upload\']',
+<!-- ===========================Form: Fileupload =========================== -->
+<div th:fragment="finance_upload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[jes-upload]')} ? error : ''"
+     th:with="currentUser=${#authentication.getDetails()},validationId='formInput[\'jes-upload\']',
          noFileUploaded=${(#strings.isEmpty(filename))},
          name='jes-upload',
          downloadURL='/application/'+ ${currentApplication.id} + '/form/' + ${applicationFinanceId} + '/finance-download'">
-        <div th:include="question-type/types :: fileupload" th:remove="tag" />
-    </div>
+    <div th:include="question-type/types :: fileupload" th:remove="tag"/>
+</div>
 </html>
