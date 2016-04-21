@@ -26,6 +26,12 @@
 	text-decoration: none;
 	color: white;
 	float: left;
+	@include media-down(mobile){
+		float:none;
+		clear:both;
+		font-size:15px;
+		margin:5px 15px 0;
+	}
 }
 
 #content {
@@ -60,7 +66,11 @@
 		font-weight:300;
 		color: $red;
 		margin: 7px 0;
+		@include media-down(mobile){
+			float:none;
+		}
 	}
+
 
 }
 

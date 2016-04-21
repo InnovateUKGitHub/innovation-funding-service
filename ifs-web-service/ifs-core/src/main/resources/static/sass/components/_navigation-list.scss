@@ -45,7 +45,17 @@ ol.navigation-list {
 	 	@extend %contain-floats;
 		float: right;
 		li { margin: 0 0 0 10px;}
+		li:first-child {
+				margin-left:0;
+				a {padding-left:0;}
+		}
 	}
+	@include media-down(mobile){
+		&.navigation-right{
+			float:none;
+		}
+	}
+
 }
 
 /*
