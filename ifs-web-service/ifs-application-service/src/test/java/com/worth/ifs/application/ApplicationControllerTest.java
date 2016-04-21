@@ -10,10 +10,10 @@ import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -237,6 +237,27 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
                 .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
+    }
+
+    // TODO: Implement this test to ensure model has correct values added
+    @Ignore
+    @Test
+    public void testApplicationSummaryReadyForReviewAction() throws Exception {
+
+    }
+
+    // TODO: Implement this test to ensure model has correct values added
+    @Ignore
+    @Test
+    public void testApplicationSummaryMarkAsCompleteAction() throws Exception {
+
+    }
+
+    // TODO: Implement this test to ensure model has correct values added
+    @Ignore
+    @Test
+    public void testApplicationSummaryMarkAsIncompleteAction() throws Exception {
+
     }
 
     @Test
