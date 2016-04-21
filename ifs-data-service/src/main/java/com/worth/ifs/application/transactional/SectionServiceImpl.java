@@ -1,5 +1,14 @@
 package com.worth.ifs.application.transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
@@ -18,16 +27,15 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.validator.util.ValidationUtil;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -355,5 +363,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 andOnSuccessReturn(sectionMapper::mapToResource);
     }
 
+    @Override public ServiceResult<List<SectionResource>> getByCompetionId(final Long competitionId) {
+        return find(sectionRepository.findByCompetitionId(competitionId), notFoundError(Section.class, competitionId)).
+            andOnSuccessReturn(r -> simpleMap(r, sectionMapper::mapToResource));
+    }
 
 }
