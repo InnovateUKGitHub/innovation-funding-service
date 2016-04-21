@@ -1,7 +1,6 @@
 package com.worth.ifs.finance.resource.cost;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
@@ -56,6 +55,16 @@ public class LabourCost implements CostItem {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public int getMinRows() {
+        return 0;
     }
 
     public String getRole() {

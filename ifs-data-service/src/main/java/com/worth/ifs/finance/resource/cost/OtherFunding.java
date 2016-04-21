@@ -76,6 +76,16 @@ public class OtherFunding implements CostItem {
         return name;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public int getMinRows() {
+        return 0;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
