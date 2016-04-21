@@ -13,8 +13,7 @@ Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
-${valid_pdf}       testing.pdf
-
+${valid_pdf}      testing.pdf
 
 *** Test Cases ***
 Comp admin can open the view mode of the application
@@ -31,11 +30,10 @@ Comp admin can open the view mode of the application
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
     When the user clicks the button/link    link=00000001
     Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
+    And the user should see the element    Link=Print application
     And the user should see the text in the page    A novel solution to an old problem
     And the user can see the upload for the 'Technical approach' question
     And the user can view this file without any errors
-
-
 
 Comp admin should not be able to edit the finances
     [Documentation]    INFUND-2443
@@ -44,7 +42,6 @@ Comp admin should not be able to edit the finances
     Then the user should not see the element    link=your finances
 
 *** Keywords ***
-
 the user uploads the file to the 'project team' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[18]    ${UPLOAD_FOLDER}/${file_name}
@@ -60,5 +57,5 @@ the user can see the upload for the 'Technical approach' question
     the user should see the text in the page    ${valid_pdf}
 
 the user can view this file without any errors
-    the user clicks the button/link         css=.uploaded-file
+    the user clicks the button/link    css=.uploaded-file
     the user should not see an error in the page

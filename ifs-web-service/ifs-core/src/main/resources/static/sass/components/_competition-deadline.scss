@@ -35,4 +35,13 @@
 	.time {
 		color: $secondary-text-colour;
 	}
+
+	@include media-down(mobile) {
+			.day {
+				font-size:60px;
+			}
+			.day span {
+				font-size:30px;
+			}
+	}
 }

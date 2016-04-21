@@ -24,7 +24,7 @@ IFS.formValidation = (function(){
                 fields : {
                   password : '[name="password"],[name="retypedPassword"]',
                   firstname : '#firstName',
-                  lastname : '#lastName',
+                  lastname : '#lastName'
                 },
                 messageInvalid : {
                   lowercase : 'Password must contain at least one lower case letter',
@@ -70,7 +70,7 @@ IFS.formValidation = (function(){
                       IFS.formValidation.checkEqualPasswords();
                 }
             });
-            jQuery('body').on('change', s.passwordPolicy.fields.password , function(){IFS.formValidation.checkPasswordPolicy(jQuery(this));});
+            jQuery('body').on('change', s.passwordPolicy.fields.password, function(){IFS.formValidation.checkPasswordPolicy(jQuery(this));});
             jQuery('body').on('change', s.email.fields , function(){IFS.formValidation.checkEmail(jQuery(this));});
             jQuery('body').on('change', s.number.fields , function(){IFS.formValidation.checkNumber(jQuery(this));});
             jQuery('body').on('change', s.min.fields , function(){IFS.formValidation.checkMin(jQuery(this));});
@@ -131,13 +131,15 @@ IFS.formValidation = (function(){
 
               var nameCheck = ['firstname','lastname'];
               jQuery(nameCheck).each(function(index,value){
-                var namePolicy = jQuery(s.passwordPolicy.fields[value]).val();
-                if(password.toLowerCase().indexOf(namePolicy.toLowerCase()) > -1){
-                  IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid[value]);
-                  confirmsToPasswordPolicy = false;
-                }
-                else {
-                  IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid[value]);
+                var name = jQuery(s.passwordPolicy.fields[value]).val();
+                if(name.replace(' ','').length){
+                  if(password.toLowerCase().indexOf(name.toLowerCase()) > -1){
+                    IFS.formValidation.setInvalid(field,s.passwordPolicy.messageInvalid[value]);
+                    confirmsToPasswordPolicy = false;
+                  }
+                  else {
+                    IFS.formValidation.setValid(field,s.passwordPolicy.messageInvalid[value]);
+                  }
                 }
               });
             }

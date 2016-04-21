@@ -7,7 +7,6 @@ import com.worth.ifs.competition.transactional.CompetitionService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
 
@@ -66,7 +65,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
      * Dummy implementation (for satisfying Spring Security's need to read parameter information from
      * methods, which is lost when using mocks)
      */
-    private static class TestCompetitionService implements CompetitionService {
+    public static class TestCompetitionService implements CompetitionService {
 
         @Override
         public ServiceResult<CompetitionResource> getCompetitionById(Long id) {

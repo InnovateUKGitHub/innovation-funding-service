@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.commons.rest.RestResult;
 
@@ -32,14 +33,16 @@ public class QuestionController {
     public RestResult<Void> markAsComplete(@PathVariable("questionId") final Long questionId,
                         @PathVariable("applicationId") final Long applicationId,
                         @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
-        return questionService.markAsComplete(questionId, applicationId, markedAsCompleteById).toPutResponse();
+        QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(questionId, applicationId);
+        return questionService.markAsComplete(ids, markedAsCompleteById).toPutResponse();
     }
 
     @RequestMapping("/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}")
     public RestResult<Void> markAsInComplete(@PathVariable("questionId") final Long questionId,
                                  @PathVariable("applicationId") final Long applicationId,
                                  @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById) {
-        return questionService.markAsInComplete(questionId, applicationId, markedAsInCompleteById).toPutResponse();
+        QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(questionId, applicationId);
+        return questionService.markAsInComplete(ids, markedAsInCompleteById).toPutResponse();
     }
 
     @RequestMapping("/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}")
@@ -47,7 +50,8 @@ public class QuestionController {
                        @PathVariable("applicationId") final Long applicationId,
                        @PathVariable("assigneeId") final Long assigneeId,
                        @PathVariable("assignedById") final Long assignedById) {
-        return questionService.assign(questionId, applicationId, assigneeId, assignedById).toPutResponse();
+        QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(questionId, applicationId);
+        return questionService.assign(ids, assigneeId, assignedById).toPutResponse();
     }
 
     @RequestMapping("/getMarkedAsComplete/{applicationId}/{organisationId}")

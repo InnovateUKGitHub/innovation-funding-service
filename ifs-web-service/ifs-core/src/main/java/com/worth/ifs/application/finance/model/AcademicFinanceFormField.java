@@ -1,6 +1,9 @@
 package com.worth.ifs.application.finance.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 public class AcademicFinanceFormField {
     Long id;
@@ -23,6 +26,16 @@ public class AcademicFinanceFormField {
 
     public String getValue() {
         return value;
+    }
+    @JsonIgnore
+    public String getNumberValue() {
+        if(value == null){
+            return "";
+        }
+        DecimalFormat formatter = new DecimalFormat("##0.##");
+        formatter.setMaximumFractionDigits(2);
+        BigDecimal numberValue = new BigDecimal(value);
+        return formatter.format(numberValue);
     }
 
     public void setValue(String value) {

@@ -2,10 +2,9 @@
 Documentation     INFUND-736: As an applicant I want to be able to add all the finance details for all the sections so I can sent in all the info necessary to apply
 ...
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
-Suite Setup       Run Keywords    Guest user log-in    &{lead_applicant_credentials}
-...               AND    Given the user navigates to the page    ${YOUR_FINANCES_URL}
+Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        HappyPath
+Force Tags        HappyPath     Failing
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -26,7 +25,10 @@ Labour
     ...    INFUND-736
     ...
     ...    INFUND-1256
-    [Tags]    Finances
+    [Tags]    Finances    Panding
+    #Pending due to INFUND-2573
+    sleep    5s
+    the user navigates to the page    ${YOUR_FINANCES_URL}
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
@@ -42,7 +44,8 @@ Administration support costs
     ...    Acceptance tests for the Administration support costs section calculations
     ...
     ...    INFUND-736
-    [Tags]    Finances
+    [Tags]    Finances    Pending
+    #Pending due to INFUND-2573
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
     And user selects the admin costs    overheads-rateType-29-51    DEFAULT_PERCENTAGE
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
@@ -81,7 +84,7 @@ Capital usage
 Subcontracting costs
     [Documentation]    INFUND-192
     ...    INFUND-736
-    ...     INFUND-2303
+    ...    INFUND-2303
     [Tags]    Finances
     When the applicant edits the Subcontracting costs section
     Then Totals should be correct    css=#section-total-13    £ 200    css=[aria-controls="collapsible-4"] [data-mirror]    £ 200
@@ -218,10 +221,10 @@ the applicant adds one row for the other costs
     focus    css=.app-submit-btn
 
 the applicant can see the option to add another source of funding
-    Element Should Be Visible           jQuery=button:contains('Add another source of funding')
+    Element Should Be Visible    jQuery=button:contains('Add another source of funding')
 
 the applicant cannot see the option to add another source of funding
-    Element Should Not Be Visible       jQuery=button:contains('Add another source of funding')
+    Element Should Not Be Visible    jQuery=button:contains('Add another source of funding')
 
 the user reloads the page
     Execute Javascript    jQuery('form').attr('data-test','true');

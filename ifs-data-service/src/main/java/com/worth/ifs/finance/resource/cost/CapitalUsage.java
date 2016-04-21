@@ -1,5 +1,9 @@
 package com.worth.ifs.finance.resource.cost;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 
 
@@ -9,11 +13,18 @@ import java.math.BigDecimal;
 public class CapitalUsage implements CostItem {
     Long id;
     String name;
+    @Min(0)
     Integer deprecation;
     String description;
     String existing;
+    @DecimalMin(value = "0")
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     BigDecimal npv;
+    @DecimalMin(value = "0")
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     BigDecimal residualValue;
+    @Min(0)
+    @Max(100)
     Integer utilisation;
     CostType costType;
 
