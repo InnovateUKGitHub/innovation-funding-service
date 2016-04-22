@@ -4,6 +4,7 @@ import com.worth.ifs.Application;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
 import com.worth.ifs.commons.rest.RestResult;
@@ -243,7 +244,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testApplicationSummaryReadyForReviewAction() throws Exception {
         ApplicationResource app = applications.get(0);
-        Question question = questions.get(questions.keySet().iterator().next());
+        QuestionResource question = questionResources.get(questionResources.keySet().iterator().next());
         ProcessRole processRole = processRoles.get(0);
 
         UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
@@ -260,7 +261,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Test
     public void testApplicationSummaryMarkAsCompleteAction() throws Exception {
         ApplicationResource app = applications.get(0);
-        Question question = questions.get(questions.keySet().iterator().next());
+        QuestionResource question = questionResources.get(questionResources.keySet().iterator().next());
         ProcessRole processRole = processRoles.get(0);
 
         UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
