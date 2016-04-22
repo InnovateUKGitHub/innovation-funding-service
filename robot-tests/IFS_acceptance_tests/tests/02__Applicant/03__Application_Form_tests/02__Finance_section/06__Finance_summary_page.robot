@@ -13,7 +13,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
 Suite Teardown    User closes the browser
-Force Tags        Finance    Applicant  Failing
+Force Tags        Finance    Applicant
 Default Tags
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
@@ -32,7 +32,7 @@ ${OVERVIEW_MARK_AS_COMPLETE}    ${SERVER}/application/7
 *** Test Cases ***
 Calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]    Collaboration
+    [Tags]    Collaboration    Failing
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
@@ -41,7 +41,7 @@ Calculations for Lead applicant
 
 Calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]    Collaboration
+    [Tags]    Collaboration    Failing
     [Setup]    Guest user log-in    &{collaborator1_credentials}
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
@@ -72,7 +72,8 @@ Green check should show when the finances are complete
     ...    INFUND-894
     ...
     ...    INFUND-446
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    #Pending due to INFUND-2576
     Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user should be redirected to the correct page    ${OVERVIEW_MARK_AS_COMPLETE}
