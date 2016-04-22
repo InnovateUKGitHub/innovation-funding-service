@@ -5,7 +5,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...               INFUND-918: As an academic partner i want to be able to mark my finances as complete, so that the lead partner can have confidence in my finances
 Suite Setup       Guest user log-in    &{collaborator2_credentials}
 Suite Teardown    User closes the browser
-Force Tags        Finances    HappyPath     Failing
+Force Tags        Finances    HappyPath    Pending
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -19,7 +19,9 @@ ${text_file}      testing.txt
 *** Test Cases ***
 Academic finances should be editable when lead marks finances as complete
     [Documentation]    INFUND-2314
+    [Tags]    Pending
     [Setup]    Lead applicant marks the finances as complete
+    #Pending due to INFUND-2576
     When the user navigates to the page    ${YOUR_FINANCES_URL}
     Then the user should not see the element    css=#incurred-staff[readonly]
     [Teardown]    Lead applicant marks the finances as incomplete
@@ -42,10 +44,9 @@ Academics upload
     And the user should see the element    link=testing.pdf
 
 Academic finances JeS link showing
-    [Documentation]     INFUND-2402
-    [Tags]  Academic    Finances
+    [Documentation]    INFUND-2402
+    [Tags]    Academic    Finances
     When the user can see the link for more JeS details
-
 
 Mark all as complete
     [Documentation]    INFUND-918
@@ -58,6 +59,7 @@ Mark all as complete
 Academic finance overview
     [Documentation]    INFUND-917
     [Tags]
+    #Pending due to INFUND-2576
     Given the user navigates to the page    ${FINANCES_OVERVIEW_URL}
     Then the finance table should be correct
     When the user clicks the button/link    link=testing.pdf
@@ -112,7 +114,6 @@ Lead applicant marks the finances as incomplete
 the user reloads the page
     Reload Page
 
-
 the user can see the link for more JeS details
-    Element Should Be Visible       link=Je-S website
-    Page Should Contain Element        xpath=//a[contains(@href,'https://je-s.rcuk.ac.uk')]
+    Element Should Be Visible    link=Je-S website
+    Page Should Contain Element    xpath=//a[contains(@href,'https://je-s.rcuk.ac.uk')]
