@@ -166,6 +166,11 @@ public class ApplicationFormController extends AbstractApplicationController {
                                    List<ProcessRole> userApplicationRoles){
         addApplicationDetails(application, competition, userId, section, question.map(q -> q.getId()), model, form, userApplicationRoles);
         addNavigation(question.orElse(null), application.getId(), model);
+        Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
+
+        if(question.isPresent()) {
+            questionFormInputs.put(question.get().getId(), formInputs.orElse(null));
+        }
         model.addAttribute("currentQuestion", question.orElse(null));
         model.addAttribute("questionFormInputs", formInputs.orElse(null));
         if(question.isPresent()) {
