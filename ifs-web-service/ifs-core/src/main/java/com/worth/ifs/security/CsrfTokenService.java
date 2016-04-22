@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfException;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.DefaultCsrfToken;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.Optional.ofNullable;
 import static java.util.UUID.randomUUID;
 
 /**
@@ -109,18 +111,22 @@ class CsrfTokenService {
     }
 
     private String getTokenFromRequest(final HttpServletRequest request) throws CsrfException {
-        final Optional<String> token = Optional.ofNullable(Optional.ofNullable(request.getHeader(CSRF_HEADER_NAME)).orElse(request.getParameter(CSRF_PARAMETER_NAME)));
+        final Optional<String> token = ofNullable(ofNullable(request.getHeader(CSRF_HEADER_NAME)).orElse(request.getParameter(CSRF_PARAMETER_NAME)));
         return token.orElseThrow(() -> new CsrfException(format("CSRF Token not found. Expected token in header with name '%s' or request parameter with name '%s'.", CSRF_HEADER_NAME, CSRF_PARAMETER_NAME)));
     }
 
     private String getUserId() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication == null ? null : authentication.getCredentials().toString();
+        return getAuthentication().map((authentication) -> {
+            return authentication instanceof AnonymousAuthenticationFilter ? "ANONYMOUS" : authentication.getCredentials().toString();
+        }).orElse("ANONYMOUS");
+    }
+
+    private Optional<Authentication> getAuthentication() {
+        return ofNullable(SecurityContextHolder.getContext().getAuthentication());
     }
 
     private boolean isUIdValid(final String uId) {
-        final String expected = getUserId();
-        return expected != null && expected.equals(uId);
+        return getUserId().equals(uId);
     }
 
     private boolean isTimestampValid(final Instant timestamp) {

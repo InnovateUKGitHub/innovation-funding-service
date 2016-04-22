@@ -57,6 +57,15 @@ public class CsrfTokenServiceTest {
     }
 
     @Test
+    public void test_generateToken_anonymous() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(null);
+        final CsrfToken token = tokenUtility.generateToken();
+        final String decrypted = encryptor.decrypt(token.getToken());
+        final CsrfUidToken parsed = CsrfUidToken.parse(decrypted);
+        assertEquals("ANONYMOUS", parsed.getuId());
+    }
+
+    @Test
     public void test_validateToken_expired() throws Exception {
         final Instant oldTimestamp = Instant.now().minus(31, ChronoUnit.MINUTES);
         thrown.expect(CsrfException.class);
@@ -70,6 +79,12 @@ public class CsrfTokenServiceTest {
         thrown.expect(CsrfException.class);
         thrown.expectMessage("User id not recognised while validating CSRF token");
         tokenUtility.validateToken(mockRequestWithHeaderValue(token(wrongUid, recentTimestamp())));
+    }
+
+    @Test
+    public void test_validateToken_anonymous() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(null);
+        assertTrue(tokenUtility.validateToken(mockRequestWithHeaderValue(token("ANONYMOUS", recentTimestamp()))));
     }
 
     @Test
