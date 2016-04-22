@@ -64,6 +64,7 @@ Materials
     ...
     ...    INFUND-736
     [Tags]    Finances
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     When the Applicant fills the Materials fields
     Then Totals should be correct    css=#section-total-11    £ 2,000    css=[data-mirror="#section-total-11"]    £ 2,000
     And the user clicks the button/link    css=#material-costs-table tbody tr:nth-child(1) button

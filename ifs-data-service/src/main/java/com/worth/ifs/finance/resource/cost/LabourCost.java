@@ -1,5 +1,7 @@
 package com.worth.ifs.finance.resource.cost;
 
+import com.worth.ifs.finance.resource.category.LabourCostCategory;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.DecimalMin;
@@ -42,6 +44,12 @@ public class LabourCost implements CostItem {
         this.id = id;
         this.name = name;
         this.role = role;
+        if(StringUtils.isNotEmpty(this.name)
+                && this.name.equals(LabourCostCategory.WORKING_DAYS_KEY)
+                && StringUtils.isEmpty(this.role)){
+            // User is only allowed to enter the labourDays on this instance, so need to fill the role field for validation.
+            this.role =LabourCostCategory.WORKING_DAYS_PER_YEAR;
+        }
         this.grossAnnualSalary = grossAnnualSalary;
         this.labourDays = labourDays;
         this.description = description;

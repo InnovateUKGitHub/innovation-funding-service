@@ -52,7 +52,6 @@ public class OtherFundingValidator implements Validator {
         if(OtherFundingCostCategory.OTHER_FUNDING.equals(response.getFundingSource()) && response.getOtherPublicFunding().equals("Yes")){
             List<Cost> otherFundingRows = costRepository.findByApplicationFinanceIdAndNameAndQuestionId(applicationFinance.getId(), "", question.getSuccessObject().getId());
             errors.reject("MinimumRows", "You should provide at least one Source of funding");
-//            errors.rejectValue("otherFunding", "MinimumRows", "You should provide at least one Source of funding");
         }else{
             LOG.debug("NO "+response.getName() + " vs " +CostType.OTHER_FUNDING.getType());
         }

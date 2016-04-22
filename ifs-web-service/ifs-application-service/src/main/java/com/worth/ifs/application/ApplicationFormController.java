@@ -93,6 +93,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         model.addAttribute("currentUser", user);
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
+        model.addAttribute("form", form);
         return APPLICATION_FORM;
     }
 
@@ -146,6 +147,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
+        model.addAttribute("form", form);
 
         return APPLICATION_FORM;
     }
@@ -203,6 +205,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
             form.setBindingResult(bindingResult);
             form.setObjectErrors(bindingResult.getAllErrors());
+            model.addAttribute("form", form);
             /* End save action */
 
             if (bindingResult.hasErrors()) {
@@ -488,6 +491,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
+        model.addAttribute("form", form);
 
         if(bindingResult.hasErrors()){
             SectionResource section = sectionService.getById(sectionId);

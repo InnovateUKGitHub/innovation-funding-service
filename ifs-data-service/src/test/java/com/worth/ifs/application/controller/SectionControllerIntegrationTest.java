@@ -124,7 +124,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         RestResult<List<ValidationMessages>> result = controller.markAsComplete(sectionIdYourFinances, applicationId, leadApplicantProcessRole);
         assertTrue(result.isSuccess());
         List<ValidationMessages> validationMessages = result.getSuccessObject();
-        assertEquals(3, validationMessages.size());
+        assertEquals(2, validationMessages.size());
 
         ValidationMessages messages = validationMessages.get(0);
         assertEquals(1, messages.getErrors().size());
@@ -143,16 +143,6 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         assertTrue(messages.getErrors().stream()
                 .filter(e -> "".equals(e.getErrorKey()))
                 .filter(e -> "You should provide at least one Source of funding".equals(e.getErrorMessage()))
-                .filter(e -> HttpStatus.NOT_ACCEPTABLE.equals(e.getStatusCode()))
-                .findAny().isPresent());
-
-        messages = validationMessages.get(2);
-        assertEquals(1, messages.getErrors().size());
-        assertEquals(new Long(1), messages.getObjectId());
-        assertEquals("costItem", messages.getObjectName());
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "role".equals(e.getErrorKey()))
-                .filter(e -> "may not be empty".equals(e.getErrorMessage()))
                 .filter(e -> HttpStatus.NOT_ACCEPTABLE.equals(e.getStatusCode()))
                 .findAny().isPresent());
     }
