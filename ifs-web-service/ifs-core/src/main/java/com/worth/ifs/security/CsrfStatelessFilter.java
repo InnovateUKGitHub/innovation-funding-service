@@ -67,9 +67,6 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
         // Add the CsrfToken as an attribute of the request as expected by org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor#getExtraHiddenFields(javax.servlet.http.HttpServletRequest)
         request.setAttribute(CsrfToken.class.getName(), token);
 
-        // TODO
-        request.setAttribute(token.getParameterName(), token);
-
         // Not all pages have a Thymeleaf form on them.
         // To cater for javascript clients making ajax calls that need to supply the CSRF token as a header parameter, set the token in the response as a cookie.
         // The cookie can then be the preferred location for finding the current CSRF token in javascript, over relying on a searching for a Thymeleaf form in the DOM.
