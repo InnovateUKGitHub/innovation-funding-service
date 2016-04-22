@@ -1,5 +1,6 @@
 package com.worth.ifs.validator.transactional;
 
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.form.domain.FormInputResponse;
@@ -47,12 +48,12 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
 
 
     @Override
-    public List<ValidationMessages> validateCostItem(Long applicationId, Long questionId, Long markedAsCompleteById) {
+    public List<ValidationMessages> validateCostItem(Long applicationId, Question question, Long markedAsCompleteById) {
         return getProcessRole(markedAsCompleteById).andOnSuccess(role -> {
             return costService.financeDetails(applicationId, role.getOrganisation().getId()).andOnSuccess(financeDetails -> {
-                return costService.getCostItems(financeDetails.getId(), questionId).andOnSuccessReturn(costItems -> {
+                return costService.getCostItems(financeDetails.getId(), question.getId()).andOnSuccessReturn(costItems -> {
                     LOG.debug("=======Got Cost Items : count 2: "+costItems.size());
-                    return ValidationUtil.validateCostItem(costItems);
+                    return ValidationUtil.validateCostItem(costItems, question);
                 });
             });
         }).getSuccessObject();

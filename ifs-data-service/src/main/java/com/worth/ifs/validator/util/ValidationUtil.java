@@ -9,6 +9,7 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
+import com.worth.ifs.validator.EmptyRowValidator;
 import com.worth.ifs.validator.GrantClaimValidator;
 import com.worth.ifs.validator.NotEmptyValidator;
 import com.worth.ifs.validator.OtherFundingValidator;
@@ -28,13 +29,19 @@ public final class ValidationUtil {
     public final static Log LOG = LogFactory.getLog(ValidationUtil.class);
     public static ValidatorService validatorService;
     public static Validator validator;
+    public static EmptyRowValidator emptyRowValidator;
     public static GrantClaimValidator grantClaimValidator;
     public static OtherFundingValidator otherFundingValidator;
 
     @Autowired
-    private ValidationUtil(ValidatorService validatorService, @Qualifier("basicValidator") Validator validator, GrantClaimValidator grantClaimValidator, OtherFundingValidator otherFundingValidator) {
+    private ValidationUtil(ValidatorService validatorService,
+                           @Qualifier("basicValidator") Validator validator,
+                           EmptyRowValidator emptyRowValidator,
+                           GrantClaimValidator grantClaimValidator,
+                           OtherFundingValidator otherFundingValidator) {
         this.validatorService = validatorService;
         this.validator = validator;
+        this.emptyRowValidator = emptyRowValidator;
         this.grantClaimValidator = grantClaimValidator;
         this.otherFundingValidator = otherFundingValidator;
     }
@@ -131,13 +138,23 @@ public final class ValidationUtil {
     private static void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {
         try {
             CostType costType = CostType.fromString(formInput.getFormInputType().getTitle()); // this checks if formInput is CostType related.
-            validationMessages.addAll(validatorService.validateCostItem(application.getId(), question.getId(), markedAsCompleteById));
+            validationMessages.addAll(validatorService.validateCostItem(application.getId(), question, markedAsCompleteById));
         } catch (IllegalArgumentException e) {
             // not a costtype, which is fine...
         }
     }
 
-    public static List<ValidationMessages> validateCostItem(List<CostItem> costItems) {
+    private static ValidationMessages invokeEmptyRowValidatorAndReturnMessages(List<CostItem> costItems, Question question) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(question, "question");
+        invokeEmptyRowValidator(costItems, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return new ValidationMessages(question.getId(), bindingResult);
+        }
+        return null;
+    }
+
+    public static List<ValidationMessages> validateCostItem(List<CostItem> costItems, Question question) {
+
         if (costItems.isEmpty())
             return Collections.emptyList();
 
@@ -145,6 +162,11 @@ public final class ValidationUtil {
                 .map(ValidationUtil::validateCostItem)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+
+        ValidationMessages emptyRowMessages = invokeEmptyRowValidatorAndReturnMessages(costItems, question);
+        if(emptyRowMessages != null)
+            results.add(emptyRowMessages);
+
         return results;
     }
 
@@ -182,5 +204,9 @@ public final class ValidationUtil {
             LOG.info("invoke extra validator: "+ extraValidator.getClass().toString());
             ValidationUtils.invokeValidator(extraValidator, costItem, bindingResult);
         }
+    }
+
+    private static void invokeEmptyRowValidator(List<CostItem> costItems, BeanPropertyBindingResult bindingResult){
+        ValidationUtils.invokeValidator(emptyRowValidator, costItems, bindingResult);
     }
 }
