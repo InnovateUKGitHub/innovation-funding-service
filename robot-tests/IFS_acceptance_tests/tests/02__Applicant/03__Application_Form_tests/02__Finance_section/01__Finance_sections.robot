@@ -4,13 +4,12 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...               INFUND-1815: Small text changes to registration journey following user testing
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
+Force Tags
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
 Resource          ../../../../resources/keywords/Login_actions.robot
 Resource          ../../../../resources/keywords/User_actions.robot
-Force Tags      Failing
-
 
 *** Test Cases ***
 Finance sub-sections

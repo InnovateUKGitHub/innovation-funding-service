@@ -2,12 +2,12 @@
 Documentation     INFUND-1110: As an applicant/partner applicant I want to add my required Funding Level so that innovate uk know my grant request
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    User closes the browser
+Force Tags
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
 Resource          ../../../../resources/keywords/Login_actions.robot
 Resource          ../../../../resources/keywords/User_actions.robot
-Force Tags      Failing
 
 *** Variables ***
 ${small_org_option}    SMALL
@@ -54,14 +54,14 @@ Large organisation can choose up to 50% funding
 *** Keywords ***
 The applicant enters organisation size details
     [Arguments]    ${org_size_option}    ${funding_level}
-    The user navigates to the page      ${YOUR_FINANCES_URL}
+    The user navigates to the page    ${YOUR_FINANCES_URL}
     Applicant enters the organisation size    ${org_size_option}
     Applicant enters the funding level    ${funding_level}
     Applicant chooses to save and return to application overview
 
 The 'your finances' section can be successfully saved
     [Arguments]    ${org_size_option}    ${funding_level}
-    The user navigates to the page      ${YOUR_FINANCES_URL}
+    The user navigates to the page    ${YOUR_FINANCES_URL}
     Applicant can see the correct organisation size has been selected    ${org_size_option}
     Applicant can see the correct funding level has been saved    ${funding_level}
 
@@ -78,9 +78,9 @@ Applicant enters the funding level
     Input Text    id=cost-financegrantclaim    ${funding_level}
 
 Applicant chooses to save and return to application overview
-    Click Button        Save and return to application overview
+    Click Button    Save and return to application overview
     # the user clicks the button/link    link=Save and return to application overview
-    # the user should be redirected to the correct page  ${application_overview_url}
+    # the user should be redirected to the correct page    ${application_overview_url}
 
 Applicant can see the correct organisation size has been selected
     [Arguments]    ${org_size_option}
