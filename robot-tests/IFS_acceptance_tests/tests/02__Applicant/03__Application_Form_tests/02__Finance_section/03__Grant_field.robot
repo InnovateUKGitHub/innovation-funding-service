@@ -2,12 +2,12 @@
 Documentation     INFUND-45: As an applicant and I am on the application form on an open application, I expect the form to help me fill in financial details, so I can have a clear overview and less chance of making mistakes.
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
+Force Tags
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
 Resource          ../../../../resources/keywords/Login_actions.robot
 Resource          ../../../../resources/keywords/User_actions.robot
-Force Tags      Failing
 
 *** Variables ***
 

@@ -21,7 +21,7 @@ If user from the list is not registered shouldn't be able to login
 
 Registration for a user who is in the list
     [Documentation]    INFUND-2129
-    [Tags]    HappyPath    Email    Failing
+    [Tags]    HappyPath    Email
     [Setup]    Delete the emails from the test mailbox
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And User creates new account verifies email and login    worth.email.test+admin1@gmail.com
@@ -44,7 +44,7 @@ User creates new account verifies email and login
     And the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user clicks the button/link    jQuery=.button:contains("Log in")
-    And the guest user inserts user email & password    ${CREATE_ACCOUNT_EMAIL}    Passw0rd
+    And the guest user inserts user email & password    ${CREATE_ACCOUNT_EMAIL}    Passw0rd123
     And the guest user clicks the log-in button
 
 the user enters the details and clicks the create account
@@ -53,7 +53,7 @@ the user enters the details and clicks the create account
     Input Text    id=lastName    Cantona
     Input Text    id=phoneNumber    0505050508
     Input Text    id=email    ${CREATE_ACCOUNT_EMAIL}
-    Input Password    id=password    Passw0rd
-    Input Password    id=retypedPassword    Passw0rd
+    Input Password    id=password    Passw0rd123
+    Input Password    id=retypedPassword    Passw0rd123
     Select Checkbox    termsAndConditions
     Submit Form
