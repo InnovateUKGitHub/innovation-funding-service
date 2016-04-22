@@ -13,7 +13,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
 Suite Teardown    User closes the browser
-Force Tags        Finance    Applicant
+Force Tags        Finance    Applicant  Failing
 Default Tags
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot

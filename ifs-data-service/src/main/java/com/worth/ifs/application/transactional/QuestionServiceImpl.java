@@ -1,19 +1,5 @@
 package com.worth.ifs.application.transactional;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.mapper.QuestionStatusMapper;
-import com.worth.ifs.application.repository.QuestionRepository;
-import com.worth.ifs.application.repository.QuestionStatusRepository;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.form.domain.FormInputType;
-import com.worth.ifs.form.transactional.FormInputTypeService;
-import com.worth.ifs.transactional.BaseTransactionalService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +7,22 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.mapper.QuestionStatusMapper;
+import com.worth.ifs.application.repository.QuestionRepository;
+import com.worth.ifs.application.repository.QuestionStatusRepository;
+import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
+import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.form.transactional.FormInputTypeService;
+import com.worth.ifs.transactional.BaseTransactionalService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -58,25 +60,23 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public ServiceResult<Void> markAsComplete(final Long questionId,
-                                              final Long applicationId,
+    public ServiceResult<Void> markAsComplete(final QuestionApplicationCompositeId ids,
                                               final Long markedAsCompleteById) {
-        return setComplete(questionId, applicationId, markedAsCompleteById, true);
+        return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true);
     }
 
     @Override
-    public ServiceResult<Void> markAsInComplete(final Long questionId,
-                                                final Long applicationId,
+    public ServiceResult<Void> markAsInComplete(final QuestionApplicationCompositeId ids,
                                                 final Long markedAsInCompleteById) {
-        return setComplete(questionId, applicationId, markedAsInCompleteById, false);
+        return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false);
     }
 
     @Override
-    public ServiceResult<Void> assign(final Long questionId, final Long applicationId, final Long assigneeId, final Long assignedById) {
+    public ServiceResult<Void> assign(final QuestionApplicationCompositeId ids, final Long assigneeId, final Long assignedById) {
 
-        return find(question(questionId), application(applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
+        return find(question(ids.questionId), application(ids.applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
 
-            QuestionStatus questionStatus = getQuestionStatusByApplicationIdAndAssigneeId(question, applicationId, assigneeId);
+            QuestionStatus questionStatus = getQuestionStatusByApplicationIdAndAssigneeId(question, ids.applicationId, assigneeId);
 
             if (questionStatus == null) {
                 questionStatus = new QuestionStatus(question, application, assignee, assignedBy, now());
