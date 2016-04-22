@@ -19,6 +19,19 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Spend profile'})" th:remove="tag" />
 
+	<p>This overview details whether each member of the project team has successfully entered the required information, allowing the revew and submittion of the profile spends for the project.</p>
+
+	<div th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
+		<h2 class="heading-medium">Profile spend</h2>
+		<p>All Spend Profiles have been submitted to InnovateUK and the Monitoring Officer assigned to this application, though it is still possible to view submitted Spend Profiles.</p>
+		
+		<a href="/prototypes/1592-spend?task=reviewProject&#38;status=Submitted">Technology inspired profile spend</a>
+
+	</div>
+
+
+	<h2 class="heading-medium">Partner progress</h2>
+
 
 	<div class="table-overflow">
 		<table>
@@ -63,9 +76,13 @@
 		</table>
 	</div>
 
-	<p class="extra-margin">When each of your partners have completed their project spend, they must be submitted to InnovateUK for review. If further refinement is required innovate return control of the project costs to the project team and inform of any required changes, these must them be resubmitted.</p>
+	<div th:if="${param.status == null or param.status[0] != 'Submitted'}" th:remove="tag">
 
-	<a href="/prototypes/1592-spend?task=reviewProject" class="button">Review and submit project profile spend</a>
+		<p class="extra-margin">When each of your partners have completed their project spend, they must be submitted to InnovateUK for review. If further refinement is required innovate return control of the project costs to the project team and inform of any required changes, these must them be resubmitted.</p>
+
+		<a href="/prototypes/1592-spend?task=reviewProject" class="button">Review and submit project profile spend</a>
+
+	</div>
 
 	
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
