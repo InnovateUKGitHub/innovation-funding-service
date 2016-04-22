@@ -1,6 +1,6 @@
 package com.worth.ifs.security;
 
-import com.worth.ifs.security.CsrfTokenUtility.CsrfUidToken;
+import com.worth.ifs.security.CsrfTokenService.CsrfUidToken;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

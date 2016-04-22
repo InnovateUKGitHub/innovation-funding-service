@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Controller;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -28,8 +30,13 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
+import java.time.Instant;
+
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.UUID.randomUUID;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -38,7 +45,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-@TestPropertySource(properties = { "ifs.web.security.csrf.encryption.password = a180fb6c-878a-4850-bccc-bd244f4c41c9", "ifs.web.security.csrf.encryption.salt: 9ea751556a3feee7" })
+@TestPropertySource(properties = {"ifs.web.security.csrf.encryption.password = a180fb6c-878a-4850-bccc-bd244f4c41c9", "ifs.web.security.csrf.encryption.salt: 9ea751556a3feee7"})
 @WebAppConfiguration
 public class CsrfStatelessFilterControllerTest {
 
@@ -46,16 +53,18 @@ public class CsrfStatelessFilterControllerTest {
     private WebApplicationContext context;
 
     @Autowired
-    private CsrfTokenUtility tokenUtility;
-
-    @Autowired
     private CsrfStatelessFilter csrfStatelessFilter;
 
     private MockMvc mockMvc;
+    private final TextEncryptor encryptor = Encryptors.text(ENCRYPTION_PASSWORD, ENCRYPTION_SALT);
+
+    private static final String ENCRYPTION_PASSWORD = "a180fb6c-878a-4850-bccc-bd244f4c41c9";
+    private static final String ENCRYPTION_SALT = "9ea751556a3feee7";
+    private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
 
     @Before
     public void setUp() {
-        final UserResource user = newUserResource().withId(-1L).withUID("5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de").build();
+        final UserResource user = newUserResource().withId(-1L).withUID(UID).build();
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
 
         mockMvc = MockMvcBuilders.webAppContextSetup(context)
@@ -69,7 +78,7 @@ public class CsrfStatelessFilterControllerTest {
     }
 
     @Test
-    public void test_csrfTokenGenerated() throws Exception {
+    public void test_checkCsrfTokenIsGeneratedInResponse() throws Exception {
         // test that a csrf token is present in the form body, and also in a cookie to be picked up by Ajax requests
         final MvcResult result = mockMvc.perform(get("/csrf-test/test-get"))
                 .andExpect(status().is2xxSuccessful())
@@ -91,23 +100,77 @@ public class CsrfStatelessFilterControllerTest {
     }
 
     @Test
-    public void test_protectedRequest_byHeader() throws Exception {
-        final String token = tokenUtility.generateToken().getToken();
+    public void test_protectedRequest_tokenMissing() throws Exception {
+        mockMvc.perform(post("/csrf-test/test-post"))
+                .andExpect(status().is(FORBIDDEN.value()))
+                .andReturn();
+    }
 
-        mockMvc.perform(post("/csrf-test/test-post").header("X-CSRF-TOKEN", token))
+    @Test
+    public void test_protectedRequest_byHeader_empty() throws Exception {
+        mockMvc.perform(post("/csrf-test/test-post")
+                .header("X-CSRF-TOKEN", EMPTY))
+                .andExpect(status().is(FORBIDDEN.value()))
+                .andReturn();
+    }
+
+    @Test
+    public void test_protectedRequest_byHeader_malformed() throws Exception {
+        mockMvc.perform(post("/csrf-test/test-post")
+                .header("X-CSRF-TOKEN", malformedToken()))
+                .andExpect(status().is(FORBIDDEN.value()))
+                .andReturn();
+    }
+
+    @Test
+    public void test_protectedRequest_byHeader() throws Exception {
+        mockMvc.perform(post("/csrf-test/test-post")
+                .header("X-CSRF-TOKEN", validToken()))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("csrf-test"))
                 .andReturn();
     }
 
     @Test
-    public void test_protectedRequest_byParameter() throws Exception {
-        final String token = tokenUtility.generateToken().getToken();
+    public void test_protectedRequest_byParameter_empty() throws Exception {
+        mockMvc.perform(post("/csrf-test/test-post")
+                .param("_csrf", EMPTY))
+                .andExpect(status().is(FORBIDDEN.value()))
+                .andReturn();
+    }
 
-        mockMvc.perform(post("/csrf-test/test-post").param("_csrf", token))
+    @Test
+    public void test_protectedRequest_byParameter_malformed() throws Exception {
+        mockMvc.perform(post("/csrf-test/test-post")
+                .param("_csrf", malformedToken()))
+                .andExpect(status().is(FORBIDDEN.value()))
+                .andReturn();
+    }
+
+    @Test
+    public void test_protectedRequest_byParameter() throws Exception {
+        mockMvc.perform(post("/csrf-test/test-post")
+                .param("_csrf", validToken()))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("csrf-test"))
                 .andReturn();
+    }
+
+    private String encrypt(final CsrfTokenService.CsrfUidToken token) {
+        return encryptor.encrypt(token.getToken());
+    }
+
+    private String token(final String uid, final Instant timestamp) {
+        return encrypt(new CsrfTokenService.CsrfUidToken(randomUUID().toString(), uid, timestamp));
+    }
+
+
+    private String validToken() {
+        return token(UID, Instant.now());
+    }
+
+    private String malformedToken() {
+        return validToken().substring(1);
     }
 
     @Controller
@@ -132,8 +195,8 @@ public class CsrfStatelessFilterControllerTest {
     static class ContextConfiguration {
 
         @Bean
-        public CsrfTokenUtility tokenUtility() {
-            return new CsrfTokenUtility();
+        public CsrfTokenService tokenUtility() {
+            return new CsrfTokenService();
         }
 
         @Bean

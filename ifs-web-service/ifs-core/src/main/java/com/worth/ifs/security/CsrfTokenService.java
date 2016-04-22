@@ -24,12 +24,28 @@ import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
 
 /**
- * TODO
  * <p>
+ * Service to generate new CSRF tokens, and validate them. This service makes use of the Spring Security Crypto module to encrypt the token using 256 bit AES encryption. CSRF tokens consist of:
+ * <ul>
+ *     <li>A random one-off string (nonce) used to make the token unpredictable.</li>
+ *     <li>The UID of the currently authenticated user.
+ *     <li>Timestamp which is checked against when validating the token</li>
+ * </ul>
+ * </p>
+ * <p>
+ * CSRF Protected HTTP requests (e.g. requests using the POST method) are expected to contain the CSRF token in either the `X-CSRF-TOKEN` header or the `_csrf` parameter.
+ * The token, after being decrypted, is expected to contain the UID of the currently authenticated user and a valid timestamp.
+ * </p>
+ * <p>
+ * As it stands at version 4.0.4 of Spring Security, the JCE Unlimited Strength Jurisdiction Policy Files are required to be installed to use the Spring Crypto module.
+ * These provide policy files which contain no restrictions on cryptographic strengths.
+ * In a future version of Spring Security - possibly 4.1.0, issue SEC-2778 will hopefully have been dealt with, allowing Encryptors to be used without needing the JCE Unlimited Strength Jurisdiction Policy Files.
+ * @see <a href="https://github.com/spring-projects/spring-security/issues/2917">SEC-2778</a>
+ * </p>
  */
 @Service
 @Configurable
-class CsrfTokenUtility {
+class CsrfTokenService {
 
     private static final String CSRF_HEADER_NAME = "X-CSRF-TOKEN";
     private static final String CSRF_PARAMETER_NAME = "_csrf";
@@ -45,7 +61,8 @@ class CsrfTokenUtility {
     }
 
     /**
-     * Generates a {@link CsrfToken} based on the encrypted user id for the currently authenticated user.
+     * Generates a {@link CsrfToken}.
+     * {@link CsrfToken} contains the encrypted token and is returned here rather than {@link CsrfUidToken} because this is what is expected by org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor#getExtraHiddenFields(javax.servlet.http.HttpServletRequest).
      *
      * @return {@link CsrfToken}
      */
@@ -54,7 +71,7 @@ class CsrfTokenUtility {
     }
 
     /**
-     * Validates the expected {@link CsrfToken} from the {@link HttpServletRequest}
+     * Validates the expected {@link CsrfUidToken} from the {@link HttpServletRequest}
      *
      * @param request the {@link HttpServletRequest} to use
      * @return true if the token is valid for the currently authenticated user, otherwise false

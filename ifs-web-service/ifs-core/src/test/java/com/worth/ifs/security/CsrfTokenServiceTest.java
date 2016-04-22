@@ -1,7 +1,7 @@
 package com.worth.ifs.security;
 
 import com.worth.ifs.commons.security.UserAuthentication;
-import com.worth.ifs.security.CsrfTokenUtility.CsrfUidToken;
+import com.worth.ifs.security.CsrfTokenService.CsrfUidToken;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Rule;
@@ -25,7 +25,7 @@ import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.junit.Assert.*;
 
-public class CsrfTokenUtilityTest {
+public class CsrfTokenServiceTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -35,7 +35,7 @@ public class CsrfTokenUtilityTest {
     private static final String ENCRYPTION_SALT = KeyGenerators.string().generateKey();
 
     private TextEncryptor encryptor;
-    private CsrfTokenUtility tokenUtility;
+    private CsrfTokenService tokenUtility;
 
     @Before
     public void setUp() throws Exception {
@@ -117,8 +117,8 @@ public class CsrfTokenUtilityTest {
         tokenUtility.validateToken(mockRequestWithParameterValue(EMPTY));
     }
 
-    private CsrfTokenUtility setUpTokenUtility() {
-        final CsrfTokenUtility tokenUtility = new CsrfTokenUtility();
+    private CsrfTokenService setUpTokenUtility() {
+        final CsrfTokenService tokenUtility = new CsrfTokenService();
         tokenUtility.setEncryptionPassword(ENCRYPTION_PASSWORD);
         tokenUtility.setEncryptionSalt(ENCRYPTION_SALT);
         tokenUtility.init();

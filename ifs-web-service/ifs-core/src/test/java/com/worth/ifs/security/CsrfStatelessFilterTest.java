@@ -26,7 +26,7 @@ public class CsrfStatelessFilterTest {
     private final CsrfStatelessFilter filter = new CsrfStatelessFilter();
 
     @Mock
-    private CsrfTokenUtility tokenUtility;
+    private CsrfTokenService tokenUtility;
 
     @Mock
     private FilterChain filterChain;
