@@ -25,10 +25,10 @@ Labour
     ...    INFUND-736
     ...
     ...    INFUND-1256
-    [Tags]    Finances    Panding
-    #Pending due to INFUND-2573
+    [Tags]    Finances    Pending
+    #Pending due to Ithe remaining tasks of the NFUND-844
     sleep    5s
-    the user navigates to the page    ${YOUR_FINANCES_URL}
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
@@ -45,7 +45,7 @@ Administration support costs
     ...
     ...    INFUND-736
     [Tags]    Finances    Pending
-    #Pending due to INFUND-2573
+    #Pending due to Ithe remaining tasks of the NFUND-844
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
     And user selects the admin costs    overheads-rateType-29-51    DEFAULT_PERCENTAGE
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
@@ -64,6 +64,7 @@ Materials
     ...
     ...    INFUND-736
     [Tags]    Finances
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
     When the Applicant fills the Materials fields
     Then Totals should be correct    css=#section-total-11    £ 2,000    css=[data-mirror="#section-total-11"]    £ 2,000
     And the user clicks the button/link    css=#material-costs-table tbody tr:nth-child(1) button

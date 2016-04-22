@@ -23,7 +23,7 @@ If research participation is too high, an error is shown on the form and also th
 
 If research participation is below the maximum level, no error is shown
     [Documentation]    INFUND-1436
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Failing
     Given the first collaborator logs in
     When the first collaborator edits financial details to bring down the research participation level
     And the applicant logs in
@@ -37,18 +37,18 @@ The applicant logs in
 
 The research participation on the second application is too high
     Guest user log-in    &{collaborator2_credentials}
-    the user navigates to the page      ${your_finances_url_application_2}
+    the user navigates to the page    ${your_finances_url_application_2}
     Input Text    id=incurred-staff    1000000000
 
 the academic collaborator can change their level of participation back
     Guest user log-in    &{collaborator2_credentials}
-    the user navigates to the page      ${your_finances_url_application_2}
+    the user navigates to the page    ${your_finances_url_application_2}
     Input Text    id=incurred-staff    1000
-    Sleep       1s
+    Sleep    1s
 
 There is an error message on the finances form
     the applicant logs in
-    the user navigates to the page   ${FINANCES_OVERVIEW_URL_APPLICATION_2}
+    the user navigates to the page    ${FINANCES_OVERVIEW_URL_APPLICATION_2}
     Page Should Contain    The participation levels of this project are not within the required range
 
 There is an error message on the summary page
@@ -56,13 +56,11 @@ There is an error message on the summary page
     Click Button    css=[aria-controls="collapsible-14"]
     Page Should Contain    The participation levels of this project are not within the required range
 
-
 The first collaborator logs in
     Guest user log-in    &{collaborator1_credentials}
 
-
 The first collaborator edits financial details to bring down the research participation level
-    the user navigates to the page       ${your_finances_url_application_2}
+    the user navigates to the page    ${your_finances_url_application_2}
     Click Element    css=[aria-controls="collapsible-0"]
     Wait Until Element Is Visible    name=add_cost
     Click Element    name=add_cost
@@ -83,5 +81,3 @@ There is no error message on the summary page
     Click Button    css=[aria-controls="collapsible-14"]
     Sleep    3s
     Page Should Not Contain    The participation levels of this project are not within the required range
-
-

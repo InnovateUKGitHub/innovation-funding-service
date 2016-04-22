@@ -2,6 +2,7 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.Application;
 import com.worth.ifs.BaseControllerMockMVCTest;
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
@@ -10,7 +11,7 @@ import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.UserResource;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -237,6 +238,39 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
                 .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
+    }
+
+    @Test
+    public void testApplicationSummaryReadyForReviewAction() throws Exception {
+        ApplicationResource app = applications.get(0);
+        Question question = questions.get(questions.keySet().iterator().next());
+        ProcessRole processRole = processRoles.get(0);
+
+        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
+        when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
+
+        mockMvc.perform(post("/application/" + app.getId() + "/summary")
+                .param(AbstractApplicationController.ASSIGN_QUESTION_PARAM, question.getId() + "_" + processRole.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/application/" + app.getId() + "/summary"));
+
+        verify(questionService, times(1)).assign(question.getId(), app.getId(), user.getId(), processRole.getId());
+    }
+
+    @Test
+    public void testApplicationSummaryMarkAsCompleteAction() throws Exception {
+        ApplicationResource app = applications.get(0);
+        Question question = questions.get(questions.keySet().iterator().next());
+        ProcessRole processRole = processRoles.get(0);
+
+        UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
+        when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
+
+        mockMvc.perform(post("/application/" + app.getId() + "/summary")
+                .param(AbstractApplicationController.MARK_AS_COMPLETE, question.getId().toString()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/application/" + app.getId() + "/summary"));
+        verify(questionService, times(1)).markAsComplete(question.getId(), app.getId(), user.getId());
     }
 
     @Test
