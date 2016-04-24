@@ -174,7 +174,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             questionFormInputs.put(question.get().getId(), formInputs.orElse(null));
         }
         model.addAttribute("currentQuestion", question.orElse(null));
-        model.addAttribute("questionFormInputs", formInputs.orElse(null));
+        model.addAttribute("questionFormInputs", questionFormInputs);
         if(question.isPresent()) {
             model.addAttribute("title", question.get().getShortName());
         }

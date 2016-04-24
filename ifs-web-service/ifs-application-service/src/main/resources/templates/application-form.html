@@ -29,15 +29,15 @@
                 </ul>
             </div>
 
-            <div class="question" th:each="formInput, status : ${questionFormInputs?.get(0L)}" th:id="'form-input-'+${formInput}"
-                 th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput)}), question=(${currentQuestion}),questionAssignee=(${questionAssignees.get(currentQuestion.getId())})">
+            <div class="question" th:each="formInput, status : ${questionFormInputs?.get(currentQuestion?.id)}" th:id="'form-input-'+${formInput.id}"
+                 th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.id)}), question=(${currentQuestion}),questionAssignee=(${questionAssignees.get(currentQuestion.getId())})">
                 <div th:replace="question-type/types :: ${formInput.formInputTypeTitle}" />
             </div>
             <div th:if="${currentSection}" th:remove="tag">
                 <p class="subtitle" th:if="${currentSection.getDescription()}" th:text="${currentSection.getDescription()}" />
                 <div th:each="question : ${sectionQuestions.get(currentSection.id)}" th:remove="tag">
                     <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:id="'form-input-'+${formInput.getId()}"
-                         th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput)}),questionAssignee=(${questionAssignees.get(question.getId())})">
+                         th:with="formInputIndex=(${status.index}), response=(${responses.get(formInput.id)}),questionAssignee=(${questionAssignees.get(question.getId())})">
                         <div th:replace="question-type/types :: ${formInput.formInputTypeTitle}" />
                         <div th:replace="'finance/'+${financeView} :: ${formInput.formInputTypeTitle}" />
                         <div th:replace="finance/finance-summary :: ${formInput.formInputTypeTitle}" />
