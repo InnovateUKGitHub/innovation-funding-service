@@ -4,6 +4,7 @@ import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.cost.CostItem;
+import com.worth.ifs.finance.resource.cost.OtherFunding;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,26 +40,26 @@ public class EmptyRowValidator implements Validator {
         List<CostItem> response = (List<CostItem>) target;
         Cost cost = costRepository.findOne(response.get(0).getId());
 
-        switch(response.get(0).getCostType()){
-            case OTHER_FUNDING:
+        int rowCount = 0;
+        if(response.size() > 1) {
+            for (final CostItem row : response) {
+                if (!row.isEmpty()) {
+                    rowCount++;
+                }
+            }
+        }
 
-                boolean allRowsAreEmpty = true;
-                for(final CostItem row : response){
-                    if(!row.isEmpty()){
-                        allRowsAreEmpty = false;
-                        break;
+        if(rowCount < response.get(0).getMinRows()){
+            switch(response.get(0).getCostType()) {
+                case OTHER_FUNDING:
+                    if(((OtherFunding)response.get(0)).getOtherPublicFunding().equals("Yes")) {
+                        errors.reject("MinimumRows", "You should provide at least " + response.get(0).getMinRows() + " source(s) of funding");
                     }
-                }
-                if(allRowsAreEmpty){
-                    errors.reject("MinimumRows", "You should provide at least one Source of funding");
-                }
-            /*ApplicationFinance applicationFinance = cost.getApplicationFinance();
-            ServiceResult<Question> question = questionService.getQuestionByFormInputType(OTHER_FUNDING.getType());
-            List<Cost> otherFundingRows = costRepository.findByApplicationFinanceIdAndNameAndQuestionId(applicationFinance.getId(), "", question.getSuccessObject().getId());
-            if(otherFundingRows.isEmpty()) {
-                errors.reject("MinimumRows", "You should provide at least one Source of funding");
-            } */
-            break;
+                    break;
+                default:
+                    errors.reject("MinimumRows", "You should provide at least" + response.get(0).getMinRows() + " row(s) of input");
+                    break;
+            }
         }
     }
 }

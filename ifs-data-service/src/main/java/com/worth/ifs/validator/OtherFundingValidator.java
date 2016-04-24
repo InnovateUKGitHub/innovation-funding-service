@@ -1,14 +1,8 @@
 package com.worth.ifs.validator;
 
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.finance.domain.ApplicationFinance;
-import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.repository.CostRepository;
-import com.worth.ifs.finance.resource.category.OtherFundingCostCategory;
-import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
-import java.util.List;
 
 /**
  * This class validates the FormInputResponse, it checks if the maximum word count has been exceeded.
@@ -43,7 +35,7 @@ public class OtherFundingValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        OtherFunding response = (OtherFunding) target;
+        /*OtherFunding response = (OtherFunding) target;
         Cost cost = costRepository.findOne(response.getId());
         ApplicationFinance applicationFinance = cost.getApplicationFinance();
 
@@ -54,6 +46,6 @@ public class OtherFundingValidator implements Validator {
             errors.reject("MinimumRows", "You should provide at least one Source of funding");
         }else{
             LOG.debug("NO "+response.getName() + " vs " +CostType.OTHER_FUNDING.getType());
-        }
+        }*/
     }
 }

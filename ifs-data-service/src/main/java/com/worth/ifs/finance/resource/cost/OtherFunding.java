@@ -78,15 +78,16 @@ public class OtherFunding implements CostItem {
 
     @Override
     public boolean isEmpty() {
-        if((fundingSource.equals("Other Funding") && fundingAmount.compareTo(BigDecimal.ZERO) == 0) || (fundingSource.isEmpty() && securedDate.isEmpty() && fundingAmount.compareTo(BigDecimal.ZERO) == 0)){
+        if((fundingSource.isEmpty() && securedDate.isEmpty() && fundingAmount.compareTo(BigDecimal.ZERO) == 0)){
             return true;
         }
+        //(fundingSource.equals("Other Funding") && fundingAmount.compareTo(BigDecimal.ZERO) == 0) ||
         return false;
     }
 
     @Override
     public int getMinRows() {
-        return 0;
+        return 1;
     }
 
     public void setId(Long id) {

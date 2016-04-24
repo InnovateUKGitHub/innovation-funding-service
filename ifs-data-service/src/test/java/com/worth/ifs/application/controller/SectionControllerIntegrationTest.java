@@ -124,25 +124,15 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         RestResult<List<ValidationMessages>> result = controller.markAsComplete(sectionIdYourFinances, applicationId, leadApplicantProcessRole);
         assertTrue(result.isSuccess());
         List<ValidationMessages> validationMessages = result.getSuccessObject();
-        assertEquals(2, validationMessages.size());
+        assertEquals(1, validationMessages.size());
 
         ValidationMessages messages = validationMessages.get(0);
-        assertEquals(1, messages.getErrors().size());
-        assertEquals(new Long(54), messages.getObjectId());
-        assertEquals("costItem", messages.getObjectName());
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "".equals(e.getErrorKey()))
-                .filter(e -> "You should provide at least one Source of funding".equals(e.getErrorMessage()))
-                .filter(e -> HttpStatus.NOT_ACCEPTABLE.equals(e.getStatusCode()))
-                .findAny().isPresent());
-
-        messages = validationMessages.get(1);
         assertEquals(1, messages.getErrors().size());
         assertEquals(new Long(35), messages.getObjectId());
         assertEquals("question", messages.getObjectName());
         assertTrue(messages.getErrors().stream()
                 .filter(e -> "".equals(e.getErrorKey()))
-                .filter(e -> "You should provide at least one Source of funding".equals(e.getErrorMessage()))
+                .filter(e -> "You should provide at least 1 source(s) of funding".equals(e.getErrorMessage()))
                 .filter(e -> HttpStatus.NOT_ACCEPTABLE.equals(e.getStatusCode()))
                 .findAny().isPresent());
     }
