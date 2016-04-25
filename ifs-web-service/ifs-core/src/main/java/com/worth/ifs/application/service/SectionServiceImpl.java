@@ -9,12 +9,15 @@ import java.util.concurrent.Future;
 
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import com.worth.ifs.form.service.FormInputService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,9 @@ public class SectionServiceImpl implements SectionService {
 
     @Autowired
     private SectionRestService sectionRestService;
+
+    @Autowired
+    private FormInputService formInputService;
 
     @Autowired
     private QuestionService questionService;
@@ -109,7 +115,7 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public void removeSectionsQuestionsWithType(SectionResource section, String name) {
-        List<Question> questions = questionService.findByCompetition(section.getCompetition());
+        List<QuestionResource> questions = questionService.findByCompetition(section.getCompetition());
         section.getChildSections().stream()
                 .map(sectionRestService::getById)
                 .map(result -> result.getSuccessObject())
@@ -121,16 +127,16 @@ public class SectionServiceImpl implements SectionService {
                                 q -> q != null &&
                                 !q.getFormInputs().stream()
                                     .anyMatch(
-                                        input -> input.getFormInputType().getTitle().equals(name)
+                                        input -> formInputService.getOne(input).getFormInputTypeTitle().equals(name)
                                     )
                         )
-                        .map(Question::getId)
+                        .map(QuestionResource::getId)
                         .collect(toList())
                 )
         );
     }
 
-    private List<Question> getQuestionsBySection(final List<Long> questionIds, final List<Question> questions) {
+    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 

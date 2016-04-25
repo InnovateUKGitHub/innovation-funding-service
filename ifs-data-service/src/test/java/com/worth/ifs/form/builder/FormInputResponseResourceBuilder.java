@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.idBasedValues;
+import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -39,7 +40,7 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
     }
 
     public FormInputResponseResourceBuilder withFormInputs(List<Long> owningFormInputs) {
-        return withList(owningFormInputs, (formInput, formInputResponse) -> formInputResponse.setFormInput(formInput));
+        return withList(owningFormInputs, (formInput, formInputResponseResource) -> formInputResponseResource.setFormInput(formInput));
     }
 
     public FormInputResponseResourceBuilder withFileEntry(FileEntryResource fileEntry) {

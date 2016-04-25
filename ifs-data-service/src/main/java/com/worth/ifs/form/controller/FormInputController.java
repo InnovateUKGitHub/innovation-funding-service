@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/forminput")
 public class FormInputController {
@@ -19,5 +21,10 @@ public class FormInputController {
     @RequestMapping("/{id}")
     public RestResult<FormInputResource> findOne(@PathVariable("id") Long id){
         return formInputService.findFormInput(id).toGetResponse();
+    }
+
+    @RequestMapping("/findByQuestionId/{questionId}")
+    public RestResult<List<FormInputResource>> findByQuestionId(@PathVariable("questionId") Long questionId){
+        return formInputService.findByQuestionId(questionId).toGetResponse();
     }
 }

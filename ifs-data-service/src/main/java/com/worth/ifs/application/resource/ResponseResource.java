@@ -19,10 +19,10 @@ public class ResponseResource {
     private Long application;
     private List<Long> responseAssessmentFeedbacks = new ArrayList<>();
 
-    public ResponseResource(Long id, LocalDateTime updateDate, ProcessRole updatedBy, Question question, Application app) {
+    public ResponseResource(Long id, LocalDateTime updateDate, ProcessRole updatedBy, Long questionId, Application app) {
         this.id = id;
         this.updateDate = updateDate;
-        this.question = question.getId();
+        this.question = questionId;
         this.application = app.getId();
         this.updatedBy = updatedBy.getId();
     }
@@ -53,10 +53,6 @@ public class ResponseResource {
 
     public void setApplication(Application application) {
         this.application = application.getId();
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question.getId();
     }
 
     public Long getUpdatedBy() {

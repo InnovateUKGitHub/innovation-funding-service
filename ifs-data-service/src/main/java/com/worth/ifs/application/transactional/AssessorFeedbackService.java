@@ -8,4 +8,6 @@ public interface AssessorFeedbackService {
 
     @NotSecured("TODO")
     ServiceResult<AssessorFeedbackResource> findOne(Long id);
+    @NotSecured("TODO")
+    ServiceResult<AssessorFeedbackResource> findByAssessorId(Long assessorId);
 }
