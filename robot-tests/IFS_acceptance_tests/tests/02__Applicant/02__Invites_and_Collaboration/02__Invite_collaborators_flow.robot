@@ -60,7 +60,7 @@ Business organisation (accept invitation)
     ...    INFUND-2286
     ...    INFUND-1779
     ...    INFUND-2336
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    organisationType    1
@@ -75,37 +75,29 @@ Business organisation (accept invitation)
     And the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
-User who accepted the invite should be able to log-in
-    [Tags]  Pending
-    # Pending due to INFUND-2583
+
+User who accepted the invite should be able to log-in and see the new company name throughout the application
+    [Documentation]     INFUND-2083
+    [Tags]
     Given the user clicks the button/link    jQuery=.button:contains("Log in")
     When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
+    [Teardown]  Logout as user
+
 
 User who accepted the invite can invite others to their own organisation
     [Documentation]    INFUND-2335
-    [Tags]     Email
-    Given the user clicks the button/link    jQuery=.button:contains("Log in")
-    When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
+    [Tags]
+    Given guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     When the user navigates to the page    ${MANAGE_CONTRIBUTORS_URL}
     Then the user can invite another person to their own organisation
 
 User who accepted the invite cannot invite others to other organisations
     [Documentation]    INFUND-2335
-    [Tags]    Email
+    [Tags]
     Then the user cannot invite another person to a different organisation
 
-Collaborator can change the name of their company and this updates throughout the application
-    [Documentation]    INFUND-2083
-    [Tags]    Pending   Email
-    # note - only pending because it isn't working yet!
-    Given the lead applicant logs out
-    And the invited user verifies their email
-    When the user changes their company name
-    Then the new company name should be shown throughout the application
-    And the lead applicant logs back in
-    And the new company name should be shown throughout the application
 
 The collaborator who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
@@ -221,15 +213,6 @@ the status of the people should be correct in the Manage contributors page
 the lead applicant logs out
     Logout as user
 
-the invited user verifies their email
-    the user navigates to the page    ${verify_link_4}
-
-the user changes their company name
-    (still to implement)
-
-the new company name should be shown throughout the application
-    {still to implement}
-
 the lead applicant logs back in
     guest user log-in    &{lead_applicant_credentials}
 
@@ -250,7 +233,7 @@ the user selects the same address
 the user can invite another person to their own organisation
     The user clicks the button/link     jQuery=button:contains('Add person')
     wait until page contains element         jQuery=li:nth-child(3) tr:nth-of-type(2) td:nth-child(2)
-    page should not contain element     jQuery=li:nth-child(4) tr:nth-of-type(2) td:nth-child(2) [readonly]
+    page should not contain element     jQuery=li:nth-child(3) tr:nth-of-type(2) td:nth-child(2) [readonly]
 
 the user cannot invite another person to a different organisation
     page should contain element         jQuery=li:nth-child(2) tr:nth-of-type(1) td:nth-child(2) [readonly]
