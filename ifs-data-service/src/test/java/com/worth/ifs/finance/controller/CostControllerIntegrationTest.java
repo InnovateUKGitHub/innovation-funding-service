@@ -153,7 +153,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         assertEquals(null, messages);
         //assertEquals(otherFunding.getId(), messages.getObjectId());
         //assertEquals("costItem", messages.getObjectName());
-
 //        assertTrue(messages.getErrors().stream()
 //                .filter(e -> "".equals(e.getErrorKey()))
 //                .filter(e -> "You should provide at least one Source of funding".equals(e.getErrorMessage()))

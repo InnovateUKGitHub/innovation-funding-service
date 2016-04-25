@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 /**
  * This class validates the FormInputResponse, it checks if the maximum word count has been exceeded.
  */
@@ -35,6 +38,23 @@ public class OtherFundingValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        // Not required for now as covered by empty row validation.  May need additional validation for date.
+        OtherFunding otherFunding = (OtherFunding) target;
+        String fundingSource = otherFunding.getFundingSource();
+        if(fundingSource != null && !fundingSource.equals("Other Funding")){
+            String securedDate = otherFunding.getSecuredDate();
+            if(!isValidDate(securedDate)) {
+                errors.reject("InvalidDate", "Invalid secured date.  Please use MM-YYYY format.");
+            }
+        }
+    }
+
+    private boolean isValidDate(final String input){
+        SimpleDateFormat format = new SimpleDateFormat("MM-yyyy");
+        try {
+            format.parse(input);
+            return true;
+        } catch(ParseException e){
+            return false;
+        }
     }
 }

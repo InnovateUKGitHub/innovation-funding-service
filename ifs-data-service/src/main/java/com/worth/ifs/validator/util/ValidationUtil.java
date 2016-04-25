@@ -9,7 +9,7 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
-import com.worth.ifs.validator.EmptyRowValidator;
+import com.worth.ifs.validator.MinRowCountValidator;
 import com.worth.ifs.validator.GrantClaimValidator;
 import com.worth.ifs.validator.NotEmptyValidator;
 import com.worth.ifs.validator.OtherFundingValidator;
@@ -29,14 +29,14 @@ public final class ValidationUtil {
     public final static Log LOG = LogFactory.getLog(ValidationUtil.class);
     public static ValidatorService validatorService;
     public static Validator validator;
-    public static EmptyRowValidator emptyRowValidator;
+    public static MinRowCountValidator emptyRowValidator;
     public static GrantClaimValidator grantClaimValidator;
     public static OtherFundingValidator otherFundingValidator;
 
     @Autowired
     private ValidationUtil(ValidatorService validatorService,
                            @Qualifier("basicValidator") Validator validator,
-                           EmptyRowValidator emptyRowValidator,
+                           MinRowCountValidator emptyRowValidator,
                            GrantClaimValidator grantClaimValidator,
                            OtherFundingValidator otherFundingValidator) {
         this.validatorService = validatorService;

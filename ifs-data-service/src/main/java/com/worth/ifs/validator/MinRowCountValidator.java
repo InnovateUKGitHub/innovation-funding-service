@@ -1,7 +1,6 @@
 package com.worth.ifs.validator;
 
 import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
@@ -19,18 +18,18 @@ import java.util.List;
  * This class validates the FormInputResponse, it checks if the maximum word count has been exceeded.
  */
 @Component
-public class EmptyRowValidator implements Validator {
+public class MinRowCountValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {
         return ArrayList.class.equals(clazz);
     }
-    private static final Log LOG = LogFactory.getLog(EmptyRowValidator.class);
+    private static final Log LOG = LogFactory.getLog(MinRowCountValidator.class);
 
     static CostRepository costRepository;
     static QuestionService questionService;
 
     @Autowired
-    public EmptyRowValidator(CostRepository costRepository, QuestionService questionService) {
+    public MinRowCountValidator(CostRepository costRepository, QuestionService questionService) {
         this.costRepository = costRepository;
         this.questionService = questionService;
     }
@@ -38,7 +37,6 @@ public class EmptyRowValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         List<CostItem> response = (List<CostItem>) target;
-        Cost cost = costRepository.findOne(response.get(0).getId());
 
         int rowCount = 0;
         if(response.size() > 1) {
