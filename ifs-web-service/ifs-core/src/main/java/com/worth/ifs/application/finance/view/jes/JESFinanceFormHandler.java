@@ -71,16 +71,16 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     public ValidationMessages storeCost(Long userId, Long applicationId, String fieldName, String value) {
         if (fieldName != null && value != null) {
             if (fieldName.startsWith("cost-")) {
-                storeField(fieldName.replace("cost-", ""), value, userId, applicationId);
+                return storeField(fieldName.replace("cost-", ""), value, userId, applicationId);
             }
         }
         return null;
     }
 
-    private void storeField(String fieldName, String value, Long userId, Long applicationId) {
+    private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {
         FinanceFormField financeFormField = getCostFormField(fieldName, value);
         if(financeFormField==null)
-            return;
+            return null;
 
         CostHandler costHandler = new AcademicFinanceHandler();
         Long costFormFieldId = 0L;
@@ -88,7 +88,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
         CostItem costItem = costHandler.toCostItem(costFormFieldId, Arrays.asList(financeFormField));
-        storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+        return storeCostItem(costItem, userId, applicationId, financeFormField.getQuestionId());
     }
 
     private FinanceFormField getCostFormField(String costTypeKey, String value) {
@@ -101,12 +101,23 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         return null;
     }
 
-    private void storeCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
+    private ValidationMessages storeCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
         if (costItem.getId().equals(0L)) {
             addCostItem(costItem, userId, applicationId, question);
         } else {
-            costService.update(costItem);
+            RestResult<ValidationMessages> messages = costService.update(costItem);
+            ValidationMessages validationMessages = messages.getSuccessObject();
+
+            if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
+                LOG.debug("no validation errors on cost items");
+                return messages.getSuccessObject();
+            } else {
+                messages.getSuccessObject().getErrors().stream()
+                        .peek(e -> LOG.debug(String.format("Got cost item Field error: %s  / %s", e.getErrorKey(), e.getErrorMessage())));
+                return messages.getSuccessObject();
+            }
         }
+        return null;
     }
 
     private void addCostItem(CostItem costItem, Long userId, Long applicationId, String question) {
