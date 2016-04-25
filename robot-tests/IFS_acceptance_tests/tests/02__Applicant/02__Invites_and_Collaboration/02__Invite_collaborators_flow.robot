@@ -85,21 +85,20 @@ User who accepted the invite should be able to log-in
 
 User who accepted the invite can invite others to their own organisation
     [Documentation]    INFUND-2335
-    [Tags]    Pending
-    # pending as not yet finished
+    [Tags]     Email
+    Given the user clicks the button/link    jQuery=.button:contains("Log in")
+    When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     When the user navigates to the page    ${MANAGE_CONTRIBUTORS_URL}
-    Then the user should see the element    foobar
+    Then the user can invite another person to their own organisation
 
 User who accepted the invite cannot invite others to other organisations
     [Documentation]    INFUND-2335
-    [Tags]    Pending
-    # pending as not yet finished
-    When the user navigates to the page    ${MANAGE_CONTRIBUTORS_URL}
-    Then the user should not see the element    foobar
+    [Tags]    Email
+    Then the user cannot invite another person to a different organisation
 
 Collaborator can change the name of their company and this updates throughout the application
     [Documentation]    INFUND-2083
-    [Tags]    Pending
+    [Tags]    Pending   Email
     # note - only pending because it isn't working yet!
     Given the lead applicant logs out
     And the invited user verifies their email
@@ -246,3 +245,12 @@ the user can see the updated company name throughout the application
 
 the user selects the same address
     select Checkbox    id=address-same
+
+
+the user can invite another person to their own organisation
+    The user clicks the button/link     jQuery=button:contains('Add person')
+    wait until page contains element         jQuery=li:nth-child(3) tr:nth-of-type(2) td:nth-child(2)
+    page should not contain element     jQuery=li:nth-child(4) tr:nth-of-type(2) td:nth-child(2) [readonly]
+
+the user cannot invite another person to a different organisation
+    page should contain element         jQuery=li:nth-child(2) tr:nth-of-type(1) td:nth-child(2) [readonly]
