@@ -32,7 +32,7 @@ ${OVERVIEW_MARK_AS_COMPLETE}    ${SERVER}/application/7
 *** Test Cases ***
 Calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]
+    [Tags]      Pending
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
@@ -41,7 +41,7 @@ Calculations for Lead applicant
 
 Calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]
+    [Tags]      Pending
     [Setup]    Guest user log-in    &{collaborator1_credentials}
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
