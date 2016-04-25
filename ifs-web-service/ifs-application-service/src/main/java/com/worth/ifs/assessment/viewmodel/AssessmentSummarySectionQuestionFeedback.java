@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.application.domain.AssessorFeedback;
+import com.worth.ifs.application.resource.AssessorFeedbackResource;
 
 /**
  * A view model object representing an Assessor's feedback for a Response.
@@ -17,7 +18,7 @@ public class AssessmentSummarySectionQuestionFeedback {
         this.feedbackValue = feedbackValue;
     }
 
-    public AssessmentSummarySectionQuestionFeedback(AssessorFeedback feedback) {
+    public AssessmentSummarySectionQuestionFeedback(AssessorFeedbackResource feedback) {
         this(feedback.getAssessmentFeedback(), feedback.getAssessmentValue());
     }
 

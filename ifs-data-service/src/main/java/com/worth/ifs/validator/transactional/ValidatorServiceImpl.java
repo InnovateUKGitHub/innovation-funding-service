@@ -21,10 +21,15 @@ import java.util.List;
  */
 @Service
 public class ValidatorServiceImpl extends BaseTransactionalService implements ValidatorService {
+
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
+
     @Autowired
-    CostService costService;
+    private CostService costService;
+
+    @Autowired
+    private ValidationUtil validationUtil;
 
     private static final Log LOG = LogFactory.getLog(ValidatorServiceImpl.class);
 
@@ -34,7 +39,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         List<FormInputResponse> response = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId);
         if(!response.isEmpty()) {
             for (FormInputResponse formInputResponse : response) {
-                results.add(ValidationUtil.validateResponse(formInputResponse, false));
+                results.add(validationUtil.validateResponse(formInputResponse, false));
             }
         }
         return results;
@@ -43,7 +48,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     @Override
     public BindingResult validateFormInputResponse(Long applicationId, Long formInputId, Long markedAsCompleteById) {
         FormInputResponse response = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, markedAsCompleteById, formInputId);
-        return ValidationUtil.validateResponse(response, false);
+        return validationUtil.validateResponse(response, false);
     }
 
 
@@ -53,7 +58,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
             return costService.financeDetails(applicationId, role.getOrganisation().getId()).andOnSuccess(financeDetails -> {
                 return costService.getCostItems(financeDetails.getId(), question.getId()).andOnSuccessReturn(costItems -> {
                     LOG.debug("=======Got Cost Items : count 2: "+costItems.size());
-                    return ValidationUtil.validateCostItem(costItems, question);
+                    return validationUtil.validateCostItem(costItems, question);
                 });
             });
         }).getSuccessObject();

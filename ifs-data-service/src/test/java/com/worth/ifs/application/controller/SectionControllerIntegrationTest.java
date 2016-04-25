@@ -1,7 +1,9 @@
 package com.worth.ifs.application.controller;
 
 import com.worth.ifs.BaseControllerIntegrationTest;
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.SectionRepository;
 import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
@@ -35,6 +37,8 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
     private QuestionService questionService;
     @Autowired
     SectionService sectionService;
+    @Autowired
+    QuestionMapper questionMapper;
 
     private Section section;
     private Long applicationId;
@@ -104,7 +108,8 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
 
         // Mark one question as incomplete.
         questionService.markAsInComplete(new QuestionApplicationCompositeId(28L, applicationId), leadApplicantProcessRole);
-        assertFalse(questionService.isMarkedAsComplete(questionService.getQuestionById(21L).getSuccessObject(), applicationId, leadApplicantOrganisationId).getSuccessObject());
+	Question question = questionService.getQuestionById(21L).andOnSuccessReturn(questionMapper::mapToDomain).getSuccessObject();
+        assertFalse(questionService.isMarkedAsComplete(question, applicationId, leadApplicantOrganisationId).getSuccessObject());
 
         assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());
         assertEquals(7, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccessObject().size());

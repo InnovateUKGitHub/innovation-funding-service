@@ -6,7 +6,10 @@ import java.util.Set;
 import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.mapper.QuestionMapper;
+import com.worth.ifs.application.repository.QuestionRepository;
 import com.worth.ifs.application.repository.QuestionStatusRepository;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.security.SecuritySetter;
 
@@ -30,11 +33,16 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     QuestionStatusRepository questionStatusRepository;
     @Autowired
     QuestionService questionService;
+    @Autowired
+    QuestionRepository questionRepository;
+    @Autowired
+    QuestionMapper questionMapper;
 
 
     private final Long userId = SecuritySetter.basicSecurityUser.getId();
     private final Long applicationId = 1L;
     private final Long questionId = 13L;
+    private QuestionResource questionResource;
     private Question question;
     private Long newAssigneeProcessRoleId = 5L;
     private Long organisationId = 3L;
@@ -46,7 +54,9 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Before
     public void setup(){
-        question = controller.getQuestionById(questionId).getSuccessObject();
+        question = questionRepository.findOne(questionId);
+        questionResource = questionMapper.mapToResource(question);
+
         addBasicSecurityUser();
     }
 
@@ -59,10 +69,10 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testGetQuestionById() throws Exception {
-        question= controller.getQuestionById(questionId).getSuccessObject();
+        questionResource= controller.getQuestionById(questionId).getSuccessObject();
 
-        assertNotNull(question);
-        assertEquals("How does your project align with the scope of this competition?", question.getName());
+        assertNotNull(questionResource);
+        assertEquals("How does your project align with the scope of this competition?", questionResource.getName());
     }
 
     @Test
@@ -143,7 +153,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testFindByCompetition() throws Exception {
-        List<Question> questions = controller.findByCompetition(competitionId).getSuccessObject();
+        List<QuestionResource> questions = controller.findByCompetition(competitionId).getSuccessObject();
 
         assertNotNull(questions);
         assertTrue(questions.size() > 5);
@@ -151,14 +161,14 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testGetNextQuestion() throws Exception {
-        Question nextQuestion = controller.getNextQuestion(9L).getSuccessObject();
+        QuestionResource nextQuestion = controller.getNextQuestion(9L).getSuccessObject();
         assertNotNull(nextQuestion);
         assertEquals(new Long(11L), nextQuestion.getId());
     }
 
     @Test
     public void testGetPreviousQuestion() throws Exception {
-        Question previousQuestion = controller.getPreviousQuestion(11L).getSuccessObject();
+        QuestionResource previousQuestion = controller.getPreviousQuestion(11L).getSuccessObject();
 
         assertNotNull(previousQuestion);
         assertEquals(new Long(9L), previousQuestion.getId());
@@ -166,7 +176,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testGetPreviousQuestionBySection() throws Exception {
-        Question previousQuestion = controller.getPreviousQuestionBySection(10L).getSuccessObject();
+        QuestionResource previousQuestion = controller.getPreviousQuestionBySection(10L).getSuccessObject();
         assertNotNull(previousQuestion);
         assertNotNull(previousQuestion.getId());
         assertEquals(16L , previousQuestion.getId().longValue());
@@ -174,7 +184,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testGetNextQuestionBySection() throws Exception {
-        Question nextQuestion = controller.getNextQuestionBySection(10L).getSuccessObject();
+        QuestionResource nextQuestion = controller.getNextQuestionBySection(10L).getSuccessObject();
         assertNotNull(nextQuestion);
         assertNotNull(nextQuestion.getId());
         assertEquals(41L, nextQuestion.getId().longValue());
@@ -191,7 +201,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testIsMarkedAsCompleteMultiple() throws Exception {
-        question = controller.getQuestionById(QUESTION_ID_WITH_MULTIPLE).getSuccessObject();
+        question = questionRepository.findOne(QUESTION_ID_WITH_MULTIPLE);
 
         assertFalse(questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccessObject());
 

@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.resource.ResponseResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.responseListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.responseResourceListType;
 
 /**
  * ResponseRestServiceImpl is a utility for CRUD operations on {@link Response}'s.
@@ -23,8 +24,8 @@ public class ResponseRestServiceImpl extends BaseRestService implements Response
     String responseRestURL;
 
     @Override
-    public RestResult<List<Response>> getResponsesByApplicationId(Long applicationId) {
-        return getWithRestResult(responseRestURL + "/findResponsesByApplication/" + applicationId, responseListType());
+    public RestResult<List<ResponseResource>> getResponsesByApplicationId(Long applicationId) {
+        return getWithRestResult(responseRestURL + "/findResponsesByApplication/" + applicationId, responseResourceListType());
     }
 
     @Override

@@ -19,15 +19,17 @@ import java.text.SimpleDateFormat;
  */
 @Component
 public class OtherFundingValidator implements Validator {
+
+    private static final Log LOG = LogFactory.getLog(OtherFundingValidator.class);
+
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
+    private CostRepository costRepository;
+    private QuestionService questionService;
+
     @Override
     public boolean supports(Class<?> clazz) {
         return OtherFunding.class.equals(clazz);
     }
-    private static final Log LOG = LogFactory.getLog(OtherFundingValidator.class);
-
-    static OrganisationFinanceDelegate organisationFinanceDelegate;
-    static CostRepository costRepository;
-    static QuestionService questionService;
 
     @Autowired
     public OtherFundingValidator(OrganisationFinanceDelegate organisationFinanceDelegate, CostRepository costRepository, QuestionService questionService) {

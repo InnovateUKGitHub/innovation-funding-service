@@ -1,6 +1,7 @@
 package com.worth.ifs.application.service;
 
 import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +13,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 import static com.worth.ifs.application.service.Futures.adapt;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
 import static java.util.Arrays.asList;
 
 /**
@@ -41,8 +42,8 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
     }
 
     @Override
-    public RestResult<List<Question>> findByCompetition(Long competitionId) {
-        return getWithRestResult(questionRestURL + "/findByCompetition/" + competitionId, questionListType());
+    public RestResult<List<QuestionResource>> findByCompetition(Long competitionId) {
+        return getWithRestResult(questionRestURL + "/findByCompetition/" + competitionId, questionResourceListType());
     }
 
     @Override
@@ -56,32 +57,32 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
     }
 
     @Override
-    public RestResult<Question> findById(Long questionId) {
-        return getWithRestResult(questionRestURL + "/id/" + questionId, Question.class);
+    public RestResult<QuestionResource> findById(Long questionId) {
+        return getWithRestResult(questionRestURL + "/id/" + questionId, QuestionResource.class);
     }
 
     @Override
-    public RestResult<Question> getNextQuestion(Long questionId) {
-        return getWithRestResult(questionRestURL + "/getNextQuestion/" + questionId, Question.class);
+    public RestResult<QuestionResource> getNextQuestion(Long questionId) {
+        return getWithRestResult(questionRestURL + "/getNextQuestion/" + questionId, QuestionResource.class);
     }
 
     @Override
-    public RestResult<Question> getPreviousQuestion(Long questionId) {
-        return getWithRestResult(questionRestURL + "/getPreviousQuestion/" + questionId, Question.class);
+    public RestResult<QuestionResource> getPreviousQuestion(Long questionId) {
+        return getWithRestResult(questionRestURL + "/getPreviousQuestion/" + questionId, QuestionResource.class);
     }
 
     @Override
-    public RestResult<Question> getPreviousQuestionBySection(Long sectionId) {
-        return getWithRestResult(questionRestURL + "/getPreviousQuestionBySection/" + sectionId, Question.class);
+    public RestResult<QuestionResource> getPreviousQuestionBySection(Long sectionId) {
+        return getWithRestResult(questionRestURL + "/getPreviousQuestionBySection/" + sectionId, QuestionResource.class);
     }
 
     @Override
-    public RestResult<Question> getNextQuestionBySection(Long sectionId) {
-        return getWithRestResult(questionRestURL + "/getNextQuestionBySection/" + sectionId, Question.class);
+    public RestResult<QuestionResource> getNextQuestionBySection(Long sectionId) {
+        return getWithRestResult(questionRestURL + "/getNextQuestionBySection/" + sectionId, QuestionResource.class);
     }
 
     @Override
-    public RestResult<Question> getQuestionByFormInputType(String formInputType) {
-        return getWithRestResult(questionRestURL + "/getQuestionByFormInputType/" + formInputType, Question.class);
+    public RestResult<QuestionResource> getQuestionByFormInputType(String formInputType) {
+        return getWithRestResult(questionRestURL + "/getQuestionByFormInputType/" + formInputType, QuestionResource.class);
     }
 }

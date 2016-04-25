@@ -12,6 +12,16 @@
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" th:remove="tag" />
     <div class="grid-row">
+
+        <section class="column-half" th:with="redirectAfterLogin= '/application/create-authenticated/'+${competitionId}">
+
+            <h1 class="heading-large">Sign in</h1>
+            <p>If you have used this service before you must <a th:href="${redirectAfterLogin}">login</a></p>
+
+            <a th:href="${redirectAfterLogin}" class="button" value="create-account" type="submit">Login</a>
+
+        </section>
+
         <section class="column-half" th:with="createUrl= '/organisation/create/find-business'">
             <h1 class="heading-large">Create Account</h1>
 
@@ -26,7 +36,8 @@
                 <li>set up successful projects</li>
             </ul>
 
-            <a th:href="${createUrl}" class="button" value="create-account" type="submit">Create</a></section>
+            <a th:href="${createUrl}" class="button" value="create-account" type="submit">Create</a>
+        </section>
     </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>

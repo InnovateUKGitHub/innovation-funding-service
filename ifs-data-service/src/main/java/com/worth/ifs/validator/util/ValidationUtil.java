@@ -18,6 +18,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.*;
 
@@ -25,28 +26,29 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-public final class ValidationUtil {
+public class ValidationUtil {
     public final static Log LOG = LogFactory.getLog(ValidationUtil.class);
-    public static ValidatorService validatorService;
-    public static Validator validator;
-    public static MinRowCountValidator emptyRowValidator;
-    public static GrantClaimValidator grantClaimValidator;
-    public static OtherFundingValidator otherFundingValidator;
+    private ValidatorService validatorService;
+    private Validator validator;
+    private GrantClaimValidator grantClaimValidator;
+    private OtherFundingValidator otherFundingValidator;
+    private MinRowCountValidator minRowCountValidator;
 
     @Autowired
+    @Lazy
     private ValidationUtil(ValidatorService validatorService,
                            @Qualifier("basicValidator") Validator validator,
-                           MinRowCountValidator emptyRowValidator,
+                           MinRowCountValidator minRowCountValidator,
                            GrantClaimValidator grantClaimValidator,
                            OtherFundingValidator otherFundingValidator) {
         this.validatorService = validatorService;
         this.validator = validator;
-        this.emptyRowValidator = emptyRowValidator;
+        this.minRowCountValidator = minRowCountValidator;
         this.grantClaimValidator = grantClaimValidator;
         this.otherFundingValidator = otherFundingValidator;
     }
 
-    public static BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
+    public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
         DataBinder binder = new DataBinder(response);
         if (response == null) {
             LOG.info("response is null");
@@ -76,29 +78,25 @@ public final class ValidationUtil {
         return binder.getBindingResult();
     }
 
-    public static List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
+    public List<ValidationMessages> isSectionValid(Long markedAsCompleteById, Section section, Application application) {
         LOG.debug("VALIDATE SECTION "+ section.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         boolean allQuestionsValid = true;
         for (Question question : section.fetchAllChildQuestions()) {
-            if (!question.getMarkAsCompletedEnabled()) {
-                // no need to validate :)
-            } else {
+            if (question.getMarkAsCompletedEnabled()) {
                 validationMessages.addAll(isQuestionValid(question, application, markedAsCompleteById));
             }
         }
         return validationMessages;
     }
 
-    public static List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
+    public List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
         LOG.debug("==validate question "+ question.getName());
-        boolean questionValid = true;
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (question.hasMultipleStatuses()) {
             for (FormInput formInput : question.getFormInputs()) {
-                validationMessages.addAll(isFormInputValid(question, application, markedAsCompleteById, questionValid, formInput));
+                validationMessages.addAll(isFormInputValid(question, application, markedAsCompleteById, formInput));
             }
-//            validationMessages.addAll(validatorService.validateCostItem(application.getId(), question.getId(), markedAsCompleteById));
         } else {
             for (FormInput formInput : question.getFormInputs()) {
                 validationMessages.addAll(isFormInputValid(application, formInput));
@@ -107,7 +105,7 @@ public final class ValidationUtil {
         return validationMessages;
     }
 
-    public static List<ValidationMessages> isFormInputValid(Application application, FormInput formInput) {
+    public List<ValidationMessages> isFormInputValid(Application application, FormInput formInput) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
         List<BindingResult> bindingResults = validatorService.validateFormInputResponse(application.getId(), formInput.getId());
         for (BindingResult bindingResult : bindingResults) {
@@ -118,7 +116,7 @@ public final class ValidationUtil {
         return null;
     }
 
-    public static List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, boolean questionValid, FormInput formInput) {
+    public List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, FormInput formInput) {
         LOG.debug("====validate form input "+ formInput.getDescription());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (formInput.getFormValidators().isEmpty()) {
@@ -135,7 +133,7 @@ public final class ValidationUtil {
         return validationMessages;
     }
 
-    private static void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {
+    private void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {
         try {
             CostType costType = CostType.fromString(formInput.getFormInputType().getTitle()); // this checks if formInput is CostType related.
             validationMessages.addAll(validatorService.validateCostItem(application.getId(), question, markedAsCompleteById));
@@ -144,7 +142,7 @@ public final class ValidationUtil {
         }
     }
 
-    private static ValidationMessages invokeEmptyRowValidatorAndReturnMessages(List<CostItem> costItems, Question question) {
+    private ValidationMessages invokeEmptyRowValidatorAndReturnMessages(List<CostItem> costItems, Question question) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(question, "question");
         invokeEmptyRowValidator(costItems, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -153,13 +151,12 @@ public final class ValidationUtil {
         return null;
     }
 
-    public static List<ValidationMessages> validateCostItem(List<CostItem> costItems, Question question) {
-
+    public List<ValidationMessages> validateCostItem(List<CostItem> costItems, Question question) {
         if (costItems.isEmpty())
             return Collections.emptyList();
 
         List<ValidationMessages> results = costItems.stream()
-                .map(ValidationUtil::validateCostItem)
+                .map(this::validateCostItem)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
@@ -170,7 +167,7 @@ public final class ValidationUtil {
         return results;
     }
 
-    public static ValidationMessages validateCostItem(CostItem costItem) {
+    public ValidationMessages validateCostItem(CostItem costItem) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
         ValidationUtils.invokeValidator(validator, costItem, bindingResult);
 
@@ -190,7 +187,7 @@ public final class ValidationUtil {
 
     }
 
-    private static void invokeExtraValidator(CostItem costItem, BeanPropertyBindingResult bindingResult) {
+    private void invokeExtraValidator(CostItem costItem, BeanPropertyBindingResult bindingResult) {
         Validator extraValidator = null;
         switch(costItem.getCostType()){
             case FINANCE:
@@ -206,7 +203,7 @@ public final class ValidationUtil {
         }
     }
 
-    private static void invokeEmptyRowValidator(List<CostItem> costItems, BeanPropertyBindingResult bindingResult){
-        ValidationUtils.invokeValidator(emptyRowValidator, costItems, bindingResult);
+    private void invokeEmptyRowValidator(List<CostItem> costItems, BeanPropertyBindingResult bindingResult){
+        ValidationUtils.invokeValidator(minRowCountValidator, costItems, bindingResult);
     }
 }

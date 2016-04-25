@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.domain.Response;
+import com.worth.ifs.application.resource.ResponseResource;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.rest.RestErrorResponse;
 import com.worth.ifs.commons.rest.RestResult;
@@ -14,8 +15,8 @@ import org.springframework.web.client.HttpServerErrorException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.responseListType;
+import static com.worth.ifs.application.builder.ResponseResourceBuilder.newResponseResource;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.responseResourceListType;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -40,11 +41,11 @@ public class ResponseRestServiceMocksTest extends BaseRestServiceUnitTest<Respon
     @Test
     public void test_getResponsesByApplicationId() {
 
-        List<Response> responses = newResponse().build(3);
-        setupGetWithRestResultExpectations(responseRestURL + "/findResponsesByApplication/1", responseListType(), responses);
+        List<ResponseResource> responses = newResponseResource().build(3);
+        setupGetWithRestResultExpectations(responseRestURL + "/findResponsesByApplication/1", responseResourceListType(), responses);
 
         // now run the method under test
-        List<Response> returnedResponses = service.getResponsesByApplicationId(1L).getSuccessObject();
+        List<ResponseResource> returnedResponses = service.getResponsesByApplicationId(1L).getSuccessObject();
 
         // verify
         assertEquals(responses, returnedResponses);
