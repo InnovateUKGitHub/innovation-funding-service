@@ -42,27 +42,30 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Override
     public Iterable<Cost> initialiseCostType(ApplicationFinance applicationFinance, CostType costType){
-        Question question = getQuestionByCostType(costType);
-        try{
-            List<Cost> cost = getCostHandler(costType).initializeCost();
-            cost.forEach(c -> {
-                c.setQuestion(question);
-                c.setApplicationFinance(applicationFinance);
-            });
-            if(!cost.isEmpty()){
-                costRepository.save(cost);
-                return cost;
-            }else{
-                return new ArrayList<>();
-            }
-
-        }catch (IllegalArgumentException e){
-            LOG.error(String.format("No CostHandler for type: %s", costType.getType()), e);
-        }
+    	
+    	if(costTypeSupportedByHandler(costType)) {
+	        Question question = getQuestionByCostType(costType);
+	        try{
+	            List<Cost> cost = getCostHandler(costType).initializeCost();
+	            cost.forEach(c -> {
+	                c.setQuestion(question);
+	                c.setApplicationFinance(applicationFinance);
+	            });
+	            if(!cost.isEmpty()){
+	                costRepository.save(cost);
+	                return cost;
+	            }else{
+	                return new ArrayList<>();
+	            }
+	
+	        }catch (IllegalArgumentException e){
+	            LOG.error(String.format("No CostHandler for type: %s", costType.getType()), e);
+	        }
+    	}
         return null;
     }
 
-    // TODO DW - INFUND-1555 - handle rest result
+	// TODO DW - INFUND-1555 - handle rest result
     private Question getQuestionByCostType(CostType costType) {
         return questionService.getQuestionByFormInputType(costType.getType()).getSuccessObjectOrThrowException();
     }
@@ -156,6 +159,10 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return costs;
     }
 
+    private boolean costTypeSupportedByHandler(CostType costType) {
+		return !(CostType.YOUR_FINANCE.equals(costType) || CostType.ACADEMIC.equals(costType));
+	}
+    
     private CostHandler getCostHandler(CostType costType) {
         switch(costType) {
             case LABOUR:
