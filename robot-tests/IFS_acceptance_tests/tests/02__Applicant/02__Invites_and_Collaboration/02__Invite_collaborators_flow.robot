@@ -141,7 +141,7 @@ The Lead applicant invites a non registered user in the same organisation
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage Contributors
-    And the user clicks the button/link    jQuery=li:nth-child(4) button:contains("Add person")
+    And the user clicks the button/link    jQuery=li:nth-child(1) button:contains("Add person")
     When the user adds new collaborator
     And the user clicks the button/link    jquery=button:contains("Save Changes")
     Then the user should be redirected to the correct page    ${APPLICATION_TEAM_URL}
@@ -182,9 +182,9 @@ The lead applicant should have the correct status
     Should Be Equal As Strings    ${input_value}    (Lead Applicant)
 
 the user adds new collaborator
-    Wait Until Element Is Visible    css=li:nth-child(4) tr:nth-of-type(2) td:nth-of-type(1) input
-    Input Text    css=li:nth-child(4) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
-    Input Text    css=li:nth-child(4) tr:nth-of-type(2) td:nth-of-type(2) input    worth.email.test+inviteorg2@gmail.com
+    Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input
+    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    Roger Axe
+    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    worth.email.test+inviteorg2@gmail.com
     focus    jquery=li:nth-child(1) button:contains('Add person')
     sleep    300ms
 
