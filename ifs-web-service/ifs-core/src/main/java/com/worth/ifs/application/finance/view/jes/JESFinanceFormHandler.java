@@ -6,6 +6,7 @@ import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.FinanceFormHandler;
 import com.worth.ifs.application.finance.view.item.CostHandler;
+import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.service.QuestionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
@@ -129,7 +130,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     }
 
     private Long getQuestionId(String costFieldName) {
-        Question question;
+        QuestionResource question;
         switch (costFieldName) {
             case "tsb_reference":
                 question = questionService.getQuestionByFormInputType("your_finance").getSuccessObject();

@@ -14,5 +14,6 @@ import java.util.List;
 public interface FormInputRepository extends PagingAndSortingRepository<FormInput, Long> {
 	@Override
     List<FormInput> findAll();
-    List<FormInput> findByCompetitionId(@Param("competitionId") Long competitionId);
+    List<FormInput> findByCompetitionId(Long competitionId);
+    List<FormInput> findByQuestionId(Long questionId);
 }

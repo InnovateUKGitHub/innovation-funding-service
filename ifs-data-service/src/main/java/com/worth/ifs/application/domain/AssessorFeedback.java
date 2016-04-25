@@ -30,9 +30,6 @@ public class AssessorFeedback {
     @JoinColumn(name="assessorId", referencedColumnName="id")
     private ProcessRole assessor;
 
-    @Column(name = "assessorId", insertable = false, updatable = false)
-    private Long assessorId;
-
     private String assessmentValue;
 
     @Column(length=5000)
@@ -74,13 +71,8 @@ public class AssessorFeedback {
         return response;
     }
 
-    public Long getAssessorId() {
-        return assessorId;
-    }
-
     void setAssessor(ProcessRole assessor) {
         this.assessor = assessor;
-        this.assessorId = assessor.getId();
     }
 
     @JsonIgnore
@@ -105,10 +97,6 @@ public class AssessorFeedback {
         return this.assessor;
     }
 
-    public void setAssessorId(Long assessorId) {
-        this.assessorId = assessorId;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -125,7 +113,6 @@ public class AssessorFeedback {
             .append(this.id, rhs.id)
             .append(this.response, rhs.response)
             .append(this.assessor, rhs.assessor)
-            .append(this.assessorId, rhs.assessorId)
             .append(this.assessmentValue, rhs.assessmentValue)
             .append(this.assessmentFeedback, rhs.assessmentFeedback)
             .isEquals();
@@ -137,13 +124,9 @@ public class AssessorFeedback {
             .append(id)
             .append(response)
             .append(assessor)
-            .append(assessorId)
             .append(assessmentValue)
             .append(assessmentFeedback)
             .toHashCode();
     }
 
-    public Long getAssessorIdOrAssessor() {
-        return assessor == null ? assessorId : assessor.getId();
-    }
 }

@@ -8,26 +8,17 @@
         </div>
         <button class="button disabled" disabled="disabled">Apply now</button>
     </div>
-    <div th:if="${currentCompetition.isOpen()} and ${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" th:remove="tag">
-        <div class="warning-alert">
-            You are already logged in. You can only create one application per account. If you want to apply to another competition please logout and create a new account.
-        </div>
-        <button class="button disabled" disabled="disabled">Apply now</button>
-    </div>
-    <div th:if="${currentCompetition.isOpen()}" th:unless="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" th:remove="tag">
+    <div th:if="${currentCompetition.isOpen()}" th:remove="tag">
         <a role="button" tabindex="0" class="button"
            th:href="@{/competition/{competitionId}/info/eligibility(competitionId=${competitionId})}">Apply now</a>
     </div>
 </div>
 
 <div th:fragment="sign-in-to-apply-button">
-    <div class="warning-alert" th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">
-        You are already logged in. You can only create one application per account. If you want to apply to another competition please logout and create a new account.
-    </div>
     <a th:unless="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" role="button" tabindex="0" class="button"
        th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${competitionId})}">Sign in to apply</a>
-
-    <button th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" class="button disabled" disabled="disabled">Sign in to apply</button>
+    <a th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" role="button" tabindex="0" class="button"
+       th:href="@{/application/create-authenticated/{competitionId}(competitionId=${competitionId})}">Apply now</a>
 </div>
 
 </html>

@@ -17,14 +17,16 @@ import org.springframework.validation.Validator;
  */
 @Component
 public class GrantClaimValidator implements Validator {
+
+    private static final Log LOG = LogFactory.getLog(GrantClaimValidator.class);
+
+    private OrganisationFinanceDelegate organisationFinanceDelegate;
+    private CostRepository costRepository;
+
     @Override
     public boolean supports(Class<?> clazz) {
         return GrantClaim.class.equals(clazz);
     }
-    private static final Log LOG = LogFactory.getLog(GrantClaimValidator.class);
-
-    static OrganisationFinanceDelegate organisationFinanceDelegate;
-    static CostRepository costRepository;
 
     @Autowired
     public GrantClaimValidator(OrganisationFinanceDelegate organisationFinanceDelegate, CostRepository costRepository) {

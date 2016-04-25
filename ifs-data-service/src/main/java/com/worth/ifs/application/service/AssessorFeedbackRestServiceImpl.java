@@ -16,4 +16,9 @@ public class AssessorFeedbackRestServiceImpl extends BaseRestService implements 
     public RestResult<AssessorFeedbackResource> findOne(Long id) {
         return getWithRestResult(restUrl + "/" + id, AssessorFeedbackResource.class);
     }
+
+    @Override
+    public RestResult<AssessorFeedbackResource> findByAssessorId(Long assessorId) {
+        return getWithRestResult(restUrl + "/findByAssessor/" + assessorId, AssessorFeedbackResource.class);
+    }
 }

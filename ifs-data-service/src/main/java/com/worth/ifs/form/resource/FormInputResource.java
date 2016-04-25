@@ -8,6 +8,7 @@ public class FormInputResource {
     private Long id;
     private Integer wordCount;
     private Long formInputType;
+    private String formInputTypeTitle;
     private List<Long> responses;
     private Long question;
     private Long competition;
@@ -71,6 +72,10 @@ public class FormInputResource {
         this.formInputType = formInputType;
     }
 
+    public void setFormInputTypeTitle(String formInputTypeTitle) {
+        this.formInputTypeTitle = formInputTypeTitle;
+    }
+
     public Long getCompetition() {
         return this.competition;
     }
@@ -81,6 +86,10 @@ public class FormInputResource {
 
     public Set<Long> getInputValidators() {
         return this.inputValidators;
+    }
+
+    public String getFormInputTypeTitle() {
+        return formInputTypeTitle;
     }
 
     public void setInputValidators(Set<Long> inputValidators) {
