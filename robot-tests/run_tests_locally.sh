@@ -166,7 +166,7 @@ echo "Postcode Lookup: 		${postcodeLookupKey}"
 if [ "$postcodeLookupKey" = '' ]
 then
     echo "Postcode lookup not implemented"
-    unset postcodeLookupImplemented
+    postcodeLookupImplemented='NO'
 else
     echo "Postcode lookup implemented. The tests will expect proper data from the SuT."
     postcodeLookUpImplemented='YES'
