@@ -51,7 +51,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         final List<Invite> invites = newInvite().build(nInvites);
         service.inviteCollaborators(baseUrl, invites);
         verify(invitePermissionRules, times(nInvites)).leadApplicantCanInviteToTheApplication(any(Invite.class), any(UserResource.class));
-        verify(invitePermissionRules, times(nInvites)).collaboratorCanInviteToApplicantForTheirOrganisation(any(Invite.class), any(UserResource.class));
+        verify(invitePermissionRules, times(nInvites)).collaboratorCanInviteToApplicationForTheirOrganisation(any(Invite.class), any(UserResource.class));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
                 () -> service.inviteCollaboratorToApplication(baseUrl, invite),
                 () -> {
                     verify(invitePermissionRules).leadApplicantCanInviteToTheApplication(eq(invite), any(UserResource.class));
-                    verify(invitePermissionRules).collaboratorCanInviteToApplicantForTheirOrganisation(eq(invite), any(UserResource.class));
+                    verify(invitePermissionRules).collaboratorCanInviteToApplicationForTheirOrganisation(eq(invite), any(UserResource.class));
                 });
     }
 
@@ -101,7 +101,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         int nInvites = 2;
         final List<InviteResource> invites = newInviteResource().build(nInvites);
         service.saveInvites(invites);
-        verify(invitePermissionRules, times(nInvites)).collaboratorCanSaveInviteToApplicantForTheirOrganisation(any(InviteResource.class), any(UserResource.class));
+        verify(invitePermissionRules, times(nInvites)).collaboratorCanSaveInviteToApplicationForTheirOrganisation(any(InviteResource.class), any(UserResource.class));
         verify(invitePermissionRules, times(nInvites)).leadApplicantCanSaveInviteToTheApplication(any(InviteResource.class), any(UserResource.class));
     }
 

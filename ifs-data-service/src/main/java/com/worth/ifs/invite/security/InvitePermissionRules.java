@@ -36,7 +36,7 @@ public class InvitePermissionRules {
     }
 
     @PermissionRule(value = "SEND", description = "collaborator can invite to the application for thier organisation")
-    public boolean collaboratorCanInviteToApplicantForTheirOrganisation(final Invite invite, final UserResource user) {
+    public boolean collaboratorCanInviteToApplicationForTheirOrganisation(final Invite invite, final UserResource user) {
         return isCollaboratorOnInvite(invite, user);
     }
 
@@ -47,7 +47,7 @@ public class InvitePermissionRules {
     }
 
     @PermissionRule(value = "SAVE", description = "collaborator can save invite to the application for thier organisation")
-    public boolean collaboratorCanSaveInviteToApplicantForTheirOrganisation(final InviteResource invite, final UserResource user) {
+    public boolean collaboratorCanSaveInviteToApplicationForTheirOrganisation(final InviteResource invite, final UserResource user) {
         return isCollaboratorOnInvite(invite, user);
     }
 

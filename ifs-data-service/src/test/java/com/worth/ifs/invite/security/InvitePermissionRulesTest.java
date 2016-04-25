@@ -90,9 +90,9 @@ public class InvitePermissionRulesTest extends BasePermissionRulesTest<InvitePer
 
     @Test
     public void testCollaboratorCanInviteToApplicantForTheirOrganisation() {
-        assertTrue(rules.collaboratorCanInviteToApplicantForTheirOrganisation(invite, collaborator));
-        assertFalse(rules.collaboratorCanInviteToApplicantForTheirOrganisation(invite, leadApplicant));
-        assertFalse(rules.collaboratorCanInviteToApplicantForTheirOrganisation(invite, otherCollaborator));
+        assertTrue(rules.collaboratorCanInviteToApplicationForTheirOrganisation(invite, collaborator));
+        assertFalse(rules.collaboratorCanInviteToApplicationForTheirOrganisation(invite, leadApplicant));
+        assertFalse(rules.collaboratorCanInviteToApplicationForTheirOrganisation(invite, otherCollaborator));
     }
 
     @Test
@@ -104,9 +104,9 @@ public class InvitePermissionRulesTest extends BasePermissionRulesTest<InvitePer
 
     @Test
     public void testCollaboratorCanSaveInviteToApplicantForTheirOrganisation() {
-        assertTrue(rules.collaboratorCanSaveInviteToApplicantForTheirOrganisation(inviteResource, collaborator));
-        assertFalse(rules.collaboratorCanSaveInviteToApplicantForTheirOrganisation(inviteResource, leadApplicant));
-        assertFalse(rules.collaboratorCanSaveInviteToApplicantForTheirOrganisation(inviteResource, otherCollaborator));
+        assertTrue(rules.collaboratorCanSaveInviteToApplicationForTheirOrganisation(inviteResource, collaborator));
+        assertFalse(rules.collaboratorCanSaveInviteToApplicationForTheirOrganisation(inviteResource, leadApplicant));
+        assertFalse(rules.collaboratorCanSaveInviteToApplicationForTheirOrganisation(inviteResource, otherCollaborator));
     }
 
     @Test

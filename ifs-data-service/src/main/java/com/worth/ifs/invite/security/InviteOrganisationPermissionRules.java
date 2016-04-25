@@ -16,8 +16,9 @@ import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
 
 
-/**
- * TODO
+
+ /**
+ * Permission rules for {@link InviteOrganisationResource} permissioning
  */
 @Component
 @PermissionRules
