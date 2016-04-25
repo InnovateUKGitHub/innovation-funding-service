@@ -86,6 +86,11 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     @Override
+    protected <R> BaseEitherBackedResult<R, ServiceFailure> createFailure(ServiceFailure failure) {
+        return serviceFailure(failure);
+    }
+
+    @Override
     protected <R> BaseEitherBackedResult<R, ServiceFailure> createSuccess(R success) {
         return serviceSuccess(success);
     }

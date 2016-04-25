@@ -8,6 +8,7 @@ import com.worth.ifs.finance.handler.OrganisationFinanceDefaultHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.OrganisationType;
 import org.junit.Test;
@@ -108,7 +109,7 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
 
         when(applicationFinanceRepository.save(newFinanceExpectations)).thenReturn(newFinance);
 
-        ServiceResult<ApplicationFinanceResource> result = service.addCost(123L, 456L);
+        ServiceResult<ApplicationFinanceResource> result = service.addCost(new ApplicationFinanceResourceId(123L, 456L));
         assertTrue(result.isSuccess());
 
         ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().

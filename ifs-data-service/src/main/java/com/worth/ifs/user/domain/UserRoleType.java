@@ -21,4 +21,13 @@ public enum UserRoleType {
     public String getName() {
         return this.name;
     }
+
+    public static UserRoleType fromName(final String name){
+        for (final UserRoleType userRoleType : UserRoleType.values()){
+            if (userRoleType.getName().equals(name)){
+                return userRoleType;
+            }
+        }
+        throw new IllegalArgumentException("No UserRoleType with name " + name);
+    }
 }

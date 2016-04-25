@@ -9,6 +9,7 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
+import com.worth.ifs.validator.AcademicValidator;
 import com.worth.ifs.validator.GrantClaimValidator;
 import com.worth.ifs.validator.NotEmptyValidator;
 import com.worth.ifs.validator.OtherFundingValidator;
@@ -33,14 +34,16 @@ public class ValidationUtil {
     private Validator validator;
     private GrantClaimValidator grantClaimValidator;
     private OtherFundingValidator otherFundingValidator;
+    private AcademicValidator academicValidator;
 
     @Autowired
     @Lazy
-    private ValidationUtil(ValidatorService validatorService, @Qualifier("basicValidator") Validator validator, GrantClaimValidator grantClaimValidator, OtherFundingValidator otherFundingValidator) {
+    private ValidationUtil(ValidatorService validatorService, @Qualifier("basicValidator") Validator validator, GrantClaimValidator grantClaimValidator, OtherFundingValidator otherFundingValidator, AcademicValidator academicValidator) {
         this.validatorService = validatorService;
         this.validator = validator;
         this.grantClaimValidator = grantClaimValidator;
         this.otherFundingValidator = otherFundingValidator;
+        this.academicValidator = academicValidator;
     }
 
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
@@ -180,6 +183,9 @@ public class ValidationUtil {
                 break;
             case OTHER_FUNDING:
                 extraValidator = otherFundingValidator;
+                break;
+            case ACADEMIC:
+                extraValidator = academicValidator;
                 break;
         }
         if(extraValidator != null){

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -18,7 +17,6 @@ import com.worth.ifs.exception.AutosaveElementException;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.profiling.ProfileExecution;
@@ -715,7 +713,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             }else{
                 errors = validationMessages.getErrors()
                         .stream()
-                        .filter(e -> fieldName.contains(e.getErrorKey())) // filter out the messages that are related to other fields.
+                        .filter(e -> fieldName.toLowerCase().contains(e.getErrorKey().toLowerCase())) // filter out the messages that are related to other fields.
                         .map(e -> e.getErrorMessage())
                         .collect(Collectors.toList());
             }
