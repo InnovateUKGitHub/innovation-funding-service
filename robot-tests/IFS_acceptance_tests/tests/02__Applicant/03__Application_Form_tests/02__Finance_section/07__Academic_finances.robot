@@ -60,7 +60,6 @@ Mark all as complete
 Academic finance overview
     [Documentation]    INFUND-917
     [Tags]
-    #Pending due to INFUND-2576
     Given the user navigates to the page    ${FINANCES_OVERVIEW_URL}
     Then the finance table should be correct
     When the user clicks the button/link    link=testing.pdf
