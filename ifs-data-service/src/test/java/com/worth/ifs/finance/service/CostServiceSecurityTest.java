@@ -8,6 +8,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.CostItem;
@@ -161,7 +162,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
 
 
     @Test
-    public void testAddCost() {
+    public void testAddCostOnLongId() {
         final Long applicationFinanceId = 1L;
         final Long questionId = 2L;
         when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
@@ -169,6 +170,33 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
                 () -> service.addCost(applicationFinanceId, questionId, new AcademicCost()),
                 () -> {
                     verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+
+    @Test
+    public void testAddCostOnApplicationFinanceResourceId() {
+        final Long applicationId = 1L;
+        final Long organisationId = 2L;
+        final ApplicationFinanceResourceId applicationFinanceId = new ApplicationFinanceResourceId(applicationId, organisationId);
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.addCost(applicationFinanceId),
+                () -> {
+                    verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                });
+    }
+
+
+    @Test
+    public void testUpdateCostOnApplicationFinanceId() {
+        final Long applicationFinanceId = 1L;
+        final ApplicationFinanceResource applicationFinanceResource = new ApplicationFinanceResource();
+        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
+        assertAccessDenied(
+                () -> service.updateCost(applicationFinanceId, applicationFinanceResource),
+                () -> {
+                    verify(applicationFinanceRules).consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 
@@ -254,7 +282,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
         }
 
         @Override
-        public ServiceResult<ApplicationFinanceResource> addCost(Long applicationId, Long organisationId) {
+        public ServiceResult<ApplicationFinanceResource> addCost(ApplicationFinanceResourceId applicationFinanceResourceId) {
             return null;
         }
 

@@ -12,6 +12,7 @@ import com.worth.ifs.file.transactional.FileEntryService;
 import com.worth.ifs.file.transactional.FileService;
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.transactional.CostService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -105,7 +106,7 @@ public class ApplicationFinanceController {
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
 
-        return costService.addCost(applicationId, organisationId).toPostCreateResponse();
+        return costService.addCost(new ApplicationFinanceResourceId(applicationId, organisationId)).toPostCreateResponse();
     }
 
     @RequestMapping("/getById/{applicationFinanceId}")
