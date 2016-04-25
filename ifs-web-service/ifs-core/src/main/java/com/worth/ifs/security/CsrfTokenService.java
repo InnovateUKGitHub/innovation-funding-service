@@ -111,7 +111,8 @@ class CsrfTokenService {
     }
 
     private String getTokenFromRequest(final HttpServletRequest request) throws CsrfException {
-        final Optional<String> token = ofNullable(ofNullable(request.getHeader(CSRF_HEADER_NAME)).orElse(request.getParameter(CSRF_PARAMETER_NAME)));
+        final Optional<String> headerToken = ofNullable(request.getHeader(CSRF_HEADER_NAME));
+        final Optional<String> token = ofNullable(headerToken.orElse(request.getParameter(CSRF_PARAMETER_NAME)));
         return token.orElseThrow(() -> new CsrfException(format("CSRF Token not found. Expected token in header with name '%s' or request parameter with name '%s'.", CSRF_HEADER_NAME, CSRF_PARAMETER_NAME)));
     }
 
