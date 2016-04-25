@@ -17,6 +17,8 @@ import com.worth.ifs.form.builder.FormInputBuilder;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputType;
 
+import com.worth.ifs.form.resource.FormInputResource;
+import com.worth.ifs.form.service.FormInputService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -29,6 +31,8 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+
 
 public class SectionServiceImplTest extends BaseUnitTestMocksTest {
 
@@ -39,9 +43,13 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
     SectionRestService sectionRestService;
     @Mock
     QuestionService questionService;
+    @Mock
+    FormInputService formInputService;
 
     private SectionResource parentSection;
     private SectionResource childSection1;
+    private FormInputResource formInputResource1;
+    private FormInputResource formInputResource2;
 
     @Before
     public void setUp() {
@@ -51,6 +59,9 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         Competition competition = CompetitionBuilder.newCompetition().build();
         parentSection = new SectionResource(10L, competition, new ArrayList<>(), "ParentSection", null);
         childSection1 = new SectionResource(20L, competition, new ArrayList<>(), "childSection1", parentSection.getId());
+        formInputResource1 = newFormInputResource().withFormInputTypeTitle("empty").build();
+        formInputResource2 = newFormInputResource().withFormInputTypeTitle("textarea").build();
+
 
         parentSection.setChildSections(asList(childSection1.getId()));
 
@@ -64,6 +75,9 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         when(questionService.getById(eq(question2.getId()))).thenReturn(question2);
 
         childSection1.setQuestions(Arrays.asList(question1.getId(), question2.getId()));
+        when(questionService.findByCompetition(childSection1.getCompetition())).thenReturn(asList(question1, question2));
+        when(formInputService.getOne(1L)).thenReturn(formInputResource1);
+        when(formInputService.getOne(2L)).thenReturn(formInputResource2);
     }
 
     @Test
