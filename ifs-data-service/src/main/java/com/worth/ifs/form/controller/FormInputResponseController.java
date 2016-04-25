@@ -3,7 +3,6 @@ package com.worth.ifs.form.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.repository.FormInputResponseRepository;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.transactional.FormInputService;
@@ -31,6 +30,9 @@ public class FormInputResponseController {
     @Autowired
     private FormInputService formInputService;
 
+    @Autowired
+    private ValidationUtil validationUtil;
+
     private static final Log LOG = LogFactory.getLog(FormInputResponseController.class);
 
     @RequestMapping("/findResponsesByApplication/{applicationId}")
@@ -56,7 +58,7 @@ public class FormInputResponseController {
 
         ServiceResult<List<String>> result = formInputService.saveQuestionResponse(userId, applicationId, formInputId, value).andOnSuccessReturn(response -> {
 
-            BindingResult bindingResult = ValidationUtil.validateResponse(response, ignoreEmpty);
+            BindingResult bindingResult = validationUtil.validateResponse(response, ignoreEmpty);
             if (bindingResult.hasErrors()) {
                 LOG.debug("Got validation errors: ");
                 bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Validation: " + e.getDefaultMessage()));
