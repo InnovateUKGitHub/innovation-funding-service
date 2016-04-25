@@ -10,6 +10,7 @@ import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
 import com.worth.ifs.validator.MinRowCountValidator;
+import com.worth.ifs.validator.AcademicValidator;
 import com.worth.ifs.validator.GrantClaimValidator;
 import com.worth.ifs.validator.NotEmptyValidator;
 import com.worth.ifs.validator.OtherFundingValidator;
@@ -32,20 +33,22 @@ public class ValidationUtil {
     private Validator validator;
     private GrantClaimValidator grantClaimValidator;
     private OtherFundingValidator otherFundingValidator;
+    private AcademicValidator academicValidator;
     private MinRowCountValidator minRowCountValidator;
 
     @Autowired
     @Lazy
-    private ValidationUtil(ValidatorService validatorService,
-                           @Qualifier("basicValidator") Validator validator,
-                           MinRowCountValidator minRowCountValidator,
+    private ValidationUtil(ValidatorService validatorService, @Qualifier("basicValidator") Validator validator,
                            GrantClaimValidator grantClaimValidator,
-                           OtherFundingValidator otherFundingValidator) {
+                           OtherFundingValidator otherFundingValidator,
+                           AcademicValidator academicValidator,
+                           MinRowCountValidator minRowCountValidator) {
         this.validatorService = validatorService;
         this.validator = validator;
         this.minRowCountValidator = minRowCountValidator;
         this.grantClaimValidator = grantClaimValidator;
         this.otherFundingValidator = otherFundingValidator;
+        this.academicValidator = academicValidator;
     }
 
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
@@ -90,7 +93,7 @@ public class ValidationUtil {
         return validationMessages;
     }
 
-    public List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
+    private List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
         LOG.debug("==validate question "+ question.getName());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (question.hasMultipleStatuses()) {
@@ -105,7 +108,7 @@ public class ValidationUtil {
         return validationMessages;
     }
 
-    public List<ValidationMessages> isFormInputValid(Application application, FormInput formInput) {
+    private List<ValidationMessages> isFormInputValid(Application application, FormInput formInput) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
         List<BindingResult> bindingResults = validatorService.validateFormInputResponse(application.getId(), formInput.getId());
         for (BindingResult bindingResult : bindingResults) {
@@ -116,7 +119,7 @@ public class ValidationUtil {
         return null;
     }
 
-    public List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, FormInput formInput) {
+    private List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, FormInput formInput) {
         LOG.debug("====validate form input "+ formInput.getDescription());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (formInput.getFormValidators().isEmpty()) {
@@ -195,6 +198,9 @@ public class ValidationUtil {
                 break;
             case OTHER_FUNDING:
                 extraValidator = otherFundingValidator;
+                break;
+            case ACADEMIC:
+                extraValidator = academicValidator;
                 break;
         }
         if(extraValidator != null){

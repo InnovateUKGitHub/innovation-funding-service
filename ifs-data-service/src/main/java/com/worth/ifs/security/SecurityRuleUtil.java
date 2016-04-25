@@ -38,4 +38,9 @@ public class SecurityRuleUtil {
         final ProcessRole processRole = processRoleRepository.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(user.getId(), role.getId(), applicationId, organisationId);
         return processRole != null;
     }
+
+    public static boolean checkRole(final UserResource user, final Long applicationId, UserRoleType userRoleType, final ProcessRoleRepository processRoleRepository) {
+        final ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), applicationId);
+        return processRole != null && processRole.getRole().getName().equals(userRoleType.getName());
+    }
 }

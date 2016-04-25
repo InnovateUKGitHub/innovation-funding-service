@@ -41,7 +41,7 @@ public class CostBuilder extends BaseBuilder<Cost, CostBuilder> {
         return with(cost -> setField("item", item, cost));
     }
 
-    public CostBuilder withApplicationFinance(ApplicationFinance applicationFinance){
-        return with(cost -> setField("applicationFinance", applicationFinance, cost));
+    public CostBuilder withApplicationFinance(final ApplicationFinance applicationFinance) {
+        return with(cost -> cost.setApplicationFinance(applicationFinance));
     }
 }
