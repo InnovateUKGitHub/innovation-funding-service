@@ -20,9 +20,9 @@ public class QuestionResource {
     private String guidanceQuestion;
     private String guidanceAnswer;
     private final List<Long> formInputs = new ArrayList<>();
-    private final Boolean markAsCompletedEnabled = false;
+    private Boolean markAsCompletedEnabled = false;
     private Boolean assignEnabled = true;
-    private final Boolean multipleStatuses = false;
+    private Boolean multipleStatuses = false;
     private Integer priority;
     private boolean needingAssessorScore;
     private boolean needingAssessorFeedback;
@@ -44,14 +44,6 @@ public class QuestionResource {
 
     public String getShortName() {
         return this.shortName;
-    }
-
-    public void setSection(Section section) {
-        this.section = section.getId();
-    }
-
-    public void setCompetition(Competition competition) {
-        this.competition = competition.getId();
     }
 
     public Long getId() {
@@ -108,6 +100,14 @@ public class QuestionResource {
 
     public Boolean getMarkAsCompletedEnabled() {
         return this.markAsCompletedEnabled;
+    }
+
+    public void setMarkAsCompletedEnabled(Boolean markAsCompletedEnabled) {
+        this.markAsCompletedEnabled = markAsCompletedEnabled;
+    }
+
+    public void setMultipleStatuses(Boolean multipleStatuses) {
+        this.multipleStatuses = multipleStatuses;
     }
 
     public Boolean isAssignEnabled() {

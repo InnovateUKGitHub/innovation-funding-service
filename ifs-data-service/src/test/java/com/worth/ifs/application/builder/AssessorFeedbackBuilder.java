@@ -53,7 +53,6 @@ public class AssessorFeedbackBuilder extends BaseBuilder<AssessorFeedback, Asses
     public AssessorFeedbackBuilder withAssessor(ProcessRole assessorProcessRole) {
         return with(feedback -> {
             setField("assessor", assessorProcessRole, feedback);
-            setField("assessorId", assessorProcessRole.getId(), feedback);
         });
     }
 }

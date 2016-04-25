@@ -251,8 +251,8 @@ the user fills the create account form
 
 the address fields should be filled
     # postcode lookup implemented on some machines but not others, so check which is running:
-    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' != ''    the address fields should be filled with valid data
-    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' == ''    the address fields should be filled with dummy data
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' != 'NO'    the address fields should be filled with valid data
+    Run Keyword If    '${POSTCODE_LOOKUP_IMPLEMENTED}' == 'NO'    the address fields should be filled with dummy data
 
 the address fields should be filled with valid data
     Textfield Should Contain    id=addressForm.selectedPostcode.addressLine1    Am Reprographics

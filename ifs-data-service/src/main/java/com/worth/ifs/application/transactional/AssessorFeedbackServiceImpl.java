@@ -25,4 +25,9 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
     public ServiceResult<AssessorFeedbackResource> findOne(Long id) {
         return find(repository.findOne(id), notFoundError(AssessorFeedback.class, id)).andOnSuccessReturn(mapper::mapToResource);
     }
+
+    @Override
+    public ServiceResult<AssessorFeedbackResource> findByAssessorId(Long assessorId) {
+        return find(repository.findByAssessorId(assessorId), notFoundError(AssessorFeedback.class, assessorId)).andOnSuccessReturn(mapper::mapToResource);
+    }
 }

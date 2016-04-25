@@ -4,8 +4,8 @@ import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.form.Form;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.*;
+import com.worth.ifs.application.service.AssessorFeedbackRestService;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.dto.Score;
@@ -61,7 +61,10 @@ public class AssessmentController extends AbstractApplicationController {
     private static final String rejectInvitation = "reject-assessment-invitation";
 
     @Autowired
-    AssessmentRestService assessmentRestService;
+    private AssessmentRestService assessmentRestService;
+
+    @Autowired
+    private AssessorFeedbackRestService assessorFeedbackRestService;
 
     private String competitionAssessmentsURL(Long competitionID) {
         return "/assessor/competitions/" + competitionID + "/applications";
@@ -191,8 +194,8 @@ public class AssessmentController extends AbstractApplicationController {
         Optional<SectionResource> currentSection = getSection(simpleMap(competition.getSections(),section -> sectionService.getById(section)), sectionId, true);
         addApplicationDetails(application, competition, userId, currentSection, Optional.empty(), model, null, userApplicationRoles);
         addSectionDetails(model, currentSection);
-        List<Response> questionResponses = responseService.getByApplication(application.getId());
-        Map<Long, Response> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
+        List<ResponseResource> questionResponses = responseService.getByApplication(application.getId());
+        Map<Long, ResponseResource> questionResponsesMap = responseService.mapResponsesToQuestion(questionResponses);
         model.addAttribute("processRole", assessorProcessRole);
         model.addAttribute("questionResponses", questionResponsesMap);
         financeOverviewModelManager.addFinanceDetails(model, competition.getId(), application.getId());
@@ -246,11 +249,11 @@ public class AssessmentController extends AbstractApplicationController {
         Assessment assessment = assessmentRestService.getOneByProcessRole(assessorProcessRole.getId()).getSuccessObjectOrThrowException();
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(competitionId);
-        List<Response> responses = getResponses(application);
+        List<ResponseResource> responses = getResponses(application);
 
         Score score = assessmentRestService.getScore(assessment.getId()).getSuccessObjectOrThrowException();
 
-        List<Question> questions = competition.getSections()
+        List<QuestionResource> questions = competition.getSections()
                 .stream()
                 .map(sectionService::getById)
                 .flatMap(section -> section.getQuestions()
