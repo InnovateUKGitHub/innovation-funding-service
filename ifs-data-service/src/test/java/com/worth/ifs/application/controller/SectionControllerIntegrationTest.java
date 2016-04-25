@@ -4,6 +4,7 @@ import com.worth.ifs.BaseControllerIntegrationTest;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.application.transactional.SectionService;
@@ -101,7 +102,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         assertEquals(8, controller.getCompletedSections(applicationId, 3L).getSuccessObject().size());
 
         // Mark one question as incomplete.
-        questionService.markAsInComplete(28L, applicationId, leadApplicantProcessRole);
+        questionService.markAsInComplete(new QuestionApplicationCompositeId(28L, applicationId), leadApplicantProcessRole);
         assertFalse(questionService.isMarkedAsComplete(questionService.getQuestionById(21L).getSuccessObject(), applicationId, leadApplicantOrganisationId).getSuccessObject());
 
         assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());
@@ -122,7 +123,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         RestResult<List<ValidationMessages>> result = controller.markAsComplete(sectionIdYourFinances, applicationId, leadApplicantProcessRole);
         assertTrue(result.isSuccess());
         List<ValidationMessages> validationMessages = result.getSuccessObject();
-        assertEquals(2, validationMessages.size());
+        assertEquals(1, validationMessages.size());
 
         ValidationMessages messages = validationMessages.get(0);
         assertEquals(1, messages.getErrors().size());
@@ -131,15 +132,6 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         assertTrue(messages.getErrors().stream()
                 .filter(e -> "".equals(e.getErrorKey()))
                 .filter(e -> "You should provide at least one Source of funding".equals(e.getErrorMessage()))
-                .findAny().isPresent());
-
-        messages = validationMessages.get(1);
-        assertEquals(1, messages.getErrors().size());
-        assertEquals(new Long(1), messages.getObjectId());
-        assertEquals("costItem", messages.getObjectName());
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "role".equals(e.getErrorKey()))
-                .filter(e -> "may not be empty".equals(e.getErrorMessage()))
                 .findAny().isPresent());
     }
 }

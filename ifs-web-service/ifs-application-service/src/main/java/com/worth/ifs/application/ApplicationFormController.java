@@ -93,6 +93,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         model.addAttribute("currentUser", user);
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
+        model.addAttribute("form", form);
         return APPLICATION_FORM;
     }
 
@@ -146,6 +147,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
+        model.addAttribute("form", form);
 
         return APPLICATION_FORM;
     }
@@ -203,6 +205,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
             form.setBindingResult(bindingResult);
             form.setObjectErrors(bindingResult.getAllErrors());
+            model.addAttribute("form", form);
             /* End save action */
 
             if (bindingResult.hasErrors()) {
@@ -297,7 +300,9 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     @RequestMapping(value = "/add_cost/{"+QUESTION_ID+"}")
-    public String addCostRow(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form, Model model,
+    public String addCostRow(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
+                             BindingResult bindingResult,
+                             Model model,
                              @PathVariable(APPLICATION_ID) final Long applicationId,
                              @PathVariable(QUESTION_ID) final Long questionId,
                              HttpServletRequest request) {
@@ -311,6 +316,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         organisationService.getUserOrganisation(applicationResource, user.getId());
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, user.getId(), questionId, type);
+
+        form.setBindingResult(bindingResult);
         return String.format("finance/finance :: %s_row", type);
     }
 
@@ -484,6 +491,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
+        model.addAttribute("form", form);
 
         if(bindingResult.hasErrors()){
             SectionResource section = sectionService.getById(sectionId);
@@ -691,7 +699,11 @@ public class ApplicationFormController extends AbstractApplicationController {
             if(validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()){
                 LOG.debug("no errors");
             }else{
-                errors = validationMessages.getErrors().stream().map(e -> e.getErrorMessage()).collect(Collectors.toList());
+                errors = validationMessages.getErrors()
+                        .stream()
+                        .filter(e -> fieldName.contains(e.getErrorKey())) // filter out the messages that are related to other fields.
+                        .map(e -> e.getErrorMessage())
+                        .collect(Collectors.toList());
             }
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);

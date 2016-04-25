@@ -1,14 +1,14 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.rest.ValidationMessages;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
+
+import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 
 /**
  * Interface for CRUD operations on {@link Section} related data.
@@ -17,6 +17,7 @@ public interface SectionRestService {
     RestResult<List<ValidationMessages>> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById);
     RestResult<Void> markAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById);
     RestResult<SectionResource> getById(Long sectionId);
+    RestResult<List<SectionResource>> getByCompetition(Long competitionId);
     RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(Long applicationId);
     RestResult<List<Long>> getCompletedSectionIds(Long applicationId, Long organisationId);
     RestResult<List<Long>> getIncompletedSectionIds(Long applicationId);

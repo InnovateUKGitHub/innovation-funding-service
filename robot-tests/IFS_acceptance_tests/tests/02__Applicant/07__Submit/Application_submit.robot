@@ -18,7 +18,7 @@ Documentation     This test has been put last (with the 1.) because the other ap
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
 Suite Setup       Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant    Submit
+Force Tags        Applicant    Submit       Pending
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/keywords/Login_actions.robot
@@ -47,7 +47,8 @@ Submit button disabled when the application is incomplete
 
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
-    [Tags]    Summary
+    [Tags]    Summary    Pending
+    #pending due to NFUND-2580
     Given the user navigates to the page    ${FINANCE_SECTION_7}
     When the user clicks the button/link    jQuery=button:contains("Edit")
     And the user navigates to the page    ${SUMMARY_PAGE_APPLICATION_7}

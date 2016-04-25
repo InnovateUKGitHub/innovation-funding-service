@@ -4,13 +4,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
+
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * Transactional and secure service for Section processing work
@@ -44,7 +46,7 @@ public interface SectionService {
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<Long>> getIncompleteSections(final Long applicationId);
 
-    @NotSecured("Any loggedIn user can find finance section for a given competition")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
 	ServiceResult<SectionResource> getFinanceSectionByCompetitionId(Long competitionId);
     
     /**
@@ -71,5 +73,8 @@ public interface SectionService {
 
     @PreAuthorize("hasPermission(#questionId, 'com.worth.ifs.application.resource.QuestionResource', 'READ')")
     ServiceResult<SectionResource> getSectionByQuestionId(final Long questionId);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<SectionResource>> getByCompetionId(final Long CompetitionId);
 
 }

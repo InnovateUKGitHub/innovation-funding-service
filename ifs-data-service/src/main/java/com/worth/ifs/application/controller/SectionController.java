@@ -1,17 +1,18 @@
 package com.worth.ifs.application.controller;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.application.transactional.SectionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * SectionController exposes Application data and operations through a REST API.
@@ -87,5 +88,10 @@ public class SectionController {
     @RequestMapping("/getFinanceSectionByCompetitionId/{competitionId}")
     public RestResult<SectionResource> getFinanceSectionByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
     	return sectionService.getFinanceSectionByCompetitionId(competitionId).toGetResponse();
+    }
+
+    @RequestMapping("/getByCompetition/{competitionId}")
+    public RestResult<List<SectionResource>> getSectionsByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
+        return sectionService.getByCompetionId(competitionId).toGetResponse();
     }
 }
