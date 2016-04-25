@@ -224,6 +224,19 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 				.orElse(null);
 	}
 	
+	@Override
+	public ServiceResult<SectionResource> getEachCollaboratorFinanceSectionByCompetitionId(Long competitionId) {
+		return getCompetition(competitionId).andOnSuccessReturn(this::eachCollaboratorFinanceSection);
+	}
+	
+	private SectionResource eachCollaboratorFinanceSection(Competition competition) {
+		return competition.getSections().stream()
+				.filter(Section::isEachCollaboratorFinance)
+				.findAny()
+				.map(sectionMapper::mapToResource)
+				.orElse(null);
+	}
+	
     // TODO DW - INFUND-1555 - work out the getSuccessObject call
     private ServiceResult<Boolean> isSectionComplete(Section section, Long applicationId, Long organisationId) {
         return isMainSectionComplete(section, applicationId, organisationId, true).andOnSuccess(sectionIsComplete -> {

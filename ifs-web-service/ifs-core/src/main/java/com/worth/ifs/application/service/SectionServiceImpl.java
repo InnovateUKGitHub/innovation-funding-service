@@ -164,4 +164,9 @@ public class SectionServiceImpl implements SectionService {
 	public SectionResource getFinanceSectionForCompetition(Long competitionId) {
 		return sectionRestService.getFinanceSectionForCompetition(competitionId).getSuccessObjectOrThrowException();
 	}
+
+	@Override
+	public SectionResource getEachCollaboratorFinanceSectionForCompetition(Long competitionId) {
+		return sectionRestService.getEachCollaboratorFinanceSectionForCompetition(competitionId).getSuccessObjectOrThrowException();
+	}
 }

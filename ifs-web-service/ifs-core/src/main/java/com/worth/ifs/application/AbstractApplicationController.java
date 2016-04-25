@@ -429,6 +429,16 @@ public abstract class AbstractApplicationController extends BaseController {
         
         model.addAttribute("hasFinanceSection", hasFinanceSection);
         model.addAttribute("financeSectionId", financeSectionId);
+        
+        SectionResource eachCollaboratorFinanceSection = sectionService.getEachCollaboratorFinanceSectionForCompetition(application.getCompetition());
+        Long eachCollaboratorFinanceSectionId;
+        if(eachCollaboratorFinanceSection != null) {
+        	eachCollaboratorFinanceSectionId = eachCollaboratorFinanceSection.getId();
+        } else {
+        	eachCollaboratorFinanceSectionId = null;
+        }
+        
+        model.addAttribute("eachCollaboratorFinanceSectionId", eachCollaboratorFinanceSectionId);
     }
 
     protected void addSectionDetails(Model model, Optional<SectionResource> currentSection) {

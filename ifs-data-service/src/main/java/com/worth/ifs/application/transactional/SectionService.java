@@ -49,6 +49,9 @@ public interface SectionService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
 	ServiceResult<SectionResource> getFinanceSectionByCompetitionId(Long competitionId);
     
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<SectionResource> getEachCollaboratorFinanceSectionByCompetitionId(Long competitionId);
+    
     /**
      * get questions for the sections and filter out the ones that have marked as completed turned on
      */

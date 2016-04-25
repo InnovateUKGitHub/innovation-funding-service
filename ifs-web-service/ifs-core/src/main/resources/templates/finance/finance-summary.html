@@ -148,9 +148,9 @@
                             </div>
                             <div th:remove="tag" th:if="${currentApplication.isOpen()}">
                               <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/tick-icon.png')}"
-                                   th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" alt="has marked the Finances as complete"/>
+                                   th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" alt="has marked the Finances as complete"/>
                               <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/warning-icon.png')}"
-                                   th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" alt="has not yet marked the Finances as complete" />
+                                   th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" alt="has not yet marked the Finances as complete" />
                             </div>
                         </div>
                     </th>
@@ -214,12 +214,12 @@
             <h2 class="heading-small no-margin">The following organisations have not marked their finances as complete:</h2>
             <ul class="list-bullet">
                 <div th:remove="tag" th:each="applicationOrganisation : ${applicationOrganisations}">
-                    <li th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}" th:text="${applicationOrganisation.name}" />
+                    <li th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" th:text="${applicationOrganisation.name}" />
                 </div>
             </ul>
             <div th:remove="tag" th:each="applicationOrganisation : ${applicationOrganisations}">
                 <a th:if="${applicationOrganisation.id == userOrganisation.id}"
-                   th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(6L)}"
+                   th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"
                    th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Return to finances section to complete your finances</a>
             </div>
 

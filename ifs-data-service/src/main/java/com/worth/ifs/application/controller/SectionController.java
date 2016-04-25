@@ -89,6 +89,11 @@ public class SectionController {
     public RestResult<SectionResource> getFinanceSectionByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
     	return sectionService.getFinanceSectionByCompetitionId(competitionId).toGetResponse();
     }
+    
+    @RequestMapping("/getEachCollaboratorFinanceSectionByCompetitionId/{competitionId}")
+    public RestResult<SectionResource> getEachCollaboratorFinanceSectionByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
+    	return sectionService.getEachCollaboratorFinanceSectionByCompetitionId(competitionId).toGetResponse();
+    }
 
     @RequestMapping("/getByCompetition/{competitionId}")
     public RestResult<List<SectionResource>> getSectionsByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
