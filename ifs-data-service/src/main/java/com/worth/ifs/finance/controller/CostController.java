@@ -27,6 +27,9 @@ public class CostController {
     @Autowired
     private CostService costService;
 
+    @Autowired
+    private ValidationUtil validationUtil;
+
     @RequestMapping("/add/{applicationFinanceId}/{questionId}")
     public RestResult<CostItem> add(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
@@ -51,7 +54,7 @@ public class CostController {
         if(updateResult.isFailure()){
             return RestResult.restFailure(updateResult.getFailure());
         }else{
-            ValidationMessages validationMessages = ValidationUtil.validateCostItem(updateResult.getSuccessObject());
+            ValidationMessages validationMessages = validationUtil.validateCostItem(updateResult.getSuccessObject());
             return RestResult.restSuccess(validationMessages);
         }
     }

@@ -5,7 +5,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...               INFUND-918: As an academic partner i want to be able to mark my finances as complete, so that the lead partner can have confidence in my finances
 Suite Setup       Guest user log-in    &{collaborator2_credentials}
 Suite Teardown    User closes the browser
-Force Tags        Finances    HappyPath    Pending
+Force Tags        Finances    HappyPath
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -19,15 +19,16 @@ ${text_file}      testing.txt
 *** Test Cases ***
 Academic finances should be editable when lead marks finances as complete
     [Documentation]    INFUND-2314
-    [Tags]    Pending
+    [Tags]    Failing
     [Setup]    Lead applicant marks the finances as complete
-    #Pending due to INFUND-2576
+    #we need to adjust the application in order to mark this as complete
     When the user navigates to the page    ${YOUR_FINANCES_URL}
     Then the user should not see the element    css=#incurred-staff[readonly]
     [Teardown]    Lead applicant marks the finances as incomplete
 
 Academic finance calculations
     [Documentation]    INFUND-917
+    When the user navigates to the page    ${YOUR_FINANCES_URL}
     When the academic partner fills the finances
     Then the calculations should be correct
 
@@ -45,7 +46,7 @@ Academics upload
 
 Academic finances JeS link showing
     [Documentation]    INFUND-2402
-    [Tags]    Academic    Finances
+    [Tags]    Academic
     When the user can see the link for more JeS details
 
 Mark all as complete

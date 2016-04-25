@@ -4,6 +4,7 @@ import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.transactional.AddressLookupService;
 import com.worth.ifs.address.transactional.AddressService;
 import com.worth.ifs.application.mapper.ApplicationMapper;
+import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.repository.*;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.ResponseService;
@@ -96,6 +97,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected QuestionStatusRepository questionStatusRepository;
+
+    @Mock
+    protected QuestionMapper questionMapperMock;
 
     @Mock
     protected FileService fileServiceMock;
