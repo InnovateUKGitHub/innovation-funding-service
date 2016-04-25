@@ -118,7 +118,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, User user, Competition competition) {
         Application application = new Application();
         application.setName(applicationName);
-        LocalDate currentDate = LocalDate.now();
+        //LocalDate currentDate = LocalDate.now();
+        LocalDate currentDate = null;
         application.setStartDate(currentDate);
 
         String name = ApplicationStatusConstants.CREATED.getName();
@@ -422,7 +423,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserAndCompetition(String applicationName, User user, Competition competition) {
     	  Application application = new Application();
           application.setName(applicationName);
-          LocalDate currentDate = LocalDate.now();
+          LocalDate currentDate = null;
           application.setStartDate(currentDate);
 
           String name = ApplicationStatusConstants.CREATED.getName();

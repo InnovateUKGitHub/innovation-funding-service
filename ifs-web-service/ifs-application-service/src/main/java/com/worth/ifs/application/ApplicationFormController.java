@@ -767,27 +767,32 @@ public class ApplicationFormController extends AbstractApplicationController {
         LocalDate startDate = application.getStartDate();
 
         if (startDate == null) {
-            startDate = LocalDate.now();
-        }
-        try {
-            if (fieldName.endsWith(".dayOfMonth")) {
-                startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
-            } else if (fieldName.endsWith(".monthValue")) {
-                startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
-            } else if (fieldName.endsWith(".year")) {
-                startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
-            }
-            if (startDate.isBefore(LocalDate.now())) {
-                errors.add("Please enter a future date.");
-            }
+            //start date is already null
+            // do null check if start date is not null in try block
+            // startDate = LocalDate.now();
 
-            application.setStartDate(startDate);
-            applicationService.save(application);
-        } catch (DateTimeException | NumberFormatException e) {
-            LOG.warn(e);
-            errors.add("Please enter a valid date.");
+            return null;
         }
-        return errors;
+        else {
+            try {
+                if (fieldName.endsWith(".dayOfMonth")) {
+                    startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
+                } else if (fieldName.endsWith(".monthValue")) {
+                    startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
+                } else if (fieldName.endsWith(".year")) {
+                    startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
+                }
+                if (startDate.isBefore(LocalDate.now())) {
+                    errors.add("Please enter a future date.");
+                }
+                application.setStartDate(startDate);
+                applicationService.save(application);
+            } catch (DateTimeException | NumberFormatException e) {
+                LOG.warn(e);
+                errors.add("Please enter a valid date.");
+            }
+            return errors;
+        }
     }
 
     public void assignQuestion(@PathVariable(APPLICATION_ID) final Long applicationId,

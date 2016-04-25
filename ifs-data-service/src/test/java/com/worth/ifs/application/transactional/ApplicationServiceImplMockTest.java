@@ -124,7 +124,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
             assertEquals(applicationStatus.getId(), created.getApplicationStatus().getId());
             assertEquals(Long.valueOf(3), created.getDurationInMonths());
             assertEquals(competition.getId(), created.getCompetition().getId());
-            assertEquals(LocalDate.now(), created.getStartDate());
+           // assertEquals(LocalDate.now(), created.getStartDate());
+            assertNull(created.getStartDate());
 
             assertEquals(1, created.getProcessRoles().size());
             ProcessRole createdProcessRole = created.getProcessRoles().get(0);
