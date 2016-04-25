@@ -1,17 +1,16 @@
 package com.worth.ifs.user.controller;
 
-import java.util.List;
-
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.transactional.UsersRolesService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * This RestController exposes CRUD operations
@@ -34,7 +33,7 @@ public class ProcessRoleController {
 
     @RequestMapping("/findByUserApplication/{userId}/{applicationId}")
     public RestResult<ProcessRole> findByUserApplication(@PathVariable("userId") final Long userId,
-                                                     @PathVariable("applicationId") final Long applicationId) {
+                                                         @PathVariable("applicationId") final Long applicationId) {
         return usersRolesService.getProcessRoleByUserIdAndApplicationId(userId, applicationId).toGetResponse();
     }
 
@@ -55,7 +54,7 @@ public class ProcessRoleController {
     }
 
     @RequestMapping("{id}/application")
-    public RestResult<ApplicationResource> findByProcessRole(@PathVariable("id") final Long id){
+    public RestResult<ApplicationResource> findByProcessRole(@PathVariable("id") final Long id) {
         return applicationService.findByProcessRole(id).toGetResponse();
     }
 }

@@ -37,7 +37,7 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
     }
 
     @Override
-    public Future<ProcessRole> getById(Long id){
+    public Future<ProcessRole> getById(Long id) {
         return adapt(userRestService.findProcessRoleById(id), RestResult::getSuccessObjectOrThrowException);
     }
 }
