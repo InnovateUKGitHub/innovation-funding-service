@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.builder;
 
 import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 
 import java.util.List;
@@ -33,5 +34,9 @@ public class CostBuilder extends BaseBuilder<Cost, CostBuilder> {
     @Override
     protected Cost createInitial() {
         return new Cost();
+    }
+
+    public CostBuilder withApplicationFinance(final ApplicationFinance applicationFinance) {
+        return with(cost -> cost.setApplicationFinance(applicationFinance));
     }
 }

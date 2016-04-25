@@ -2,6 +2,7 @@ package com.worth.ifs.invite.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.invite.domain.InviteOrganisation;
+import com.worth.ifs.user.domain.Organisation;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -28,4 +29,9 @@ public class InviteOrganisationBuilder extends BaseBuilder<InviteOrganisation, I
     protected InviteOrganisation createInitial() {
         return new InviteOrganisation();
     }
+
+    public InviteOrganisationBuilder withOrganisation(Organisation... organisations) {
+        return withArray((organisation, inviteOrganisation) -> inviteOrganisation.setOrganisation(organisation), organisations);
+    }
+
 }

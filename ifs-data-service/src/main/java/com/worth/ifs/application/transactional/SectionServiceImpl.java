@@ -1,14 +1,5 @@
 package com.worth.ifs.application.transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
@@ -28,11 +19,13 @@ import com.worth.ifs.user.domain.Organisation;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.validator.util.ValidationUtil;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -60,6 +53,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private ValidationUtil validationUtil;
 
     @Override
     public ServiceResult<SectionResource> getById(final Long sectionId) {
@@ -133,7 +129,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
             Set<Long> questions = collectAllQuestionFrom(section);
 
-            List<ValidationMessages> sectionIsValid = ValidationUtil.isSectionValid(markedAsCompleteById, section, application);
+            List<ValidationMessages> sectionIsValid = validationUtil.isSectionValid(markedAsCompleteById, section, application);
 
             if (sectionIsValid.isEmpty()) {
                 LOG.debug("======= SECTION IS VALID =======");

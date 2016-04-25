@@ -7,6 +7,8 @@ import com.worth.ifs.competition.mapper.CompetitionMapper;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.resource.FormInputResource;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -19,6 +21,12 @@ import org.mapstruct.Mapper;
     }
 )
 public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputResource, Long> {
+
+    @Mappings({
+            @Mapping(source = "formInputType.title", target = "formInputTypeTitle")
+    })
+    @Override
+    public abstract FormInputResource mapToResource(FormInput domain);
 
     public Long mapFormInputToId(FormInput object) {
         if (object == null) {

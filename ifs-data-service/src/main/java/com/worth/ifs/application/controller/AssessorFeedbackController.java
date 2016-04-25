@@ -20,4 +20,9 @@ public class AssessorFeedbackController {
     public RestResult<AssessorFeedbackResource> findById(@PathVariable("id") final Long id) {
         return service.findOne(id).toGetResponse();
     }
+
+    @RequestMapping("/findByAssessor/{id}")
+    public RestResult<AssessorFeedbackResource> findByAssessorId(@PathVariable("id") final Long assessorId) {
+        return service.findByAssessorId(assessorId).toGetResponse();
+    }
 }

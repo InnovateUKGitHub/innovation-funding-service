@@ -59,6 +59,11 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
         return findFormInputEntity(id).andOnSuccessReturn(formInputMapper::mapToResource);
     }
 
+    @Override
+    public ServiceResult<List<FormInputResource>> findByQuestionId(Long questionId) {
+        return serviceSuccess(formInputToResources(formInputRepository.findByQuestionId(questionId)));
+    }
+
     private ServiceResult<FormInput> findFormInputEntity(Long id) {
         return find(formInputRepository.findOne(id), notFoundError(FormInput.class, id));
     }
@@ -118,6 +123,10 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     private Supplier<ServiceResult<FormInput>> formInput(Long id) {
         return () -> findFormInputEntity(id);
+    }
+
+    private List<FormInputResource> formInputToResources(List<FormInput> filtered) {
+        return simpleMap(filtered, formInput -> formInputMapper.mapToResource(formInput));
     }
 
     private List<FormInputResponseResource> formInputResponsesToResources(List<FormInputResponse> filtered) {

@@ -23,9 +23,7 @@ import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.resource.*;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
@@ -36,8 +34,10 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
+import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
+import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
@@ -122,6 +122,9 @@ public abstract class AbstractApplicationController extends BaseController {
 
     @Autowired
     protected CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    @Autowired
+    protected FormInputService formInputService;
 
     @Autowired
     protected CompetitionService competitionService;
@@ -270,7 +273,7 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
     }
 
-    protected List<Response> getResponses(ApplicationResource application) {
+    protected List<ResponseResource> getResponses(ApplicationResource application) {
         return responseService.getByApplication(application.getId());
     }
 
@@ -361,22 +364,25 @@ public abstract class AbstractApplicationController extends BaseController {
 
         userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
 
-        List<Question> questions = questionService.findByCompetition(competition.getId());
+        List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
 
         model.addAttribute("sections", sections);
-        Map<Long, List<Question>> sectionQuestions = sectionsList.stream()
+        Map<Long, List<QuestionResource>> sectionQuestions = sectionsList.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId,
                         s -> getQuestionsBySection(s.getQuestions(), questions)
                 ));
+        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
+        model.addAttribute("questionFormInputs", questionFormInputs);
         model.addAttribute("sectionQuestions", sectionQuestions);
 
+        Map<Long, List<QuestionResource>> subsectionQuestions = new HashMap<>();
         if(currentSection.isPresent()){
             Map<Long, List<SectionResource>>  subSections = new HashMap<>();
             subSections.put(currentSection.get().getId(), simpleMap(currentSection.get().getChildSections(), sectionService::getById));
 
             model.addAttribute("subSections", subSections);
-            Map<Long, List<Question>> subsectionQuestions = subSections.get(currentSection.get().getId()).stream()
+            subsectionQuestions = subSections.get(currentSection.get().getId()).stream()
                     .collect(Collectors.toMap(SectionResource::getId,
                             ss -> getQuestionsBySection(ss.getQuestions(), questions)
                     ));
@@ -387,16 +393,18 @@ public abstract class AbstractApplicationController extends BaseController {
                             SectionResource::getId, s -> simpleMap(s.getChildSections(), sectionService::getById)
                     ));
             model.addAttribute("subSections", subSections);
-            Map<Long, List<Question>> subsectionQuestions = sectionsList.stream()
+            subsectionQuestions = sectionsList.stream()
                     .collect(Collectors.toMap(SectionResource::getId,
                             ss -> getQuestionsBySection(ss.getQuestions(), questions)
                     ));
             model.addAttribute("subsectionQuestions", subsectionQuestions);
         }
 
+        Map<Long, List<FormInputResource>> subSectionQuestionFormInputs = subsectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
+        model.addAttribute("subSectionQuestionFormInputs", subSectionQuestionFormInputs);
     }
 
-    private List<Question> getQuestionsBySection(final List<Long> questionIds, final List<Question> questions) {
+    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
@@ -445,10 +453,12 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("currentSectionId", currentSection.map(SectionResource::getId).orElse(null));
         model.addAttribute("currentSection", currentSection.orElse(null));
         if(currentSection.isPresent()) {
-            List<Question> questions = getQuestionsBySection(currentSection.get().getQuestions(), questionService.findByCompetition(currentSection.get().getCompetition()));
-            Map<Long, List<Question>> sectionQuestions = new HashMap<>();
+            List<QuestionResource> questions = getQuestionsBySection(currentSection.get().getQuestions(), questionService.findByCompetition(currentSection.get().getCompetition()));
+            Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
             sectionQuestions.put(currentSection.get().getId(), questions);
+            Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
 
+            model.addAttribute("questionFormInputs", questionFormInputs);
             model.addAttribute("sectionQuestions", sectionQuestions);
             model.addAttribute("title", currentSection.get().getName());
         }

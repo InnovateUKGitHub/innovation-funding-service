@@ -24,20 +24,20 @@ public class FormInputResponseResource {
     public FormInputResponseResource() {
     	// no-arg constructor
     }
-    public FormInputResponseResource(LocalDateTime updateDate, String value, ProcessRole updatedBy, FormInput formInput, Application application) {
+    public FormInputResponseResource(LocalDateTime updateDate, String value, ProcessRole updatedBy, Long formInput, Application application) {
         this.updateDate = updateDate;
         this.value = value;
         this.updatedBy = updatedBy.getId();
-        this.formInput = formInput.getId();
+        this.formInput = formInput;
         this.application = application.getId();
     }
 
 
-    public FormInputResponseResource(LocalDateTime updateDate, FileEntry fileEntry, ProcessRole updatedBy, FormInput formInput, Application application) {
+    public FormInputResponseResource(LocalDateTime updateDate, FileEntry fileEntry, ProcessRole updatedBy, Long formInput, Application application) {
         this.updateDate = updateDate;
         this.fileEntry = fileEntry.getId();
         this.updatedBy = updatedBy.getId();
-        this.formInput = formInput.getId();
+        this.formInput = formInput;
         this.application = application.getId();
     }
 

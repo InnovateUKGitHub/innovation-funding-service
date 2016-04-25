@@ -10,7 +10,6 @@ public class AssessorFeedbackResource {
     private Long id;
     private Long response;
     private Long assessor;
-    private Long assessorId;
     private String assessmentValue;
     private String assessmentFeedback;
 
@@ -71,14 +70,6 @@ public class AssessorFeedbackResource {
 
     public void setAssessor(Long assessor) {
         this.assessor = assessor;
-    }
-
-    public void setAssessorId(Long assessorId) {
-        this.assessorId = assessorId;
-    }
-
-    public Long getAssessorId() {
-        return this.assessorId;
     }
 
     @Override

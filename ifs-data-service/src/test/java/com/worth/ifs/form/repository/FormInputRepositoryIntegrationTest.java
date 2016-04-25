@@ -59,6 +59,19 @@ public class FormInputRepositoryIntegrationTest extends BaseRepositoryIntegratio
     }
 
     @Test
+    public void test_findByQuestionId() {
+        List<FormInput> questionInputs = repository.findByQuestionId(1L);
+        FormInput first = questionInputs.get(0);
+        assertEquals(Long.valueOf(1), first.getId());
+    }
+
+    @Test
+    public void test_findByQuestionId_nonExistingQuestion() {
+        List<FormInput> questionInputs = repository.findByQuestionId(999L);
+        assertEquals(0, questionInputs.size());
+    }
+
+    @Test
     public void test_findOne_nonExistentInput() {
 
         assertEquals(null, repository.findOne(Long.MAX_VALUE));

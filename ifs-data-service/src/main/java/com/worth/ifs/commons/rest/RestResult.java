@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worth.ifs.commons.error.CommonFailureKeys;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.error.exception.*;
-import com.worth.ifs.commons.service.BaseEitherBackedResult;
-import com.worth.ifs.commons.service.ExceptionThrowingFunction;
-import com.worth.ifs.commons.service.FailingOrSucceedingResult;
-import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.commons.service.*;
 import com.worth.ifs.util.Either;
 
 import org.apache.commons.logging.Log;
@@ -156,6 +153,11 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         }
 
         return (RestResult<R>) restFailure(INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    protected <R> BaseEitherBackedResult<R, RestFailure> createFailure(RestFailure failure) {
+        return restFailure(failure);
     }
 
     public HttpStatus getStatusCode() {
