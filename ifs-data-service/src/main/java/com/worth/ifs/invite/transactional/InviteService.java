@@ -19,7 +19,7 @@ import java.util.Set;
 public interface InviteService {
 
     @PreFilter(filterTarget = "invites", value = "hasPermission(filterObject, 'SEND')")
-    List<ServiceResult<Notification>> inviteCollaborators(String baseUrl, @P("invites")List<Invite> invites);
+    List<ServiceResult<Notification>> inviteCollaborators(String baseUrl, @P("invites") List<Invite> invites);
 
     @PreAuthorize("hasPermission(#invite, 'SEND')")
     ServiceResult<Notification> inviteCollaboratorToApplication(String baseUrl, @P("invite") Invite invite);
@@ -29,7 +29,7 @@ public interface InviteService {
 
     @PreAuthorize("hasPermission(#inviteOrganisationResource, 'SEND')")
     ServiceResult<InviteResultsResource> createApplicationInvites(@P("inviteOrganisationResource") final InviteOrganisationResource inviteOrganisationResource);
-
+    
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ORGANISATION_ON_HASH",
             description = "The System Registration user can view an organisation invitation when looked up by hash",
@@ -39,8 +39,8 @@ public interface InviteService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId);
 
-    @PreFilter(filterTarget = "inviteResources", value="hasPermission(filterObject, 'SAVE')")
-    ServiceResult<InviteResultsResource> saveInvites(@P("inviteResources")List<InviteResource> inviteResources);
+    @PreFilter(filterTarget = "inviteResources", value = "hasPermission(filterObject, 'SAVE')")
+    ServiceResult<InviteResultsResource> saveInvites(@P("inviteResources") List<InviteResource> inviteResources);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "ACCEPT_INVITE",

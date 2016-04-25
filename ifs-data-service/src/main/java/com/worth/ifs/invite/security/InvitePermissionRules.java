@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
+import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 
 /**
  * Permission rules for {@link Invite} and {@link InviteResource} for permissioning
@@ -65,7 +66,7 @@ public class InvitePermissionRules {
         final InviteOrganisation inviteOrganisation = invite.getInviteOrganisation(); // Not an actual organisation.
         if (inviteOrganisation != null && inviteOrganisation.getOrganisation() != null) {
             long organisationId = inviteOrganisation.getOrganisation().getId();
-            final boolean isCollaborator = checkRole(user, applicationId, organisationId, UserRoleType.LEADAPPLICANT, roleRepository, processRoleRepository);
+            final boolean isCollaborator = checkRole(user, applicationId, organisationId, COLLABORATOR, roleRepository, processRoleRepository);
             return isCollaborator;
         }
         return false;
