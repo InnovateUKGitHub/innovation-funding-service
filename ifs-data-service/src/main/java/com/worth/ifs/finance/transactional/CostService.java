@@ -7,7 +7,6 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.security.NotSecured;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -23,16 +22,16 @@ public interface CostService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CostFieldResource>> findAllCostFields();
 
-    @NotSecured("TODO")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CostItem> getCostItem(Long costItemId);
 
-    @NotSecured("TODO")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<Cost>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId);
 
-    @NotSecured("TODO")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, String costTypeName, Long questionId);
 
-    @NotSecured("TODO")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, Long questionId);
 
     @PreAuthorize("hasPermission(#applicationFinanceId, 'com.worth.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
