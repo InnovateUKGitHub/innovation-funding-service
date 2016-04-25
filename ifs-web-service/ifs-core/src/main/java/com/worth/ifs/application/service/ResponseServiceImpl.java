@@ -20,7 +20,7 @@ import java.util.Optional;
 public class ResponseServiceImpl implements ResponseService {
 
     @Autowired
-    ResponseRestService responseRestService;
+    private ResponseRestService responseRestService;
 
     @Override
     public List<ResponseResource> getByApplication(Long applicationId) {

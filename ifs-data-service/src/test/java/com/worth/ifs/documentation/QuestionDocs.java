@@ -22,6 +22,7 @@ import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectio
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.finance.builder.CostBuilder.newCost;
 import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class QuestionDocs {
@@ -59,8 +60,8 @@ public class QuestionDocs {
             .withAssessorConfirmationQuestion("confirmation question")
             .withCompetition(1L)
             .withSection(1L)
-            .withResponses(newSectionResource().build(2).stream().map(SectionResource::getId).collect(Collectors.toList()))
-            .withQuestionStatuses(newQuestionStatusResource().build(2).stream().map(QuestionStatusResource::getId).collect(Collectors.toList()))
-            .withCosts(Arrays.asList(1L))
+            .withResponses(asList(1L, 2L))
+            .withQuestionStatuses(asList(1L, 2L))
+            .withCosts(asList(1L))
             .withQuestionNumber("1");
 }

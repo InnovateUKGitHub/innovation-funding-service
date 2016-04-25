@@ -9,6 +9,6 @@ import java.util.List;
  * Interface for CRUD operations on {@link Response} related data.
  */
 public interface FormInputService {
-    public FormInputResource getOne(Long formInputId);
-    public List<FormInputResource> findByQuestion(Long questionId);
+    FormInputResource getOne(Long formInputId);
+    List<FormInputResource> findByQuestion(Long questionId);
 }

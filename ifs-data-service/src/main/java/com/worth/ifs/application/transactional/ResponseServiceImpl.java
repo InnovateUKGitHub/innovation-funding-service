@@ -44,6 +44,6 @@ public class ResponseServiceImpl extends BaseTransactionalService implements Res
     }
 
     private List<ResponseResource> responsesToResources(List<Response> filtered) {
-        return simpleMap(filtered, response -> responseMapper.mapToResource(response));
+        return simpleMap(filtered, responseMapper::mapToResource);
     }
 }

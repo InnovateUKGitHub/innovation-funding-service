@@ -61,10 +61,10 @@ public class AssessmentController extends AbstractApplicationController {
     private static final String rejectInvitation = "reject-assessment-invitation";
 
     @Autowired
-    AssessmentRestService assessmentRestService;
+    private AssessmentRestService assessmentRestService;
 
     @Autowired
-    AssessorFeedbackRestService assessorFeedbackRestService;
+    private AssessorFeedbackRestService assessorFeedbackRestService;
 
     private String competitionAssessmentsURL(Long competitionID) {
         return "/assessor/competitions/" + competitionID + "/applications";
@@ -265,8 +265,6 @@ public class AssessmentController extends AbstractApplicationController {
                 .stream()
                 .map(sectionService::getById)
                 .collect(toList());
-
-        Optional<AssessorFeedbackResource> assessorFeedback = assessorFeedbackRestService.findByAssessorId(assessment.getProcessRole().getId()).getOptionalSuccessObject();
 
         AssessmentSubmitReviewModel viewModel = new AssessmentSubmitReviewModel(assessment, responses, application, competition, score, questions, sections);
 

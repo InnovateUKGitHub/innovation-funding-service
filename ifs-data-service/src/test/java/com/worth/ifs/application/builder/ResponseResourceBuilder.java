@@ -39,8 +39,8 @@ public class ResponseResourceBuilder extends BaseBuilder<ResponseResource, Respo
         return new ResponseResource();
     }
 
-    public ResponseResourceBuilder withId(Long id) {
-        return with(response -> id(id));
+    public ResponseResourceBuilder withId(Long... ids) {
+        return withArray((id, response) -> setField("id", id, response), ids);
     }
 
     public ResponseResourceBuilder withApplication(Builder<Application, ?> application) {
