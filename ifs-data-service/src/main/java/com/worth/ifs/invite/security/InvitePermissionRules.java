@@ -15,9 +15,8 @@ import org.springframework.stereotype.Component;
 
 import static com.worth.ifs.security.SecurityRuleUtil.checkRole;
 
-
 /**
- * TODO
+ * Permission rules for {@link Invite} and {@link InviteResource} for permissioning
  */
 @Component
 @PermissionRules
