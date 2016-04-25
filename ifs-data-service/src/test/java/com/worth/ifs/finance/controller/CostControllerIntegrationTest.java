@@ -151,12 +151,6 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<ValidationMessages> validationMessages = controller.update(otherFunding.getId(), otherFunding);
         ValidationMessages messages = validationMessages.getSuccessObject();
         assertEquals(null, messages);
-        //assertEquals(otherFunding.getId(), messages.getObjectId());
-        //assertEquals("costItem", messages.getObjectName());
-//        assertTrue(messages.getErrors().stream()
-//                .filter(e -> "".equals(e.getErrorKey()))
-//                .filter(e -> "You should provide at least one Source of funding".equals(e.getErrorMessage()))
-//                .findAny().isPresent());
     }
 
     @Rollback
