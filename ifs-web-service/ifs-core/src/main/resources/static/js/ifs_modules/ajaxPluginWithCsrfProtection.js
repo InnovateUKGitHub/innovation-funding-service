@@ -40,7 +40,7 @@
             }
         };
 
-        this.ajax(options);
+        return this.ajax(options);
     };
 
 }(jQuery));
