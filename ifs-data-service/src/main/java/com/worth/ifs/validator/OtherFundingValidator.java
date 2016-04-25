@@ -35,17 +35,6 @@ public class OtherFundingValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        /*OtherFunding response = (OtherFunding) target;
-        Cost cost = costRepository.findOne(response.getId());
-        ApplicationFinance applicationFinance = cost.getApplicationFinance();
-
-        ServiceResult<Question> question = questionService.getQuestionByFormInputType(CostType.OTHER_FUNDING.getType());
-
-        if(OtherFundingCostCategory.OTHER_FUNDING.equals(response.getFundingSource()) && response.getOtherPublicFunding().equals("Yes")){
-            List<Cost> otherFundingRows = costRepository.findByApplicationFinanceIdAndNameAndQuestionId(applicationFinance.getId(), "", question.getSuccessObject().getId());
-            errors.reject("MinimumRows", "You should provide at least one Source of funding");
-        }else{
-            LOG.debug("NO "+response.getName() + " vs " +CostType.OTHER_FUNDING.getType());
-        }*/
+        // Not required for now as covered by empty row validation.  May need additional validation for date.
     }
 }
