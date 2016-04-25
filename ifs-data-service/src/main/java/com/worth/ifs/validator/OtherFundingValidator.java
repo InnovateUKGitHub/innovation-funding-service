@@ -1,12 +1,8 @@
 package com.worth.ifs.validator;
 
-import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
-import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -22,20 +18,9 @@ public class OtherFundingValidator implements Validator {
 
     private static final Log LOG = LogFactory.getLog(OtherFundingValidator.class);
 
-    private OrganisationFinanceDelegate organisationFinanceDelegate;
-    private CostRepository costRepository;
-    private QuestionService questionService;
-
     @Override
     public boolean supports(Class<?> clazz) {
         return OtherFunding.class.equals(clazz);
-    }
-
-    @Autowired
-    public OtherFundingValidator(OrganisationFinanceDelegate organisationFinanceDelegate, CostRepository costRepository, QuestionService questionService) {
-        this.organisationFinanceDelegate = organisationFinanceDelegate;
-        this.costRepository = costRepository;
-        this.questionService = questionService;
     }
 
     @Override
