@@ -1,6 +1,7 @@
 package com.worth.ifs.finance.resource.cost;
 
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
+import com.worth.ifs.validator.ConditionalMaxLabourDays;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -15,6 +16,7 @@ import java.math.RoundingMode;
 /**
  * {@code LabourCost} implements {@link CostItem}
  */
+@ConditionalMaxLabourDays
 public class LabourCost implements CostItem {
     private Long id;
 
