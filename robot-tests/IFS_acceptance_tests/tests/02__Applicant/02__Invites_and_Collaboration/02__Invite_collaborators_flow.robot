@@ -60,7 +60,7 @@ Business organisation (accept invitation)
     ...    INFUND-2286
     ...    INFUND-1779
     ...    INFUND-2336
-    [Tags]    HappyPath    Email
+    [Tags]    HappyPath
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And user selects the radio button    organisationType    1
@@ -75,38 +75,29 @@ Business organisation (accept invitation)
     And the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
-User who accepted the invite should be able to log-in
-    [Tags]  Pending
-    # Pending due to INFUND-2583
+
+User who accepted the invite should be able to log-in and see the new company name throughout the application
+    [Documentation]     INFUND-2083
+    [Tags]
     Given the user clicks the button/link    jQuery=.button:contains("Log in")
     When guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
+    [Teardown]  Logout as user
+
 
 User who accepted the invite can invite others to their own organisation
     [Documentation]    INFUND-2335
-    [Tags]    Pending
-    # pending as not yet finished
+    [Tags]  Failing
+    Given guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     When the user navigates to the page    ${MANAGE_CONTRIBUTORS_URL}
-    Then the user should see the element    foobar
+    Then the user can invite another person to their own organisation
 
 User who accepted the invite cannot invite others to other organisations
     [Documentation]    INFUND-2335
-    [Tags]    Pending
-    # pending as not yet finished
-    When the user navigates to the page    ${MANAGE_CONTRIBUTORS_URL}
-    Then the user should not see the element    foobar
+    [Tags]      Failing
+    Then the user cannot invite another person to a different organisation
 
-Collaborator can change the name of their company and this updates throughout the application
-    [Documentation]    INFUND-2083
-    [Tags]    Pending
-    # note - only pending because it isn't working yet!
-    Given the lead applicant logs out
-    And the invited user verifies their email
-    When the user changes their company name
-    Then the new company name should be shown throughout the application
-    And the lead applicant logs back in
-    And the new company name should be shown throughout the application
 
 The collaborator who accepted the invite should be visible in the assign list
     [Documentation]    INFUND-1779
@@ -150,7 +141,7 @@ The Lead applicant invites a non registered user in the same organisation
     Given the user navigates to the page    ${APPLICATION_TEAM_URL}
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage Contributors
-    And the user clicks the button/link    jQuery=li:nth-child(4) button:contains("Add person")
+    And the user clicks the button/link    jQuery=li:nth-child(1) button:contains("Add person")
     When the user adds new collaborator
     And the user clicks the button/link    jquery=button:contains("Save Changes")
     Then the user should be redirected to the correct page    ${APPLICATION_TEAM_URL}
@@ -191,9 +182,9 @@ The lead applicant should have the correct status
     Should Be Equal As Strings    ${input_value}    (Lead Applicant)
 
 the user adds new collaborator
-    Wait Until Element Is Visible    css=li:nth-child(4) tr:nth-of-type(2) td:nth-of-type(1) input
-    Input Text    css=li:nth-child(4) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
-    Input Text    css=li:nth-child(4) tr:nth-of-type(2) td:nth-of-type(2) input    worth.email.test+inviteorg2@gmail.com
+    Wait Until Element Is Visible    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input
+    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(1) input    Roger Axe
+    Input Text    css=li:nth-child(1) tr:nth-of-type(3) td:nth-of-type(2) input    worth.email.test+inviteorg2@gmail.com
     focus    jquery=li:nth-child(1) button:contains('Add person')
     sleep    300ms
 
@@ -204,7 +195,6 @@ The status of the invited people should be correct in the application team page
     Element Should Contain    css=div+ div .heading-medium small    (pending)
 
 the invited collaborators are not editable
-    #Element Should Contain    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(3)    (pending)
     page should contain element    jQuery=li:nth-child(1) tr:nth-of-type(1) td:nth-child(1) [readonly]
     page should contain element    jQuery=li:nth-child(1) tr:nth-of-type(1) td:nth-child(2) [readonly]
     page should contain element    jQuery=li:nth-child(2) tr:nth-of-type(1) td:nth-child(1) [readonly]
@@ -223,15 +213,6 @@ the status of the people should be correct in the Manage contributors page
 the lead applicant logs out
     Logout as user
 
-the invited user verifies their email
-    the user navigates to the page    ${verify_link_4}
-
-the user changes their company name
-    (still to implement)
-
-the new company name should be shown throughout the application
-    {still to implement}
-
 the lead applicant logs back in
     guest user log-in    &{lead_applicant_credentials}
 
@@ -247,3 +228,12 @@ the user can see the updated company name throughout the application
 
 the user selects the same address
     select Checkbox    id=address-same
+
+
+the user can invite another person to their own organisation
+    The user clicks the button/link     jQuery=button:contains('Add person')
+    wait until page contains element         jQuery=li:nth-child(3) tr:nth-of-type(2) td:nth-child(2)
+    page should not contain element     jQuery=li:nth-child(3) tr:nth-of-type(2) td:nth-child(2) [readonly]
+
+the user cannot invite another person to a different organisation
+    page should contain element         jQuery=li:nth-child(2) tr:nth-of-type(1) td:nth-child(2) [readonly]

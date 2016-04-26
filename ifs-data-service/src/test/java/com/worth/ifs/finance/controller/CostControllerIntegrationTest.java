@@ -63,6 +63,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
     @Before
     public void prepare(){
+        loginSteveSmith();
         grandClaimCost = costRepository.findOne(48L);
         applicationFinance = grandClaimCost.getApplicationFinance();
 

@@ -2,8 +2,7 @@ package com.worth.ifs.finance.security;
 
 import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
-import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
+import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.security.PermissionRule;
 import com.worth.ifs.security.PermissionRules;
@@ -32,10 +31,7 @@ public class CostPermissionRules {
     private RoleRepository roleRepository;
 
     @Autowired
-    private ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Autowired
-    private ApplicationFinanceMapper applicationMapper;
+    private CostRepository costRepository;
 
     @PermissionRule(value = "UPDATE", description = "The consortium can update the cost for their application and organisation")
     public boolean consortiumCanUpdateACostForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
@@ -45,6 +41,16 @@ public class CostPermissionRules {
     @PermissionRule(value = "DELETE", description = "The consortium can update the cost for their application and organisation")
     public boolean consortiumCanDeleteACostForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
         return isCollaborator(cost, user);
+    }
+
+    @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
+    public boolean consortiumCanReadACostForTheirApplicationAndOrganisation(final Cost cost, final UserResource user) {
+        return isCollaborator(cost, user);
+    }
+
+    @PermissionRule(value = "READ", description = "The consortium can read the cost for their application and organisation")
+    public boolean consortiumCanReadACostForTheirApplicationAndOrganisation(final CostItem costItem, final UserResource user) {
+        return isCollaborator(costRepository.findOne(costItem.getId()), user);
     }
 
     private boolean isCollaborator(final Cost cost, final UserResource user) {

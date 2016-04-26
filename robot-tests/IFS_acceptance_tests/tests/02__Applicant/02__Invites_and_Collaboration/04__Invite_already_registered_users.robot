@@ -34,7 +34,7 @@ The user should see the correct content in the confirm page
     [Documentation]    INFUND-1458
     [Tags]
     Then the user should see the text in the page    INNOVATE LTD
-    And the user should see the text in the page    BH14 0HU
+    And the user should see the text in the page    BH12 4NZ
     And the user should see the element    link=email the application lead
 
 The continue button should redirect to the overview page

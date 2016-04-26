@@ -13,8 +13,15 @@ def shell(command):
 def tidyUpPybotOutput(pybot_output):
   for match in re.finditer("\d* tests", pybot_output):
     pass
-  return match.group()
-
+  if match:
+    return match.group()
+  else:
+    for single_match in re.finditer("\d test", pybot_output):
+      pass
+    if single_match:
+      return single_match.group()
+    else:
+      return "0 tests!"
 
 
 
