@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>CSRF Protection Sample Form</h1>
-<form action="#" th:action="@{${#httpServletRequest.requestURI}}" method="post">
+<form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
     <input type="submit" value="Submit"/>
 </form>
 </body>

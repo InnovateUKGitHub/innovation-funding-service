@@ -1,6 +1,7 @@
 package com.worth.ifs.security;
 
 import com.worth.ifs.commons.security.UserAuthentication;
+import com.worth.ifs.config.IfSThymeleafDialect;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.After;
 import org.junit.Before;
@@ -26,11 +27,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.UUID.randomUUID;
@@ -221,8 +225,12 @@ public class CsrfStatelessFilterControllerTest {
             templateResolver.setSuffix(".html");
             templateResolver.setPrefix("templates/");
 
+            final Set<IDialect> additionalDialects = new HashSet<>();
+            additionalDialects.add(new IfSThymeleafDialect());
+
             SpringTemplateEngine engine = new SpringTemplateEngine();
             engine.setTemplateResolver(templateResolver);
+            engine.setAdditionalDialects(additionalDialects);
 
             ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
             viewResolver.setTemplateEngine(engine);

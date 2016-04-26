@@ -17,7 +17,7 @@
             <div th:include="fragments/elements :: application-title (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag" />
             <h1 class="heading-xlarge"  th:text="${title}" />
         </div>
-        <form action="#" th:action="@{${#httpServletRequest.requestURI}}" method="post" th:object="${form}" class="form-serialize-js" enctype="multipart/form-data"
+        <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js" enctype="multipart/form-data"
                 th:with="appIsClosed=${!currentApplication.isOpen()}, readonly=${!currentApplication.isOpen()}">
             <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
             <div class="error-summary" th:if="${#fields.hasErrors('*')}">
