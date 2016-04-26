@@ -33,6 +33,7 @@ public class CsrfTokenServiceTest {
     private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
     private static final String ENCRYPTION_PASSWORD = randomUUID().toString();
     private static final String ENCRYPTION_SALT = KeyGenerators.string().generateKey();
+    private static final int TOKEN_VALIDITY_MINS = 15;
 
     private TextEncryptor encryptor;
     private CsrfTokenService tokenUtility;
@@ -67,7 +68,7 @@ public class CsrfTokenServiceTest {
 
     @Test
     public void test_validateToken_expired() throws Exception {
-        final Instant oldTimestamp = Instant.now().minus(31, ChronoUnit.MINUTES);
+        final Instant oldTimestamp = Instant.now().minus(TOKEN_VALIDITY_MINS+1, ChronoUnit.MINUTES);
         thrown.expect(CsrfException.class);
         thrown.expectMessage("Timestamp not valid while validating CSRF token.");
         tokenUtility.validateToken(mockRequestWithHeaderValue(token(UID, oldTimestamp)));
@@ -84,7 +85,7 @@ public class CsrfTokenServiceTest {
     @Test
     public void test_validateToken_anonymous() throws Exception {
         SecurityContextHolder.getContext().setAuthentication(null);
-        assertTrue(tokenUtility.validateToken(mockRequestWithHeaderValue(token("ANONYMOUS", recentTimestamp()))));
+        tokenUtility.validateToken(mockRequestWithHeaderValue(token("ANONYMOUS", recentTimestamp())));
     }
 
     @Test
@@ -96,7 +97,7 @@ public class CsrfTokenServiceTest {
 
     @Test
     public void test_validateToken_requestHeader_present() throws Exception {
-        assertTrue(tokenUtility.validateToken(mockRequestWithHeaderValue(validToken())));
+        tokenUtility.validateToken(mockRequestWithHeaderValue(validToken()));
     }
 
     @Test
@@ -115,7 +116,7 @@ public class CsrfTokenServiceTest {
 
     @Test
     public void test_validateToken_requestBody_present() throws Exception {
-        assertTrue(tokenUtility.validateToken(mockRequestWithParameterValue(validToken())));
+        tokenUtility.validateToken(mockRequestWithParameterValue(validToken()));
     }
 
     @Test
@@ -136,6 +137,7 @@ public class CsrfTokenServiceTest {
         final CsrfTokenService tokenUtility = new CsrfTokenService();
         tokenUtility.setEncryptionPassword(ENCRYPTION_PASSWORD);
         tokenUtility.setEncryptionSalt(ENCRYPTION_SALT);
+        tokenUtility.setTokenValidityMins(TOKEN_VALIDITY_MINS);
         tokenUtility.init();
         return tokenUtility;
     }
@@ -145,7 +147,8 @@ public class CsrfTokenServiceTest {
     }
 
     private Instant recentTimestamp() {
-        return Instant.now().minus(29, ChronoUnit.MINUTES);
+        // recent timestamp is one minute before it expires
+        return Instant.now().minus(TOKEN_VALIDITY_MINS-1, ChronoUnit.MINUTES);
     }
 
     private String validToken() {

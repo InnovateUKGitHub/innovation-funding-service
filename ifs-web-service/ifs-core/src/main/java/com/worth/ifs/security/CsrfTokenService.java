@@ -51,11 +51,11 @@ class CsrfTokenService {
 
     private static final String CSRF_HEADER_NAME = "X-CSRF-TOKEN";
     private static final String CSRF_PARAMETER_NAME = "_csrf";
-    private static final long TOKEN_VALIDITY_MINS = 30;
 
     private TextEncryptor encryptor;
     private String encryptionPassword;
     private String encryptionSalt;
+    private int tokenValidityMins;
 
     @PostConstruct
     void init() {
@@ -74,19 +74,19 @@ class CsrfTokenService {
 
     /**
      * Validates the expected {@link CsrfUidToken} from the {@link HttpServletRequest}
-     *
      * @param request the {@link HttpServletRequest} to use
-     * @return true if the token is valid for the currently authenticated user, otherwise false
+     * @throws CsrfException if the token is not found or not valid
      */
-    boolean validateToken(final HttpServletRequest request) throws CsrfException {
+    void validateToken(final HttpServletRequest request) throws CsrfException {
         final CsrfUidToken csrfUidToken = decryptToken(request);
-        if (isUIdValid(csrfUidToken.getuId())) {
-            if (isTimestampValid(csrfUidToken.getTimestamp())) {
-                return true;
-            }
+
+        if (!isUIdValid(csrfUidToken.getuId())) {
+            throw new CsrfException("User id not recognised while validating CSRF token.");
+        }
+
+        if (!isTimestampValid(csrfUidToken.getTimestamp())) {
             throw new CsrfException("Timestamp not valid while validating CSRF token.");
         }
-        throw new CsrfException("User id not recognised while validating CSRF token.");
     }
 
     private CsrfUidToken createToken() {
@@ -117,9 +117,9 @@ class CsrfTokenService {
     }
 
     private String getUserId() {
-        return getAuthentication().map((authentication) -> {
-            return authentication instanceof AnonymousAuthenticationFilter ? "ANONYMOUS" : authentication.getCredentials().toString();
-        }).orElse("ANONYMOUS");
+        return getAuthentication().map((authentication) ->
+                authentication instanceof AnonymousAuthenticationFilter ? "ANONYMOUS" : authentication.getCredentials().toString()
+        ).orElse("ANONYMOUS");
     }
 
     private Optional<Authentication> getAuthentication() {
@@ -131,17 +131,22 @@ class CsrfTokenService {
     }
 
     private boolean isTimestampValid(final Instant timestamp) {
-        return ChronoUnit.MINUTES.between(timestamp, Instant.now()) < TOKEN_VALIDITY_MINS;
+        return ChronoUnit.MINUTES.between(timestamp, Instant.now()) < tokenValidityMins;
     }
 
     @Value("${ifs.web.security.csrf.encryption.password}")
-    public void setEncryptionPassword(String encryptionPassword) {
+    public void setEncryptionPassword(final String encryptionPassword) {
         this.encryptionPassword = encryptionPassword;
     }
 
     @Value("${ifs.web.security.csrf.encryption.salt}")
-    public void setEncryptionSalt(String encryptionSalt) {
+    public void setEncryptionSalt(final String encryptionSalt) {
         this.encryptionSalt = encryptionSalt;
+    }
+
+    @Value("${ifs.web.security.csrf.token.validity.mins}")
+    public void setTokenValidityMins(final int tokenValidityMins) {
+        this.tokenValidityMins = tokenValidityMins;
     }
 
     static final class CsrfUidToken {

@@ -45,7 +45,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-@TestPropertySource(properties = {"ifs.web.security.csrf.encryption.password = a180fb6c-878a-4850-bccc-bd244f4c41c9", "ifs.web.security.csrf.encryption.salt: 9ea751556a3feee7"})
+@TestPropertySource(properties = {"ifs.web.security.csrf.encryption.password = a180fb6c-878a-4850-bccc-bd244f4c41c9", "ifs.web.security.csrf.encryption.salt: 9ea751556a3feee7", "ifs.web.security.csrf.token.validity.mins: 30"})
 @WebAppConfiguration
 public class CsrfStatelessFilterControllerTest {
 

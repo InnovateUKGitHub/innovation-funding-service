@@ -55,14 +55,14 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
     private static final Log LOG = LogFactory.getLog(CsrfStatelessFilter.class);
 
     @Autowired
-    private CsrfTokenService tokenUtility;
+    private CsrfTokenService tokenService;
 
     private AccessDeniedHandler accessDeniedHandler = new AccessDeniedHandlerImpl();
     private final RequestMatcher requireCsrfProtectionMatcher = new DefaultRequiresCsrfMatcher();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        final CsrfToken token = tokenUtility.generateToken();
+        final CsrfToken token = tokenService.generateToken();
 
         // Add the CsrfToken as an attribute of the request as expected by org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor#getExtraHiddenFields(javax.servlet.http.HttpServletRequest)
         request.setAttribute(CsrfToken.class.getName(), token);
@@ -80,7 +80,7 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
 
         // Validate the CSRF token
         try {
-            tokenUtility.validateToken(request);
+            tokenService.validateToken(request);
         } catch (final CsrfException e) {
             LOG.warn("Handling access denied for exception", e);
             accessDeniedHandler.handle(request, response, e);

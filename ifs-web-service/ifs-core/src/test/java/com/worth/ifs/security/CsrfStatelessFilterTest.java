@@ -44,7 +44,6 @@ public class CsrfStatelessFilterTest {
         MockitoAnnotations.initMocks(this);
 
         when(tokenUtility.generateToken()).thenReturn(CSRF_TOKEN);
-        when(tokenUtility.validateToken(same(request))).thenReturn(true);
 
         setUpFilter();
     }
@@ -58,7 +57,7 @@ public class CsrfStatelessFilterTest {
         final MockHttpServletRequest invalidRequest = new MockHttpServletRequest();
         invalidRequest.setMethod(POST.toString());
         final CsrfException expectedException = new CsrfException("Not allowed");
-        when(tokenUtility.validateToken(same(invalidRequest))).thenThrow(expectedException);
+        doThrow(expectedException).when(tokenUtility).validateToken(same(invalidRequest));
 
         filter.doFilterInternal(invalidRequest, response, filterChain);
 
