@@ -92,13 +92,12 @@ public class ApplicationFormController extends AbstractApplicationController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
-        this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
+        this.addFormAttributes(application, competition, Optional.ofNullable(section), user, model, form,
                 Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
         this.addUserDetails(model, application, user.getId());
-        model.addAttribute("currentUser", user);
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
-        model.addAttribute("form", form);
+
         return APPLICATION_FORM;
     }
 
@@ -160,11 +159,11 @@ public class ApplicationFormController extends AbstractApplicationController {
     private void addFormAttributes(ApplicationResource application,
                                    CompetitionResource competition,
                                    Optional<SectionResource> section,
-                                   Long userId, Model model,
+                                   UserResource user, Model model,
                                    ApplicationForm form, Optional<QuestionResource> question,
                                    Optional<List<FormInputResource>> formInputs,
                                    List<ProcessRole> userApplicationRoles){
-        addApplicationDetails(application, competition, userId, section, question.map(q -> q.getId()), model, form, userApplicationRoles);
+        addApplicationDetails(application, competition, user.getId(), section, question.map(q -> q.getId()), model, form, userApplicationRoles);
         addNavigation(question.orElse(null), application.getId(), model);
         Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
 
@@ -173,6 +172,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
         model.addAttribute("currentQuestion", question.orElse(null));
         model.addAttribute("questionFormInputs", questionFormInputs);
+        model.addAttribute("currentUser", user);
+        model.addAttribute("form", form);
         if(question.isPresent()) {
             model.addAttribute("title", question.get().getShortName());
         }
@@ -221,7 +222,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             /* End save action */
 
             if (bindingResult.hasErrors()) {
-                this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
+                this.addFormAttributes(application, competition, Optional.ofNullable(section), user, model, form,
                         Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
                 return APPLICATION_FORM;
             } else {
@@ -372,7 +373,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
 
-        setApplicationDetails(application, form.getApplication());
+        setApplicationDetails(application, form.getApplication(), bindingResult);
         Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
         if(userIsLeadApplicant) {
             applicationService.save(application);
@@ -387,15 +388,14 @@ public class ApplicationFormController extends AbstractApplicationController {
             if(financeErrorsMark != null && !financeErrorsMark.isEmpty()){
                 bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
                 financeErrorsMark.forEach((validationMessage) ->
-                        validationMessage.getErrors().stream().forEach(e -> {
-                            LOG.debug(String.format("reject value: %s / %s", "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage()));
-                            if(StringUtils.hasText(e.getErrorKey())){
-                                bindingResult.rejectValue("formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage(), e.getErrorMessage());
-                            }else {
-                                bindingResult.rejectValue("formInput[cost-"+validationMessage.getObjectId()+"]", e.getErrorMessage(), e.getErrorMessage());
-                            }
-
-                        })
+                    validationMessage.getErrors().stream().forEach(e -> {
+                        LOG.debug(String.format("reject value: %s / %s", "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage()));
+                        if(StringUtils.hasText(e.getErrorKey())){
+                            bindingResult.rejectValue("formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage(), e.getErrorMessage());
+                        }else {
+                            bindingResult.rejectValue("formInput[cost-"+validationMessage.getObjectId()+"]", e.getErrorMessage(), e.getErrorMessage());
+                        }
+                    })
                 );
             }
         }
@@ -648,7 +648,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     /**
      * Set the submitted values, if not null. If they are null, then probably the form field was not in the current html form.
      */
-    private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
+    private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication, BindingResult bindingResult) {
         if (updatedApplication == null) {
             return;
         }
@@ -658,8 +658,17 @@ public class ApplicationFormController extends AbstractApplicationController {
             application.setName(updatedApplication.getName());
         }
         if (updatedApplication.getStartDate() != null) {
-            LOG.debug("setApplicationDetails: " + updatedApplication.getStartDate());
-            application.setStartDate(updatedApplication.getStartDate());
+            LOG.debug("setApplicationDetails date 123: " + updatedApplication.getStartDate().toString());
+            if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)) {
+                // user submitted a empty date field.
+                application.setStartDate(null);
+            }else if (updatedApplication.getStartDate().isBefore(LocalDate.now())) {
+                bindingResult.rejectValue("application.startDate.year", "FutureDate", "Please enter a future date.");
+            }else{
+                application.setStartDate(updatedApplication.getStartDate());
+            }
+        }else{
+            application.setStartDate(null);
         }
         if (updatedApplication.getDurationInMonths() != null) {
             LOG.debug("setApplicationDetails: " + updatedApplication.getDurationInMonths());
@@ -769,9 +778,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         if (startDate == null) {
             //start date is already null
             // do null check if start date is not null in try block
-            // startDate = LocalDate.now();
-
-            return null;
+//            startDate = LocalDate.now();
+            errors.add("Please enter a valid date.");
+            return errors;
         }
         else {
             try {
@@ -785,11 +794,14 @@ public class ApplicationFormController extends AbstractApplicationController {
                 if (startDate.isBefore(LocalDate.now())) {
                     errors.add("Please enter a future date.");
                 }
+
+                LOG.debug("Save startdate: "+ startDate.toString());
+
                 application.setStartDate(startDate);
                 applicationService.save(application);
             } catch (DateTimeException | NumberFormatException e) {
-                LOG.warn(e);
                 errors.add("Please enter a valid date.");
+                LOG.warn(e);
             }
             return errors;
         }
