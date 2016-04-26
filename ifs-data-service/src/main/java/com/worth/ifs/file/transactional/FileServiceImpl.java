@@ -45,6 +45,18 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     private FileStorageStrategy initialFileStorageStrategy;
 
     @Autowired
+    @Qualifier("quarantinedFileStorageStrategy")
+    private FileStorageStrategy quarantinedFileStorageStrategy;
+
+    @Autowired
+    @Qualifier("scannedFileStorageStrategy")
+    private FileStorageStrategy scannedFileStorageStrategy;
+
+    @Autowired
+    @Qualifier("finalFileStorageStrategy")
+    private FileStorageStrategy finalFileStorageStrategy;
+
+    @Autowired
     private FileEntryRepository fileEntryRepository;
 
     @Override
@@ -201,7 +213,14 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     private ServiceResult<File> findFile(FileEntry fileEntry) {
 
+
+        ServiceResult<Void> asdf = validateNotInQuarantine(fileEntry);
+        ServiceResult<Void> asdf2 = validateNotAwaitingScanning(fileEntry);
         // TODO DW - INFUND-2220 - this code needs to be amended to look in virus scanning / scanned folders
+        return findFileInFinalFileStorageLocation(fileEntry);
+    }
+
+    private ServiceResult<File> findFileInFinalFileStorageLocation(FileEntry fileEntry) {
         Pair<List<String>, String> filePathAndName = initialFileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
         List<String> pathElements = filePathAndName.getLeft();
         String filename = filePathAndName.getRight();
@@ -212,6 +231,15 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         } else {
             return serviceFailure(notFoundError(FileEntry.class, fileEntry.getId()));
         }
+    }
+
+    private ServiceResult<Void> validateNotAwaitingScanning(FileEntry fileEntry) {
+//        return initialFileStorageStrategy.getAbsoluteFilePathAndName();
+        return null;
+    }
+
+    private ServiceResult<Void> validateNotInQuarantine(FileEntry fileEntry) {
+        return null;
     }
 
     private ServiceResult<File> createFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {

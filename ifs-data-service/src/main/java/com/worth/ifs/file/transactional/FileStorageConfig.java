@@ -17,7 +17,7 @@ public class FileStorageConfig {
     @Value("${ifs.data.service.file.storage.containing.folder}")
     private String fileStorageFolder;
 
-    @Value("${ifs.virus.scanning.enabled}")
+    @Value("${ifs.data.service.file.storage.virus.scanning.enabled}")
     private Boolean virusScanningEnabled;
 
     @Value("${ifs.data.service.file.storage.virus.scanning.holding.folder}")
@@ -40,16 +40,19 @@ public class FileStorageConfig {
     }
 
     @Bean
+    @Qualifier("quarantinedFileStorageStrategy")
     public FileStorageStrategy getVirusScanningQuarantinedFolderStrategy() {
         return new FlatFolderFileStorageStrategy(pathToStorageBase, virusScanningQuarantineFolder);
     }
 
     @Bean
+    @Qualifier("scannedFileStorageStrategy")
     public FileStorageStrategy getVirusScanningScannedFolderStrategy() {
         return new FlatFolderFileStorageStrategy(pathToStorageBase, virusScanningScannedFolder);
     }
 
     @Bean
+    @Qualifier("finalFileStorageStrategy")
     public FileStorageStrategy getFinalStorageLocationStrategy() {
         return new ByFileIdFileStorageStrategy(pathToStorageBase, fileStorageFolder);
     }
