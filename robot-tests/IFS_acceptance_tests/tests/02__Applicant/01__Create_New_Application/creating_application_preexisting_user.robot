@@ -6,7 +6,7 @@ Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
 Resource          ../../../resources/keywords/Login_actions.robot
 Resource          ../../../resources/keywords/User_actions.robot
-Force Tags        Pending     # waiting for the 1040 story to move to done
+Force Tags        Create application
 
 *** Test Cases ***
 
@@ -71,6 +71,7 @@ Non-logged in user can log in and continue with an existing application
     Then the user should be redirected to the correct page      ${speed_bump_url}
     And the user selects the option     false
     And the user should be redirected to the correct page       ${dashboard_url}
+    [Teardown]  Logout as user
 
 
 *** Keywords ***
