@@ -33,7 +33,14 @@ class EnhancedUtextProcessor extends AbstractUnescapedTextChildModifierAttrProce
         final Object result =
             expression.execute(configuration, arguments, StandardExpressionExecutionContext.UNESCAPED_EXPRESSION);
 
-        return Jsoup.clean((result == null? "" : result.toString()), Whitelist.relaxed());
+        Whitelist whitelist = Whitelist.relaxed()
+            .addTags("ul", "li", "ol")
+            .addAttributes("ul", "class", "id", "style")
+            .addAttributes("li", "class", "id", "style")
+            .addAttributes("ol", "class", "id", "style")
+            .addAttributes("div", "class", "id", "style", "aria-hidden");
+
+        return Jsoup.clean((result == null? "" : result.toString()), whitelist);
     }
 
     @Override public int getPrecedence() {
