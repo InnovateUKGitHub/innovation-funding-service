@@ -155,8 +155,9 @@ public class ValidationUtil {
     }
 
     public List<ValidationMessages> validateCostItem(List<CostItem> costItems, Question question) {
-        if (costItems.isEmpty())
+        if (costItems.isEmpty()) {
             return Collections.emptyList();
+        }
 
         List<ValidationMessages> results = costItems.stream()
                 .map(this::validateCostItem)
@@ -164,8 +165,9 @@ public class ValidationUtil {
                 .collect(Collectors.toList());
 
         ValidationMessages emptyRowMessages = invokeEmptyRowValidatorAndReturnMessages(costItems, question);
-        if(emptyRowMessages != null)
+        if(emptyRowMessages != null) {
             results.add(emptyRowMessages);
+        }
 
         return results;
     }

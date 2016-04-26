@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.worth.ifs.finance.handler.item.OtherFundingHandler.COST_KEY;
+import static com.worth.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 
 /**
  * This class validates the FormInputResponse, it checks if the maximum word count has been exceeded.
@@ -51,10 +52,10 @@ public class OtherFundingValidator implements Validator {
         OtherFunding otherFunding = (OtherFunding) target;
         boolean userHasSelectedYesToOtherFunding = userHasSelectedYes(otherFunding);
         String fundingSource = otherFunding.getFundingSource();
-        if(userHasSelectedYesToOtherFunding && fundingSource != null && !fundingSource.equals("Other Funding")){
+        if(userHasSelectedYesToOtherFunding && fundingSource != null && !fundingSource.equals(OTHER_FUNDING)){
             String securedDate = otherFunding.getSecuredDate();
             if(!isValidDate(securedDate)) {
-                errors.reject("InvalidDate", "Invalid secured date.  Please use MM-YYYY format.");
+                errors.reject("finance.invalid.secured.date", "Invalid secured date.  Please use MM-YYYY format.");
             }
 
             if(StringUtils.isBlank(fundingSource)){

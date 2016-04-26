@@ -81,7 +81,6 @@ public class OtherFunding implements CostItem {
         if((fundingSource.isEmpty() && securedDate.isEmpty() && fundingAmount.compareTo(BigDecimal.ZERO) == 0)){
             return true;
         }
-        //(fundingSource.equals("Other Funding") && fundingAmount.compareTo(BigDecimal.ZERO) == 0) ||
         return false;
     }
 
