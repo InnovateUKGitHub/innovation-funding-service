@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:safe="http://www.w3.org/1999/xhtml">
 
 <!-- =========================== Form label =========================== -->
 <div th:fragment="form-label (name)">
@@ -25,7 +25,7 @@
 <div th:fragment="form-hint (hint)">
     <span class="form-hint"
          th:if="${hint}"
-         th:utext="${hint}"
+         safe:utext="${hint}"
             />
 </div>
 <!-- ========================= Form Guidance =========================== -->
@@ -35,7 +35,7 @@
         <summary>
             <span class="summary" th:text="${question.getGuidanceQuestion()}"/>
         </summary>
-        <div class="panel-indent" th:utext="${question.getGuidanceAnswer()}">
+        <div class="panel-indent" safe:utext="${question.getGuidanceAnswer()}">
         </div>
     </details>
 </div>
