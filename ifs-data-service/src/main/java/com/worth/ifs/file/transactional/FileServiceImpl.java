@@ -11,6 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +23,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
 import static com.worth.ifs.util.FileFunctions.pathElementsToPath;
@@ -36,10 +38,11 @@ import static com.worth.ifs.util.FileFunctions.pathElementsToPath;
 @Service
 public class FileServiceImpl extends BaseTransactionalService implements FileService {
 
-    private static final Log log = LogFactory.getLog(FileServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(FileServiceImpl.class);
 
     @Autowired
-    private FileStorageStrategy fileStorageStrategy;
+    @Qualifier("initialFileStorageStrategy")
+    private FileStorageStrategy initialFileStorageStrategy;
 
     @Autowired
     private FileEntryRepository fileEntryRepository;
@@ -114,7 +117,8 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     private ServiceResult<Pair<File, FileEntry>> updateFileForFileEntry(FileEntry existingFileEntry, File tempFile) {
 
-        Pair<List<String>, String> absoluteFilePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(existingFileEntry);
+        // TODO DW - INFUND-2220 - this code needs to be adapted to handle the need to update a file that could be still awaiting scanning, has been scanned etc
+        Pair<List<String>, String> absoluteFilePathAndName = initialFileStorageStrategy.getAbsoluteFilePathAndName(existingFileEntry);
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
 
@@ -133,7 +137,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         if (tempFile.length() == filesizeBytes) {
             return serviceSuccess(tempFile);
         } else {
-            log.error("Reported filesize was " + filesizeBytes + " bytes but actual file is " + tempFile.length() + " bytes");
+            LOG.error("Reported filesize was " + filesizeBytes + " bytes but actual file is " + tempFile.length() + " bytes");
             return serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_FILESIZE, tempFile.length()));
         }
     }
@@ -143,17 +147,17 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         try {
             detectedContentType = Files.probeContentType(file.toPath());
         } catch (IOException e) {
-            log.error("Unable to probe file for Content Type", e);
+            LOG.error("Unable to probe file for Content Type", e);
             return serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE));
         }
 
         if (detectedContentType == null) {
-            log.warn("Content Type of file " + file + " could not be determined - returning as valid because not explicitly detectable");
+            LOG.warn("Content Type of file " + file + " could not be determined - returning as valid because not explicitly detectable");
             return serviceSuccess(file);
         } else if (mediaType.toString().equals(detectedContentType)) {
             return serviceSuccess(file);
         } else {
-            log.warn("Content Type of file has been detected as " + detectedContentType + " but was reported as being " + mediaType);
+            LOG.warn("Content Type of file has been detected as " + detectedContentType + " but was reported as being " + mediaType);
             return serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE, detectedContentType));
         }
     }
@@ -162,7 +166,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         try {
             return serviceSuccess(Files.createTempFile(prefix, ""));
         } catch (IOException e) {
-            log.error("Error creating temporary file for " + prefix, e);
+            LOG.error("Error creating temporary file for " + prefix, e);
             return serviceFailure(errorMessage);
         }
     }
@@ -172,7 +176,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             try {
                 return new FileInputStream(file);
             } catch (FileNotFoundException e) {
-                log.error("Unable to supply FileInputStream for file " + file, e);
+                LOG.error("Unable to supply FileInputStream for file " + file, e);
                 throw new IllegalStateException("Unable to supply FileInputStream for file " + file, e);
             }
         });
@@ -180,7 +184,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     private ServiceResult<Pair<File, FileEntry>> createFileForFileEntry(FileEntry savedFileEntry, File tempFile) {
 
-        Pair<List<String>, String> absoluteFilePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
+        Pair<List<String>, String> absoluteFilePathAndName = initialFileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
         return createFileForFileEntry(pathElements, filename, tempFile).andOnSuccessReturn(file -> Pair.of(file, savedFileEntry));
@@ -197,7 +201,8 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
     private ServiceResult<File> findFile(FileEntry fileEntry) {
 
-        Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
+        // TODO DW - INFUND-2220 - this code needs to be amended to look in virus scanning / scanned folders
+        Pair<List<String>, String> filePathAndName = initialFileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
         List<String> pathElements = filePathAndName.getLeft();
         String filename = filePathAndName.getRight();
         File expectedFile = new File(pathElementsToFile(pathElements), filename);
@@ -228,14 +233,14 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             File fileToCreate = new File(targetFolder.toString(), targetFilename);
 
             if (fileToCreate.exists()) {
-                log.error("File " + targetFilename + " already existed in target path " + targetFolder + ".  Cannot create a new one here.");
+                LOG.error("File " + targetFilename + " already existed in target path " + targetFolder + ".  Cannot create a new one here.");
                 return serviceFailure(new Error(FILES_DUPLICATE_FILE_CREATED));
             }
 
             Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename));
             return serviceSuccess(targetFile.toFile());
         } catch (IOException e) {
-            log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
+            LOG.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
             return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
         }
     }
@@ -245,14 +250,14 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             File fileToCreate = new File(targetFolder.toString(), targetFilename);
 
             if (!fileToCreate.exists()) {
-                log.error("File " + targetFilename + " doesn't exist in target path " + targetFolder + ".  Cannot update one here.");
+                LOG.error("File " + targetFilename + " doesn't exist in target path " + targetFolder + ".  Cannot update one here.");
                 return serviceFailure(notFoundError(File.class));
             }
 
             Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename), StandardCopyOption.REPLACE_EXISTING);
             return serviceSuccess(targetFile.toFile());
         } catch (IOException e) {
-            log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
+            LOG.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
             return serviceFailure(new Error(FILES_UNABLE_TO_UPDATE_FILE));
         }
     }
@@ -261,7 +266,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         try {
             return serviceSuccess(Files.createDirectories(path));
         } catch (IOException e) {
-            log.error("Error creating folders " + path, e);
+            LOG.error("Error creating folders " + path, e);
             return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FOLDERS));
         }
     }
@@ -278,12 +283,12 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                     Files.copy(sourceInputStream, file, StandardCopyOption.REPLACE_EXISTING);
                     return serviceSuccess(file);
                 } catch (IOException e) {
-                    log.error("Could not write data to file " + file, e);
+                    LOG.error("Could not write data to file " + file, e);
                     return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
                 }
             }
         } catch (IOException e) {
-            log.error("Error closing file stream for file " + file, e);
+            LOG.error("Error closing file stream for file " + file, e);
             return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
         }
     }
@@ -292,7 +297,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         try {
             Files.delete(file.toPath());
         } catch (IOException e) {
-            log.error("Error deleting file", e);
+            LOG.error("Error deleting file", e);
         }
     }
 }
