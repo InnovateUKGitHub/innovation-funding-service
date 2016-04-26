@@ -13,7 +13,7 @@ import org.thymeleaf.standard.expression.StandardExpressions;
  * this class id responsible for the escaping of <script> tags inside thymeleaf code. it does the same as a th:utext tag except for the fact that it escapes the <script> tags
  */
 
-class EnhancedUtextProcessor extends AbstractUnescapedTextChildModifierAttrProcessor {
+public class EnhancedUtextProcessor extends AbstractUnescapedTextChildModifierAttrProcessor {
 
     EnhancedUtextProcessor() {
         super("utext");
@@ -31,7 +31,11 @@ class EnhancedUtextProcessor extends AbstractUnescapedTextChildModifierAttrProce
         final Object result =
             expression.execute(configuration, arguments, StandardExpressionExecutionContext.UNESCAPED_EXPRESSION);
 
-        return (result == null? "" : result.toString()).replaceAll("(?i)<(/?script[^>]*)>", "&lt;$1&gt;");
+        return escape(result == null? "" : result.toString());
+    }
+
+    public static String escape(String text){
+        return text.replaceAll("(?i)<( */? *script[^>]*)>", "&lt;$1&gt;");
     }
 
     @Override public int getPrecedence() {
