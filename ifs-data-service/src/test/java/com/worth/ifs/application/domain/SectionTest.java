@@ -1,12 +1,16 @@
 package com.worth.ifs.application.domain;
 
-import com.worth.ifs.competition.domain.Competition;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.worth.ifs.competition.domain.Competition;
 
 public class SectionTest {
     Section section;
@@ -33,9 +37,29 @@ public class SectionTest {
 
     @Test
     public void sectionShouldReturnCorrectAttributeValues() throws Exception {
-        Assert.assertEquals(section.getQuestions(), questions);
-        Assert.assertEquals(section.getId(), id);
-        Assert.assertEquals(section.getName(), name);
-        Assert.assertEquals(section.getParentSection(), parentSection);
+        assertEquals(section.getQuestions(), questions);
+        assertEquals(section.getId(), id);
+        assertEquals(section.getName(), name);
+        assertEquals(section.getParentSection(), parentSection);
+    }
+    
+    @Test
+    public void sectionWithNullTypeIsNotFinanceSection() {
+    	assertFalse(section.isFinance());
+    	assertFalse(section.isEachCollaboratorFinance());
+    }
+    
+    @Test
+    public void sectionWithAppropriateTypeIsFinanceSection() {
+    	section.setType(SectionType.FINANCE);
+    	assertTrue(section.isFinance());
+    	assertFalse(section.isEachCollaboratorFinance());
+    }
+    
+    @Test
+    public void sectionWithAppropriateTypeIsEachCollaboratorFinanceSection() {
+    	section.setType(SectionType.EACH_COLLABORATOR_FINANCE);
+    	assertFalse(section.isFinance());
+    	assertTrue(section.isEachCollaboratorFinance());
     }
 }

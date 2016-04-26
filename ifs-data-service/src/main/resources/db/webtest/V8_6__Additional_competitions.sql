@@ -4,27 +4,27 @@ INSERT  IGNORE INTO `competition` (`id`, `assessment_end_date`, `assessment_star
 INSERT  IGNORE INTO `section` (`id`, `assessor_guidance_description`, `description`, `display_in_assessment_application_summary`, `name`, `priority`, `competition_id`, `parent_section_id`, `question_group`) VALUES (16,NULL,'Please provide Innovate UK with information about your project. These sections are not scored but will provide background to the project.','\0','Project details',1,2,NULL,'\0');
 
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('43','100', '2', '2', '0', 'First Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('43','100', '2', '2', '1', 'First Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('43',0, '<p>guidance</p>', '', 1, 0, 1, 'Project summary', 'Summary', 0, 0, '1', '2', '16');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('43', '43', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (43,2);
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('44','100', '2', '2', '0', 'Second Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('44','100', '2', '2', '1', 'Second Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('44',0, '<p>guidance</p>', '', 1, 0, 2, 'Second Question', 'Secondly', 0, 0, '2', '2', '16');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('44', '44', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (44,2);
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('45','100', '2', '2', '0', 'Third Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('45','100', '2', '2', '1', 'Third Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('45',0, '<p>guidance</p>', '', 1, 0, 3, 'Third Question', 'Thirdly', 0, 0, '3', '2', '16');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('45', '45', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (45,2);
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('46','100', '2', '2', '0', 'Fourth Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('46','100', '2', '2', '1', 'Fourth Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('46',0, '<p>guidance</p>', '', 1, 0, 4, 'Fourth Question', 'Fourthly', 0, 0, '4', '2', '16');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('46', '46', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (46,2);
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('47','100', '2', '2', '0', 'Fifth Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('47','100', '2', '2', '1', 'Fifth Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('47',0, '<p>guidance</p>', '', 1, 0, 5, 'Fifth Question', 'Fifthly', 0, 0, '5', '2', '16');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('47', '47', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (47,2);
@@ -131,27 +131,27 @@ INSERT  IGNORE INTO `competition` (`id`, `assessment_end_date`, `assessment_star
 INSERT  IGNORE INTO `section` (`id`, `assessor_guidance_description`, `description`, `display_in_assessment_application_summary`, `name`, `priority`, `competition_id`, `parent_section_id`, `question_group`) VALUES (27,NULL,'Please provide Innovate UK with information about your project. These sections are not scored but will provide background to the project.','\0','Project details',1,3,NULL,'\0');
 
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('68','100', '2', '3', '0', 'First Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('68','100', '2', '3', '1', 'First Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('68',0, '<p>guidance</p>', '', 1, 0, 1, 'Project summary', 'Summary', 0, 0, '1', '3', '27');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('68', '68', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (68,2);
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('69','100', '2', '3', '0', 'Second Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('69','100', '2', '3', '1', 'Second Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('69',0, '<p>guidance</p>', '', 1, 0, 2, 'Second Question', 'Secondly', 0, 0, '2', '3', '27');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('69', '69', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (69,2);
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('70','100', '2', '3', '0', 'Third Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('70','100', '2', '3', '1', 'Third Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('70',0, '<p>guidance</p>', '', 1, 0, 3, 'Third Question', 'Thirdly', 0, 0, '3', '3', '27');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('70', '70', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (70,2);
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('71','100', '2', '3', '0', 'Fourth Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('71','100', '2', '3', '1', 'Fourth Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('71',0, '<p>guidance</p>', '', 1, 0, 4, 'Fourth Question', 'Fourthly', 0, 0, '4', '3', '27');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('71', '71', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (71,2);
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('72','100', '2', '3', '0', 'Fifth Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('72','100', '2', '3', '1', 'Fifth Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('72',0, '<p>guidance</p>', '', 1, 0, 5, 'Fifth Question', 'Fifthly', 0, 0, '5', '3', '27');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('72', '72', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (72,2);
@@ -257,27 +257,27 @@ INSERT  IGNORE INTO `competition` (`id`, `assessment_end_date`, `assessment_star
 INSERT  IGNORE INTO `section` (`id`, `assessor_guidance_description`, `description`, `display_in_assessment_application_summary`, `name`, `priority`, `competition_id`, `parent_section_id`, `question_group`) VALUES (38,NULL,'Please provide Innovate UK with information about your project. These sections are not scored but will provide background to the project.','\0','Project details',1,4,NULL,'\0');
 
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('93','100', '2', '4', '0', 'First Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('93','100', '2', '4', '1', 'First Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('93',0, '<p>guidance</p>', '', 1, 0, 1, 'Project summary', 'Summary', 0, 0, '1', '4', '38');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('93', '93', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (93,2);
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('94','100', '2', '4', '0', 'Second Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('94','100', '2', '4', '1', 'Second Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('94',0, '<p>guidance</p>', '', 1, 0, 2, 'Second Question', 'Secondly', 0, 0, '2', '4', '38');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('94', '94', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (94,2);
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('95','100', '2', '4', '0', 'Third Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('95','100', '2', '4', '1', 'Third Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('95',0, '<p>guidance</p>', '', 1, 0, 3, 'Third Question', 'Thirdly', 0, 0, '3', '4', '38');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('95', '95', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (95,2);
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('96','100', '2', '4', '0', 'Fourth Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('96','100', '2', '4', '1', 'Fourth Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('96',0, '<p>guidance</p>', '', 1, 0, 4, 'Fourth Question', 'Fourthly', 0, 0, '4', '4', '38');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('96', '96', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (96,2);
 
-INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('97','100', '2', '4', '0', 'Fifth Question');
+INSERT IGNORE INTO `form_input` (`id`,`word_count`, `form_input_type_id`, `competition_id`, `included_in_application_summary`, `description`) VALUES ('97','100', '2', '4', '1', 'Fifth Question');
 INSERT IGNORE INTO `question` (`id`,`assign_enabled`, `guidance_answer`, `guidance_question`, `mark_as_completed_enabled`, `multiple_statuses`, `question_number`, `name`, `short_name`, `needing_assessor_feedback`, `needing_assessor_score`, `priority`, `competition_id`, `section_id`) VALUES ('97',0, '<p>guidance</p>', '', 1, 0, 5, 'Fifth Question', 'Fifthly', 0, 0, '5', '4', '38');
 INSERT IGNORE INTO `question_form_input` (`question_id`, `form_input_id`, `priority`) VALUES ('97', '97', '0');
 INSERT IGNORE INTO `form_input_validator` (`form_input_id`, `form_validator_id`) VALUES (97,2);

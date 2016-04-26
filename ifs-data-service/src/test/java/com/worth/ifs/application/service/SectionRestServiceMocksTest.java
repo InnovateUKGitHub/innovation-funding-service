@@ -1,16 +1,15 @@
 package com.worth.ifs.application.service;
 
-import java.util.List;
-
-import com.worth.ifs.BaseRestServiceUnitTest;
-import com.worth.ifs.application.resource.SectionResource;
-
-import org.junit.Test;
-
-import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
+import org.junit.Test;
+
+import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.application.resource.SectionResource;
 
 /**
  * Tests to check the ApplicationRestService's interaction with the RestTemplate and the processing of its results
@@ -49,6 +48,32 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
 
         // now run the method under test
         List<Long> response = service.getIncompletedSectionIds(123L).getSuccessObject();
+        assertEquals(returnedResponse, response);
+    }
+    
+    @Test
+    public void testGetFinanceSectionForCompetition() {
+
+        String expectedUrl = sectionRestUrl + "/getFinanceSectionByCompetitionId/123";
+        SectionResource returnedResponse = new SectionResource();
+
+        setupGetWithRestResultExpectations(expectedUrl, SectionResource.class, returnedResponse);
+
+        SectionResource response = service.getFinanceSectionForCompetition(123L).getSuccessObject();
+        
+        assertEquals(returnedResponse, response);
+    }
+    
+    @Test
+    public void testGetEachCollaboratorFinanceSectionForCompetition() {
+
+        String expectedUrl = sectionRestUrl + "/getEachCollaboratorFinanceSectionByCompetitionId/123";
+        SectionResource returnedResponse = new SectionResource();
+
+        setupGetWithRestResultExpectations(expectedUrl, SectionResource.class, returnedResponse);
+
+        SectionResource response = service.getEachCollaboratorFinanceSectionForCompetition(123L).getSuccessObject();
+        
         assertEquals(returnedResponse, response);
     }
 
