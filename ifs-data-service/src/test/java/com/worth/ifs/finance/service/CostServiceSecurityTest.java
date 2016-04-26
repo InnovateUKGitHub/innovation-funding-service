@@ -16,9 +16,9 @@ import com.worth.ifs.finance.security.*;
 import com.worth.ifs.finance.transactional.CostService;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
@@ -35,8 +35,6 @@ import static org.mockito.Mockito.*;
 /**
  * Testing how the secured methods in CostService interact with Spring Security
  */
-// TODO qqRP
-@Ignore
 public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService> {
 
     private CostFieldPermissionsRules costFieldPermissionsRules;
@@ -204,6 +202,44 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
     }
 
 
+    @Test
+    public void testGetCostItem() {
+        final Long costId = 1L;
+        assertAccessDenied(
+                () -> service.getCostItem(costId),
+                () -> {
+                    verify(costPermissionsRules).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
+                });
+    }
+
+    @Test
+    public void testGetCosts() {
+        final Long costId = 1L;
+        final String costTypeName = "academic";
+        final Long questionId = 2L;
+
+        service.getCosts(costId, costTypeName, questionId);
+        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(Cost.class), isA(UserResource.class));
+    }
+
+    @Test
+    public void testGetCostItems() {
+        final Long costId = 1L;
+        final String costTypeName = "academic";
+        final Long questionId = 2L;
+
+        service.getCostItems(costId, costTypeName, questionId);
+        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
+    }
+
+    @Test
+    public void testGetCostItems2() {
+        final Long applicationFinanceId = 1L;
+        final Long questionId = 2L;
+        service.getCostItems(applicationFinanceId, questionId);
+        verify(costPermissionsRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanReadACostForTheirApplicationAndOrganisation(isA(CostItem.class), isA(UserResource.class));
+    }
+
     private void verifyApplicationFinanceResourceReadRulesCalled() {
         verifyApplicationFinanceResourceReadRulesCalled(1);
     }
@@ -236,7 +272,7 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
 
         @Override
         public ServiceResult<CostItem> getCostItem(Long costItemId) {
-            return null;
+            return serviceSuccess(new AcademicCost());
         }
 
         @Override
@@ -251,17 +287,25 @@ public class CostServiceSecurityTest extends BaseServiceSecurityTest<CostService
 
         @Override
         public ServiceResult<List<Cost>> getCosts(Long applicationFinanceId, String costTypeName, Long questionId) {
-            return null;
+            return serviceSuccess(newCost().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
         public ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, String costTypeName, Long questionId) {
-            return null;
+            return getCostItems();
+        }
+
+        private ServiceResult<List<CostItem>> getCostItems() {
+            final List<CostItem> items = new ArrayList<>();
+            for (int i = 0; i < ARRAY_SIZE_FOR_POST_FILTER_TESTS; i++) {
+                items.add(new AcademicCost());
+            }
+            return serviceSuccess(items);
         }
 
         @Override
         public ServiceResult<List<CostItem>> getCostItems(Long applicationFinanceId, Long questionId) {
-            return null;
+            return getCostItems();
         }
 
         @Override
