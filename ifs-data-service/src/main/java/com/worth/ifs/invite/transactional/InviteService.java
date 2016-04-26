@@ -29,7 +29,7 @@ public interface InviteService {
 
     @PreAuthorize("hasPermission(#inviteOrganisationResource, 'SEND')")
     ServiceResult<InviteResultsResource> createApplicationInvites(@P("inviteOrganisationResource") final InviteOrganisationResource inviteOrganisationResource);
-    
+
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ORGANISATION_ON_HASH",
             description = "The System Registration user can view an organisation invitation when looked up by hash",
