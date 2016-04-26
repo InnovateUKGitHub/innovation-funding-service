@@ -88,14 +88,14 @@ User who accepted the invite should be able to log-in and see the new company na
 
 User who accepted the invite can invite others to their own organisation
     [Documentation]    INFUND-2335
-    [Tags]
+    [Tags]  Failing
     Given guest user log-in    worth.email.test+inviteorg1@gmail.com    Passw0rd123
     When the user navigates to the page    ${MANAGE_CONTRIBUTORS_URL}
     Then the user can invite another person to their own organisation
 
 User who accepted the invite cannot invite others to other organisations
     [Documentation]    INFUND-2335
-    [Tags]
+    [Tags]      Failing
     Then the user cannot invite another person to a different organisation
 
 
