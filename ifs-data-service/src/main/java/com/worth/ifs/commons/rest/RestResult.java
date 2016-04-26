@@ -23,6 +23,7 @@ import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.Either.left;
 import static com.worth.ifs.util.Either.right;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpStatus.*;
 
@@ -309,5 +310,21 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
     public static RestResult<Void> toDeleteResponse() {
         return restSuccess(NO_CONTENT);
     }
+
+
+    /**
+     * Aggregate a {@link List} of {@link RestResult} into a {@link RestResult} containing a {@list List}
+     *
+     * @param input
+     * @param <T>
+     * @return
+     */
+    public static <T> RestResult<List<T>> aggregate(final List<RestResult<T>> input) {
+        return BaseEitherBackedResult.aggregate(
+                input,
+                (f1, f2) -> new RestFailure(combineLists(f1.getErrors(), f2.getErrors())),
+                restSuccess(emptyList()));
+    }
+
 
 }
