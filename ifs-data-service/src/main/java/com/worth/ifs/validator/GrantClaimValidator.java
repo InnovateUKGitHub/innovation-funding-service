@@ -40,9 +40,9 @@ public class GrantClaimValidator implements Validator {
         Cost cost = costRepository.findOne(response.getId());
         OrganisationSize size = cost.getApplicationFinance().getOrganisationSize();
 
-        LOG.info(String.format("Validate grant claim percentage: %s  /  %s", response.getGrantClaimPercentage(), size.getMaxGrantClaimPercentage()));
-        if(response.getGrantClaimPercentage() > size.getMaxGrantClaimPercentage()){
-            LOG.info("Invalid grant claim percentage.");
+        if(response.getGrantClaimPercentage() == null || response.getGrantClaimPercentage().equals(0)){
+            errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message", null, null);
+        }else if(response.getGrantClaimPercentage() > size.getMaxGrantClaimPercentage()){
             errors.rejectValue("grantClaimPercentage", "Max", String.format("This field should be %s%% or lower", size.getMaxGrantClaimPercentage()));
         }
     }

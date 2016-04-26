@@ -2,6 +2,7 @@ package com.worth.ifs.commons.rest;
 
 import com.worth.ifs.commons.error.Error;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 
 import java.io.Serializable;
@@ -21,7 +22,11 @@ public class ValidationMessages implements Serializable {
         errors = new ArrayList<>();
         bindingResult.getFieldErrors().forEach(e->{
             List<Object> args = Arrays.asList();
-            Error error = new Error(e.getField(), e.getDefaultMessage(), args, HttpStatus.NOT_ACCEPTABLE);
+            String errorMessage = e.getDefaultMessage();
+            if(StringUtils.isEmpty(errorMessage)){
+                errorMessage = e.getCode();
+            }
+            Error error = new Error(e.getField(), errorMessage, args, HttpStatus.NOT_ACCEPTABLE);
             errors.add(error);
             }
         );
