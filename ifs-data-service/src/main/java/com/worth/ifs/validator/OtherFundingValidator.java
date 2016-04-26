@@ -55,15 +55,15 @@ public class OtherFundingValidator implements Validator {
         if(userHasSelectedYesToOtherFunding && fundingSource != null && !fundingSource.equals(OTHER_FUNDING)){
             String securedDate = otherFunding.getSecuredDate();
             if(!isValidDate(securedDate)) {
-                errors.reject("finance.invalid.secured.date", "Invalid secured date.  Please use MM-YYYY format.");
+                errors.reject("validation.finance.secured.date.invalid", "Invalid secured date.  Please use MM-YYYY format.");
             }
 
             if(StringUtils.isBlank(fundingSource)){
-                errors.reject("NotBlank", "Funding source cannot be blank");
+                errors.reject("validation.finance.funding.source.blank", "Funding source cannot be blank");
             }
 
             if(otherFunding.getFundingAmount() == null || otherFunding.getFundingAmount().compareTo(BigDecimal.ZERO) <= 0){
-                errors.reject("NotZero", "Funding amount should be greater than 0");
+                errors.reject("validation.finance.funding.amount.zero", "Funding amount should be greater than 0");
             }
         }
     }

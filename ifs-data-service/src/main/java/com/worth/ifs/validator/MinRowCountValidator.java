@@ -1,7 +1,5 @@
 package com.worth.ifs.validator;
 
-import com.worth.ifs.application.transactional.QuestionService;
-import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 import org.apache.commons.logging.Log;
@@ -25,14 +23,8 @@ public class MinRowCountValidator implements Validator {
     }
     private static final Log LOG = LogFactory.getLog(MinRowCountValidator.class);
 
-    static CostRepository costRepository;
-    static QuestionService questionService;
-
     @Autowired
-    public MinRowCountValidator(CostRepository costRepository, QuestionService questionService) {
-        this.costRepository = costRepository;
-        this.questionService = questionService;
-    }
+    public MinRowCountValidator() {}
 
     @Override
     public void validate(Object target, Errors errors) {
@@ -51,11 +43,11 @@ public class MinRowCountValidator implements Validator {
             switch(response.get(0).getCostType()) {
                 case OTHER_FUNDING:
                     if(((OtherFunding)response.get(0)).getOtherPublicFunding().equals("Yes")) {
-                        errors.reject("MinimumRows", "You should provide at least " + response.get(0).getMinRows() + " source(s) of funding");
+                        errors.reject("validation.finance.min.row", new Integer[]{response.get(0).getMinRows()}, "You should provide at least " + response.get(0).getMinRows() + " source(s) of funding");
                     }
                     break;
                 default:
-                    errors.reject("MinimumRows", "You should provide at least" + response.get(0).getMinRows() + " row(s) of input");
+                    errors.reject("validation.finance.min.row", new Integer[]{response.get(0).getMinRows()}, "You should provide at least" + response.get(0).getMinRows() + " row(s) of input");
                     break;
             }
         }
