@@ -4,7 +4,6 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.OtherFunding;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -22,9 +21,6 @@ public class MinRowCountValidator implements Validator {
         return ArrayList.class.equals(clazz);
     }
     private static final Log LOG = LogFactory.getLog(MinRowCountValidator.class);
-
-    @Autowired
-    public MinRowCountValidator() {}
 
     @Override
     public void validate(Object target, Errors errors) {
