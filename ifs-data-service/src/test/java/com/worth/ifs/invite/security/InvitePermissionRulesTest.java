@@ -61,7 +61,9 @@ public class InvitePermissionRulesTest extends BasePermissionRulesTest<InvitePer
             final InviteOrganisation inviteOrganisation = newInviteOrganisation().withOrganisation(organisation).build();
             invite = newInvite().withApplication(application).withInviteOrganisation(inviteOrganisation).build();
             inviteResource = new InviteResource();
-            inviteResource.setId(invite.getId());
+            inviteResource.setApplication(application.getId());
+            inviteResource.setInviteOrganisation(inviteOrganisation.getId());
+            when(inviteOrganisationRepositoryMock.findOne(inviteOrganisation.getId())).thenReturn(inviteOrganisation);
             when(inviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicant.getId(), application.getId())).thenReturn(newProcessRole().withRole(getRole(LEADAPPLICANT)).build());
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaborator.getId(), application.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
