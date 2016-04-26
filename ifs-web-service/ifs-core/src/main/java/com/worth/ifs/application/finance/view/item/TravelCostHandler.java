@@ -19,13 +19,13 @@ public class TravelCostHandler extends CostHandler {
             String fieldValue = financeFormField.getValue();
             if(fieldValue != null) {
                 switch (financeFormField.getCostName()) {
-                    case "travelPurpose":
+                    case "item":
                         item = fieldValue;
                         break;
-                    case "travelNumTimes":
+                    case "quantity":
                         quantity = getIntegerValue(fieldValue, 0);
                         break;
-                    case "travelCostEach":
+                    case "cost":
                         costPerItem = getBigDecimalValue(fieldValue, 0d);
                         break;
                     default:
