@@ -211,7 +211,6 @@ public abstract class AbstractApplicationController extends BaseController {
         Map<String, String> formInputs = form.getFormInput();
         formInputs.put("application_details-title", application.getName());
         formInputs.put("application_details-duration", String.valueOf(application.getDurationInMonths()));
-       // if(application.getStartDate() != null){
         if(application.getStartDate() == null){
             formInputs.put("application_details-startdate_day", "");
             formInputs.put("application_details-startdate_month", "");
@@ -227,7 +226,6 @@ public abstract class AbstractApplicationController extends BaseController {
     protected  void addApplicationInputs(ApplicationResource application, Model model) {
         model.addAttribute("application_title", application.getName());
         model.addAttribute("application_duration", String.valueOf(application.getDurationInMonths()));
-       // if(application.getStartDate() != null){
         if(application.getStartDate() == null){
             model.addAttribute("application_startdate_day", "");
             model.addAttribute("application_startdate_month", "");

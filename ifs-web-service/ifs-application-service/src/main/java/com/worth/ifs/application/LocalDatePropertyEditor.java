@@ -33,28 +33,6 @@ public class LocalDatePropertyEditor extends PropertyEditorSupport {
         Integer month = returnZeroWhenNotValid(parameterMap, "application.startDate.monthValue", ChronoField.MONTH_OF_YEAR);
         Integer day = returnZeroWhenNotValid(parameterMap, "application.startDate.dayOfMonth", ChronoField.DAY_OF_MONTH);
 
-        /*
-           INFUND-2354
-           sets the localDate to default values YY,M,D (9999, 1, 1) year if startdate is 0
-
-           should be if startDate is 0 leave empty, else carry out with block
-         */
-
-        //!consider to refactor/extend the returnZeroWhenNotValid instead
-        // get method to validate application.startdate if null to return as null/empty string
-        //
-
-      /*  if {stardate == null )
-            {
-                //catch
-                return empty string
-            }
-            else
-            {
-                try .../
-
-            }*/
-
         try {
             setValue(LocalDate.of(year, month, day));
 
@@ -72,6 +50,4 @@ public class LocalDatePropertyEditor extends PropertyEditorSupport {
             return (int)chronoField.range().getMinimum();
         }
     }
-
-
 }
