@@ -34,7 +34,7 @@ public class LabourCostHandler extends CostHandler {
                     case "labourDays":
                         labourDays = getIntegerValue(fieldValue, 0);
                         break;
-                    case "workingDays":
+                    case "labourDaysYearly":
                         labourDays = getIntegerValue(fieldValue, 0);
                         description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
                         key = LabourCostCategory.WORKING_DAYS_PER_YEAR;

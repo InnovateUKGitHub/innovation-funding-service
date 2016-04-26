@@ -17,8 +17,8 @@
 </div>
 <!-- =========================== Form validation messages =========================== -->
 <div th:fragment="form-validation-messages (id)">
-    <div th:if="${form != null}"  th:remove="tag">
-        <span class="error-message" th:if="${#fields.hasErrors('${form.formInput[__${id}__]}')}" th:errors="${form.formInput[__${id}__]}"></span>
+    <div th:if="${(form != null) and #fields.hasErrors('${form.formInput[__${id}__]}')}"  th:remove="tag">
+        <span class="error-message" th:each="err : ${#fields.errors('${form.formInput[__${id}__]}')}" th:text="${err}" />
     </div>
 </div>
 <!-- ===========================Form hint =========================== -->
@@ -121,17 +121,17 @@
     	<div th:with="dateFieldPresent=*{__${field}__ != null}" th:remove="tag">
 	        <div class="day">
 	            <input type="hidden" th:name="${field}" value="to be ignored" />
-	
+
 	            <div th:include="question-type/form-elements :: form-label (name='Day',id=${id}+'_day',bold=false)"
 	                 th:remove="tag"/>
-	            <div th:if="${dateFieldPresent}" th:remove="tag">   
+	            <div th:if="${dateFieldPresent}" th:remove="tag">
 	            	<div th:include="question-type/form-elements :: form-number-extra-small (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD')"
 	                	 th:remove="tag"/>
 	             </div>
 	             <div th:unless="${dateFieldPresent}" th:remove="tag">
 	            	<div th:include="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_day', placeholder='DD')"
 	                	 th:remove="tag"/>
-	             </div>  
+	             </div>
 	        </div>
 	        <div class="month">
 	            <div th:include="question-type/form-elements :: form-label (name='Month',id=${id}+'_month',bold=false)"
