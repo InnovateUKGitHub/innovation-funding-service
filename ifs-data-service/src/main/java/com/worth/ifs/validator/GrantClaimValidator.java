@@ -41,7 +41,7 @@ public class GrantClaimValidator implements Validator {
         OrganisationSize size = cost.getApplicationFinance().getOrganisationSize();
 
         if(response.getGrantClaimPercentage() == null || response.getGrantClaimPercentage().equals(0)){
-            errors.rejectValue("grantClaimPercentage", "{org.hibernate.validator.constraints.NotBlank.message}");
+            errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message", null, null);
         }else if(response.getGrantClaimPercentage() > size.getMaxGrantClaimPercentage()){
             errors.rejectValue("grantClaimPercentage", "Max", String.format("This field should be %s%% or lower", size.getMaxGrantClaimPercentage()));
         }

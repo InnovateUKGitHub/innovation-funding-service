@@ -27,6 +27,7 @@ import com.worth.ifs.util.MessageUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -72,6 +73,9 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @Autowired
     private FormInputService formInputService;
+
+    @Autowired
+    MessageSource messageSource;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -439,11 +443,18 @@ public class ApplicationFormController extends AbstractApplicationController {
                     .stream()
                     .filter(fieldError -> !fieldError.getDefaultMessage().equals(e))
                         .forEach(fieldError -> {
-                            bindingResult.rejectValue(k, e, e);
+                            String defaultMessage = messageSource.getMessage(e, null, Locale.getDefault());
+                            if(defaultMessage == null){
+                                defaultMessage = e;
+                            }
+                            bindingResult.rejectValue(k, e, defaultMessage);
                         });
         }else{
             bindingResult.rejectValue(k, e, e);
         }
+
+
+
     }
 
     private List<ValidationMessages> markAllQuestionsInSection(ApplicationResource application,

@@ -23,14 +23,13 @@ public class ConditionalMaxLabourDaysValidator  implements ConstraintValidator<C
 
         if(StringUtils.isNotEmpty(value.getName())
                 && value.getName().equals(LabourCostCategory.WORKING_DAYS_KEY)){
-            if(value.getLabourDays() > 365){
+            if(value.getLabourDays() != null && value.getLabourDays() > 365){
                 // A year can not have more working days then 365...
                 return false;
             }else{
                 return true;
             }
         }
-
         return true;
     }
 }
