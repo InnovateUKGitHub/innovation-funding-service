@@ -1,5 +1,7 @@
 package com.worth.ifs.config;
 
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 import org.thymeleaf.Arguments;
 import org.thymeleaf.Configuration;
 import org.thymeleaf.dom.Element;
@@ -13,7 +15,7 @@ import org.thymeleaf.standard.expression.StandardExpressions;
  * this class id responsible for the escaping of <script> tags inside thymeleaf code. it does the same as a th:utext tag except for the fact that it escapes the <script> tags
  */
 
-public class EnhancedUtextProcessor extends AbstractUnescapedTextChildModifierAttrProcessor {
+class EnhancedUtextProcessor extends AbstractUnescapedTextChildModifierAttrProcessor {
 
     EnhancedUtextProcessor() {
         super("utext");
@@ -31,11 +33,7 @@ public class EnhancedUtextProcessor extends AbstractUnescapedTextChildModifierAt
         final Object result =
             expression.execute(configuration, arguments, StandardExpressionExecutionContext.UNESCAPED_EXPRESSION);
 
-        return escape(result == null? "" : result.toString());
-    }
-
-    public static String escape(String text){
-        return text.replaceAll("(?i)<( */? *script[^>]*)>", "&lt;$1&gt;");
+        return Jsoup.clean((result == null? "" : result.toString()), Whitelist.relaxed());
     }
 
     @Override public int getPrecedence() {
