@@ -37,7 +37,7 @@
     </div>
 
 
-    <span th:if="${message} and ${message.length() != 0}" th:utext="${'&lt;!--' + message + ' --&gt;'}" th:remove="tag">
+    <span th:if="${message} and ${message.length() != 0}" safe:utext="${'&lt;!--' + message + ' --&gt;'}" th:remove="tag">
         Error message will be displayed here for developers on dev/UAT environments.
     </span>
 
@@ -53,7 +53,7 @@
         )
     </p> */-->
 
-    <pre th:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
+    <pre safe:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
         Stack trace will be printed here...
     </pre>
 
