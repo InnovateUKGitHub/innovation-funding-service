@@ -56,9 +56,8 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
         storeCostItems(costItems).forEach((costId, validationMessages) -> {
             List<String> errorList = validationMessages.getErrors().stream().map(error -> error.getErrorMessage()).collect(Collectors.toList());
             validationMessages.getErrors().stream().forEach(e -> {
-                errors.put("formInput[cost-" + costId + "-" + e.getErrorKey() + "]", Arrays.asList(e.getErrorKey() + " " + e.getErrorMessage()));
+                errors.put("formInput[cost-" + costId + "-" + e.getErrorKey() + "]", Arrays.asList(e.getErrorMessage()));
             });
-            errors.put("formInput[cost-" + costId + "]", errorList);
         });
         addRemoveCostRows(request, applicationId, userId);
 

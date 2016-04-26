@@ -11,6 +11,9 @@ import javax.validation.ConstraintValidatorContext;
 
 public class ConditionalMaxLabourDaysValidator  implements ConstraintValidator<ConditionalMaxLabourDays, LabourCost> {
     private static final Log LOG = LogFactory.getLog(ConditionalMaxLabourDaysValidator.class);
+    @Override
+    public void initialize(final ConditionalMaxLabourDays annotation) {
+    }
 
     @Override
     public boolean isValid(final LabourCost value, final ConstraintValidatorContext ctx) {
