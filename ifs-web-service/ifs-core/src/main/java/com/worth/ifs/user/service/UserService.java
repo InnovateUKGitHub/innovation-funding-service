@@ -2,8 +2,8 @@ package com.worth.ifs.user.service;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.Set;
 public interface UserService {
     List<UserResource> getAssignable(Long applicationId);
     Boolean isLeadApplicant(Long userId, ApplicationResource application);
-    ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application);
+    ProcessRoleResource getLeadApplicantProcessRoleOrNull(ApplicationResource application);
     RestResult<Void> verifyEmail(String hash);
     RestResult<Void> sendPasswordResetNotification(String email);
     RestResult<Void> checkPasswordResetHash(String hash);

@@ -2,7 +2,6 @@ package com.worth.ifs.application;
 
 import com.worth.ifs.Application;
 import com.worth.ifs.BaseControllerMockMVCTest;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -12,7 +11,7 @@ import com.worth.ifs.filter.CookieFlashMessageFilter;
 import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -245,7 +244,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void testApplicationSummaryReadyForReviewAction() throws Exception {
         ApplicationResource app = applications.get(0);
         QuestionResource question = questionResources.get(questionResources.keySet().iterator().next());
-        ProcessRole processRole = processRoles.get(0);
+        ProcessRoleResource processRole = processRoles.get(0);
 
         UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
         when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);
@@ -262,7 +261,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void testApplicationSummaryMarkAsCompleteAction() throws Exception {
         ApplicationResource app = applications.get(0);
         QuestionResource question = questionResources.get(questionResources.keySet().iterator().next());
-        ProcessRole processRole = processRoles.get(0);
+        ProcessRoleResource processRole = processRoles.get(0);
 
         UserResource user = newUserResource().withId(1L).withFirstName("test").withLastName("name").build();
         when(processRoleService.findProcessRole(user.getId(), app.getId())).thenReturn(processRole);

@@ -14,6 +14,7 @@ public class ProcessRoleResource {
     private User user;
     private Long application;
     private Long role;
+    private String roleName;
     private Long organisation;
     private List<Response> responses = new ArrayList<>();
 
@@ -26,6 +27,7 @@ public class ProcessRoleResource {
         this.user = user;
         this.application = application.getId();
         this.role = role.getId();
+        this.roleName = role.getName();
         this.organisation = organisation.getId();
     }
 
@@ -37,6 +39,10 @@ public class ProcessRoleResource {
 
     public Long getRole() {
         return role;
+    }
+
+    public String getRoleName() {
+        return roleName;
     }
 
     public Long getOrganisation() {
@@ -57,6 +63,10 @@ public class ProcessRoleResource {
 
     public void setRole(Long role) {
         this.role = role;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     public void setOrganisation(Long organisation) {
