@@ -12,7 +12,10 @@ Force Tags        Create application
 
 Logged in user can create a new application
     [Documentation]     INFUND-1040
-    [Tags]  Create application
+    ...
+    ...                 INFUND-1223
+    [Tags]  Create application      Pending
+    # Pending until INFUND-1223 is finished and on dev
     Given Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page  ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
@@ -24,6 +27,8 @@ Logged in user can create a new application
     And the user clicks the button/link     jQuery=.button:contains("Begin application")
     And the user should see the text in the page      Application overview
     And the user can see this new application on their dashboard
+    And the project start date is blank
+    And the user can save the page with the blank date
 
 
 Logged in user can choose to continue with an existing application
@@ -85,6 +90,18 @@ The user selects the option
 The user can see this new application on their dashboard
     The user navigates to the page      ${applicant_dashboard_url}
     The user should see the text in the page        Technology Inspired
+
+The project start date is blank
+    The user clicks the button/link          link=Technology Inspired
+    The user clicks the button/link          link=Application details
+    Element Should Be Visible               xpath=//*[@id="application_details-startdate_day" and @placeholder="DD"]
+    Element Should Be Visible               xpath=//*[@id="application_details-startdate_month" and @placeholder="MM"]
+    Element Should Be Visible               xpath=//*[@id="application_details-startdate_year" and @placeholder="YYYY"]
+
+
+The user can save the page with the blank date
+    the user clicks the button/link     jQuery=.button:contains("Save and return to application overview")
+    the user should be redirected to the correct page       ${dashboard_url}
 
 
 
