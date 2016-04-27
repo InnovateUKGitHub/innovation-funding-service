@@ -3,21 +3,21 @@ package com.worth.ifs.validator;
 import com.worth.ifs.form.domain.FormInputResponse;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
+import org.springframework.validation.Validator;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class EmailValidatorTest {
-    private EmailValidator getValidator() {
+public class EmailValidatorTest extends AbstractValidatorTest {
+    public Validator getValidator() {
         return new EmailValidator();
     }
 
     @Test
-    public void testInvalidEmail() throws Exception {
+    public void testInvalid() throws Exception {
         FormInputResponse formInputResponse = new FormInputResponse();
 
-        BindingResult bindingResult = this.getBindingResult(formInputResponse);
+        BindingResult bindingResult = getBindingResult(formInputResponse);
 
 
         formInputResponse.setValue("SomeNotValidEmailAdres@.nl");
@@ -35,10 +35,10 @@ public class EmailValidatorTest {
     }
 
     @Test
-    public void testValidEmail() throws Exception {
+    public void testValid() throws Exception {
         FormInputResponse formInputResponse = new FormInputResponse();
 
-        BindingResult bindingResult = this.getBindingResult(formInputResponse);
+        BindingResult bindingResult = getBindingResult(formInputResponse);
 
         formInputResponse.setValue("info12@govgov.gov.uk");
         getValidator().validate(formInputResponse, bindingResult);
@@ -51,11 +51,5 @@ public class EmailValidatorTest {
         formInputResponse.setValue("SomeLongEmailAdres@SomeLongDomain.test");
         getValidator().validate(formInputResponse, bindingResult);
         assertFalse(bindingResult.hasErrors());
-    }
-
-    private BindingResult getBindingResult(FormInputResponse formInputResponse) {
-        DataBinder binder = new DataBinder(formInputResponse);
-        BindingResult bindingResult = binder.getBindingResult();
-        return bindingResult;
     }
 }

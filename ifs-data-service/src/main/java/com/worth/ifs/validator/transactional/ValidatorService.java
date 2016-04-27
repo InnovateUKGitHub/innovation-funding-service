@@ -1,5 +1,6 @@
 package com.worth.ifs.validator.transactional;
 
+import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.security.NotSecured;
 import org.springframework.validation.BindingResult;
@@ -14,5 +15,5 @@ public interface ValidatorService {
     BindingResult validateFormInputResponse(Long applicationId, Long formInputId, Long markedAsCompleteById);
 
     @NotSecured("This service is used to validate existing data")
-    List<ValidationMessages> validateCostItem(Long applicationId, Long questionId, Long markedAsCompleteById);
+    List<ValidationMessages> validateCostItem(Long applicationId, Question question, Long markedAsCompleteById);
 }
