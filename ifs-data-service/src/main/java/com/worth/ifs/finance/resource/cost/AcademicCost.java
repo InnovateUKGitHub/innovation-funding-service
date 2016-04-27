@@ -52,6 +52,16 @@ public class AcademicCost implements CostItem {
         return name;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public int getMinRows() {
+        return 0;
+    }
+
     public BigDecimal getCost() {
         return cost;
     }

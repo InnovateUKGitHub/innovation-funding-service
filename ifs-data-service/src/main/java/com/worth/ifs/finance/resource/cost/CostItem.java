@@ -28,4 +28,6 @@ public interface CostItem {
     public BigDecimal getTotal();
     public CostType getCostType();
     public String getName();
+    public boolean isEmpty();
+    public int getMinRows();
 }

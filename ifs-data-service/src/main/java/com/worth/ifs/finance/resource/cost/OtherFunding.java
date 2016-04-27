@@ -1,5 +1,6 @@
 package com.worth.ifs.finance.resource.cost;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.DecimalMin;
@@ -74,6 +75,19 @@ public class OtherFunding implements CostItem {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        if((StringUtils.isBlank(fundingSource) && StringUtils.isBlank(securedDate) && (fundingAmount == null || fundingAmount.compareTo(BigDecimal.ZERO) == 0))){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int getMinRows() {
+        return 1;
     }
 
     public void setId(Long id) {

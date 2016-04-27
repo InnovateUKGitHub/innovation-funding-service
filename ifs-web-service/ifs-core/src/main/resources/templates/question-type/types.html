@@ -69,7 +69,7 @@
     <div th:fragment="fileupload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''"
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']',
          noFileUploaded=${(#strings.isEmpty(responses?.get(formInput.getId())?.getFilename())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))},
-         downloadURL=${question.id} + '/forminput/' + ${formInput.id} + '/download',
+         downloadURL='/application/' + ${currentApplication.id} + '/form/question/' + ${question.id} + '/forminput/' + ${formInput.id} + '/download',
          compManagementDownloadURL=${currentApplication.id} + '/forminput/' + ${formInput.id} + '/download',
          filename=${responses?.get(formInput.getId())?.getFilename()}">
         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
@@ -160,7 +160,7 @@
 
     <!-- ===========================Form: empty / no question =========================== -->
     <div th:fragment="empty" th:remove="tag">
-        <div th:utext="${question.getDescription()}" th:remove="tag" />
+        <div safe:utext="${question.getDescription()}" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
     </div>
 

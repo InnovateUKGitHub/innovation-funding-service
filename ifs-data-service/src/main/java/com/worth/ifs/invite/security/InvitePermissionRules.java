@@ -2,6 +2,7 @@ package com.worth.ifs.invite.security;
 
 import com.worth.ifs.invite.domain.Invite;
 import com.worth.ifs.invite.domain.InviteOrganisation;
+import com.worth.ifs.invite.repository.InviteOrganisationRepository;
 import com.worth.ifs.invite.repository.InviteRepository;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.security.PermissionRule;
@@ -29,6 +30,8 @@ public class InvitePermissionRules {
     private RoleRepository roleRepository;
     @Autowired
     private InviteRepository inviteRepository;
+    @Autowired
+    private InviteOrganisationRepository inviteOrganisationRepository;
 
     @PermissionRule(value = "SEND", description = "lead applicant can invite to the application")
     public boolean leadApplicantCanInviteToTheApplication(final Invite invite, final UserResource user) {
@@ -63,7 +66,7 @@ public class InvitePermissionRules {
 
     private boolean isCollaboratorOnInvite(final Invite invite, final UserResource user) {
         final long applicationId = invite.getApplication().getId();
-        final InviteOrganisation inviteOrganisation = invite.getInviteOrganisation(); // Not an actual organisation.
+        final InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
         if (inviteOrganisation != null && inviteOrganisation.getOrganisation() != null) {
             long organisationId = inviteOrganisation.getOrganisation().getId();
             final boolean isCollaborator = checkRole(user, applicationId, organisationId, COLLABORATOR, roleRepository, processRoleRepository);
@@ -73,7 +76,13 @@ public class InvitePermissionRules {
     }
 
     private boolean isCollaboratorOnInvite(final InviteResource invite, final UserResource user) {
-        return isCollaboratorOnInvite(inviteRepository.findOne(invite.getId()), user);
+        if (invite.getApplication() != null && invite.getInviteOrganisation() != null) {
+            final InviteOrganisation inviteOrganisation = inviteOrganisationRepository.findOne(invite.getInviteOrganisation());
+            if (inviteOrganisation != null && inviteOrganisation.getOrganisation() != null) {
+                return checkRole(user, invite.getApplication(), inviteOrganisation.getOrganisation().getId(), COLLABORATOR, roleRepository, processRoleRepository);
+            }
+        }
+        return false;
     }
 
     private boolean isLeadForInvite(final Invite invite, final UserResource user) {
@@ -82,6 +91,6 @@ public class InvitePermissionRules {
     }
 
     private boolean isLeadForInvite(final InviteResource invite, final UserResource user) {
-        return isLeadForInvite(inviteRepository.findOne(invite.getId()), user);
+        return checkRole(user, invite.getApplication(), UserRoleType.LEADAPPLICANT, processRoleRepository);
     }
 }

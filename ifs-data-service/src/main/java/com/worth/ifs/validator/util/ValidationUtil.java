@@ -9,6 +9,7 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
+import com.worth.ifs.validator.MinRowCountValidator;
 import com.worth.ifs.validator.AcademicValidator;
 import com.worth.ifs.validator.GrantClaimValidator;
 import com.worth.ifs.validator.NotEmptyValidator;
@@ -27,20 +28,24 @@ import java.util.stream.Collectors;
 
 @Component
 public class ValidationUtil {
-
     public final static Log LOG = LogFactory.getLog(ValidationUtil.class);
-
     private ValidatorService validatorService;
     private Validator validator;
     private GrantClaimValidator grantClaimValidator;
     private OtherFundingValidator otherFundingValidator;
     private AcademicValidator academicValidator;
+    private MinRowCountValidator minRowCountValidator;
 
     @Autowired
     @Lazy
-    private ValidationUtil(ValidatorService validatorService, @Qualifier("basicValidator") Validator validator, GrantClaimValidator grantClaimValidator, OtherFundingValidator otherFundingValidator, AcademicValidator academicValidator) {
+    private ValidationUtil(ValidatorService validatorService, @Qualifier("basicValidator") Validator validator,
+                           GrantClaimValidator grantClaimValidator,
+                           OtherFundingValidator otherFundingValidator,
+                           AcademicValidator academicValidator,
+                           MinRowCountValidator minRowCountValidator) {
         this.validatorService = validatorService;
         this.validator = validator;
+        this.minRowCountValidator = minRowCountValidator;
         this.grantClaimValidator = grantClaimValidator;
         this.otherFundingValidator = otherFundingValidator;
         this.academicValidator = academicValidator;
@@ -81,24 +86,20 @@ public class ValidationUtil {
         List<ValidationMessages> validationMessages = new ArrayList<>();
         boolean allQuestionsValid = true;
         for (Question question : section.fetchAllChildQuestions()) {
-            if (!question.getMarkAsCompletedEnabled()) {
-                // no need to validate :)
-            } else {
+            if (question.getMarkAsCompletedEnabled()) {
                 validationMessages.addAll(isQuestionValid(question, application, markedAsCompleteById));
             }
         }
         return validationMessages;
     }
 
-    public List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
+    private List<ValidationMessages> isQuestionValid(Question question, Application application, Long markedAsCompleteById) {
         LOG.debug("==validate question "+ question.getName());
-        boolean questionValid = true;
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (question.hasMultipleStatuses()) {
             for (FormInput formInput : question.getFormInputs()) {
-                validationMessages.addAll(isFormInputValid(question, application, markedAsCompleteById, questionValid, formInput));
+                validationMessages.addAll(isFormInputValid(question, application, markedAsCompleteById, formInput));
             }
-//            validationMessages.addAll(validatorService.validateCostItem(application.getId(), question.getId(), markedAsCompleteById));
         } else {
             for (FormInput formInput : question.getFormInputs()) {
                 validationMessages.addAll(isFormInputValid(application, formInput));
@@ -107,7 +108,7 @@ public class ValidationUtil {
         return validationMessages;
     }
 
-    public List<ValidationMessages> isFormInputValid(Application application, FormInput formInput) {
+    private List<ValidationMessages> isFormInputValid(Application application, FormInput formInput) {
         List<ValidationMessages> validationMessages = new ArrayList<>();
         List<BindingResult> bindingResults = validatorService.validateFormInputResponse(application.getId(), formInput.getId());
         for (BindingResult bindingResult : bindingResults) {
@@ -118,7 +119,7 @@ public class ValidationUtil {
         return null;
     }
 
-    public List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, boolean questionValid, FormInput formInput) {
+    private List<ValidationMessages> isFormInputValid(Question question, Application application, Long markedAsCompleteById, FormInput formInput) {
         LOG.debug("====validate form input "+ formInput.getDescription());
         List<ValidationMessages> validationMessages = new ArrayList<>();
         if (formInput.getFormValidators().isEmpty()) {
@@ -138,20 +139,36 @@ public class ValidationUtil {
     private void validationCostItem(Question question, Application application, Long markedAsCompleteById, FormInput formInput, List<ValidationMessages> validationMessages) {
         try {
             CostType costType = CostType.fromString(formInput.getFormInputType().getTitle()); // this checks if formInput is CostType related.
-            validationMessages.addAll(validatorService.validateCostItem(application.getId(), question.getId(), markedAsCompleteById));
+            validationMessages.addAll(validatorService.validateCostItem(application.getId(), question, markedAsCompleteById));
         } catch (IllegalArgumentException e) {
             // not a costtype, which is fine...
         }
     }
 
-    public List<ValidationMessages> validateCostItem(List<CostItem> costItems) {
-        if (costItems.isEmpty())
+    private ValidationMessages invokeEmptyRowValidatorAndReturnMessages(List<CostItem> costItems, Question question) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(question, "question");
+        invokeEmptyRowValidator(costItems, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return new ValidationMessages(question.getId(), bindingResult);
+        }
+        return null;
+    }
+
+    public List<ValidationMessages> validateCostItem(List<CostItem> costItems, Question question) {
+        if (costItems.isEmpty()) {
             return Collections.emptyList();
+        }
 
         List<ValidationMessages> results = costItems.stream()
                 .map(this::validateCostItem)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+
+        ValidationMessages emptyRowMessages = invokeEmptyRowValidatorAndReturnMessages(costItems, question);
+        if(emptyRowMessages != null) {
+            results.add(emptyRowMessages);
+        }
+
         return results;
     }
 
@@ -192,5 +209,9 @@ public class ValidationUtil {
             LOG.info("invoke extra validator: "+ extraValidator.getClass().toString());
             ValidationUtils.invokeValidator(extraValidator, costItem, bindingResult);
         }
+    }
+
+    private void invokeEmptyRowValidator(List<CostItem> costItems, BeanPropertyBindingResult bindingResult){
+        ValidationUtils.invokeValidator(minRowCountValidator, costItems, bindingResult);
     }
 }

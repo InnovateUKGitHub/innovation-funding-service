@@ -4,14 +4,14 @@ import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
+import org.springframework.validation.Validator;
 
 import static com.worth.ifs.form.builder.FormInputBuilder.newFormInput;
 import static com.worth.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.junit.Assert.assertTrue;
 
-public class WordCountValidatorTest {
-    private WordCountValidator getValidator() {
+public class WordCountValidatorTest extends AbstractValidatorTest {
+    public Validator getValidator() {
         return new WordCountValidator();
     }
 
@@ -21,7 +21,7 @@ public class WordCountValidatorTest {
         FormInput formInput = newFormInput().withWordCount(500).build();
         FormInputResponse formInputResponse = newFormInputResponse().withFormInputs(formInput).build();
 
-        BindingResult bindingResult = this.getBindingResult(formInputResponse);
+        BindingResult bindingResult = getBindingResult(formInputResponse);
 
         String testValue1 = "";
         for(int i=0; i<500; i++) {
@@ -48,7 +48,7 @@ public class WordCountValidatorTest {
         FormInput formInput = newFormInput().withWordCount(500).build();
         FormInputResponse formInputResponse = newFormInputResponse().withFormInputs(formInput).build();
 
-        BindingResult bindingResult = this.getBindingResult(formInputResponse);
+        BindingResult bindingResult = getBindingResult(formInputResponse);
 
         formInputResponse.setValue("");
         getValidator().validate(formInputResponse, bindingResult);
@@ -70,11 +70,5 @@ public class WordCountValidatorTest {
         formInputResponse.setValue(testValue1);
         getValidator().validate(formInputResponse, bindingResult);
         assertTrue(!bindingResult.hasErrors());
-    }
-
-    private BindingResult getBindingResult(FormInputResponse formInputResponse) {
-        DataBinder binder = new DataBinder(formInputResponse);
-        BindingResult bindingResult = binder.getBindingResult();
-        return bindingResult;
     }
 }

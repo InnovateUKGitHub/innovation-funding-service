@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:safe="http://www.w3.org/1999/xhtml">
 <head>
     <div th:include="fragments/layout :: head" th:remove="tag" />
 </head>
@@ -49,7 +49,7 @@
         )
     </p> */-->
 
-    <pre th:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
+    <pre safe:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
         Stack trace will be printed here...
     </pre>
 
