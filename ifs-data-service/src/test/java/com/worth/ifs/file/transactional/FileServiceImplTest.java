@@ -297,36 +297,20 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testDeleteFileButCantDeleteFile() throws IOException {
+    public void testDeleteFileButCantDeleteFileFromFilesystem() throws IOException {
 
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
         FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
+        when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+        when(finalFileStorageStrategy.deleteFile(fileEntryToDelete)).thenReturn(serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE)));
 
-        File existingFileToDelete = pathElementsToFile(combineLists(fullPathToNewFile, "thefilename", "andachildthatwillstopdeletion"));
+        ServiceResult<FileEntry> result = service.deleteFile(456L);
+        assertNotNull(result);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(new Error(FILES_UNABLE_TO_DELETE_FILE)));
 
-        try {
-
-            Files.createParentDirs(existingFileToDelete);
-            existingFileToDelete.createNewFile();
-            Files.write("Content to be deleted", existingFileToDelete, defaultCharset());
-
-            when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
-            when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(fileEntryToDelete)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
-
-            ServiceResult<FileEntry> result = service.deleteFile(456L);
-            assertNotNull(result);
-            assertTrue(result.isFailure());
-            assertTrue(result.getFailure().is(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, 456L));
-
-            assertTrue(existingFileToDelete.exists());
-            verify(fileEntryRepository).delete(fileEntryToDelete);
-
-        } finally {
-
-            FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
-        }
+        verify(fileEntryRepository).delete(fileEntryToDelete);
     }
 
     @Test

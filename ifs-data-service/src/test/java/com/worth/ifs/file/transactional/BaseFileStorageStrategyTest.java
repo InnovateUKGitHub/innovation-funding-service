@@ -286,6 +286,43 @@ public abstract class BaseFileStorageStrategyTest {
         }
     }
 
+    @Test
+    public void testDeleteFile() throws IOException {
+
+        BaseFileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
+
+        File tempFile = File.createTempFile("tempfilefortesting1", "suffix", tempFolder);
+
+        FileEntry fileEntry = newFileEntry().with(id(123L)).build();
+
+        try {
+            ServiceResult<File> createdFile = strategy.createFile(fileEntry, tempFile);
+            assertTrue(createdFile.isSuccess());
+
+            ServiceResult<Void> deletedResult = strategy.deleteFile(fileEntry);
+            assertTrue(deletedResult.isSuccess());
+            assertFalse(strategy.exists(fileEntry));
+        } finally {
+            tempFile.delete();
+            FileUtils.deleteDirectory(new File(tempFolder, "BaseFolder"));
+        }
+    }
+
+    @Test
+    public void testDeleteFileButNoFileExistsOnFilesystemToDelete() throws IOException {
+
+        BaseFileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
+        FileEntry fileEntry = newFileEntry().with(id(123L)).build();
+
+        try {
+            ServiceResult<Void> deletedResult = strategy.deleteFile(fileEntry);
+            assertTrue(deletedResult.isFailure());
+            assertTrue(deletedResult.getFailure().is(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, 123L)));
+        } finally {
+            FileUtils.deleteDirectory(new File(tempFolder, "BaseFolder"));
+        }
+    }
+
     protected abstract BaseFileStorageStrategy createFileStorageStrategy(String pathToStorageBase, String containingFolder);
 
     private boolean isNotOsx() {
