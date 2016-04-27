@@ -414,27 +414,16 @@ public class ApplicationFormController extends AbstractApplicationController {
             if(financeErrorsMark != null && !financeErrorsMark.isEmpty()){
                 bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
                 financeErrorsMark.forEach((validationMessage) ->
-<<<<<<< HEAD
-                    validationMessage.getErrors().stream().forEach(e -> {
+                    validationMessage.getErrors().parallelStream()
+                    .filter(e -> StringUtils.hasText(e.getErrorMessage()))
+                    .forEach(e -> {
                         LOG.debug(String.format("reject value: %s / %s", "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage()));
                         if(StringUtils.hasText(e.getErrorKey())){
-                            bindingResult.rejectValue("formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage(), e.getErrorMessage());
+                            addNonDuplicateFieldError(bindingResult, "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage());
                         }else {
-                            bindingResult.rejectValue("formInput[cost-"+validationMessage.getObjectId()+"]", e.getErrorMessage(), e.getErrorMessage());
+                            addNonDuplicateFieldError(bindingResult, "formInput[cost-"+validationMessage.getObjectId()+"]", e.getErrorMessage());
                         }
-                    })
-=======
-                        validationMessage.getErrors().parallelStream()
-                        .filter(e -> StringUtils.hasText(e.getErrorMessage()))
-                        .forEach(e -> {
-                            LOG.debug(String.format("reject value: %s / %s", "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage()));
-                            if(StringUtils.hasText(e.getErrorKey())){
-                                addNonDuplicateFieldError(bindingResult, "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage());
-                            }else {
-                                addNonDuplicateFieldError(bindingResult, "formInput[cost-"+validationMessage.getObjectId()+"]", e.getErrorMessage());
-                            }
                         })
->>>>>>> development
                 );
             }
         }
