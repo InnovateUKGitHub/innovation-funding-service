@@ -64,7 +64,7 @@ Empty company name field
     Given the user navigates to the page    ${SEARCH_COMPANYHOUSE_URL}
     When the user enters text to a text field    id=organisationSearchName    ${EMPTY}
     And the user clicks the button/link    id=org-search
-    Then the user should see an error    may not be empty
+    Then the user should see an error    ${empty_field_warning_message}
 
 *** Keywords ***
 the search criteria should be displayed
