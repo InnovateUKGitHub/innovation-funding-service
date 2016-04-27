@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface ConditionalMaxLabourDays {
 
-    String message() default "{LabourCost.LabourDays.message";
+    String message() default "LabourCost.LabourDays.message";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
