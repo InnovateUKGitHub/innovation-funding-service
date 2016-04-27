@@ -43,12 +43,12 @@ Submit button disabled when the application is incomplete
     And the applicant marks the first question as incomplete
     Then the user navigates to the page    ${SUMMARY_PAGE_APPLICATION_7}
     And the submit button should be disabled
-    [Teardown]    And the applicant marks the first question as complete
+    [Teardown]    the applicant marks the first question as complete
 
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
-    [Tags]    Summary    Pending
-    #pending due to NFUND-2580
+    [Tags]    Summary   Pending
+    #pending due to INFUND-2580
     Given the user navigates to the page    ${FINANCE_SECTION_7}
     When the user clicks the button/link    jQuery=button:contains("Edit")
     And the user navigates to the page    ${SUMMARY_PAGE_APPLICATION_7}
@@ -59,7 +59,7 @@ Submit flow (complete application)
     [Documentation]    INFUND-205
     ...
     ...    INFUND-1887
-    [Tags]    Summary    HappyPath      Email       Pending
+    [Tags]    Summary    HappyPath      Email
     [Setup]    Delete the emails from the test mailbox
     Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
     When the user clicks the button/link    link=Review & submit
@@ -72,13 +72,12 @@ Submit flow (complete application)
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
-    [Tags]    Email    HappyPath        Pending
-    # Pending due to INFUND-2492
+    [Tags]    Email    HappyPath
     Then the user should get a confirmation email
 
 Submitted application is read only
     [Documentation]    INFUND-1938
-    [Tags]      Pending
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    Link=Marking it as complete
     When the user clicks the button/link    Link=View application
@@ -87,7 +86,7 @@ Submitted application is read only
 
 Status of the submitted application
     [Documentation]    INFUND-1137
-    [Tags]      Pending
+    [Tags]
     When the user navigates to the page    ${DASHBOARD_URL}
     Then the user should see the text in the page    Application submitted
     And the user clicks the button/link    Link=Marking it as complete
