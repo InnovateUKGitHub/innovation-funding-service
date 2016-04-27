@@ -112,7 +112,7 @@ Catapult search (empty, invalid & valid inputs)
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user should see the text in the page    Catapult
     When the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    This field cannot be left blank
+    Then the user should see the text in the page    ${empty_field_warning_message}
     When the user enters text to a text field    name=organisationName    Digital Catapult
     When the user clicks the button/link    jQuery=.button:contains("Find UK address")
     And the user should see the text in the page    Please enter a UK postcode
@@ -123,7 +123,7 @@ Catapult search (empty, invalid & valid inputs)
 
 Catapult search (accept invitation flow)
     [Documentation]    INFUND-1230
-    [Tags]    Invite    Catapult    Pending
+    [Tags]    Invite    Catapult
     # Pending due to INFUND-2583
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Digital Catapult
@@ -137,8 +137,7 @@ Catapult search (accept invitation flow)
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=A novel solution to an old problem
     And the user clicks the button/link    link=Your finances
-    Then the user should see the text in the page    TSB reference
-    And the user should not see the text in the page    Labour
+    Then the user should see the text in the page    Digital Catapult
 
 *** Keywords ***
 the user selects the radio button
