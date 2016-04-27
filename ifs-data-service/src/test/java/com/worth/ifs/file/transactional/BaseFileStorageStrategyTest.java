@@ -1,6 +1,7 @@
 package com.worth.ifs.file.transactional;
 
 import com.google.common.io.Files;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import org.apache.commons.io.FileUtils;
@@ -17,8 +18,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
-import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_CREATE_FILE;
-import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_CREATE_FOLDERS;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilterNot;
@@ -213,6 +213,78 @@ public abstract class BaseFileStorageStrategyTest {
         }
     }
 
+    @Test
+    public void testCreateFileWithTwoDifferentlyNamedFilesInSameFolder() throws IOException {
+
+        FileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
+
+        File tempFileWithContents1 = File.createTempFile("tempfilefortesting1", "suffix", tempFolder);
+        File tempFileWithContents2 = File.createTempFile("tempfilefortesting2", "suffix", tempFolder);
+
+        FileEntry fileEntry1 = newFileEntry().with(id(1L)).build();
+        FileEntry fileEntry2 = newFileEntry().with(id(2L)).build();
+
+        try {
+            Files.write("Original content 1", tempFileWithContents1, defaultCharset());
+            Files.write("Original content 2", tempFileWithContents2, defaultCharset());
+
+            ServiceResult<File> createdFile1Result = strategy.createFile(fileEntry1, tempFileWithContents1);
+            assertTrue(createdFile1Result.isSuccess());
+
+            ServiceResult<File> createdFile2Result = strategy.createFile(fileEntry2, tempFileWithContents2);
+            assertTrue(createdFile2Result.isSuccess());
+
+            File createdFile1 = createdFile1Result.getSuccessObject();
+            File createdFile2 = createdFile2Result.getSuccessObject();
+
+            assertTrue(createdFile1.exists());
+            assertTrue(createdFile2.exists());
+            assertEquals(createdFile1.getParent(), createdFile2.getParent());
+
+            assertEquals("Original content 1", Files.readFirstLine(createdFile1, defaultCharset()));
+            assertEquals("Original content 2", Files.readFirstLine(createdFile2, defaultCharset()));
+
+        } finally {
+            FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
+            tempFileWithContents1.delete();
+            tempFileWithContents2.delete();
+        }
+    }
+
+    @Test
+    public void testCreateFileWithTwoFilesInSameFolderWithSameNameFailsGracefully() throws IOException {
+
+
+        FileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
+
+        File tempFileWithContents1 = File.createTempFile("tempfilefortesting1", "suffix", tempFolder);
+        File tempFileWithContents2 = File.createTempFile("tempfilefortesting2", "suffix", tempFolder);
+
+        FileEntry fileEntry1 = newFileEntry().with(id(1L)).build();
+        FileEntry fileEntry2 = newFileEntry().with(id(1L)).build();
+
+        try {
+            Files.write("Original content 1", tempFileWithContents1, defaultCharset());
+            Files.write("Original content 2", tempFileWithContents2, defaultCharset());
+
+            ServiceResult<File> createdFile1Result = strategy.createFile(fileEntry1, tempFileWithContents1);
+            assertTrue(createdFile1Result.isSuccess());
+
+            ServiceResult<File> createdFile2Result = strategy.createFile(fileEntry2, tempFileWithContents2);
+            assertTrue(createdFile2Result.isFailure());
+            assertTrue(createdFile2Result.getFailure().is(new Error(FILES_DUPLICATE_FILE_CREATED)));
+
+            File createdFile1 = createdFile1Result.getSuccessObject();
+            assertTrue(createdFile1.exists());
+
+            assertEquals("Original content 1", Files.readFirstLine(createdFile1, defaultCharset()));
+
+        } finally {
+            FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
+            tempFileWithContents1.delete();
+            tempFileWithContents2.delete();
+        }
+    }
 
     protected abstract BaseFileStorageStrategy createFileStorageStrategy(String pathToStorageBase, String containingFolder);
 
