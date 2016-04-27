@@ -2,6 +2,7 @@ package com.worth.ifs.file.transactional;
 
 import com.google.common.io.Files;
 import com.worth.ifs.BaseUnitTestMocksTest;
+import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.domain.builders.FileEntryBuilder;
@@ -28,6 +29,7 @@ import static com.worth.ifs.BuilderAmendFunctions.*;
 import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
@@ -122,155 +124,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testCreateFileWithTwoDifferentlyNamedFilesInSameFolder() throws IOException {
-
-        List<FileEntryResource> fileResources = newFileEntryResource().
-                with(id(null)).
-                with(names((i, resource) -> "fileEntry" + i)).
-                withFilesizeBytes(17).
-                build(2);
-
-        List<FileEntry> persistedFiles = newFileEntry().
-                with(incrementingIds()).
-                with(names((i, resource) -> "fileEntry" + i)).
-                withFilesizeBytes(17).
-                build(2);
-
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
-
-        try {
-
-            forEachWithIndex(fileResources, (i, resource) -> {
-                FileEntry unpersistedFile = new FileEntry(resource.getId(), resource.getName(), resource.getMediaType(), resource.getFilesizeBytes());
-                when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFiles.get(i));
-            });
-
-            forEachWithIndex(persistedFiles, (i, file) -> {
-                when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(file)).thenReturn(Pair.of(fullPathToNewFile, "thefilename" + (i + 1)));
-            });
-
-            ServiceResult<Pair<File, FileEntry>> result1 = service.createFile(fileResources.get(0), fakeInputStreamSupplier());
-            ServiceResult<Pair<File, FileEntry>> result2 = service.createFile(fileResources.get(1), fakeInputStreamSupplier());
-
-            assertTrue(result1.isSuccess());
-            assertTrue(result2.isSuccess());
-
-            File firstFile = result1.getSuccessObject().getKey();
-            assertTrue(firstFile.exists());
-            assertEquals("thefilename1", firstFile.getName());
-
-            File secondFile = result2.getSuccessObject().getKey();
-            assertTrue(secondFile.exists());
-            assertEquals("thefilename2", secondFile.getName());
-
-            String expectedPath = pathElementsToPathString(fullPathToNewFile);
-            assertEquals(expectedPath + File.separator + "thefilename1", firstFile.getPath());
-            assertEquals(expectedPath + File.separator + "thefilename2", secondFile.getPath());
-
-        } finally {
-
-            FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
-        }
-    }
-
-    @Test
-    public void testCreateFileWithTwoFilesInSameFolderWithSameNameFailsGracefully() throws IOException {
-
-        List<FileEntryResource> fileResources = newFileEntryResource().
-                with(id(null)).
-                with(names((i, resource) -> "fileEntry" + i)).
-                withFilesizeBytes(17).
-                build(2);
-
-        List<FileEntry> persistedFiles = newFileEntry().
-                with(incrementingIds()).
-                with(names((i, resource) -> "fileEntry" + i)).
-                withFilesizeBytes(17).
-                build(2);
-
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
-
-        try {
-
-            forEachWithIndex(fileResources, (i, resource) -> {
-                FileEntry unpersistedFile = new FileEntry(resource.getId(), resource.getName(), resource.getMediaType(), resource.getFilesizeBytes());
-                when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFiles.get(i));
-            });
-
-            persistedFiles.forEach(file -> {
-                when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(file)).thenReturn(Pair.of(fullPathToNewFile, "samefilename"));
-            });
-
-            ServiceResult<Pair<File, FileEntry>> result1 = service.createFile(fileResources.get(0), fakeInputStreamSupplier());
-            ServiceResult<Pair<File, FileEntry>> result2 = service.createFile(fileResources.get(1), fakeInputStreamSupplier());
-
-            assertTrue(result1.isSuccess());
-            assertTrue(result2.isFailure());
-            assertTrue(result2.getFailure().is(FILES_DUPLICATE_FILE_CREATED));
-
-        } finally {
-            FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
-        }
-    }
-
-    @Test
-    public void testCreateFileWithTwoSameNamesInDifferentFolders() throws IOException {
-
-        List<FileEntryResource> fileResources = newFileEntryResource().
-                with(id(null)).
-                with(names((i, resource) -> "fileEntry" + i)).
-                withFilesizeBytes(17).
-                build(2);
-
-
-        List<FileEntry> persistedFiles = newFileEntry().
-                with(incrementingIds()).
-                with(names((i, resource) -> "fileEntry" + i)).
-                withFilesizeBytes(17).
-                build(2);
-
-        List<List<String>> fullPathsToNewFiles = asList(
-                combineLists(tempFolderPaths, "path", "to", "file"),
-                combineLists(tempFolderPaths, "path", "to2", "file")
-                );
-
-        try {
-            forEachWithIndex(fileResources, (i, resource) -> {
-                FileEntry unpersistedFile = new FileEntry(resource.getId(), resource.getName(), resource.getMediaType(), resource.getFilesizeBytes());
-                when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFiles.get(i));
-            });
-
-            forEachWithIndex(persistedFiles, (i, file) -> {
-                when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(file)).thenReturn(Pair.of(fullPathsToNewFiles.get(i), "samefilename"));
-            });
-
-            ServiceResult<Pair<File, FileEntry>> result1 = service.createFile(fileResources.get(0), fakeInputStreamSupplier());
-            ServiceResult<Pair<File, FileEntry>> result2 = service.createFile(fileResources.get(1), fakeInputStreamSupplier());
-
-            assertTrue(result1.isSuccess());
-            assertTrue(result2.isSuccess());
-
-            File firstFile = result1.getSuccessObject().getKey();
-            assertTrue(firstFile.exists());
-            assertEquals("samefilename", firstFile.getName());
-            String expectedPath1 = pathElementsToPathString(fullPathsToNewFiles.get(0));
-            assertEquals(expectedPath1 + File.separator + "samefilename", firstFile.getPath());
-
-            File secondFile = result2.getSuccessObject().getKey();
-            assertTrue(secondFile.exists());
-            assertEquals("samefilename", secondFile.getName());
-            String expectedPath2 = pathElementsToPathString(fullPathsToNewFiles.get(1));
-            assertEquals(expectedPath2 + File.separator + "samefilename", secondFile.getPath());
-
-        } finally {
-            FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
-        }
-    }
-
-    @Test
-    public void testCreateFileFailureToCreateFoldersHandledGracefully() {
-
-        assumeNotWindows();
+    public void testCreateFileFailureToCreateFileOnFilesystemHandledGracefully() {
 
         FileEntryResource fileResource = newFileEntryResource().
                 with(id(null)).
@@ -281,54 +135,13 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
         FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
         FileEntry persistedFile = fileBuilder.with(id(456L)).build();
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "cantcreatethisfolder");
 
         when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
-        when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+        when(temporaryHoldingFileStorageStrategy.createFile(eq(persistedFile), isA(File.class))).thenReturn(serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FOLDERS)));
 
-        // make the temp folder readonly so that the subfolder creation fails
-        File tempFolder = pathElementsToFile(tempFolderPaths);
-        tempFolder.setReadOnly();
-
-        try {
-            ServiceResult<Pair<File, FileEntry>> result = service.createFile(fileResource, fakeInputStreamSupplier());
-            assertTrue(result.isFailure());
-            assertTrue(result.getFailure().is(FILES_UNABLE_TO_CREATE_FOLDERS));
-        } finally {
-            tempFolder.setWritable(true);
-        }
-    }
-
-    @Test
-    public void testCreateFileFailureToCreateFileHandledGracefully() {
-
-        assumeNotWindows();
-
-        FileEntryResource fileResource = newFileEntryResource().
-                with(id(null)).
-                withFilesizeBytes(17).
-                build();
-
-        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(17);
-
-        FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
-        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
-        List<String> fullPathToNewFile = tempFolderPaths;
-
-        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
-        when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
-
-        // make the target folder readonly so that the subfolder creation fails
-        File targetFolder = pathElementsToFile(fullPathToNewFile);
-        targetFolder.setReadOnly();
-
-        try {
-            ServiceResult<Pair<File, FileEntry>> result = service.createFile(fileResource, fakeInputStreamSupplier());
-            assertTrue(result.isFailure());
-            assertTrue(result.getFailure().is(FILES_UNABLE_TO_CREATE_FILE));
-        } finally {
-            targetFolder.setWritable(true);
-        }
+        ServiceResult<Pair<File, FileEntry>> result = service.createFile(fileResource, fakeInputStreamSupplier());
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(new Error(FILES_UNABLE_TO_CREATE_FOLDERS)));
     }
 
     @Test
