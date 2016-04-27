@@ -107,17 +107,10 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
 
         return findFileEntry(fileEntryId).
             andOnSuccess(fileEntry -> findFile(fileEntry).
-            andOnSuccess(file -> {
+            andOnSuccess(() -> {
 
                 fileEntryRepository.delete(fileEntry);
-
-                boolean fileDeletedSuccessfully = file.delete();
-
-                if (fileDeletedSuccessfully) {
-                    return serviceSuccess(fileEntry);
-                } else {
-                    return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, fileEntryId));
-                }
+                return finalFileStorageStrategy.deleteFile(fileEntry).andOnSuccessReturn(() -> fileEntry);
             }));
     }
 
@@ -127,9 +120,10 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     private ServiceResult<Pair<File, FileEntry>> updateFileForFileEntry(FileEntry existingFileEntry, File tempFile) {
-        // TODO DW - INFUND-2220 - this code needs to be adapted to handle the need to update a file that could be still awaiting scanning, has been scanned etc
-        return finalFileStorageStrategy.updateFile(existingFileEntry, tempFile).
-                andOnSuccessReturn(file -> Pair.of(file, existingFileEntry));
+
+        return temporaryHoldingFileStorageStrategy.createFile(existingFileEntry, tempFile).
+                andOnSuccess(newFileWithUpdatedContents -> finalFileStorageStrategy.deleteFile(existingFileEntry).
+                andOnSuccessReturn(() -> Pair.of(newFileWithUpdatedContents, existingFileEntry)));
     }
 
     private ServiceResult<File> createTemporaryFileForValidation(Supplier<InputStream> inputStreamSupplier) {

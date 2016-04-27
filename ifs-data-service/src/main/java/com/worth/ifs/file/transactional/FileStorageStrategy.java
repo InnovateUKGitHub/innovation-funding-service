@@ -41,4 +41,6 @@ public interface FileStorageStrategy {
     ServiceResult<File> updateFile(FileEntry fileEntry, File temporaryFile);
 
     ServiceResult<File> moveFile(File temporaryFile);
+
+    ServiceResult<Void> deleteFile(FileEntry fileEntry);
 }

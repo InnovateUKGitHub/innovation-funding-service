@@ -22,6 +22,7 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilterNot;
+import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
 import static com.worth.ifs.util.FileFunctions.pathElementsToPath;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
@@ -66,7 +67,21 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
         Pair<List<String>, String> absoluteFilePathAndName = getAbsoluteFilePathAndName(fileEntry);
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
-        return createFileForFileEntry(pathElements, filename, temporaryFile);
+        return updateFileForFileEntry(pathElements, filename, temporaryFile);
+    }
+
+    @Override
+    public ServiceResult<Void> deleteFile(FileEntry fileEntry) {
+        Pair<List<String>, String> absoluteFilePathAndName = getAbsoluteFilePathAndName(fileEntry);
+        List<String> pathElements = absoluteFilePathAndName.getLeft();
+        String filename = absoluteFilePathAndName.getRight();
+        File filePath = pathElementsToFile(combineLists(pathElements, filename));
+
+        if (filePath.delete()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, fileEntry.getId()));
+        }
     }
 
     @Override

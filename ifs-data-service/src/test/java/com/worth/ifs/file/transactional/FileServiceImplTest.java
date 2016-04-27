@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
 /**
  *
  */
-@Ignore("TODO DW - INFUND-2220 - reinstate")
+@Ignore
 public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
@@ -344,18 +344,13 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntry fileToUpdate = fileBuilder.with(id(456L)).build();
         FileEntry updatedFile = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
+        File fileItselfToUpdate = new File("/tmp/path/to/updatedfile");
 
         try {
 
-            File existingFileToUpdate = pathElementsToFile(combineLists(fullPathToNewFile, "thefilename"));
-            Files.createParentDirs(existingFileToUpdate);
-            existingFileToUpdate.createNewFile();
-
-            Files.write("Original content", existingFileToUpdate, defaultCharset());
-
             when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
-            when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(updatedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+            when(finalFileStorageStrategy.deleteFile(fileToUpdate)).thenReturn(serviceSuccess());
+            when(temporaryHoldingFileStorageStrategy.createFile(eq(updatedFile), isA(File.class))).thenReturn(serviceSuccess(fileItselfToUpdate));
 
             ServiceResult<Pair<File, FileEntry>> result = service.updateFile(updatingFileEntry, fakeInputStreamSupplier("Updated content should be here"));
 
@@ -363,14 +358,9 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
             assertTrue(result.isSuccess());
 
             File newFileResult = result.getSuccessObject().getKey();
+            assertEquals("updatedfile", newFileResult.getName());
 
-            assertTrue(newFileResult.exists());
-            assertEquals("thefilename", newFileResult.getName());
-
-            String expectedPath = pathElementsToPathString(fullPathToNewFile);
-            assertEquals(expectedPath + File.separator + "thefilename", newFileResult.getPath());
-
-            assertEquals("Updated content should be here", Files.readFirstLine(newFileResult, defaultCharset()));
+            assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());
 
         } finally {
 
