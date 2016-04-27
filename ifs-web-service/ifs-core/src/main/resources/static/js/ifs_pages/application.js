@@ -16,7 +16,7 @@ IFS.application_page = (function(){
                 sectionId = sectionToUpdate.closest('section[id^="section-"]').attr('id').replace('section-','');
             }
             if(sectionToUpdate.length && sectionId && questionId){
-              jQuery.ajax({
+              jQuery.ajaxProtected({
                     type: "POST",
                     beforeSend : function(){
                         if(typeof(IFS.progressiveSelect.hideAll) == 'function'){ IFS.progressiveSelect.hideAll();  }

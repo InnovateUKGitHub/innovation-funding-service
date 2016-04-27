@@ -36,7 +36,7 @@ IFS.invites = (function(){
       saveToCookie : function(){
           //cookie is updated simply by having an ajax call go to the server
           var data = (jQuery(s.formid).serialize());
-          jQuery.ajax({
+          jQuery.ajaxProtected({
             url: window.location.href,
             method: "POST",
             dataType : 'json', //for requests headers so that the back-end can give a version without 302 redirect

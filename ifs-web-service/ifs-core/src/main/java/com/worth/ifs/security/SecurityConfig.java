@@ -20,6 +20,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    private CsrfStatelessFilter csrfStatelessFilter;
+
+    @Autowired
     private StatelessAuthenticationFilter statelessAuthenticationFilter;
 
     public SecurityConfig() {
@@ -32,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(csrfStatelessFilter, StatelessAuthenticationFilter.class)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
                 .anonymous()
@@ -41,5 +45,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers()
                     .cacheControl().disable();
     }
-
 }
