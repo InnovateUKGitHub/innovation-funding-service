@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -55,26 +54,19 @@ public class OtherFundingValidator implements Validator {
         if(userHasSelectedYesToOtherFunding && fundingSource != null && !fundingSource.equals(OTHER_FUNDING)){
             validateDate(otherFunding, errors);
             validateFundingSource(fundingSource, errors);
-            validateFundingAmount(otherFunding, errors);
         }
     }
 
     private void validateDate(OtherFunding otherFunding, Errors errors){
         String securedDate = otherFunding.getSecuredDate();
-        if(!isValidDate(securedDate)) {
+        if(StringUtils.isNotBlank(securedDate) && !isValidDate(securedDate)) {
             errors.reject("validation.finance.secured.date.invalid", "Invalid secured date.  Please use MM-YYYY format.");
         }
     }
 
     private void validateFundingSource(String fundingSource, Errors errors){
-        if(StringUtils.isBlank(fundingSource)){
+        if(StringUtils.isNotBlank(fundingSource) && StringUtils.isBlank(fundingSource)){
             errors.reject("validation.finance.funding.source.blank", "Funding source cannot be blank");
-        }
-    }
-
-    private void validateFundingAmount(OtherFunding otherFunding, Errors errors){
-        if(otherFunding.getFundingAmount() == null || otherFunding.getFundingAmount().compareTo(BigDecimal.ZERO) <= 0){
-            errors.reject("validation.finance.funding.amount.zero", "Funding amount should be greater than 0");
         }
     }
 
