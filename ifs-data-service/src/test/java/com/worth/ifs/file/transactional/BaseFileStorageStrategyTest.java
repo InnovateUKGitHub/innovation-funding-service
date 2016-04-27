@@ -128,7 +128,6 @@ public abstract class BaseFileStorageStrategyTest {
 
         try {
             Files.write("Original content", tempFileWithContents, defaultCharset());
-
             ServiceResult<File> movedFileResult = strategy.moveFile(fileEntry.getId(), tempFileWithContents);
             assertTrue(movedFileResult.isSuccess());
             assertTrue(movedFileResult.getSuccessObject().exists());
@@ -137,6 +136,29 @@ public abstract class BaseFileStorageStrategyTest {
             assertEquals(pathElementsToPath(expectedFilePath), movedFile.toPath());
             assertEquals("Original content", Files.readFirstLine(movedFile, defaultCharset()));
             assertFalse(tempFileWithContents.exists());
+        } finally {
+            FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
+            tempFileWithContents.delete();
+        }
+    }
+
+    protected void doTestGetAll(List<Pair<FileEntry, Pair<List<String>, String>>> fileEntriesAndExpectedPaths) throws IOException {
+
+        final FileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
+        final File tempFileWithContents = File.createTempFile("tempfilefortesting", "suffix", tempFolder);
+
+        try {
+            // Create the files
+            for (final Pair<FileEntry, Pair<List<String>, String>> entry : fileEntriesAndExpectedPaths) {
+                ServiceResult<File> createdFileResult = strategy.createFile(entry.getLeft(), tempFileWithContents);
+                assertTrue(createdFileResult.isSuccess());
+            }
+            final List<Pair<List<String>, String>> all = strategy.getAll();
+            assertEquals(fileEntriesAndExpectedPaths.size(), all.size());
+            for (final Pair<FileEntry, Pair<List<String>, String>> fileEntryAndExpectedPath: fileEntriesAndExpectedPaths) {
+                final Pair<List<String>, String> expectedPath = fileEntryAndExpectedPath.getValue();
+                assertTrue(all.contains(expectedPath));
+            }
         } finally {
             FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
             tempFileWithContents.delete();

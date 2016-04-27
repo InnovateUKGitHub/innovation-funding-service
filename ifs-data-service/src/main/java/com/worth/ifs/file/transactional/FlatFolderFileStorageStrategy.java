@@ -5,6 +5,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_FIND_FILE_ENTRY_ID_FROM_FILE;
@@ -32,17 +33,21 @@ public class FlatFolderFileStorageStrategy extends BaseFileStorageStrategy {
     @Override
     public List<Pair<List<String>, String>> getAll() {
         final File uploadFolder = pathElementsToFile(getAbsolutePathToFileUploadFolder());
-        return asList(uploadFolder.listFiles()).stream().
-                filter(f -> isLong(f.getName())).
-                filter(f -> f.isDirectory()).
-                map(f -> Pair.of(getAbsolutePathToFileUploadFolder(), f.getName())).
-                collect(toList());
+        final File[] files = uploadFolder.listFiles();
+        if (files != null) {
+            return asList(files).stream().
+                    filter(f -> isLong(f.getName())).
+                    filter(f -> f.isFile()).
+                    map(f -> Pair.of(getAbsolutePathToFileUploadFolder(), f.getName())).
+                    collect(toList());
+        }
+        return new ArrayList<>();
     }
 
     @Override
     public ServiceResult<Long> fileEntryIdFromPath(Pair<List<String>, String> path) {
-        if (getAbsolutePathToFileUploadFolder().equals(path.getLeft())){
-            if (isLong(path.getRight())){
+        if (getAbsolutePathToFileUploadFolder().equals(path.getLeft())) {
+            if (isLong(path.getRight())) {
                 return serviceSuccess(parseLong(path.getRight()));
             }
         }
