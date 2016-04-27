@@ -35,6 +35,7 @@ public class LocalDatePropertyEditor extends PropertyEditorSupport {
 
         try {
             setValue(LocalDate.of(year, month, day));
+
         } catch (Exception ex) {
             LOG.error(ex);
             setValue(null);

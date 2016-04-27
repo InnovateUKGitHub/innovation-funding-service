@@ -1,7 +1,6 @@
 package com.worth.ifs.validator;
 
 import com.worth.ifs.finance.domain.Cost;
-import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.cost.GrantClaim;
 import com.worth.ifs.user.domain.OrganisationSize;
@@ -17,10 +16,8 @@ import org.springframework.validation.Validator;
  */
 @Component
 public class GrantClaimValidator implements Validator {
-
     private static final Log LOG = LogFactory.getLog(GrantClaimValidator.class);
 
-    private OrganisationFinanceDelegate organisationFinanceDelegate;
     private CostRepository costRepository;
 
     @Override
@@ -29,8 +26,7 @@ public class GrantClaimValidator implements Validator {
     }
 
     @Autowired
-    public GrantClaimValidator(OrganisationFinanceDelegate organisationFinanceDelegate, CostRepository costRepository) {
-        this.organisationFinanceDelegate = organisationFinanceDelegate;
+    public GrantClaimValidator(CostRepository costRepository) {
         this.costRepository = costRepository;
     }
 
@@ -40,9 +36,11 @@ public class GrantClaimValidator implements Validator {
         Cost cost = costRepository.findOne(response.getId());
         OrganisationSize size = cost.getApplicationFinance().getOrganisationSize();
 
-        if(response.getGrantClaimPercentage() == null || response.getGrantClaimPercentage().equals(0)){
+        if(size == null) {
+            errors.rejectValue("grantClaimPercentage", "validation.finance.select.organisation.size", null, null);
+        } else if(response.getGrantClaimPercentage() == null || response.getGrantClaimPercentage().equals(0)) {
             errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message", null, null);
-        }else if(response.getGrantClaimPercentage() > size.getMaxGrantClaimPercentage()){
+        } else if(response.getGrantClaimPercentage() > size.getMaxGrantClaimPercentage()){
             errors.rejectValue("grantClaimPercentage", "Max", String.format("This field should be %s%% or lower", size.getMaxGrantClaimPercentage()));
         }
     }
