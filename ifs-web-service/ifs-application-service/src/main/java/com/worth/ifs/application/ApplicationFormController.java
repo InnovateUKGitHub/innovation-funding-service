@@ -420,7 +420,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         new ApplicationStartDateValidator().validate(request, bindingResult);
         
-        setApplicationDetails(application, form.getApplication(), bindingResult);
+        setApplicationDetails(application, form.getApplication());
 
         Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
         if(userIsLeadApplicant) {
@@ -722,10 +722,10 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     /**
      * Set the submitted values, if not null. If they are null, then probably the form field was not in the current html form.
-     * @param bindingResult 
-     * @param request 
+     * @param application 
+     * @param updatedApplication 
      */
-    private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication, BindingResult bindingResult) {
+    private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
         if (updatedApplication == null) {
             return;
         }
