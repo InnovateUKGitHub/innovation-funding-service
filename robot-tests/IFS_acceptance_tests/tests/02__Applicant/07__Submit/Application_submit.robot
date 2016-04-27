@@ -48,7 +48,7 @@ Submit button disabled when the application is incomplete
 Submit button disabled when finance section is incomplete
     [Documentation]    INFUND-927
     [Tags]    Summary   Pending
-    #pending due to INFUND-2580
+    # Pending due to INFUND-808 finance validation
     Given the user navigates to the page    ${FINANCE_SECTION_7}
     When the user clicks the button/link    jQuery=button:contains("Edit")
     And the user navigates to the page    ${SUMMARY_PAGE_APPLICATION_7}
