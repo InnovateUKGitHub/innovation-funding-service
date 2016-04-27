@@ -18,7 +18,7 @@ Documentation     This test has been put last (with the 1.) because the other ap
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
 Suite Setup       Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant    Submit       Pending
+Force Tags        Applicant    Submit
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/keywords/Login_actions.robot
@@ -59,7 +59,7 @@ Submit flow (complete application)
     [Documentation]    INFUND-205
     ...
     ...    INFUND-1887
-    [Tags]    Summary    HappyPath
+    [Tags]    Summary    HappyPath      Email       Pending
     [Setup]    Delete the emails from the test mailbox
     Given the user navigates to the page    ${OVERVIEW_PAGE_APPLICATION_7}
     When the user clicks the button/link    link=Review & submit
@@ -72,13 +72,13 @@ Submit flow (complete application)
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
-    [Tags]    Email    HappyPath
+    [Tags]    Email    HappyPath        Pending
     # Pending due to INFUND-2492
     Then the user should get a confirmation email
 
 Submitted application is read only
     [Documentation]    INFUND-1938
-    [Tags]
+    [Tags]      Pending
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    Link=Marking it as complete
     When the user clicks the button/link    Link=View application
@@ -87,7 +87,7 @@ Submitted application is read only
 
 Status of the submitted application
     [Documentation]    INFUND-1137
-    [Tags]
+    [Tags]      Pending
     When the user navigates to the page    ${DASHBOARD_URL}
     Then the user should see the text in the page    Application submitted
     And the user clicks the button/link    Link=Marking it as complete

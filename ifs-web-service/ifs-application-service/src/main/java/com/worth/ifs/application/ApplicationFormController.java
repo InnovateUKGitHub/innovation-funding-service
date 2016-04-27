@@ -27,6 +27,7 @@ import com.worth.ifs.util.MessageUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -70,6 +73,9 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @Autowired
     private FormInputService formInputService;
+
+    @Autowired
+    MessageSource messageSource;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -216,6 +222,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                 cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
             }
 
+            bindingResult = removeDuplicateFieldErrors(bindingResult);
             form.setBindingResult(bindingResult);
             form.setObjectErrors(bindingResult.getAllErrors());
             model.addAttribute("form", form);
@@ -231,6 +238,25 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
     }
 
+    private BindingResult removeDuplicateFieldErrors(BindingResult bindingResult) {
+        BindingResult br = new BeanPropertyBindingResult(this, "form");
+        bindingResult.getFieldErrors().stream().distinct()
+                .filter(e -> {
+                    for (FieldError fieldError : br.getFieldErrors(e.getField())) {
+                        if(fieldError.getDefaultMessage().equals(e.getDefaultMessage())){
+                            return false;
+                        }else{
+                            return true;
+                        }
+                    }
+                    return true;
+                })
+                .forEach(e -> br.addError(e));
+        bindingResult.getGlobalErrors().stream().forEach(e -> br.addError(e));
+        bindingResult = br;
+        return bindingResult;
+    }
+
     private String getRedirectUrl(HttpServletRequest request, Long applicationId) {
         if (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||
                 request.getParameter(MARK_AS_INCOMPLETE) != null ||
@@ -242,11 +268,11 @@ public class ApplicationFormController extends AbstractApplicationController {
                 request.getParameter(UPLOAD_FILE) != null ||
                 request.getParameter(EDIT_QUESTION) != null) {
             // user did a action, just display the same page.
-            LOG.info("redirect: " + request.getRequestURI());
+            LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
         } else {
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
-            LOG.info("default redirect: ");
+            LOG.debug("default redirect: ");
             return "redirect:"+APPLICATION_BASE_URL + applicationId;
         }
     }
@@ -388,6 +414,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             if(financeErrorsMark != null && !financeErrorsMark.isEmpty()){
                 bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
                 financeErrorsMark.forEach((validationMessage) ->
+<<<<<<< HEAD
                     validationMessage.getErrors().stream().forEach(e -> {
                         LOG.debug(String.format("reject value: %s / %s", "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage()));
                         if(StringUtils.hasText(e.getErrorKey())){
@@ -396,6 +423,18 @@ public class ApplicationFormController extends AbstractApplicationController {
                             bindingResult.rejectValue("formInput[cost-"+validationMessage.getObjectId()+"]", e.getErrorMessage(), e.getErrorMessage());
                         }
                     })
+=======
+                        validationMessage.getErrors().parallelStream()
+                        .filter(e -> StringUtils.hasText(e.getErrorMessage()))
+                        .forEach(e -> {
+                            LOG.debug(String.format("reject value: %s / %s", "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage()));
+                            if(StringUtils.hasText(e.getErrorKey())){
+                                addNonDuplicateFieldError(bindingResult, "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage());
+                            }else {
+                                addNonDuplicateFieldError(bindingResult, "formInput[cost-"+validationMessage.getObjectId()+"]", e.getErrorMessage());
+                            }
+                        })
+>>>>>>> development
                 );
             }
         }
@@ -404,11 +443,30 @@ public class ApplicationFormController extends AbstractApplicationController {
         Map<String, List<String>> financeErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
         financeErrors.forEach((k, errorsList) ->
             errorsList.forEach(e -> {
-                LOG.debug("Got validation error: " + k);
-                bindingResult.rejectValue(k, e, e);
+                addNonDuplicateFieldError(bindingResult, k, e);
             }));
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+    }
+
+    private void addNonDuplicateFieldError(BindingResult bindingResult, String k, String e) {
+        if(bindingResult.getFieldErrorCount(k) > 0){
+            bindingResult.getFieldErrors(k)
+                    .stream()
+                    .filter(fieldError -> !fieldError.getDefaultMessage().equals(e))
+                        .forEach(fieldError -> {
+                            String defaultMessage = messageSource.getMessage(e, null, Locale.getDefault());
+                            if(defaultMessage == null){
+                                defaultMessage = e;
+                            }
+                            bindingResult.rejectValue(k, e, defaultMessage);
+                        });
+        }else{
+            bindingResult.rejectValue(k, e, e);
+        }
+
+
+
     }
 
     private List<ValidationMessages> markAllQuestionsInSection(ApplicationResource application,
@@ -457,7 +515,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                           HttpServletRequest request,
                                                           boolean ignoreEmpty) {
         Map<Long, List<String>> errors = saveQuestionResponses(request, questions, userId, processRoleId, application.getId(), ignoreEmpty);
-        errors.forEach((k, errorsList) -> LOG.info(String.format("Field Error on save: %s  / ", k)));
+        errors.forEach((k, errorsList) -> LOG.debug(String.format("Field Error on save: %s  / ", k)));
         errors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue("formInput[" + k + "]", e, e)));
         return errors;
     }
@@ -492,9 +550,15 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         Map<String, String[]> params = request.getParameterMap();
 
-        bindingResult.getAllErrors().forEach(e -> LOG.info("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
+        if(LOG.isDebugEnabled())
+            bindingResult.getAllErrors().forEach(e -> LOG.debug("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
+
         saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
-        bindingResult.getAllErrors().forEach(e -> LOG.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
+
+        if(LOG.isDebugEnabled()){
+            bindingResult.getFieldErrors().forEach(e -> LOG.debug("Remote validation field: " + e.getObjectName() + " v: " + e.getField() + " v: " + e.getDefaultMessage()));
+            bindingResult.getGlobalErrors().forEach(e -> LOG.debug("Remote validation global: " + e.getObjectName()+ " v: " + e.getCode() + " v: " + e.getDefaultMessage()));
+        }
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             assignQuestion(applicationId, request);
