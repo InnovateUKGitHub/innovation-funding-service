@@ -13,9 +13,12 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_CREATE_FILE;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_CREATE_FOLDERS;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilterNot;
@@ -24,6 +27,7 @@ import static java.io.File.separator;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Test common features of any storage strategies
@@ -164,5 +168,67 @@ public abstract class BaseFileStorageStrategyTest {
         }
     }
 
+    @Test
+    public void testCreateFileFailureToCreateFoldersHandledGracefully() {
+
+        assumeNotWindows();
+
+        BaseFileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "cantcreatethisfolder");
+
+        // make the temp folder readonly so that the subfolder creation fails
+        File tempFolder = pathElementsToFile(tempFolderPathSegments);
+        tempFolder.setReadOnly();
+
+        try {
+            ServiceResult<File> result = strategy.createFile(newFileEntry().build(), new File("dontneedthis"));
+            assertTrue(result.isFailure());
+            assertTrue(result.getFailure().is(FILES_UNABLE_TO_CREATE_FOLDERS));
+        } finally {
+            tempFolder.setWritable(true);
+        }
+    }
+
+    @Test
+    public void testCreateFileFailureToCreateFileHandledGracefully() throws IOException {
+
+        assumeNotWindows();
+
+        BaseFileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
+
+        // make the temp folder readonly so that the subfolder creation fails
+        Pair<List<String>, String> targetFolderAndFilename = strategy.getAbsoluteFilePathAndName(newFileEntry().build());
+        Path targetFolder = pathElementsToPath(targetFolderAndFilename.getKey());
+        java.nio.file.Files.createDirectories(targetFolder);
+        targetFolder.toFile().setReadOnly();
+        File tempFile = File.createTempFile("tempfile", "suffix", tempFolder);
+
+        try {
+            ServiceResult<File> result = strategy.createFile(newFileEntry().build(), tempFile);
+            assertTrue(result.isFailure());
+            assertTrue(result.getFailure().is(FILES_UNABLE_TO_CREATE_FILE));
+        } finally {
+            targetFolder.toFile().setWritable(true);
+            tempFile.delete();
+            FileUtils.deleteDirectory(new File(tempFolder, "BaseFolder"));
+        }
+    }
+
+
     protected abstract BaseFileStorageStrategy createFileStorageStrategy(String pathToStorageBase, String containingFolder);
+
+    private boolean isNotOsx() {
+        return !System.getProperty("os.name").toLowerCase().contains("mac");
+    }
+
+    private boolean isNotWindows() {
+        return !System.getProperty("os.name").toLowerCase().contains("windows");
+    }
+
+    private void assumeNotWindows() {
+        assumeTrue(isNotWindows());
+    }
+
+    private void assumeNotOsx() {
+        assumeTrue(isNotOsx());
+    }
 }

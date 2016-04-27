@@ -12,7 +12,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -46,7 +45,6 @@ import static org.mockito.Mockito.when;
 /**
  *
  */
-@Ignore
 public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
@@ -264,70 +262,6 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
         } finally {
             FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
-        }
-    }
-
-    @Test
-    public void testCreateFileFailureToCreateFoldersHandledGracefully() {
-
-        assumeNotWindows();
-
-        FileEntryResource fileResource = newFileEntryResource().
-                with(id(null)).
-                withFilesizeBytes(17).
-                build();
-
-        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(17);
-
-        FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
-        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "cantcreatethisfolder");
-
-        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
-        when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
-
-        // make the temp folder readonly so that the subfolder creation fails
-        File tempFolder = pathElementsToFile(tempFolderPaths);
-        tempFolder.setReadOnly();
-
-        try {
-            ServiceResult<Pair<File, FileEntry>> result = service.createFile(fileResource, fakeInputStreamSupplier());
-            assertTrue(result.isFailure());
-            assertTrue(result.getFailure().is(FILES_UNABLE_TO_CREATE_FOLDERS));
-        } finally {
-            tempFolder.setWritable(true);
-        }
-    }
-
-    @Test
-    public void testCreateFileFailureToCreateFileHandledGracefully() {
-
-        assumeNotWindows();
-
-        FileEntryResource fileResource = newFileEntryResource().
-                with(id(null)).
-                withFilesizeBytes(17).
-                build();
-
-        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(17);
-
-        FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
-        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
-        List<String> fullPathToNewFile = tempFolderPaths;
-
-        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
-        when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
-
-        // make the target folder readonly so that the subfolder creation fails
-        File targetFolder = pathElementsToFile(fullPathToNewFile);
-        targetFolder.setReadOnly();
-
-        try {
-            ServiceResult<Pair<File, FileEntry>> result = service.createFile(fileResource, fakeInputStreamSupplier());
-            assertTrue(result.isFailure());
-            assertTrue(result.getFailure().is(FILES_UNABLE_TO_CREATE_FILE));
-        } finally {
-            targetFolder.setWritable(true);
         }
     }
 
