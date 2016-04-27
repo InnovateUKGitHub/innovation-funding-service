@@ -21,6 +21,7 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.profiling.ProfileExecution;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.AjaxResult;
 import com.worth.ifs.util.MessageUtil;
@@ -90,7 +91,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         SectionResource section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
         this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
                 Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
@@ -110,7 +111,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                 @PathVariable("formInputId") final Long formInputId,
                                 HttpServletRequest request) {
         final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
         return getPdfFile(resource);
     }
@@ -163,7 +164,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                    Long userId, Model model,
                                    ApplicationForm form, Optional<QuestionResource> question,
                                    Optional<List<FormInputResource>> formInputs,
-                                   List<ProcessRole> userApplicationRoles){
+                                   List<ProcessRoleResource> userApplicationRoles){
         addApplicationDetails(application, competition, userId, section, question.map(q -> q.getId()), model, form, userApplicationRoles);
         addNavigation(question.orElse(null), application.getId(), model);
         Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
@@ -193,7 +194,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         // Check if the request is to just open edit view or to save
         if(params.containsKey(EDIT_QUESTION)){
-            ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+            ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
             if (processRole != null) {
                 questionService.markAsInComplete(questionId, applicationId, processRole.getId());
             } else {
@@ -205,7 +206,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             SectionResource section = sectionService.getSectionByQuestionId(questionId);
             ApplicationResource application = applicationService.getById(applicationId);
             CompetitionResource competition = competitionService.getById(application.getCompetition());
-            List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+            List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
             List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
             /* Start save action */
             saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
@@ -324,8 +325,6 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
-        ApplicationResource applicationResource = applicationService.getById(applicationId);
-        organisationService.getUserOrganisation(applicationResource, user.getId());
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, user.getId(), questionId, type);
 
@@ -355,7 +354,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                               HttpServletResponse response,
                                               BindingResult bindingResult ) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
 
         // Check if action is mark as complete.  Check empty values if so, ignore otherwise. (INFUND-1222)
         Map<String, String[]> params = request.getParameterMap();

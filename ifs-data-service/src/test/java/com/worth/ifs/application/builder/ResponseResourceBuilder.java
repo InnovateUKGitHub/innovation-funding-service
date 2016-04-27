@@ -3,9 +3,6 @@ package com.worth.ifs.application.builder;
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.Builder;
 import com.worth.ifs.application.domain.Application;
-import com.worth.ifs.application.domain.AssessorFeedback;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.AssessorFeedbackResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.ResponseResource;
@@ -15,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.BuilderAmendFunctions.setField;
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 public class ResponseResourceBuilder extends BaseBuilder<ResponseResource, ResponseResourceBuilder> {
@@ -56,7 +53,7 @@ public class ResponseResourceBuilder extends BaseBuilder<ResponseResource, Respo
     }
 
     public ResponseResourceBuilder withUpdatedBy(ProcessRole value) {
-        return with(response -> response.setUpdatedBy(value));
+        return with(response -> response.setUpdatedBy(value.getId()));
     }
 
     public ResponseResourceBuilder withQuestion(Builder<QuestionResource, ?> question) {

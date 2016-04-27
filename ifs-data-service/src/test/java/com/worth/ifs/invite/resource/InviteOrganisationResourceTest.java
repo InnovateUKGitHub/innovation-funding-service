@@ -32,7 +32,7 @@ public class InviteOrganisationResourceTest {
         setInviteOrganisationResource.setOrganisationName(name);
         setInviteOrganisationResource.setOrganisation(organisation.getId());
 
-        constructedInviteOrganisationResource = new InviteOrganisationResource(id, name, organisation, invites);
+        constructedInviteOrganisationResource = new InviteOrganisationResource(id, name, organisation.getId(), invites);
     }
 
     @Test

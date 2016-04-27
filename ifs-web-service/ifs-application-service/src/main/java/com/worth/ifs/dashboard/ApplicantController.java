@@ -5,12 +5,11 @@ import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.ApplicationStatusRestService;
 import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.user.resource.UserResource;
-import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,8 +73,8 @@ public class ApplicantController {
      */
     private List<Long> getAssignedApplications(List<ApplicationResource> inProgress, UserResource user){
         return inProgress.stream().filter(applicationResource -> {
-                    ProcessRole role = processRoleService.findProcessRole(user.getId(), applicationResource.getId());
-                    if(!role.getRole().getName().equals("leadapplicant")){
+                    ProcessRoleResource role = processRoleService.findProcessRole(user.getId(), applicationResource.getId());
+                    if(!role.getRoleName().equals("leadapplicant")){
                         int count = applicationService.getAssignedQuestionsCount(applicationResource.getId(), role.getId());
                         return count == 0 ? false : true;
                     }else{
