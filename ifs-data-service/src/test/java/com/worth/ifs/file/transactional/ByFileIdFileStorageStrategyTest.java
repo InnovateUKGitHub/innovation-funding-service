@@ -90,6 +90,12 @@ public class ByFileIdFileStorageStrategyTest extends BaseFileStorageStrategyTest
         doTestCreateFile(fileEntry, combineLists(tempFolderPathSegmentsWithBaseFolder, "000000000_999999999", "000000_999999", "000_999", "123"));
     }
 
+    @Test
+    public void testMoveFile() throws IOException {
+        FileEntry fileEntry = newFileEntry().with(id(123L)).build();
+        doTestMoveFile(fileEntry, combineLists(tempFolderPathSegmentsWithBaseFolder, "000000000_999999999", "000000_999999", "000_999", "123"));
+    }
+
     @Override
     protected BaseFileStorageStrategy createFileStorageStrategy(String pathToStorageBase, String containingFolder) {
         return new ByFileIdFileStorageStrategy(pathToStorageBase, containingFolder);

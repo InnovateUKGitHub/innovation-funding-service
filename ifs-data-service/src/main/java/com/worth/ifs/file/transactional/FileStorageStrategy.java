@@ -21,6 +21,9 @@ public interface FileStorageStrategy {
      */
     Pair<List<String>, String> getAbsoluteFilePathAndName(FileEntry file);
 
+
+    Pair<List<String>, String> getAbsoluteFilePathAndName(Long fileEntryId);
+
     /**
      * Given a FileEntry, see if this strategy can locate an existing file in its own storage
      *
@@ -40,7 +43,12 @@ public interface FileStorageStrategy {
 
     ServiceResult<File> updateFile(FileEntry fileEntry, File temporaryFile);
 
-    ServiceResult<File> moveFile(File temporaryFile);
-
     ServiceResult<Void> deleteFile(FileEntry fileEntry);
+
+    ServiceResult<File> moveFile(Long fileId, File temporaryFile);
+
+    List<Pair<List<String>, String>> getAll();
+
+    ServiceResult<Long> fileEntryIdFromPath(Pair<List<String>, String> path);
+
 }

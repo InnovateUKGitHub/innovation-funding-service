@@ -113,6 +113,32 @@ public abstract class BaseFileStorageStrategyTest {
         }
     }
 
+
+
+    protected void doTestMoveFile(FileEntry fileEntry, List<String> expectedFilePath) throws IOException {
+
+        FileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
+        assertFalse(strategy.exists(fileEntry));
+
+        File tempFileWithContents = File.createTempFile("tempfilefortesting", "suffix", tempFolder);
+
+        try {
+            Files.write("Original content", tempFileWithContents, defaultCharset());
+
+            ServiceResult<File> movedFileResult = strategy.moveFile(fileEntry.getId(), tempFileWithContents);
+            assertTrue(movedFileResult.isSuccess());
+            assertTrue(movedFileResult.getSuccessObject().exists());
+            File movedFile = movedFileResult.getSuccessObject();
+            assertTrue(movedFile.exists());
+            assertEquals(pathElementsToPath(expectedFilePath), movedFile.toPath());
+            assertEquals("Original content", Files.readFirstLine(movedFile, defaultCharset()));
+            assertFalse(tempFileWithContents.exists());
+        } finally {
+            FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
+            tempFileWithContents.delete();
+        }
+    }
+
     @Test
     public void testUpdateFile() throws IOException {
 

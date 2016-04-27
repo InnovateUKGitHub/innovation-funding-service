@@ -1,6 +1,6 @@
 package com.worth.ifs.file.transactional;
 
-import com.worth.ifs.file.domain.FileEntry;
+import com.worth.ifs.commons.service.ServiceResult;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,8 +31,8 @@ public class ByFileIdFileStorageStrategy extends BaseFileStorageStrategy {
     }
 
     @Override
-    public Pair<List<String>, String> getAbsoluteFilePathAndName(FileEntry file) {
-        return getFilePathAndName(file.getId());
+    public Pair<List<String>, String> getAbsoluteFilePathAndName(Long fileEntryId) {
+        return getFilePathAndName(fileEntryId);
     }
 
     Pair<List<String>, String> getFilePathAndName(Long id) {
@@ -58,5 +58,15 @@ public class ByFileIdFileStorageStrategy extends BaseFileStorageStrategy {
         List<String> fullPathToContainingFolder = getAbsolutePathToFileUploadFolder();
         List<String> folderPathToFileWithinContainingFolder = range(0, partitionLevels).mapToObj(folderNameFunction).collect(toList());
         return combineLists(fullPathToContainingFolder, folderPathToFileWithinContainingFolder);
+    }
+
+    @Override
+    public List<Pair<List<String>, String>> getAll() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ServiceResult<Long> fileEntryIdFromPath(Pair<List<String>, String> path) {
+        throw new UnsupportedOperationException();
     }
 }

@@ -31,8 +31,16 @@ public class FlatFolderFileStorageStrategyTest extends BaseFileStorageStrategyTe
         doTestCreateFile(fileEntry, combineLists(tempFolderPathSegmentsWithBaseFolder, "123"));
     }
 
+    @Test
+    public void testMoveFile() throws IOException {
+        FileEntry fileEntry = newFileEntry().with(id(123L)).build();
+        doTestMoveFile(fileEntry, combineLists(tempFolderPathSegmentsWithBaseFolder, "123"));
+    }
+
     @Override
     protected BaseFileStorageStrategy createFileStorageStrategy(String pathToStorageBase, String containingFolder) {
         return new FlatFolderFileStorageStrategy(pathToStorageBase, containingFolder);
     }
+
+
 }

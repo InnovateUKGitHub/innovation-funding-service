@@ -10,10 +10,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.List;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
@@ -46,6 +43,11 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
     }
 
     @Override
+    public final Pair<List<String>, String> getAbsoluteFilePathAndName(FileEntry file) {
+        return getAbsoluteFilePathAndName(file.getId());
+    }
+
+    @Override
     public boolean exists(FileEntry file) {
         Pair<List<String>, String> absoluteFilePathAndName = getAbsoluteFilePathAndName(file);
         List<String> pathElements = absoluteFilePathAndName.getLeft();
@@ -71,6 +73,14 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
     }
 
     @Override
+    public ServiceResult<File> moveFile(Long fileEntryId, File temporaryFile) {
+        final Pair<List<String>, String> absoluteFilePathAndName = getAbsoluteFilePathAndName(fileEntryId);
+        final List<String> pathElements = absoluteFilePathAndName.getLeft();
+        final String filename = absoluteFilePathAndName.getRight();
+        return moveFileForFileEntry(pathElements, filename, temporaryFile);
+    }
+
+    @Override
     public ServiceResult<Void> deleteFile(FileEntry fileEntry) {
         Pair<List<String>, String> absoluteFilePathAndName = getAbsoluteFilePathAndName(fileEntry);
         List<String> pathElements = absoluteFilePathAndName.getLeft();
@@ -84,17 +94,20 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
         }
     }
 
-    @Override
-    public ServiceResult<File> moveFile(File temporaryFile) {
-        return null;
-    }
-
     private ServiceResult<File> createFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
 
         Path foldersPath = pathElementsToPath(absolutePathElements);
 
         return createFolders(foldersPath).
                 andOnSuccess(createdFolders -> copyTempFileToTargetFile(createdFolders, filename, tempFile));
+    }
+
+    private ServiceResult<File> moveFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
+
+        Path foldersPath = pathElementsToPath(absolutePathElements);
+
+        return createFolders(foldersPath).
+                andOnSuccess(createdFolders -> moveTempFileToTargetFile(createdFolders, filename, tempFile));
     }
 
     private ServiceResult<Path> createFolders(Path path) {
@@ -122,6 +135,22 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
             return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
         }
     }
+
+
+    private ServiceResult<File> moveTempFileToTargetFile(Path targetFolder, String targetFilename, File tempFile) {
+        try {
+            final File fileToCreate = new File(targetFolder.toString(), targetFilename);
+            final Path targetFile = Files.move(tempFile.toPath(), fileToCreate.toPath());
+            return serviceSuccess(targetFile.toFile());
+        } catch (final FileAlreadyExistsException e) {
+            LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
+            return serviceFailure(new Error(FILES_DUPLICATE_FILE_CREATED));
+        } catch (IOException e){
+            LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
+            return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
+        }
+    }
+
 
     private ServiceResult<File> updateFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
 
