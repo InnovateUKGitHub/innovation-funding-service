@@ -59,6 +59,11 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     }
 
     @Bean
+    public IfSThymeleafDialect getIfsIfSThymeleafDialect() {
+        return new IfSThymeleafDialect();
+    }
+
+    @Bean
     public HandlerInterceptor getMenuLinksHandlerInterceptor() {
         return new MenuLinksHandlerInterceptor();
     }
