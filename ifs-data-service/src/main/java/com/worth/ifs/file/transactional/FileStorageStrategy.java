@@ -1,8 +1,10 @@
 package com.worth.ifs.file.transactional;
 
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -18,4 +20,25 @@ public interface FileStorageStrategy {
      * @return
      */
     Pair<List<String>, String> getAbsoluteFilePathAndName(FileEntry file);
+
+    /**
+     * Given a FileEntry, see if this strategy can locate an existing file in its own storage
+     *
+     * @param file
+     * @return
+     */
+    boolean exists(FileEntry file);
+
+    /**
+     * Creates a new File in the location that this strategy would place it
+     *
+     * @param fileEntry
+     * @param temporaryFile
+     * @return
+     */
+    ServiceResult<File> createFile(FileEntry fileEntry, File temporaryFile);
+
+    ServiceResult<File> updateFile(FileEntry fileEntry, File temporaryFile);
+
+    ServiceResult<File> moveFile(File temporaryFile);
 }

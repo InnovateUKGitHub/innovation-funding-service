@@ -1,11 +1,28 @@
 package com.worth.ifs.file.transactional;
 
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.file.domain.FileEntry;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilterNot;
+import static com.worth.ifs.util.FileFunctions.pathElementsToPath;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
 
@@ -17,6 +34,8 @@ import static java.util.Arrays.asList;
  */
 abstract class BaseFileStorageStrategy implements FileStorageStrategy {
 
+    private static final Log LOG = LogFactory.getLog(BaseFileStorageStrategy.class);
+
     protected String pathToStorageBase;
     protected String containingFolder;
 
@@ -24,6 +43,95 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
         this.pathToStorageBase = pathToStorageBase;
         this.containingFolder = containingFolder;
     }
+
+    @Override
+    public boolean exists(FileEntry file) {
+        Pair<List<String>, String> absoluteFilePathAndName = getAbsoluteFilePathAndName(file);
+        List<String> pathElements = absoluteFilePathAndName.getLeft();
+        String filename = absoluteFilePathAndName.getRight();
+        Path foldersPath = pathElementsToPath(pathElements);
+        return new File(foldersPath.toFile(), filename).exists();
+    }
+
+    @Override
+    public ServiceResult<File> createFile(FileEntry fileEntry, File temporaryFile) {
+        Pair<List<String>, String> absoluteFilePathAndName = getAbsoluteFilePathAndName(fileEntry);
+        List<String> pathElements = absoluteFilePathAndName.getLeft();
+        String filename = absoluteFilePathAndName.getRight();
+        return createFileForFileEntry(pathElements, filename, temporaryFile);
+    }
+
+    @Override
+    public ServiceResult<File> updateFile(FileEntry fileEntry, File temporaryFile) {
+        Pair<List<String>, String> absoluteFilePathAndName = getAbsoluteFilePathAndName(fileEntry);
+        List<String> pathElements = absoluteFilePathAndName.getLeft();
+        String filename = absoluteFilePathAndName.getRight();
+        return createFileForFileEntry(pathElements, filename, temporaryFile);
+    }
+
+    @Override
+    public ServiceResult<File> moveFile(File temporaryFile) {
+        return null;
+    }
+
+    private ServiceResult<File> createFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
+
+        Path foldersPath = pathElementsToPath(absolutePathElements);
+
+        return createFolders(foldersPath).
+                andOnSuccess(createdFolders -> copyTempFileToTargetFile(createdFolders, filename, tempFile));
+    }
+
+    private ServiceResult<Path> createFolders(Path path) {
+        try {
+            return serviceSuccess(Files.createDirectories(path));
+        } catch (IOException e) {
+            LOG.error("Error creating folders " + path, e);
+            return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FOLDERS));
+        }
+    }
+
+    private ServiceResult<File> copyTempFileToTargetFile(Path targetFolder, String targetFilename, File tempFile) {
+        try {
+            File fileToCreate = new File(targetFolder.toString(), targetFilename);
+
+            if (fileToCreate.exists()) {
+                LOG.error("File " + targetFilename + " already existed in target path " + targetFolder + ".  Cannot create a new one here.");
+                return serviceFailure(new Error(FILES_DUPLICATE_FILE_CREATED));
+            }
+
+            Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename));
+            return serviceSuccess(targetFile.toFile());
+        } catch (IOException e) {
+            LOG.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
+            return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
+        }
+    }
+
+    private ServiceResult<File> updateFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
+
+        Path foldersPath = pathElementsToPath(absolutePathElements);
+        return updateExistingFileWithTempFile(foldersPath, filename, tempFile);
+    }
+
+
+    private ServiceResult<File> updateExistingFileWithTempFile(Path targetFolder, String targetFilename, File tempFile) {
+        try {
+            File fileToCreate = new File(targetFolder.toString(), targetFilename);
+
+            if (!fileToCreate.exists()) {
+                LOG.error("File " + targetFilename + " doesn't exist in target path " + targetFolder + ".  Cannot update one here.");
+                return serviceFailure(notFoundError(File.class));
+            }
+
+            Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename), StandardCopyOption.REPLACE_EXISTING);
+            return serviceSuccess(targetFile.toFile());
+        } catch (IOException e) {
+            LOG.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
+            return serviceFailure(new Error(FILES_UNABLE_TO_UPDATE_FILE));
+        }
+    }
+
 
     protected List<String> getAbsolutePathToFileUploadFolder() {
         return getAbsolutePathToFileUploadFolder(separator);

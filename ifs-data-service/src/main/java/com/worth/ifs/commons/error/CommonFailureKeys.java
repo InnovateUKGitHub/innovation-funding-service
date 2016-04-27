@@ -29,6 +29,8 @@ public enum CommonFailureKeys implements ErrorTemplate {
     FILES_DUPLICATE_FILE_CREATED("A matching file already exists", CONFLICT),
     FILES_INCORRECTLY_REPORTED_MEDIA_TYPE("The actual file media type didn't match the reported media type", UNSUPPORTED_MEDIA_TYPE),
     FILES_INCORRECTLY_REPORTED_FILESIZE("The actual file size didn't match the reported file size", BAD_REQUEST),
+    FILES_FILE_AWAITING_VIRUS_SCAN("The file is awaiting virus scanning", FORBIDDEN),
+    FILES_FILE_QUARANTINED("The file has been quarantined by the virus scanner", FORBIDDEN),
 
     /**
      * Notifications

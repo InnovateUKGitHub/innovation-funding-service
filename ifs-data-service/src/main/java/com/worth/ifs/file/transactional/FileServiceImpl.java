@@ -18,18 +18,17 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static com.worth.ifs.commons.error.CommonErrors.forbiddenErrorWithKey;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
-import static com.worth.ifs.util.FileFunctions.pathElementsToPath;
 
 /**
  * The class is an implementation of FileService that, based upon a given fileStorageStrategy, is able to
@@ -41,8 +40,8 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     private static final Log LOG = LogFactory.getLog(FileServiceImpl.class);
 
     @Autowired
-    @Qualifier("initialFileStorageStrategy")
-    private FileStorageStrategy initialFileStorageStrategy;
+    @Qualifier("temporaryHoldingFileStorageStrategy")
+    private FileStorageStrategy temporaryHoldingFileStorageStrategy;
 
     @Autowired
     @Qualifier("quarantinedFileStorageStrategy")
@@ -128,13 +127,9 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     private ServiceResult<Pair<File, FileEntry>> updateFileForFileEntry(FileEntry existingFileEntry, File tempFile) {
-
         // TODO DW - INFUND-2220 - this code needs to be adapted to handle the need to update a file that could be still awaiting scanning, has been scanned etc
-        Pair<List<String>, String> absoluteFilePathAndName = initialFileStorageStrategy.getAbsoluteFilePathAndName(existingFileEntry);
-        List<String> pathElements = absoluteFilePathAndName.getLeft();
-        String filename = absoluteFilePathAndName.getRight();
-
-        return updateFileForFileEntry(pathElements, filename, tempFile).andOnSuccessReturn(file -> Pair.of(file, existingFileEntry));
+        return finalFileStorageStrategy.updateFile(existingFileEntry, tempFile).
+                andOnSuccessReturn(file -> Pair.of(file, existingFileEntry));
     }
 
     private ServiceResult<File> createTemporaryFileForValidation(Supplier<InputStream> inputStreamSupplier) {
@@ -195,11 +190,8 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     private ServiceResult<Pair<File, FileEntry>> createFileForFileEntry(FileEntry savedFileEntry, File tempFile) {
-
-        Pair<List<String>, String> absoluteFilePathAndName = initialFileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
-        List<String> pathElements = absoluteFilePathAndName.getLeft();
-        String filename = absoluteFilePathAndName.getRight();
-        return createFileForFileEntry(pathElements, filename, tempFile).andOnSuccessReturn(file -> Pair.of(file, savedFileEntry));
+        return temporaryHoldingFileStorageStrategy.createFile(savedFileEntry, tempFile).
+                andOnSuccessReturn(file -> Pair.of(file, savedFileEntry));
     }
 
     private ServiceResult<FileEntry> saveFileEntry(FileEntryResource resource) {
@@ -212,16 +204,27 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     private ServiceResult<File> findFile(FileEntry fileEntry) {
+        return validateFileNotUnsafe(fileEntry).andOnSuccess(() -> findFileInSafeLocation(fileEntry));
+    }
 
+    private ServiceResult<File> findFileInSafeLocation(FileEntry fileEntry) {
+        return findFileInFinalFileStorageLocation(fileEntry).andOnFailure(() -> findFileInScannedStorageLocation(fileEntry));
+    }
 
-        ServiceResult<Void> asdf = validateNotInQuarantine(fileEntry);
-        ServiceResult<Void> asdf2 = validateNotAwaitingScanning(fileEntry);
-        // TODO DW - INFUND-2220 - this code needs to be amended to look in virus scanning / scanned folders
-        return findFileInFinalFileStorageLocation(fileEntry);
+    private ServiceResult<Void> validateFileNotUnsafe(FileEntry fileEntry) {
+        return validateNotInQuarantine(fileEntry).andOnSuccess(() -> validateNotAwaitingScanning(fileEntry));
     }
 
     private ServiceResult<File> findFileInFinalFileStorageLocation(FileEntry fileEntry) {
-        Pair<List<String>, String> filePathAndName = initialFileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
+        return findFileInStorageLocation(fileEntry, finalFileStorageStrategy);
+    }
+
+    private ServiceResult<File> findFileInScannedStorageLocation(FileEntry fileEntry) {
+        return findFileInStorageLocation(fileEntry, scannedFileStorageStrategy);
+    }
+
+    private ServiceResult<File> findFileInStorageLocation(FileEntry fileEntry, FileStorageStrategy fileStorageStrategy) {
+        Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
         List<String> pathElements = filePathAndName.getLeft();
         String filename = filePathAndName.getRight();
         File expectedFile = new File(pathElementsToFile(pathElements), filename);
@@ -234,68 +237,18 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     private ServiceResult<Void> validateNotAwaitingScanning(FileEntry fileEntry) {
-//        return initialFileStorageStrategy.getAbsoluteFilePathAndName();
-        return null;
+        if (temporaryHoldingFileStorageStrategy.exists(fileEntry)) {
+            return serviceFailure(forbiddenErrorWithKey(FILES_FILE_AWAITING_VIRUS_SCAN));
+        } else {
+            return serviceSuccess();
+        }
     }
 
     private ServiceResult<Void> validateNotInQuarantine(FileEntry fileEntry) {
-        return null;
-    }
-
-    private ServiceResult<File> createFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
-
-        Path foldersPath = pathElementsToPath(absolutePathElements);
-
-        return createFolders(foldersPath).
-                andOnSuccess(createdFolders -> copyTempFileToTargetFile(createdFolders, filename, tempFile));
-    }
-
-    private ServiceResult<File> updateFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
-
-        Path foldersPath = pathElementsToPath(absolutePathElements);
-        return updateExistingFileWithTempFile(foldersPath, filename, tempFile);
-    }
-
-    private ServiceResult<File> copyTempFileToTargetFile(Path targetFolder, String targetFilename, File tempFile) {
-        try {
-            File fileToCreate = new File(targetFolder.toString(), targetFilename);
-
-            if (fileToCreate.exists()) {
-                LOG.error("File " + targetFilename + " already existed in target path " + targetFolder + ".  Cannot create a new one here.");
-                return serviceFailure(new Error(FILES_DUPLICATE_FILE_CREATED));
-            }
-
-            Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename));
-            return serviceSuccess(targetFile.toFile());
-        } catch (IOException e) {
-            LOG.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
-            return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
-        }
-    }
-
-    private ServiceResult<File> updateExistingFileWithTempFile(Path targetFolder, String targetFilename, File tempFile) {
-        try {
-            File fileToCreate = new File(targetFolder.toString(), targetFilename);
-
-            if (!fileToCreate.exists()) {
-                LOG.error("File " + targetFilename + " doesn't exist in target path " + targetFolder + ".  Cannot update one here.");
-                return serviceFailure(notFoundError(File.class));
-            }
-
-            Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename), StandardCopyOption.REPLACE_EXISTING);
-            return serviceSuccess(targetFile.toFile());
-        } catch (IOException e) {
-            LOG.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
-            return serviceFailure(new Error(FILES_UNABLE_TO_UPDATE_FILE));
-        }
-    }
-
-    private ServiceResult<Path> createFolders(Path path) {
-        try {
-            return serviceSuccess(Files.createDirectories(path));
-        } catch (IOException e) {
-            LOG.error("Error creating folders " + path, e);
-            return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FOLDERS));
+        if (quarantinedFileStorageStrategy.exists(fileEntry)) {
+            return serviceFailure(forbiddenErrorWithKey(FILES_FILE_QUARANTINED));
+        } else {
+            return serviceSuccess();
         }
     }
 

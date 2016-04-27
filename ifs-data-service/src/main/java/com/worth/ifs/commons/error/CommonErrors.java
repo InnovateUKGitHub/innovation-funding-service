@@ -60,6 +60,10 @@ public final class CommonErrors {
         return new Error(GENERAL_FORBIDDEN, message, FORBIDDEN);
     }
 
+    public static Error forbiddenErrorWithKey(Enum<?> key) {
+        return new Error(key, FORBIDDEN);
+    }
+
     public static Error incorrectTypeError(Class<?> clazz, List<Object> arguments) {
 
         List<Object> allArguments = new ArrayList<>();
