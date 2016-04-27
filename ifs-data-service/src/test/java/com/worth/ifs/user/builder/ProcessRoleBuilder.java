@@ -17,6 +17,9 @@ import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
+/**
+ * Builder for {@link ProcessRole} entities.
+ */
 public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuilder> {
 
     private ProcessRoleBuilder(List<BiConsumer<Integer, ProcessRole>> multiActions) {

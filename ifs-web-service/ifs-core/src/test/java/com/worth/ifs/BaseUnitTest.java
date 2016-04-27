@@ -68,6 +68,7 @@ import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
 import static com.worth.ifs.commons.rest.RestResult.restSuccess;
@@ -180,6 +181,7 @@ public class BaseUnitTest {
     public List<OrganisationResource> organisations;
     TreeSet<OrganisationResource> organisationSet;
     public List<Assessment> assessments;
+    // TODO BO - remove assessorProcessRolesTemporary when Assessment is converted to DTO
     public List<ProcessRole> assessorProcessRolesTemporary;
     public List<ProcessRoleResource> assessorProcessRoleResources;
     public List<ProcessRoleResource> applicantRoles;
@@ -547,7 +549,7 @@ public class BaseUnitTest {
         organisation1.setProcessRoles(simpleMap(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8, processRole8), ProcessRoleResource::getId));
         organisation2.setProcessRoles(simpleMap(singletonList(processRole5), ProcessRoleResource::getId));
 
-        competitionResource.setApplications(applicationResources.stream().map(ApplicationResource::getId).collect(Collectors.toList()));
+        competitionResource.setApplications(simpleMap(applicationResources, ApplicationResource::getId));
 
         applicationResources.get(0).setCompetition(competitionResource.getId());
         applicationResources.get(0).setProcessRoles(asList(processRole1.getId(), processRole5.getId()));
@@ -656,10 +658,10 @@ public class BaseUnitTest {
     }
 
     public void setupAssessment(){
-        final Assessment assessment1 = AssessmentBuilder.newAssessment().withId(1L).withProcessRole(assessorProcessRolesTemporary.get(2)).build();
-        final Assessment assessment2 = AssessmentBuilder.newAssessment().withId(2L).withProcessRole(assessorProcessRolesTemporary.get(0)).build();
-        final Assessment assessment3 = AssessmentBuilder.newAssessment().withId(3L).withProcessRole(assessorProcessRolesTemporary.get(1)).build();
-        final Assessment assessment4 = AssessmentBuilder.newAssessment().withId(4L).withProcessRole(assessorProcessRolesTemporary.get(3)).build();
+        final Assessment assessment1 = newAssessment().withId(1L).withProcessRole(assessorProcessRolesTemporary.get(2)).build();
+        final Assessment assessment2 = newAssessment().withId(2L).withProcessRole(assessorProcessRolesTemporary.get(0)).build();
+        final Assessment assessment3 = newAssessment().withId(3L).withProcessRole(assessorProcessRolesTemporary.get(1)).build();
+        final Assessment assessment4 = newAssessment().withId(4L).withProcessRole(assessorProcessRolesTemporary.get(3)).build();
 
         when(assessmentRestService.getTotalAssignedByAssessorAndCompetition(assessor.getId(), competitionResource.getId())).thenReturn(restSuccess(3));
         when(assessmentRestService.getTotalSubmittedByAssessorAndCompetition(assessor.getId(), competitionResource.getId())).thenReturn(restSuccess(1));

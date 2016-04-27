@@ -49,11 +49,11 @@ public class ResponseResourceBuilder extends BaseBuilder<ResponseResource, Respo
     }
 
     public ResponseResourceBuilder withUpdatedBy(Builder<ProcessRole, ?> value) {
-        return withUpdatedBy(value.build());
+        return withUpdatedBy(value.build().getId());
     }
 
-    public ResponseResourceBuilder withUpdatedBy(ProcessRole value) {
-        return with(response -> response.setUpdatedBy(value.getId()));
+    public ResponseResourceBuilder withUpdatedBy(Long updatedBy) {
+        return with(response -> response.setUpdatedBy(updatedBy));
     }
 
     public ResponseResourceBuilder withQuestion(Builder<QuestionResource, ?> question) {

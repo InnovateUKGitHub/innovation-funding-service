@@ -7,6 +7,7 @@ import com.worth.ifs.application.service.ApplicationStatusRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;
@@ -74,7 +75,7 @@ public class ApplicantController {
     private List<Long> getAssignedApplications(List<ApplicationResource> inProgress, UserResource user){
         return inProgress.stream().filter(applicationResource -> {
                     ProcessRoleResource role = processRoleService.findProcessRole(user.getId(), applicationResource.getId());
-                    if(!role.getRoleName().equals("leadapplicant")){
+                    if(!UserRoleType.LEADAPPLICANT.getName().equals(role.getRoleName())) {
                         int count = applicationService.getAssignedQuestionsCount(applicationResource.getId(), role.getId());
                         return count == 0 ? false : true;
                     }else{
