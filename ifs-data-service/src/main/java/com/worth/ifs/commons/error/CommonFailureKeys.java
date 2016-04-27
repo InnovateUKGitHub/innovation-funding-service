@@ -23,6 +23,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
      */
     FILES_UNABLE_TO_FIND_FILE_ENTRY_ID_FROM_FILE("The file entry id could not be determined from the file", INTERNAL_SERVER_ERROR),
     FILES_UNABLE_TO_CREATE_FILE("The file could not be created", INTERNAL_SERVER_ERROR),
+    FILES_NO_SUCH_FILE("The file could founs created", INTERNAL_SERVER_ERROR),
     FILES_UNABLE_TO_MOVE_FILE("The file could not be moved", INTERNAL_SERVER_ERROR),
     FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE("A file is already linked to this Form Input Response", CONFLICT),
     FILES_UNABLE_TO_UPDATE_FILE("The file could not be updated", INTERNAL_SERVER_ERROR),

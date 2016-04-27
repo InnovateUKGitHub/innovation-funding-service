@@ -30,8 +30,6 @@ public class ScheduledFileMoveFiles {
     @Scheduled(fixedDelayString = "${ifs.data.service.file.storage.virus.scanning.scanned.move.delay.millis}")
     public void moveFiles() {
         for (Pair<List<String>, String> temp : scannedFileStorageStrategy.getAll()) {
-
-
             final ServiceResult<File> fileServiceResult = scannedFileStorageStrategy.fileEntryIdFromPath(temp).andOnSuccess(id -> {
                 final File fileToMove = new File(pathElementsToFile(temp.getKey()), temp.getValue());
                 return finalFileStorageStrategy.moveFile(id, fileToMove);

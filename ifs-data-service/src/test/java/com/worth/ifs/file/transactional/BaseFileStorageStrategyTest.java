@@ -54,6 +54,38 @@ public abstract class BaseFileStorageStrategyTest {
     }
 
     @Test
+    public void testMoveNoFile(){
+        BaseFileStorageStrategy strategy = createFileStorageStrategy("/tmp/path/to/containing/folder", "BaseFolder");
+        final ServiceResult<File> fileServiceResult = strategy.moveFile(1L, new File("/does/not/exist"));
+        assertTrue(fileServiceResult.isFailure());
+        assertTrue(fileServiceResult.getFailure().is(FILES_NO_SUCH_FILE));
+    }
+
+
+    @Test
+    public void testMoveFileAlreadyExists() throws IOException {
+        FileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
+        FileEntry fileEntry = newFileEntry().with(id(123L)).build();
+        assertFalse(strategy.exists(fileEntry));
+        File tempFileWithContents = File.createTempFile("tempfilefortesting", "suffix", tempFolder);
+        try {
+            // Create a file to try and move over.
+            ServiceResult<File> file = strategy.createFile(fileEntry, tempFileWithContents);
+            assertTrue(file.isSuccess());
+            assertTrue(file.getSuccessObject().exists());
+            // Try to move over the existing file.
+            final ServiceResult<File> fileServiceResult = strategy.moveFile(fileEntry.getId(), tempFileWithContents);
+            assertTrue(fileServiceResult.isFailure());
+            assertTrue(fileServiceResult.getFailure().is(FILES_DUPLICATE_FILE_CREATED));
+        } finally {
+            FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
+            tempFileWithContents.delete();
+        }
+    }
+
+
+
+    @Test
     public void testGetFullPathToFileUploadFolderWithUnixSeparator() {
 
         BaseFileStorageStrategy strategy = createFileStorageStrategy("/tmp/path/to/containing/folder", "BaseFolder");
