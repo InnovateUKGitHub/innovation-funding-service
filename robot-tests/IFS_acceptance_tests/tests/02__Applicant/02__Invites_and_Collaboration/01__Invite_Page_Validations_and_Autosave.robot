@@ -46,7 +46,7 @@ Validations for the name field
     [Documentation]    INFUND-901
     [Tags]
     When the applicant fills the lead organisation fields    ${EMPTY}    ewan+5@hiveit.co.uk
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    ${empty_field_warning_message}
 
 Link to remove partner organisation
     [Documentation]    INFUND-1039
@@ -70,13 +70,13 @@ Blank organisation name is not allowed
     [Tags]
     Given the user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    MR Tester
     When the applicant fills the Partner organisation fields    1    ${EMPTY}    Collaborator 7    ewan+6@hiveit.co.uk
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    ${empty_field_warning_message}
 
 Blank person name is not allowed
     [Documentation]    INFUND-896
     [Tags]
     When the applicant fills the Partner organisation fields    1    Fannie May    ${EMPTY}    ewan+7@hiveit.co.uk
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    ${empty_field_warning_message}
 
 Blank email is not allowed
     [Documentation]    INFUND-896
@@ -84,7 +84,7 @@ Blank email is not allowed
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ${EMPTY}
     And browser validations have been disabled
     And The user clicks the button/link    jquery=button:contains('Begin application')
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    ${empty_field_warning_message}
 
 Invalid email address is not allowed
     [Documentation]    INFUND-896
