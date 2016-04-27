@@ -1,5 +1,22 @@
 package com.worth.ifs.application.transactional;
 
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.QuestionStatus;
+import com.worth.ifs.application.mapper.QuestionMapper;
+import com.worth.ifs.application.mapper.QuestionStatusMapper;
+import com.worth.ifs.application.repository.QuestionRepository;
+import com.worth.ifs.application.repository.QuestionStatusRepository;
+import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.form.domain.FormInputType;
+import com.worth.ifs.form.transactional.FormInputTypeService;
+import com.worth.ifs.transactional.BaseTransactionalService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -7,24 +24,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.mapper.QuestionMapper;
-import com.worth.ifs.application.mapper.QuestionStatusMapper;
-import com.worth.ifs.application.repository.QuestionRepository;
-import com.worth.ifs.application.repository.QuestionStatusRepository;
-import com.worth.ifs.application.resource.QuestionResource;
-import com.worth.ifs.application.resource.QuestionApplicationCompositeId;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.form.domain.FormInputType;
-import com.worth.ifs.form.transactional.FormInputTypeService;
-import com.worth.ifs.transactional.BaseTransactionalService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -208,8 +207,11 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                     previousQuestion = getPreviousQuestionBySection(question.getSection().getId(), question.getCompetition().getId());
                 }
             }
-
-            return serviceSuccess(questionMapper.mapToResource(previousQuestion));
+            if(previousQuestion == null){
+                return serviceFailure(notFoundError(QuestionResource.class, "getPreviousQuestion", questionId));
+            }else{
+                return serviceSuccess(questionMapper.mapToResource(previousQuestion));
+            }
         });
 
     }

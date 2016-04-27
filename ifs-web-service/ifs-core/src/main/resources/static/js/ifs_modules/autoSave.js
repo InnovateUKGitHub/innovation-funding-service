@@ -61,7 +61,7 @@ IFS.autoSave = (function(){
                formTextareaSaveInfo = formGroup.find('.textarea-save-info');
             }
 
-            jQuery.ajax({
+            jQuery.ajaxProtected({
                 type: 'POST',
                 url: '/application/'+applicationId+'/form/saveFormElement',
                 data: data,

@@ -70,6 +70,10 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.AjaxResult;
 import com.worth.ifs.util.MessageUtil;
+import org.springframework.context.MessageSource;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.FieldError;
+import java.util.*;
 
 /**
  * This controller will handle all requests that are related to the application form.
@@ -86,7 +90,10 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     @Autowired
     private FormInputService formInputService;
-    
+
+    @Autowired
+    MessageSource messageSource;
+
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
         dataBinder.registerCustomEditor(LocalDate.class, APPLICATION_START_DATE, new LocalDatePropertyEditor(webRequest));
@@ -108,13 +115,12 @@ public class ApplicationFormController extends AbstractApplicationController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
-        this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
+        this.addFormAttributes(application, competition, Optional.ofNullable(section), user, model, form,
                 Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
         this.addUserDetails(model, application, user.getId());
-        model.addAttribute("currentUser", user);
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
-        model.addAttribute("form", form);
+
         return APPLICATION_FORM;
     }
 
@@ -176,11 +182,11 @@ public class ApplicationFormController extends AbstractApplicationController {
     private void addFormAttributes(ApplicationResource application,
                                    CompetitionResource competition,
                                    Optional<SectionResource> section,
-                                   Long userId, Model model,
+                                   UserResource user, Model model,
                                    ApplicationForm form, Optional<QuestionResource> question,
                                    Optional<List<FormInputResource>> formInputs,
                                    List<ProcessRole> userApplicationRoles){
-        addApplicationDetails(application, competition, userId, section, question.map(q -> q.getId()), model, form, userApplicationRoles);
+        addApplicationDetails(application, competition, user.getId(), section, question.map(q -> q.getId()), model, form, userApplicationRoles);
         addNavigation(question.orElse(null), application.getId(), model);
         Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
 
@@ -189,6 +195,8 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
         model.addAttribute("currentQuestion", question.orElse(null));
         model.addAttribute("questionFormInputs", questionFormInputs);
+        model.addAttribute("currentUser", user);
+        model.addAttribute("form", form);
         if(question.isPresent()) {
             model.addAttribute("title", question.get().getShortName());
         }
@@ -231,13 +239,14 @@ public class ApplicationFormController extends AbstractApplicationController {
                 cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
             }
 
+            bindingResult = removeDuplicateFieldErrors(bindingResult);
             form.setBindingResult(bindingResult);
             form.setObjectErrors(bindingResult.getAllErrors());
             model.addAttribute("form", form);
             /* End save action */
 
             if (bindingResult.hasErrors()) {
-                this.addFormAttributes(application, competition, Optional.ofNullable(section), user.getId(), model, form,
+                this.addFormAttributes(application, competition, Optional.ofNullable(section), user, model, form,
                         Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
                 model.addAttribute("currentUser", user);
                 addUserDetails(model, application, user.getId());
@@ -246,6 +255,25 @@ public class ApplicationFormController extends AbstractApplicationController {
                 return getRedirectUrl(request, applicationId);
             }
         }
+    }
+
+    private BindingResult removeDuplicateFieldErrors(BindingResult bindingResult) {
+        BindingResult br = new BeanPropertyBindingResult(this, "form");
+        bindingResult.getFieldErrors().stream().distinct()
+                .filter(e -> {
+                    for (FieldError fieldError : br.getFieldErrors(e.getField())) {
+                        if(fieldError.getDefaultMessage().equals(e.getDefaultMessage())){
+                            return false;
+                        }else{
+                            return true;
+                        }
+                    }
+                    return true;
+                })
+                .forEach(e -> br.addError(e));
+        bindingResult.getGlobalErrors().stream().forEach(e -> br.addError(e));
+        bindingResult = br;
+        return bindingResult;
     }
 
     private String getRedirectUrl(HttpServletRequest request, Long applicationId) {
@@ -259,11 +287,11 @@ public class ApplicationFormController extends AbstractApplicationController {
                 request.getParameter(UPLOAD_FILE) != null ||
                 request.getParameter(EDIT_QUESTION) != null) {
             // user did a action, just display the same page.
-            LOG.info("redirect: " + request.getRequestURI());
+            LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
         } else {
             // add redirect, to make sure the user cannot resubmit the form by refreshing the page.
-            LOG.info("default redirect: ");
+            LOG.debug("default redirect: ");
             return "redirect:"+APPLICATION_BASE_URL + applicationId;
         }
     }
@@ -392,7 +420,8 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         new ApplicationStartDateValidator().validate(request, bindingResult);
         
-        setApplicationDetails(application, form.getApplication());
+        setApplicationDetails(application, form.getApplication(), bindingResult);
+
         Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
         if(userIsLeadApplicant) {
             applicationService.save(application);
@@ -407,14 +436,15 @@ public class ApplicationFormController extends AbstractApplicationController {
             if(financeErrorsMark != null && !financeErrorsMark.isEmpty()){
                 bindingResult.rejectValue("formInput[cost]", "application.validation.MarkAsCompleteFailed");
                 financeErrorsMark.forEach((validationMessage) ->
-                        validationMessage.getErrors().stream().forEach(e -> {
-                            LOG.debug(String.format("reject value: %s / %s", "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage()));
-                            if(StringUtils.hasText(e.getErrorKey())){
-                                bindingResult.rejectValue("formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage(), e.getErrorMessage());
-                            }else {
-                                bindingResult.rejectValue("formInput[cost-"+validationMessage.getObjectId()+"]", e.getErrorMessage(), e.getErrorMessage());
-                            }
-
+                    validationMessage.getErrors().parallelStream()
+                    .filter(e -> StringUtils.hasText(e.getErrorMessage()))
+                    .forEach(e -> {
+                        LOG.debug(String.format("reject value: %s / %s", "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage()));
+                        if(StringUtils.hasText(e.getErrorKey())){
+                            addNonDuplicateFieldError(bindingResult, "formInput[cost-"+validationMessage.getObjectId()+"-"+e.getErrorKey()+"]", e.getErrorMessage());
+                        }else {
+                            addNonDuplicateFieldError(bindingResult, "formInput[cost-"+validationMessage.getObjectId()+"]", e.getErrorMessage());
+                        }
                         })
                 );
             }
@@ -424,11 +454,30 @@ public class ApplicationFormController extends AbstractApplicationController {
         Map<String, List<String>> financeErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId);
         financeErrors.forEach((k, errorsList) ->
             errorsList.forEach(e -> {
-                LOG.debug("Got validation error: " + k);
-                bindingResult.rejectValue(k, e, e);
+                addNonDuplicateFieldError(bindingResult, k, e);
             }));
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
+    }
+
+    private void addNonDuplicateFieldError(BindingResult bindingResult, String k, String e) {
+        if(bindingResult.getFieldErrorCount(k) > 0){
+            bindingResult.getFieldErrors(k)
+                    .stream()
+                    .filter(fieldError -> !fieldError.getDefaultMessage().equals(e))
+                        .forEach(fieldError -> {
+                            String defaultMessage = messageSource.getMessage(e, null, Locale.getDefault());
+                            if(defaultMessage == null){
+                                defaultMessage = e;
+                            }
+                            bindingResult.rejectValue(k, e, defaultMessage);
+                        });
+        }else{
+            bindingResult.rejectValue(k, e, e);
+        }
+
+
+
     }
 
     private List<ValidationMessages> markAllQuestionsInSection(ApplicationResource application,
@@ -477,7 +526,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                                           HttpServletRequest request,
                                                           boolean ignoreEmpty) {
         Map<Long, List<String>> errors = saveQuestionResponses(request, questions, userId, processRoleId, application.getId(), ignoreEmpty);
-        errors.forEach((k, errorsList) -> LOG.info(String.format("Field Error on save: %s  / ", k)));
+        errors.forEach((k, errorsList) -> LOG.debug(String.format("Field Error on save: %s  / ", k)));
         errors.forEach((k, errorsList) -> errorsList.forEach(e -> bindingResult.rejectValue("formInput[" + k + "]", e, e)));
         return errors;
     }
@@ -512,9 +561,15 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         Map<String, String[]> params = request.getParameterMap();
 
-        bindingResult.getAllErrors().forEach(e -> LOG.info("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
+        if(LOG.isDebugEnabled())
+            bindingResult.getAllErrors().forEach(e -> LOG.debug("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
+
         saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult);
-        bindingResult.getAllErrors().forEach(e -> LOG.info("Remote validation: " + e.getObjectName() + " v: " + e.getDefaultMessage()));
+
+        if(LOG.isDebugEnabled()){
+            bindingResult.getFieldErrors().forEach(e -> LOG.debug("Remote validation field: " + e.getObjectName() + " v: " + e.getField() + " v: " + e.getDefaultMessage()));
+            bindingResult.getGlobalErrors().forEach(e -> LOG.debug("Remote validation global: " + e.getObjectName()+ " v: " + e.getCode() + " v: " + e.getDefaultMessage()));
+        }
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             assignQuestion(applicationId, request);
@@ -670,7 +725,7 @@ public class ApplicationFormController extends AbstractApplicationController {
      * @param bindingResult 
      * @param request 
      */
-    private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
+    private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication, BindingResult bindingResult) {
         if (updatedApplication == null) {
             return;
         }
@@ -681,8 +736,15 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
         
         if (updatedApplication.getStartDate() != null) {
-            LOG.debug("setApplicationDetails: " + updatedApplication.getStartDate());
-            application.setStartDate(updatedApplication.getStartDate());
+            LOG.debug("setApplicationDetails date 123: " + updatedApplication.getStartDate().toString());
+            if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)) {
+                // user submitted a empty date field.
+                application.setStartDate(null);
+            }else{
+                application.setStartDate(updatedApplication.getStartDate());
+            }
+        }else{
+            application.setStartDate(null);
         }
         if (updatedApplication.getDurationInMonths() != null) {
             LOG.debug("setApplicationDetails: " + updatedApplication.getDurationInMonths());
@@ -788,10 +850,6 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private List<String> saveApplicationStartDate(ApplicationResource application, String fieldName, String value, List<String> errors) {
         LocalDate startDate = application.getStartDate();
-
-        if (startDate == null) {
-            startDate = LocalDate.now();
-        }
         try {
             if (fieldName.endsWith(".dayOfMonth")) {
                 startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
@@ -804,14 +862,17 @@ public class ApplicationFormController extends AbstractApplicationController {
                 errors.add("Please enter a future date.");
             }
 
+            LOG.debug("Save startdate: "+ startDate.toString());
+
             application.setStartDate(startDate);
             applicationService.save(application);
         } catch (DateTimeException | NumberFormatException e) {
-            LOG.warn(e);
             errors.add("Please enter a valid date.");
+            LOG.warn(e);
         }
         return errors;
     }
+
 
     public void assignQuestion(@PathVariable(APPLICATION_ID) final Long applicationId,
                                HttpServletRequest request) {

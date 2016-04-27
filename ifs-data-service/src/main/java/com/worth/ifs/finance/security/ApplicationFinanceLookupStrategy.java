@@ -20,7 +20,11 @@ public class ApplicationFinanceLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public ApplicationFinanceResource getApplicationFinance(final ApplicationFinanceResourceId id) {
-        return applicationMapper.mapToResource(applicationFinanceRepository.findByApplicationIdAndOrganisationId(id.getApplicationId(), id.getOrganisationId()));
+        final ApplicationFinanceResource applicationFinanceResource = applicationMapper.mapToResource(applicationFinanceRepository.findByApplicationIdAndOrganisationId(id.getApplicationId(), id.getOrganisationId()));
+        // If its new then this could be empty so fill in the fields we can
+        applicationFinanceResource.setApplication(id.getApplicationId());
+        applicationFinanceResource.setOrganisation(id.getOrganisationId());
+        return  applicationFinanceResource;
     }
 
 

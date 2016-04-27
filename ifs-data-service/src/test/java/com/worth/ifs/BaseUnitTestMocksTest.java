@@ -7,6 +7,7 @@ import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.mapper.QuestionMapper;
 import com.worth.ifs.application.repository.*;
 import com.worth.ifs.application.transactional.ApplicationService;
+import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.application.transactional.ResponseService;
 import com.worth.ifs.assessment.repository.AssessmentRepository;
 import com.worth.ifs.authentication.service.IdentityProviderService;
@@ -91,6 +92,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationService applicationService;
+
+    @Mock
+    protected QuestionService questionServiceMock;
 
     @Mock
     protected QuestionRepository questionRepository;

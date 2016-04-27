@@ -48,6 +48,16 @@ public class GrantClaim implements CostItem {
     }
 
     @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public int getMinRows() {
+        return 0;
+    }
+
+    @Override
     public CostType getCostType() {
         return costType;
     }

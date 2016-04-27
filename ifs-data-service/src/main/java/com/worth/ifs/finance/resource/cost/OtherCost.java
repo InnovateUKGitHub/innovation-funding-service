@@ -58,4 +58,14 @@ public class OtherCost implements CostItem {
     public String getName() {
         return this.name;
     }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public int getMinRows() {
+        return 0;
+    }
 }

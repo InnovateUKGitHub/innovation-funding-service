@@ -83,4 +83,9 @@ public class HttpConfig {
             throw new RuntimeException(e);
         }
     }
+
+    @Bean
+    public UtextDialect getUtextDialect(){
+        return new UtextDialect();
+    }
 }

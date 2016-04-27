@@ -48,6 +48,16 @@ public class SubContractingCost implements CostItem {
         return name;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public int getMinRows() {
+        return 0;
+    }
+
     public String getRole() {
         return role;
     }
