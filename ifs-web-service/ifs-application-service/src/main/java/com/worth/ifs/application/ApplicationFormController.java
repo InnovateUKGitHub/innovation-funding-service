@@ -390,7 +390,9 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
 
-        setApplicationDetails(application, form.getApplication(), request, bindingResult);
+        new ApplicationStartDateValidator().validate(request, bindingResult);
+        
+        setApplicationDetails(application, form.getApplication());
         Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
         if(userIsLeadApplicant) {
             applicationService.save(application);
@@ -668,12 +670,10 @@ public class ApplicationFormController extends AbstractApplicationController {
      * @param bindingResult 
      * @param request 
      */
-    private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication, HttpServletRequest request, BindingResult bindingResult) {
+    private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
         if (updatedApplication == null) {
             return;
         }
-
-        new ApplicationStartDateValidator().validate(request, bindingResult);
         
         if (updatedApplication.getName() != null) {
             LOG.debug("setApplicationDetails: " + updatedApplication.getName());

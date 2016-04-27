@@ -9,6 +9,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+/**
+ * This is responsible for validating the input application start date.
+ * It does so by performing the validate method on the request.
+ */
 public class ApplicationStartDateValidator implements Validator {
 
 	@Override

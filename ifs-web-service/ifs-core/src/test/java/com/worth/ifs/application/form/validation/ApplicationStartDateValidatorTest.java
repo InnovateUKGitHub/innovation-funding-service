@@ -74,6 +74,16 @@ public class ApplicationStartDateValidatorTest {
 	}
 	
 	@Test
+	public void testDoNotComplainAboutAbsentFields() {
+		Errors errors = mock(Errors.class);
+		HttpServletRequest request = mock(HttpServletRequest.class);
+		
+		validator.validate(request, errors);
+		
+		verifyNoMoreInteractions(errors);
+	}
+	
+	@Test
 	public void testDoNotAllowPartlyEmptyFields() {
 		Errors errors = mock(Errors.class);
 		HttpServletRequest request = req("11","3","");
