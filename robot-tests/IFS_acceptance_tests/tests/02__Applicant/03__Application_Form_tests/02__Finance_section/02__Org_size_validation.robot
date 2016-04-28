@@ -51,6 +51,13 @@ Large organisation can choose up to 50% funding
     When the applicant enters organisation size details    ${large_org_option}    43
     Then the 'your finances' section can be successfully saved    ${large_org_option}    43
 
+Any one of the Organisation Size should be selected
+    [Documentation]    INFUND-2643
+    [Tags]    Organisation    Funding    Finance    pending
+    When the applicant doesn't select any of the option
+    And The user clicks the button/link    name=mark_section_as_complete
+    Then the user should see an error    Funding level allowed depends on organisation size. Please select your organisation size.
+
 *** Keywords ***
 The applicant enters organisation size details
     [Arguments]    ${org_size_option}    ${funding_level}
@@ -91,3 +98,6 @@ Applicant can see the correct funding level has been saved
     Wait Until Element Is Visible    id=cost-financegrantclaim
     ${saved_funding_level} =    Get Element Attribute    id=cost-financegrantclaim@value
     Should Be Equal As Integers    ${saved_funding_level}    ${funding_level}
+
+the applicant doesn't select any of the option
+    Select Radio Button    name=financePosition-organisationSize    false
