@@ -1,6 +1,5 @@
 package com.worth.ifs.file.transactional;
 
-import com.google.common.io.Files;
 import com.worth.ifs.BaseUnitTestMocksTest;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -8,12 +7,8 @@ import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.domain.builders.FileEntryBuilder;
 import com.worth.ifs.file.repository.FileEntryRepository;
 import com.worth.ifs.file.resource.FileEntryResource;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -25,30 +20,27 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
-import static com.worth.ifs.InputStreamTestUtil.assertInputStreamContents;
+import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.file.resource.builders.FileEntryResourceBuilder.newFileEntryResource;
-import static com.worth.ifs.util.CollectionFunctions.*;
+import static com.worth.ifs.util.CollectionFunctions.combineLists;
 import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
 import static com.worth.ifs.util.FileFunctions.pathElementsToPathString;
 import static java.nio.charset.Charset.defaultCharset;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  *
  */
-@Ignore
 public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
@@ -69,27 +61,9 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
     @Mock(name = "finalFileStorageStrategy")
     private FileStorageStrategy finalFileStorageStrategy;
 
-    private File tempFolderPath;
-    private List<String> tempFolderPaths;
-
-    @Before
-    public void setupTempFolders() {
-        tempFolderPath = Files.createTempDir();
-        tempFolderPaths = simpleFilterNot(asList(tempFolderPath.getPath().split(File.pathSeparator)), StringUtils::isBlank);
-    }
-
     @After
-    public void teardownTempFolder() {
-        assertTrue(tempFolderPath.delete());
-    }
-
-    @After
-    public void teardownInputStream() {
-        try {
-            fakeInputStreamSupplier().get().close();
-        } catch (IOException e) {
-            throw new RuntimeException("Could not close input stream", e);
-        }
+    public void verifyMockExpectations() {
+        verifyNoMoreFileServiceInteractions();
     }
 
     @Test
@@ -105,7 +79,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
         FileEntry persistedFile = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
+        List<String> fullPathToNewFile = combineLists("path", "to", "file");
         List<String> fullPathPlusFilename = combineLists(fullPathToNewFile, "thefilename");
 
         when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
@@ -121,6 +95,9 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
         String expectedPath = pathElementsToPathString(fullPathToNewFile);
         assertEquals(expectedPath + File.separator + "thefilename", newFileResult.getPath());
+
+        verify(fileEntryRepository).save(unpersistedFile);
+        verify(temporaryHoldingFileStorageStrategy).createFile(eq(persistedFile), isA(File.class));
     }
 
     @Test
@@ -142,6 +119,9 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Pair<File, FileEntry>> result = service.createFile(fileResource, fakeInputStreamSupplier());
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(new Error(FILES_UNABLE_TO_CREATE_FOLDERS)));
+
+        verify(fileEntryRepository).save(unpersistedFile);
+        verify(temporaryHoldingFileStorageStrategy).createFile(eq(persistedFile), isA(File.class));
     }
 
     @Test
@@ -159,26 +139,29 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
         File fileItselfToUpdate = new File("/tmp/path/to/updatedfile");
 
-        try {
+        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
+        when(temporaryHoldingFileStorageStrategy.exists(updatedFile)).thenReturn(false);
+        when(finalFileStorageStrategy.getFile(updatedFile)).thenReturn(serviceSuccess(fileItselfToUpdate));
+        when(finalFileStorageStrategy.deleteFile(updatedFile)).thenReturn(serviceSuccess());
+        when(temporaryHoldingFileStorageStrategy.createFile(eq(updatedFile), isA(File.class))).thenReturn(serviceSuccess(fileItselfToUpdate));
 
-            when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
-            when(finalFileStorageStrategy.deleteFile(fileToUpdate)).thenReturn(serviceSuccess());
-            when(temporaryHoldingFileStorageStrategy.createFile(eq(updatedFile), isA(File.class))).thenReturn(serviceSuccess(fileItselfToUpdate));
+        ServiceResult<Pair<File, FileEntry>> result = service.updateFile(updatingFileEntry, fakeInputStreamSupplier("Updated content should be here"));
 
-            ServiceResult<Pair<File, FileEntry>> result = service.updateFile(updatingFileEntry, fakeInputStreamSupplier("Updated content should be here"));
+        assertNotNull(result);
+        assertTrue(result.isSuccess());
 
-            assertNotNull(result);
-            assertTrue(result.isSuccess());
+        File newFileResult = result.getSuccessObject().getKey();
+        assertEquals("updatedfile", newFileResult.getName());
 
-            File newFileResult = result.getSuccessObject().getKey();
-            assertEquals("updatedfile", newFileResult.getName());
+        assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());
 
-            assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());
-
-        } finally {
-
-            FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
-        }
+        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).save(fileToUpdate);
+        verify(temporaryHoldingFileStorageStrategy).exists(updatedFile);
+        verify(finalFileStorageStrategy).getFile(updatedFile);
+        verify(finalFileStorageStrategy).deleteFile(updatedFile);
+        verify(temporaryHoldingFileStorageStrategy).createFile(eq(updatedFile), isA(File.class));
     }
 
     @Test
@@ -187,29 +170,50 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(17);
 
         FileEntry fileToUpdate = fileBuilder.with(id(456L)).build();
-        FileEntry updatedFile = fileBuilder.with(id(456L)).build();
+        FileEntry updatedFileEntry = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
+        FileEntryResource expectedFileResourceForUpdate = newFileEntryResource().
+                with(id(456L)).
+                withFilesizeBytes(17).
+                build();
 
-        try {
-            when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
-            when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(updatedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFileEntry);
+        when(temporaryHoldingFileStorageStrategy.exists(updatedFileEntry)).thenReturn(false);
+        when(finalFileStorageStrategy.getFile(updatedFileEntry)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(temporaryHoldingFileStorageStrategy.getFile(updatedFileEntry)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(scannedFileStorageStrategy.getFile(updatedFileEntry)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(quarantinedFileStorageStrategy.getFile(updatedFileEntry)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
 
-            FileEntryResource expectedFileResourceForUpdate = newFileEntryResource().
-                    with(id(456L)).
-                    withFilesizeBytes(17).
-                    build();
+        ServiceResult<Pair<File, FileEntry>> result = service.updateFile(expectedFileResourceForUpdate, fakeInputStreamSupplier());
 
-            ServiceResult<Pair<File, FileEntry>> result = service.updateFile(expectedFileResourceForUpdate, fakeInputStreamSupplier());
+        assertNotNull(result);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 456L)));
 
-            assertNotNull(result);
-            assertTrue(result.isFailure());
-            assertTrue(result.getFailure().is(notFoundError(File.class)));
+        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).save(fileToUpdate);
+        verify(temporaryHoldingFileStorageStrategy).exists(updatedFileEntry);
+        verify(finalFileStorageStrategy).getFile(updatedFileEntry);
+        verify(temporaryHoldingFileStorageStrategy).getFile(updatedFileEntry);
+        verify(scannedFileStorageStrategy).getFile(updatedFileEntry);
+        verify(quarantinedFileStorageStrategy).getFile(updatedFileEntry);
+    }
 
-        } finally {
+    @Test
+    public void testUpdateFileButNoFileEntryExistsInDatabase() throws IOException {
 
-            FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
-        }
+        FileEntryResource expectedFileResourceForUpdate = newFileEntryResource().with(id(456L)).build();
+
+        when(fileEntryRepository.findOne(456L)).thenReturn(null);
+
+        ServiceResult<Pair<File, FileEntry>> result = service.updateFile(expectedFileResourceForUpdate, fakeInputStreamSupplier());
+
+        assertNotNull(result);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 456L)));
+
+        verify(fileEntryRepository).findOne(456L);
     }
 
     @Test
@@ -223,18 +227,15 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
                 build();
 
         FileEntryBuilder fileBuilder = newFileEntry().with(id(456L)).withFilesizeBytes(incorrectFilesize);
+        FileEntry fileToUpdate = fileBuilder.build();
 
-        FileEntry originalFile = fileBuilder.build();
-        FileEntry persistedFile = fileBuilder.build();
-
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
-
-        when(fileEntryRepository.save(originalFile)).thenReturn(persistedFile);
-        when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
 
         ServiceResult<Pair<File, FileEntry>> result = service.updateFile(fileResource, fakeInputStreamSupplier());
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(FILES_INCORRECTLY_REPORTED_FILESIZE, 17));
+
+        verify(fileEntryRepository).findOne(456L);
     }
 
     @Test
@@ -251,17 +252,15 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(17).withMediaType("application/pdf");
 
-        FileEntry unpersistedFile = fileBuilder.with(id(456L)).build();
-        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
+        FileEntry fileToUpdate = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
-
-        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
-        when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
 
         ServiceResult<Pair<File, FileEntry>> result = service.updateFile(fileResource, fakeInputStreamSupplier());
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE, "text/plain"));
+
+        verify(fileEntryRepository).findOne(456L);
     }
 
     @Test
@@ -270,30 +269,18 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
         FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
+        when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+        when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceSuccess(new File("foundme")));
+        when(finalFileStorageStrategy.deleteFile(fileEntryToDelete)).thenReturn(serviceSuccess());
 
-        try {
+        ServiceResult<FileEntry> result = service.deleteFile(456L);
+        assertNotNull(result);
+        assertTrue(result.isSuccess());
 
-            File existingFileToDelete = pathElementsToFile(combineLists(fullPathToNewFile, "thefilename"));
-            Files.createParentDirs(existingFileToDelete);
-            existingFileToDelete.createNewFile();
-            Files.write("Content to be deleted", existingFileToDelete, defaultCharset());
-            assertTrue(existingFileToDelete.exists());
-
-            when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
-            when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(fileEntryToDelete)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
-
-            ServiceResult<FileEntry> result = service.deleteFile(456L);
-            assertNotNull(result);
-            assertTrue(result.isSuccess());
-
-            assertFalse(existingFileToDelete.exists());
-            verify(fileEntryRepository).delete(fileEntryToDelete);
-
-        } finally {
-
-            FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
-        }
+        verify(fileEntryRepository).findOne(456L);
+        verify(finalFileStorageStrategy).getFile(fileEntryToDelete);
+        verify(finalFileStorageStrategy).deleteFile(fileEntryToDelete);
+        verify(fileEntryRepository).delete(fileEntryToDelete);
     }
 
     @Test
@@ -303,6 +290,7 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
 
         when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+        when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceSuccess(new File("cantdeleteme")));
         when(finalFileStorageStrategy.deleteFile(fileEntryToDelete)).thenReturn(serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE)));
 
         ServiceResult<FileEntry> result = service.deleteFile(456L);
@@ -310,7 +298,10 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(new Error(FILES_UNABLE_TO_DELETE_FILE)));
 
+        verify(fileEntryRepository).findOne(456L);
         verify(fileEntryRepository).delete(fileEntryToDelete);
+        verify(finalFileStorageStrategy).getFile(fileEntryToDelete);
+        verify(finalFileStorageStrategy).deleteFile(fileEntryToDelete);
     }
 
     @Test
@@ -319,22 +310,47 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
         FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
 
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
+        when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+        when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(temporaryHoldingFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(scannedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(quarantinedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
 
-        try {
+        ServiceResult<FileEntry> result = service.deleteFile(456L);
+        assertNotNull(result);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 456L)));
 
-            when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
-            when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(fileEntryToDelete)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+        verify(fileEntryRepository).findOne(456L);
+        verify(finalFileStorageStrategy).getFile(fileEntryToDelete);
+        verify(temporaryHoldingFileStorageStrategy).getFile(fileEntryToDelete);
+        verify(scannedFileStorageStrategy).getFile(fileEntryToDelete);
+        verify(quarantinedFileStorageStrategy).getFile(fileEntryToDelete);
+    }
 
-            ServiceResult<FileEntry> result = service.deleteFile(456L);
-            assertNotNull(result);
-            assertTrue(result.isFailure());
-            assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 456L)));
+    @Test
+    public void testDeleteFileChecksEveryFolderForFile() throws IOException {
 
-        } finally {
+        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
+        FileEntry fileEntryToDelete = fileBuilder.with(id(456L)).build();
 
-            FileUtils.deleteDirectory(new File(tempFolderPath, "path"));
-        }
+        when(fileEntryRepository.findOne(456L)).thenReturn(fileEntryToDelete);
+        when(finalFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(temporaryHoldingFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(scannedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(quarantinedFileStorageStrategy.getFile(fileEntryToDelete)).thenReturn(serviceSuccess(new File("foundme")));
+        when(quarantinedFileStorageStrategy.deleteFile(fileEntryToDelete)).thenReturn(serviceSuccess());
+
+        ServiceResult<FileEntry> result = service.deleteFile(456L);
+        assertTrue(result.isSuccess());
+
+        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).delete(fileEntryToDelete);
+        verify(finalFileStorageStrategy).getFile(fileEntryToDelete);
+        verify(temporaryHoldingFileStorageStrategy).getFile(fileEntryToDelete);
+        verify(scannedFileStorageStrategy).getFile(fileEntryToDelete);
+        verify(quarantinedFileStorageStrategy).getFile(fileEntryToDelete);
+        verify(quarantinedFileStorageStrategy).deleteFile(fileEntryToDelete);
     }
 
     @Test
@@ -346,71 +362,136 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         assertNotNull(result);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 456L)));
+
+        verify(fileEntryRepository).findOne(456L);
     }
 
     @Test
     public void testGetFileByFileEntryId() throws IOException {
 
-        // start by creating a new File to retrieve
-        List<String> fullPathToNewFile = tempFolderPaths;
-        List<String> fullPathPlusFilename = combineLists(fullPathToNewFile, "thefilename");
-        pathElementsToFile(fullPathPlusFilename).createNewFile();
+        FileEntry existingFileEntry = newFileEntry().with(id(123L)).build();
 
-        try {
-            Files.write("Plain text",
-                    pathElementsToFile(fullPathPlusFilename), defaultCharset());
+        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(quarantinedFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
+        when(temporaryHoldingFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
+        when(finalFileStorageStrategy.getFile(existingFileEntry)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 123L)));
+        when(scannedFileStorageStrategy.getFile(existingFileEntry)).thenReturn(serviceSuccess(new File("foundme")));
 
-            FileEntry existingFileEntry = newFileEntry().with(id(123L)).withFilesizeBytes(10).build();
+        ServiceResult<Supplier<InputStream>> inputStreamResult = service.getFileByFileEntryId(123L);
+        assertTrue(inputStreamResult.isSuccess());
 
-            when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
-            when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(existingFileEntry)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
+        verify(fileEntryRepository).findOne(123L);
+        verify(quarantinedFileStorageStrategy).exists(existingFileEntry);
+        verify(temporaryHoldingFileStorageStrategy).exists(existingFileEntry);
+        verify(finalFileStorageStrategy).getFile(existingFileEntry);
+        verify(scannedFileStorageStrategy).getFile(existingFileEntry);
+    }
 
-            ServiceResult<Supplier<InputStream>> inputStreamResult = service.getFileByFileEntryId(123L);
-            assertTrue(inputStreamResult.isSuccess());
+    @Test
+    public void testGetFileByFileEntryIdButFileInQuarantine() throws IOException {
 
-            assertInputStreamContents(inputStreamResult.getSuccessObject().get(), "Plain text");
-        } finally {
-            pathElementsToFile(fullPathPlusFilename).delete();
-        }
+        FileEntry existingFileEntry = newFileEntry().with(id(123L)).build();
+
+        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(quarantinedFileStorageStrategy.exists(existingFileEntry)).thenReturn(true);
+
+        ServiceResult<Supplier<InputStream>> inputStreamResult = service.getFileByFileEntryId(123L);
+        assertTrue(inputStreamResult.isFailure());
+        assertTrue(inputStreamResult.getFailure().is(forbiddenError(FILES_FILE_QUARANTINED)));
+
+        verify(fileEntryRepository).findOne(123L);
+        verify(quarantinedFileStorageStrategy).exists(existingFileEntry);
+        verifyNoMoreFileServiceInteractions();
+    }
+
+    @Test
+    public void testGetFileByFileEntryIdButFileAwaitingScanning() throws IOException {
+
+        FileEntry existingFileEntry = newFileEntry().with(id(123L)).build();
+
+        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(quarantinedFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
+        when(temporaryHoldingFileStorageStrategy.exists(existingFileEntry)).thenReturn(true);
+
+        ServiceResult<Supplier<InputStream>> inputStreamResult = service.getFileByFileEntryId(123L);
+        assertTrue(inputStreamResult.isFailure());
+        assertTrue(inputStreamResult.getFailure().is(forbiddenError(FILES_FILE_AWAITING_VIRUS_SCAN)));
+
+        verify(fileEntryRepository).findOne(123L);
+        verify(quarantinedFileStorageStrategy).exists(existingFileEntry);
+        verify(temporaryHoldingFileStorageStrategy).exists(existingFileEntry);
+    }
+
+    @Test
+    public void testGetFileByFileEntryIdAndFileInScannedFolder() throws IOException {
+
+        FileEntry existingFileEntry = newFileEntry().with(id(123L)).build();
+
+        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(quarantinedFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
+        when(temporaryHoldingFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
+        when(finalFileStorageStrategy.getFile(existingFileEntry)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 123L)));
+        when(scannedFileStorageStrategy.getFile(existingFileEntry)).thenReturn(serviceSuccess(new File("foundme")));
+
+        ServiceResult<Supplier<InputStream>> inputStreamResult = service.getFileByFileEntryId(123L);
+        assertTrue(inputStreamResult.isSuccess());
+
+        verify(fileEntryRepository).findOne(123L);
+        verify(quarantinedFileStorageStrategy).exists(existingFileEntry);
+        verify(temporaryHoldingFileStorageStrategy).exists(existingFileEntry);
+        verify(finalFileStorageStrategy).getFile(existingFileEntry);
+        verify(scannedFileStorageStrategy).getFile(existingFileEntry);
     }
 
     @Test
     public void testGetFileByFileEntryIdButFileEntryEntityDoesntExist() throws IOException {
 
-        // start by creating a new File to retrieve
-        List<String> fullPathToNewFile = tempFolderPaths;
-        List<String> fullPathPlusFilename = combineLists(fullPathToNewFile, "thefilename");
-        pathElementsToFile(fullPathPlusFilename).createNewFile();
+        when(fileEntryRepository.findOne(123L)).thenReturn(null);
 
-        try {
+        ServiceResult<Supplier<InputStream>> result = service.getFileByFileEntryId(123L);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 123L)));
 
-            Files.write("Plain text",
-                    pathElementsToFile(fullPathPlusFilename), defaultCharset());
+        verify(fileEntryRepository).findOne(123L);
+    }
 
-            when(fileEntryRepository.findOne(123L)).thenReturn(null);
+    @Test
+    public void testGetFileByFileEntryIdAndFileIsInFinalStorageLocation() throws IOException {
 
-            ServiceResult<Supplier<InputStream>> result = service.getFileByFileEntryId(123L);
-            assertTrue(result.isFailure());
-            assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 123L)));
+        FileEntry existingFileEntry = newFileEntry().with(id(123L)).withFilesizeBytes(10).build();
+        when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
+        when(quarantinedFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
+        when(temporaryHoldingFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
+        when(finalFileStorageStrategy.getFile(existingFileEntry)).thenReturn(serviceSuccess(new File("foundme")));
 
-        } finally {
-            pathElementsToFile(fullPathPlusFilename).delete();
-        }
+        ServiceResult<Supplier<InputStream>> result = service.getFileByFileEntryId(123L);
+        assertTrue(result.isSuccess());
+
+        verify(fileEntryRepository).findOne(123L);
+        verify(quarantinedFileStorageStrategy).exists(existingFileEntry);
+        verify(temporaryHoldingFileStorageStrategy).exists(existingFileEntry);
+        verify(finalFileStorageStrategy).getFile(existingFileEntry);
     }
 
     @Test
     public void testGetFileByFileEntryIdButFileDoesntExist() throws IOException {
 
-        // start by creating a new File to retrieve
-        List<String> fullPathToNewFile = tempFolderPaths;
-
         FileEntry existingFileEntry = newFileEntry().with(id(123L)).withFilesizeBytes(10).build();
         when(fileEntryRepository.findOne(123L)).thenReturn(existingFileEntry);
-        when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(existingFileEntry)).thenReturn(Pair.of(fullPathToNewFile, "nonexistent"));
+        when(quarantinedFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
+        when(temporaryHoldingFileStorageStrategy.exists(existingFileEntry)).thenReturn(false);
+        when(finalFileStorageStrategy.getFile(existingFileEntry)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 123L)));
+        when(scannedFileStorageStrategy.getFile(existingFileEntry)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 123L)));
 
         ServiceResult<Supplier<InputStream>> result = service.getFileByFileEntryId(123L);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(FileEntry.class, 123L)));
+
+        verify(fileEntryRepository).findOne(123L);
+        verify(quarantinedFileStorageStrategy).exists(existingFileEntry);
+        verify(temporaryHoldingFileStorageStrategy).exists(existingFileEntry);
+        verify(finalFileStorageStrategy).getFile(existingFileEntry);
+        verify(scannedFileStorageStrategy).getFile(existingFileEntry);
     }
 
     @Test
@@ -422,16 +503,6 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
                 with(id(null)).
                 withFilesizeBytes(incorrectFilesize).
                 build();
-
-        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(incorrectFilesize);
-
-        FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
-        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
-
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
-
-        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
-        when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
 
         ServiceResult<Pair<File, FileEntry>> result = service.createFile(fileResource, fakeInputStreamSupplier());
         assertTrue(result.isFailure());
@@ -449,16 +520,6 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
                 withFilesizeBytes(17).
                 withMediaType("application/pdf").
                 build();
-
-        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(17).withMediaType("application/pdf");
-
-        FileEntry unpersistedFile = fileBuilder.with(id(null)).build();
-        FileEntry persistedFile = fileBuilder.with(id(456L)).build();
-
-        List<String> fullPathToNewFile = combineLists(tempFolderPaths, "path", "to", "file");
-
-        when(fileEntryRepository.save(unpersistedFile)).thenReturn(persistedFile);
-        when(temporaryHoldingFileStorageStrategy.getAbsoluteFilePathAndName(persistedFile)).thenReturn(Pair.of(fullPathToNewFile, "thefilename"));
 
         ServiceResult<Pair<File, FileEntry>> result = service.createFile(fileResource, fakeInputStreamSupplier());
         assertTrue(result.isFailure());
@@ -488,5 +549,9 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
 
     private void assumeNotOsx() {
         assumeTrue(isNotOsx());
+    }
+
+    private void verifyNoMoreFileServiceInteractions() {
+        verifyNoMoreInteractions(fileEntryRepository, quarantinedFileStorageStrategy, temporaryHoldingFileStorageStrategy, finalFileStorageStrategy, scannedFileStorageStrategy);
     }
 }
