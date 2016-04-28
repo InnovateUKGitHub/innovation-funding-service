@@ -712,11 +712,10 @@ public class ApplicationFormController extends AbstractApplicationController {
         }
         if (updatedApplication.getStartDate() != null) {
             LOG.debug("setApplicationDetails date 123: " + updatedApplication.getStartDate().toString());
-            if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)) {
-                // user submitted a empty date field.
+            if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)
+                    || updatedApplication.getStartDate().isBefore(LocalDate.now())) {
+                // user submitted a empty date field or date before today
                 application.setStartDate(null);
-            }else if (updatedApplication.getStartDate().isBefore(LocalDate.now())) {
-                bindingResult.rejectValue("application.startDate.year", "FutureDate", "Please enter a future date.");
             }else{
                 application.setStartDate(updatedApplication.getStartDate());
             }
@@ -827,7 +826,6 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private List<String> saveApplicationStartDate(ApplicationResource application, String fieldName, String value, List<String> errors) {
         LocalDate startDate = application.getStartDate();
-        try {
             if (fieldName.endsWith(".dayOfMonth")) {
                 startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
             } else if (fieldName.endsWith(".monthValue")) {
@@ -836,17 +834,11 @@ public class ApplicationFormController extends AbstractApplicationController {
                 startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
             }
             if (startDate.isBefore(LocalDate.now())) {
-                errors.add("Please enter a future date.");
+                startDate = null;
             }
-
             LOG.debug("Save startdate: "+ startDate.toString());
-
             application.setStartDate(startDate);
             applicationService.save(application);
-        } catch (DateTimeException | NumberFormatException e) {
-            errors.add("Please enter a valid date.");
-            LOG.warn(e);
-        }
         return errors;
     }
 
