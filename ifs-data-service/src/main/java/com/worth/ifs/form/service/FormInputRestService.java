@@ -10,4 +10,5 @@ import java.util.List;
 public interface FormInputRestService {
     RestResult<FormInputResource> getById(Long id);
     RestResult<List<FormInputResource>> getByQuestionId(Long questionId);
+    RestResult<List<FormInputResource>> getByCompetitionId(Long competitionId);
 }

@@ -26,4 +26,9 @@ public class FormInputRestServiceImpl extends BaseRestService implements FormInp
     public RestResult<List<FormInputResource>> getByQuestionId(Long questionId) {
         return getWithRestResult(formInputRestURL + "/findByQuestionId/" + questionId, formInputResourceListType());
     }
+
+    @Override
+    public RestResult<List<FormInputResource>> getByCompetitionId(Long competitionId) {
+        return getWithRestResult(formInputRestURL + "/findByCompetitionId/" + competitionId, formInputResourceListType());
+    }
 }

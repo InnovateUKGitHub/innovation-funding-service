@@ -21,6 +21,9 @@ public interface FormInputService {
     @NotSecured("anyone can see a form input")
     ServiceResult<List<FormInputResource>> findByQuestionId(Long questionId);
 
+    @NotSecured("anyone can see a form input")
+    ServiceResult<List<FormInputResource>> findByCompetitionId(Long competitionId);
+
     @PostFilter("hasPermission(returnObject, 'READ')")
     ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(Long applicationId);
 
@@ -29,4 +32,6 @@ public interface FormInputService {
 
     @NotSecured("TODO DW - implement when permissions matrix available")
     ServiceResult<FormInputResponse> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String htmlUnescapedValue);
+
+
 }

@@ -32,17 +32,21 @@ public class ApplicationStartDateValidator implements Validator {
 		try {
 			startDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
 		} catch (NumberFormatException | DateTimeException e) {
-			 reject(errors);
+			 rejectInvalid(errors);
 			 return;
 		}
 
 		if (startDate.isBefore(LocalDate.now())) {
-			 reject(errors);
+			 rejectPast(errors);
         }
 	}
 
-	private void reject(Errors errors) {
-		 errors.reject("application.startDate.invalid", "Please enter a future date.");
+	private void rejectPast(Errors errors) {
+		 errors.reject("application.startDate.past", "Please enter a future date.");
+	}
+	
+	private void rejectInvalid(Errors errors) {
+		 errors.reject("application.startDate.invalid", "Please enter a valid date.");
 	}
 
 	@Override

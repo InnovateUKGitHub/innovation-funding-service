@@ -40,27 +40,27 @@ public class ApplicationStartDateValidatorTest {
 		
 		validator.validate(request, errors);
 		
-		verify(errors).reject("application.startDate.invalid", "Please enter a future date.");
+		verify(errors).reject("application.startDate.past", "Please enter a future date.");
 	}
 	
 	@Test
 	public void testDoNotAllowNonNumeric() {
 		Errors errors = mock(Errors.class);
-		HttpServletRequest request = req("abc","3","1985");
+		HttpServletRequest request = req("abc","3","2020");
 		
 		validator.validate(request, errors);
 		
-		verify(errors).reject("application.startDate.invalid", "Please enter a future date.");
+		verify(errors).reject("application.startDate.invalid", "Please enter a valid date.");
 	}
 	
 	@Test
 	public void testDoNotAllowInvalidDate() {
 		Errors errors = mock(Errors.class);
-		HttpServletRequest request = req("30","2","1985");
+		HttpServletRequest request = req("30","2","2020");
 		
 		validator.validate(request, errors);
 		
-		verify(errors).reject("application.startDate.invalid", "Please enter a future date.");
+		verify(errors).reject("application.startDate.invalid", "Please enter a valid date.");
 	}
 	
 	@Test
@@ -86,11 +86,11 @@ public class ApplicationStartDateValidatorTest {
 	@Test
 	public void testDoNotAllowPartlyEmptyFields() {
 		Errors errors = mock(Errors.class);
-		HttpServletRequest request = req("11","3","");
+		HttpServletRequest request = req("","3","2020");
 		
 		validator.validate(request, errors);
 		
-		verify(errors).reject("application.startDate.invalid", "Please enter a future date.");
+		verify(errors).reject("application.startDate.invalid", "Please enter a valid date.");
 	}
 	
 	@Test
