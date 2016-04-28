@@ -68,3 +68,4 @@ ${LOCAL_MAIL_SENDING_IMPLEMENTED}    'YES'
 ${COMP_ADMINISTRATOR_OPEN}    ${SERVER}/management/competition/1
 ${COMP_ADMINISTRATOR_IN_ASSESSMENT}    ${SERVER}/management/competition/2
 ${DOWNLOAD_FOLDER}    ../download_files
+${empty_field_warning_message}      This field cannot be left blank

@@ -1,8 +1,8 @@
 package com.worth.ifs.user.service;
 
 import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
@@ -18,14 +18,14 @@ public interface UserRestService {
 
     RestResult<UserResource> retrieveUserById(Long id);
     RestResult<List<UserResource>> findAll();
-    RestResult<ProcessRole> findProcessRole(Long userId, Long applicationId);
-    RestResult<List<ProcessRole>> findProcessRole(Long applicationId);
+    RestResult<ProcessRoleResource> findProcessRole(Long userId, Long applicationId);
+    RestResult<List<ProcessRoleResource>> findProcessRole(Long applicationId);
     RestResult<List<UserResource>> findAssignableUsers(Long applicationId);
     RestResult<UserResource> findUserByEmail(String email);
-    Future<RestResult<ProcessRole[]>> findAssignableProcessRoles(Long applicationId);
+    Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(Long applicationId);
     RestResult<List<UserResource>> findRelatedUsers(Long applicationId);
 
-    Future<RestResult<ProcessRole>> findProcessRoleById(Long processRoleId);
+    Future<RestResult<ProcessRoleResource>> findProcessRoleById(Long processRoleId);
     RestResult<Void> verifyEmail(String hash);
 
     RestResult<Void> sendPasswordResetNotification(String email);

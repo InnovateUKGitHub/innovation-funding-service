@@ -1,11 +1,11 @@
 package com.worth.ifs.assessment;
 
 import com.worth.ifs.application.AbstractApplicationController;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.form.Form;
-import com.worth.ifs.application.resource.*;
-import com.worth.ifs.application.service.AssessorFeedbackRestService;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.ResponseResource;
+import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.AssessmentStates;
 import com.worth.ifs.assessment.dto.Score;
@@ -14,10 +14,10 @@ import com.worth.ifs.assessment.viewmodel.AssessmentDashboardModel;
 import com.worth.ifs.assessment.viewmodel.AssessmentSubmitReviewModel;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
@@ -62,9 +62,6 @@ public class AssessmentController extends AbstractApplicationController {
 
     @Autowired
     private AssessmentRestService assessmentRestService;
-
-    @Autowired
-    private AssessorFeedbackRestService assessorFeedbackRestService;
 
     private String competitionAssessmentsURL(Long competitionID) {
         return "/assessor/competitions/" + competitionID + "/applications";
@@ -114,7 +111,7 @@ public class AssessmentController extends AbstractApplicationController {
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
         model.addAttribute("form", form);
-        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
         return solvePageForApplicationAssessment(model, competitionId, applicationId, empty(), userId, userApplicationRoles);
     }
 
@@ -128,7 +125,7 @@ public class AssessmentController extends AbstractApplicationController {
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
         model.addAttribute("form", form);
-        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
         return solvePageForApplicationAssessment(model, competitionId, applicationId, Optional.of(sectionId), userId, userApplicationRoles);
     }
 
@@ -154,9 +151,9 @@ public class AssessmentController extends AbstractApplicationController {
             Long applicationId,
             Optional<Long> sectionId,
             Long userId,
-            List<ProcessRole> userApplicationRoles) {
-        ProcessRole assessorProcessRole = processRoleService.findProcessRole(userId, applicationId);
-        boolean invalidAssessor = assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName());
+            List<ProcessRoleResource> userApplicationRoles) {
+        ProcessRoleResource assessorProcessRole = processRoleService.findProcessRole(userId, applicationId);
+        boolean invalidAssessor = assessorProcessRole == null || !assessorProcessRole.getRoleName().equals(UserRoleType.ASSESSOR.getName());
         if (invalidAssessor) {
             LOG.warn("User is not an Assessor on this application");
             return showInvalidAssessmentView(model, competitionId, null);
@@ -187,9 +184,9 @@ public class AssessmentController extends AbstractApplicationController {
             Model model,
             Optional<Long> sectionId,
             Long userId,
-            ProcessRole assessorProcessRole,
+            ProcessRoleResource assessorProcessRole,
             ApplicationResource application,
-            List<ProcessRole> userApplicationRoles) {
+            List<ProcessRoleResource> userApplicationRoles) {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         Optional<SectionResource> currentSection = getSection(simpleMap(competition.getSections(),section -> sectionService.getById(section)), sectionId, true);
         addApplicationDetails(application, competition, userId, currentSection, Optional.empty(), model, null, userApplicationRoles);
@@ -210,14 +207,14 @@ public class AssessmentController extends AbstractApplicationController {
     }
 
     private String showApplicationReviewView(Model model, Long competitionId, Long userId, ApplicationResource application,
-                                             List<ProcessRole> userApplicationRoles) {
+                                             List<ProcessRoleResource> userApplicationRoles) {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationDetails(application, competition, userId, empty(), Optional.empty(), model, null, userApplicationRoles);
         getAndPassAssessmentDetails(competitionId, application.getId(), userId, model);
         Set<String> partners = call(application.getProcessRoles().stream().
                 map(processRoleService::getById)).
-                map(ProcessRole::getOrganisation).
-                map(Organisation::getName).
+                map(uar -> organisationService.getOrganisationById(uar.getOrganisation())).
+                map(OrganisationResource::getName).
                 collect(toSet());
         model.addAttribute("partners", partners);
         return applicationReview;
@@ -240,9 +237,9 @@ public class AssessmentController extends AbstractApplicationController {
     public ModelAndView getAssessmentSubmitReview(@PathVariable("competitionId") final Long competitionId,
                                                   @PathVariable("applicationId") final Long applicationId,
                                                   User user) {
-        ProcessRole assessorProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource assessorProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
 
-        if (assessorProcessRole == null || !assessorProcessRole.getRole().getName().equals(UserRoleType.ASSESSOR.getName())) {
+        if (assessorProcessRole == null || !assessorProcessRole.getRoleName().equals(UserRoleType.ASSESSOR.getName())) {
             throw new IllegalStateException("User is not an Assessor on this application");
         }
 
@@ -301,12 +298,12 @@ public class AssessmentController extends AbstractApplicationController {
 
     private void acceptInvitation(Long applicationId, Long userId) {
         Assessment assessment = new Assessment();
-        ProcessRole assessorProcessRole = processRoleService.findProcessRole(userId, applicationId);
+        ProcessRoleResource assessorProcessRole = processRoleService.findProcessRole(userId, applicationId);
         assessmentRestService.acceptAssessmentInvitation(assessorProcessRole.getId(), assessment);
     }
 
     private void rejectInvitation(Long applicationId, Long userId, String decisionReason, String observations) {
-        ProcessRole assessorProcessRole = processRoleService.findProcessRole(userId, applicationId);
+        ProcessRoleResource assessorProcessRole = processRoleService.findProcessRole(userId, applicationId);
         ProcessOutcome processOutcome = new ProcessOutcome();
         processOutcome.setOutcome(decisionReason);
         processOutcome.setDescription(observations);
@@ -376,7 +373,7 @@ public class AssessmentController extends AbstractApplicationController {
     private Pair<CompetitionResource, Assessment> getAndPassAssessmentDetails(Long competitionId, Long applicationId, Long userId, Model model) {
         //gets
         CompetitionResource competition = competitionService.getById(competitionId);
-        ProcessRole assessmentProcessRole = processRoleService.findProcessRole(userId, applicationId);
+        ProcessRoleResource assessmentProcessRole = processRoleService.findProcessRole(userId, applicationId);
         Assessment assessment = assessmentRestService.getOneByProcessRole(assessmentProcessRole.getId()).getSuccessObjectOrThrowException();
 
         //pass to view

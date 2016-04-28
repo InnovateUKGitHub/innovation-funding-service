@@ -46,7 +46,7 @@
     <!-- ===========================Form: your_finance =========================== -->
     <div th:fragment="your_finance" th:remove="tag">
         <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}" />
-        <p safe:utext="${question.description}" />
+        <p ifs:utext="${question.description}" />
         <section class="collapsible" th:each="subSection : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
             <h2>
                 <span th:text="${subSection.getName()}" th:remove="tag" />

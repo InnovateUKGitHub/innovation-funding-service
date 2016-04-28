@@ -22,7 +22,7 @@ Academic organisations search (empty & invalid inputs)
     When the user selects the radio button    organisationType    5
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=.button:contains("Search")
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    ${empty_field_warning_message}
     When the user enters text to a text field    id=organisationSearchName    abcd
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    Sorry we couldn't find any results.

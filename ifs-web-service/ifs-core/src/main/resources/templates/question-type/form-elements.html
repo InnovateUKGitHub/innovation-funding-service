@@ -25,7 +25,7 @@
 <div th:fragment="form-hint (hint)">
     <span class="form-hint"
          th:if="${hint}"
-         safe:utext="${hint}"
+         ifs:utext="${hint}"
             />
 </div>
 <!-- ========================= Form Guidance =========================== -->
@@ -35,7 +35,7 @@
         <summary>
             <span class="summary" th:text="${question.getGuidanceQuestion()}"/>
         </summary>
-        <div class="panel-indent" safe:utext="${question.getGuidanceAnswer()}">
+        <div class="panel-indent" ifs:utext="${question.getGuidanceAnswer()}">
         </div>
     </details>
 </div>
