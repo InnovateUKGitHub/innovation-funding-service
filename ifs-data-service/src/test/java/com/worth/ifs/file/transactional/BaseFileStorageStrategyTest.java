@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
@@ -215,6 +216,25 @@ public abstract class BaseFileStorageStrategyTest {
             File updatedFile = updatedFileResult.getSuccessObject();
             assertEquals(createdFile.getSuccessObject().toPath(), updatedFile.toPath());
             assertEquals("Updated content", Files.readFirstLine(updatedFile, defaultCharset()));
+        } finally {
+            FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
+            tempFileWithContents.delete();
+        }
+    }
+
+    @Test
+    public void testUpdateFileButExistingFileDoesntExistOnFilesystem() throws IOException {
+
+        FileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
+
+        FileEntry fileEntry = newFileEntry().with(id(123L)).build();
+        File tempFileWithContents = File.createTempFile("tempfilefortesting", "suffix", tempFolder);
+
+        try {
+            Files.write("Updated content", tempFileWithContents, defaultCharset());
+            ServiceResult<File> updatedFileResult = strategy.updateFile(fileEntry, tempFileWithContents);
+            assertTrue(updatedFileResult.isFailure());
+            assertTrue(updatedFileResult.getFailure().is(notFoundError(FileEntry.class, 123L)));
         } finally {
             FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
             tempFileWithContents.delete();
