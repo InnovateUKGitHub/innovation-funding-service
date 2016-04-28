@@ -1,11 +1,10 @@
 package com.worth.ifs.form.repository;
 
-import com.worth.ifs.form.domain.FormInput;
-import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.repository.query.Param;
-
-import java.util.Collection;
 import java.util.List;
+
+import com.worth.ifs.form.domain.FormInput;
+
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  * This interface is used to generate Spring Data Repositories.
