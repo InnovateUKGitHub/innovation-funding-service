@@ -31,7 +31,7 @@ public class FlatFolderFileStorageStrategy extends BaseFileStorageStrategy {
     }
 
     @Override
-    public List<Pair<List<String>, String>> getAll() {
+    public List<Pair<List<String>, String>> all() {
         final File uploadFolder = pathElementsToFile(getAbsolutePathToFileUploadFolder());
         final File[] files = uploadFolder.listFiles();
         if (files != null) {
@@ -43,6 +43,9 @@ public class FlatFolderFileStorageStrategy extends BaseFileStorageStrategy {
         }
         return new ArrayList<>();
     }
+
+
+
 
     @Override
     public ServiceResult<Long> fileEntryIdFromPath(Pair<List<String>, String> path) {

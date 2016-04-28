@@ -23,6 +23,7 @@ import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
 import static com.worth.ifs.util.FileFunctions.pathElementsToPath;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Represents a component that, given a FileEntry to store, decides how best to store it and stores it on the filesystem.
@@ -92,6 +93,11 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
         } else {
             return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, fileEntry.getId()));
         }
+    }
+
+    @Override
+    public final List<Pair<Long, Pair<List<String>, String>>> allWithIds() {
+        return all().stream().map(path -> Pair.of(fileEntryIdFromPath(path).getSuccessObject(), path)).collect(toList());
     }
 
     private ServiceResult<File> createFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {

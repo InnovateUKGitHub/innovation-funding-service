@@ -3,43 +3,26 @@ package com.worth.ifs.file.service;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.transactional.FileStorageStrategy;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.File;
 import java.util.List;
 
+import static com.worth.ifs.commons.service.ServiceResult.aggregate;
 import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
+import static java.util.stream.Collectors.toList;
 
 
 public final class MoveFiles {
 
-
-    @Autowired
-    @Qualifier("finalFileStorageStrategy")
-    private FileStorageStrategy finalFileStorageStrategy;
-
-    @Autowired
-    @Qualifier("scannedFileStorageStrategy")
-    private FileStorageStrategy scannedFileStorageStrategy;
-
-
-    @Scheduled(fixedDelayString = "${ifs.data.service.file.storage.virus.scanning.scanned.move.delay.millis}")
-    public void moveFiles() {
-
-    }
-
-    public static void moveAllFiles(final FileStorageStrategy from, final FileStorageStrategy to) {
-        for (Pair<List<String>, String> temp : from.getAll()) {
-            final ServiceResult<File> fileServiceResult = from.fileEntryIdFromPath(temp).andOnSuccess(id -> {
-                final File fileToMove = new File(pathElementsToFile(temp.getKey()), temp.getValue());
-                return to.moveFile(id, fileToMove);
-            });
-            if (fileServiceResult.isFailure()) {
-
-            }
-        }
+    public static ServiceResult<List<File>> moveAllFiles(final FileStorageStrategy from, final FileStorageStrategy to) {
+        final List<ServiceResult<File>> moveResults = from.allWithIds().stream().
+                map(idAndPathOfFileToMove -> {
+                    final Long id = idAndPathOfFileToMove.getKey();
+                    final Pair<List<String>, String> path = idAndPathOfFileToMove.getValue();
+                    final File fileToMove = new File(pathElementsToFile(path.getKey()), path.getValue());
+                    return to.moveFile(id, fileToMove);
+                }).
+                collect(toList());
+        return aggregate(moveResults);
     }
 }
-

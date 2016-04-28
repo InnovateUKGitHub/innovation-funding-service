@@ -47,7 +47,9 @@ public interface FileStorageStrategy {
 
     ServiceResult<File> moveFile(Long fileId, File temporaryFile);
 
-    List<Pair<List<String>, String>> getAll();
+    List<Pair<List<String>, String>> all();
+
+    List<Pair<Long, Pair<List<String>, String>>> allWithIds();
 
     ServiceResult<Long> fileEntryIdFromPath(Pair<List<String>, String> path);
 
