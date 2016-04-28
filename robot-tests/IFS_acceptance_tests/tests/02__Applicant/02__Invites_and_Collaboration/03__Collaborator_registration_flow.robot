@@ -123,8 +123,7 @@ Catapult search (empty, invalid & valid inputs)
 
 Catapult search (accept invitation flow)
     [Documentation]    INFUND-1230
-    [Tags]    Invite    Catapult
-    # Pending due to INFUND-2583
+    [Tags]    Invite    Catapult        Email
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Digital Catapult
     And the user should see the text in the page    Operating Address
