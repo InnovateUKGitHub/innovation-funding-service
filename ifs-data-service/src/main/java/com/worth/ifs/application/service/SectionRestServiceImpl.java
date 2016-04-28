@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.domain.SectionType;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
@@ -89,7 +90,8 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     }
 
 	@Override
-	public RestResult<SectionResource> getFinanceSectionForCompetition(Long competitionId) {
-		return getWithRestResult(sectionRestURL + "/getFinanceSectionByCompetitionId/" + competitionId, SectionResource.class);
+	public RestResult<List<SectionResource>> getSectionsByCompetitionIdAndType(Long competitionId, SectionType type) {
+		return getWithRestResult(sectionRestURL + "/getSectionsByCompetitionIdAndType/" + competitionId + "/" + type.name(), new ParameterizedTypeReference<List<SectionResource>>() {});
 	}
+
 }

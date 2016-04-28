@@ -4,7 +4,6 @@ import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.ApplicationStatusResource;
 import com.worth.ifs.dashboard.ApplicantController;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.After;
 import org.junit.Before;

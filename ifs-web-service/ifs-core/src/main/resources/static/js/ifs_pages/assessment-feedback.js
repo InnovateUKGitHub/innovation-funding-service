@@ -37,7 +37,7 @@ IFS.assesment_feedback_page = (function(){
                 formTextareaSaveInfo = formGroup.find('.textarea-save-info');
             }
 
-	        jQuery.ajax({
+	        jQuery.ajaxProtected({
 	            type: "PUT",
 	            url: formUrl + '/response/' + responseId + '?feedbackText=' + feedbackText + '&feedbackValue=' + feedbackValue,
                 beforeSend: function() {

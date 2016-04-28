@@ -1,6 +1,16 @@
 package com.worth.ifs.application.finance.view;
 
-import com.worth.ifs.application.domain.Question;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+
+import com.worth.ifs.application.domain.SectionType;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -11,15 +21,6 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 @Component
 public class FinanceOverviewModelManager {
@@ -59,11 +60,13 @@ public class FinanceOverviewModelManager {
     }
 
     private void addFinanceSections(Long competitionId, Model model) {
-    	SectionResource section = sectionService.getFinanceSectionForCompetition(competitionId);
+    	List<SectionResource> sections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FINANCE);
     	
-    	if(section == null) {
+    	if(sections.isEmpty()) {
     		return;
     	}
+    	
+    	SectionResource section = sections.get(0);
     	
         sectionService.removeSectionsQuestionsWithType(section, "empty");
 

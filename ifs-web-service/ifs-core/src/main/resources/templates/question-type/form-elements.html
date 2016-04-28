@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:safe="http://www.w3.org/1999/xhtml">
 
 <!-- =========================== Form label =========================== -->
 <div th:fragment="form-label (name)">
@@ -25,7 +25,7 @@
 <div th:fragment="form-hint (hint)">
     <span class="form-hint"
          th:if="${hint}"
-         th:utext="${hint}"
+         ifs:utext="${hint}"
             />
 </div>
 <!-- ========================= Form Guidance =========================== -->
@@ -35,7 +35,7 @@
         <summary>
             <span class="summary" th:text="${question.getGuidanceQuestion()}"/>
         </summary>
-        <div class="panel-indent" th:utext="${question.getGuidanceAnswer()}">
+        <div class="panel-indent" ifs:utext="${question.getGuidanceAnswer()}">
         </div>
     </details>
 </div>
@@ -103,11 +103,12 @@
 
 <!-- ========================= empty input field type number =========================== -->
 
-<div th:fragment="form-number-extra-small-empty (id)">
+<div th:fragment="form-number-extra-small-empty (id, field)">
     <input class="form-control width-extra-small"
            th:readonly="${readonly}"
            type="number"
            th:id="${id}"
+           th:name="${field}"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
            th:min="${min}"
            th:max="${max}"
@@ -129,7 +130,7 @@
 	                	 th:remove="tag"/>
 	             </div>
 	             <div th:unless="${dateFieldPresent}" th:remove="tag">
-	            	<div th:include="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_day', placeholder='DD')"
+	            	<div th:include="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD')"
 	                	 th:remove="tag"/>
 	             </div>
 	        </div>
@@ -141,7 +142,7 @@
 	                 	th:remove="tag"/>
 	            </div>
 	            <div th:unless="${dateFieldPresent}" th:remove="tag">
-	           		<div th:include="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_month', placeholder='MM')"
+	           		<div th:include="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_month', field=${field}+'.monthValue',placeholder='MM')"
 	                 	th:remove="tag"/>
 	            </div>
 	        </div>
@@ -153,7 +154,7 @@
 	                	th:remove="tag"/>
 	            </div>
 	            <div th:unless="${dateFieldPresent}" th:remove="tag">
-	           		<div th:include="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_year', placeholder='YYYY')"
+	           		<div th:include="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_year',field=${field}+'.year', placeholder='YYYY')"
 	                	th:remove="tag"/>
 	            </div>
             </div>
@@ -188,13 +189,15 @@
               >
 		</textarea>
 </div>
-<div th:fragment="form-finance-textarea (type, id, name, value,readonly)">
+<div th:fragment="form-finance-textarea (type, id, name, value,readonly,required)">
+
 		<textarea  class="form-control"
                 th:id="${'cost-'+ type + '-'+id+'-'+name}"
                 th:name="${type +'-'+name+'-'+question.id+'-' + id}"
                 th:text="${value}"
                 rows="4"
                 th:readonly="${readonly}"
+                th:required="${required}"
                 >
 		</textarea>
 </div>

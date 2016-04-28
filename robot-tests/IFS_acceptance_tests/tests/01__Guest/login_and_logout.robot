@@ -67,7 +67,8 @@ Valid login as Comp Admin
 
 Reset password (psw does not match)
     [Documentation]    INFUND-1889
-    [Tags]    Email
+    [Tags]    Email     Pending
+    # Pending due to INFUND-2649
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the button/link    link=Forgot your password?
@@ -85,7 +86,8 @@ Reset password (psw does not match)
 
 Reset password
     [Documentation]    INFUND-1889
-    [Tags]    Email    HappyPath
+    [Tags]    Email    HappyPath        Pending
+    # Pending due to INFUND-2649
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the button/link    link=Forgot your password?

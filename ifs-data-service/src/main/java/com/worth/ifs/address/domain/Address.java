@@ -23,11 +23,9 @@ public class Address {
     private String addressLine2;
     private String addressLine3;
     
-    @NotBlank
     private String town;
     private String county;
     
-    @NotBlank
     @Length(max = 9)
     private String postcode;
 

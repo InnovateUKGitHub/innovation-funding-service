@@ -85,9 +85,11 @@
 
 						<p style="margin: 0 0 1em 0;">Dear [fullname],</p>
 
-						<p style="margin: 0 0 1em 0;">We are pleased to inform you that your application [Application Name] has been successful in achieving funding in the competition [competition name].</p>
+						<p style="margin: 0 0 1em 0;">Following the success of your application [application name] to achieve funding in the competition [competition name], we are happy to inform you that feedback is now available.</p>
 
-						<p style="margin: 0 0 1em 0;">Following the submission of your application '[Application Name]'  for the [competition name] competition, we have reviewed the feedback to your application provided by our independent assessors and is now available from your <a th:href="${(param.status != null and param.status[0] == 'unsuccessfulFeedback' ? '/prototypes/2113-dashboard?status=unsuccessfulFeedback':'/prototypes/2113-dashboard?status=successfulFeedback')}"><b>Innovate UK dashboard</b></a>.</p>
+						<p>The feedback provided by the independent assessors has been reviewed by Innovate UK</p>
+
+						<p style="margin: 0 0 1em 0;">You can now view this feedback by logging onto your <a th:href="${(param.status != null and param.status[0] == 'unsuccessfulFeedback' ? '/prototypes/2113-dashboard?status=unsuccessfulFeedback':'/prototypes/2113-dashboard?status=successfulFeedback')}"><b>Innovation Funding Service dashboard</b></a>.</p>
 
 						<p style="margin: 0 0 1em 0;">Yours sincerely,</p>
 

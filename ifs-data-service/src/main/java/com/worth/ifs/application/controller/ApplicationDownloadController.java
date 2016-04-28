@@ -44,7 +44,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 @RequestMapping("/application/download")
 public class ApplicationDownloadController {
     private static final Log LOG = LogFactory.getLog(ApplicationDownloadController.class);
-    private static final Long APPLICATION_SUMMARY_FORM_INPUT_ID = 11L;
+    private static final String APPLICATION_SUMMARY_QUESTION_NAME = "Project summary";
     public static final int PROJECT_SUMMARY_COLUMN_WITH = 50; // the width in amount of letters.
     public static final String FONT_NAME = "Arial";
     @Autowired
@@ -65,7 +65,7 @@ public class ApplicationDownloadController {
         if(applicationsResult.isSuccess()) {
         	applications = applicationsResult.getSuccessObject();
         } else {
-        	LOG.error("failed call to get application summaries by competiton and status for the download");
+        	LOG.error("failed call to get application summaries by competition and status for the download");
         	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
@@ -128,7 +128,7 @@ public class ApplicationDownloadController {
         for (Application a : applications) {
             // PREPARE APPLICATION INFORMATION
         	
-            List<FormInputResponse> projectSummary = formInputResponseRepository.findByApplicationIdAndFormInputId(a.getId(), APPLICATION_SUMMARY_FORM_INPUT_ID);
+            List<FormInputResponse> projectSummary = formInputResponseRepository.findByApplicationIdAndFormInputQuestionName(a.getId(), APPLICATION_SUMMARY_QUESTION_NAME);
             String projectSummaryString;
             if(projectSummary.isEmpty()){
                 projectSummaryString = "";

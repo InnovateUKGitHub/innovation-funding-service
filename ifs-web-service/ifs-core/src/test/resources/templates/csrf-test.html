@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>CSRF Test</title>
+</head>
+<body>
+<h1>CSRF Protection Sample Form</h1>
+<form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
+    <input type="submit" value="Submit"/>
+</form>
+</body>
+</html>

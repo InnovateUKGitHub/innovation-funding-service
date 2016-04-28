@@ -40,7 +40,7 @@
             </ul>
         </div>
     </div>
-    <form action="#" method="post" class="application-overview">
+    <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" class="application-overview">
         <div th:remove="tag" th:each="section,iteration : ${sections.values()}">
             <section th:id="'section-'+${section.getId()}">
                 <h2 th:text="${section.name}" th:class="${iteration.index==0} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>

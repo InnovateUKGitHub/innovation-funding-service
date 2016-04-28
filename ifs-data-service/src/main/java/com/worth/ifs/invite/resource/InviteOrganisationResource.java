@@ -24,12 +24,10 @@ public class InviteOrganisationResource {
     	// no-arg constructor
     }
 
-    public InviteOrganisationResource(Long id, String organisationName, Organisation organisation, List<InviteResource> inviteResources) {
+    public InviteOrganisationResource(Long id, String organisationName, Long organisation, List<InviteResource> inviteResources) {
         this.id = id;
         this.organisationName = organisationName;
-        if(organisation!=null){
-            this.organisation = organisation.getId();
-        }
+        this.organisation = organisation;
         this.inviteResources = inviteResources;
     }
 

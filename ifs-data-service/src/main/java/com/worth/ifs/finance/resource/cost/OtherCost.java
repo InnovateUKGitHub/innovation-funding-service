@@ -16,12 +16,10 @@ public class OtherCost implements CostItem {
     @Digits(integer = MAX_DIGITS, fraction = 0)
     private BigDecimal cost;
 
-    private CostType costType;
     private String name;
 
     public OtherCost() {
-        this.costType = CostType.OTHER_COSTS;
-        this.name = this.costType.getType();
+        this.name = getCostType().getType();
     }
 
     public OtherCost(Long id, String description, BigDecimal cost) {
@@ -51,11 +49,21 @@ public class OtherCost implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return CostType.OTHER_COSTS;
     }
 
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public int getMinRows() {
+        return 0;
     }
 }
