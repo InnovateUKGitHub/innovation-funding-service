@@ -38,7 +38,7 @@ public class LocalDatePropertyEditor extends PropertyEditorSupport {
 
         } catch (Exception ex) {
             LOG.error(ex);
-            setValue(null);
+            setValue(LocalDate.MIN);
         }
     }
 
