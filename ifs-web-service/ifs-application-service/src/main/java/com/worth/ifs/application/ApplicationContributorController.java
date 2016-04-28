@@ -8,6 +8,7 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.ApplicationService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
@@ -69,14 +70,14 @@ public class ApplicationContributorController{
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
-        Organisation leadOrganisation = leadApplicantProcessRole.getOrganisation();
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+        OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
         User leadApplicant = leadApplicantProcessRole.getUser();
 
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
         if(savedInvites.stream().noneMatch(i -> i.getOrganisation() != null && i.getOrganisation().equals(leadOrganisation.getId()))){
             // Lead organisation has no invites, add it to the list
-            savedInvites.add(0, new InviteOrganisationResource(0L, leadOrganisation.getName(), leadOrganisation, new ArrayList<InviteResource>())); // make sure the lead organisation is also part of this list.
+            savedInvites.add(0, new InviteOrganisationResource(0L, leadOrganisation.getName(), leadOrganisation.getId(), new ArrayList<InviteResource>())); // make sure the lead organisation is also part of this list.
         }else{
             // lead organisation has invites, make sure its the first in the list.
             Optional<InviteOrganisationResource> leadOrg = savedInvites.stream().filter(i -> i.getOrganisation() != null && i.getOrganisation().equals(leadOrganisation.getId())).findAny();
@@ -103,8 +104,8 @@ public class ApplicationContributorController{
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
-        Organisation leadOrganisation = leadApplicantProcessRole.getOrganisation();
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+        OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
         User leadApplicant = leadApplicantProcessRole.getUser();
 
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
@@ -135,7 +136,7 @@ public class ApplicationContributorController{
     /**
      * Add the invites from the database, to the ContributorsForm object.
      */
-    private void addSavedInvitesToForm(ContributorsForm contributorsForm, Organisation leadOrganisation, List<InviteOrganisationResource> savedInvites) {
+    private void addSavedInvitesToForm(ContributorsForm contributorsForm, OrganisationResource leadOrganisation, List<InviteOrganisationResource> savedInvites) {
         OrganisationInviteForm leadOrganisationInviteForm = new OrganisationInviteForm();
         leadOrganisationInviteForm.setOrganisationName(leadOrganisation.getName());
         leadOrganisationInviteForm.setOrganisationId(leadOrganisation.getId());
@@ -197,10 +198,11 @@ public class ApplicationContributorController{
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
         ApplicationResource application = applicationService.getById(applicationId);
-        ProcessRole leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+        OrganisationResource organisationResource = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
         // User should never be able to set the organisation name or id of the lead-organisation.
-        contributorsForm.getOrganisations().get(0).setOrganisationName(leadApplicantProcessRole.getOrganisation().getName());
-        contributorsForm.getOrganisations().get(0).setOrganisationId(leadApplicantProcessRole.getOrganisation().getId());
+        contributorsForm.getOrganisations().get(0).setOrganisationName(organisationResource.getName());
+        contributorsForm.getOrganisations().get(0).setOrganisationId(organisationResource.getId());
         contributorsForm.setTriedToSave(false);
 
         if (organisationIndex != null) {

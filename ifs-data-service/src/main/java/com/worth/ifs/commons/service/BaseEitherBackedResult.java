@@ -7,7 +7,10 @@ import org.apache.commons.logging.LogFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
+
+import static com.worth.ifs.util.CollectionFunctions.nullSafe;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a FailureType, and a
@@ -204,13 +207,13 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
         return result.getRight();
     }
 
+
     /**
      * Function to aggregate a {@link List} of {@link BaseEitherBackedResult}.
-     * Work still required:
-     * Deal with empty list
-     * Aggregate failures.
      *
      * @param input
+     * @param failureCollector
+     * @param emptyResult
      * @param <Item>
      * @param <FailureType>
      * @param <Result>
@@ -221,21 +224,26 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
             FailureType,
             Result extends BaseEitherBackedResult<List<Item>, FailureType>,
             Input extends BaseEitherBackedResult<Item, FailureType>>
-    Result aggregate(final List<Input> input) {
-        List<Item> items = new ArrayList<>();
-        List<FailureType> fails = new ArrayList<>();
-        for (Input i : input) {
+    Result aggregate(final List<Input> input,
+                     final BinaryOperator<FailureType> failureCollector,
+                     final Result emptyResult) {
+        if (input == null || input.isEmpty()) {
+            return emptyResult;
+        }
+        final Input firstResult = input.get(0);
+        final List<Item> items = new ArrayList<>();
+        final List<FailureType> failures = new ArrayList<FailureType>();
+        for (final Input i : input) {
             if (i.isSuccess()) {
                 items.add(i.getSuccessObject());
             } else {
-                fails.add(i.getFailure());
+                failures.add(i.getFailure());
             }
         }
-        if (fails.isEmpty()) {
-            return (Result) input.get(0).createSuccess(items);
-
+        if (failures.isEmpty()) {
+            return (Result) firstResult.createSuccess(items);
         } else {
-            BaseEitherBackedResult<List<Item>, FailureType> failure = input.get(0).createFailure(fails.get(0));
+            final BaseEitherBackedResult<Item, FailureType> failure = firstResult.createFailure(failures.stream().reduce(null, nullSafe(failureCollector)));
             return (Result) failure;
         }
     }

@@ -21,7 +21,8 @@ import static java.util.stream.Collectors.*;
  */
 public final class CollectionFunctions {
 
-	private CollectionFunctions(){}
+    private CollectionFunctions() {
+    }
 
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(CollectionFunctions.class);
@@ -261,6 +262,7 @@ public final class CollectionFunctions {
 
     /**
      * A andOnSuccess collector that preserves order
+     *
      * @param keyMapper
      * @param valueMapper
      * @param <T>
@@ -268,10 +270,12 @@ public final class CollectionFunctions {
      * @param <U>
      * @return
      */
-    public static <T, K, U> Collector<T, ?, Map<K,U>> toLinkedMap(
+    public static <T, K, U> Collector<T, ?, Map<K, U>> toLinkedMap(
             Function<? super T, ? extends K> keyMapper,
             Function<? super T, ? extends U> valueMapper) {
-        return toMap(keyMapper, valueMapper, (u, v) -> {throw new IllegalStateException(String.format("Duplicate key %s", u));}, LinkedHashMap::new);
+        return toMap(keyMapper, valueMapper, (u, v) -> {
+            throw new IllegalStateException(String.format("Duplicate key %s", u));
+        }, LinkedHashMap::new);
     }
 
     /**
@@ -284,7 +288,7 @@ public final class CollectionFunctions {
      * @param <U>
      * @return
      */
-    public static <T, K, U> Map<K,U> simpleToMap(
+    public static <T, K, U> Map<K, U> simpleToMap(
             List<T> list,
             Function<? super T, ? extends K> keyMapper,
             Function<? super T, ? extends U> valueMapper) {
@@ -304,7 +308,7 @@ public final class CollectionFunctions {
      * @param <K>
      * @return
      */
-    public static <T, K> Map<K,T> simpleToMap(
+    public static <T, K> Map<K, T> simpleToMap(
             List<T> list,
             Function<? super T, ? extends K> keyMapper) {
 
@@ -313,6 +317,7 @@ public final class CollectionFunctions {
 
     /**
      * A collector that maps a collection of pairs into a andOnSuccess.
+     *
      * @param <R>
      * @param <T>
      * @return
@@ -323,6 +328,7 @@ public final class CollectionFunctions {
 
     /**
      * Function that takes a andOnSuccess entry and returns the value. Useful for collecting over collections of entry sets
+     *
      * @param <R>
      * @param <T>
      * @return
@@ -442,8 +448,30 @@ public final class CollectionFunctions {
     }
 
     /**
+     * Wrap a {@link BinaryOperator} with null checks
+     * @param notNullSafe
+     * @param <T>
+     * @return
+     */
+    public static <T> BinaryOperator<T> nullSafe(final BinaryOperator<T> notNullSafe) {
+        return new BinaryOperator<T>() {
+            @Override
+            public T apply(T t1, T t2) {
+                if (t1 != null && t2 != null) {
+                    return notNullSafe.apply(t1, t2);
+                } else if (t1 != null) {
+                    return t1;
+                } else if (t2 != null) {
+                    return t2;
+                }
+                return null;
+            }
+        };
+    }
+
+    /**
      * Given a list of elements, this method will find all possible permutations of those elements.
-     *
+     * <p>
      * E.g. given (1, 2, 3), possible permutations are (1, 2, 3), (2, 1, 3), (3, 1, 2) etc...
      *
      * @param excludedWords

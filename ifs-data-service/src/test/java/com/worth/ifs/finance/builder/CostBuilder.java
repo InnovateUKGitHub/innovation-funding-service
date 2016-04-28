@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.worth.ifs.BuilderAmendFunctions.idBasedDescriptions;
+import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
@@ -34,6 +35,10 @@ public class CostBuilder extends BaseBuilder<Cost, CostBuilder> {
     @Override
     protected Cost createInitial() {
         return new Cost();
+    }
+
+    public CostBuilder withItem(String item){
+        return with(cost -> setField("item", item, cost));
     }
 
     public CostBuilder withApplicationFinance(final ApplicationFinance applicationFinance) {

@@ -70,7 +70,6 @@ Large pdf uploads not allowed
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
     [Tags]    Collaboration    Upload
-    # Pending due to INFUND-2578
     Given the user can see the option to upload a file on the page    ${PROJECT_TEAM_URL}
     When the user uploads the file to the 'project team' question    ${text_file}
     Then the user should get an error page    ${wrong_filetype_validation_error}

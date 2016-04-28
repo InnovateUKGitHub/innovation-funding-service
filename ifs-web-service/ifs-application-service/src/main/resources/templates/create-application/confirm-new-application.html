@@ -18,7 +18,7 @@
         <h1 class="heading-large">Application in progress</h1>
         <p>You have already started an application in this competition. Please confirm whether you want to continue with your existing application or create a new one.</p>
 
-        <form method="post" action="">
+        <form method="post" action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
 
             <fieldset>
                 <legend class="visuallyhidden">Create a new application?</legend>
