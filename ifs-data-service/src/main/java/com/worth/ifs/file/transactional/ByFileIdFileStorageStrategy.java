@@ -61,7 +61,7 @@ public class ByFileIdFileStorageStrategy extends BaseFileStorageStrategy {
     }
 
     @Override
-    public List<Pair<List<String>, String>> getAll() {
+    public List<Pair<List<String>, String>> all() {
         throw new UnsupportedOperationException();
     }
 

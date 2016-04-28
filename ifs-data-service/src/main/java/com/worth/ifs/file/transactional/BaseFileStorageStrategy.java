@@ -23,6 +23,7 @@ import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
 import static com.worth.ifs.util.FileFunctions.pathElementsToPath;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Represents a component that, given a FileEntry to store, decides how best to store it and stores it on the filesystem.
@@ -105,6 +106,11 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
         }
     }
 
+    @Override
+    public final List<Pair<Long, Pair<List<String>, String>>> allWithIds() {
+        return all().stream().map(path -> Pair.of(fileEntryIdFromPath(path).getSuccessObject(), path)).collect(toList());
+    }
+
     private ServiceResult<File> createFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
 
         Path foldersPath = pathElementsToPath(absolutePathElements);
@@ -154,10 +160,10 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
             final Path targetFile = Files.move(tempFile.toPath(), fileToCreate.toPath());
             return serviceSuccess(targetFile.toFile());
         } catch (final FileAlreadyExistsException e) {
-            LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename + " file already exists", e);
+            LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename + " file already exists");
             return serviceFailure(new Error(FILES_DUPLICATE_FILE_CREATED));
         } catch (NoSuchFileException e){
-            LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename + "file does not exist", e);
+            LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename + "file does not exist");
             return serviceFailure(new Error(FILES_NO_SUCH_FILE));
         } catch (IOException e){
             LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);

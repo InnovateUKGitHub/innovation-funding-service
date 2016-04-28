@@ -184,7 +184,7 @@ public abstract class BaseFileStorageStrategyTest {
                 ServiceResult<File> createdFileResult = strategy.createFile(entry.getLeft(), tempFileWithContents);
                 assertTrue(createdFileResult.isSuccess());
             }
-            final List<Pair<List<String>, String>> all = strategy.getAll();
+            final List<Pair<List<String>, String>> all = strategy.all();
             assertEquals(fileEntriesAndExpectedPaths.size(), all.size());
             for (final Pair<FileEntry, Pair<List<String>, String>> fileEntryAndExpectedPath: fileEntriesAndExpectedPaths) {
                 final Pair<List<String>, String> expectedPath = fileEntryAndExpectedPath.getValue();
