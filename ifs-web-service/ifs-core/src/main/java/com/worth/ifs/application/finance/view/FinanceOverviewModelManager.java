@@ -77,7 +77,10 @@ public class FinanceOverviewModelManager {
                         s -> simpleMap(s.getQuestions(), questionService::getById)
                 ));
         model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
-        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
+
+        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
+                .values().stream().flatMap(a -> a.stream())
+                .collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
         model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);
     }
 }

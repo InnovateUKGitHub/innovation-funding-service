@@ -27,4 +27,9 @@ public class FormInputController {
     public RestResult<List<FormInputResource>> findByQuestionId(@PathVariable("questionId") Long questionId){
         return formInputService.findByQuestionId(questionId).toGetResponse();
     }
+
+    @RequestMapping("/findByCompetitionId/{competitionId}")
+    public RestResult<List<FormInputResource>> findByCompetitionId(@PathVariable("competitionId") Long competitionId) {
+        return formInputService.findByCompetitionId(competitionId).toGetResponse();
+    }
 }
