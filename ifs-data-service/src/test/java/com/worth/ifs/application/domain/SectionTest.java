@@ -44,22 +44,27 @@ public class SectionTest {
     }
     
     @Test
-    public void sectionWithNullTypeIsNotFinanceSection() {
-    	assertFalse(section.isFinance());
-    	assertFalse(section.isEachCollaboratorFinance());
-    }
-    
-    @Test
     public void sectionWithAppropriateTypeIsFinanceSection() {
     	section.setType(SectionType.FINANCE);
-    	assertTrue(section.isFinance());
-    	assertFalse(section.isEachCollaboratorFinance());
+    	
+    	assertTrue(section.isType(SectionType.FINANCE));
+    	assertFalse(section.isType(SectionType.ORGANISATION_FINANCES));
+    	assertFalse(section.isType(SectionType.GENERAL));
     }
     
     @Test
-    public void sectionWithAppropriateTypeIsEachCollaboratorFinanceSection() {
-    	section.setType(SectionType.EACH_COLLABORATOR_FINANCE);
-    	assertFalse(section.isFinance());
-    	assertTrue(section.isEachCollaboratorFinance());
+    public void sectionWithAppropriateTypeIsOrganisationFinancesSection() {
+    	section.setType(SectionType.ORGANISATION_FINANCES);
+    	
+    	assertFalse(section.isType(SectionType.FINANCE));
+    	assertTrue(section.isType(SectionType.ORGANISATION_FINANCES));
+    	assertFalse(section.isType(SectionType.GENERAL));
+    }
+    
+    @Test
+    public void sectionWithAppropriateTypeIsGeneralSection() {
+    	assertFalse(section.isType(SectionType.FINANCE));
+    	assertFalse(section.isType(SectionType.ORGANISATION_FINANCES));
+    	assertTrue(section.isType(SectionType.GENERAL));
     }
 }

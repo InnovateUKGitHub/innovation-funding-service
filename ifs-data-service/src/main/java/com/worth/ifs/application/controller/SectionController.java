@@ -4,15 +4,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.application.transactional.SectionService;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.rest.ValidationMessages;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.worth.ifs.application.domain.SectionType;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.transactional.SectionService;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.rest.ValidationMessages;
 
 /**
  * SectionController exposes Application data and operations through a REST API.
@@ -85,14 +86,9 @@ public class SectionController {
         return sectionService.getQuestionsForSectionAndSubsections(sectionId).toGetResponse();
     }
     
-    @RequestMapping("/getFinanceSectionByCompetitionId/{competitionId}")
-    public RestResult<SectionResource> getFinanceSectionByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
-    	return sectionService.getFinanceSectionByCompetitionId(competitionId).toGetResponse();
-    }
-    
-    @RequestMapping("/getEachCollaboratorFinanceSectionByCompetitionId/{competitionId}")
-    public RestResult<SectionResource> getEachCollaboratorFinanceSectionByCompetitionId(@PathVariable("competitionId") final Long competitionId) {
-    	return sectionService.getEachCollaboratorFinanceSectionByCompetitionId(competitionId).toGetResponse();
+    @RequestMapping("/getSectionsByCompetitionIdAndType/{competitionId}/{type}")
+    public RestResult<List<SectionResource>> getSectionsByCompetitionIdAndType(@PathVariable("competitionId") final Long competitionId, @PathVariable("type") SectionType type) {
+    	return sectionService.getSectionsByCompetitionIdAndType(competitionId, type).toGetResponse();
     }
 
     @RequestMapping("/getByCompetition/{competitionId}")

@@ -1,5 +1,10 @@
 package com.worth.ifs.application.service;
 
+import static com.worth.ifs.application.service.Futures.adapt;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -7,24 +12,18 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import com.worth.ifs.application.domain.Question;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.domain.SectionType;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import com.worth.ifs.form.service.FormInputService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import static com.worth.ifs.application.service.Futures.adapt;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.stream.Collectors.toList;
 
 /**
  * This class contains methods to retrieve and store {@link Section} related data,
@@ -167,12 +166,8 @@ public class SectionServiceImpl implements SectionService {
     }
 
 	@Override
-	public SectionResource getFinanceSectionForCompetition(Long competitionId) {
-		return sectionRestService.getFinanceSectionForCompetition(competitionId).getSuccessObjectOrThrowException();
+	public List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type) {
+		return sectionRestService.getSectionsByCompetitionIdAndType(competitionId, type).getSuccessObjectOrThrowException();
 	}
 
-	@Override
-	public SectionResource getEachCollaboratorFinanceSectionForCompetition(Long competitionId) {
-		return sectionRestService.getEachCollaboratorFinanceSectionForCompetition(competitionId).getSuccessObjectOrThrowException();
-	}
 }

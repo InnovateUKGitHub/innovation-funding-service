@@ -4,11 +4,14 @@ import static com.worth.ifs.commons.service.ParameterizedTypeReferences.longsLis
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+import org.springframework.core.ParameterizedTypeReference;
 
 import com.worth.ifs.BaseRestServiceUnitTest;
+import com.worth.ifs.application.domain.SectionType;
 import com.worth.ifs.application.resource.SectionResource;
 
 /**
@@ -52,29 +55,17 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
     }
     
     @Test
-    public void testGetFinanceSectionForCompetition() {
+    public void testGetSectionsForCompetitionByType() {
 
-        String expectedUrl = sectionRestUrl + "/getFinanceSectionByCompetitionId/123";
-        SectionResource returnedResponse = new SectionResource();
+        String expectedUrl = sectionRestUrl + "/getSectionsByCompetitionIdAndType/123/FINANCE";
+        List<SectionResource> returnedResponse = Arrays.asList(new SectionResource());
 
-        setupGetWithRestResultExpectations(expectedUrl, SectionResource.class, returnedResponse);
+        setupGetWithRestResultExpectations(expectedUrl, new ParameterizedTypeReference<List<SectionResource>>() {}, returnedResponse);
 
-        SectionResource response = service.getFinanceSectionForCompetition(123L).getSuccessObject();
+        List<SectionResource> response = service.getSectionsByCompetitionIdAndType(123L, SectionType.FINANCE).getSuccessObject();
         
         assertEquals(returnedResponse, response);
     }
     
-    @Test
-    public void testGetEachCollaboratorFinanceSectionForCompetition() {
-
-        String expectedUrl = sectionRestUrl + "/getEachCollaboratorFinanceSectionByCompetitionId/123";
-        SectionResource returnedResponse = new SectionResource();
-
-        setupGetWithRestResultExpectations(expectedUrl, SectionResource.class, returnedResponse);
-
-        SectionResource response = service.getEachCollaboratorFinanceSectionForCompetition(123L).getSuccessObject();
-        
-        assertEquals(returnedResponse, response);
-    }
 
 }

@@ -58,7 +58,7 @@ public class Section implements Comparable<Section> {
     
     @Enumerated(EnumType.STRING)
     @Column(name="section_type")
-    private SectionType type;
+    private SectionType type = SectionType.GENERAL;
 
     public Section(long id, Competition competition, List<Question> questions, String name, Section parentSection) {
         this.id = id;
@@ -149,12 +149,8 @@ public class Section implements Comparable<Section> {
 
     public String getAssessorGuidanceDescription() { return assessorGuidanceDescription; }
 
-    public boolean isFinance() {
-		return SectionType.FINANCE.equals(type) ;
-	}
-    
-    public boolean isEachCollaboratorFinance() {
-    	return SectionType.EACH_COLLABORATOR_FINANCE.equals(type);
+    public boolean isType(SectionType queriedType) {
+    	return queriedType.equals(type);
     }
     
     public void setAssessorGuidanceDescription(String assessorGuidanceDescription) { this.assessorGuidanceDescription = assessorGuidanceDescription; }

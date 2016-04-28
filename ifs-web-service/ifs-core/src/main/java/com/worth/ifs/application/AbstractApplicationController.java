@@ -28,6 +28,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
 import com.worth.ifs.BaseController;
+import com.worth.ifs.application.domain.SectionType;
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.ApplicationForm;
@@ -438,26 +439,27 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
         
-        SectionResource financeSection = sectionService.getFinanceSectionForCompetition(application.getCompetition());
-        boolean hasFinanceSection = financeSection != null;
+        List<SectionResource> financeSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
+        boolean hasFinanceSection;
         Long financeSectionId;
-        if(hasFinanceSection) {
-        	financeSectionId = financeSection.getId();
-        } else {
+        if(financeSections.isEmpty()) {
+        	hasFinanceSection = false;
         	financeSectionId = null;
+        } else {
+        	hasFinanceSection = true;
+        	financeSectionId = financeSections.get(0).getId();
         }
         
         model.addAttribute("hasFinanceSection", hasFinanceSection);
         model.addAttribute("financeSectionId", financeSectionId);
         
-        SectionResource eachCollaboratorFinanceSection = sectionService.getEachCollaboratorFinanceSectionForCompetition(application.getCompetition());
+        List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.ORGANISATION_FINANCES);
         Long eachCollaboratorFinanceSectionId;
-        if(eachCollaboratorFinanceSection != null) {
-        	eachCollaboratorFinanceSectionId = eachCollaboratorFinanceSection.getId();
-        } else {
+        if(eachOrganisationFinanceSections.isEmpty()) {
         	eachCollaboratorFinanceSectionId = null;
-        }
-        
+        } else {
+        	eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
+        }        
         model.addAttribute("eachCollaboratorFinanceSectionId", eachCollaboratorFinanceSectionId);
     }
 
@@ -518,11 +520,10 @@ public abstract class AbstractApplicationController extends BaseController {
                                                         Model model, ApplicationForm form) {
         model.addAttribute("currentUser", user);
         
-        SectionResource financeSection = sectionService.getFinanceSectionForCompetition(competitionId);
-        boolean hasFinanceSection = financeSection != null;
+        List<SectionResource> financeSections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FINANCE);
+        boolean hasFinanceSection = !financeSections.isEmpty();
         
         if(hasFinanceSection) {
-        
 	        financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
 	        if(!form.isAdminMode()){
 	            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);

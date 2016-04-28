@@ -6,6 +6,7 @@ import com.worth.ifs.application.builder.SectionResourceBuilder;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.domain.SectionType;
 import com.worth.ifs.application.finance.model.UserRole;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.finance.service.FinanceService;
@@ -407,7 +408,8 @@ public class BaseUnitTest {
                     when(sectionService.getById(s.getId())).thenReturn(s);
                 }
         );
-        when(sectionService.getFinanceSectionForCompetition(1L)).thenReturn(sectionResource7);
+        when(sectionService.getSectionsForCompetitionByType(1L,SectionType.FINANCE)).thenReturn(Arrays.asList(sectionResource7));
+        when(sectionService.getSectionsForCompetitionByType(1L,SectionType.ORGANISATION_FINANCES)).thenReturn(Arrays.asList(sectionResource6));
 
         ArrayList<QuestionResource> questionList = new ArrayList<>();
         for (SectionResource section : sectionResources) {

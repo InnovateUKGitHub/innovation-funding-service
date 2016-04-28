@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.domain.SectionType;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 
@@ -30,6 +31,5 @@ public interface SectionService {
     Future<SectionResource> getNextSection(Optional<SectionResource> sectionId);
     SectionResource getSectionByQuestionId(Long questionId);
     Set<Long> getQuestionsForSectionAndSubsections(Long sectionId);
-	SectionResource getFinanceSectionForCompetition(Long competitionId);
-	SectionResource getEachCollaboratorFinanceSectionForCompetition(Long competitionId);
+	List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type);
 }

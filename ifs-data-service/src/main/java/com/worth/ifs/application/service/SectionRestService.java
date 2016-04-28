@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.domain.SectionType;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
@@ -26,6 +27,5 @@ public interface SectionRestService {
     Future<RestResult<SectionResource>> getNextSection(Long sectionId);
     RestResult<SectionResource> getSectionByQuestionId(Long questionId);
     RestResult<Set<Long>> getQuestionsForSectionAndSubsections(Long sectionId);
-    RestResult<SectionResource> getFinanceSectionForCompetition(Long competitionId);
-    RestResult<SectionResource> getEachCollaboratorFinanceSectionForCompetition(Long competitionId);
+    RestResult<List<SectionResource>> getSectionsByCompetitionIdAndType(Long competitionId, SectionType type);
 }
