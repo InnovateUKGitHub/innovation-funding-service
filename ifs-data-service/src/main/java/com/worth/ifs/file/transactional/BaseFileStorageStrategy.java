@@ -107,7 +107,7 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
     }
 
     @Override
-    public final List<Pair<Long, Pair<List<String>, String>>> allWithIds() {
+    public List<Pair<Long, Pair<List<String>, String>>> allWithIds() {
         return all().stream().map(path -> Pair.of(fileEntryIdFromPath(path).getSuccessObject(), path)).collect(toList());
     }
 

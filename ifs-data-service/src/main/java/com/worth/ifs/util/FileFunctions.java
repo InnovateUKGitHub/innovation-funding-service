@@ -2,9 +2,12 @@ package com.worth.ifs.util;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
+import static java.util.Arrays.asList;
 
 /**
  * A collection of helpful methods for dealing with Files and Filesystem concerns
@@ -31,6 +34,13 @@ public final class FileFunctions {
 
         return pathElements.stream().reduce("",
                 (pathSoFar, nextPathSegment) -> pathSoFar + (!pathSoFar.isEmpty() ? separator : "") + nextPathSegment);
+    }
+
+    public static final List<String> pathStringToPathElements(final String pathString){
+        if (pathString == null || pathString.isEmpty()){
+            return new ArrayList<>();
+        }
+        return asList(pathString.split(Pattern.quote(File.separator)));
     }
 
     /**
