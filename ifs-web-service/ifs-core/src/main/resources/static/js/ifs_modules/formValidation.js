@@ -163,7 +163,7 @@ IFS.formValidation = (function(){
         },
         checkNumber : function(field){
             //https://api.jquery.com/jQuery.isNumeric/
-            if(!jQuery.isNumeric(field.val())){
+            if((!jQuery.isNumeric(field.val())) && (field.val().length > 0)){
               IFS.formValidation.setInvalid(field,s.number.messageInvalid);
               return false;
             }
