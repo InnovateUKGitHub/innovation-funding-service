@@ -141,7 +141,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals("Started", result.getSuccessObject().getContent().get(0).getStatus());
         assertEquals("A novel solution to an old problem", result.getSuccessObject().getContent().get(0).getName());
         assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
-        assertEquals(Integer.valueOf(36), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
+        assertEquals(Integer.valueOf(33), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
     }
     @Test
     public void testApplicationSummariesByCompetitionIdSortedId() throws Exception {
@@ -156,7 +156,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals("Started", result.getSuccessObject().getContent().get(0).getStatus());
         assertEquals("A novel solution to an old problem", result.getSuccessObject().getContent().get(0).getName());
         assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
-        assertEquals(Integer.valueOf(36), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
+        assertEquals(Integer.valueOf(33), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
     }
     @Test
     public void testApplicationSummariesByCompetitionIdSortedName() throws Exception {
@@ -193,7 +193,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(1, result.getSuccessObject().getTotalElements());
         assertEquals(1, result.getSuccessObject().getTotalPages());
         assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getContent().get(0).getId());
-        assertEquals(Integer.valueOf(36), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
+        assertEquals(Integer.valueOf(33), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
         assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
     }
 
