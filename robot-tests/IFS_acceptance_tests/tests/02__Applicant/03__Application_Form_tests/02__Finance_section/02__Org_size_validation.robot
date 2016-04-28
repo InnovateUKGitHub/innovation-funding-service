@@ -53,7 +53,7 @@ Large organisation can choose up to 50% funding
 
 Any one of the Organisation Size should be selected
     [Documentation]    INFUND-2643
-    [Tags]    Organisation    Funding    Finance    pending
+    [Tags]    Organisation    Funding    Finance    Pending
     When the applicant doesn't select any of the option
     And The user clicks the button/link    name=mark_section_as_complete
     Then the user should see an error    Funding level allowed depends on organisation size. Please select your organisation size.
