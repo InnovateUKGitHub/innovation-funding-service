@@ -47,7 +47,7 @@ public interface SectionService {
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<Long>> getIncompleteSections(final Long applicationId);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    @PostAuthorize("hasPermission(filterObject, 'READ')")
 	ServiceResult<List<SectionResource>> getSectionsByCompetitionIdAndType(Long competitionId, SectionType type);
     
     /**
