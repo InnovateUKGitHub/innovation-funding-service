@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.domain.SectionType;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;
@@ -46,8 +47,8 @@ public interface SectionService {
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<Long>> getIncompleteSections(final Long applicationId);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
-	ServiceResult<SectionResource> getFinanceSectionByCompetitionId(Long competitionId);
+    @PostAuthorize("hasPermission(filterObject, 'READ')")
+	ServiceResult<List<SectionResource>> getSectionsByCompetitionIdAndType(Long competitionId, SectionType type);
     
     /**
      * get questions for the sections and filter out the ones that have marked as completed turned on
