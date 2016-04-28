@@ -15,10 +15,8 @@ public class SubContractingCost implements CostItem {
     private String country;
     private String name;
     private String role;
-    private CostType costType;
 
-    public SubContractingCost() {
-        this.costType = CostType.SUBCONTRACTING_COSTS;
+    public SubContractingCost(){
     }
 
     public SubContractingCost(Long id, BigDecimal cost, String country, String name, String role) {
@@ -69,6 +67,6 @@ public class SubContractingCost implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return CostType.SUBCONTRACTING_COSTS;
     }
 }

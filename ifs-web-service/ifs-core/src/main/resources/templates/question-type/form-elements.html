@@ -25,7 +25,7 @@
 <div th:fragment="form-hint (hint)">
     <span class="form-hint"
          th:if="${hint}"
-         safe:utext="${hint}"
+         ifs:utext="${hint}"
             />
 </div>
 <!-- ========================= Form Guidance =========================== -->
@@ -35,7 +35,7 @@
         <summary>
             <span class="summary" th:text="${question.getGuidanceQuestion()}"/>
         </summary>
-        <div class="panel-indent" safe:utext="${question.getGuidanceAnswer()}">
+        <div class="panel-indent" ifs:utext="${question.getGuidanceAnswer()}">
         </div>
     </details>
 </div>
@@ -189,13 +189,15 @@
               >
 		</textarea>
 </div>
-<div th:fragment="form-finance-textarea (type, id, name, value,readonly)">
+<div th:fragment="form-finance-textarea (type, id, name, value,readonly,required)">
+
 		<textarea  class="form-control"
                 th:id="${'cost-'+ type + '-'+id+'-'+name}"
                 th:name="${type +'-'+name+'-'+question.id+'-' + id}"
                 th:text="${value}"
                 rows="4"
                 th:readonly="${readonly}"
+                th:required="${required}"
                 >
 		</textarea>
 </div>

@@ -1,8 +1,6 @@
 package com.worth.ifs.commons.service;
 
 import com.worth.ifs.address.resource.AddressResource;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.QuestionStatusResource;
@@ -14,14 +12,12 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.CostFieldResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
-import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
-import com.worth.ifs.user.domain.ProcessRole;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.core.ParameterizedTypeReference;
 
@@ -59,8 +55,8 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<ApplicationResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<ProcessRole>> processRoleListType() {
-        return new ParameterizedTypeReference<List<ProcessRole>>() {};
+    public static ParameterizedTypeReference<List<ProcessRoleResource>> processRoleResourceListType() {
+        return new ParameterizedTypeReference<List<ProcessRoleResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<UserResource>> userListType() {

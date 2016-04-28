@@ -3,6 +3,9 @@ package com.worth.ifs.user.transactional;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.mapper.ProcessRoleMapper;
+import com.worth.ifs.user.resource.ProcessRoleResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,6 +17,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.user.domain.UserRoleType.COLLABORATOR;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -22,34 +26,43 @@ import static com.worth.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class UsersRolesServiceImpl extends BaseTransactionalService implements UsersRolesService {
 
+    @Autowired
+    private ProcessRoleMapper processRoleMapper;
+
     @Override
-    public ServiceResult<ProcessRole> getProcessRoleById(Long id) {
-        return super.getProcessRole(id);
+    public ServiceResult<ProcessRoleResource> getProcessRoleById(Long id) {
+        return super.getProcessRole(id).andOnSuccessReturn(processRoleMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<List<ProcessRole>> getProcessRolesByApplicationId(Long applicationId) {
-        return find(processRoleRepository.findByApplicationId(applicationId), notFoundError(ProcessRole.class, "Application", applicationId));
+    public ServiceResult<List<ProcessRoleResource>> getProcessRolesByApplicationId(Long applicationId) {
+        return serviceSuccess(processRolesToResources(processRoleRepository.findByApplicationId(applicationId)));
     }
 
     @Override
-    public ServiceResult<ProcessRole> getProcessRoleByUserIdAndApplicationId(Long userId, Long applicationId) {
-        return find(processRoleRepository.findByUserIdAndApplicationId(userId, applicationId), notFoundError(ProcessRole.class, "User", userId, "Application", applicationId));
+    public ServiceResult<ProcessRoleResource> getProcessRoleByUserIdAndApplicationId(Long userId, Long applicationId) {
+        return find(processRoleRepository.findByUserIdAndApplicationId(userId, applicationId), notFoundError(ProcessRole.class, "User", userId, "Application", applicationId)).andOnSuccessReturn(processRoleMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<List<ProcessRole>> getProcessRolesByUserId(Long userId) {
-        return find(processRoleRepository.findByUserId(userId), notFoundError(ProcessRole.class, "User", userId));
+    public ServiceResult<List<ProcessRoleResource>> getProcessRolesByUserId(Long userId) {
+        return serviceSuccess(processRolesToResources(processRoleRepository.findByUserId(userId)));
     }
 
     @Override
-    public ServiceResult<List<ProcessRole>> getAssignableProcessRolesByApplicationId(Long applicationId) {
-
+    public ServiceResult<List<ProcessRoleResource>> getAssignableProcessRolesByApplicationId(Long applicationId) {
         List<ProcessRole> processRoles = processRoleRepository.findByApplicationId(applicationId);
-        Set<ProcessRole> assignableProcessRoles = processRoles.stream()
+
+        Set<ProcessRoleResource> assignableProcessRoleResources = processRoles.stream()
                 .filter(r -> LEADAPPLICANT.getName().equals(r.getRole().getName()) ||
                         COLLABORATOR.getName().equals(r.getRole().getName()))
+                .map(processRoleMapper::mapToResource)
                 .collect(Collectors.toSet());
-        return serviceSuccess(new ArrayList<>(assignableProcessRoles));
+
+        return serviceSuccess(new ArrayList<>(assignableProcessRoleResources));
+    }
+
+    private List<ProcessRoleResource> processRolesToResources(final List<ProcessRole> processRoles) {
+        return simpleMap(processRoles, processRoleMapper::mapToResource);
     }
 }

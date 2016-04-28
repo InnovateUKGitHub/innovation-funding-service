@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.finance.service.CostService;
 import com.worth.ifs.application.form.ApplicationForm;
+import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -20,7 +21,7 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
 import com.worth.ifs.profiling.ProfileExecution;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.util.AjaxResult;
 import com.worth.ifs.util.MessageUtil;
@@ -96,7 +97,7 @@ public class ApplicationFormController extends AbstractApplicationController {
         SectionResource section = sectionService.getSectionByQuestionId(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
         this.addFormAttributes(application, competition, Optional.ofNullable(section), user, model, form,
                 Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
@@ -115,7 +116,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                 @PathVariable("formInputId") final Long formInputId,
                                 HttpServletRequest request) {
         final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
         return getPdfFile(resource);
     }
@@ -168,7 +169,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                    UserResource user, Model model,
                                    ApplicationForm form, Optional<QuestionResource> question,
                                    Optional<List<FormInputResource>> formInputs,
-                                   List<ProcessRole> userApplicationRoles){
+                                   List<ProcessRoleResource> userApplicationRoles){
         addApplicationDetails(application, competition, user.getId(), section, question.map(q -> q.getId()), model, form, userApplicationRoles);
         addNavigation(question.orElse(null), application.getId(), model);
         Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
@@ -200,7 +201,7 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         // Check if the request is to just open edit view or to save
         if(params.containsKey(EDIT_QUESTION)){
-            ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+            ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
             if (processRole != null) {
                 questionService.markAsInComplete(questionId, applicationId, processRole.getId());
             } else {
@@ -212,7 +213,7 @@ public class ApplicationFormController extends AbstractApplicationController {
             SectionResource section = sectionService.getSectionByQuestionId(questionId);
             ApplicationResource application = applicationService.getById(applicationId);
             CompetitionResource competition = competitionService.getById(application.getCompetition());
-            List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+            List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
             List<FormInputResource> formInputs = formInputService.findByQuestion(questionId);
             /* Start save action */
             saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult);
@@ -231,6 +232,8 @@ public class ApplicationFormController extends AbstractApplicationController {
             if (bindingResult.hasErrors()) {
                 this.addFormAttributes(application, competition, Optional.ofNullable(section), user, model, form,
                         Optional.ofNullable(question), Optional.ofNullable(formInputs), userApplicationRoles);
+                model.addAttribute("currentUser", user);
+                addUserDetails(model, application, user.getId());
                 return APPLICATION_FORM;
             } else {
                 return getRedirectUrl(request, applicationId);
@@ -351,8 +354,6 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
-        ApplicationResource applicationResource = applicationService.getById(applicationId);
-        organisationService.getUserOrganisation(applicationResource, user.getId());
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, user.getId(), questionId, type);
 
@@ -382,7 +383,7 @@ public class ApplicationFormController extends AbstractApplicationController {
                                               HttpServletResponse response,
                                               BindingResult bindingResult ) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRole processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
 
         // Check if action is mark as complete.  Check empty values if so, ignore otherwise. (INFUND-1222)
         Map<String, String[]> params = request.getParameterMap();
@@ -399,7 +400,10 @@ public class ApplicationFormController extends AbstractApplicationController {
 
         params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s   => value %s", key, value[0])));
 
-        setApplicationDetails(application, form.getApplication(), bindingResult);
+        new ApplicationStartDateValidator().validate(request, bindingResult);
+        
+        setApplicationDetails(application, form.getApplication());
+
         Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
         if(userIsLeadApplicant) {
             applicationService.save(application);
@@ -700,16 +704,19 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     /**
      * Set the submitted values, if not null. If they are null, then probably the form field was not in the current html form.
+     * @param application 
+     * @param updatedApplication 
      */
-    private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication, BindingResult bindingResult) {
+    private void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
         if (updatedApplication == null) {
             return;
         }
-
+        
         if (updatedApplication.getName() != null) {
             LOG.debug("setApplicationDetails: " + updatedApplication.getName());
             application.setName(updatedApplication.getName());
         }
+        
         if (updatedApplication.getStartDate() != null) {
             LOG.debug("setApplicationDetails date 123: " + updatedApplication.getStartDate().toString());
             if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)

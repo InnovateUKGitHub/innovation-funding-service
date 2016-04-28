@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <div th:fragment="your_finance" th:remove="tag">
     <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}"/>
-    <p safe:utext="${question.description}"/>
+    <p ifs:utext="${question.description}"/>
     <div class="academic">
         <input type="hidden" name="questionId" value="${question.id}"/>
         <input type="hidden" name="applicationFinanceId" value="${applicationFinance.id}"/>

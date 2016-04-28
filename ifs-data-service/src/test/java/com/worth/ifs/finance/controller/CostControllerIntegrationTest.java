@@ -124,17 +124,17 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         assertTrue(messages.getErrors().stream()
                 .filter(e -> "labourDays".equals(e.getErrorKey()))
-                .filter(e -> "must be greater than or equal to 0".equals(e.getErrorMessage()))
+                .filter(e -> "This field should be 0 or higher".equals(e.getErrorMessage()))
                 .findAny().isPresent());
 
         assertTrue(messages.getErrors().stream()
                 .filter(e -> "role".equals(e.getErrorKey()))
-                .filter(e -> "may not be empty".equals(e.getErrorMessage()))
+                .filter(e -> "This field cannot be left blank".equals(e.getErrorMessage()))
                 .findAny().isPresent());
 
         assertTrue(messages.getErrors().stream()
                 .filter(e -> "grossAnnualSalary".equals(e.getErrorKey()))
-                .filter(e -> "must be greater than or equal to 0".equals(e.getErrorMessage()))
+                .filter(e -> "This field should be 0 or higher".equals(e.getErrorMessage()))
                 .findAny().isPresent());
     }
 
@@ -172,17 +172,17 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         assertTrue(messages.getErrors().stream()
                 .filter(e -> "item".equals(e.getErrorKey()))
-                .filter(e -> "may not be empty".equals(e.getErrorMessage()))
+                .filter(e -> "This field cannot be left blank".equals(e.getErrorMessage()))
                 .findAny().isPresent());
 
         assertTrue(messages.getErrors().stream()
                 .filter(e -> "quantity".equals(e.getErrorKey()))
-                .filter(e -> "must be greater than or equal to 1".equals(e.getErrorMessage()))
+                .filter(e -> "This field should be 1 or higher".equals(e.getErrorMessage()))
                 .findAny().isPresent());
 
         assertTrue(messages.getErrors().stream()
                 .filter(e -> "cost".equals(e.getErrorKey()))
-                .filter(e -> "must be greater than or equal to 1".equals(e.getErrorMessage()))
+                .filter(e -> "This field should be 1 or higher".equals(e.getErrorMessage()))
                 .findAny().isPresent());
     }
 
