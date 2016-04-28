@@ -1,7 +1,6 @@
 package com.worth.ifs.finance.resource.cost;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
@@ -11,11 +10,8 @@ import java.math.BigDecimal;
 public class OtherFunding implements CostItem {
     private Long id;
 
-    @NotBlank
-    private String otherPublicFunding; // the date
-    @NotBlank
+    private String otherPublicFunding;
     private String fundingSource;
-    @NotBlank
     private String securedDate;
 
     @NotNull
