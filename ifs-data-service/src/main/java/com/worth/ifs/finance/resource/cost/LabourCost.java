@@ -36,10 +36,9 @@ public class LabourCost implements CostItem {
     private BigDecimal rate; // calculated field, no validation
     private String description;
     private BigDecimal total; // calculated field, no validation
-    private CostType costType;
 
     public LabourCost() {
-        this.costType = CostType.LABOUR;
+
     }
 
     public LabourCost(Long id, String name, String role, BigDecimal grossAnnualSalary, Integer labourDays, String description) {
@@ -152,7 +151,7 @@ public class LabourCost implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return CostType.LABOUR;
     }
 
     public void setDescription(String description) {
