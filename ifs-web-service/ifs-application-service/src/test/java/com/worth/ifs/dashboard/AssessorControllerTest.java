@@ -47,15 +47,11 @@ public class AssessorControllerTest  extends BaseUnitTest {
      public void testDashboardWithAssessorLogin() throws Exception {
         this.loginUser(assessor);
 
-        List<Competition> competitions = asList(competition);
-
-        List<CompetitionResource> competitionResources = asList(competitionResource);
-
         Map<Long, Integer> competitionsTotalAssignedAssessments = new HashMap<>();
-        competitionsTotalAssignedAssessments.put(competition.getId(), 3);
+        competitionsTotalAssignedAssessments.put(competitionResource.getId(), 3);
 
         Map<Long, Integer> competitionsSubmittedAssessments = new HashMap<>();
-        competitionsSubmittedAssessments.put(competition.getId(), 1);
+        competitionsSubmittedAssessments.put(competitionResource.getId(), 1);
 
         when(competitionService.getAllCompetitions()).thenReturn(competitionResources);
 
@@ -71,38 +67,32 @@ public class AssessorControllerTest  extends BaseUnitTest {
     public void testDashboardWithApplicantLogin() throws Exception {
         this.loginUser(applicant);
 
-        List<Competition> competitions = new ArrayList<>();
-        competitions.add(competition);
-
         Map<Long, Integer> competitionsTotalAssignedAssessments = new HashMap<>();
-        competitionsTotalAssignedAssessments.put(competition.getId(), 3);
+        competitionsTotalAssignedAssessments.put(competitionResource.getId(), 3);
 
         Map<Long, Integer> competitionsSubmittedAssessments = new HashMap<>();
-        competitionsSubmittedAssessments.put(competition.getId(), 1);
+        competitionsSubmittedAssessments.put(competitionResource.getId(), 1);
 
         mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isForbidden())
                 .andExpect(view().name("assessor-dashboard"))
-                .andExpect(model().attribute("competitionsForAssessment", competitions))
+                .andExpect(model().attribute("competitionsForAssessment", competitionResources))
                 .andExpect(model().attribute("totalAssignedAssessments", competitionsTotalAssignedAssessments))
                 .andExpect(model().attribute("submittedAssessments", competitionsSubmittedAssessments));
     }
 
     @Ignore
     public void testDashboardWithoutLogin() throws Exception {
-        List<Competition> competitions = new ArrayList<>();
-        competitions.add(competition);
-
         Map<Long, Integer> competitionsTotalAssignedAssessments = new HashMap<>();
-        competitionsTotalAssignedAssessments.put(competition.getId(), 3);
+        competitionsTotalAssignedAssessments.put(competitionResource.getId(), 3);
 
         Map<Long, Integer> competitionsSubmittedAssessments = new HashMap<>();
-        competitionsSubmittedAssessments.put(competition.getId(), 1);
+        competitionsSubmittedAssessments.put(competitionResource.getId(), 1);
 
         mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isForbidden())
                 .andExpect(view().name("assessor-dashboard"))
-                .andExpect(model().attribute("competitionsForAssessment", competitions))
+                .andExpect(model().attribute("competitionsForAssessment", competitionResources))
                 .andExpect(model().attribute("totalAssignedAssessments", competitionsTotalAssignedAssessments))
                 .andExpect(model().attribute("submittedAssessments", competitionsSubmittedAssessments));
     }

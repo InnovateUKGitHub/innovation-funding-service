@@ -1,6 +1,7 @@
 package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.BuilderAmendFunctions;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.AssessorFeedback;
@@ -12,8 +13,10 @@ import com.worth.ifs.assessment.dto.Score;
 import com.worth.ifs.assessment.workflow.AssessmentWorkflowEventHandler;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.user.builder.ProcessRoleResourceBuilder;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.transactional.UsersRolesService;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Test;
@@ -23,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
+import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
 import static com.worth.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -31,6 +35,7 @@ import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.domain.UserRoleType.ASSESSOR;
 import static java.util.Collections.emptyList;
@@ -226,8 +231,8 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
     @Test
     public void testAcceptAssessmentInvitation() {
 
-        Competition competititon = newCompetition().build();
-        Application application = newApplication().withCompetition(competititon).build();
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
         ProcessRole processRole = newProcessRole().withApplication(application).build();
         Assessment assessment = newAssessment().withProcessRole(processRole).build();
 
@@ -242,8 +247,8 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
     @Test
     public void testRejectAssessmentInvitation() {
 
-        Competition competititon = newCompetition().build();
-        Application application = newApplication().withCompetition(competititon).build();
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
         ProcessRole processRole = newProcessRole().withApplication(application).build();
         Assessment assessment = newAssessment().withProcessRole(processRole).build();
 
@@ -259,8 +264,8 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
     @Test
     public void testSubmitAssessments() {
 
-        Competition competititon = newCompetition().build();
-        Application application = newApplication().withCompetition(competititon).build();
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
         ProcessRole processRole = newProcessRole().withApplication(application).build();
         Assessment assessment1 = newAssessment().withProcessRole(processRole).build();
         Assessment assessment2 = newAssessment().withProcessRole(processRole).build();
@@ -277,12 +282,13 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
     @Test
     public void testSubmitAssessment() {
 
-        Competition competititon = newCompetition().build();
-        Application application = newApplication().withCompetition(competititon).build();
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withCompetition(competition).build();
         ProcessRole processRole = newProcessRole().withApplication(application).build();
+        ProcessRoleResource processRoleResource = newProcessRoleResource().with(id(processRole.getId())).withApplicationId(application.getId()).build();
         Assessment assessment = newAssessment().withProcessRole(processRole).build();
 
-        when(usersRolesServiceMock.getProcessRoleByUserIdAndApplicationId(123L, 456L)).thenReturn(serviceSuccess(processRole));
+        when(usersRolesServiceMock.getProcessRoleByUserIdAndApplicationId(123L, 456L)).thenReturn(serviceSuccess(processRoleResource));
 
         when(assessmentRepositoryMock.findOneByProcessRoleId(processRole.getId())).thenReturn(assessment);
         ServiceResult<Void> result = service.submitAssessment(123L, 456L, "a suitable value", "suitable feedback", "some comments");

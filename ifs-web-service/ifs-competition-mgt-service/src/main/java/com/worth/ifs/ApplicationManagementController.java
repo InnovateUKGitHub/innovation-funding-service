@@ -14,8 +14,8 @@ import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.resource.FormInputResponseResource;
 import com.worth.ifs.form.service.FormInputResponseService;
 import com.worth.ifs.form.service.FormInputRestService;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;
 import org.apache.commons.logging.Log;
@@ -98,7 +98,7 @@ public class ApplicationManagementController extends AbstractApplicationControll
             @PathVariable("formInputId") final Long formInputId,
             HttpServletRequest request) throws ExecutionException, InterruptedException {
         final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRole processRole;
+        ProcessRoleResource processRole;
         if(user.hasRole(UserRoleType.COMP_ADMIN)){
             long processRoleId = formInputResponseService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();

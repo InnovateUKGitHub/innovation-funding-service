@@ -4,8 +4,8 @@ import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.application.service.Futures;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.application.UserApplicationRole;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,17 +38,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = call(simpleMap(application.getProcessRoles(), id -> processRoleService.getById(id)));
-        return userApplicationRoles.stream().anyMatch(uar -> uar.getRole().getName()
+        List<ProcessRoleResource> userApplicationRoles = call(simpleMap(application.getProcessRoles(), id -> processRoleService.getById(id)));
+        return userApplicationRoles.stream().anyMatch(uar -> uar.getRoleName()
                 .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().getId().equals(userId));
 
     }
 
     @Override
-    public ProcessRole getLeadApplicantProcessRoleOrNull(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = call(simpleMap(application.getProcessRoles(), id -> processRoleService.getById(id)));
-        for(final ProcessRole processRole : userApplicationRoles){
-            if(processRole.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())){
+    public ProcessRoleResource getLeadApplicantProcessRoleOrNull(ApplicationResource application) {
+        List<ProcessRoleResource> userApplicationRoles = call(simpleMap(application.getProcessRoles(), id -> processRoleService.getById(id)));
+        for(final ProcessRoleResource processRole : userApplicationRoles){
+            if(processRole.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())){
                 return processRole;
             }
         }
@@ -57,22 +57,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Set<User> getAssignableUsers(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = Futures.call(application.getProcessRoles().stream()
+        List<ProcessRoleResource> userApplicationRoles = Futures.call(application.getProcessRoles().stream()
                 .map(id -> processRoleService.getById(id))
                 .collect(Collectors.toList()));
         return userApplicationRoles.stream()
-                .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
-                .map(ProcessRole::getUser)
+                .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) || uar.getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
+                .map(ProcessRoleResource::getUser)
                 .collect(Collectors.toSet());
     }
 
     @Override
     public Set<User> getApplicationUsers(ApplicationResource application) {
-        List<ProcessRole> userApplicationRoles = Futures.call(application.getProcessRoles().stream()
+        List<ProcessRoleResource> userApplicationRoles = Futures.call(application.getProcessRoles().stream()
             .map(id -> processRoleService.getById(id))
             .collect(Collectors.toList())); 
         return userApplicationRoles.stream()
-                .map(ProcessRole::getUser)
+                .map(ProcessRoleResource::getUser)
                 .collect(Collectors.toSet());
     }
 

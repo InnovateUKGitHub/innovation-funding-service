@@ -5,13 +5,15 @@ import com.worth.ifs.application.finance.model.AcademicFinanceFormField;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.finance.view.FinanceModelManager;
 import com.worth.ifs.application.form.Form;
-import com.worth.ifs.user.service.ProcessRoleService;
+import com.worth.ifs.application.service.OrganisationService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.AcademicCost;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
+import com.worth.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -26,14 +28,18 @@ public class JESFinanceModelManager implements FinanceModelManager {
     ProcessRoleService processRoleService;
 
     @Autowired
+    OrganisationService organisationService;
+
+    @Autowired
     FinanceService financeService;
 
     @Override
     public void addOrganisationFinanceDetails(Model model, Long applicationId, Long userId, Form form) {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
 
-        ProcessRole processRole = processRoleService.findProcessRole(userId, applicationId);
-        String organisationName = processRole.getOrganisation().getName();
+        ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
+        OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisation());
+
         Map<CostType, CostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
         AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
         if(applicationFinanceResource.getFinanceFileEntry() != null) {
@@ -45,7 +51,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
             );
         }
 
-        model.addAttribute("title", organisationName + " finances");
+        model.addAttribute("title", organisationResource.getName() + " finances");
         model.addAttribute("applicationFinanceId", applicationFinanceResource.getId());
         model.addAttribute("financeView", "academic-finance");
         model.addAttribute("academicFinance", academicFinance);

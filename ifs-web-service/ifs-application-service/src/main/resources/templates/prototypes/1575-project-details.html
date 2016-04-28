@@ -19,7 +19,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project details'})" th:remove="tag" />
 	
-	<p>Please supply the following details about your project and the team so that we can conduct the necessary finance checks before the project begins.</p>
+	<p>Please supply the following details about your project and the team. We need these to carry out financial checks before the project begins.</p>
 
 	<h2 class="heading-medium">Project details</h2>
 
@@ -78,7 +78,7 @@
 
 	<h2 class="heading-medium">Finance contacts</h2>
 
-	<p>Each partner is required to provide a finance contact who will be sent any queries from Innovate UK around project finances.</p>
+	<p>Each partner must provide a finance contact who will be sent any queries from us around project finances.</p>
 
 	<table>
 		<thead>
@@ -127,10 +127,10 @@
 		</tbody>
 	</table>
 
-	<p class="extra-margin">Any new team members invited at this stage are required to join this project before this section can be marked as complete.</p>
+	<p class="extra-margin">Any new team members invited at this stage must join the project before this section can be marked as complete.</p>
 
 	<div class="extra-margin">
-		<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1588-project-status?user=nonLead?stage=level2' :'/prototypes/1588-project-status?stage=level2'}" class="button">Save and return to project setup status</a>
+		<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1588-project-status?user=nonLead?stage=level2' :'/prototypes/1588-project-status?stage=level2'}" class="button">Save and return to project setup</a>
 	</div>
 
 	

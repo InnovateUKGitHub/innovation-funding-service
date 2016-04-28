@@ -8,6 +8,7 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.finance.service.CostRestService;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -37,24 +38,24 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Override
     public ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId) {
-        ProcessRole processRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
+        ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
 
         if(processRole.getOrganisation()!=null) {
-            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisation().getId()).getSuccessObjectOrThrowException();
+            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisation()).getSuccessObjectOrThrowException();
         }
         return null;
     }
 
     @Override
     public ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId) {
-        ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
-        return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation().getId()).getSuccessObjectOrThrowException();
+        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
+        return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation()).getSuccessObjectOrThrowException();
     }
 
     @Override
     public ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId) {
-        ProcessRole userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
-        return applicationFinanceRestService.getFinanceDetails(applicationId, userApplicationRole.getOrganisation().getId()).getSuccessObjectOrThrowException();
+        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
+        return applicationFinanceRestService.getFinanceDetails(applicationId, userApplicationRole.getOrganisation()).getSuccessObjectOrThrowException();
     }
 
 

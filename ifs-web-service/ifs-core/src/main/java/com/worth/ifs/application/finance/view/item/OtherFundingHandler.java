@@ -7,6 +7,8 @@ import com.worth.ifs.finance.resource.cost.OtherFunding;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.worth.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
+
 /**
  * Handles the conversion of form fields to other funding item
  */
@@ -24,7 +26,7 @@ public class OtherFundingHandler extends CostHandler {
             if (fieldValue != null) {
                 switch (financeFormField.getCostName()) {
                     case "otherPublicFunding":
-                        fundingSource = "Other Funding";
+                        fundingSource = OTHER_FUNDING;
                         otherPublicFunding = fieldValue;
                         break;
                     case "fundingAmount":
