@@ -14,6 +14,7 @@ public class CapitalUsage implements CostItem {
     Long id;
     String name;
     @Min(0)
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     Integer deprecation;
     String description;
     String existing;
@@ -25,12 +26,11 @@ public class CapitalUsage implements CostItem {
     BigDecimal residualValue;
     @Min(0)
     @Max(100)
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     Integer utilisation;
-    CostType costType;
 
     public CapitalUsage() {
-        this.costType = CostType.CAPITAL_USAGE;
-        this.name = this.costType.getType();
+        this.name = getCostType().getType();
     }
 
     public CapitalUsage(Long id, Integer deprecation, String description, String existing,
@@ -103,6 +103,6 @@ public class CapitalUsage implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return CostType.CAPITAL_USAGE;
     }
 }

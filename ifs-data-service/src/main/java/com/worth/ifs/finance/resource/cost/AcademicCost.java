@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 public class AcademicCost implements CostItem {
     private Long id;
     private String name;
-    private CostType costType;
 
     @DecimalMin("0")
     private BigDecimal cost;
@@ -15,7 +14,6 @@ public class AcademicCost implements CostItem {
 
     public AcademicCost() {
     	// no-arg constructor
-        costType = CostType.ACADEMIC;
     }
 
     public AcademicCost(Long id, String name, BigDecimal cost, String item) {
