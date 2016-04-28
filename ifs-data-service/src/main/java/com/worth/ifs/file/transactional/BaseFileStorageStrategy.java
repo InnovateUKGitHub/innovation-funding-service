@@ -194,7 +194,7 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
 
             if (!fileToCreate.exists()) {
                 LOG.error("File " + targetFilename + " doesn't exist in target path " + targetFolder + ".  Cannot update one here.");
-                return serviceFailure(notFoundError(File.class));
+                return serviceFailure(notFoundError(FileEntry.class, targetFilename));
             }
 
             Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename), StandardCopyOption.REPLACE_EXISTING);
