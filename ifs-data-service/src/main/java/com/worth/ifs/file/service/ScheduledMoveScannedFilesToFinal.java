@@ -15,7 +15,7 @@ import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
 
 
 @Component
-public class ScheduledFileMoveFiles {
+public class ScheduledMoveScannedFilesToFinal {
 
 
     @Autowired
@@ -29,15 +29,18 @@ public class ScheduledFileMoveFiles {
 
     @Scheduled(fixedDelayString = "${ifs.data.service.file.storage.virus.scanning.scanned.move.delay.millis}")
     public void moveFiles() {
-        for (Pair<List<String>, String> temp : scannedFileStorageStrategy.getAll()) {
-            final ServiceResult<File> fileServiceResult = scannedFileStorageStrategy.fileEntryIdFromPath(temp).andOnSuccess(id -> {
-                final File fileToMove = new File(pathElementsToFile(temp.getKey()), temp.getValue());
-                return finalFileStorageStrategy.moveFile(id, fileToMove);
-            });
-            if (fileServiceResult.isFailure()){
-                // TODO
-            }
 
+    }
+
+    public static void moveAllFiles(final FileStorageStrategy from, final FileStorageStrategy to) {
+        for (Pair<List<String>, String> temp : from.getAll()) {
+            final ServiceResult<File> fileServiceResult = from.fileEntryIdFromPath(temp).andOnSuccess(id -> {
+                final File fileToMove = new File(pathElementsToFile(temp.getKey()), temp.getValue());
+                return to.moveFile(id, fileToMove);
+            });
+            if (fileServiceResult.isFailure()) {
+
+            }
         }
     }
 }
