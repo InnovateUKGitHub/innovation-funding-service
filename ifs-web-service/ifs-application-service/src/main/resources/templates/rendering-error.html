@@ -49,7 +49,7 @@
         )
     </p> */-->
 
-    <pre safe:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
+    <pre ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
         Stack trace will be printed here...
     </pre>
 

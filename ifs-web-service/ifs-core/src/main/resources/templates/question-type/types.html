@@ -160,7 +160,7 @@
 
     <!-- ===========================Form: empty / no question =========================== -->
     <div th:fragment="empty" th:remove="tag">
-        <div safe:utext="${question.getDescription()}" th:remove="tag" />
+        <div ifs:utext="${question.getDescription()}" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
     </div>
 
