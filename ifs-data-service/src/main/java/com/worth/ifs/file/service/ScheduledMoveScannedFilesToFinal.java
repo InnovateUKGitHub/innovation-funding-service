@@ -31,7 +31,7 @@ public class ScheduledMoveScannedFilesToFinal {
 
     @Scheduled(fixedDelayString = "${ifs.data.service.file.storage.virus.scanning.scanned.move.delay.millis}")
     public void moveFiles() {
-        final ServiceResult<List<File>> listServiceResult = moveAllFiles(scannedFileStorageStrategy, finalFileStorageStrategy);
+        final ServiceResult<List<File>> listServiceResult = moveAllFiles(scannedFileStorageStrategy, finalFileStorageStrategy, true);
         if (listServiceResult.isFailure()){
             LOG.error("Failed to move some files from scanned to final: " + listServiceResult.getFailure());
         }

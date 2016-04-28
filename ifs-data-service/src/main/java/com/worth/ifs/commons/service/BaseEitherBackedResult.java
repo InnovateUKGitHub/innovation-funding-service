@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static com.worth.ifs.util.CollectionFunctions.nullSafe;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a FailureType, and a
@@ -262,4 +264,8 @@ public abstract class BaseEitherBackedResult<T, FailureType> implements FailingO
         }
     }
 
+
+    public static <T, FailureType, R extends BaseEitherBackedResult<T, FailureType>> List<R> filterErrors(final List<R> results, Predicate<FailureType> errorsFilter){
+        return results.stream().filter(result -> result.isSuccess() ? true : errorsFilter.test(result.getFailure())).collect(toList());
+    }
 }

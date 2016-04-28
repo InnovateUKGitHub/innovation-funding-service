@@ -54,7 +54,7 @@ public abstract class BaseFileStorageStrategyTest {
     }
 
     @Test
-    public void testMoveNoFile(){
+    public void testMoveFileNoFileToMove() {
         BaseFileStorageStrategy strategy = createFileStorageStrategy("/tmp/path/to/containing/folder", "BaseFolder");
         final ServiceResult<File> fileServiceResult = strategy.moveFile(1L, new File("/does/not/exist"));
         assertTrue(fileServiceResult.isFailure());
@@ -76,13 +76,36 @@ public abstract class BaseFileStorageStrategyTest {
             // Try to move over the existing file.
             final ServiceResult<File> fileServiceResult = strategy.moveFile(fileEntry.getId(), tempFileWithContents);
             assertTrue(fileServiceResult.isFailure());
-            assertTrue(fileServiceResult.getFailure().is(FILES_DUPLICATE_FILE_CREATED));
+            assertTrue(fileServiceResult.getFailure().is(FILES_DUPLICATE_FILE_MOVED));
         } finally {
             FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
             tempFileWithContents.delete();
         }
     }
 
+    @Test
+    public void testMoveFileNoFileToMoveAndFileAlreadyExists() throws IOException {
+        // This is what we will get if another process has already moved the file.
+        // First create a file where we want to move to
+        final FileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
+        final FileEntry fileEntry = newFileEntry().with(id(123L)).build();
+        assertFalse(strategy.exists(fileEntry));
+        final File tempFileWithContents = File.createTempFile("tempfilefortesting", "suffix", tempFolder);
+        try {
+            // Create a file to try and move over.
+            ServiceResult<File> file = strategy.createFile(fileEntry, tempFileWithContents);
+            assertTrue(file.isSuccess());
+            assertTrue(file.getSuccessObject().exists());
+            // Try to move over the with the non existing file.
+            final ServiceResult<File> fileServiceResult = strategy.moveFile(fileEntry.getId(), new File("/does/not/exist"));
+            assertTrue(fileServiceResult.isFailure());
+            assertTrue(fileServiceResult.getFailure().is(FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT));
+        } finally {
+            FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
+            tempFileWithContents.delete();
+        }
+
+    }
 
 
     @Test
@@ -150,7 +173,6 @@ public abstract class BaseFileStorageStrategyTest {
     }
 
 
-
     protected void doTestMoveFile(FileEntry fileEntry, List<String> expectedFilePath) throws IOException {
 
         FileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
@@ -187,7 +209,7 @@ public abstract class BaseFileStorageStrategyTest {
             }
             final List<Pair<List<String>, String>> all = strategy.all();
             assertEquals(fileEntriesAndExpectedPaths.size(), all.size());
-            for (final Pair<FileEntry, Pair<List<String>, String>> fileEntryAndExpectedPath: fileEntriesAndExpectedPaths) {
+            for (final Pair<FileEntry, Pair<List<String>, String>> fileEntryAndExpectedPath : fileEntriesAndExpectedPaths) {
                 final Pair<List<String>, String> expectedPath = fileEntryAndExpectedPath.getValue();
                 assertTrue(all.contains(expectedPath));
             }

@@ -35,7 +35,7 @@ public class ScheduledMoveNotScannedFilesToScannedWhereNoAv {
     @Scheduled(fixedDelayString = "${ifs.data.service.file.storage.virus.scanning.scanned.move.delay.millis}")
     public void moveFiles() {
         if (!virusScanningEnabled) {
-            final ServiceResult<List<File>> listServiceResult = moveAllFiles(temporaryHoldingFileStorageStrategy, scannedFileStorageStrategy);
+            final ServiceResult<List<File>> listServiceResult = moveAllFiles(temporaryHoldingFileStorageStrategy, scannedFileStorageStrategy, true);
             if (listServiceResult.isFailure()) {
                 LOG.error("Failed to move some files from scanned to final: " + listServiceResult.getFailure());
             } else {
