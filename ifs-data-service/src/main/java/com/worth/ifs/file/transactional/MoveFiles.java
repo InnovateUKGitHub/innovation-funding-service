@@ -1,7 +1,6 @@
-package com.worth.ifs.file.service;
+package com.worth.ifs.file.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.file.transactional.FileStorageStrategy;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;

@@ -1,7 +1,6 @@
-package com.worth.ifs.file.service;
+package com.worth.ifs.file.transactional;
 
 import com.worth.ifs.commons.service.ServiceResult;
-import com.worth.ifs.file.transactional.FileStorageStrategy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.List;
 
-import static com.worth.ifs.file.service.MoveFiles.moveAllFiles;
+import static com.worth.ifs.file.transactional.MoveFiles.moveAllFiles;
 
 
 @Component
