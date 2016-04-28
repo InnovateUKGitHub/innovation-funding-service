@@ -25,7 +25,7 @@ Labour
     ...    INFUND-736
     ...
     ...    INFUND-1256
-    [Tags]    Finances    Pending
+    [Tags]    Finances
     #Pending due to Ithe remaining tasks of the NFUND-844
     sleep    5s
     Given the user navigates to the page    ${YOUR_FINANCES_URL}
@@ -44,7 +44,7 @@ Administration support costs
     ...    Acceptance tests for the Administration support costs section calculations
     ...
     ...    INFUND-736
-    [Tags]    Finances    Pending
+    [Tags]    Finances
     #Pending due to Ithe remaining tasks of the NFUND-844
     When the user clicks the button/link    jQuery=button:contains("Administration support costs")
     And user selects the admin costs    overheads-rateType-29-51    DEFAULT_PERCENTAGE
@@ -117,14 +117,13 @@ Other costs
 Other Funding
     [Documentation]    INFUND-438, INFUND-2257
     [Tags]    Finances
-    When the applicant can see the option to add another source of funding
-    And the applicant selects 'No' for other funding
-    And the applicant cannot see the option to add another source of funding
+    Given the applicant selects 'No' for other funding
+    Then the user should not see the element    jQuery=button:contains('Add another source of funding')
     And the applicant selects 'Yes' and fills two rows
     Then the total of the other funding should be correct
     And the applicant can leave the 'Your finances' page but the details are still saved
     And the applicant selects 'No' for other funding
-    And the applicant cannot see the option to add another source of funding
+    Then the user should not see the element    jQuery=button:contains('Add another source of funding')
     And the applicant cannot see the 'other funding' details
 
 *** Keywords ***
@@ -132,11 +131,12 @@ the Applicant fills in the Labour costs for two rows
     Click Element    jQuery=button:contains("Labour")
     Click Element    jQuery=button:contains('Add another role')
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
-    Clear Element Text    css=#cost-labour-1-workingDays
-    Input Text    css=#cost-labour-1-workingDays    230
+    Clear Element Text    css=#cost-labour-1-labourDaysYearly
+    Input Text    css=#cost-labour-1-labourDaysYearly    230
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
     Input Text    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
+    Focus    jQuery=button:contains('Add another role')
     Click Element    jQuery=button:contains('Add another role')
     Wait Until Page Contains Element    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     Input Text    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
@@ -145,9 +145,9 @@ the Applicant fills in the Labour costs for two rows
 
 the applicant edits the working days field
     #Click Element    css=[aria-controls="collapsible-1"]
-    Wait Until Element Is Visible    css=#cost-labour-1-workingDays
-    Clear Element Text    css=#cost-labour-1-workingDays
-    Input Text    css=#cost-labour-1-workingDays    250
+    Wait Until Element Is Visible    css=#cost-labour-1-labourDaysYearly
+    Clear Element Text    css=#cost-labour-1-labourDaysYearly
+    Input Text    css=#cost-labour-1-labourDaysYearly    250
     Focus    css=.app-submit-btn
     Sleep    200ms
 
@@ -158,6 +158,7 @@ the Applicant fills the Materials fields
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     Input Text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
     input text    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
+    Focus    jQuery=button:contains('Add another materials cost')
     Click Element    jQuery=button:contains('Add another materials cost')
     Wait Until Page Contains Element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Input Text    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
@@ -221,12 +222,6 @@ the applicant adds one row for the other costs
     Mouse Out    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     focus    css=.app-submit-btn
 
-the applicant can see the option to add another source of funding
-    Element Should Be Visible    jQuery=button:contains('Add another source of funding')
-
-the applicant cannot see the option to add another source of funding
-    Element Should Not Be Visible    jQuery=button:contains('Add another source of funding')
-
 the user reloads the page
     Execute Javascript    jQuery('form').attr('data-test','true');
     Reload page
@@ -259,6 +254,7 @@ The applicant selects 'Yes' and fills two rows
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
     Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
+    Focus    jQuery=button:contains('Add another source of funding')
     Click Element    jQuery=button:contains('Add another source of funding')
     Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     Click Element    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
