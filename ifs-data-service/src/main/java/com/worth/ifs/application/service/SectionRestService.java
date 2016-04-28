@@ -28,4 +28,5 @@ public interface SectionRestService {
     RestResult<SectionResource> getSectionByQuestionId(Long questionId);
     RestResult<Set<Long>> getQuestionsForSectionAndSubsections(Long sectionId);
     RestResult<List<SectionResource>> getSectionsByCompetitionIdAndType(Long competitionId, SectionType type);
+    RestResult<SectionResource> getFinanceSectionForCompetition(Long competitionId);
 }
