@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.worth.ifs.application.domain.SectionType;
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -59,11 +60,13 @@ public class FinanceOverviewModelManager {
     }
 
     private void addFinanceSections(Long competitionId, Model model) {
-    	SectionResource section = sectionService.getFinanceSectionForCompetition(competitionId);
+    	List<SectionResource> sections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FINANCE);
     	
-    	if(section == null) {
+    	if(sections.isEmpty()) {
     		return;
     	}
+    	
+    	SectionResource section = sections.get(0);
     	
         sectionService.removeSectionsQuestionsWithType(section, "empty");
 

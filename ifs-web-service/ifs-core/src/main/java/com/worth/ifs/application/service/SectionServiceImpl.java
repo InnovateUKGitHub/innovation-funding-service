@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 import com.worth.ifs.application.domain.Section;
+import com.worth.ifs.application.domain.SectionType;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
@@ -179,8 +180,14 @@ public class SectionServiceImpl implements SectionService {
         return sectionRestService.getQuestionsForSectionAndSubsections(sectionId).getSuccessObjectOrThrowException();
     }
 
-	@Override
-	public SectionResource getFinanceSectionForCompetition(Long competitionId) {
-		return sectionRestService.getFinanceSectionForCompetition(competitionId).getSuccessObjectOrThrowException();
+    @Override public SectionResource getFinanceSectionForCompetition(final Long competitionId) {
+        return sectionRestService.getFinanceSectionForCompetition(competitionId).getSuccessObjectOrThrowException();
+
+    }
+
+    @Override
+	public List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type) {
+		return sectionRestService.getSectionsByCompetitionIdAndType(competitionId, type).getSuccessObjectOrThrowException();
 	}
+
 }
