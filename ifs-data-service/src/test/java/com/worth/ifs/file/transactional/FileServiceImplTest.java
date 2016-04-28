@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
+import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.error.CommonFailureKeys.*;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
@@ -162,6 +163,171 @@ public class FileServiceImplTest extends BaseUnitTestMocksTest {
         verify(finalFileStorageStrategy).getFile(updatedFile);
         verify(finalFileStorageStrategy).deleteFile(updatedFile);
         verify(temporaryHoldingFileStorageStrategy).createFile(eq(updatedFile), isA(File.class));
+    }
+
+    @Test
+    public void testUpdateFileDoesntDeleteOriginalFileUntilNewFileSuccessfullyCreated() throws IOException {
+
+        FileEntryResource updatingFileEntry = newFileEntryResource().
+                with(id(456L)).
+                withFilesizeBytes(30).
+                build();
+
+        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
+
+        FileEntry fileToUpdate = fileBuilder.with(id(456L)).build();
+        FileEntry updatedFile = fileBuilder.with(id(456L)).build();
+
+        File fileItselfToUpdate = new File("/tmp/path/to/updatedfile");
+
+        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
+        when(temporaryHoldingFileStorageStrategy.exists(updatedFile)).thenReturn(false);
+        when(finalFileStorageStrategy.getFile(updatedFile)).thenReturn(serviceSuccess(fileItselfToUpdate));
+        when(temporaryHoldingFileStorageStrategy.createFile(eq(updatedFile), isA(File.class))).thenReturn(serviceFailure(internalServerErrorError()));
+
+        ServiceResult<Pair<File, FileEntry>> result = service.updateFile(updatingFileEntry, fakeInputStreamSupplier("Updated content should be here"));
+
+        assertNotNull(result);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(internalServerErrorError()));
+
+        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).save(fileToUpdate);
+        verify(temporaryHoldingFileStorageStrategy).exists(updatedFile);
+        verify(finalFileStorageStrategy).getFile(updatedFile);
+        verify(temporaryHoldingFileStorageStrategy).createFile(eq(updatedFile), isA(File.class));
+    }
+
+    @Test
+    public void testUpdateFileAndOriginalFileIsCurrentlyAwaitingScanning() throws IOException {
+
+        FileEntryResource updatingFileEntry = newFileEntryResource().
+                with(id(456L)).
+                withFilesizeBytes(30).
+                build();
+
+        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
+
+        FileEntry fileToUpdate = fileBuilder.with(id(456L)).build();
+        FileEntry updatedFile = fileBuilder.with(id(456L)).build();
+
+        File fileItselfToUpdate = new File("/tmp/path/to/updatedfile");
+
+        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
+        when(temporaryHoldingFileStorageStrategy.exists(updatedFile)).thenReturn(true);
+        when(temporaryHoldingFileStorageStrategy.createFile(eq(updatedFile), isA(File.class))).thenReturn(serviceSuccess(fileItselfToUpdate));
+        when(temporaryHoldingFileStorageStrategy.deleteFile(updatedFile)).thenReturn(serviceSuccess());
+
+        ServiceResult<Pair<File, FileEntry>> result = service.updateFile(updatingFileEntry, fakeInputStreamSupplier("Updated content should be here"));
+
+        assertNotNull(result);
+        assertTrue(result.isSuccess());
+
+        File newFileResult = result.getSuccessObject().getKey();
+        assertEquals("updatedfile", newFileResult.getName());
+
+        assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());
+
+        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).save(fileToUpdate);
+        verify(temporaryHoldingFileStorageStrategy).exists(updatedFile);
+        verify(temporaryHoldingFileStorageStrategy).createFile(eq(updatedFile), isA(File.class));
+        verify(temporaryHoldingFileStorageStrategy).deleteFile(updatedFile);
+    }
+
+    @Test
+    public void testUpdateFileAndOriginalFileIsCurrentlyQuarantined() throws IOException {
+
+        FileEntryResource updatingFileEntry = newFileEntryResource().
+                with(id(456L)).
+                withFilesizeBytes(30).
+                build();
+
+        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
+
+        FileEntry fileToUpdate = fileBuilder.with(id(456L)).build();
+        FileEntry updatedFile = fileBuilder.with(id(456L)).build();
+
+        File fileItselfToUpdate = new File("/tmp/path/to/updatedfile");
+
+        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
+        when(temporaryHoldingFileStorageStrategy.exists(updatedFile)).thenReturn(false);
+
+        when(finalFileStorageStrategy.getFile(updatedFile)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(temporaryHoldingFileStorageStrategy.getFile(updatedFile)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(scannedFileStorageStrategy.getFile(updatedFile)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(quarantinedFileStorageStrategy.getFile(updatedFile)).thenReturn(serviceSuccess(fileItselfToUpdate));
+
+        when(temporaryHoldingFileStorageStrategy.createFile(eq(updatedFile), isA(File.class))).thenReturn(serviceSuccess(fileItselfToUpdate));
+        when(quarantinedFileStorageStrategy.deleteFile(updatedFile)).thenReturn(serviceSuccess());
+
+        ServiceResult<Pair<File, FileEntry>> result = service.updateFile(updatingFileEntry, fakeInputStreamSupplier("Updated content should be here"));
+
+        assertNotNull(result);
+        assertTrue(result.isSuccess());
+
+        File newFileResult = result.getSuccessObject().getKey();
+        assertEquals("updatedfile", newFileResult.getName());
+
+        assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());
+
+        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).save(fileToUpdate);
+        verify(temporaryHoldingFileStorageStrategy).exists(updatedFile);
+        verify(finalFileStorageStrategy).getFile(updatedFile);
+        verify(temporaryHoldingFileStorageStrategy).getFile(updatedFile);
+        verify(scannedFileStorageStrategy).getFile(updatedFile);
+        verify(quarantinedFileStorageStrategy).getFile(updatedFile);
+        verify(temporaryHoldingFileStorageStrategy).createFile(eq(updatedFile), isA(File.class));
+        verify(quarantinedFileStorageStrategy).deleteFile(updatedFile);
+    }
+
+    @Test
+    public void testUpdateFileAndOriginalFileIsCurrentlyScanned() throws IOException {
+
+        FileEntryResource updatingFileEntry = newFileEntryResource().
+                with(id(456L)).
+                withFilesizeBytes(30).
+                build();
+
+        FileEntryBuilder fileBuilder = newFileEntry().withFilesizeBytes(30);
+
+        FileEntry fileToUpdate = fileBuilder.with(id(456L)).build();
+        FileEntry updatedFile = fileBuilder.with(id(456L)).build();
+
+        File fileItselfToUpdate = new File("/tmp/path/to/updatedfile");
+
+        when(fileEntryRepository.findOne(456L)).thenReturn(fileToUpdate);
+        when(fileEntryRepository.save(fileToUpdate)).thenReturn(updatedFile);
+        when(temporaryHoldingFileStorageStrategy.exists(updatedFile)).thenReturn(false);
+
+        when(finalFileStorageStrategy.getFile(updatedFile)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(temporaryHoldingFileStorageStrategy.getFile(updatedFile)).thenReturn(serviceFailure(notFoundError(FileEntry.class, 456L)));
+        when(scannedFileStorageStrategy.getFile(updatedFile)).thenReturn(serviceSuccess(fileItselfToUpdate));
+
+        when(temporaryHoldingFileStorageStrategy.createFile(eq(updatedFile), isA(File.class))).thenReturn(serviceSuccess(fileItselfToUpdate));
+        when(scannedFileStorageStrategy.deleteFile(updatedFile)).thenReturn(serviceSuccess());
+
+        ServiceResult<Pair<File, FileEntry>> result = service.updateFile(updatingFileEntry, fakeInputStreamSupplier("Updated content should be here"));
+
+        assertNotNull(result);
+        assertTrue(result.isSuccess());
+
+        File newFileResult = result.getSuccessObject().getKey();
+        assertEquals("updatedfile", newFileResult.getName());
+
+        assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());
+
+        verify(fileEntryRepository).findOne(456L);
+        verify(fileEntryRepository).save(fileToUpdate);
+        verify(temporaryHoldingFileStorageStrategy).exists(updatedFile);
+        verify(finalFileStorageStrategy).getFile(updatedFile);
+        verify(scannedFileStorageStrategy).getFile(updatedFile);
+        verify(temporaryHoldingFileStorageStrategy).createFile(eq(updatedFile), isA(File.class));
+        verify(scannedFileStorageStrategy).deleteFile(updatedFile);
     }
 
     @Test
