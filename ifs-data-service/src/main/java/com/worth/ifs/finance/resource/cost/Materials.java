@@ -26,11 +26,9 @@ public class Materials implements CostItem {
     private Integer quantity;
 
     private BigDecimal total = BigDecimal.ZERO; // calculated, no validation
-    private CostType costType;
 
     public Materials() {
-        this.costType = CostType.MATERIALS;
-        this.name = this.costType.getType();
+        this.name = getCostType().getType();
     }
 
     public Materials(Long id, String item, BigDecimal cost, Integer quantity) {
@@ -70,7 +68,7 @@ public class Materials implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return CostType.MATERIALS;
     }
 
     public void setItem(String item) {
