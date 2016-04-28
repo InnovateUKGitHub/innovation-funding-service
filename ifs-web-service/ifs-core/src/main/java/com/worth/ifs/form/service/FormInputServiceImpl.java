@@ -27,4 +27,9 @@ public class FormInputServiceImpl implements FormInputService {
     public List<FormInputResource> findByQuestion(Long questionId) {
         return formInputRestService.getByQuestionId(questionId).getSuccessObjectOrThrowException();
     }
+
+    @Override
+    public List<FormInputResource> findByCompetitionId(Long competitionId) {
+        return formInputRestService.getByCompetitionId(competitionId).getSuccessObjectOrThrowException();
+    }
 }

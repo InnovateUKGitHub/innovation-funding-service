@@ -34,7 +34,6 @@ class EnhancedUtextProcessor extends AbstractUnescapedTextChildModifierAttrProce
             expression.execute(configuration, arguments, StandardExpressionExecutionContext.UNESCAPED_EXPRESSION);
 
         Whitelist whitelist = Whitelist.relaxed()
-            .addTags("ul", "li", "ol")
             .addAttributes("ul", "class", "id", "style")
             .addAttributes("li", "class", "id", "style")
             .addAttributes("ol", "class", "id", "style")

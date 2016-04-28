@@ -64,6 +64,11 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
         return serviceSuccess(formInputToResources(formInputRepository.findByQuestionId(questionId)));
     }
 
+    @Override
+    public ServiceResult<List<FormInputResource>> findByCompetitionId(Long competitionId) {
+        return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionId(competitionId)));
+    }
+
     private ServiceResult<FormInput> findFormInputEntity(Long id) {
         return find(formInputRepository.findOne(id), notFoundError(FormInput.class, id));
     }
