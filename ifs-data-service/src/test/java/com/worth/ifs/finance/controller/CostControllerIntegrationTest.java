@@ -129,7 +129,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         assertTrue(messages.getErrors().stream()
                 .filter(e -> "role".equals(e.getErrorKey()))
-                .filter(e -> "may not be empty".equals(e.getErrorMessage()))
+                .filter(e -> "This field cannot be left blank".equals(e.getErrorMessage()))
                 .findAny().isPresent());
 
         assertTrue(messages.getErrors().stream()
@@ -172,7 +172,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         assertTrue(messages.getErrors().stream()
                 .filter(e -> "item".equals(e.getErrorKey()))
-                .filter(e -> "may not be empty".equals(e.getErrorMessage()))
+                .filter(e -> "This field cannot be left blank".equals(e.getErrorMessage()))
                 .findAny().isPresent());
 
         assertTrue(messages.getErrors().stream()

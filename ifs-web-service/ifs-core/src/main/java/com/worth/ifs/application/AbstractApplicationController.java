@@ -1,35 +1,12 @@
 package com.worth.ifs.application;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.worth.ifs.BaseController;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
 import com.worth.ifs.application.resource.*;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.application.service.OrganisationService;
-import com.worth.ifs.application.service.QuestionService;
-import com.worth.ifs.application.service.ResponseService;
-import com.worth.ifs.application.service.SectionService;
+import com.worth.ifs.application.service.*;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -45,17 +22,24 @@ import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.user.domain.OrganisationTypeEnum;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.worth.ifs.application.service.Futures.call;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
@@ -162,7 +146,7 @@ public abstract class AbstractApplicationController extends BaseController {
 
     protected void assignQuestion(HttpServletRequest request, Long applicationId) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRole assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
 
         Map<String, String[]> params = request.getParameterMap();
         if(params.containsKey(ASSIGN_QUESTION_PARAM)){
@@ -183,7 +167,7 @@ public abstract class AbstractApplicationController extends BaseController {
                                                         Optional<Long> currentQuestionId,
                                                         Model model,
                                                         ApplicationForm form,
-                                                        List<ProcessRole> userApplicationRoles) {
+                                                        List<ProcessRoleResource> userApplicationRoles) {
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);
 
@@ -211,7 +195,11 @@ public abstract class AbstractApplicationController extends BaseController {
         Map<String, String> formInputs = form.getFormInput();
         formInputs.put("application_details-title", application.getName());
         formInputs.put("application_details-duration", String.valueOf(application.getDurationInMonths()));
-        if(application.getStartDate() != null){
+        if(application.getStartDate() == null){
+            formInputs.put("application_details-startdate_day", "");
+            formInputs.put("application_details-startdate_month", "");
+            formInputs.put("application_details-startdate_year", "");
+        }else{
             formInputs.put("application_details-startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
             formInputs.put("application_details-startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
             formInputs.put("application_details-startdate_year", String.valueOf(application.getStartDate().getYear()));
@@ -222,7 +210,12 @@ public abstract class AbstractApplicationController extends BaseController {
     protected  void addApplicationInputs(ApplicationResource application, Model model) {
         model.addAttribute("application_title", application.getName());
         model.addAttribute("application_duration", String.valueOf(application.getDurationInMonths()));
-        if(application.getStartDate() != null){
+        if(application.getStartDate() == null){
+            model.addAttribute("application_startdate_day", "");
+            model.addAttribute("application_startdate_month", "");
+            model.addAttribute("application_startdate_year", "");
+        }
+        else{
             model.addAttribute("application_startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
             model.addAttribute("application_startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
             model.addAttribute("application_startdate_year", String.valueOf(application.getStartDate().getYear()));
@@ -230,7 +223,7 @@ public abstract class AbstractApplicationController extends BaseController {
     }
 
     protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation,
-                                          List<ProcessRole> userApplicationRoles) {
+                                          List<ProcessRoleResource> userApplicationRoles) {
 
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
         SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
@@ -408,7 +401,7 @@ public abstract class AbstractApplicationController extends BaseController {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
-    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, List<ProcessRole> userApplicationRoles) {
+    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, List<ProcessRoleResource> userApplicationRoles) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
 
@@ -482,7 +475,7 @@ public abstract class AbstractApplicationController extends BaseController {
                                                                              Model model,
                                                                              ApplicationForm form) {
 
-        List<ProcessRole> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
         application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles);
         
@@ -509,17 +502,15 @@ public abstract class AbstractApplicationController extends BaseController {
         }
     }
 
-    public SortedSet<OrganisationResource> getApplicationOrganisations(List<ProcessRole> userApplicationRoles) {
+    public SortedSet<OrganisationResource> getApplicationOrganisations(List<ProcessRoleResource> userApplicationRoles) {
         Comparator<OrganisationResource> compareById =
                 Comparator.comparingLong(OrganisationResource::getId);
         Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
 
-        // TODO DW - INFUND-1604 - remove organisation rest service call when ProcessRoles converted to DTOs
         return userApplicationRoles.stream()
-                .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
-                            || uar.getRole().getName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
-                .map(ProcessRole::getOrganisation)
-                .map(organisation -> organisationRestService.getOrganisationById(organisation.getId()).getSuccessObjectOrThrowException())
+                .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
+                            || uar.getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
                 .collect(Collectors.toCollection(supplier));
     }
 
@@ -534,23 +525,19 @@ public abstract class AbstractApplicationController extends BaseController {
                 .collect(Collectors.toCollection(supplier));
     }
 
-    public Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRole> userApplicationRoles) {
+    public Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
 
-        // TODO DW - INFUND-1604 - remove organisation rest service call when ProcessRoles converted to DTOs
         return userApplicationRoles.stream()
-                .filter(uar -> uar.getRole().getName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(ProcessRole::getOrganisation)
-                .map(organisation -> organisationRestService.getOrganisationById(organisation.getId()).getSuccessObjectOrThrowException())
+                .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
                 .findFirst();
     }
 
-    public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRole> userApplicationRoles) {
+    public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {
 
-        // TODO DW - INFUND-1604 - remove organisation rest service call when ProcessRoles converted to DTOs
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().getId().equals(userId))
-                .map(ProcessRole::getOrganisation)
-                .map(organisation -> organisationRestService.getOrganisationById(organisation.getId()).getSuccessObjectOrThrowException())
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
                 .findFirst();
     }
 

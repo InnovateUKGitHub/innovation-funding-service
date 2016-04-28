@@ -57,7 +57,8 @@ Red warning should show when the finances are incomplete
     ...    INFUND-894
     ...
     ...    INFUND-446
-    [Tags]    HappyPath
+    [Tags]    HappyPath     Pending
+    # Pending due to INFUND-808 finance validation
     [Setup]    Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
     Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     When the user clicks the button/link    jQuery=button:contains("Edit")
@@ -73,7 +74,7 @@ Green check should show when the finances are complete
     ...
     ...    INFUND-446
     [Tags]    HappyPath     Pending
-    #pending due to INFUND-2580
+    # Pending due to INFUND-808
     Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user should be redirected to the correct page    ${OVERVIEW_MARK_AS_COMPLETE}

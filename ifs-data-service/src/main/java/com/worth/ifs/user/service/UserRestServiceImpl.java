@@ -3,8 +3,8 @@ package com.worth.ifs.user.service;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.service.BaseRestService;
 import com.worth.ifs.user.controller.UserController;
-import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,7 +18,7 @@ import java.util.concurrent.Future;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.commons.service.ParameterizedTypeReferences.processRoleListType;
+import static com.worth.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.userListType;
 
 /**
@@ -114,18 +114,18 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<ProcessRole> findProcessRole(Long userId, Long applicationId) {
-        return getWithRestResult(processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, ProcessRole.class);
+    public RestResult<ProcessRoleResource> findProcessRole(Long userId, Long applicationId) {
+        return getWithRestResult(processRoleRestURL + "/findByUserApplication/" + userId + "/" + applicationId, ProcessRoleResource.class);
     }
 
     @Override
-    public Future<RestResult<ProcessRole>> findProcessRoleById(Long processRoleId) {
-        return getWithRestResultAsync(processRoleRestURL + "/" + processRoleId, ProcessRole.class);
+    public Future<RestResult<ProcessRoleResource>> findProcessRoleById(Long processRoleId) {
+        return getWithRestResultAsync(processRoleRestURL + "/" + processRoleId, ProcessRoleResource.class);
     }
 
     @Override
-    public RestResult<List<ProcessRole>> findProcessRole(Long applicationId) {
-        return getWithRestResult(processRoleRestURL + "/findByApplicationId/" + applicationId, processRoleListType());
+    public RestResult<List<ProcessRoleResource>> findProcessRole(Long applicationId) {
+        return getWithRestResult(processRoleRestURL + "/findByApplicationId/" + applicationId, processRoleResourceListType());
     }
 
     @Override
@@ -134,8 +134,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public Future<RestResult<ProcessRole[]>> findAssignableProcessRoles(Long applicationId){
-        return getWithRestResultAsync(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRole[].class);
+    public Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(Long applicationId){
+        return getWithRestResultAsync(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRoleResource[].class);
     }
 
     @Override
