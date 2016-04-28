@@ -7,23 +7,20 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.form.service.FormInputService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.worth.ifs.form.service.FormInputService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.worth.ifs.application.service.Futures.adapt;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -88,8 +85,7 @@ public class SectionServiceImpl implements SectionService {
      */
     @Override
     public List<SectionResource> filterParentSections(List<SectionResource> sections) {
-        List<SectionResource> childSections = new ArrayList<>();
-        getChildSections(sections, childSections);
+        List<SectionResource> childSections = getChildSections(sections, new ArrayList<>());
         sections = sections.stream()
                 .filter(s -> !childSections.stream()
                         .anyMatch(c -> c.getId().equals(s.getId())))
@@ -105,20 +101,31 @@ public class SectionServiceImpl implements SectionService {
     }
 
     private List<SectionResource> getChildSections(List<SectionResource> sections, List<SectionResource>children) {
+        if(sections!= null && sections.size()>0) {
+            List<SectionResource> allSections = this.getAllByCompetitionId(sections.get(0).getCompetition());
+            getChildSections2(sections, children, allSections);
+        }
+        return children;
+    }
+
+    private List<SectionResource> getChildSections2(List<SectionResource> sections, List<SectionResource>children, final List<SectionResource> all) {
         sections.stream().filter(section -> section.getChildSections() != null).forEach(section -> {
-            List<SectionResource> childSections = simpleMap(section.getChildSections(), sectionId -> sectionRestService.getById(sectionId).getSuccessObject());
+            List<SectionResource> childSections = findResourceByIdInList(section.getChildSections(), all);
             children.addAll(childSections);
             getChildSections(childSections, children);
         });
         return children;
     }
 
+    public List<SectionResource> findResourceByIdInList(final List<Long> ids, final List<SectionResource> list){
+        return simpleFilter(list, item -> ids.contains(item.getId()));
+    }
+
     @Override
     public void removeSectionsQuestionsWithType(SectionResource section, String name) {
         List<QuestionResource> questions = questionService.findByCompetition(section.getCompetition());
-        section.getChildSections().stream()
-                .map(sectionRestService::getById)
-                .map(result -> result.getSuccessObject())
+        List<SectionResource> sections = this.getAllByCompetitionId(section.getCompetition());
+        filterByIdList(section.getChildSections(), sections).stream()
                 .forEach(
                 s -> s.setQuestions(
                         getQuestionsBySection(s.getQuestions(), questions)
@@ -134,6 +141,10 @@ public class SectionServiceImpl implements SectionService {
                         .collect(toList())
                 )
         );
+    }
+
+    private List<SectionResource> filterByIdList(final List<Long> ids, final List<SectionResource> list){
+        return simpleFilter(list, section -> ids.contains(section.getId()));
     }
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {

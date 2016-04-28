@@ -31,4 +31,5 @@ public interface SectionService {
     SectionResource getSectionByQuestionId(Long questionId);
     Set<Long> getQuestionsForSectionAndSubsections(Long sectionId);
 	SectionResource getFinanceSectionForCompetition(Long competitionId);
+    List<SectionResource> findResourceByIdInList(List<Long> ids, List<SectionResource> list);
 }

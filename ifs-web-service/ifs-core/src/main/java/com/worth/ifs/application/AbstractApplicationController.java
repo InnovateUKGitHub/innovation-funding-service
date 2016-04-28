@@ -1,12 +1,37 @@
 package com.worth.ifs.application;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.worth.ifs.BaseController;
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.Form;
-import com.worth.ifs.application.resource.*;
-import com.worth.ifs.application.service.*;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.application.resource.QuestionResource;
+import com.worth.ifs.application.resource.QuestionStatusResource;
+import com.worth.ifs.application.resource.ResponseResource;
+import com.worth.ifs.application.resource.SectionResource;
+import com.worth.ifs.application.service.ApplicationService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.application.service.QuestionService;
+import com.worth.ifs.application.service.ResponseService;
+import com.worth.ifs.application.service.SectionService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
@@ -27,6 +52,7 @@ import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.OrganisationRestService;
 import com.worth.ifs.user.service.ProcessRoleService;
 import com.worth.ifs.user.service.UserService;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,16 +60,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
 import static com.worth.ifs.application.service.Futures.call;
 import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This object contains shared methods for all the Controllers related to the {@link ApplicationResource} data.
@@ -349,30 +367,35 @@ public abstract class AbstractApplicationController extends BaseController {
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                             Optional<SectionResource> currentSection,
                                             Optional<OrganisationResource> userOrganisation) {
-        List<SectionResource> sectionsList = sectionService.filterParentSections(sectionService.getAllByCompetitionId(competition.getId()));
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
+        List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
 
         Map<Long, SectionResource> sections =
-                sectionsList.stream().collect(Collectors.toMap(SectionResource::getId,
+                parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
                         Function.identity()));
 
         userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
 
         List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
 
+        List<FormInputResource> formInputResources = formInputService.findByCompetitionId(competition.getId());
+
         model.addAttribute("sections", sections);
-        Map<Long, List<QuestionResource>> sectionQuestions = sectionsList.stream()
+        Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId,
                         s -> getQuestionsBySection(s.getQuestions(), questions)
                 ));
-        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
+        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
+            .flatMap(a -> a.stream())
+            .collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
         model.addAttribute("questionFormInputs", questionFormInputs);
         model.addAttribute("sectionQuestions", sectionQuestions);
 
         Map<Long, List<QuestionResource>> subsectionQuestions = new HashMap<>();
         if(currentSection.isPresent()){
             Map<Long, List<SectionResource>>  subSections = new HashMap<>();
-            subSections.put(currentSection.get().getId(), simpleMap(currentSection.get().getChildSections(), sectionService::getById));
+            subSections.put(currentSection.get().getId(), getSectionsFromListByIdList(currentSection.get().getChildSections(), allSections));
 
             model.addAttribute("subSections", subSections);
             subsectionQuestions = subSections.get(currentSection.get().getId()).stream()
@@ -381,20 +404,28 @@ public abstract class AbstractApplicationController extends BaseController {
                     ));
             model.addAttribute("subsectionQuestions", subsectionQuestions);
         }else{
-            Map<Long, List<SectionResource>>   subSections = sectionsList.stream()
+            Map<Long, List<SectionResource>>   subSections = parentSections.stream()
                     .collect(Collectors.toMap(
-                            SectionResource::getId, s -> simpleMap(s.getChildSections(), sectionService::getById)
+                            SectionResource::getId, s -> getSectionsFromListByIdList(s.getChildSections(), allSections)
                     ));
             model.addAttribute("subSections", subSections);
-            subsectionQuestions = sectionsList.stream()
+            subsectionQuestions = parentSections.stream()
                     .collect(Collectors.toMap(SectionResource::getId,
                             ss -> getQuestionsBySection(ss.getQuestions(), questions)
                     ));
             model.addAttribute("subsectionQuestions", subsectionQuestions);
         }
 
-        Map<Long, List<FormInputResource>> subSectionQuestionFormInputs = subsectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
+        Map<Long, List<FormInputResource>> subSectionQuestionFormInputs = subsectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
         model.addAttribute("subSectionQuestionFormInputs", subSectionQuestionFormInputs);
+    }
+
+    private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections, final List<SectionResource> allSections) {
+        return simpleFilter(allSections, section -> childSections.contains(section.getId()));
+    }
+
+    private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
+        return simpleFilter(list, input -> input.getId().equals(id));
     }
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {

@@ -1,6 +1,9 @@
 package com.worth.ifs.application.finance.view;
 
-import com.worth.ifs.application.domain.Question;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
@@ -11,15 +14,12 @@ import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class FinanceOverviewModelManager {
@@ -68,19 +68,32 @@ public class FinanceOverviewModelManager {
         sectionService.removeSectionsQuestionsWithType(section, "empty");
 
         model.addAttribute("financeSection", section);
-        List<SectionResource> financeSectionChildren = simpleMap(section.getChildSections(), sectionService::getById);
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
+        List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(section.getChildSections(), allSections);
         model.addAttribute("financeSectionChildren", financeSectionChildren);
+
+        List<QuestionResource> allQuestions = questionService.findByCompetition(competitionId);
 
         Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSectionChildren.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId,
-                        s -> simpleMap(s.getQuestions(), questionService::getById)
+                        s -> filterQuestions(s.getQuestions(), allQuestions)
                 ));
         model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
 
+        List<FormInputResource> formInputs = formInputService.findByCompetitionId(competitionId);
+
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())
-                .collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
+                .collect(Collectors.toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
         model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);
+    }
+
+    private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list){
+        return simpleFilter(list, question -> ids.contains(question.getId()));
+    }
+
+    private List<FormInputResource> filterFormInputsByQuestion(final Long id, final List<FormInputResource> list){
+        return simpleFilter(list, input -> id.equals(input.getQuestion()));
     }
 }
