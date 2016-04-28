@@ -77,7 +77,7 @@ The applicant should get a confirmation email
 
 Submitted application is read only
     [Documentation]    INFUND-1938
-    [Tags]
+    [Tags]      Email
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    Link=Marking it as complete
     When the user clicks the button/link    Link=View application
@@ -86,7 +86,7 @@ Submitted application is read only
 
 Status of the submitted application
     [Documentation]    INFUND-1137
-    [Tags]
+    [Tags]      Email
     When the user navigates to the page    ${DASHBOARD_URL}
     Then the user should see the text in the page    Application submitted
     And the user clicks the button/link    Link=Marking it as complete
