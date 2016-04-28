@@ -31,6 +31,7 @@ public class LabourCost implements CostItem {
 
     @NotNull
     @Min(0)
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     private Integer labourDays;
     private BigDecimal rate; // calculated field, no validation
     private String description;

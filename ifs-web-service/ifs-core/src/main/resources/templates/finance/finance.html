@@ -3,12 +3,16 @@
 
     <!-- ===========================Form: finance =========================== -->
     <div th:fragment="finance">
-        <div th:class="form-group" th:classappend="${organisationFinanceSize?.getMaxGrantClaimPercentage() != null and organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}? 'error'">
+        <div th:class="form-group"
+             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ organisationgrantClaimPercentageId +'-grantClaimPercentage]}')}? 'error'">
+
             <label class="form-label form-label-bold" for="cost-financegrantclaim">
                 <div th:text="${question.name}" />
                 <span class="form-hint" th:text="${question.description}" />
                 <span th:if="${organisationFinanceSize?.getMaxGrantClaimPercentage() != null and organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}" class="error-message">This field should be <span th:remove="tag" th:text="${organisationFinanceSize?.getMaxGrantClaimPercentage()}" />% or lower</span>
+                <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationgrantClaimPercentageId+'-grantClaimPercentage'})" th:remove="tag" />
             </label>
+
             <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"/>
             <input type="number"
                    min="0"
@@ -35,7 +39,11 @@
                 <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
 
                 <label class="block-label" th:each="size : ${T(com.worth.ifs.user.domain.OrganisationSize).values()}">
-                    <input type="radio"  th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}" th:id="'financePosition-organisationSize-'+${size}" th:name="'financePosition-organisationSize'" th:value="${size}" th:checked="${size == organisationFinanceSize}"/>
+                    <input type="radio"  th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                           th:id="'financePosition-organisationSize-'+${size}"
+                           th:name="'financePosition-organisationSize'"
+                           th:value="${size}"
+                           th:checked="${size == organisationFinanceSize}"/>
                     <span th:text="${size.name}" />
                 </label>
             </fieldset>
@@ -833,15 +841,19 @@
 
 
     <!-- ===========================Form: Other funding=========================== -->
-    <div th:fragment="other_funding" th:remove="tag">
+    <div th:fragment="other_funding" th:remove="tag"
+         th:with="formInputType=${formInput.formInputType},
+                   costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))},
+                   type=${formInput.formInputTypeTitle}">
+        <div class="form-group"
+                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}')}? 'error'">
+
+
         <h2 th:text="${question.getName()}" class="heading-medium" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
 
-        <div th:remove="tag"
-             th:with="formInputType=${formInput.formInputType},
-                                       costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))}
-                             ,type=${formInput.formInputTypeTitle}">
             <fieldset class="inline" id="otherFundingShowHideToggle">
                 <legend class="visuallyhidden" th:text="${question.getName()}" />
                 <div class="form-block inline">

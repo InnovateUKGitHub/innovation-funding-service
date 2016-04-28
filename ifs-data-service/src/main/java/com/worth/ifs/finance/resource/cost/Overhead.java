@@ -2,6 +2,7 @@ package com.worth.ifs.finance.resource.cost;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ public class Overhead implements CostItem {
     private OverheadRateType rateType;
     @Min(0)
     @Max(100)
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     private Integer rate;
     private CostType costType;
     private String name;

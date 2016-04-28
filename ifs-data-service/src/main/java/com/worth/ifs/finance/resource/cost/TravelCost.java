@@ -15,6 +15,7 @@ public class TravelCost implements CostItem {
     @Digits(integer = MAX_DIGITS, fraction = 0)
     private BigDecimal cost;
     @Min(0)
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     private Integer quantity;
     private CostType costType;
     private String name;

@@ -14,6 +14,7 @@ public class CapitalUsage implements CostItem {
     Long id;
     String name;
     @Min(0)
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     Integer deprecation;
     String description;
     String existing;
@@ -25,6 +26,7 @@ public class CapitalUsage implements CostItem {
     BigDecimal residualValue;
     @Min(0)
     @Max(100)
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     Integer utilisation;
     CostType costType;
 

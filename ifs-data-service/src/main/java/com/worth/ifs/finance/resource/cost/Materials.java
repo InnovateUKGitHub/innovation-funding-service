@@ -22,6 +22,7 @@ public class Materials implements CostItem {
     private BigDecimal cost;
 
     @Min(1)
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     private Integer quantity;
 
     private BigDecimal total = BigDecimal.ZERO; // calculated, no validation
