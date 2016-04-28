@@ -1,12 +1,13 @@
 package com.worth.ifs.application.resource;
 
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.competition.domain.Competition;
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
+import com.worth.ifs.application.domain.Question;
+import com.worth.ifs.application.domain.SectionType;
+import com.worth.ifs.competition.domain.Competition;
 
 public class SectionResource {
     private Long id;
@@ -20,7 +21,7 @@ public class SectionResource {
     private Long parentSection;
     private List<Long> childSections;
     private Boolean displayInAssessmentApplicationSummary = false;
-    private String type;
+    private SectionType type;
 
     public SectionResource(long id, Competition competition, List<Question> questions, String name, Long parentSection) {
         this.id = id;
@@ -122,10 +123,10 @@ public class SectionResource {
         return this.displayInAssessmentApplicationSummary;
     }
     
-    public String getType() {
+    public SectionType getType() {
 		return type;
 	}
-    public void setType(String type) {
+    public void setType(SectionType type) {
 		this.type = type;
 	}
 }
