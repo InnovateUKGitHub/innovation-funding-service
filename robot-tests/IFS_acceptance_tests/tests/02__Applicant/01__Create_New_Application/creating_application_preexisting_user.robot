@@ -14,8 +14,7 @@ Logged in user can create a new application
     [Documentation]     INFUND-1040
     ...
     ...                 INFUND-1223
-    [Tags]  Create application      Pending
-    # Pending due to INFUND-1223
+    [Tags]  Create application
     Given Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page  ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
@@ -27,8 +26,9 @@ Logged in user can create a new application
     And the user clicks the button/link     jQuery=.button:contains("Begin application")
     And the user should see the text in the page      Application overview
     And the user can see this new application on their dashboard
-    And the project start date is blank
-    And the user can save the page with the blank date
+    # These last two steps are pending due to INFUND-1223
+    # And the project start date is blank
+    # And the user can save the page with the blank date
 
 
 Logged in user can choose to continue with an existing application
@@ -102,7 +102,8 @@ The project start date is blank
 
 
 The user can save the page with the blank date
-    the user clicks the button/link     jQuery=.button:contains("Save and return to application overview")
+    the user clicks the button/link      name=submit-section
+    # the user clicks the button/link     jQuery=.button:contains("Save and return to application overview")
     the user should be redirected to the correct page       ${dashboard_url}
 
 
