@@ -155,17 +155,26 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
 
 
     private ServiceResult<File> moveTempFileToTargetFile(Path targetFolder, String targetFilename, File tempFile) {
+        File fileToCreate = null;
         try {
-            final File fileToCreate = new File(targetFolder.toString(), targetFilename);
+            fileToCreate = new File(targetFolder.toString(), targetFilename);
             final Path targetFile = Files.move(tempFile.toPath(), fileToCreate.toPath());
             return serviceSuccess(targetFile.toFile());
         } catch (final FileAlreadyExistsException e) {
+            if (!tempFile.exists()) {
+                // Move might already have happened as we do not have file to copy and the target already exists
+                return serviceFailure(new Error(FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT));
+            }
             LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename + " file already exists");
-            return serviceFailure(new Error(FILES_DUPLICATE_FILE_CREATED));
-        } catch (NoSuchFileException e){
+            return serviceFailure(new Error(FILES_DUPLICATE_FILE_MOVED));
+        } catch (final NoSuchFileException e) {
+            if (fileToCreate.exists()) {
+                // Move might already have happened as we do not have file to copy and the target already exists
+                return serviceFailure(new Error(FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT));
+            }
             LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename + "file does not exist");
             return serviceFailure(new Error(FILES_NO_SUCH_FILE));
-        } catch (IOException e){
+        } catch (final IOException e) {
             LOG.error("Unable to move temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
             return serviceFailure(new Error(FILES_UNABLE_TO_MOVE_FILE));
         }
