@@ -19,13 +19,11 @@ public class Overhead implements CostItem {
     @Max(100)
     @Digits(integer = MAX_DIGITS, fraction = 0)
     private Integer rate;
-    private CostType costType;
     private String name;
 
     public Overhead() {
-        this.costType = CostType.OVERHEADS;
         this.rateType = OverheadRateType.NONE;
-        this.name = this.costType.getType();
+        this.name = getCostType().getType();
     }
 
     public Overhead(Long id, OverheadRateType rateType, Integer rate) {
@@ -52,7 +50,7 @@ public class Overhead implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return  CostType.OVERHEADS;
     }
 
     public OverheadRateType getRateType() {

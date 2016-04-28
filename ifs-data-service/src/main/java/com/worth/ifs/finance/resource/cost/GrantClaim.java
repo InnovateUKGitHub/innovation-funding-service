@@ -10,11 +10,9 @@ public class GrantClaim implements CostItem {
     @Max(100)
     @Digits(integer = MAX_DIGITS, fraction = 0)
     private Integer grantClaimPercentage;
-    private CostType costType;
     private String name;
     public GrantClaim() {
-        this.costType = CostType.FINANCE;
-        this.name = this.costType.getType();
+        this.name = getCostType().getType();
     }
 
     public GrantClaim(Long id, Integer grantClaimPercentage) {
@@ -61,6 +59,6 @@ public class GrantClaim implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return CostType.FINANCE;
     }
 }
