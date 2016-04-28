@@ -48,7 +48,8 @@ function resetDB {
 
 function clearDownFileRepository {
     echo "***********Deleting any uploaded files***************"
-    rm -rf /tmp/ifs/
+    echo "storedFileFolder:		${storedFileFolder}"
+    rm -rf ${storedFileFolder}
 }
 
 
@@ -161,6 +162,9 @@ echo "dataPort:          ${dataPort}"
 mysqlUser=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsDatasourceUsername'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "mysqlUser:         ${mysqlUser}"
 mysqlPassword=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsDatasourcePassword'  | cut -d "=" -f2 | sed 's/"//g'`
+storedFileFolder=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsFileStorageLocation'  | cut -d "=" -f2 | sed 's/"//g'`/ifs/
+echo "storedFileFolder:		${storedFileFolder}"
+echo "We are about to delete the above directory, make sure that it's the right one!"
 postcodeLookupKey=`sed '/^\#/d' dev-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "Postcode Lookup: 		${postcodeLookupKey}"
 if [ "$postcodeLookupKey" = '' ]
