@@ -15,8 +15,7 @@ Logged in user can create a new application
     ...
     ...                 INFUND-1223
     [Tags]  Create application      Pending
-    # Pending until INFUND-1223 is finished and on dev
-    # Pending also due to INFUND-2666
+    # Pending due to INFUND-1223
     Given Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page  ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
@@ -34,8 +33,7 @@ Logged in user can create a new application
 
 Logged in user can choose to continue with an existing application
     [Documentation]     INFUND-1040
-    [Tags]  Create application      Pending
-    # Pending due to INFUND-2666
+    [Tags]  Create application
     Given Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page  ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
@@ -49,8 +47,7 @@ Logged in user can choose to continue with an existing application
 
 Non-logged in user has the option to log into an existing account
     [Documentation]     INFUND-1040
-    [Tags]      Create application      Pending
-    # Pending due to INFUND-2666
+    [Tags]      Create application
     Given the user can log out
     When the user navigates to the page      ${competition_details_url}
     And the user clicks the button/link     jQuery=.button:contains("Apply now")
@@ -69,8 +66,7 @@ Non-logged in user has the option to log into an existing account
 
 Non-logged in user can log in and continue with an existing application
     [Documentation]     INFUND-1040
-    [Tags]  Create application      Pending
-    # Pending due to INFUND-2666
+    [Tags]  Create application
     Given the user can log out
     When the user navigates to the page     ${competition_details_url}
     And the user clicks the button/link     jQuery=.button:contains("Apply now")

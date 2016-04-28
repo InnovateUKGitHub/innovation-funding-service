@@ -15,13 +15,12 @@ public class TravelCost implements CostItem {
     @Digits(integer = MAX_DIGITS, fraction = 0)
     private BigDecimal cost;
     @Min(0)
+    @Digits(integer = MAX_DIGITS, fraction = 0)
     private Integer quantity;
-    private CostType costType;
     private String name;
 
     public TravelCost() {
-        this.costType = CostType.TRAVEL;
-        this.name = this.costType.getType();
+        this.name = getCostType().getType();
     }
 
     public TravelCost(Long id, String item, BigDecimal cost, Integer quantity) {
@@ -59,7 +58,7 @@ public class TravelCost implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return CostType.TRAVEL;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.worth.ifs.finance.resource.cost;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
@@ -11,11 +10,8 @@ import java.math.BigDecimal;
 public class OtherFunding implements CostItem {
     private Long id;
 
-    @NotBlank
-    private String otherPublicFunding; // the date
-    @NotBlank
+    private String otherPublicFunding;
     private String fundingSource;
-    @NotBlank
     private String securedDate;
 
     @NotNull
@@ -23,12 +19,10 @@ public class OtherFunding implements CostItem {
     @Digits(integer = MAX_DIGITS, fraction = 0)
     private BigDecimal fundingAmount;
 
-    private CostType costType;
     private String name;
 
     public OtherFunding() {
-        this.costType = CostType.OTHER_FUNDING;
-        this.name = this.costType.getType();
+        this.name = getCostType().getType();
     }
 
     public OtherFunding(Long id, String otherPublicFunding, String fundingSource, String securedDate, BigDecimal fundingAmount) {
@@ -69,7 +63,7 @@ public class OtherFunding implements CostItem {
 
     @Override
     public CostType getCostType() {
-        return costType;
+        return CostType.OTHER_FUNDING;
     }
 
     @Override
@@ -108,10 +102,6 @@ public class OtherFunding implements CostItem {
 
     public void setFundingAmount(BigDecimal fundingAmount) {
         this.fundingAmount = fundingAmount;
-    }
-
-    public void setCostType(CostType costType) {
-        this.costType = costType;
     }
 
     public void setName(String name) {

@@ -18,8 +18,11 @@ sudo apt-get -y install python-pip
 echo "# Installing robotframework"
 sudo pip install robotframework
 
-echo "# Installing robotframework-selenium2library"
-sudo pip install robotframework-selenium2library
+echo "# Installing version 2.48.0 of selenium"
+sudo pip install selenium==2.48.0
+
+echo "# Installing robotframework-selenium2library version 1.7.4"
+sudo pip install robotframework-selenium2library==1.7.4
 
 echo "# Installing robotframework-ride"
 sudo pip install robotframework-ride
@@ -27,8 +30,9 @@ sudo pip install robotframework-ride
 echo "# Installing terminal"
 sudo apt-get -y install gnome-terminal
 
-echo "# Installing firefox"
-sudo apt-get -y install firefox
+echo "# Installing firefox version build_43.0.4-0ubuntu1_amd64"
+wget http://vorboss.dl.sourceforge.net/project/ubuntuzilla/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_43.0.4-0ubuntu1_amd64.deb
+sudo dpkg -i firefox-mozilla-build_43.0.4-0ubuntu1_amd64.deb
 
 echo "# Installing xvfb library"
 pip install robotframework-xvfb
