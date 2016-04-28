@@ -33,6 +33,14 @@ public interface FileStorageStrategy {
     boolean exists(FileEntry file);
 
     /**
+     * Given a FileEntry, this method will return the equivalent file from the filesystem if it exists
+     *
+     * @param file
+     * @return
+     */
+    ServiceResult<File> getFile(FileEntry file);
+
+    /**
      * Creates a new File in the location that this strategy would place it
      *
      * @param fileEntry

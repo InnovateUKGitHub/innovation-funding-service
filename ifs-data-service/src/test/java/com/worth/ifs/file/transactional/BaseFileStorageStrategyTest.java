@@ -27,7 +27,6 @@ import static java.io.File.separator;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
-import static org.junit.Assume.assumeTrue;
 
 /**
  * Test common features of any storage strategies
@@ -247,8 +246,6 @@ public abstract class BaseFileStorageStrategyTest {
     @Test
     public void testCreateFileFailureToCreateFoldersHandledGracefully() {
 
-        assumeNotWindows();
-
         BaseFileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "cantcreatethisfolder");
 
         // make the temp folder readonly so that the subfolder creation fails
@@ -266,8 +263,6 @@ public abstract class BaseFileStorageStrategyTest {
 
     @Test
     public void testCreateFileFailureToCreateFileHandledGracefully() throws IOException {
-
-        assumeNotWindows();
 
         BaseFileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
 
@@ -400,20 +395,4 @@ public abstract class BaseFileStorageStrategyTest {
     }
 
     protected abstract BaseFileStorageStrategy createFileStorageStrategy(String pathToStorageBase, String containingFolder);
-
-    private boolean isNotOsx() {
-        return !System.getProperty("os.name").toLowerCase().contains("mac");
-    }
-
-    private boolean isNotWindows() {
-        return !System.getProperty("os.name").toLowerCase().contains("windows");
-    }
-
-    private void assumeNotWindows() {
-        assumeTrue(isNotWindows());
-    }
-
-    private void assumeNotOsx() {
-        assumeTrue(isNotOsx());
-    }
 }
