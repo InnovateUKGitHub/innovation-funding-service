@@ -148,6 +148,40 @@ public abstract class BaseFileStorageStrategyTest {
         }
     }
 
+    @Test
+    public void testGetFile() throws IOException {
+
+        FileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
+        FileEntry fileEntry = newFileEntry().with(id(123L)).build();
+        assertFalse(strategy.exists(fileEntry));
+        Pair<List<String>, String> absoluteFilePathAndName = strategy.getAbsoluteFilePathAndName(fileEntry);
+
+        try {
+            File existingFile = pathElementsToFile(combineLists(absoluteFilePathAndName.getKey(), absoluteFilePathAndName.getValue()));
+            Files.createParentDirs(existingFile);
+            existingFile.createNewFile();
+
+            ServiceResult<File> getFileResults = strategy.getFile(fileEntry);
+            assertTrue(getFileResults.isSuccess());
+            assertEquals(existingFile.toPath(), getFileResults.getSuccessObject().toPath());
+
+        } finally {
+            FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
+        }
+    }
+
+    @Test
+    public void testGetFileButFileDoesntExist() throws IOException {
+
+        FileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
+        FileEntry fileEntry = newFileEntry().with(id(123L)).build();
+        assertFalse(strategy.exists(fileEntry));
+
+        ServiceResult<File> getFileResults = strategy.getFile(fileEntry);
+        assertTrue(getFileResults.isFailure());
+        assertTrue(getFileResults.getFailure().is(notFoundError(FileEntry.class, 123L)));
+    }
+
     protected void doTestCreateFile(FileEntry fileEntry, List<String> expectedFilePath) throws IOException {
 
         FileStorageStrategy strategy = createFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
