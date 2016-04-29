@@ -8,4 +8,7 @@ public interface FileEntryService {
 
     @NotSecured("TODO")
     ServiceResult<FileEntryResource> findOne(Long id);
+
+    @NotSecured("TODO")
+    ServiceResult<FileEntryResource> getFileEntryIdByApplicationFinanceId(Long applicationFinanceId);
 }

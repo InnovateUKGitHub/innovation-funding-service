@@ -11,7 +11,6 @@ import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.finance.service.ApplicationFinanceRestService;
 import com.worth.ifs.user.domain.OrganisationSize;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -290,7 +289,6 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
 
     @Override
     public RestResult<ByteArrayResource> getFile(Long applicationFinanceId) {
-        throw new NotImplementedException("Finance upload is not available for the default finances");
-
+        return financeService.getFinanceDocumentByApplicationFinance(applicationFinanceId);
     }
 }

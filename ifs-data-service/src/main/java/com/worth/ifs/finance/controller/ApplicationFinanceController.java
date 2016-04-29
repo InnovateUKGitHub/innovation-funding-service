@@ -215,8 +215,7 @@ public class ApplicationFinanceController {
         // TODO DW - INFUND-854 - remove try-catch - possibly handle this ResponseEntity with CustomHttpMessageConverter
         try {
             FileEntryResource fileEntry = doGetFile(applicationFinanceId).getSuccessObject();
-            ApplicationFinanceResource applicationFinanceResource = costService.getApplicationFinanceById(applicationFinanceId).getSuccessObject();
-            return fileService.getFileByFileEntryId(applicationFinanceResource.getFinanceFileEntry()).handleSuccessOrFailure(
+            return fileService.getFileByFileEntryId(fileEntry.getId()).handleSuccessOrFailure(
                     failure -> {
                         RestErrorResponse errorResponse = new RestErrorResponse(failure.getErrors());
                         return new ResponseEntity<>(errorResponse, errorResponse.getStatusCode());
@@ -239,11 +238,7 @@ public class ApplicationFinanceController {
     }
 
     private ServiceResult<FileEntryResource> doGetFile(long applicationFinanceId) {
-        return costService.getApplicationFinanceById(applicationFinanceId).andOnSuccess(applicationFinanceResource -> {
-                    long financeFileEntryId = applicationFinanceResource.getFinanceFileEntry();
-                    return fileEntryService.findOne(financeFileEntryId);
-                }
-        );
+        return fileEntryService.getFileEntryIdByApplicationFinanceId(applicationFinanceId);
     }
 
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
