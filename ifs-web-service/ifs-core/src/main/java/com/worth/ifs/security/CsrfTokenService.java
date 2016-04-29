@@ -173,7 +173,7 @@ class CsrfTokenService {
         }
 
         String getToken() {
-            return Arrays.asList(randomUUID().toString(), getuId(), getTimestamp().toString()).stream().collect(Collectors.joining("_"));
+            return Arrays.asList(getNonce(), getuId(), getTimestamp().toString()).stream().collect(Collectors.joining("_"));
         }
 
         static CsrfUidToken parse(final String token) throws CsrfException {
