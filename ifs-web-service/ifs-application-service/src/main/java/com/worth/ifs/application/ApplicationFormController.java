@@ -52,7 +52,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -443,7 +442,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addNonDuplicateFieldError(BindingResult bindingResult, String k, String e) {
-        if(bindingResult.getFieldErrorCount(k) > 0){
+        if(bindingResult.getFieldErrors(k) != null && bindingResult.getFieldErrorCount(k) > 0){
             bindingResult.getFieldErrors(k)
                     .stream()
                     .filter(fieldError -> !fieldError.getDefaultMessage().equals(e))
@@ -457,9 +456,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         }else{
             bindingResult.rejectValue(k, e, e);
         }
-
-
-
     }
 
     private List<ValidationMessages> markAllQuestionsInSection(ApplicationResource application,
