@@ -65,7 +65,7 @@ public class OtherFundingValidator implements Validator {
     }
 
     private void validateFundingSource(String fundingSource, Errors errors){
-        if(StringUtils.isNotBlank(fundingSource) && StringUtils.isBlank(fundingSource)){
+        if(StringUtils.isBlank(fundingSource)){
             errors.rejectValue("fundingSource", "validation.finance.funding.source.blank", "Funding source cannot be blank");
         }
     }
