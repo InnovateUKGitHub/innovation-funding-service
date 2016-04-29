@@ -754,8 +754,10 @@ public class ApplicationFormController extends AbstractApplicationController {
                 return this.createJsonObjectNode(true, null);
             }
         } catch (Exception e) {
-            LOG.error("Got a exception: ");
-            e.printStackTrace();
+            LOG.error("Got a exception: "+ e.getMessage());
+            if(LOG.isDebugEnabled()){
+                e.printStackTrace();
+            }
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
             errors.add(ex.getErrorMessage());
             return this.createJsonObjectNode(false, errors);
