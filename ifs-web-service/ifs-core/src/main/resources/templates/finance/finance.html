@@ -9,7 +9,6 @@
             <label class="form-label form-label-bold" for="cost-financegrantclaim">
                 <div th:text="${question.name}" />
                 <span class="form-hint" th:text="${question.description}" />
-                <span th:if="${organisationFinanceSize?.getMaxGrantClaimPercentage() != null and organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage}" class="error-message">This field should be <span th:remove="tag" th:text="${organisationFinanceSize?.getMaxGrantClaimPercentage()}" />% or lower</span>
                 <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationgrantClaimPercentageId+'-grantClaimPercentage'})" th:remove="tag" />
             </label>
 
@@ -22,6 +21,7 @@
                    id="cost-financegrantclaim"
                    th:name="${'finance-grantclaim-' + question.id + '-' + organisationgrantClaimPercentageId}"
                    th:value="${organisationGrantClaimPercentage}"
+                   data-max-errormessage="This field should be %max%% or lower"
                     />
             <span>%</span>
         </div>
