@@ -198,6 +198,7 @@
                 rows="4"
                 th:readonly="${readonly}"
                 th:required="${required}"
+                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-'+name+']}')} ? 'field-error' : ''">
                 >
 		</textarea>
 </div>
