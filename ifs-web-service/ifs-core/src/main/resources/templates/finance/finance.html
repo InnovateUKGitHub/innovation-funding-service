@@ -883,10 +883,10 @@
 
     <div th:fragment="other_costs_row" th:remove="tag">
         <tr th:id="${'cost-'+cost.id}" th:attr="data-repeatable-row=${cost.id}">
-            <td class="form-group">
+            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-description]}')} ? 'error' : ''">
                 <label th:for="${'cost-'+ type + '-'+cost.id+'-description'}">
                     <span class="visuallyhidden">Description and justification of the cost</span>
-                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+id+'-description'})" th:remove="tag" />
+                    <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-description'})" th:remove="tag" />
                 </label>
                 <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${cost.id}, name='description', value=${cost.description},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
             </td>
