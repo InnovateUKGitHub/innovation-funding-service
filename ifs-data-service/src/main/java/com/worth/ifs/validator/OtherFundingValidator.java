@@ -14,7 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import java.text.ParseException;
@@ -66,7 +65,10 @@ public class OtherFundingValidator implements Validator {
     }
 
     private void validateFundingSource(String fundingSource, Errors errors){
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "fundingSource", "validation.finance.funding.source.blank");
+        if(StringUtils.isBlank(fundingSource)){
+            errors.rejectValue("fundingSource", "validation.finance.funding.source.blank");
+        }
+
     }
 
     private boolean userHasSelectedYes(final OtherFunding otherFunding) {
