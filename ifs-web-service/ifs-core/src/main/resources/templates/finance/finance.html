@@ -1002,10 +1002,10 @@
     <div th:fragment="other_funding_row" th:remove="tag">
 
         <tr th:id="${'cost-'+cost.id}" th:attr="data-repeatable-row=${cost.id}">
-            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-source]}')} ? 'error' : ''">
+            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-fundingSource]}')} ? 'error' : ''">
                 <label th:for="${'cost-'+type+'-'+cost.id+'-source'}">
                       <span class="visuallyhidden">Source of funding</span>
-                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-source'})" th:remove="tag" />
+                      <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-fundingSource'})" th:remove="tag" />
                 </label>
                 <input type="text"
                        th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
@@ -1013,7 +1013,7 @@
                        class="form-control width-full"
                        th:id="${'cost-'+type+'-'+cost.id+'-source'}"
                        th:value="${cost.fundingSource}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-source]}')} ? 'field-error' : ''"
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-fundingSource]}')} ? 'field-error' : ''"
                        required="required" />
             </td>
             <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-securedDate]}')} ? 'error' : ''">
