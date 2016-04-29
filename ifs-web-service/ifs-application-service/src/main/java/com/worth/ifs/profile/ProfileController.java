@@ -1,11 +1,11 @@
 package com.worth.ifs.profile;
 
-import com.worth.ifs.user.service.UserService;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.commons.rest.RestResult;
-import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.UserResource;
+import java.util.List;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -16,9 +16,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.List;
+import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressResource;
+import com.worth.ifs.application.service.OrganisationService;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.commons.security.UserAuthenticationService;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.service.UserService;
 
 /**
  * This controller will handle all requests that are related to a user profile.
@@ -29,6 +36,9 @@ import java.util.List;
 public class ProfileController {
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private OrganisationService organisationService;
 
     @Autowired
     UserAuthenticationService userAuthenticationService;
@@ -38,6 +48,7 @@ public class ProfileController {
     public String viewUserProfile(Model model, HttpServletRequest request) {
         String destination = "profile/user-profile";
         populateUserDetailsForm(model, request);
+        populateOrganisationDetailsForm(model, request);
         boolean userIsLoggedIn = userIsLoggedIn(request);
         model.addAttribute("userIsLoggedIn", userIsLoggedIn);
         return destination;
@@ -49,8 +60,21 @@ public class ProfileController {
         setFormActionURL(userDetailsForm);
         model.addAttribute("userDetailsForm", userDetailsForm);
     }
+    
+    private void populateOrganisationDetailsForm(Model model, HttpServletRequest request){
+        final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        OrganisationDetailsForm organisationDetailsForm;
+        if(!user.getOrganisations().isEmpty()) {
+        	Long organisationId = user.getOrganisations().get(0);
+        	OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        	organisationDetailsForm = buildOrganisationDetailsForm(organisation);
+        } else {
+        	organisationDetailsForm = buildOrganisationDetailsForm(null);
+        }
+        model.addAttribute("organisationDetailsForm", organisationDetailsForm);
+    }
 
-    private UserDetailsForm buildUserDetailsForm(final UserResource user){
+	private UserDetailsForm buildUserDetailsForm(final UserResource user){
         UserDetailsForm form = new UserDetailsForm();
         form.setEmail(user.getEmail());
         form.setFirstName(user.getFirstName());
@@ -59,6 +83,36 @@ public class ProfileController {
         form.setPhoneNumber(user.getPhoneNumber());
         return form;
     }
+	
+	private OrganisationDetailsForm buildOrganisationDetailsForm(final OrganisationResource organisation) {
+		OrganisationDetailsForm form = new OrganisationDetailsForm();
+		if(organisation == null) {
+			return form;
+		}
+		form.setName(organisation.getName());
+		form.setCompanyHouseNumber(organisation.getCompanyHouseNumber());
+		
+		OrganisationAddressResource organisationAddress;
+		Optional<OrganisationAddressResource> registeredAddress = organisation.getAddresses().stream().filter(a -> AddressType.REGISTERED.equals(a.getAddressType())).findFirst();
+		if(registeredAddress.isPresent()) {
+			organisationAddress = registeredAddress.get();
+		} else {
+			organisationAddress = organisation.getAddresses().stream().filter(a -> AddressType.OPERATING.equals(a.getAddressType())).findFirst().orElse(null);
+		}
+		
+		if(organisationAddress != null && organisationAddress.getAddress() != null) {
+			AddressResource address = organisationAddress.getAddress();
+			
+			form.setAddressLine1(address.getAddressLine1());
+			form.setAddressLine2(address.getAddressLine2());
+			form.setAddressLine3(address.getAddressLine3());
+			form.setCounty(address.getCounty());
+			form.setPostcode(address.getPostcode());
+			form.setTown(address.getTown());
+		}
+		
+		return form;
+	}
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public String submitUserProfile(@Valid @ModelAttribute UserDetailsForm userDetailsForm, BindingResult bindingResult,

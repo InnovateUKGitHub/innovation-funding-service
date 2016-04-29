@@ -1,9 +1,24 @@
 package com.worth.ifs.profile;
 
-import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.resource.UserResource;
+import static com.worth.ifs.commons.rest.RestResult.restFailure;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.Arrays;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,24 +26,23 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.servlet.http.HttpServletRequest;
-
-import static com.worth.ifs.commons.rest.RestResult.restFailure;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static com.worth.ifs.user.builder.UserBuilder.newUser;
-import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.worth.ifs.BaseUnitTest;
+import com.worth.ifs.address.builder.AddressResourceBuilder;
+import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.user.resource.OrganisationResource;
+import com.worth.ifs.user.resource.UserResource;
 
 public class ProfileControllerTest extends BaseUnitTest {
     @InjectMocks
     private ProfileController profileController;
 
-    UserResource user;
+    private UserResource user;
+    
+    private OrganisationResource organisation;
+    
+    private OrganisationAddressResource address;
 
     @Before
     public void setUp() {
@@ -44,8 +58,28 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .withLastName("lastname")
                 .withPhoneNumber("1234567890")
                 .withEmail("email@provider.com")
+                .withOrganisations(Arrays.asList(6L))
                 .build();
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(user);
+        
+        address = new OrganisationAddressResource();
+        address.setAddressType(AddressType.REGISTERED);
+        address.setAddress(AddressResourceBuilder
+        		.newAddressResource()
+        		.withAddressLine1("line1")
+        		.withAddressLine2("line2")
+        		.withAddressLine3("line3")
+        		.withTown("town")
+        		.withCounty("county")
+        		.withPostcode("postcode")
+        		.build());
+        
+        organisation = newOrganisationResource()
+        		.withName("orgname")
+        		.withCompanyHouseNumber("companyhousenumber")
+        		.withAddress(Arrays.asList(address))
+        		.build();
+        when(organisationService.getOrganisationById(6L)).thenReturn(organisation);
     }
 
     @Test
@@ -56,8 +90,18 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("firstName", Matchers.equalTo(user.getFirstName()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("lastName", Matchers.equalTo(user.getLastName()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("phoneNumber", Matchers.equalTo(user.getPhoneNumber()))))
-                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("email", Matchers.equalTo(user.getEmail()))));
-    }
+                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("email", Matchers.equalTo(user.getEmail()))))
+
+                .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("name", Matchers.equalTo(organisation.getName()))))
+        		.andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("companyHouseNumber", Matchers.equalTo(organisation.getCompanyHouseNumber()))))
+		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("addressLine1", Matchers.equalTo(address.getAddress().getAddressLine1()))))
+		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("addressLine2", Matchers.equalTo(address.getAddress().getAddressLine2()))))
+		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("addressLine3", Matchers.equalTo(address.getAddress().getAddressLine3()))))
+		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("town", Matchers.equalTo(address.getAddress().getTown()))))
+		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("county", Matchers.equalTo(address.getAddress().getCounty()))))
+		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("postcode", Matchers.equalTo(address.getAddress().getPostcode()))));
+
+    }	
 
     @Test
     public void userProfileDetailsAreAddedToModelWhenViewingDetailsForm() throws Exception {
