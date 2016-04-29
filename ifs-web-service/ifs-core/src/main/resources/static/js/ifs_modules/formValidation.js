@@ -271,16 +271,11 @@ IFS.formValidation = (function(){
             var errorMessage = field.attr('data-'+type+'-errormessage');
             //if there is no data-errormessage we use the default messagging defined in the settings object
             if (typeof(errorMessage) == 'undefined') {
-                  switch(type){
-                      case 'min':
-                      case 'max':
-                      case 'minlength':
-                      case 'maxlength':
-                        errorMessage = s[type].messageInvalid.replace('%'+type+'%',field.attr(type));
-                        break;
-                      default:
-                        errorMessage = s[type].messageInvalid;
-                  }
+              errorMessage = s[type].messageInvalid;
+            }
+            //replace value so we can have text like; this cannot be under %max%
+            if(errorMessage.indexOf('%'+type+'%') !== -1){
+                errorMessage = errorMessage.replace('%'+type+'%',field.attr(type));
             }
             return errorMessage;
         },
