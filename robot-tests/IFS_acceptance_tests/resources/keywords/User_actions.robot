@@ -51,6 +51,11 @@ The user should be redirected to the correct page
     Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Wait Until Element Is Visible       id=global-header
+    Page Should Contain         BETA
+
 
 the user reloads the page
     Reload Page
