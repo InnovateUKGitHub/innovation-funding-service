@@ -1004,19 +1004,19 @@
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-source]}')} ? 'field-error' : ''"
                        required="required" />
             </td>
-            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-date]}')} ? 'error' : ''">
-                <label th:for="${'cost-'+type+'-'+cost.id+'-date'}">
+            <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-securedDate]}')} ? 'error' : ''">
+                <label th:for="${'cost-'+type+'-'+cost.id+'-securedDate'}">
                   <span class="visuallyhidden">Date secured</span>
-                  <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-date'})" th:remove="tag" />
+                  <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-securedDate'})" th:remove="tag" />
                 </label>
                 <input type="text"
                        th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-                       th:name="${type +'-dateSecured-' + question.id + '-' + cost.id}"
+                       th:name="${type +'-securedDate-' + question.id + '-' + cost.id}"
                        class="form-control width-medium"
-                       th:id="${'cost-'+type+'-'+cost.id+'-date'}"
+                       th:id="${'cost-'+type+'-'+cost.id+'-securedDate'}"
                        placeholder="MM-YYYY"
                        th:value="${cost.securedDate}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-date]}')} ? 'field-error' : ''"
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-securedDate]}')} ? 'field-error' : ''"
                        required="required"/>
             </td>
 
