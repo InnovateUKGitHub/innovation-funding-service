@@ -1,7 +1,7 @@
 package com.worth.ifs.assessment.service;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 

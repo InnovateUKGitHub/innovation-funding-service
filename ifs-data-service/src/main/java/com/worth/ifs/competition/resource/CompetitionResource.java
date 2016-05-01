@@ -2,7 +2,7 @@ package com.worth.ifs.competition.resource;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.worth.ifs.application.domain.Application;
+import com.worth.ifs.application.resource.ApplicationResource;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -83,11 +83,11 @@ public class CompetitionResource {
         this.description = description;
     }
 
-    public void addApplication(Application... apps) {
+    public void addApplication(ApplicationResource... apps) {
         if (applications == null) {
             applications = new ArrayList<>();
         }
-        this.applications.addAll(Arrays.asList(apps).stream().map(Application::getId).collect(Collectors.toList()));
+        this.applications.addAll(Arrays.asList(apps).stream().map(ApplicationResource::getId).collect(Collectors.toList()));
     }
 
     public Long getId() {

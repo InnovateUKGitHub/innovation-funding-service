@@ -11,7 +11,7 @@ import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.User;
-import com.worth.ifs.user.domain.UserStatus;
+import com.worth.ifs.user.resource.UserStatus;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.resource.UserResource;

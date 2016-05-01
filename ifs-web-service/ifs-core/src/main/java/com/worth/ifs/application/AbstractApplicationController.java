@@ -28,7 +28,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
 import com.worth.ifs.BaseController;
-import com.worth.ifs.application.domain.SectionType;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.finance.view.FinanceHandler;
 import com.worth.ifs.application.finance.view.FinanceOverviewModelManager;
 import com.worth.ifs.application.form.ApplicationForm;
@@ -56,8 +56,7 @@ import com.worth.ifs.invite.constant.InviteStatusConstants;
 import com.worth.ifs.invite.resource.InviteOrganisationResource;
 import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.invite.service.InviteRestService;
-import com.worth.ifs.user.domain.OrganisationTypeEnum;
-import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
@@ -192,13 +191,14 @@ public abstract class AbstractApplicationController extends BaseController {
         model.addAttribute("currentCompetition", competition);
 
         Optional<OrganisationResource> userOrganisation = getUserOrganisation(userId, userApplicationRoles);
+        model.addAttribute("userOrganisation", userOrganisation.orElse(null));
 
         if(form == null){
             form = new ApplicationForm();
         }
         form.setApplication(application);
 
-        addOrganisationDetails(model, application, userOrganisation, userApplicationRoles);
+        //addOrganisationDetails(model, application, userApplicationRoles);
         addQuestionsDetails(model, application, form);
         addUserDetails(model, application, userId);
         addApplicationFormDetailInputs(application, form);
@@ -242,16 +242,11 @@ public abstract class AbstractApplicationController extends BaseController {
         }
     }
 
-    protected void addOrganisationDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation,
-                                          List<ProcessRoleResource> userApplicationRoles) {
-
-        model.addAttribute("userOrganisation", userOrganisation.orElse(null));
+    protected void addOrganisationDetails(Model model, ApplicationResource application, List<ProcessRoleResource> userApplicationRoles) {
         SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
         model.addAttribute("applicationOrganisations", organisations);
         model.addAttribute("academicOrganisations", getAcademicOrganisations(organisations));
-        
-        model.addAttribute("applicationOrganisations", organisations);
-        
+
         List<String> activeApplicationOrganisationNames = organisations.stream().map(OrganisationResource::getName).collect(Collectors.toList());
         
         List<String> pendingOrganisationNames = pendingInvitations(application).stream()
@@ -347,7 +342,7 @@ public abstract class AbstractApplicationController extends BaseController {
     private boolean isApplicationInViewMode(Model model, ApplicationResource application, OrganisationResource userOrganisation) {
         if(!application.isOpen() || userOrganisation == null){
             //Application Not open, so add empty lists
-            model.addAttribute("assignableUsers", new ArrayList<ProcessRole>());
+            model.addAttribute("assignableUsers", new ArrayList<ProcessRoleResource>());
             model.addAttribute("pendingAssignableUsers", new ArrayList<InviteResource>());
             model.addAttribute("questionAssignees", new HashMap<Long, QuestionStatusResource>());
             model.addAttribute("notifications", new ArrayList<QuestionStatusResource>());
@@ -523,7 +518,7 @@ public abstract class AbstractApplicationController extends BaseController {
                                                                              ApplicationForm form) {
 
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-
+        addOrganisationDetails(model, application, userApplicationRoles);
         application = addApplicationDetails(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles);
         
         model.addAttribute("completedQuestionsPercentage", applicationService.getCompleteQuestionsPercentage(application.getId()));
@@ -582,7 +577,7 @@ public abstract class AbstractApplicationController extends BaseController {
     public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {
 
         return userApplicationRoles.stream()
-                .filter(uar -> uar.getUser().getId().equals(userId))
+                .filter(uar -> uar.getUser().equals(userId))
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
                 .findFirst();
     }

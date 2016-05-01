@@ -5,8 +5,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.dto.Feedback;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.Feedback;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
@@ -25,10 +25,10 @@ public interface AssessorService {
      * Update the Assessor's feedback to a given Response, creating a new AssessorFeedback if one does not yet
      * exist for this Assessor
      */
-    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.assessment.dto.Feedback', 'UPDATE')")
+    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.assessment.resource.Feedback', 'UPDATE')")
     ServiceResult<Feedback> updateAssessorFeedback(@P("id") Feedback.Id feedbackId, Optional<String> feedbackValue, Optional<String> feedbackText);
 
-    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.assessment.dto.Feedback', 'READ')")
+    @PreAuthorize("hasPermission(#id, 'com.worth.ifs.assessment.resource.Feedback', 'READ')")
     ServiceResult<Feedback> getFeedback(@P("id") Feedback.Id id);
 
     @PreAuthorize("hasPermission(#a, 'UPDATE')")

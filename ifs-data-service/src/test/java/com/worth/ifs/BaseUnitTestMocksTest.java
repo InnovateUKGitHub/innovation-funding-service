@@ -14,6 +14,7 @@ import com.worth.ifs.authentication.service.IdentityProviderService;
 import com.worth.ifs.competition.repository.CompetitionRepository;
 import com.worth.ifs.email.service.EmailService;
 import com.worth.ifs.file.transactional.FileService;
+import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.form.repository.FormInputRepository;
@@ -53,6 +54,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationMapper applicationMapperMock;
+
+    @Mock
+    protected ApplicationFinanceMapper applicationFinanceMapper;
 
     @Mock
     protected ApplicationFinanceRepository applicationFinanceRepository;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.workflow.domain.ProcessOutcome;
 import org.junit.Test;

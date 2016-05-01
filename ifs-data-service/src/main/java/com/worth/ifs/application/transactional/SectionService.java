@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.application.domain.SectionType;
+import com.worth.ifs.application.resource.SectionType;
 import com.worth.ifs.application.resource.SectionResource;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.commons.service.ServiceResult;

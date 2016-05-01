@@ -1,6 +1,6 @@
 package com.worth.ifs.organisation.resource;
 
-import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.user.domain.Organisation;
 

@@ -2,9 +2,9 @@ package com.worth.ifs.assessment.transactional;
 
 import com.worth.ifs.BaseServiceSecurityTest;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.dto.Feedback;
-import com.worth.ifs.assessment.dto.Feedback.Id;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.Feedback;
+import com.worth.ifs.assessment.resource.Feedback.Id;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.assessment.security.FeedbackLookupStrategy;
 import com.worth.ifs.assessment.security.FeedbackRules;
 import com.worth.ifs.commons.service.ServiceResult;

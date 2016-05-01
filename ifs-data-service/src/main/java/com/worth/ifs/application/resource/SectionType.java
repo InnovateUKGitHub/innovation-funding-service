@@ -1,4 +1,4 @@
-package com.worth.ifs.application.domain;
+package com.worth.ifs.application.resource;
 
 public enum SectionType {
 	FINANCE,

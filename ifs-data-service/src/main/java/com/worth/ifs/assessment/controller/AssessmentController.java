@@ -3,7 +3,7 @@ package com.worth.ifs.assessment.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.assessment.transactional.AssessorService;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.workflow.domain.ProcessOutcome;

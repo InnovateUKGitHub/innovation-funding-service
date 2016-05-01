@@ -1,13 +1,14 @@
 package com.worth.ifs.finance.handler;
 
 import com.worth.ifs.finance.domain.ApplicationFinance;
+import com.worth.ifs.finance.mapper.ApplicationFinanceMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.ApplicationFinanceResourceId;
 import com.worth.ifs.finance.resource.category.CostCategory;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.OrganisationTypeEnum;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
     @Autowired
     OrganisationFinanceDelegate organiastionFinanceDelegate;
 
+    @Autowired
+    ApplicationFinanceMapper applicationFinanceMapper;
+
     @Override
     public ApplicationFinanceResource getApplicationOrganisationFinances(ApplicationFinanceResourceId applicationFinanceResourceId) {
         ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(
@@ -40,7 +44,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         ApplicationFinanceResource applicationFinanceResource = null;
 
         if(applicationFinance!=null) {
-            applicationFinanceResource = new ApplicationFinanceResource(applicationFinance);
+            applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
             setFinanceDetails(applicationFinanceResource);
         }
         return applicationFinanceResource;
@@ -52,7 +56,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();
 
         for(ApplicationFinance applicationFinance : applicationFinances) {
-            ApplicationFinanceResource applicationFinanceResource = new ApplicationFinanceResource(applicationFinance);
+            ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
             OrganisationFinanceHandler organisationFinanceHandler = organiastionFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
             EnumMap<CostType, CostCategory> costs = new EnumMap<>(organisationFinanceHandler.getOrganisationFinanceTotals(applicationFinanceResource.getId(), applicationFinance.getApplication().getCompetition()));
             applicationFinanceResource.setFinanceOrganisationDetails(costs);

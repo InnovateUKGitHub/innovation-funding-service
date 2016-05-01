@@ -23,7 +23,7 @@ import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.security.NotSecured;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 
 /**
  * Transactional and secure service for Application processing work

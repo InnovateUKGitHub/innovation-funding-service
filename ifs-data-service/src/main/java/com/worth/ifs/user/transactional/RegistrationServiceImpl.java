@@ -14,6 +14,7 @@ import com.worth.ifs.user.domain.*;
 import com.worth.ifs.user.mapper.UserMapper;
 import com.worth.ifs.user.repository.CompAdminEmailRepository;
 import com.worth.ifs.user.resource.UserResource;
+import com.worth.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -24,8 +25,8 @@ import java.util.*;
 
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static com.worth.ifs.user.domain.UserRoleType.APPLICANT;
-import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.APPLICANT;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static com.worth.ifs.util.CollectionFunctions.getOnlyElement;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Collections.singletonList;

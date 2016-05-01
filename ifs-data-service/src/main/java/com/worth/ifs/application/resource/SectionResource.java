@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.SectionType;
 import com.worth.ifs.competition.domain.Competition;
 
 public class SectionResource {

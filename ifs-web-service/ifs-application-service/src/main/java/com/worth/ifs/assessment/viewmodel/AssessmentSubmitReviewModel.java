@@ -1,12 +1,9 @@
 package com.worth.ifs.assessment.viewmodel;
 
-import com.worth.ifs.application.domain.AssessorFeedback;
-import com.worth.ifs.application.domain.Question;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.resource.*;
 import com.worth.ifs.assessment.domain.Assessment;
 import com.worth.ifs.assessment.domain.RecommendedValue;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.worth.ifs.assessment.domain.AssessmentOutcomes.RECOMMEND;
+import static com.worth.ifs.assessment.domain.AssessmentOutcomes;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.PairFunctions.leftPair;
 import static com.worth.ifs.util.PairFunctions.presentRightPair;
@@ -78,17 +75,17 @@ public class AssessmentSubmitReviewModel {
 //                map(response -> Pair.of(response, response.getResponseAssessmentFeedbacks())).
 //                filter(rightPairIsPresent()).
 //                collect(toMap(leftPair(), presentRightPair()));
-
+//
 //        responses.forEach(response -> {
 //            response.getResponseAssessmentFeedbacks()
 //            responseIdsAndFeedback.put(response.getId(), )
 //        });
-
+//
 //        responseIdsAndFeedback = ;
 //                responsesAndFeedback.entrySet().stream().
 //                collect(toMap(e -> e.getKey().getId(), mapEntryValue()));
-
-
+//
+//
 //        Map<QuestionResource, Optional<AssessorFeedbackResource>> questionsAndFeedback =
 //                questionsAndResponses.entrySet().stream().
 //                map(e -> Pair.of(e.getKey(), e.getValue().map(feedback -> Optional.ofNullable(responseIdsAndFeedback.get(feedback.getId()))).orElse(empty()))).

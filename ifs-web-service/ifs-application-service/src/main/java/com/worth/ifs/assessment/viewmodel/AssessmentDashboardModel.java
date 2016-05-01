@@ -2,7 +2,7 @@ package com.worth.ifs.assessment.viewmodel;
 
 import com.worth.ifs.application.resource.ApplicationResource;
 import com.worth.ifs.assessment.domain.Assessment;
-import com.worth.ifs.assessment.dto.Score;
+import com.worth.ifs.assessment.resource.Score;
 import com.worth.ifs.competition.resource.CompetitionResource;
 
 import java.beans.Transient;

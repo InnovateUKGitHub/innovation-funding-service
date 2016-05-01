@@ -1,4 +1,6 @@
-package com.worth.ifs.user.domain;
+package com.worth.ifs.user.resource;
+
+import com.worth.ifs.user.domain.OrganisationType;
 
 import java.util.Map;
 import java.util.Optional;

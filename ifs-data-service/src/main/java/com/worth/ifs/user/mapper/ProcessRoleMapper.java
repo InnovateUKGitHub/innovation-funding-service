@@ -15,7 +15,8 @@ import org.mapstruct.Mappings;
     uses = {
         ApplicationMapper.class,
         RoleMapper.class,
-        OrganisationMapper.class
+        OrganisationMapper.class,
+        UserMapper.class
     }
 )
 public abstract class ProcessRoleMapper extends BaseMapper<ProcessRole, ProcessRoleResource, Long> {

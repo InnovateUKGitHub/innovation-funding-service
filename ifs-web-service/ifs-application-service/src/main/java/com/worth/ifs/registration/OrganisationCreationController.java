@@ -1,7 +1,7 @@
 package com.worth.ifs.registration;
 
 import com.google.common.net.UrlEscapers;
-import com.worth.ifs.address.domain.AddressType;
+import com.worth.ifs.address.resource.AddressType;
 import com.worth.ifs.address.resource.AddressResource;
 import com.worth.ifs.address.service.AddressRestService;
 import com.worth.ifs.application.form.AddressForm;
@@ -13,7 +13,7 @@ import com.worth.ifs.invite.service.InviteRestService;
 import com.worth.ifs.organisation.resource.OrganisationSearchResult;
 import com.worth.ifs.registration.form.OrganisationCreationForm;
 import com.worth.ifs.registration.form.OrganisationTypeForm;
-import com.worth.ifs.user.domain.OrganisationTypeEnum;
+import com.worth.ifs.user.resource.OrganisationTypeEnum;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.OrganisationTypeResource;
 import com.worth.ifs.user.service.OrganisationSearchRestService;

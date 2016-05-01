@@ -2,15 +2,15 @@ package com.worth.ifs.security;
 
 import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.repository.ProcessRoleRepository;
 import com.worth.ifs.user.repository.RoleRepository;
 import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
 
-import static com.worth.ifs.user.domain.UserRoleType.COMP_ADMIN;
-import static com.worth.ifs.user.domain.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static com.worth.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static com.worth.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 
 public class SecurityRuleUtil {
 

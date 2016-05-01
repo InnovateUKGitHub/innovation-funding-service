@@ -1,11 +1,8 @@
 package com.worth.ifs.user.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.OrganisationSize;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.user.resource.OrganisationSize;
 import com.worth.ifs.user.resource.OrganisationResource;
-import com.worth.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
