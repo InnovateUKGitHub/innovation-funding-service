@@ -205,7 +205,7 @@ public abstract class AbstractApplicationController extends BaseController {
         addMappedSectionsDetails(model, application, competition, section, userOrganisation);
 
         addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section, currentQuestionId);
-        addCompletedDetails(model, application, userOrganisation, userApplicationRoles);
+        addCompletedDetails(model, application, userOrganisation);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         return application;
@@ -434,15 +434,10 @@ public abstract class AbstractApplicationController extends BaseController {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
-    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, List<ProcessRoleResource> userApplicationRoles) {
+
+    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
-
-        SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
-        Set<Long> questionsCompletedByAllOrganisation = new TreeSet<>(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(organisations.first()))));
-        // only keep the questionIDs of questions that are complete by all organisations
-        organisations.forEach(o -> questionsCompletedByAllOrganisation.retainAll(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(o)))));
-        model.addAttribute("questionsCompletedByAllOrganisation", questionsCompletedByAllOrganisation);
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
@@ -474,6 +469,14 @@ public abstract class AbstractApplicationController extends BaseController {
         	eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
         }        
         model.addAttribute("eachCollaboratorFinanceSectionId", eachCollaboratorFinanceSectionId);
+    }
+
+    private void addCompletedQuestionsForAllOrganisations(Model model, ApplicationResource application, List<ProcessRoleResource> userApplicationRoles) {
+        SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
+        Set<Long> questionsCompletedByAllOrganisation = new TreeSet<>(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(organisations.first()))));
+        // only keep the questionIDs of questions that are complete by all organisations
+        organisations.forEach(o -> questionsCompletedByAllOrganisation.retainAll(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(o)))));
+        model.addAttribute("questionsCompletedByAllOrganisation", questionsCompletedByAllOrganisation);
     }
 
     protected void addSectionDetails(Model model, Optional<SectionResource> currentSection) {
