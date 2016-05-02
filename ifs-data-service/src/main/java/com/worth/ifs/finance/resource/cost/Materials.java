@@ -17,7 +17,7 @@ public class Materials implements CostItem {
     private String item;
 
     private String name;
-    @DecimalMin(value = "1")
+    @DecimalMin(value = "0")
     @Digits(integer = MAX_DIGITS, fraction = 0)
     private BigDecimal cost;
 
