@@ -837,11 +837,16 @@ public class ApplicationFormController extends AbstractApplicationController {
                 startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
             } else if (fieldName.endsWith(".year")) {
                 startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
+            } else if ("application.startDate".equals(fieldName)){
+                String[] parts = value.split("-");
+                startDate = LocalDate.of(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Integer.parseInt(parts[0]));
             }
             if (startDate.isBefore(LocalDate.now())) {
+                errors.add("Please enter a future date.");
                 startDate = null;
+            }else{
+                LOG.debug("Save startdate: "+ startDate.toString());
             }
-            LOG.debug("Save startdate: "+ startDate.toString());
             application.setStartDate(startDate);
             applicationService.save(application);
         return errors;
