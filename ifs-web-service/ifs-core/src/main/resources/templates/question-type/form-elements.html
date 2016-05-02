@@ -91,6 +91,7 @@
 
 <div th:fragment="form-number-extra-small (id, field)">
     <input class="form-control width-extra-small"
+           th:classAppend="${inputCssClass}"
            th:readonly="${readonly}"
            type="number"
            th:id="${id}"
@@ -105,6 +106,7 @@
 
 <div th:fragment="form-number-extra-small-empty (id, field)">
     <input class="form-control width-extra-small"
+           th:classAppend="${inputCssClass}"
            th:readonly="${readonly}"
            type="number"
            th:id="${id}"
@@ -119,10 +121,10 @@
 
 <div th:fragment="form-dateinput (id, field)">
     <div class="date-group">
-    	<div th:with="dateFieldPresent=*{__${field}__ != null}" th:remove="tag">
-	        <div class="day">
-	            <input type="hidden" th:name="${field}" value="to be ignored" />
+    	<div th:with="dateFieldPresent=*{__${field}__ != null},inputCssClass='js-autosave-disabled'" th:remove="tag">
+          <input type="hidden" th:name="${field}" th:id="${id}" value="to be ignored" />
 
+	        <div class="day">
 	            <div th:include="question-type/form-elements :: form-label (name='Day',id=${id}+'_day',bold=false)"
 	                 th:remove="tag"/>
 	            <div th:if="${dateFieldPresent}" th:remove="tag">
