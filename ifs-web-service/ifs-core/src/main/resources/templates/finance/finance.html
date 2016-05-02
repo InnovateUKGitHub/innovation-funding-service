@@ -644,19 +644,19 @@
     </div>
 
     <!-- ===========================Form: subcontracting cost =========================== -->
-    <div th:fragment="subcontracting_costs">
+    <div th:fragment="subcontracting">
         <p th:text="${question.getDescription()}"></p>
         <div th:remove="tag" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
 
-            <div id="subcontracting_costs">
+            <div id="subcontracting">
                 <div th:each="cost : ${costCategory.costs}" th:remove="tag">
-                    <div th:include="finance/finance :: subcontracting_costs_row" th:remove="tag"/>
+                    <div th:include="finance/finance :: subcontracting_row" th:remove="tag"/>
                 </div>
             </div>
 
 
             <p class="alignright" th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
-              <div th:include="question-type/types :: add_row(text='Add another subcontractor', question=${question},rowcontainer='#subcontracting_costs')" th:remove="tag"/>
+              <div th:include="question-type/types :: add_row(text='Add another subcontractor', question=${question},rowcontainer='#subcontracting')" th:remove="tag"/>
             </p>
             <div class="form-group alignright">
                 <label th:for="${'section-total-'+subSection.id}">Total subcontracting costs</label>
@@ -672,7 +672,7 @@
         </div>
     </div>
 
-    <div th:fragment="subcontracting_costs_row" th:remove="tag">
+    <div th:fragment="subcontracting_row" th:remove="tag">
         <div class="form-row" th:id="${'cost-'+cost.id}" th:attr="data-repeatable-row=${cost.id}">
             <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-companyName]}')} ? 'error' : ''">
                 <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-companyName'}">
@@ -708,7 +708,7 @@
             </div>
 
             <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-cost]}')} ? 'error' : ''">
-                <label class="form-label" th:for="${'cost-subcontracting_costs-'+cost.id+'-subcontractingCost'}">
+                <label class="form-label" th:for="${'cost-subcontracting-'+cost.id+'-subcontractingCost'}">
                       <span>Cost</span>
                       <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+cost.id+'-cost'})" th:remove="tag" />
                   </label>
@@ -716,7 +716,7 @@
                        class="form-control"
                        data-calculation-input="subcontracting-cost-row"
                        th:name="${type +'-subcontractingCost-' + question.id + '-' + cost.id}"
-                       th:id="${'cost-subcontracting_costs-'+cost.id+'-subcontractingCost'}"
+                       th:id="${'cost-subcontracting-'+cost.id+'-subcontractingCost'}"
                        th:value="${#numbers.formatDecimal(cost.cost,0,0)}"
                        th:readonly="${complete == 'complete'}"
                        min="0"
