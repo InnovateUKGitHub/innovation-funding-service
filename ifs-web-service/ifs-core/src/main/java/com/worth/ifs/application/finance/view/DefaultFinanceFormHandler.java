@@ -21,6 +21,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
@@ -70,14 +71,22 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
         List<ValidationMessages> invalidItems = costItems.stream().filter(e -> e.isRight()).map(e -> e.getRight()).collect(Collectors.toList());
         invalidItems.forEach(validationMessages ->
                 validationMessages.getErrors().stream().forEach(e -> {
-                    errors.put("formInput[cost-" + validationMessages.getObjectId() + "-" + e.getErrorKey() + "]", Arrays.asList(e.getErrorMessage()));
+                    if(StringUtils.hasText(e.getErrorKey())){
+                        errors.put("formInput[cost-" + validationMessages.getObjectId() + "-" + e.getErrorKey() + "]", Arrays.asList(e.getErrorMessage()));
+                    }else{
+                        errors.put("formInput[cost-" + validationMessages.getObjectId() + "]", Arrays.asList(e.getErrorMessage()));
+                    }
                 })
         );
 
         List<CostItem> validItems = costItems.stream().filter(e -> e.isLeft()).map(e -> e.getLeft()).collect(Collectors.toList());
         storeCostItems(validItems).forEach((costId, validationMessages) -> {
             validationMessages.getErrors().stream().forEach(e -> {
-                errors.put("formInput[cost-" + costId + "-" + e.getErrorKey() + "]", Arrays.asList(e.getErrorMessage()));
+                if(StringUtils.hasText(e.getErrorKey())){
+                    errors.put("formInput[cost-" + costId + "-" + e.getErrorKey() + "]", Arrays.asList(e.getErrorMessage()));
+                }else{
+                    errors.put("formInput[cost-" + costId + "]", Arrays.asList(e.getErrorMessage()));
+                }
             });
         });
     }

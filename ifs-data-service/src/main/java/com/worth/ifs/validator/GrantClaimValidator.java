@@ -37,9 +37,9 @@ public class GrantClaimValidator implements Validator {
         OrganisationSize size = cost.getApplicationFinance().getOrganisationSize();
 
         if(size == null) {
-            errors.rejectValue("grantClaimPercentage", "validation.finance.select.organisation.size", null, null);
+            errors.rejectValue("grantClaimPercentage", "validation.finance.select.organisation.size");
         } else if(response.getGrantClaimPercentage() == null || response.getGrantClaimPercentage().equals(0)) {
-            errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message", null, null);
+            errors.rejectValue("grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
         } else if(response.getGrantClaimPercentage() > size.getMaxGrantClaimPercentage()){
             errors.rejectValue("grantClaimPercentage", "Max", String.format("This field should be %s%% or lower", size.getMaxGrantClaimPercentage()));
         }
