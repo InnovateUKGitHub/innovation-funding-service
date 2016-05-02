@@ -31,7 +31,7 @@ public class OverheadsHandler extends CostHandler {
                     agreedRate = getIntegerValue(financeFormField.getValue(), 0);
                     break;
                 default:
-                    log.info("Unused costField: " + financeFormField.getCostName());
+                    LOG.info("Unused costField: " + financeFormField.getCostName());
                     break;
             }
         }

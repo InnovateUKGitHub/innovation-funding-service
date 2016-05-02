@@ -43,7 +43,7 @@ public class CapitalUsageHandler extends CostHandler {
                     utilisation = getIntegerValue(costFormValue, 0);
                     break;
                 default:
-                    log.info("Unused costField: " + financeFormField.getCostName());
+                    LOG.info("Unused costField: " + financeFormField.getCostName());
                     break;
             }
         }
