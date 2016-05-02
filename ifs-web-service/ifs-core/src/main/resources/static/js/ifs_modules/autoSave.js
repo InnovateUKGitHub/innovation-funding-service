@@ -45,18 +45,21 @@ IFS.autoSave = (function(){
               //for the 3 seperate field date that has to be send as one
 
               var fieldValue = field.val();
-              if(typeof(field.attr('data-date') !== 'undefined')){
+              var datefield = field.attr('data-date');
+              if(typeof datefield !== typeof undefined && datefield !== false){
                 fieldValue = field.attr('data-date');
                 var fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
                 name = fieldInfo.attr('name');
                 fieldId = fieldInfo.attr('id');
               }
+
               var jsonObj = {
                   value: fieldValue,
                   formInputId: fieldId,
                   fieldName: name,
                   applicationId: applicationId
               };
+              console.log(jsonObj);
               //per field we handle the request on a promise base, this means that ajax calls should be per field sequental
               //this menas we can still have async as two fields can still be processed at the same time
               //http://www.jefferydurand.com/jquery/sequential/javascript/ajax/2015/04/13/jquery-sequential-ajax-promise-deferred.html
