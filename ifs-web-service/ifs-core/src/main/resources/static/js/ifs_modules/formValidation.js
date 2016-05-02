@@ -174,10 +174,7 @@ IFS.formValidation = (function(){
         },
         checkNumber : function(field,showMessage){
             //https://api.jquery.com/jQuery.isNumeric/
-            if(field.val().replace(/ /g,'').length === 0){
-              return false;
-            }
-            else if((!jQuery.isNumeric(field.val()))){
+             if(!jQuery.isNumeric(field.val())){
               if(showMessage) { IFS.formValidation.setInvalid(field,s.number.messageInvalid);}
               return false;
             }
@@ -190,7 +187,7 @@ IFS.formValidation = (function(){
             var max = parseInt(field.attr('max'),10);
             var errorMessage = IFS.formValidation.getErrorMessage(field,'max');
 
-            if(IFS.formValidation.checkNumber(field)){
+            if(IFS.formValidation.checkNumber(field,true)){
               var fieldVal = parseInt(field.val(),10);
               if(fieldVal > max){
                 if(showMessage) { IFS.formValidation.setInvalid(field,errorMessage);}
