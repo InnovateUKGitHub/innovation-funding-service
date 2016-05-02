@@ -1014,7 +1014,8 @@
                        th:id="${'cost-'+type+'-'+cost.id+'-source'}"
                        th:value="${cost.fundingSource}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-fundingSource]}')} ? 'field-error' : ''"
-                       required="required" />
+                       required="required"
+                       data-required-errormessage="Funding source cannot be blank" />
             </td>
             <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-securedDate]}')} ? 'error' : ''">
                 <label th:for="${'cost-'+type+'-'+cost.id+'-date'}">
