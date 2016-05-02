@@ -343,10 +343,10 @@
                 <div id="overhead-special-rate">
                     <h3 class="heading-medium">Special rate agreed with Innovate UK</h3>
                     <p>You should only use this section if you have previously agreed a rate of admin support cost funding with Innovate UK's project finance team. If this project is granted funding then you will need to justify this rate before the project can begin.</p>
-                    <div class="form-group alignright inline"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-agreedRate]}')} ? 'error' : ''">
+                    <div class="form-group alignright inline"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-rate]}')} ? 'error' : ''">
                         <label th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-agreedRate'}">
                           <span>Rate agreed with Innovate UK (%)</span>
-                          <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+overheadCosts?.id+'-agreedRate'})" th:remove="tag" />
+                          <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+overheadCosts?.id+'-rate'})" th:remove="tag" />
                         </label>
                         <input type="number"
                                th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
@@ -357,7 +357,7 @@
                                max="100"
                                class="form-control form-control-1-4 alignright"
                                th:value="${overheadCosts?.getRate()!=null and overheadRate.equals(T(com.worth.ifs.finance.resource.cost.OverheadRateType).SPECIAL_AGREED_RATE)} ? ${overheadCosts?.getRate()} : 0"
-                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-agreedRate]}')} ? 'field-error' : ''" />
+                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-rate]}')} ? 'field-error' : ''" />
                     </div>
                     <div class="form-group alignright inline">
                         <label th:for="${'section-total-'+subSection.id+'-special'}">
