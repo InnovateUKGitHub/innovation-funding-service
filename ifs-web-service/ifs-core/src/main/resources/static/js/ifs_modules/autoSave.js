@@ -59,7 +59,6 @@ IFS.autoSave = (function(){
                   fieldName: name,
                   applicationId: applicationId
               };
-              console.log(jsonObj);
               //per field we handle the request on a promise base, this means that ajax calls should be per field sequental
               //this menas we can still have async as two fields can still be processed at the same time
               //http://www.jefferydurand.com/jquery/sequential/javascript/ajax/2015/04/13/jquery-sequential-ajax-promise-deferred.html
