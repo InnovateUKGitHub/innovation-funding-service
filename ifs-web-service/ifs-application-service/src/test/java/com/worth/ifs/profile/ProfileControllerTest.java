@@ -2,7 +2,6 @@ package com.worth.ifs.profile;
 
 import com.worth.ifs.BaseUnitTest;
 import com.worth.ifs.commons.error.Error;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.hamcrest.Matchers;
 import org.junit.Before;

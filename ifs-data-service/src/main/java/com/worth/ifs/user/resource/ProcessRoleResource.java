@@ -5,9 +5,6 @@ import java.util.List;
 
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Response;
-import com.worth.ifs.user.domain.Organisation;
-import com.worth.ifs.user.domain.Role;
-import com.worth.ifs.user.domain.User;
 
 public class ProcessRoleResource {
     private Long id;
@@ -22,7 +19,7 @@ public class ProcessRoleResource {
     	// no-arg constructor
     }
 
-    public ProcessRoleResource(Long id, User user, Application application, Role role, Organisation organisation) {
+    public ProcessRoleResource(Long id, UserResource user, Application application, RoleResource role, OrganisationResource organisation) {
         this.id = id;
         this.user = user.getId();
         this.application = application.getId();

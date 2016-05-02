@@ -5,8 +5,7 @@ import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.exception.ErrorControllerAdvice;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
-import com.worth.ifs.invite.domain.Invite;
-import com.worth.ifs.user.domain.User;
+import com.worth.ifs.invite.resource.InviteResource;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -84,7 +83,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(userService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(restSuccess(new UserResource()));
 
         when(userService.verifyEmail(eq(VERIFY_HASH))).thenReturn(restSuccess());
-        when(userService.verifyEmail(eq(INVALID_VERIFY_HASH))).thenReturn(restFailure(CommonErrors.notFoundError(Invite.class, INVALID_VERIFY_HASH)));
+        when(userService.verifyEmail(eq(INVALID_VERIFY_HASH))).thenReturn(restFailure(CommonErrors.notFoundError(InviteResource.class, INVALID_VERIFY_HASH)));
 
         inviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, INVITE_HASH);
         usedInviteHashCookie = new Cookie(AcceptInviteController.INVITE_HASH, ACCEPTED_INVITE_HASH);
@@ -353,7 +352,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getPhoneNumber(),
                 1L,
                 null)).thenReturn(restSuccess(userResource));
-        when(userService.findUserByEmailForAnonymousUserFlow("test@test.test")).thenReturn(restFailure(notFoundError(User.class, "test@test.test")));
+        when(userService.findUserByEmailForAnonymousUserFlow("test@test.test")).thenReturn(restFailure(notFoundError(UserResource.class, "test@test.test")));
 
         mockMvc.perform(post("/registration/register?organisationId=1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -394,7 +393,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getPhoneNumber(),
                 1L,
                 null)).thenReturn(restSuccess(userResource));
-        when(userService.findUserByEmailForAnonymousUserFlow(eq("invited@email.com"))).thenReturn(restFailure(notFoundError(User.class, "invited@email.com")));
+        when(userService.findUserByEmailForAnonymousUserFlow(eq("invited@email.com"))).thenReturn(restFailure(notFoundError(UserResource.class, "invited@email.com")));
         when(inviteRestService.acceptInvite(eq(INVITE_HASH),anyLong())).thenReturn(restSuccess());
         mockMvc.perform(post("/registration/register?organisationId=1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

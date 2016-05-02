@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.worth.ifs.assessment.domain.AssessmentOutcomes;
+import static com.worth.ifs.assessment.domain.AssessmentOutcomes.RECOMMEND;
 import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.PairFunctions.leftPair;
 import static com.worth.ifs.util.PairFunctions.presentRightPair;

@@ -573,7 +573,6 @@ public class BaseUnitTest {
         processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(restSuccess(idsToApplicationResources.get(pr.getApplication()))));
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(applications));
-
         when(applicationService.getById(applications.get(0).getId())).thenReturn(applications.get(0));
         when(applicationService.getById(applications.get(1).getId())).thenReturn(applications.get(1));
         when(applicationService.getById(applications.get(2).getId())).thenReturn(applications.get(2));
@@ -586,6 +585,8 @@ public class BaseUnitTest {
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1))).thenReturn(processRole2);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(2))).thenReturn(processRole3);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(3))).thenReturn(processRole4);
+        when(userService.findById(loggedInUser.getId())).thenReturn(loggedInUser);
+
         processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(settable(processRole)));
 
         when(sectionService.getById(1L)).thenReturn(sectionResources.get(0));

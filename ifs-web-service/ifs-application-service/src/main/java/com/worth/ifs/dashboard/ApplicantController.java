@@ -7,7 +7,7 @@ import com.worth.ifs.application.service.ApplicationStatusRestService;
 import com.worth.ifs.application.service.CompetitionService;
 import com.worth.ifs.commons.security.UserAuthenticationService;
 import com.worth.ifs.competition.resource.CompetitionResource;
-import com.worth.ifs.user.domain.UserRoleType;
+import com.worth.ifs.user.resource.UserRoleType;
 import com.worth.ifs.user.resource.ProcessRoleResource;
 import com.worth.ifs.user.resource.UserResource;
 import com.worth.ifs.user.service.ProcessRoleService;

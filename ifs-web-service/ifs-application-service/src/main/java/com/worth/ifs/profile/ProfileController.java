@@ -4,7 +4,6 @@ import com.worth.ifs.user.service.UserService;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.security.UserAuthenticationService;
-import com.worth.ifs.user.domain.User;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

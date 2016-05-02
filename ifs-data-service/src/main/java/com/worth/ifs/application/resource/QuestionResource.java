@@ -1,7 +1,5 @@
 package com.worth.ifs.application.resource;
 
-import com.worth.ifs.application.domain.Section;
-import com.worth.ifs.competition.domain.Competition;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

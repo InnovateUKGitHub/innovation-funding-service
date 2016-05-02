@@ -1,12 +1,9 @@
 package com.worth.ifs.application.builder;
 
 import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.domain.Response;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.form.domain.FormInput;
 
 import java.util.ArrayList;
 import java.util.List;

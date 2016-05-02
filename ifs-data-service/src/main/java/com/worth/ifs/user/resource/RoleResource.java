@@ -21,10 +21,10 @@ public class RoleResource {
     	// no-arg constructor
     }
 
-    public RoleResource(Long id, String name, List<ProcessRole> processRoles) {
+    public RoleResource(Long id, String name, List<ProcessRoleResource> processRoles) {
         this.id = id;
         this.name = name;
-        this.processRoles = simpleMap(processRoles, ProcessRole::getId);
+        this.processRoles = simpleMap(processRoles, ProcessRoleResource::getId);
     }
 
     protected Boolean canEqual(Object other) {

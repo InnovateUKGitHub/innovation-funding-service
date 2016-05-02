@@ -1,7 +1,5 @@
 package com.worth.ifs.user.resource;
 
-import com.worth.ifs.user.domain.OrganisationType;
-
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -48,9 +46,9 @@ public enum OrganisationTypeEnum {
         return organisationType.equals(RESEARCH) || (organisationType.getParentOrganisationType() != null && organisationType.getParentOrganisationType().equals(RESEARCH));
     }
 
-    public static boolean isResearch(OrganisationType organisationType){
-        if(organisationType!=null) {
-            return isResearch(getFromId(organisationType.getId()));
+    public static boolean isResearch(Long organisationTypeId){
+        if(organisationTypeId!=null) {
+            return isResearch(getFromId(organisationTypeId));
         } else {
             return false;
         }

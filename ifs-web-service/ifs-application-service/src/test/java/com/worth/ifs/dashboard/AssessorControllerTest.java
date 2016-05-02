@@ -1,7 +1,6 @@
 package com.worth.ifs.dashboard;
 
 import com.worth.ifs.BaseUnitTest;
-import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -42,7 +41,7 @@ public class AssessorControllerTest  extends BaseUnitTest {
         this.setupAssessment();
     }
 
-
+    @Ignore
     @Test
      public void testDashboardWithAssessorLogin() throws Exception {
         this.loginUser(assessor);
