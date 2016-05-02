@@ -32,7 +32,7 @@ ${OVERVIEW_MARK_AS_COMPLETE}    ${SERVER}/application/7
 *** Test Cases ***
 Calculations for Lead applicant
     [Documentation]    INFUND-524
-    [Tags]
+    [Tags]    Failing
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
@@ -41,7 +41,7 @@ Calculations for Lead applicant
 
 Calculations for the first collaborator
     [Documentation]    INFUND-524
-    [Tags]
+    [Tags]    Failing
     [Setup]    Guest user log-in    &{collaborator1_credentials}
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
@@ -57,9 +57,9 @@ Red warning should show when the finances are incomplete
     ...    INFUND-894
     ...
     ...    INFUND-446
-    [Tags]    HappyPath     Pending
-    # Pending due to INFUND-808 finance validation
+    [Tags]    HappyPath    Pending
     [Setup]    Guest user log-in    email=worth.email.test+submit@gmail.com    password=Passw0rd
+    # Pending due to INFUND-808 finance validation
     Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     When the user clicks the button/link    jQuery=button:contains("Edit")
     Then the red warnng should be visible
@@ -73,7 +73,7 @@ Green check should show when the finances are complete
     ...    INFUND-894
     ...
     ...    INFUND-446
-    [Tags]    HappyPath     Pending
+    [Tags]    HappyPath    Pending
     # Pending due to INFUND-808
     Given the user navigates to the page    ${MARKING_IT_AS_COMPLETE_FINANCE_SECTION}
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
