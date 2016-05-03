@@ -69,7 +69,7 @@ function addTestFiles {
     echo "***********Making the quarantined directory ***************"
     mkdir -p ${virusScanQuarantinedFolder}
     echo "***********Adding pretend quarantined file ***************"
-    mv ${uploadFileDir}/8 ${virusScanQuarantinedFolder}/8
+    cp ${uploadFileDir}/8 ${virusScanQuarantinedFolder}/8
 }
 
 
