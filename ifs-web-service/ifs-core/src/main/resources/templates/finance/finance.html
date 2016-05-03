@@ -137,7 +137,7 @@
                            readonly="readonly"
                            type="text"
                            th:id="${'section-total-'+subSection.id}"
-                           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
+                           th:value="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}" />
                 </div>
             </div>
         </div>
@@ -173,7 +173,8 @@
                        th:name="${type +'-grossAnnualSalary-' + question.id + '-' + cost.id}"
                        th:id="${'cost-labour-'+cost.id+'-labourGrossSalary'}"
                        th:readonly="${complete == 'complete'}"
-                       th:value="${#numbers.formatDecimal(cost.grossAnnualSalary,0,0)}"
+                       th:value="${cost.grossAnnualSalary != null ? #numbers.formatDecimal(cost.grossAnnualSalary,0,0) : ''}"
+                       placeholder="0"
                        min="0"
                         />
             </td>
@@ -188,7 +189,7 @@
                        readonly="readonly"
                        th:id="${'cost-labour-'+cost.id+'-labourRate'}"
                        th:name="${type + '-labourRate-' + question.id + '-' + cost.id}"
-                       th:value="${costCategory?.workingDaysPerYear != null ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}"
+                       th:value="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}"
                        />
             </td>
             <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-labourDays]}')} ? 'error' : ''">
@@ -203,6 +204,7 @@
                        th:id="${'cost-labour-'+cost.id+'-labourDays'}"
                        th:name="${type + '-labourDays-' + question.id + '-' + cost.id}"
                        th:value="${cost.labourDays}"
+                       placeholder="0"
                        required="required"
                        min="0"
                         />
