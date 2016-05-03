@@ -26,9 +26,9 @@ Logged in user can create a new application
     And the user clicks the button/link     jQuery=.button:contains("Begin application")
     And the user should see the text in the page      Application overview
     And the user can see this new application on their dashboard
-    # These last two steps are pending due to INFUND-1223
-    # And the project start date is blank
-    # And the user can save the page with the blank date
+    And the project start date is blank
+    # This last step is pending due to INFUND-1223
+    And the user can save the page with the blank date
 
 
 Logged in user can choose to continue with an existing application
@@ -102,9 +102,12 @@ The project start date is blank
 
 
 The user can save the page with the blank date
-    the user clicks the button/link      name=submit-section
-    # the user clicks the button/link     jQuery=.button:contains("Save and return to application overview")
-    the user should be redirected to the correct page       ${dashboard_url}
+    Submit Form
+    # note that the below validation is being used rather than a specific application number so that the test is
+    # not broken by other tests that run before it and may change this application's number
+    the user should see the text in the page        Application overview
+    the user should see the text in the page        Technology Inspired
+
 
 
 
