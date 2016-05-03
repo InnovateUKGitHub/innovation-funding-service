@@ -36,11 +36,25 @@ IFS.autoSave = (function(){
             var name = field.attr('name');
             var fieldId = field.attr('id').replace('form-textarea-','');
             var applicationId = jQuery("#application_id").val();
+            var autoSaveEnabled = true;
+            if(field.hasClass('js-autosave-disabled')){
+              autoSaveEnabled = false;
+            }
 
+            if((typeof(applicationId) !== 'undefined') && (typeof(name) !== 'undefined') && autoSaveEnabled) {
+              //for the 3 seperate field date that has to be send as one
 
-            if((typeof(applicationId) !== 'undefined') && (typeof(name) !== 'undefined')) {
+              var fieldValue = field.val();
+              var datefield = field.attr('data-date');
+              if(typeof datefield !== typeof undefined && datefield !== false){
+                fieldValue = field.attr('data-date');
+                var fieldInfo = field.closest('.date-group').find('input[type="hidden"]');
+                name = fieldInfo.attr('name');
+                fieldId = fieldInfo.attr('id');
+              }
+
               var jsonObj = {
-                  value: field.val(),
+                  value: fieldValue,
                   formInputId: fieldId,
                   fieldName: name,
                   applicationId: applicationId

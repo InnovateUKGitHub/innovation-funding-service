@@ -5,7 +5,7 @@
 <div th:fragment="head">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
-    <title th:text="'Innovation Funding Service - '+${pageTitle}"></title>
+    <title th:text="${pageTitle}+' - Innovation Funding Service'"></title>
 
     <script type="text/javascript">
       if (!window.console) console = {log: function() {}, warn: function(){}};

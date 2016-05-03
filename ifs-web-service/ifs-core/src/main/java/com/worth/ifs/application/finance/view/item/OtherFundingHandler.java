@@ -39,7 +39,7 @@ public class OtherFundingHandler extends CostHandler {
                         securedDate = fieldValue;
                         break;
                     default:
-                        log.info("Unused costField: " + financeFormField.getCostName());
+                        LOG.info("Unused costField: " + financeFormField.getCostName());
                         break;
                 }
             }

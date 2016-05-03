@@ -18,8 +18,7 @@ import java.util.*;
  */
 public abstract class CostHandler {
     public static final Locale LOCALE_UK = Locale.UK;
-    protected final Log log = LogFactory.getLog(getClass());
-
+    protected Log LOG = LogFactory.getLog(this.getClass());
     Map<String, CostField> costFields = new HashMap<>();
 
     public abstract CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields);
@@ -43,8 +42,8 @@ public abstract class CostHandler {
         }
     }
 
-    public Integer getIntegerValue(String value, Integer defaultValue) {
-        value = cleanNumberValue(value);
+    public Integer getIntegerValue(String inputValue, Integer defaultValue) {
+        String value = cleanNumberValue(inputValue);
         if(StringUtils.isEmpty(value))
             return defaultValue;
 
@@ -53,11 +52,12 @@ public abstract class CostHandler {
 
         nf.setParseIntegerOnly(true);
         try {
-            return Integer.valueOf(nf.parse(value).toString());
+            String stringValue = nf.parse(value).toString();
+            return Integer.valueOf(stringValue);
         } catch (NumberFormatException nfe) {
-            throw nfe;
+            throw new NumberFormatException(inputValue);
         } catch (ParseException e) {
-            throw new NumberFormatException();
+            throw new NumberFormatException(inputValue);
         }
     }
 

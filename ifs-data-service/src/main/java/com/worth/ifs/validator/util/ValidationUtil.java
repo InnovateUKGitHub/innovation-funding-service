@@ -9,16 +9,13 @@ import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInput;
 import com.worth.ifs.form.domain.FormInputResponse;
 import com.worth.ifs.form.domain.FormValidator;
-import com.worth.ifs.validator.MinRowCountValidator;
-import com.worth.ifs.validator.AcademicValidator;
-import com.worth.ifs.validator.GrantClaimValidator;
-import com.worth.ifs.validator.NotEmptyValidator;
-import com.worth.ifs.validator.OtherFundingValidator;
+import com.worth.ifs.validator.*;
 import com.worth.ifs.validator.transactional.ValidatorService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.*;
@@ -29,6 +26,7 @@ import java.util.stream.Collectors;
 @Component
 public class ValidationUtil {
     public final static Log LOG = LogFactory.getLog(ValidationUtil.class);
+    private MessageSource messageSource;
     private ValidatorService validatorService;
     private Validator validator;
     private GrantClaimValidator grantClaimValidator;
@@ -42,13 +40,16 @@ public class ValidationUtil {
                            GrantClaimValidator grantClaimValidator,
                            OtherFundingValidator otherFundingValidator,
                            AcademicValidator academicValidator,
-                           MinRowCountValidator minRowCountValidator) {
+                           MinRowCountValidator minRowCountValidator,
+                           MessageSource messageSource
+    ) {
         this.validatorService = validatorService;
         this.validator = validator;
         this.minRowCountValidator = minRowCountValidator;
         this.grantClaimValidator = grantClaimValidator;
         this.otherFundingValidator = otherFundingValidator;
         this.academicValidator = academicValidator;
+        this.messageSource = messageSource;
     }
 
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
@@ -113,7 +114,7 @@ public class ValidationUtil {
         List<BindingResult> bindingResults = validatorService.validateFormInputResponse(application.getId(), formInput.getId());
         for (BindingResult bindingResult : bindingResults) {
             if (bindingResult.hasErrors()) {
-                validationMessages.add(new ValidationMessages(formInput.getId(), bindingResult));
+                validationMessages.add(new ValidationMessages(messageSource, formInput.getId(), bindingResult));
             }
         }
         return null;
@@ -128,7 +129,7 @@ public class ValidationUtil {
             BindingResult validationResult = validatorService.validateFormInputResponse(application.getId(), formInput.getId(), markedAsCompleteById);
 
             if (validationResult.hasErrors()) {
-                validationMessages.add(new ValidationMessages(formInput.getId(), validationResult));
+                validationMessages.add(new ValidationMessages(messageSource, formInput.getId(), validationResult));
             }
         }
 
@@ -149,7 +150,7 @@ public class ValidationUtil {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(question, "question");
         invokeEmptyRowValidator(costItems, bindingResult);
         if (bindingResult.hasErrors()) {
-            return new ValidationMessages(question.getId(), bindingResult);
+            return new ValidationMessages(messageSource, question.getId(), bindingResult);
         }
         return null;
     }
@@ -184,7 +185,7 @@ public class ValidationUtil {
                 bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: "+ e.getRejectedValue() + e.getDefaultMessage()));
                 bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Error: "+ e.getObjectName() + e.getDefaultMessage()));
             }
-            return new ValidationMessages(costItem.getId(), bindingResult);
+            return new ValidationMessages(messageSource, costItem.getId(), bindingResult);
         } else {
             LOG.debug("validated, no messages");
             return null;

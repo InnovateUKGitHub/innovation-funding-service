@@ -40,7 +40,7 @@ public class LabourCostHandler extends CostHandler {
                         key = LabourCostCategory.WORKING_DAYS_PER_YEAR;
                         break;
                     default:
-                        log.info("Unused costField: " + financeFormField.getCostName());
+                        LOG.info("Unused costField: " + financeFormField.getCostName());
                         break;
                 }
             }

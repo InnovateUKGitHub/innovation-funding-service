@@ -8,7 +8,7 @@ public enum CostType {
     OVERHEADS("overheads"),
     MATERIALS("materials"),
     CAPITAL_USAGE("capital_usage"),
-    SUBCONTRACTING_COSTS("subcontracting_costs"),
+    SUBCONTRACTING_COSTS("subcontracting"),
     TRAVEL("travel"),
     OTHER_COSTS("other_costs"),
     YOUR_FINANCE("your_finance"),
