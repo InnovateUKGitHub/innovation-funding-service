@@ -64,6 +64,14 @@ function clearDownFileRepository {
     rm -rf ${virusScanScannedFolder}    
 }
 
+function addTestFiles {
+    echo "***********Adding test files***************"
+    echo "***********Making the quarantined directory ***************"
+    mkdir -p ${virusScanQuarantinedFolder}
+    echo "***********Adding pretend quarantined file ***************"
+    mv ${uploadFileDir}/8 ${virusScanQuarantinedFolder}/8
+}
+
 
 function buildAndDeploy {
     echo "********BUILD AND DEPLOY THE APPLICATION********"
@@ -279,6 +287,7 @@ then
     resetDB
     resetLDAP
     clearDownFileRepository
+    addTestFiles
     runTests
 elif [ "$testScrub" ]
 then
@@ -286,6 +295,7 @@ then
     stopServers
     resetDB
     clearDownFileRepository
+    addTestFiles
     buildAndDeploy
     startServers
 elif [ "$happyPath" ]
@@ -294,6 +304,7 @@ then
     stopServers
     resetDB
     clearDownFileRepository
+    addTestFiles
     buildAndDeploy
     startServers
     runHappyPathTests
@@ -310,6 +321,7 @@ else
     stopServers
     resetDB
     clearDownFileRepository
+    addTestFiles
     buildAndDeploy
     startServers
     runTests
