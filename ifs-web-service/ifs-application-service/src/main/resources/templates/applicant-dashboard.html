@@ -65,13 +65,16 @@
                 <li th:each="application : ${applicationsFinished}">
                     <div class="grid-row">
                         <div class="column-assessment-details">
-                            <h3 class="heading-medium" th:text="${application.name}"></h3>
+                            <h3 class="heading-medium">
+                            	<a th:href="@{/application/{id}(id=${application.getId()})}" th:text="${application.name}" />
+                            </h3>
                             <p class="form-hint">Application number: <span th:text="${#numbers.formatInteger(application.id,8)}"></span></p>
                         </div>
                         <div class="column-assessment-status navigation-right">
                             <div th:class="((${applicationStatuses.get(application.getId()).name} == 'approved') ? 'yes' : 'no') + ' application-status assessed'">
-                                <p th:if="${applicationStatuses.get(application.getId()).name == 'rejected'}" th:text="Unsuccessful" th:class="results-status"></p>
-                                <p th:if="${applicationStatuses.get(application.getId()).name == 'approved'}" th:text="Successful" th:class="results-status"></p>
+                                <p th:if="${applicationStatuses.get(application.getId()).name == 'rejected'}" th:text="'Unsuccessful'" th:class="results-status"></p>
+                                <p th:if="${applicationStatuses.get(application.getId()).name == 'approved'}" th:text="'Successful'" th:class="results-status"></p>
+                                <p th:if="${applicationStatuses.get(application.getId()).name == 'created' || applicationStatuses.get(application.getId()).name == 'open'}" th:text="'Not submitted'" th:class="results-status"></p>
                             </div>
                         </div>
                     </div>
