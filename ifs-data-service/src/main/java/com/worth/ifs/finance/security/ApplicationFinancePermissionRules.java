@@ -53,9 +53,9 @@ public class ApplicationFinancePermissionRules {
         return isAConsortiumMember(applicationFinanceResource, user);
     }
 
-    @PermissionRule(value = "READ_FILE_ENTRY", description = "A lead applicant can get file entry resource for finance section of a collaborator")
-    public boolean leadApplicantCanGetFileEntryResourceByFinanceIdOfACollaborator(final ApplicationFinanceResource applicationFinanceResource, final UserResource user){
-        return checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
+    @PermissionRule(value = "READ_FILE_ENTRY", description = "The consortium can get file entry resource for finance section of a collaborator")
+    public boolean consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(final ApplicationFinanceResource applicationFinanceResource, final UserResource user){
+        return isAConsortiumMember(applicationFinanceResource.getApplication(), user);
     }
 
     @PermissionRule(value = "READ_FILE_ENTRY", description = "A comp admin can get file entry resource for finance section of a collaborator")
@@ -63,9 +63,17 @@ public class ApplicationFinancePermissionRules {
         return SecurityRuleUtil.isCompAdmin(user);
     }
 
-    private final boolean isAConsortiumMember(final ApplicationFinanceResource applicationFinanceResource, final UserResource user){
+    private boolean isAConsortiumMember(final ApplicationFinanceResource applicationFinanceResource, final UserResource user){
         final boolean isLeadApplicant = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
         final boolean isCollaborator = checkRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
+
+        return isLeadApplicant || isCollaborator;
+    }
+
+    private boolean isAConsortiumMember(final Long applicationId, final UserResource user){
+        final boolean isLeadApplicant = SecurityRuleUtil.checkRole(user, applicationId, LEADAPPLICANT, processRoleRepository);
+        final boolean isCollaborator = SecurityRuleUtil.checkRole(user, applicationId, COLLABORATOR, processRoleRepository);
+
         return isLeadApplicant || isCollaborator;
     }
 
