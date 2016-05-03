@@ -48,6 +48,7 @@ Questions can be assigned with appendices to the collaborator
 Appendices are only available for the correct questions
     [Documentation]    INFUND-832
     [Tags]    Collaboration    Upload
+    [Setup]     Guest user log-in   &{lead_applicant_credentials}
     the user cannot see the option to upload a file on the page    ${business_opportunity_url}
     the user cannot see the option to upload a file on the page    ${potential_market_url}
     the user cannot see the option to upload a file on the page    ${project_exploitation_url}
@@ -78,9 +79,10 @@ Quarantined files are not returned to the user and the user is informed
     ...    INFUND-2684
     # We should get the pretend quarantined file into the bamboo agent so we can test on the dev server.
     [Tags]    LocalFilesOnly    Upload
+    [Setup]     Guest user log-in   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_team_url}
-    the user should see the text in the page    test_quarantine.pdf
-    When the user clicks the button/link    link=test_quarantine.pdf
+    When the user should see the text in the page    test_quarantine.pdf
+    And the user clicks the button/link    link=test_quarantine.pdf
     Then the user should see the text in the page   File not available for download
     And the user should see the text in the page    This file has been quarantined by the virus scanner
 
