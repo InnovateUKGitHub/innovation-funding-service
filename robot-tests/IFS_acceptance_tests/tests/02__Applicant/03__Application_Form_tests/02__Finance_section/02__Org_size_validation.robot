@@ -13,6 +13,8 @@ Resource          ../../../../resources/keywords/User_actions.robot
 ${small_org_option}    SMALL
 ${medium_org_option}    MEDIUM
 ${large_org_option}    LARGE
+${no_org_selected_message}      Funding level allowed depends on organisation size. Please select your organisation size.
+${incorrect_funding_level_message}      This field should be
 
 *** Test Cases ***
 
@@ -22,13 +24,13 @@ One of the org size options must be selected
     Given the user navigates to the page    ${newly_created_application_your_finances_url}
     And the applicant enters the funding level          50
     When the applicant chooses to save and return to application overview
-    Then the 'your finances' section cannot be successfully saved
+    Then the 'your finances' section cannot be successfully saved with the message      ${no_org_selected_message}
 
 Small organisation can't choose over 70% funding
     [Documentation]    INFUND-1100
     [Tags]    Organisation    Funding    Finance
     When the applicant enters organisation size details    ${small_org_option}    82
-    Then the 'your finances' section cannot be successfully saved
+    Then the 'your finances' section cannot be successfully saved with the message  ${incorrect_funding_level_message}
 
 Small organisation can choose up to 70% funding
     [Documentation]    INFUND-1100
@@ -40,7 +42,7 @@ Medium organisation can't choose over 60% funding
     [Documentation]    INFUND-1100
     [Tags]    Organisation    Funding    Finance
     When the applicant enters organisation size details    ${medium_org_option}    68
-    Then the 'your finances' section cannot be successfully saved
+    Then the 'your finances' section cannot be successfully saved with the message      ${incorrect_funding_level_message}
 
 Medium organisation can choose up to 60% funding
     [Documentation]    INFUND-1100
@@ -52,7 +54,7 @@ Large organisation can't choose over 50% funding
     [Documentation]    INFUND-1100
     [Tags]    Organisation    Funding    Finance
     When the applicant enters organisation size details    ${large_org_option}    54
-    Then the 'your finances' section cannot be successfully saved
+    Then the 'your finances' section cannot be successfully saved with the message      ${incorrect_funding_level_message}
 
 Large organisation can choose up to 50% funding
     [Documentation]    INFUND-1100
@@ -63,7 +65,6 @@ Large organisation can choose up to 50% funding
 *** Keywords ***
 The applicant enters organisation size details
     [Arguments]    ${org_size_option}    ${funding_level}
-    The user navigates to the page    ${newly_created_application_your_finances_url}
     the applicant enters the organisation size    ${org_size_option}
     the applicant enters the funding level    ${funding_level}
     the applicant chooses to save and return to application overview
@@ -74,9 +75,10 @@ The 'your finances' section can be successfully saved
     the applicant can see the correct organisation size has been selected    ${org_size_option}
     the applicant can see the correct funding level has been saved    ${funding_level}
 
-The 'your finances' section cannot be successfully saved
+The 'your finances' section cannot be successfully saved with the message
+    [Arguments]     ${warning_message}
     the user is on the page    ${newly_created_application_your_finances_url}
-    the user should see the text in the page    This field should be
+    the user should see the text in the page    ${warning_message}
 
 The applicant enters the organisation size
     [Arguments]    ${org_size_option}
