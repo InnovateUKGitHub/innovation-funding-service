@@ -71,6 +71,13 @@ Mark all as complete
     And the user navigates to the page    ${FINANCES_OVERVIEW_URL}
     And the user should see the element    css=.finance-summary tr:nth-of-type(3) img[src="/images/field/tick-icon.png
 
+File upload/delete should not be allowed when marked as complete
+    [Documentation]    INFUND-2437
+    [Tags]    Pending
+    # Pending due to 2202
+    Then the user cannot see the option to upload a file on the page    ${YOUR_FINANCES_URL}
+    And the user cannot remove the uploaded file
+
 Academic finance overview
     [Documentation]    INFUND-917
     ...
