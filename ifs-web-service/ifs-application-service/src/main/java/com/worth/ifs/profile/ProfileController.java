@@ -48,7 +48,6 @@ public class ProfileController {
     public String viewUserProfile(Model model, HttpServletRequest request) {
         String destination = "profile/user-profile";
         populateUserDetailsForm(model, request);
-        populateOrganisationDetailsForm(model, request);
         boolean userIsLoggedIn = userIsLoggedIn(request);
         model.addAttribute("userIsLoggedIn", userIsLoggedIn);
         return destination;
@@ -56,40 +55,30 @@ public class ProfileController {
 
     private void populateUserDetailsForm(Model model, HttpServletRequest request){
         final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        UserDetailsForm userDetailsForm = buildUserDetailsForm(user);
+        OrganisationResource organisation;
+        if(!user.getOrganisations().isEmpty()) {
+        	Long organisationId = user.getOrganisations().get(0);
+        	organisation = organisationService.getOrganisationById(organisationId);
+        } else {
+        	organisation = null;
+        }
+        UserDetailsForm userDetailsForm = buildUserDetailsForm(user, organisation);
         setFormActionURL(userDetailsForm);
         model.addAttribute("userDetailsForm", userDetailsForm);
     }
     
-    private void populateOrganisationDetailsForm(Model model, HttpServletRequest request){
-        final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        OrganisationDetailsForm organisationDetailsForm;
-        if(!user.getOrganisations().isEmpty()) {
-        	Long organisationId = user.getOrganisations().get(0);
-        	OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
-        	organisationDetailsForm = buildOrganisationDetailsForm(organisation);
-        } else {
-        	organisationDetailsForm = buildOrganisationDetailsForm(null);
-        }
-        model.addAttribute("organisationDetailsForm", organisationDetailsForm);
-    }
-
-	private UserDetailsForm buildUserDetailsForm(final UserResource user){
+	private UserDetailsForm buildUserDetailsForm(final UserResource user, final OrganisationResource organisation){
         UserDetailsForm form = new UserDetailsForm();
         form.setEmail(user.getEmail());
         form.setFirstName(user.getFirstName());
         form.setLastName(user.getLastName());
         form.setTitle(user.getTitle());
         form.setPhoneNumber(user.getPhoneNumber());
-        return form;
-    }
-	
-	private OrganisationDetailsForm buildOrganisationDetailsForm(final OrganisationResource organisation) {
-		OrganisationDetailsForm form = new OrganisationDetailsForm();
-		if(organisation == null) {
+        
+        if(organisation == null) {
 			return form;
 		}
-		form.setName(organisation.getName());
+		form.setOrganisationName(organisation.getName());
 		form.setCompanyHouseNumber(organisation.getCompanyHouseNumber());
 		
 		Optional<OrganisationAddressResource> organisationAddress = getAddress(organisation);
@@ -104,10 +93,9 @@ public class ProfileController {
 			form.setPostcode(address.getPostcode());
 			form.setTown(address.getTown());
 		}
-		
 		return form;
-	}
-
+    }
+	
 	private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation) {
 		Optional<OrganisationAddressResource> registeredAddress = getAddress(organisation, AddressType.OPERATING);
 		if(registeredAddress.isPresent()) {

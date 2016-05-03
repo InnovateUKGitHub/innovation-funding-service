@@ -101,8 +101,8 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("lastName", Matchers.equalTo(user.getLastName()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("phoneNumber", Matchers.equalTo(user.getPhoneNumber()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("email", Matchers.equalTo(user.getEmail()))))
-                .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("name", Matchers.equalTo(organisation.getName()))))
-                .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("companyHouseNumber", Matchers.equalTo(organisation.getCompanyHouseNumber()))));
+                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("organisationName", Matchers.equalTo(organisation.getName()))))
+                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("companyHouseNumber", Matchers.equalTo(organisation.getCompanyHouseNumber()))));
 
         verifyOrganisationAddress(result, operatingOrgAddress);
     }
@@ -140,22 +140,22 @@ public class ProfileControllerTest extends BaseUnitTest {
     	
         mockMvc.perform(get("/profile/view"))
                 .andExpect(status().is2xxSuccessful())
-		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("addressLine1", Matchers.isEmptyOrNullString())))
-		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("addressLine2", Matchers.isEmptyOrNullString())))
-		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("addressLine3", Matchers.isEmptyOrNullString())))
-		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("town", Matchers.isEmptyOrNullString())))
-		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("county", Matchers.isEmptyOrNullString())))
-		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("postcode", Matchers.isEmptyOrNullString())));
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("addressLine1", Matchers.isEmptyOrNullString())))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("addressLine2", Matchers.isEmptyOrNullString())))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("addressLine3", Matchers.isEmptyOrNullString())))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("town", Matchers.isEmptyOrNullString())))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("county", Matchers.isEmptyOrNullString())))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("postcode", Matchers.isEmptyOrNullString())));
     }
 	
     private void verifyOrganisationAddress(ResultActions result, OrganisationAddressResource registeredOrgAddress) throws Exception {
    	 result
-	    	 	.andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("addressLine1", Matchers.equalTo(registeredOrgAddress.getAddress().getAddressLine1()))))
-		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("addressLine2", Matchers.equalTo(registeredOrgAddress.getAddress().getAddressLine2()))))
-		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("addressLine3", Matchers.equalTo(registeredOrgAddress.getAddress().getAddressLine3()))))
-		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("town", Matchers.equalTo(registeredOrgAddress.getAddress().getTown()))))
-		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("county", Matchers.equalTo(registeredOrgAddress.getAddress().getCounty()))))
-		        .andExpect(model().attribute("organisationDetailsForm", Matchers.hasProperty("postcode", Matchers.equalTo(registeredOrgAddress.getAddress().getPostcode()))));
+	    	 	.andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("addressLine1", Matchers.equalTo(registeredOrgAddress.getAddress().getAddressLine1()))))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("addressLine2", Matchers.equalTo(registeredOrgAddress.getAddress().getAddressLine2()))))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("addressLine3", Matchers.equalTo(registeredOrgAddress.getAddress().getAddressLine3()))))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("town", Matchers.equalTo(registeredOrgAddress.getAddress().getTown()))))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("county", Matchers.equalTo(registeredOrgAddress.getAddress().getCounty()))))
+		        .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("postcode", Matchers.equalTo(registeredOrgAddress.getAddress().getPostcode()))));
 	}
 
     @Test
