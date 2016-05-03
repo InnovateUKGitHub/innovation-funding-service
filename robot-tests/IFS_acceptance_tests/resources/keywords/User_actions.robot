@@ -56,6 +56,14 @@ The user should be redirected to the correct page
     Wait Until Element Is Visible       id=global-header
     Page Should Contain         BETA
 
+the user should be redirected to the correct page without the usual headers
+    [Arguments]    ${URL}
+    Sleep    500ms
+    Location Should Contain    ${URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+
 
 the user reloads the page
     Reload Page

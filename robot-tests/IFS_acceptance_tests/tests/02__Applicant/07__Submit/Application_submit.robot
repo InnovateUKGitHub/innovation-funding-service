@@ -93,7 +93,7 @@ Status of the submitted application
     And the user should see the element    Link=View application
     And the user should see the element    Link=Print Application
     When the user clicks the button/link    Link=Print Application
-    Then the user should be redirected to the correct page    ${SERVER}/application/7/print
+    Then the user should be redirected to the correct page without the usual headers   ${SERVER}/application/7/print
 
 *** Keywords ***
 the applicant clicks Yes in the submit modal
