@@ -3,6 +3,9 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...
 ...
 ...               INFUND-918: As an academic partner i want to be able to mark my finances as complete, so that the lead partner can have confidence in my finances
+...
+...
+...               INFUND-2399: As a Academic partner I want to be able to add my finances including decimals for accurate recording of my finances
 Suite Setup       Guest user log-in    &{collaborator2_credentials}
 Suite Teardown    User closes the browser
 Force Tags        Finances    HappyPath
@@ -26,11 +29,22 @@ Academic finances should be editable when lead marks finances as complete
     Then the user should not see the element    css=#incurred-staff[readonly]
     [Teardown]    Lead applicant marks the finances as incomplete
 
+Academic validations
+    [Documentation]    INFUND-2399
+    When the user navigates to the page    ${YOUR_FINANCES_URL}
+    And the applicant enters invalid inputs
+    Mark academic finances as complete
+    Then the user should see an error    This field should be 0 or higher
+    And the user should see the element    css=.error-summary-list
+    And the field should not contain the currency symbol
+
 Academic finance calculations
     [Documentation]    INFUND-917
+    ...
+    ...    INFUND-2399
     When the user navigates to the page    ${YOUR_FINANCES_URL}
     When the academic partner fills the finances
-    Then the calculations should be correct
+    Then the calculations should be correct and the totals rounded to the second decimal
 
 Academic invalid upload
     When the academic partner uploads a file    ${text_file}
@@ -59,6 +73,8 @@ Mark all as complete
 
 Academic finance overview
     [Documentation]    INFUND-917
+    ...
+    ...    INFUND-2399
     [Tags]
     Given the user navigates to the page    ${FINANCES_OVERVIEW_URL}
     Then the finance table should be correct
@@ -67,18 +83,19 @@ Academic finance overview
 
 *** Keywords ***
 the academic partner fills the finances
-    Input Text    id=incurred-staff    1000
-    Input Text    id=travel    1000
-    Input Text    id=other    1000
-    Input Text    id=investigators    1000
-    Input Text    id=estates    1000
-    Input Text    id=other-direct    1000
-    Input Text    id=indirect    1000
-    Input Text    id=exceptions-staff    1000
-    Input Text    id=exceptions-other-direct    1000
+    [Documentation]    INFUND-2399
+    Input Text    id=incurred-staff    999.999
+    Input Text    id=travel    999.999
+    Input Text    id=other    999.999
+    Input Text    id=investigators    999.999
+    Input Text    id=estates    999.999
+    Input Text    id=other-direct    999.999
+    Input Text    id=indirect    999.999
+    Input Text    id=exceptions-staff    999.999
+    Input Text    id=exceptions-other-direct    999.999
     Input Text    id=tsb-ref    123123
 
-the calculations should be correct
+the calculations should be correct and the totals rounded to the second decimal
     Textfield Value Should Be    id=subtotal-directly-allocated    £ 3,000
     Textfield Value Should Be    id=subtotal-exceptions    £ 2,000
     Textfield Value Should Be    id=total    £ 9,000
@@ -117,3 +134,22 @@ the user reloads the page
 the user can see the link for more JeS details
     Element Should Be Visible    link=Je-S website
     Page Should Contain Element    xpath=//a[contains(@href,'https://je-s.rcuk.ac.uk')]
+
+the applicant enters invalid inputs
+    Input Text    id=incurred-staff    100£
+    Input Text    id=travel    -89
+    Input Text    id=other    999.999
+    Input Text    id=investigators    999.999
+    Input Text    id=estates    999.999
+    Input Text    id=other-direct    999.999
+    Input Text    id=indirect    999.999
+    Input Text    id=exceptions-staff    999.999
+    Input Text    id=exceptions-other-direct    999.999
+    Input Text    id=tsb-ref    123123
+
+the field should not contain the currency symbol
+    Textfield Value Should Be    id=incurred-staff    100
+
+Mark academic finances as complete
+    Focus     jQuery=.button:contains("Mark all as complete")
+    And the user clicks the button/link    jQuery=.button:contains("Mark all as complete")

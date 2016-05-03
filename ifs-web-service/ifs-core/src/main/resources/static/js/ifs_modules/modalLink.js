@@ -38,7 +38,6 @@ IFS.modal = (function(){
         disableTabPage : function(){
             jQuery(":tabbable").each(function(){
                 var el = jQuery(this);
-
                 if(el.closest('[role="dialog"]').length === 0){
                     var tabindex = 0;
                     if(el.prop('tabindex')){

@@ -15,6 +15,15 @@ ${medium_org_option}    MEDIUM
 ${large_org_option}    LARGE
 
 *** Test Cases ***
+
+One of the org size options must be selected
+    [Documentation]     INFUND-2643
+    [Tags]      Organisation    Funding        Finance      Pending
+    Given the user navigates to the page    ${your_finances_url}
+    And the applicant enters the funding level          50
+    When the applicant chooses to save and return to application overview
+    Then the 'your finances' section cannot be successfully saved
+
 Small organisation can't choose over 70% funding
     [Documentation]    INFUND-1100
     [Tags]    Organisation    Funding    Finance
@@ -62,42 +71,40 @@ Any one of the Organisation Size should be selected
 The applicant enters organisation size details
     [Arguments]    ${org_size_option}    ${funding_level}
     The user navigates to the page    ${YOUR_FINANCES_URL}
-    Applicant enters the organisation size    ${org_size_option}
-    Applicant enters the funding level    ${funding_level}
-    Applicant chooses to save and return to application overview
+    the applicant enters the organisation size    ${org_size_option}
+    the applicant enters the funding level    ${funding_level}
+    the applicant chooses to save and return to application overview
 
 The 'your finances' section can be successfully saved
     [Arguments]    ${org_size_option}    ${funding_level}
     The user navigates to the page    ${YOUR_FINANCES_URL}
-    Applicant can see the correct organisation size has been selected    ${org_size_option}
-    Applicant can see the correct funding level has been saved    ${funding_level}
+    the applicant can see the correct organisation size has been selected    ${org_size_option}
+    the applicant can see the correct funding level has been saved    ${funding_level}
 
 The 'your finances' section cannot be successfully saved
     the user is on the page    ${your_finances_url}
     the user should see the text in the page    This field should be
 
-Applicant enters the organisation size
+The applicant enters the organisation size
     [Arguments]    ${org_size_option}
     Select Radio Button    financePosition-organisationSize    ${org_size_option}
 
-Applicant enters the funding level
+The applicant enters the funding level
     [Arguments]    ${funding_level}
     Input Text    id=cost-financegrantclaim    ${funding_level}
 
-Applicant chooses to save and return to application overview
+The applicant chooses to save and return to application overview
     Click Button    Save and return to application overview
-    # the user clicks the button/link    link=Save and return to application overview
-    # the user should be redirected to the correct page    ${application_overview_url}
 
-Applicant can see the correct organisation size has been selected
+
+The applicant can see the correct organisation size has been selected
     [Arguments]    ${org_size_option}
     Radio Button Should Be Set To    financePosition-organisationSize    ${org_size_option}
 
-Applicant can see the correct funding level has been saved
+The applicant can see the correct funding level has been saved
     [Arguments]    ${funding_level}
     Wait Until Element Is Visible    id=cost-financegrantclaim
     ${saved_funding_level} =    Get Element Attribute    id=cost-financegrantclaim@value
     Should Be Equal As Integers    ${saved_funding_level}    ${funding_level}
 
-the applicant doesn't select any of the option
-    Select Radio Button    name=financePosition-organisationSize    false
+

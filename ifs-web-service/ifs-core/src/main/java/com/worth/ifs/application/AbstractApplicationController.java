@@ -205,7 +205,7 @@ public abstract class AbstractApplicationController extends BaseController {
         addMappedSectionsDetails(model, application, competition, section, userOrganisation);
 
         addAssignableDetails(model, application, userOrganisation.orElse(null), userId, section, currentQuestionId);
-        addCompletedDetails(model, application, userOrganisation, userApplicationRoles);
+        addCompletedDetails(model, application, userOrganisation);
 
         model.addAttribute(FORM_MODEL_ATTRIBUTE, form);
         return application;
@@ -369,30 +369,35 @@ public abstract class AbstractApplicationController extends BaseController {
     protected void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                             Optional<SectionResource> currentSection,
                                             Optional<OrganisationResource> userOrganisation) {
-        List<SectionResource> sectionsList = sectionService.filterParentSections(sectionService.getAllByCompetitionId(competition.getId()));
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
+        List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
 
         Map<Long, SectionResource> sections =
-                sectionsList.stream().collect(Collectors.toMap(SectionResource::getId,
+                parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
                         Function.identity()));
 
         userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
 
         List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
 
+        List<FormInputResource> formInputResources = formInputService.findByCompetitionId(competition.getId());
+
         model.addAttribute("sections", sections);
-        Map<Long, List<QuestionResource>> sectionQuestions = sectionsList.stream()
+        Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId,
                         s -> getQuestionsBySection(s.getQuestions(), questions)
                 ));
-        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
+        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
+            .flatMap(a -> a.stream())
+            .collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
         model.addAttribute("questionFormInputs", questionFormInputs);
         model.addAttribute("sectionQuestions", sectionQuestions);
 
         Map<Long, List<QuestionResource>> subsectionQuestions = new HashMap<>();
         if(currentSection.isPresent()){
             Map<Long, List<SectionResource>>  subSections = new HashMap<>();
-            subSections.put(currentSection.get().getId(), simpleMap(currentSection.get().getChildSections(), sectionService::getById));
+            subSections.put(currentSection.get().getId(), getSectionsFromListByIdList(currentSection.get().getChildSections(), allSections));
 
             model.addAttribute("subSections", subSections);
             subsectionQuestions = subSections.get(currentSection.get().getId()).stream()
@@ -401,35 +406,38 @@ public abstract class AbstractApplicationController extends BaseController {
                     ));
             model.addAttribute("subsectionQuestions", subsectionQuestions);
         }else{
-            Map<Long, List<SectionResource>>   subSections = sectionsList.stream()
+            Map<Long, List<SectionResource>>   subSections = parentSections.stream()
                     .collect(Collectors.toMap(
-                            SectionResource::getId, s -> simpleMap(s.getChildSections(), sectionService::getById)
+                            SectionResource::getId, s -> getSectionsFromListByIdList(s.getChildSections(), allSections)
                     ));
             model.addAttribute("subSections", subSections);
-            subsectionQuestions = sectionsList.stream()
+            subsectionQuestions = parentSections.stream()
                     .collect(Collectors.toMap(SectionResource::getId,
                             ss -> getQuestionsBySection(ss.getQuestions(), questions)
                     ));
             model.addAttribute("subsectionQuestions", subsectionQuestions);
         }
 
-        Map<Long, List<FormInputResource>> subSectionQuestionFormInputs = subsectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findByQuestion(k.getId())));
+        Map<Long, List<FormInputResource>> subSectionQuestionFormInputs = subsectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
         model.addAttribute("subSectionQuestionFormInputs", subSectionQuestionFormInputs);
+    }
+
+    private List<SectionResource> getSectionsFromListByIdList(final List<Long> childSections, final List<SectionResource> allSections) {
+        return simpleFilter(allSections, section -> childSections.contains(section.getId()));
+    }
+
+    private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
+        return simpleFilter(list, input -> input.getId().equals(id));
     }
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
-    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, List<ProcessRoleResource> userApplicationRoles) {
+
+    private void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
-
-        SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
-        Set<Long> questionsCompletedByAllOrganisation = new TreeSet<>(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(organisations.first()))));
-        // only keep the questionIDs of questions that are complete by all organisations
-        organisations.forEach(o -> questionsCompletedByAllOrganisation.retainAll(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(o)))));
-        model.addAttribute("questionsCompletedByAllOrganisation", questionsCompletedByAllOrganisation);
 
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = new TreeSet<>(completedSectionsByOrganisation.get(completedSectionsByOrganisation.keySet().stream().findFirst().get()));
@@ -461,6 +469,14 @@ public abstract class AbstractApplicationController extends BaseController {
         	eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
         }        
         model.addAttribute("eachCollaboratorFinanceSectionId", eachCollaboratorFinanceSectionId);
+    }
+
+    private void addCompletedQuestionsForAllOrganisations(Model model, ApplicationResource application, List<ProcessRoleResource> userApplicationRoles) {
+        SortedSet<OrganisationResource> organisations = getApplicationOrganisations(userApplicationRoles);
+        Set<Long> questionsCompletedByAllOrganisation = new TreeSet<>(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(organisations.first()))));
+        // only keep the questionIDs of questions that are complete by all organisations
+        organisations.forEach(o -> questionsCompletedByAllOrganisation.retainAll(call(getMarkedAsCompleteDetails(application, Optional.ofNullable(o)))));
+        model.addAttribute("questionsCompletedByAllOrganisation", questionsCompletedByAllOrganisation);
     }
 
     protected void addSectionDetails(Model model, Optional<SectionResource> currentSection) {

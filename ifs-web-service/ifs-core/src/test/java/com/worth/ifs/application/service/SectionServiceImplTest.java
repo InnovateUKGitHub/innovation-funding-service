@@ -1,37 +1,31 @@
 package com.worth.ifs.application.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.worth.ifs.BaseUnitTestMocksTest;
-import com.worth.ifs.application.builder.QuestionBuilder;
 import com.worth.ifs.application.builder.QuestionResourceBuilder;
-import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.application.resource.SectionResource;
-import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.competition.builder.CompetitionBuilder;
 import com.worth.ifs.competition.domain.Competition;
-import com.worth.ifs.form.builder.FormInputBuilder;
-import com.worth.ifs.form.domain.FormInput;
-import com.worth.ifs.form.domain.FormInputType;
-
 import com.worth.ifs.form.resource.FormInputResource;
 import com.worth.ifs.form.service.FormInputService;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
-import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 
 
 public class SectionServiceImplTest extends BaseUnitTestMocksTest {
@@ -65,8 +59,10 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
 
         parentSection.setChildSections(asList(childSection1.getId()));
 
-        when(sectionRestService.getById(eq(childSection1.getId()))).thenReturn(RestResult.restSuccess(childSection1));
-        when(sectionRestService.getById(eq(parentSection.getId()))).thenReturn(RestResult.restSuccess(parentSection));
+        when(sectionRestService.getById(eq(childSection1.getId()))).thenReturn(restSuccess(childSection1));
+        when(sectionRestService.getById(eq(parentSection.getId()))).thenReturn(restSuccess(parentSection));
+
+        when(sectionRestService.getByCompetition(anyLong())).thenReturn(restSuccess(asList(parentSection,childSection1)));
 
         QuestionResource question1 = QuestionResourceBuilder.newQuestionResource().withFormInputs(Arrays.asList(1L)).build();
         when(questionService.getById(eq(question1.getId()))).thenReturn(question1);
@@ -78,6 +74,8 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         when(questionService.findByCompetition(childSection1.getCompetition())).thenReturn(asList(question1, question2));
         when(formInputService.getOne(1L)).thenReturn(formInputResource1);
         when(formInputService.getOne(2L)).thenReturn(formInputResource2);
+
+        when(formInputService.findByCompetitionId(anyLong())).thenReturn(asList(formInputResource1, formInputResource2));
     }
 
     @Test

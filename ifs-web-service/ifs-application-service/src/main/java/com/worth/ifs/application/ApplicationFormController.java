@@ -52,7 +52,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -443,7 +442,7 @@ public class ApplicationFormController extends AbstractApplicationController {
     }
 
     private void addNonDuplicateFieldError(BindingResult bindingResult, String k, String e) {
-        if(bindingResult.getFieldErrorCount(k) > 0){
+        if(bindingResult.getFieldErrors(k) != null && bindingResult.getFieldErrorCount(k) > 0){
             bindingResult.getFieldErrors(k)
                     .stream()
                     .filter(fieldError -> !fieldError.getDefaultMessage().equals(e))
@@ -457,9 +456,6 @@ public class ApplicationFormController extends AbstractApplicationController {
         }else{
             bindingResult.rejectValue(k, e, e);
         }
-
-
-
     }
 
     private List<ValidationMessages> markAllQuestionsInSection(ApplicationResource application,
@@ -719,8 +715,9 @@ public class ApplicationFormController extends AbstractApplicationController {
         
         if (updatedApplication.getStartDate() != null) {
             LOG.debug("setApplicationDetails date 123: " + updatedApplication.getStartDate().toString());
-            if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)) {
-                // user submitted a empty date field.
+            if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)
+                    || updatedApplication.getStartDate().isBefore(LocalDate.now())) {
+                // user submitted a empty date field or date before today
                 application.setStartDate(null);
             }else{
                 application.setStartDate(updatedApplication.getStartDate());
@@ -757,8 +754,10 @@ public class ApplicationFormController extends AbstractApplicationController {
                 return this.createJsonObjectNode(true, null);
             }
         } catch (Exception e) {
-            LOG.error("Got a exception: ");
-            e.printStackTrace();
+            LOG.error("Got a exception: "+ e.getMessage());
+            if(LOG.isDebugEnabled()){
+                e.printStackTrace();
+            }
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
             errors.add(ex.getErrorMessage());
             return this.createJsonObjectNode(false, errors);
@@ -832,26 +831,24 @@ public class ApplicationFormController extends AbstractApplicationController {
 
     private List<String> saveApplicationStartDate(ApplicationResource application, String fieldName, String value, List<String> errors) {
         LocalDate startDate = application.getStartDate();
-        try {
             if (fieldName.endsWith(".dayOfMonth")) {
                 startDate = LocalDate.of(startDate.getYear(), startDate.getMonth(), Integer.parseInt(value));
             } else if (fieldName.endsWith(".monthValue")) {
                 startDate = LocalDate.of(startDate.getYear(), Integer.parseInt(value), startDate.getDayOfMonth());
             } else if (fieldName.endsWith(".year")) {
                 startDate = LocalDate.of(Integer.parseInt(value), startDate.getMonth(), startDate.getDayOfMonth());
+            } else if ("application.startDate".equals(fieldName)){
+                String[] parts = value.split("-");
+                startDate = LocalDate.of(Integer.parseInt(parts[2]), Integer.parseInt(parts[1]), Integer.parseInt(parts[0]));
             }
             if (startDate.isBefore(LocalDate.now())) {
                 errors.add("Please enter a future date.");
+                startDate = null;
+            }else{
+                LOG.debug("Save startdate: "+ startDate.toString());
             }
-
-            LOG.debug("Save startdate: "+ startDate.toString());
-
             application.setStartDate(startDate);
             applicationService.save(application);
-        } catch (DateTimeException | NumberFormatException e) {
-            errors.add("Please enter a valid date.");
-            LOG.warn(e);
-        }
         return errors;
     }
 

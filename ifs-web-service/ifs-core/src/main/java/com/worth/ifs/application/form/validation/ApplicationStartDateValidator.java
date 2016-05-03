@@ -1,13 +1,12 @@
 package com.worth.ifs.application.form.validation;
 
-import java.time.DateTimeException;
-import java.time.LocalDate;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+
+import javax.servlet.http.HttpServletRequest;
+import java.time.DateTimeException;
+import java.time.LocalDate;
 
 /**
  * This is responsible for validating the input application start date.
@@ -32,17 +31,21 @@ public class ApplicationStartDateValidator implements Validator {
 		try {
 			startDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
 		} catch (NumberFormatException | DateTimeException e) {
-			 reject(errors);
+			 rejectInvalid(errors);
 			 return;
 		}
 
 		if (startDate.isBefore(LocalDate.now())) {
-			 reject(errors);
+			 rejectPast(errors);
         }
 	}
 
-	private void reject(Errors errors) {
-		 errors.reject("application.startDate.invalid", "Please enter a future date.");
+	private void rejectPast(Errors errors) {
+		 errors.reject("application.startDate", "Please enter a future date.");
+	}
+	
+	private void rejectInvalid(Errors errors) {
+		 errors.reject("application.startDate", "Please enter a valid date.");
 	}
 
 	@Override

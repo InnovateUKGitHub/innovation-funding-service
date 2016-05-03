@@ -9,6 +9,7 @@ import java.util.List;
 import static com.worth.ifs.commons.service.ParameterizedTypeReferences.formInputResourceListType;
 import static com.worth.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class FormInputRestServiceMocksTest extends BaseRestServiceUnitTest<FormInputRestServiceImpl> {
     private static final String formInputRestURL = "/forminput";
@@ -28,5 +29,27 @@ public class FormInputRestServiceMocksTest extends BaseRestServiceUnitTest<FormI
 
         List<FormInputResource> formInputs = service.getByQuestionId(1L).getSuccessObject();
         assertEquals(returnedFormInputs, formInputs);
+    }
+
+    @Test
+    public void getOneTest() {
+        FormInputResource formInputResource = newFormInputResource().build();
+        setupGetWithRestResultExpectations(formInputRestURL + "/1", FormInputResource.class, formInputResource);
+
+        FormInputResource returnedFormInputs = service.getById(1L).getSuccessObject();
+
+        assertNotNull(returnedFormInputs);
+        assertEquals(formInputResource, returnedFormInputs);
+    }
+
+    @Test
+    public void findByCompetitionIdTest() {
+        List<FormInputResource> formInputResources = newFormInputResource().build(3);
+        setupGetWithRestResultExpectations(formInputRestURL + "/findByCompetitionId/1", formInputResourceListType(), formInputResources);
+
+        List<FormInputResource> returnedFormInputResources = service.getByCompetitionId(1L).getSuccessObject();
+
+        assertNotNull(returnedFormInputResources);
+        assertEquals(formInputResources, returnedFormInputResources);
     }
 }

@@ -103,85 +103,32 @@ the guidance should be visible
     Element Should Be Visible    css=#details-content-0 p
 
 the Applicant clicks a section then the Applicant navigates to the correct section
-    Click Element    link=Application details
-    Location Should Be    ${APPLICATION_DETAILS_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=Project summary
-    Click Element    link=Project summary
-    Location Should Be    ${PROJECT_SUMMARY_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=Public description
-    Click Element    link=Public description
-    Location Should Be    ${PUBLIC_DESCRIPTION_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=Scope
-    Click Element    link=Scope
-    Location Should Be    ${SCOPE_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=1. Business opportunity
-    Click Element    link=1. Business opportunity
-    Location Should Be    ${BUSINESS_OPPORTUNITY_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=2. Potential market
-    Click Element    link=2. Potential market
-    Location Should Be    ${POTENTIAL_MARKET_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=3. Project exploitation
-    Click Element    link=3. Project exploitation
-    Location Should Be    ${PROJECT_EXPLOITATION_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=4. Economic benefit
-    Click Element    link=4. Economic benefit
-    Location Should Be    ${ECONOMIC_BENEFIT_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=5. Technical approach
-    Click Element    link=5. Technical approach
-    Location Should Be    ${TECHNICAL_APPROACH_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=6. Innovation
-    Click Element    link=6. Innovation
-    Location Should Be    ${INNOVATION_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=7. Risks
-    Click Element    link=7. Risks
-    Location Should Be    ${RISKS_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=8. Project team
-    Click Element    link=8. Project team
-    Location Should Be    ${PROJECT_TEAM_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=9. Funding
-    Click Element    link=9. Funding
-    Location Should Be    ${FUNDING_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=10. Adding value
-    Click Element    link=10. Adding value
-    Location Should Be    ${ADDING_VALUE_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=Your finances
-    Click Element    link=Your finances
-    Location Should Be    ${YOUR_FINANCES_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
-    Wait Until Element Is Visible    link=Finances overview
-    Click Element    link=Finances overview
-    Location Should Be    ${FINANCES_OVERVIEW_URL}
-    Page Should Not Contain Element    css=body.error
-    Click Element    link=Application Overview
+
+    The user clicks the section link and is on the correct section      Application details     ${APPLICATION_DETAILS_URL}
+    The user clicks the section link and is on the correct section      Project summary         ${PROJECT_SUMMARY_URL}
+    The user clicks the section link and is on the correct section      Public description      ${PUBLIC_DESCRIPTION_URL}
+    The user clicks the section link and is on the correct section      Scope                   ${SCOPE_URL}
+    The user clicks the section link and is on the correct section      1. Business opportunity    ${BUSINESS_OPPORTUNITY_URL}
+    The user clicks the section link and is on the correct section      2. Potential market        ${POTENTIAL_MARKET_URL}
+    The user clicks the section link and is on the correct section      3. Project exploitation    ${PROJECT_EXPLOITATION_URL}
+    The user clicks the section link and is on the correct section      4. Economic benefit        ${ECONOMIC_BENEFIT_URL}
+    The user clicks the section link and is on the correct section      5. Technical approach      ${TECHNICAL_APPROACH_URL}
+    The user clicks the section link and is on the correct section      6. Innovation              ${INNOVATION_URL}
+    The user clicks the section link and is on the correct section      7. Risks                   ${RISKS_URL}
+    The user clicks the section link and is on the correct section      8. Project team            ${PROJECT_TEAM_URL}
+    The user clicks the section link and is on the correct section      9. Funding                 ${FUNDING_URL}
+    The user clicks the section link and is on the correct section      10. Adding value            ${ADDING_VALUE_URL}
+    The user clicks the section link and is on the correct section      Your finances           ${YOUR_FINANCES_URL}
+    The user clicks the section link and is on the correct section      Finances overview        ${FINANCES_OVERVIEW_URL}
+
+
+The user clicks the section link and is on the correct section
+    [Arguments]     ${link}     ${url}
+    The user clicks the button/link     link=${link}
+    The user should be redirected to the correct page   ${url}
+    The user clicks the button/link     link=Application Overview
+
+
 
 the Applicant edits the Public description
     Clear Element Text    css=#form-input-12 .editor
