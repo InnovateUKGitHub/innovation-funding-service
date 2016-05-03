@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle=${title}" th:remove="tag"></div>
+</head>
+<body class="error" th:attrappend="class='${errorMessageClass}'">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
+<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+
+    <h1 class="heading-large" th:text="${title}">Page title</h1>
+
+    <p th:if="${url}">
+        <b>Page:</b> <span th:text="${url}">Page URL</span>
+    </p>
+
+    <p th:if="${status}">
+        <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
+            th:if="${error}" th:text="'('+${error}+')'">error ...</span>
+    </p>
+
+    <!--/* ${ex} is set by ourSimpleMappingExceptionResolver,
+           ${exception} or ${message} are set internally by Spring Boot. */-->
+
+    <div class="boxed">
+		<span>
+            <p th:text="${messageForUser}" th:remove="tag">An unexpected error occurred.</p>
+            You can return to <a th:href="@{/}">IFS application </a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
+        </span>
+    </div>
+
+
+    <span th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}" th:remove="tag">
+        Error message will be displayed here for developers on dev/UAT environment
+    </span>
+
+
+    <p th:unless="${exception} or (${message} and ${message.length() != 0})">
+        Cause unknown (no exception details available)</p>
+
+    <pre ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}" th:remove="tag">
+        Stack trace will be printed here...
+    </pre>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag"></div>
+<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+</body>
+</html>

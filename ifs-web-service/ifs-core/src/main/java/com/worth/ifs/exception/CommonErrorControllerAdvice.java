@@ -1,9 +1,6 @@
 package com.worth.ifs.exception;
 
-import java.util.Collections;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.worth.ifs.commons.error.exception.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
@@ -15,21 +12,8 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.worth.ifs.commons.error.exception.FileAlreadyLinkedToFormInputResponseException;
-import com.worth.ifs.commons.error.exception.ForbiddenActionException;
-import com.worth.ifs.commons.error.exception.GeneralUnexpectedErrorException;
-import com.worth.ifs.commons.error.exception.IncorrectArgumentTypeException;
-import com.worth.ifs.commons.error.exception.InvalidURLException;
-import com.worth.ifs.commons.error.exception.LengthRequiredException;
-import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
-import com.worth.ifs.commons.error.exception.PayloadTooLargeException;
-import com.worth.ifs.commons.error.exception.UnableToCreateFileException;
-import com.worth.ifs.commons.error.exception.UnableToCreateFoldersException;
-import com.worth.ifs.commons.error.exception.UnableToDeleteFileException;
-import com.worth.ifs.commons.error.exception.UnableToRenderNotificationTemplateException;
-import com.worth.ifs.commons.error.exception.UnableToSendNotificationException;
-import com.worth.ifs.commons.error.exception.UnableToUpdateFileException;
-import com.worth.ifs.commons.error.exception.UnsupportedMediaTypeException;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 
 /**
  * This controller can handle all Exceptions, so the user should always gets a
@@ -158,5 +142,17 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
         return createExceptionModelAndView(e, "error", req, Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ResponseStatus(value= HttpStatus.FORBIDDEN)  // 403
+    @ExceptionHandler(value = FileAwaitingVirusScanException.class)
+    public ModelAndView fileAwaitingScanning(HttpServletRequest req, FileAwaitingVirusScanException e) {
+        LOG.debug("ErrorController  fileAwaitingScanning", e);
+        return createExceptionModelAndViewWithTitleAndMessage(e, "error.title.file.awaiting.scanning", "error.message.file.awaiting.scanning", req, e.getArguments(), HttpStatus.FORBIDDEN);
+    }
 
+    @ResponseStatus(value= HttpStatus.FORBIDDEN)  // 403
+    @ExceptionHandler(value = FileQuarantinedException.class)
+    public ModelAndView fileQuarantined(HttpServletRequest req, FileQuarantinedException e) {
+        LOG.debug("ErrorController  fileQuarantined", e);
+        return createExceptionModelAndViewWithTitleAndMessage(e, "error.title.file.quarantined", "error.message.file.quarantined", req, e.getArguments(), HttpStatus.FORBIDDEN);
+    }
 }
