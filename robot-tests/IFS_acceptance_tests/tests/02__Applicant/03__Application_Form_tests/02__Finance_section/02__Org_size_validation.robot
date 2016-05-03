@@ -18,8 +18,8 @@ ${large_org_option}    LARGE
 
 One of the org size options must be selected
     [Documentation]     INFUND-2643
-    [Tags]      Organisation    Funding        Finance      Pending
-    Given the user navigates to the page    ${your_finances_url}
+    [Tags]      Organisation    Funding        Finance
+    Given the user navigates to the page    ${newly_created_application_your_finances_url}
     And the applicant enters the funding level          50
     When the applicant chooses to save and return to application overview
     Then the 'your finances' section cannot be successfully saved
@@ -60,29 +60,22 @@ Large organisation can choose up to 50% funding
     When the applicant enters organisation size details    ${large_org_option}    43
     Then the 'your finances' section can be successfully saved    ${large_org_option}    43
 
-Any one of the Organisation Size should be selected
-    [Documentation]    INFUND-2643
-    [Tags]    Organisation    Funding    Finance    Pending
-    When the applicant doesn't select any of the option
-    And The user clicks the button/link    name=mark_section_as_complete
-    Then the user should see an error    Funding level allowed depends on organisation size. Please select your organisation size.
-
 *** Keywords ***
 The applicant enters organisation size details
     [Arguments]    ${org_size_option}    ${funding_level}
-    The user navigates to the page    ${YOUR_FINANCES_URL}
+    The user navigates to the page    ${newly_created_application_your_finances_url}
     the applicant enters the organisation size    ${org_size_option}
     the applicant enters the funding level    ${funding_level}
     the applicant chooses to save and return to application overview
 
 The 'your finances' section can be successfully saved
     [Arguments]    ${org_size_option}    ${funding_level}
-    The user navigates to the page    ${YOUR_FINANCES_URL}
+    The user navigates to the page    ${newly_created_application_your_finances_url}
     the applicant can see the correct organisation size has been selected    ${org_size_option}
     the applicant can see the correct funding level has been saved    ${funding_level}
 
 The 'your finances' section cannot be successfully saved
-    the user is on the page    ${your_finances_url}
+    the user is on the page    ${newly_created_application_your_finances_url}
     the user should see the text in the page    This field should be
 
 The applicant enters the organisation size
