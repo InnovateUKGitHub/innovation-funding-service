@@ -18,6 +18,18 @@ public class CsrfUidTokenTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
+    public void test_getToken() throws Exception {
+        final String nonce = "add3fc58-0c7c-410d-9223-15a1153dcd8b";
+        final String uId = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
+        final String timestampAsString = "2016-04-20T14:23:47.241Z";
+
+        final String expected = asList(nonce, uId, timestampAsString).stream().collect(Collectors.joining("_"));
+        final CsrfUidToken token = new CsrfUidToken(nonce, uId, Instant.parse(timestampAsString));
+
+        assertEquals(expected, token.getToken());
+    }
+
+    @Test
     public void test_parse() throws Exception {
         final String nonce = "add3fc58-0c7c-410d-9223-15a1153dcd8b";
         final String uId = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";

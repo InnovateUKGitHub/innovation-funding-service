@@ -31,7 +31,7 @@ public class CapitalUsageHandler extends CostHandler {
                     existing = costFormValue;
                     break;
                 case "deprecation_period":
-                    deprecation = Integer.valueOf(costFormValue);
+                    deprecation = getIntegerValue(costFormValue, 0);
                     break;
                 case "npv":
                     npv = getBigDecimalValue(costFormValue, 0d);
@@ -40,10 +40,10 @@ public class CapitalUsageHandler extends CostHandler {
                     residualValue = getBigDecimalValue(costFormValue, 0d);
                     break;
                 case "utilisation":
-                    utilisation = Integer.valueOf(costFormValue);
+                    utilisation = getIntegerValue(costFormValue, 0);
                     break;
                 default:
-                    log.info("Unused costField: " + financeFormField.getCostName());
+                    LOG.info("Unused costField: " + financeFormField.getCostName());
                     break;
             }
         }

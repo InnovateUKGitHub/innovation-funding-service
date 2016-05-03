@@ -60,14 +60,15 @@ public class OtherFundingValidator implements Validator {
     private void validateDate(OtherFunding otherFunding, Errors errors){
         String securedDate = otherFunding.getSecuredDate();
         if(StringUtils.isNotBlank(securedDate) && !isValidDate(securedDate)) {
-            errors.rejectValue("securedDate", "validation.finance.secured.date.invalid", "Invalid secured date.  Please use MM-YYYY format.");
+            errors.rejectValue("securedDate", "validation.finance.secured.date.invalid");
         }
     }
 
     private void validateFundingSource(String fundingSource, Errors errors){
-        if(StringUtils.isNotBlank(fundingSource) && StringUtils.isBlank(fundingSource)){
-            errors.rejectValue("fundingSource", "validation.finance.funding.source.blank", "Funding source cannot be blank");
+        if(StringUtils.isBlank(fundingSource)){
+            errors.rejectValue("fundingSource", "validation.finance.funding.source.blank");
         }
+
     }
 
     private boolean userHasSelectedYes(final OtherFunding otherFunding) {

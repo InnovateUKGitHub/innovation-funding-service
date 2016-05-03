@@ -182,7 +182,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         assertTrue(messages.getErrors().stream()
                 .filter(e -> "cost".equals(e.getErrorKey()))
-                .filter(e -> "This field should be 1 or higher".equals(e.getErrorMessage()))
+                .filter(e -> "This field should be 0 or higher".equals(e.getErrorMessage()))
                 .findAny().isPresent());
     }
 
