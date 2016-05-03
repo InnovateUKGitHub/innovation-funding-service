@@ -92,16 +92,10 @@ public class ProfileController {
 		form.setName(organisation.getName());
 		form.setCompanyHouseNumber(organisation.getCompanyHouseNumber());
 		
-		OrganisationAddressResource organisationAddress;
-		Optional<OrganisationAddressResource> registeredAddress = organisation.getAddresses().stream().filter(a -> AddressType.REGISTERED.equals(a.getAddressType())).findFirst();
-		if(registeredAddress.isPresent()) {
-			organisationAddress = registeredAddress.get();
-		} else {
-			organisationAddress = organisation.getAddresses().stream().filter(a -> AddressType.OPERATING.equals(a.getAddressType())).findFirst().orElse(null);
-		}
+		Optional<OrganisationAddressResource> organisationAddress = getAddress(organisation);
 		
-		if(organisationAddress != null && organisationAddress.getAddress() != null) {
-			AddressResource address = organisationAddress.getAddress();
+		if(organisationAddress.isPresent() && organisationAddress.get().getAddress() != null) {
+			AddressResource address = organisationAddress.get().getAddress();
 			
 			form.setAddressLine1(address.getAddressLine1());
 			form.setAddressLine2(address.getAddressLine2());
@@ -112,6 +106,18 @@ public class ProfileController {
 		}
 		
 		return form;
+	}
+
+	private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation) {
+		Optional<OrganisationAddressResource> registeredAddress = getAddress(organisation, AddressType.REGISTERED);
+		if(registeredAddress.isPresent()) {
+			return registeredAddress;
+		}
+		return getAddress(organisation, AddressType.OPERATING);
+	}
+	
+	private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final AddressType addressType) {
+		return organisation.getAddresses().stream().filter(a -> addressType.equals(a.getAddressType())).findFirst();
 	}
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
