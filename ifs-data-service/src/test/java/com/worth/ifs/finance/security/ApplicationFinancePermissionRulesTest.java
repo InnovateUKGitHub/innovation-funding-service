@@ -120,4 +120,19 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         assertFalse(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
         assertFalse(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, compAdmin));
     }
+
+    @Test
+    public void testLeadCanGetFileResourceForPartner() {
+        assertTrue(rules.leadApplicantCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, leadApplicant));
+        assertFalse(rules.leadApplicantCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, collaborator));
+        assertFalse(rules.leadApplicantCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, otherLeadApplicant));
+        assertFalse(rules.leadApplicantCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, compAdmin));
+    }
+
+    @Test
+    public void testCompAdminCanGetFileResourceForPartner(){
+        assertTrue(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, compAdmin));
+        assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, collaborator));
+        assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, leadApplicant));
+    }
 }

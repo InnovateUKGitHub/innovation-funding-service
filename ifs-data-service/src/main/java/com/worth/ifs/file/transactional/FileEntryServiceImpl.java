@@ -34,7 +34,7 @@ public class FileEntryServiceImpl extends BaseTransactionalService implements Fi
     }
 
     @Override
-    public ServiceResult<FileEntryResource> getFileEntryIdByApplicationFinanceId(Long applicationFinanceId) {
+    public ServiceResult<FileEntryResource> getFileEntryByApplicationFinanceId(Long applicationFinanceId) {
         return find(applicationFinance(applicationFinanceId)).andOnSuccessReturn(finance -> mapper.mapToResource(finance.getFinanceFileEntry()));
     }
 

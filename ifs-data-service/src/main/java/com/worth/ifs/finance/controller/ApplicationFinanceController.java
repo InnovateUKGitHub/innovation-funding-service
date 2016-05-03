@@ -238,7 +238,7 @@ public class ApplicationFinanceController {
     }
 
     private ServiceResult<FileEntryResource> doGetFile(long applicationFinanceId) {
-        return fileEntryService.getFileEntryIdByApplicationFinanceId(applicationFinanceId);
+        return fileEntryService.getFileEntryByApplicationFinanceId(applicationFinanceId);
     }
 
     private Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
