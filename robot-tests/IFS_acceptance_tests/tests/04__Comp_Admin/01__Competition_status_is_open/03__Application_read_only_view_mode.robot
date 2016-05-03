@@ -57,5 +57,6 @@ the user can see the upload for the 'Technical approach' question
     the user should see the text in the page    ${valid_pdf}
 
 the user can view this file without any errors
-    the user clicks the button/link    xpath=//a[contains(@href, 'download')]
+    # the user clicks the button/link    xpath=//a[contains(@href, 'https://ifs-local-dev/management/competition/1/application/1/forminput/18/download')]
+    the user clicks the button/link         link=testing.pdf(7 KB)
     the user should not see an error in the page

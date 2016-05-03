@@ -123,7 +123,7 @@ the Applicant is logged-in
     Wait Until Element Is Visible    link=Logout
 
 the user should be logged-in as an Assessor
-    Title Should Be    Innovation Funding Service - Assessor Dashboard
+    Title Should Be     Assessor Dashboard - Innovation Funding Service
 
 the user opens the mailbox and clicks the reset link
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
