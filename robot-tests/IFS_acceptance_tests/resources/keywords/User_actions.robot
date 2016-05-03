@@ -51,6 +51,11 @@ The user should be redirected to the correct page
     Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Wait Until Element Is Visible       id=global-header
+    Page Should Contain         BETA
+
 
 the user reloads the page
     Reload Page
@@ -229,7 +234,7 @@ Delete the emails from the test mailbox
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
     Wait Until Page Contains Element    link=terms and conditions
-    Page Should Contain Element     xpath=//a[contains(@href, '/info/terms-and-conditions')]
+    Page Should Contain Element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     Input Text    id=firstName    Stuart
     Input Text    id=lastName    ANDERSON
     Input Text    id=phoneNumber    23232323

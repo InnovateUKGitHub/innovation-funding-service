@@ -27,7 +27,7 @@ public class OtherCostHandler extends CostHandler {
                         cost = getBigDecimalValue(fieldValue, 0d);
                         break;
                     default:
-                        log.info("Unused costField: " + financeFormField.getCostName());
+                        LOG.info("Unused costField: " + financeFormField.getCostName());
                         break;
                 }
             }

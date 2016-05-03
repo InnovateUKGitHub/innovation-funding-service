@@ -57,5 +57,5 @@ the user can see the upload for the 'Technical approach' question
     the user should see the text in the page    ${valid_pdf}
 
 the user can view this file without any errors
-    the user clicks the button/link    css=.uploaded-file
+    the user clicks the button/link    xpath=//a[contains(@href, 'download')]
     the user should not see an error in the page

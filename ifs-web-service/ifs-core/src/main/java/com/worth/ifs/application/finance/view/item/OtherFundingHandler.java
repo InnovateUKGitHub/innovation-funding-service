@@ -18,7 +18,7 @@ public class OtherFundingHandler extends CostHandler {
     public CostItem toCostItem(Long id, List<FinanceFormField> financeFormFields) {
         String otherPublicFunding = null;
         String fundingSource = null;
-        String dateSecured = null;
+        String securedDate = null;
         BigDecimal fundingAmount = null;
 
         for (FinanceFormField financeFormField : financeFormFields) {
@@ -35,16 +35,16 @@ public class OtherFundingHandler extends CostHandler {
                     case "fundingSource":
                         fundingSource = fieldValue;
                         break;
-                    case "dateSecured":
-                        dateSecured = fieldValue;
+                    case "securedDate":
+                        securedDate = fieldValue;
                         break;
                     default:
-                        log.info("Unused costField: " + financeFormField.getCostName());
+                        LOG.info("Unused costField: " + financeFormField.getCostName());
                         break;
                 }
             }
         }
 
-        return new OtherFunding(id, otherPublicFunding, fundingSource, dateSecured, fundingAmount);
+        return new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount);
     }
 }
