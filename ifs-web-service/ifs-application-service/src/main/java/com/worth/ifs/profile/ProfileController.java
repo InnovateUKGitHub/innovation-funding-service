@@ -109,11 +109,11 @@ public class ProfileController {
 	}
 
 	private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation) {
-		Optional<OrganisationAddressResource> registeredAddress = getAddress(organisation, AddressType.REGISTERED);
+		Optional<OrganisationAddressResource> registeredAddress = getAddress(organisation, AddressType.OPERATING);
 		if(registeredAddress.isPresent()) {
 			return registeredAddress;
 		}
-		return getAddress(organisation, AddressType.OPERATING);
+		return getAddress(organisation, AddressType.REGISTERED);
 	}
 	
 	private Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final AddressType addressType) {
