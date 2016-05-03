@@ -31,10 +31,9 @@ public class ScheduledMoveScannedFilesToFinal {
     @Scheduled(fixedDelayString = "${ifs.data.service.file.storage.virus.scanning.scanned.move.delay.millis}")
     public void moveFiles() {
         final ServiceResult<List<File>> listServiceResult = moveAllFiles(scannedFileStorageStrategy, finalFileStorageStrategy, true);
-        if (listServiceResult.isFailure()){
+        if (listServiceResult.isFailure()) {
             LOG.error("Failed to move some files from scanned to final: " + listServiceResult.getFailure());
-        }
-        else {
+        } else if (listServiceResult.getSuccessObject() != null && listServiceResult.getSuccessObject().size() > 0) {
             LOG.debug("Copied files from scanned to final: " + listServiceResult.getSuccessObject());
         }
     }

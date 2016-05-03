@@ -50,6 +50,26 @@ function clearDownFileRepository {
     echo "***********Deleting any uploaded files***************"
     echo "storedFileFolder:		${storedFileFolder}"
     rm -rf ${storedFileFolder}
+
+    echo "***********Deleting any holding for scan files***************"
+    echo "virusScanHoldingFolder:	${virusScanHoldingFolder}"
+    rm -rf ${virusScanHoldingFolder}
+
+    echo "***********Deleting any quarantined files***************"
+    echo "virusScanQuarantinedFolder:	${virusScanQuarantinedFolder}"
+    rm -rf ${virusScanQuarantinedFolder}
+    
+    echo "***********Deleting any scanned files***************"
+    echo "virusScanScannedFolder:	${virusScanScannedFolder}"
+    rm -rf ${virusScanScannedFolder}    
+}
+
+function addTestFiles {
+    echo "***********Adding test files***************"
+    echo "***********Making the quarantined directory ***************"
+    mkdir -p ${virusScanQuarantinedFolder}
+    echo "***********Adding pretend quarantined file ***************"
+    mv ${uploadFileDir}/8 ${virusScanQuarantinedFolder}/8
 }
 
 
@@ -178,9 +198,17 @@ echo "dataPort:          ${dataPort}"
 mysqlUser=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsDatasourceUsername'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "mysqlUser:         ${mysqlUser}"
 mysqlPassword=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsDatasourcePassword'  | cut -d "=" -f2 | sed 's/"//g'`
-storedFileFolder=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsFileStorageLocation'  | cut -d "=" -f2 | sed 's/"//g'`/ifs/
-echo "storedFileFolder:		${storedFileFolder}"
-echo "We are about to delete the above directory, make sure that it's the right one!"
+baseFileStorage=`sed '/^\#/d' dev-build.gradle | grep 'ext.ifsFileStorageLocation'  | cut -d "=" -f2 | sed 's/"//g'`
+echo "${baseFileStorage}"
+storedFileFolder=${baseFileStorage}/ifs/
+echo "${storedFileFolder}"
+virusScanHoldingFolder=${baseFileStorage}/virus-scan-holding/
+echo "virusScanHoldingFolder:		${virusScanHoldingFolder}"
+virusScanQuarantinedFolder=${baseFileStorage}/virus-scan-quarantined
+echo "virusScanQuarantinedFolder:		${virusScanQuarantinedFolder}"
+virusScanScannedFolder=${baseFileStorage}/virus-scan-scanned
+echo "virusScanScannedFolder:		${virusScanScannedFolder}"
+echo "We are about to delete the above directories, make sure that they are right ones!"
 postcodeLookupKey=`sed '/^\#/d' dev-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
 echo "Postcode Lookup: 		${postcodeLookupKey}"
 if [ "$postcodeLookupKey" = '' ]
@@ -279,6 +307,7 @@ then
     resetDB
     resetLDAP
     clearDownFileRepository
+    addTestFiles
     runTests
 elif [ "$testScrub" ]
 then
@@ -286,6 +315,7 @@ then
     stopServers
     resetDB
     clearDownFileRepository
+    addTestFiles
     buildAndDeploy
     startServers
 elif [ "$happyPath" ]
@@ -294,6 +324,7 @@ then
     stopServers
     resetDB
     clearDownFileRepository
+    addTestFiles
     buildAndDeploy
     startServers
     runHappyPathTests
@@ -310,6 +341,7 @@ else
     stopServers
     resetDB
     clearDownFileRepository
+    addTestFiles
     buildAndDeploy
     startServers
     runTests
