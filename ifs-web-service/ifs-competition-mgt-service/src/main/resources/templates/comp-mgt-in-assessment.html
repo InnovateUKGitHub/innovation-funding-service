@@ -63,58 +63,11 @@
           <button type="submit" class="button no-margin">Sort</button>
         </div>
     </div>
-
-    <table th:if="${activeTab == 'submitted'}">
-       <thead>
-         <tr>
-           <th scope="col">Application no</th>
-           <th scope="col">Project title</th>
-           <th scope="col">Lead</th>
-           <th scope="col">No. of partners</th>
-           <th scope="col">Grant requested (£)</th>
-           <th scope="col">Total project cost (£)</th>
-           <th scope="col">Duration (months)</th>
-         </tr>
-       </thead>
-       <tbody>
-         <tr th:each="result : ${results.content}">
-           <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
-           <td th:text="${result.name}"></td>
-           <td th:text="${result.lead}"></td>
-           <td th:text="${result.numberOfPartners}"></td>
-           <td th:text="${result.grantRequested}"></td>
-           <td th:text="${result.totalProjectCost}"></td>
-           <td th:text="${result.duration}"></td>
-         </tr>
-       </tbody>
-     </table>
-     
-     <table th:if="${activeTab == 'notSubmitted'}">
-       <thead>
-         <tr>
-           <th scope="col">Application no</th>
-           <th scope="col">Project title</th>
-           <th scope="col">Lead</th>
-           <th scope="col">Percentage complete</th>
-         </tr>
-       </thead>
-       <tbody>
-         <tr th:each="result : ${results.content}">
-           <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
-           <td th:text="${result.name}"></td>
-           <td th:text="${result.lead}"></td>
-           <td th:text="${result.completedPercentage}"></td>
-         </tr>
-       </tbody>
-     </table>
-
-	     <div class="pagination" th:if="${results.hasPrevious() or results.hasNext()}">
-	       <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">Prev</button>
-	       <div class="status">
-	         Page <span th:text="${results.number + 1}"></span> of <span th:text="${results.totalPages}"></span>
-	       </div>
-	       <button class="next" th:if="${results.hasNext()}" type="submit" name="page" th:value="${results.number + 2}">Next</button>
-	     </div>
+    
+    <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
+    
+    <div th:include="fragments/competition-management :: applications-pagination(results=${results})" th:remove="tag" />
+				
      </form>
   </div>
 </div>
