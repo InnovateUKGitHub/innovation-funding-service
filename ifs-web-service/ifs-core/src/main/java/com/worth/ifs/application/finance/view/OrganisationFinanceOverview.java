@@ -6,6 +6,7 @@ import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.file.service.FileEntryRestService;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.CostType;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
@@ -16,8 +17,8 @@ import java.util.stream.Collectors;
 @Configurable
 public class OrganisationFinanceOverview {
 
-    Long applicationId;
-    List<ApplicationFinanceResource> applicationFinances = new ArrayList<>();
+    private Long applicationId;
+    private List<ApplicationFinanceResource> applicationFinances = new ArrayList<>();
 
     @Autowired
     private FinanceService financeService;
@@ -50,11 +51,11 @@ public class OrganisationFinanceOverview {
                 .collect(Collectors.toMap(ApplicationFinanceResource::getOrganisation, f -> f));
     }
 
-    public Map<Long, FileEntryResource> getAcademicOrganisationFileEntries(){
+    public Map<Long, Pair<ApplicationFinanceResource, FileEntryResource>> getAcademicOrganisationFileEntries(){
         ArrayList<ApplicationFinanceResource> applicationFinance = new ArrayList<>(this.getApplicationFinancesByOrganisation().values());
-        Map<Long, FileEntryResource> files = applicationFinance.stream()
+        Map<Long, Pair<ApplicationFinanceResource, FileEntryResource>> files = applicationFinance.stream()
                 .filter(o -> o.getFinanceFileEntry() != null)
-                .collect(HashMap::new, (m,v)->m.put(v.getOrganisation(), getFileEntry(v)), HashMap::putAll);
+                .collect(HashMap::new, (m,v)->m.put(v.getOrganisation(), Pair.of(v, getFileEntry(v))), HashMap::putAll);
         return files;
     }
 
