@@ -93,11 +93,11 @@ the user is not logged-in
 
 
 the email address should persist
-    [Arguments]     ${email_addy}
+    [Arguments]     ${email_address}
     # Note: we have to do it this way rather than the more straightforward eg Textfield Value Should Be
     # due to a bug in selenium2library
     ${stored_data}=     Get Value       id=username
-    Should Be Equal     ${stored_data}      ${email_addy}
+    Should Be Equal     ${stored_data}      ${email_address}
 
 the user tries to log in
     the user clicks the button/link    css=button[name="_eventId_proceed"]

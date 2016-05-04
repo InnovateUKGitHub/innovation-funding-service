@@ -21,13 +21,13 @@ Logged in user can create a new application
     And the user should be redirected to the correct page      ${ELIGIBILITY_INFO_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     Then the user should be redirected to the correct page       ${speed_bump_url}
-    And the user selects the option     true
+    And the user selects the radio button    create-application      true
+    And the user clicks the button/link     jQuery=.button:contains("Continue")
     And the user should see the text in the page        Inviting Contributors and Partners
     And the user clicks the button/link     jQuery=.button:contains("Begin application")
     And the user should see the text in the page      Application overview
     And the user can see this new application on their dashboard
     And the project start date is blank
-    # This last step is pending due to INFUND-1223
     And the user can save the page with the blank date
 
 
@@ -40,7 +40,8 @@ Logged in user can choose to continue with an existing application
     And the user should be redirected to the correct page      ${ELIGIBILITY_INFO_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     Then the user should be redirected to the correct page       ${speed_bump_url}
-    And the user selects the option     false
+    And the user selects the radio button    create-application      false
+    And the user clicks the button/link     jQuery=.button:contains("Continue")
     And the user should be redirected to the correct page   ${dashboard_url}
 
 
@@ -57,7 +58,8 @@ Non-logged in user has the option to log into an existing account
     And the guest user inserts user email & password       jessica.doe@ludlow.co.uk     Passw0rd
     And the guest user clicks the log-in button
     Then the user should be redirected to the correct page      ${speed_bump_url}
-    And the user selects the option     true
+    And the user selects the radio button    create-application      true
+    And the user clicks the button/link     jQuery=.button:contains("Continue")
     And the user should see the text in the page        Inviting Contributors and Partners
     And the user clicks the button/link         jQuery=.button:contains("Begin application")
     And the user should see the text in the page        Application overview
@@ -76,18 +78,13 @@ Non-logged in user can log in and continue with an existing application
     And the guest user inserts user email & password       jessica.doe@ludlow.co.uk    Passw0rd
     And the guest user clicks the log-in button
     Then the user should be redirected to the correct page      ${speed_bump_url}
-    And the user selects the option     false
+    And the user selects the radio button    create-application      false
+    And the user clicks the button/link     jQuery=.button:contains("Continue")
     And the user should be redirected to the correct page       ${dashboard_url}
     [Teardown]  Logout as user
 
 
 *** Keywords ***
-
-The user selects the option
-    [Arguments]         ${option}
-    Select Radio Button    create-application      ${option}
-    the user clicks the button/link     jQuery=.button:contains("Continue")
-
 
 The user can see this new application on their dashboard
     The user navigates to the page      ${applicant_dashboard_url}

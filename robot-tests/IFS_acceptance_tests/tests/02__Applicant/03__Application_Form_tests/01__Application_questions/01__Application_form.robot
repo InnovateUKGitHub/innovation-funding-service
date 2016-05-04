@@ -31,7 +31,7 @@ Verify the Autosave for the form text areas
     [Setup]
     Given the user navigates to the page    ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}
     When the Applicant enters some text
-    And the Applicant refreshes the page
+    And the user reloads the page
     Then the text should be visible
 
 Verify the Questions guidance for the "Rovel additive..." Application form
@@ -88,9 +88,6 @@ the Applicant enters some text
     Focus    css=.app-submit-btn
     Sleep    2s
 
-the Applicant refreshes the page
-    Reload Page
-    sleep    1s
 
 the text should be visible
     Element Should Contain    css=#form-input-11 .editor    I am a robot
