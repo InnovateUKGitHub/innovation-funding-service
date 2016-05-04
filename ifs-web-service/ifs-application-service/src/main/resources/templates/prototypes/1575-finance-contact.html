@@ -98,6 +98,40 @@
 	// <![CDATA[
 	jQuery(document).ready(function(){
 
+		function $_GET(param) {
+	        var vars = {};
+	        window.location.href.replace( location.hash, '' ).replace( 
+	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
+	            function( m, key, value ) { // callback
+	                vars[key] = value !== undefined ? value : '';
+	            }
+	        );
+
+	        if ( param ) {
+	            return vars[param] ? vars[param] : null;    
+	        }
+	        return vars;
+	    }
+
+	    var userType = $_GET('user');
+
+	    if (userType == null){
+	    	var financesTurnoverLead = decodeURIComponent(localStorage.getItem('financesTurnoverLead'));
+	    	var financesHeadcountLead = decodeURIComponent(localStorage.getItem('financesHeadcountLead'));
+
+	    	jQuery('#finance-turnover').val(financesTurnoverLead);
+	    	jQuery('#finance-headcount').val(financesHeadcountLead);
+
+	    }else if(userType != null){
+
+	    	var financesTurnoverNonLead = decodeURIComponent(localStorage.getItem('financesTurnoverNonLead'));
+	    	var financesHeadcountPartner = decodeURIComponent(localStorage.getItem('financesHeadcountPartner'));
+
+	    	jQuery('#finance-turnover').val(financesTurnoverNonLead);
+	    	jQuery('#finance-headcount').val(financesHeadcountPartner);
+	    }
+
+
 		jQuery('#add-finance-contact').on('click',function(e){ 
 
 			if(jQuery(this).is(':checked')){

@@ -243,7 +243,7 @@
 		var financesPartnerNamePending = localStorage.getItem('financesPartnerNamePending');
 
 		if (userType == null && financesTurnover != null){ // LEAD VIEW
-			localStorage.setItem('financesTurnoverLead', financesTurnover);
+			localStorage.setItem('financesTurnoverLead', '£'+financesTurnover);
 		}else if(userType == null && financesTurnover == null){
 			localStorage.setItem('financesTurnoverLead', '£1,000,012');
 			localStorage.setItem('financesTurnoverNonLead', '-');
@@ -253,9 +253,9 @@
 		//alert('lead'+financesTurnoverLead);
 
 		if (userType != null && financesTurnover != null){ // PARTNER VIEW
-			localStorage.setItem('financesTurnoverNonLead', financesTurnover);
+			localStorage.setItem('financesTurnoverNonLead', '£'+financesTurnover);
 		}else if(userType != null && financesTurnover == null){
-			localStorage.setItem('financesTurnoverLead', '-');
+			//localStorage.setItem('financesTurnoverLead', '-');
 			localStorage.setItem('financesTurnoverNonLead', '-');
 		}
 		var financesTurnoverNonLead = decodeURIComponent(localStorage.getItem('financesTurnoverNonLead'));
@@ -271,6 +271,13 @@
 		var financesHeadcountLead = decodeURIComponent(localStorage.getItem('financesHeadcountLead'));
 
 		//alert('lead'+financesHeadcountLead);
+
+		if (userType != null && financesHeadcount != null){ // PARTNER VIEW
+			localStorage.setItem('financesHeadcountPartner', financesHeadcount);
+		}else if(userType == null && financesHeadcount == null){
+			localStorage.setItem('financesHeadcountPartner', '-');
+		}
+		var financesHeadcountPartner = decodeURIComponent(localStorage.getItem('financesHeadcountPartner'));
 		
 
 		if(startDate == null){
@@ -330,14 +337,16 @@
 			jQuery('#finance-headcount').text(financesHeadcountLead);
 			jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
 			jQuery('#finance-partner-contact').text(financesPartnerName.replace(/\+/g,' '));
+			jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
 
-		}else if(financesName != null & financesTurnoverLead != '-' & userType == null){
+		}else if(financesName != null & userType == null){
 
 			jQuery('#finance-contact').text(financesName.replace(/\+/g,' '));
 			jQuery('#finance-turnover').text(financesTurnoverLead);
 			jQuery('#finance-headcount').text(financesHeadcountLead);
 			jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
 			jQuery('#finance-partner-contact').text(financesPartnerName.replace(/\+/g,' '));
+			jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
 
 			if(financesNamePending == null){
 				jQuery('#finance-contact-status').text('Yes');
@@ -363,6 +372,10 @@
 
 			jQuery('#finance-partner-contact').text(financesPartnerName.replace(/\+/g,' '));
 			jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
+			jQuery('#finance-turnover').text(financesTurnoverLead);
+			jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
+			jQuery('#finance-headcount').text(financesHeadcountLead);
+
 
 			if(financesNamePending == null){
 				jQuery('#finance-partner-contact-status').text('Yes');
