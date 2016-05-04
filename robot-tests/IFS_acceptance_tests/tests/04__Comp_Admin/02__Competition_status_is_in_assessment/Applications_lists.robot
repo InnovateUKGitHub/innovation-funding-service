@@ -2,6 +2,8 @@
 Documentation     INFUND-1987
 ...
 ...               INFUND-2307 Acceptance test: List of applications which are in assessment
+...
+...               INFUND-2411 When the competition is in assessment the total costs are showingn as zero in the list
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    User closes the browser
 Force Tags
@@ -33,10 +35,25 @@ Summary of the applications submitted
     Then The calculations should be correct    css=.info-area p:nth-child(2) span
     And Both calculations in the page should show the same    css=.info-area p:nth-child(2) span
 
-The applications can be sorted by Lead
+Sort by Lead
     [Documentation]    INFUND-2307
     When The application list is sorted by    Lead
     Then The applications should be sorted by column    3
+
+Sort by Grant requested
+    [Documentation]    INFUND-2411
+    When The application list is sorted by    Grant requested
+    Then The applications should be sorted by column    5
+
+Sort by Total project cost
+    [Documentation]    INFUND-2411
+    When The application list is sorted by    Total project cost
+    Then The applications should be sorted by column    6
+
+Finances are showing in the list
+    [Documentation]    INFUND-2411
+    Then the user should see the text in the page    4608.00
+    And the user should see the text in the page    7680.00
 
 Excel download button should be visible
     [Documentation]    INFUND-2307
