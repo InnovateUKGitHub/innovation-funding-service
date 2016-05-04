@@ -33,36 +33,55 @@
 
 		
 			<div class="form-group extra-margin">			
-					<label for="finances-name-1" class="block-label">
-						<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
-						John Smith
-					</label>
+				<label for="finances-name-1" class="block-label">
+					<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
+					John Smith
+				</label>
 
-					<label for="finances-name-2" class="block-label">
-						<input id="finances-name-2" type="radio" name="finances-name-group" value="Ann Jones" />
-						Ann Jones
-					</label>
+				<label for="finances-name-2" class="block-label">
+					<input id="finances-name-2" type="radio" name="finances-name-group" value="Ann Jones" />
+					Ann Jones
+				</label>
 
-					<label for="finances-name-invite" class="block-label" id="invited-finance-contact" style="display: none">
-						<input id="finances-name-invite" type="radio" name="finances-name-group" value="" />
-						<span id="finance-name">Ann Jones (pending)</span>
-					</label>
+				<label for="finances-name-invite" class="block-label" id="invited-finance-contact" style="display: none">
+					<input id="finances-name-invite" type="radio" name="finances-name-group" value="" />
+					<span id="finance-name">Ann Jones (pending)</span>
+				</label>
 
-					<label for="add-finance-contact" class="block-label">
-						<input id="add-finance-contact" type="radio" name="finances-name-group" value="Add new team member" />
-						Add new team member
-					</label>
+				<label for="add-finance-contact" class="block-label">
+					<input id="add-finance-contact" type="radio" name="finances-name-group" value="Add new team member" />
+					Add new team member
+				</label>
 
-					<input type="hidden" name="user" th:value="${param.user[0]}" th:unless="${param.user == null}" />
-					
-				</div>
+				<input type="hidden" name="user" th:value="${param.user[0]}" th:unless="${param.user == null}" />
+				
+			</div>
 			
-
 		</fieldset>
 
 		<div th:include="prototypes/fragments/project-setup :: prototype-add-users('finance-contact')" th:remove="tag" />
 
-		<button class="button button-large extra-margin" style="display: none;" id="finance-cta">Save</button>
+		<fieldset class="extra-margin">
+			<legend class="visuallyhidden">Organisation details</legend>
+				
+			<div class="form-group">
+				<label class="form-label-bold" for="finance-turnover">Turnover (&pound;)
+					<span class="form-hint">Income during the previous year from the sale of products or the provision of services. Turnover should not include value added tax (VAT) or other indirect taxes.</span>
+				</label>
+				<input class="form-control width-large" id="finance-turnover" name="finance-turnover" type="text" value="" />
+			</div>
+			<div class="form-group">
+				<label class="form-label-bold" for="finance-headcount">Staff headcount
+					<span class="form-hint">
+						Anyone who is currently employed full time or Part time by your organisation.
+					</span>
+				</label>
+				<input class="form-control width-medium" id="finance-headcount" name="finance-headcount" type="text" value="" />
+			</div>
+
+		</fieldset>
+
+		<button class="button button-large extra-margin" id="finance-cta">Save</button>
 
 	</form>
 
