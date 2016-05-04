@@ -1,40 +1,129 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-<div th:include="fragments/layout :: head"
-	th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
 </head>
 <body class="competition-management application-funders-panel">
 
-	<div th:include="fragments/layout :: body-start" th:remove="tag" />
-	<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-	<main id="content" class="full-width">
-	<div th:include="fragments/layout :: main-content-start"
-		th:remove="tag" />
+<main id="content" class="full-width">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-	<div class="grid-row">
-		<div class="column-two-thirds">
-			<div class="page-title">
-				<div
-					th:include="fragments/competition-management :: competition-id(competition=${competitionSummary})"
-					th:remove="tag" />
-				<h1 class="heading-xlarge"
-					th:text="${competitionSummary.competitionName}" />
-			</div>
-		</div>
-		<div class="column-third alignright extra-margin">
-			<div
-				th:include="fragments/competition-management :: competition-status(competition=${competitionSummary})"
-				th:remove="tag" />
-		</div>
-	</div>
+  <div class="grid-row">
+      <div class="column-two-thirds">
+            <div class="page-title">
+                <div th:include="fragments/competition-management :: competition-id(competition=${competitionSummary})" th:remove="tag" />
+                <h1 class="heading-xlarge" th:text="${competitionSummary.competitionName}" />
+            </div>
+      </div>
+      <div class="column-third alignright extra-margin">
+        <div th:include="fragments/competition-management :: competition-status(competition=${competitionSummary})" th:remove="tag" />
+      </div>
+  </div>
 
-	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
-	</main>
+  <div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" th:remove="tag" />
 
-	<div th:include="fragments/layout :: footer" th:remove="tag" />
-	<div th:include="fragments/layout :: body-end" th:remove="tag" />
+    <div class="grid-row competition-data">
+        <div class="column-fifth">
+              <div th:include="fragments/competition-management :: info-area" th:remove="tag" />
+        </div>
+        <div class="column-four-fifth">
+          <form method="get">
+              <input type="hidden" name="tab" th:if="${activeTab != null}" th:value="${activeTab}" />
+
+    <h2 class="bold-large" th:if="${activeTab == 'submitted'}">Applications submitted</h2>
+    <h2 class="bold-large" th:if="${activeTab == 'notSubmitted'}">Applications not submitted</h2>
+
+
+    <div class="grid-row sort-by">
+        <div class="column-two-thirds">
+          <h3>
+            <span class="heading-large" th:text="${results.totalElements}" /> applications
+          </h3>
+        </div>
+        <div class="column-third alignright">
+          <label for="sort-by">Sort by</label>
+          <select id="sort-by" name="sort" class="js-auto-submit form-control" th:if="${activeTab == 'submitted'}">
+              <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
+              <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
+              <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
+              <option value="numberOfPartners" th:selected="${(activeSortField == 'numberOfPartners')}">No. of partners</option>
+              <option value="grantRequested" th:selected="${(activeSortField == 'grantRequested')}">Grant requested</option>
+              <option value="totalProjectCost" th:selected="${(activeSortField == 'totalProjectCost')}">Total project cost</option>
+              <option value="duration" th:selected="${(activeSortField == 'duration')}">Duration</option>
+          </select>
+          <select id="sort-by" name="sort" class="js-auto-submit form-control" th:if="${activeTab == 'notSubmitted'}">
+              <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
+              <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
+              <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
+              <option value="percentageComplete" th:selected="${(activeSortField == 'percentageComplete')}">Percentage complete</option>
+          </select>
+          <button type="submit" class="button no-margin">Sort</button>
+        </div>
+    </div>
+
+    <table th:if="${activeTab == 'submitted'}">
+       <thead>
+         <tr>
+           <th scope="col">Application no</th>
+           <th scope="col">Project title</th>
+           <th scope="col">Lead</th>
+           <th scope="col">No. of partners</th>
+           <th scope="col">Grant requested (£)</th>
+           <th scope="col">Total project cost (£)</th>
+           <th scope="col">Duration (months)</th>
+         </tr>
+       </thead>
+       <tbody>
+         <tr th:each="result : ${results.content}">
+           <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
+           <td th:text="${result.name}"></td>
+           <td th:text="${result.lead}"></td>
+           <td th:text="${result.numberOfPartners}"></td>
+           <td th:text="${result.grantRequested}"></td>
+           <td th:text="${result.totalProjectCost}"></td>
+           <td th:text="${result.duration}"></td>
+         </tr>
+       </tbody>
+     </table>
+     
+     <table th:if="${activeTab == 'notSubmitted'}">
+       <thead>
+         <tr>
+           <th scope="col">Application no</th>
+           <th scope="col">Project title</th>
+           <th scope="col">Lead</th>
+           <th scope="col">Percentage complete</th>
+         </tr>
+       </thead>
+       <tbody>
+         <tr th:each="result : ${results.content}">
+           <td><a th:href="${'/management/competition/' + competitionSummary.competitionId + '/application/' + result.id}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
+           <td th:text="${result.name}"></td>
+           <td th:text="${result.lead}"></td>
+           <td th:text="${result.completedPercentage}"></td>
+         </tr>
+       </tbody>
+     </table>
+
+	     <div class="pagination" th:if="${results.hasPrevious() or results.hasNext()}">
+	       <button class="prev" th:if="${results.hasPrevious()}" type="submit" name="page" th:value="${results.number}">Prev</button>
+	       <div class="status">
+	         Page <span th:text="${results.number + 1}"></span> of <span th:text="${results.totalPages}"></span>
+	       </div>
+	       <button class="next" th:if="${results.hasNext()}" type="submit" name="page" th:value="${results.number + 2}">Next</button>
+	     </div>
+     </form>
+  </div>
+</div>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
 
 </body>
 </html>
