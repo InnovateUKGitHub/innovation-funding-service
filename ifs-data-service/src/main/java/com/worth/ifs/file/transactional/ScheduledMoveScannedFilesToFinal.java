@@ -14,6 +14,9 @@ import java.util.List;
 import static com.worth.ifs.file.transactional.MoveFiles.moveAllFiles;
 
 
+/**
+ * Move files from the scanned folder to the final directory structure on a periodic basis.
+ */
 @Component
 public class ScheduledMoveScannedFilesToFinal {
 

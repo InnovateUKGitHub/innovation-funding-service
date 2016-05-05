@@ -15,6 +15,9 @@ import java.util.List;
 import static com.worth.ifs.file.transactional.MoveFiles.moveAllFiles;
 
 
+/**
+ * Move files from the not scanned folder to the scanned folder on a periodic basis if AV scanning is not enabled.
+ */
 @Component
 public class ScheduledMoveNotScannedFilesToScannedWhereNoAv {
 
