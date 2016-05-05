@@ -107,10 +107,11 @@ the user selects the radio button
 
 
 
-Applicant edits the 'Project Summary' question
+the user edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    I am a robot
+    sleep       1s
 
 Question should be editable
     [Arguments]    ${Mark_question_as_incomplete}
