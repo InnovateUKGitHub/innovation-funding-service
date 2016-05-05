@@ -143,6 +143,11 @@ The user clicks the button/link
 The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
     wait until page contains    ${VISIBLE_TEXT}
+    Page Should Not Contain         Error
+    Page Should Not Contain         error
+    Page Should Not Contain         Page or resource not found
+    Page Should Not Contain         You do not have the necessary permissions for your request
+    Page Should Not Contain         something went wrong
 
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
@@ -222,9 +227,6 @@ the user can remove the uploaded file
     Page Should Contain    Upload
     Page Should Not Contain    ${file_name}
 
-the user cannot remove the uploaded file
-    [Arguments]    ${file_name}
-    Page Should Not Contain    Remove
 
 the user clicks the link from the appropriate email sender
     Run keyword if    '${RUNNING_ON_DEV}' == ''    the user opens the mailbox and verifies the email sent from a developer machine
