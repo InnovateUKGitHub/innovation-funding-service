@@ -53,7 +53,7 @@
                         <div th:replace="application/single-section-details :: sectionDetails (question=${question}, questionAssignee=${questionAssignee}, questionAssignees=${questionAssignees}, responses=${responses}, currentUser=${currentUser}, userIsLeadApplicant=${userIsLeadApplicant}, leadApplicant=${leadApplicant}, section=${section}, currentApplication=${currentApplication})"></div>
                     </div>
                     <!--/* sections with children like the finance */-->
-                    <div th:unless="${subSections.get(section.id).size() ==0}" th:remove="tag">
+                    <div th:unless="${subSections.get(section.id).size() ==0 }" th:remove="tag">
                         <li class="grid-row" th:classappend="section" th:each="childSection : ${subSections.get(section.id)}">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
@@ -61,6 +61,20 @@
                                        th:text="${childSection.getName()}" />
                                 </h3>
                             </div>
+                            <!-- todo hardcoded childSection.getId() -->
+                            <div th:if="${childSection.getId() == 7}">
+                                <img class="section-status complete"
+                                     src="/images/field/field-done-right.png"
+                                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
+                                     width="30"
+                                     height="30"
+                                th:if
+
+                                <!-- th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"-->
+                                />
+
+                            </div>
+
                         </li>
                     </div>
                 </ul>
