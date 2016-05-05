@@ -104,7 +104,15 @@ function startServers {
 
     echo "********START THE DATA SERVER********"
     cd ${dataTomcatBinPath}
-    ./startup.sh
+
+    if [ "$startServersInDebugMode" ]; then 
+      export JPDA_ADDRESS=8000
+      export JPDA_TRANSPORT=dt_socket
+      ./catalina.sh jpda start
+    else
+      ./startup.sh
+    fi
+
     echo "**********WAIT FOR SUCCESSFUL DEPLOYMENT OF THE APPLICATION**********"
     touch ${dataLogFilePath}
     tail -F -n0 ${dataLogFilePath} | while read logLine
@@ -114,7 +122,15 @@ function startServers {
     echo "********START THE WEB SERVER********"
     touch ${webTomcatBinPath}
     cd ${webTomcatBinPath}
-    ./startup.sh
+
+    if [ "$startServersInDebugMode" ]; then 
+      export JPDA_ADDRESS=8001
+      export JPDA_TRANSPORT=dt_socket
+      ./catalina.sh jpda start
+    else
+      ./startup.sh
+    fi
+
     echo "**********WAIT FOR SUCCESSFUL DEPLOYMENT OF THE APPLICATION**********"
     tail -F -n0 ${webLogFilePath} | while read logLine
     do
@@ -237,10 +253,11 @@ unset testScrub
 unset happyPath
 useXvfb=true
 unset remoteRun
+unset startServersInDebugMode
 
 
 testDirectory='IFS_acceptance_tests/tests/*'
-while getopts ":q :t :h :p :r :d: :x" opt ; do
+while getopts ":q :t :h :p :r :d: :D :x" opt ; do
     case $opt in
         q)
          quickTest=1
@@ -262,6 +279,9 @@ while getopts ":q :t :h :p :r :d: :x" opt ; do
         ;;
         d)
          testDirectory="$OPTARG"
+        ;;
+        D)
+         startServersInDebugMode=true
         ;;
         \?)
          coloredEcho "Invalid option: -$OPTARG" red >&2
