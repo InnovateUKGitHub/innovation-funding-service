@@ -13,6 +13,9 @@ import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
 import static java.util.stream.Collectors.toList;
 
 
+/**
+ * Functionality to move files
+ */
 public final class MoveFiles {
 
     public static ServiceResult<List<File>> moveAllFiles(final FileStorageStrategy from, final FileStorageStrategy to, final boolean ignoreAlreadyMovedErrors) {
