@@ -5,7 +5,6 @@ import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -25,9 +24,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
 		
 		List<Application> applicationsForCompetition = applicationRepository.findByCompetitionId(competitionId);
 		
-		Optional<Application> absentFromDecision = applicationsForCompetition.stream().filter(app -> applicationFundingDecisions.get(app.getId()) == null).findAny();
+		boolean allPresent = applicationsForCompetition.stream().noneMatch(app -> !applicationFundingDecisions.containsKey(app.getId()));
 		
-		if(absentFromDecision.isPresent()) {
+		if(!allPresent) {
 			return serviceFailure(CommonErrors.badRequestError("not all applications represented in funding decision"));
 		}
 		
