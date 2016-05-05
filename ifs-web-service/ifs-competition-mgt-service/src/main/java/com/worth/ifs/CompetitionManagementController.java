@@ -92,7 +92,11 @@ public class CompetitionManagementController {
 	private String fundersPanelCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm,
 			BindingResult bindingResult) {
 		
-		populateSubmittedModel(model, competitionId, queryForm, bindingResult);
+		if("notSubmitted".equals(queryForm.getTab())) {
+			populateNotSubmittedModel(model, competitionId, queryForm, bindingResult);
+		} else {
+			populateSubmittedModel(model, competitionId, queryForm, bindingResult);
+		}
 		
 		LOG.warn("Show in assessment competition info");
 		

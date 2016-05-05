@@ -29,8 +29,10 @@
         <div th:remove="tag" th:case="'IN_ASSESSMENT'">
           <div th:include="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" th:remove="tag" />
         </div>
+        <div th:remove="tag" th:case="'FUNDERS_PANEL'">
+        	<div th:include="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" th:remove="tag" />
+        </div>
         <!--/* future
-        <div th:remove="tag" th:case="'FUNDERS_PANEL'"></div>
         <div th:remove="tag" th:case="'PROJECT_SETUP'"></div>
         */-->
     </div>
@@ -92,7 +94,8 @@
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}" /> Applications not submitted</p>
           <a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.xls)</a>
-          <a href="#" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
+          <a href="#" id="publish-funding-decision" class="button disabled" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
+    	  <div th:include="fragments/modals :: modal-publish-funding-decision" th:remove="tag" />
       </div>
 
       <div th:case="'PROJECT_SETUP'" class="info-area boxed">
@@ -160,10 +163,10 @@
 	           <td th:text="${result.totalProjectCost}"></td>
 	           <td th:text="${result.duration}"></td>
 	           <td scope="col" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">
-	          	 <select id="fund" name="fund">
-           			<option value="">-</option>
-           			<option value="">Yes</option>
-           			<option value="">No</option>
+	          	 <select class="funding-decision" th:id="${'fund' + result.id}" name="fund">
+           			<option value="-">-</option>
+           			<option value="Y">Yes</option>
+           			<option value="N">No</option>
            		  </select>
 	           </td>
 	         </tr>
