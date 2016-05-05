@@ -18,6 +18,8 @@
         <h1 class="heading-xlarge">Application overview</h1>
     </div>
 
+	<div th:include="fragments/elements :: competition-status-warning (application=${currentApplication}, competition=${currentCompetition})" th:remove="tag"/>
+
     <div class="grid-row">
         <div class="column-half">
           <dl class="dl-left">
