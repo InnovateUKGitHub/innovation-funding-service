@@ -1,6 +1,8 @@
 package com.worth.ifs.file.transactional;
 
 import com.worth.ifs.commons.error.Error;
+import com.worth.ifs.commons.service.FailingOrSucceedingResult;
+import com.worth.ifs.commons.service.ServiceFailure;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
 import com.worth.ifs.file.repository.FileEntryRepository;
@@ -11,23 +13,22 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 import java.util.function.Supplier;
 
-import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.error.CommonErrors.forbiddenError;
 import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
-import static com.worth.ifs.commons.service.ServiceResult.*;
+import static com.worth.ifs.commons.error.CommonFailureKeys.*;
+import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
+import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.util.EntityLookupCallbacks.find;
-import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
-import static com.worth.ifs.util.FileFunctions.pathElementsToPath;
 
 /**
  * The class is an implementation of FileService that, based upon a given fileStorageStrategy, is able to
@@ -36,10 +37,23 @@ import static com.worth.ifs.util.FileFunctions.pathElementsToPath;
 @Service
 public class FileServiceImpl extends BaseTransactionalService implements FileService {
 
-    private static final Log log = LogFactory.getLog(FileServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(FileServiceImpl.class);
 
     @Autowired
-    private FileStorageStrategy fileStorageStrategy;
+    @Qualifier("temporaryHoldingFileStorageStrategy")
+    private FileStorageStrategy temporaryHoldingFileStorageStrategy;
+
+    @Autowired
+    @Qualifier("quarantinedFileStorageStrategy")
+    private FileStorageStrategy quarantinedFileStorageStrategy;
+
+    @Autowired
+    @Qualifier("scannedFileStorageStrategy")
+    private FileStorageStrategy scannedFileStorageStrategy;
+
+    @Autowired
+    @Qualifier("finalFileStorageStrategy")
+    private FileStorageStrategy finalFileStorageStrategy;
 
     @Autowired
     private FileEntryRepository fileEntryRepository;
@@ -65,13 +79,17 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     @Override
     public ServiceResult<Supplier<InputStream>> getFileByFileEntryId(Long fileEntryId) {
         return findFileEntry(fileEntryId).
-                andOnSuccess(this::findFile).
-                andOnSuccess(this::getInputStreamSupplier);
+                andOnSuccess(this::findFileForGet).
+                andOnSuccess(fileAndStorageLocation -> getInputStreamSupplier(fileAndStorageLocation.getKey()));
     }
 
     @Override
-    public ServiceResult<Pair<File, FileEntry>> updateFile(FileEntryResource updatedFile, Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<Pair<File, FileEntry>> updateFile(FileEntryResource fileToUpdate, Supplier<InputStream> inputStreamSupplier) {
+        return findFileEntry(fileToUpdate.getId()).
+                andOnSuccess(updatedFile -> doFileValidationAndUpdate(updatedFile, inputStreamSupplier));
+    }
 
+    private FailingOrSucceedingResult<Pair<File, FileEntry>, ServiceFailure> doFileValidationAndUpdate(FileEntry updatedFile, Supplier<InputStream> inputStreamSupplier) {
         return createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
             try {
                 return find(
@@ -79,9 +97,8 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                         validateContentLength(updatedFile.getFilesizeBytes(), validationFile)).
                         andOnSuccess((mediaType, contentLength) ->
 
-                    updateFileEntry(updatedFile).
-                            andOnSuccess(updatedFileEntry -> updateFileForFileEntry(updatedFileEntry, validationFile))
-                );
+                                updateFileEntry(updatedFile).andOnSuccess(updatedFileEntry -> updateFileForFileEntry(updatedFileEntry, validationFile))
+                        );
             } finally {
                 deleteFile(validationFile);
             }
@@ -92,33 +109,32 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     public ServiceResult<FileEntry> deleteFile(long fileEntryId) {
 
         return findFileEntry(fileEntryId).
-            andOnSuccess(fileEntry -> findFile(fileEntry).
-            andOnSuccess(file -> {
-
+            andOnSuccess(fileEntry -> findFileForDelete(fileEntry).
+            andOnSuccess(fileAndStorageLocation -> {
                 fileEntryRepository.delete(fileEntry);
-
-                boolean fileDeletedSuccessfully = file.delete();
-
-                if (fileDeletedSuccessfully) {
-                    return serviceSuccess(fileEntry);
-                } else {
-                    return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, fileEntryId));
-                }
+                FileStorageStrategy storageLocation = fileAndStorageLocation.getValue();
+                return storageLocation.deleteFile(fileEntry).andOnSuccessReturn(() -> fileEntry);
             }));
     }
 
-    private ServiceResult<FileEntry> updateFileEntry(FileEntryResource updatedFileDetails) {
-        FileEntry updated = fileEntryRepository.save(FileEntryResourceAssembler.valueOf(updatedFileDetails));
+    private ServiceResult<FileEntry> updateFileEntry(FileEntry updatedFileDetails) {
+        FileEntry updated = fileEntryRepository.save(updatedFileDetails);
         return serviceSuccess(updated);
     }
 
     private ServiceResult<Pair<File, FileEntry>> updateFileForFileEntry(FileEntry existingFileEntry, File tempFile) {
 
-        Pair<List<String>, String> absoluteFilePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(existingFileEntry);
-        List<String> pathElements = absoluteFilePathAndName.getLeft();
-        String filename = absoluteFilePathAndName.getRight();
+        boolean fileAlreadyInHoldingStorageLocation = temporaryHoldingFileStorageStrategy.exists(existingFileEntry);
 
-        return updateFileForFileEntry(pathElements, filename, tempFile).andOnSuccessReturn(file -> Pair.of(file, existingFileEntry));
+        if (fileAlreadyInHoldingStorageLocation) {
+            return temporaryHoldingFileStorageStrategy.deleteFile(existingFileEntry).
+                    andOnSuccess(() -> createFileForFileEntry(existingFileEntry, tempFile));
+        } else {
+            return findFileInAnyLocation(existingFileEntry).
+                    andOnSuccess(existingFileAndStorage -> createFileForFileEntry(existingFileEntry, tempFile).
+                    andOnSuccess(updatedFile -> existingFileAndStorage.getRight().deleteFile(existingFileEntry).
+                    andOnSuccessReturn(() -> updatedFile)));
+        }
     }
 
     private ServiceResult<File> createTemporaryFileForValidation(Supplier<InputStream> inputStreamSupplier) {
@@ -133,7 +149,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         if (tempFile.length() == filesizeBytes) {
             return serviceSuccess(tempFile);
         } else {
-            log.error("Reported filesize was " + filesizeBytes + " bytes but actual file is " + tempFile.length() + " bytes");
+            LOG.error("Reported filesize was " + filesizeBytes + " bytes but actual file is " + tempFile.length() + " bytes");
             return serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_FILESIZE, tempFile.length()));
         }
     }
@@ -143,17 +159,17 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         try {
             detectedContentType = Files.probeContentType(file.toPath());
         } catch (IOException e) {
-            log.error("Unable to probe file for Content Type", e);
+            LOG.error("Unable to probe file for Content Type", e);
             return serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE));
         }
 
         if (detectedContentType == null) {
-            log.warn("Content Type of file " + file + " could not be determined - returning as valid because not explicitly detectable");
+            LOG.warn("Content Type of file " + file + " could not be determined - returning as valid because not explicitly detectable");
             return serviceSuccess(file);
         } else if (mediaType.toString().equals(detectedContentType)) {
             return serviceSuccess(file);
         } else {
-            log.warn("Content Type of file has been detected as " + detectedContentType + " but was reported as being " + mediaType);
+            LOG.warn("Content Type of file has been detected as " + detectedContentType + " but was reported as being " + mediaType);
             return serviceFailure(new Error(FILES_INCORRECTLY_REPORTED_MEDIA_TYPE, detectedContentType));
         }
     }
@@ -162,7 +178,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         try {
             return serviceSuccess(Files.createTempFile(prefix, ""));
         } catch (IOException e) {
-            log.error("Error creating temporary file for " + prefix, e);
+            LOG.error("Error creating temporary file for " + prefix, e);
             return serviceFailure(errorMessage);
         }
     }
@@ -172,18 +188,15 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
             try {
                 return new FileInputStream(file);
             } catch (FileNotFoundException e) {
-                log.error("Unable to supply FileInputStream for file " + file, e);
+                LOG.error("Unable to supply FileInputStream for file " + file, e);
                 throw new IllegalStateException("Unable to supply FileInputStream for file " + file, e);
             }
         });
     }
 
     private ServiceResult<Pair<File, FileEntry>> createFileForFileEntry(FileEntry savedFileEntry, File tempFile) {
-
-        Pair<List<String>, String> absoluteFilePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(savedFileEntry);
-        List<String> pathElements = absoluteFilePathAndName.getLeft();
-        String filename = absoluteFilePathAndName.getRight();
-        return createFileForFileEntry(pathElements, filename, tempFile).andOnSuccessReturn(file -> Pair.of(file, savedFileEntry));
+        return temporaryHoldingFileStorageStrategy.createFile(savedFileEntry, tempFile).
+                andOnSuccessReturn(file -> Pair.of(file, savedFileEntry));
     }
 
     private ServiceResult<FileEntry> saveFileEntry(FileEntryResource resource) {
@@ -195,74 +208,62 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         return find(fileEntryRepository.findOne(fileEntryId), notFoundError(FileEntry.class, fileEntryId));
     }
 
-    private ServiceResult<File> findFile(FileEntry fileEntry) {
+    private ServiceResult<Pair<File, FileStorageStrategy>> findFileForGet(FileEntry fileEntry) {
+        return validateFileNotUnsafe(fileEntry).andOnSuccess(() -> findFileInSafeLocation(fileEntry));
+    }
 
-        Pair<List<String>, String> filePathAndName = fileStorageStrategy.getAbsoluteFilePathAndName(fileEntry);
-        List<String> pathElements = filePathAndName.getLeft();
-        String filename = filePathAndName.getRight();
-        File expectedFile = new File(pathElementsToFile(pathElements), filename);
+    private ServiceResult<Pair<File, FileStorageStrategy>> findFileForDelete(FileEntry fileEntry) {
+        return findFileInAnyLocation(fileEntry);
+    }
 
-        if (expectedFile.exists()) {
-            return serviceSuccess(expectedFile);
+    private ServiceResult<Pair<File, FileStorageStrategy>> findFileInSafeLocation(FileEntry fileEntry) {
+        return findFileInFinalFileStorageLocation(fileEntry).andOnFailure(() -> findFileInScannedStorageLocation(fileEntry));
+    }
+
+    private ServiceResult<Pair<File, FileStorageStrategy>> findFileInAnyLocation(FileEntry fileEntry) {
+        return findFileInFinalFileStorageLocation(fileEntry).
+                andOnFailure(() -> findFileInScannedStorageLocation(fileEntry)).
+                andOnFailure(() -> findFileInHoldingStorageLocation(fileEntry)).
+                andOnFailure(() -> findFileInQuarantinedStorageLocation(fileEntry));
+    }
+
+    private ServiceResult<Void> validateFileNotUnsafe(FileEntry fileEntry) {
+        return validateNotInQuarantine(fileEntry).andOnSuccess(() -> validateNotAwaitingScanning(fileEntry));
+    }
+
+    private ServiceResult<Pair<File, FileStorageStrategy>> findFileInFinalFileStorageLocation(FileEntry fileEntry) {
+        return findFileInStorageLocation(fileEntry, finalFileStorageStrategy).andOnSuccessReturn(file -> Pair.of(file, finalFileStorageStrategy));
+    }
+
+    private ServiceResult<Pair<File, FileStorageStrategy>> findFileInScannedStorageLocation(FileEntry fileEntry) {
+        return findFileInStorageLocation(fileEntry, scannedFileStorageStrategy).andOnSuccessReturn(file -> Pair.of(file, scannedFileStorageStrategy));
+    }
+
+    private ServiceResult<Pair<File, FileStorageStrategy>> findFileInHoldingStorageLocation(FileEntry fileEntry) {
+        return findFileInStorageLocation(fileEntry, temporaryHoldingFileStorageStrategy).andOnSuccessReturn(file -> Pair.of(file, temporaryHoldingFileStorageStrategy));
+    }
+
+    private ServiceResult<Pair<File, FileStorageStrategy>> findFileInQuarantinedStorageLocation(FileEntry fileEntry) {
+        return findFileInStorageLocation(fileEntry, quarantinedFileStorageStrategy).andOnSuccessReturn(file -> Pair.of(file, quarantinedFileStorageStrategy));
+    }
+
+    private ServiceResult<File> findFileInStorageLocation(FileEntry fileEntry, FileStorageStrategy fileStorageStrategy) {
+        return fileStorageStrategy.getFile(fileEntry);
+    }
+
+    private ServiceResult<Void> validateNotAwaitingScanning(FileEntry fileEntry) {
+        if (temporaryHoldingFileStorageStrategy.exists(fileEntry)) {
+            return serviceFailure(forbiddenError(FILES_FILE_AWAITING_VIRUS_SCAN));
         } else {
-            return serviceFailure(notFoundError(FileEntry.class, fileEntry.getId()));
+            return serviceSuccess();
         }
     }
 
-    private ServiceResult<File> createFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
-
-        Path foldersPath = pathElementsToPath(absolutePathElements);
-
-        return createFolders(foldersPath).
-                andOnSuccess(createdFolders -> copyTempFileToTargetFile(createdFolders, filename, tempFile));
-    }
-
-    private ServiceResult<File> updateFileForFileEntry(List<String> absolutePathElements, String filename, File tempFile) {
-
-        Path foldersPath = pathElementsToPath(absolutePathElements);
-        return updateExistingFileWithTempFile(foldersPath, filename, tempFile);
-    }
-
-    private ServiceResult<File> copyTempFileToTargetFile(Path targetFolder, String targetFilename, File tempFile) {
-        try {
-            File fileToCreate = new File(targetFolder.toString(), targetFilename);
-
-            if (fileToCreate.exists()) {
-                log.error("File " + targetFilename + " already existed in target path " + targetFolder + ".  Cannot create a new one here.");
-                return serviceFailure(new Error(FILES_DUPLICATE_FILE_CREATED));
-            }
-
-            Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename));
-            return serviceSuccess(targetFile.toFile());
-        } catch (IOException e) {
-            log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
-            return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
-        }
-    }
-
-    private ServiceResult<File> updateExistingFileWithTempFile(Path targetFolder, String targetFilename, File tempFile) {
-        try {
-            File fileToCreate = new File(targetFolder.toString(), targetFilename);
-
-            if (!fileToCreate.exists()) {
-                log.error("File " + targetFilename + " doesn't exist in target path " + targetFolder + ".  Cannot update one here.");
-                return serviceFailure(notFoundError(File.class));
-            }
-
-            Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename), StandardCopyOption.REPLACE_EXISTING);
-            return serviceSuccess(targetFile.toFile());
-        } catch (IOException e) {
-            log.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
-            return serviceFailure(new Error(FILES_UNABLE_TO_UPDATE_FILE));
-        }
-    }
-
-    private ServiceResult<Path> createFolders(Path path) {
-        try {
-            return serviceSuccess(Files.createDirectories(path));
-        } catch (IOException e) {
-            log.error("Error creating folders " + path, e);
-            return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FOLDERS));
+    private ServiceResult<Void> validateNotInQuarantine(FileEntry fileEntry) {
+        if (quarantinedFileStorageStrategy.exists(fileEntry)) {
+            return serviceFailure(forbiddenError(FILES_FILE_QUARANTINED));
+        } else {
+            return serviceSuccess();
         }
     }
 
@@ -278,12 +279,12 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
                     Files.copy(sourceInputStream, file, StandardCopyOption.REPLACE_EXISTING);
                     return serviceSuccess(file);
                 } catch (IOException e) {
-                    log.error("Could not write data to file " + file, e);
+                    LOG.error("Could not write data to file " + file, e);
                     return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
                 }
             }
         } catch (IOException e) {
-            log.error("Error closing file stream for file " + file, e);
+            LOG.error("Error closing file stream for file " + file, e);
             return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
         }
     }
@@ -292,7 +293,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         try {
             Files.delete(file.toPath());
         } catch (IOException e) {
-            log.error("Error deleting file", e);
+            LOG.error("Error deleting file", e);
         }
     }
 }
