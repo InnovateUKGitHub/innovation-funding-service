@@ -76,10 +76,42 @@ the user reloads the page
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
 
-Applicant edits the 'Project Summary' question
+the user selects the checkbox
+    [Arguments]     ${checkbox}
+     Select Checkbox    ${checkbox}
+     # Error checking
+     Page Should Not Contain    Error
+     Page Should Not Contain    something went wrong
+     Page Should Not Contain    Page or resource not found
+     Page Should Not Contain    You do not have the necessary permissions for your request
+     # Header checking (INFUND-1892)
+     Element Should Be Visible    id=global-header
+     Page Should Contain    BETA
+
+
+the user unselects the checkbox
+    [Arguments]     ${checkbox}
+     Unselect Checkbox    ${checkbox}
+     # Error checking
+     Page Should Not Contain    Error
+     Page Should Not Contain    something went wrong
+     Page Should Not Contain    Page or resource not found
+     Page Should Not Contain    You do not have the necessary permissions for your request
+     # Header checking (INFUND-1892)
+     Element Should Be Visible    id=global-header
+     Page Should Contain    BETA
+
+the user selects the radio button
+    [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
+    Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
+
+
+
+the user edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    I am a robot
+    sleep       1s
 
 Question should be editable
     [Arguments]    ${Mark_question_as_incomplete}
@@ -288,7 +320,7 @@ the user cannot see a validation error in the page
 
 the user submits their information
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Select Checkbox    termsAndConditions
+    Focus       name=termsAndConditions
     Select Checkbox    termsAndConditions
     Submit Form
 

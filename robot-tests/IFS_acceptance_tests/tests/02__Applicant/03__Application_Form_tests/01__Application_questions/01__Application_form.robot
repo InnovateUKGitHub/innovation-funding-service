@@ -22,7 +22,6 @@ ${CREATE_APPLICATION_PAGE}    ${SERVER}/application/create/1?accept=accepted
 ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}    ${SERVER}/application/1/form/question/11
 ${NEW_TEST_APPLICATION_PUBLIC_DESCRIPTION}    ${SERVER}/application/1/form/question/12
 ${NEW_TEST_APPLICATION_OVERVIEW}    ${SERVER}/application/1
-${JSFUNCTION}     window.document.getElementById("18").onChange();
 
 *** Test Cases ***
 Verify the Autosave for the form text areas
@@ -30,22 +29,22 @@ Verify the Autosave for the form text areas
     [Tags]    Applicant    Form    HappyPath
     [Setup]
     Given the user navigates to the page    ${NEW_TEST_APPLICATION_PROJECT_SUMMARY}
-    When the Applicant enters some text
-    And the Applicant refreshes the page
+    When the user edits the 'project summary' question
+    And the user reloads the page
     Then the text should be visible
 
 Verify the Questions guidance for the "Rovel additive..." Application form
     [Documentation]    INFUND-190
     [Tags]    Applicant    Form
     Given the user navigates to the page    ${PROJECT_SUMMARY_URL}
-    When the applicant clicks the "What should I include in project summary?" question
-    Then the guidance should be visible
+    When the user clicks the button/link    css=#form-input-11 .summary
+    Then the user should see the element    css=#details-content-0 p
 
 Verify the navigation in the form sections
     [Documentation]    INFUND-189
     [Tags]    Applicant    Form    HappyPath
-    Given the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
-    When the Applicant clicks a section then the Applicant navigates to the correct section
+    When the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
+    Then the user clicks the section links and is redirected to the correct sections
 
 Verify that the word count works
     [Documentation]    INFUND-198
@@ -59,8 +58,8 @@ Verify that the word count works
 Verify the "review and submit" button
     [Tags]    Applicant    Form
     Given the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
-    When the Applicant clicks the "Review and submit" button
-    Then the Applicant will navigate to the summary page
+    When the user clicks the button/link        jQuery=.button:contains("Review & submit")
+    Then the user should be redirected to the correct page      ${summary_url}
 
 Verify that when the Applicant marks as complete the text box should be green and the state changes to edit
     [Documentation]    INFUND-210,
@@ -83,46 +82,32 @@ Verify that when the Applicant marks as incomplete the text box is no longer gre
     And the question should not be marked as complete on the application overview page
 
 *** Keywords ***
-the Applicant enters some text
-    Applicant edits the 'Project Summary' question
-    Focus    css=.app-submit-btn
-    Sleep    2s
-
-the Applicant refreshes the page
-    Reload Page
-    sleep    1s
 
 the text should be visible
     Element Should Contain    css=#form-input-11 .editor    I am a robot
 
-the applicant clicks the "What should I include in project summary?" question
-    Wait Until Element Is Visible    css=#form-input-11 .summary
-    Click Element    css=#form-input-11 .summary
 
-the guidance should be visible
-    Element Should Be Visible    css=#details-content-0 p
+the user clicks the section links and is redirected to the correct sections
 
-the Applicant clicks a section then the Applicant navigates to the correct section
-
-    The user clicks the section link and is on the correct section      Application details     ${APPLICATION_DETAILS_URL}
-    The user clicks the section link and is on the correct section      Project summary         ${PROJECT_SUMMARY_URL}
-    The user clicks the section link and is on the correct section      Public description      ${PUBLIC_DESCRIPTION_URL}
-    The user clicks the section link and is on the correct section      Scope                   ${SCOPE_URL}
-    The user clicks the section link and is on the correct section      1. Business opportunity    ${BUSINESS_OPPORTUNITY_URL}
-    The user clicks the section link and is on the correct section      2. Potential market        ${POTENTIAL_MARKET_URL}
-    The user clicks the section link and is on the correct section      3. Project exploitation    ${PROJECT_EXPLOITATION_URL}
-    The user clicks the section link and is on the correct section      4. Economic benefit        ${ECONOMIC_BENEFIT_URL}
-    The user clicks the section link and is on the correct section      5. Technical approach      ${TECHNICAL_APPROACH_URL}
-    The user clicks the section link and is on the correct section      6. Innovation              ${INNOVATION_URL}
-    The user clicks the section link and is on the correct section      7. Risks                   ${RISKS_URL}
-    The user clicks the section link and is on the correct section      8. Project team            ${PROJECT_TEAM_URL}
-    The user clicks the section link and is on the correct section      9. Funding                 ${FUNDING_URL}
-    The user clicks the section link and is on the correct section      10. Adding value            ${ADDING_VALUE_URL}
-    The user clicks the section link and is on the correct section      Your finances           ${YOUR_FINANCES_URL}
-    The user clicks the section link and is on the correct section      Finances overview        ${FINANCES_OVERVIEW_URL}
+    The user clicks the section link and is redirected to the correct section      Application details     ${APPLICATION_DETAILS_URL}
+    The user clicks the section link and is redirected to the correct section      Project summary         ${PROJECT_SUMMARY_URL}
+    The user clicks the section link and is redirected to the correct section      Public description      ${PUBLIC_DESCRIPTION_URL}
+    The user clicks the section link and is redirected to the correct section      Scope                   ${SCOPE_URL}
+    The user clicks the section link and is redirected to the correct section      1. Business opportunity    ${BUSINESS_OPPORTUNITY_URL}
+    The user clicks the section link and is redirected to the correct section      2. Potential market        ${POTENTIAL_MARKET_URL}
+    The user clicks the section link and is redirected to the correct section      3. Project exploitation    ${PROJECT_EXPLOITATION_URL}
+    The user clicks the section link and is redirected to the correct section      4. Economic benefit        ${ECONOMIC_BENEFIT_URL}
+    The user clicks the section link and is redirected to the correct section      5. Technical approach      ${TECHNICAL_APPROACH_URL}
+    The user clicks the section link and is redirected to the correct section      6. Innovation              ${INNOVATION_URL}
+    The user clicks the section link and is redirected to the correct section      7. Risks                   ${RISKS_URL}
+    The user clicks the section link and is redirected to the correct section      8. Project team            ${PROJECT_TEAM_URL}
+    The user clicks the section link and is redirected to the correct section      9. Funding                 ${FUNDING_URL}
+    The user clicks the section link and is redirected to the correct section      10. Adding value            ${ADDING_VALUE_URL}
+    The user clicks the section link and is redirected to the correct section      Your finances           ${YOUR_FINANCES_URL}
+    The user clicks the section link and is redirected to the correct section      Finances overview        ${FINANCES_OVERVIEW_URL}
 
 
-The user clicks the section link and is on the correct section
+The user clicks the section link and is redirected to the correct section
     [Arguments]     ${link}     ${url}
     The user clicks the button/link     link=${link}
     The user should be redirected to the correct page   ${url}
@@ -152,12 +137,6 @@ the Applicant edits the Project description question (300 words)
     Focus    css=.app-submit-btn
     Sleep    10s
 
-the Applicant clicks the "Review and submit" button
-    Page Should Contain element    link=Review & submit
-    Click Element    link=Review & submit
-
-the Applicant will navigate to the summary page
-    Location Should Be    ${SUMMARY_URL}
 
 the text box should turn to green
     Page Should Contain Element    css=#form-input-12 div.marked-as-complete img.marked-as-complete
