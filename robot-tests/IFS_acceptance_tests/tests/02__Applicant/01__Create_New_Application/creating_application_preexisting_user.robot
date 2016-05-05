@@ -79,6 +79,7 @@ Non-logged in user can log in and continue with an existing application
     And the user should be redirected to the correct page       ${dashboard_url}
     [Teardown]  Logout as user
 
+*** Keywords ***
 
 The user can see this new application on their dashboard
     The user navigates to the page    ${applicant_dashboard_url}
