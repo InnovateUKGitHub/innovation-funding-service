@@ -6,6 +6,8 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,8 @@ import com.worth.ifs.user.service.UserService;
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
+    private static final Log LOG = LogFactory.getLog(ProfileController.class);
+
     @Autowired
     private UserService userService;
     
@@ -60,6 +64,7 @@ public class ProfileController {
         	Long organisationId = user.getOrganisations().get(0);
         	organisation = organisationService.getOrganisationById(organisationId);
         } else {
+        	LOG.warn("No organisation associated with user" + user.getId());
         	organisation = null;
         }
         UserDetailsForm userDetailsForm = buildUserDetailsForm(user, organisation);
@@ -76,6 +81,7 @@ public class ProfileController {
         form.setPhoneNumber(user.getPhoneNumber());
         
         if(organisation == null) {
+        	LOG.warn("No organisation retrieved for user" + user.getId());
 			return form;
 		}
 		form.setOrganisationName(organisation.getName());
