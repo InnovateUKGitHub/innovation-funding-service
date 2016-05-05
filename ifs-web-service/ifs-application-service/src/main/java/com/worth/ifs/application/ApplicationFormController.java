@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worth.ifs.application.finance.service.CostService;
+import com.worth.ifs.application.finance.service.FinanceService;
 import com.worth.ifs.application.form.ApplicationForm;
 import com.worth.ifs.application.form.validation.ApplicationStartDateValidator;
 import com.worth.ifs.application.resource.ApplicationResource;
@@ -75,6 +76,9 @@ public class ApplicationFormController extends AbstractApplicationController {
     private FormInputService formInputService;
 
     @Autowired
+    private FinanceService financeService;
+
+    @Autowired
     MessageSource messageSource;
 
     @InitBinder
@@ -123,12 +127,8 @@ public class ApplicationFormController extends AbstractApplicationController {
     @RequestMapping(value = "/{applicationFinanceId}/finance-download", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable(APPLICATION_ID) final Long applicationId,
-            @PathVariable("applicationFinanceId") final Long applicationFinanceId,
-            HttpServletRequest request) {
-        final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-
-        final ByteArrayResource resource = financeHandler.getFinanceFormHandler(organisationType).getFile(applicationFinanceId).getSuccessObjectOrThrowException();
+            @PathVariable("applicationFinanceId") final Long applicationFinanceId) {
+        final ByteArrayResource resource = financeService.getFinanceDocumentByApplicationFinance(applicationFinanceId).getSuccessObjectOrThrowException();
         return getPdfFile(resource);
     }
 

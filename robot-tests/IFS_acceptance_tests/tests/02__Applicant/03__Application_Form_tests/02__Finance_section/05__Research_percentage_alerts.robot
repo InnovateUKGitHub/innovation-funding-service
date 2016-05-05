@@ -26,9 +26,8 @@ Alert should show If the research participation of the academic partner is too h
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath
     [Setup]    Given Guest user log-in    &{collaborator1_credentials}
-    #Pending due to Ithe remaining tasks of the NFUND-844
     When the first collaborator edits financial details to bring down the research participation level
     And Guest user log-in    &{lead_applicant_credentials}
     And the user navigates to the page    ${FINANCES_OVERVIEW_URL_APPLICATION_2}

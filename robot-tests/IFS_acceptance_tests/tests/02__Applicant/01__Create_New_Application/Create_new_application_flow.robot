@@ -98,8 +98,7 @@ Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
-    [Tags]    HappyPath    Email    Failing
-    # note that this seems to be failing due to a change in the webtest db. needs more investigation
+    [Tags]    HappyPath    Email
     [Setup]    The guest user opens the browser
     When guest user log-in    worth.email.test+1@gmail.com    Passw0rd123
     And the user edits the competition title
