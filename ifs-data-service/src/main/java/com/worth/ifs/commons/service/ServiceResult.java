@@ -52,6 +52,11 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     @Override
+    public <R> ServiceResult<R> andOnFailure(Supplier<FailingOrSucceedingResult<R, ServiceFailure>> failureHandler) {
+        return (ServiceResult<R>) super.andOnFailure(failureHandler);
+    }
+
+    @Override
     public ServiceResult<Void> andOnSuccessReturnVoid(Runnable successHandler) {
         return (ServiceResult<Void>) super.andOnSuccessReturnVoid(successHandler);
     }
@@ -300,6 +305,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
                 (f1, f2) -> new ServiceFailure(combineLists(f1.getErrors(), f2.getErrors())),
                 serviceSuccess(emptyList()));
     }
+
 
 
 }

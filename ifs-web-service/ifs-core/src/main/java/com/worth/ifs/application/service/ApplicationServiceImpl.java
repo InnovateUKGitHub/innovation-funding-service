@@ -1,22 +1,24 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.application.constant.ApplicationStatusConstants;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationStatusResource;
-import com.worth.ifs.commons.rest.RestResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import static com.worth.ifs.application.service.Futures.adapt;
+import static com.worth.ifs.application.service.Futures.call;
+import static java.util.stream.Collectors.toMap;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import static com.worth.ifs.application.service.Futures.adapt;
-import static com.worth.ifs.application.service.Futures.call;
-import static java.util.Map.Entry;
-import static java.util.stream.Collectors.toMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.service.CompetitionsRestService;
 /**
  * This class contains methods to retrieve and store {@link ApplicationResource} related data,
  * through the RestService {@link ApplicationRestService}.
@@ -26,10 +28,10 @@ import static java.util.stream.Collectors.toMap;
 public class ApplicationServiceImpl implements ApplicationService {
 
     @Autowired
-    ApplicationRestService applicationRestService;
+    private ApplicationRestService applicationRestService;
 
     @Autowired
-    ApplicationStatusRestService applicationStatusRestService;
+    private CompetitionsRestService competitionsRestService;
 
     @Override
     public ApplicationResource getById(Long applicationId) {
@@ -44,28 +46,51 @@ public class ApplicationServiceImpl implements ApplicationService {
     public List<ApplicationResource> getInProgress(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrThrowException();
         return applications.stream()
-                .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.CREATED.getName())
-                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.SUBMITTED.getName())
-                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.OPEN.getName())
-                )
+                .filter(this::applicationInProgress)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
-
+    
     @Override
     public List<ApplicationResource> getFinished(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrThrowException();
         return applications.stream()
-                .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.APPROVED.getName())
-                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.REJECTED.getName()))
+                .filter(this::applicationFinished)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
-
+    
+    private boolean applicationInProgress(ApplicationResource a) {
+    	return applicationStatusInProgress(a) && competitionOpen(a);
+    }
+    
+    private boolean applicationStatusInProgress(ApplicationResource a) {
+    	return a.getApplicationStatus().equals(ApplicationStatusConstants.CREATED.getId())
+		        || a.getApplicationStatus().equals(ApplicationStatusConstants.SUBMITTED.getId())
+		        || a.getApplicationStatus().equals(ApplicationStatusConstants.OPEN.getId());
+    }
+    
+    private boolean applicationFinished(ApplicationResource a) {
+    	return (applicationStatusInProgress(a) && competitionClosed(a)) || applicationStatusFinished(a);
+    }
+    
+    private boolean applicationStatusFinished(ApplicationResource a) {
+    	return a.getApplicationStatus().equals(ApplicationStatusConstants.APPROVED.getId())
+                || a.getApplicationStatus().equals(ApplicationStatusConstants.REJECTED.getId());
+    }
+    
+    private boolean competitionOpen(ApplicationResource a) {
+    	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
+    	return CompetitionResource.Status.OPEN.equals(competition.getCompetitionStatus());
+    }
+    
+    private boolean competitionClosed(ApplicationResource a) {
+    	return !competitionOpen(a);
+    }
+    
     @Override
     public Map<Long, Integer> getProgress(Long userId) {
         List<ApplicationResource> applications = applicationRestService.getApplicationsByUserId(userId).getSuccessObjectOrThrowException();
         return call(applications.stream()
-                .filter(a -> fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.CREATED.getName())
-                        || fetchApplicationStatusFromId(a.getApplicationStatus()).getName().equals(ApplicationStatusConstants.OPEN.getName()))
+                .filter(this::applicationInProgress)
                 .map(ApplicationResource::getId)
                 .collect(toMap(id -> id, id -> applicationRestService.getCompleteQuestionsPercentage(id))))
                 .entrySet().stream()
@@ -106,10 +131,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public RestResult<ApplicationResource> findByProcessRoleId(Long id) {
         return applicationRestService.findByProcessRoleId(id);
-    }
-
-    private ApplicationStatusResource fetchApplicationStatusFromId(Long id){
-        return applicationStatusRestService.getApplicationStatusById(id).getSuccessObjectOrThrowException();
     }
 
 }

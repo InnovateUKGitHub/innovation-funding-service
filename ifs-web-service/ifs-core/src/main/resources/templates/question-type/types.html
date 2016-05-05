@@ -146,6 +146,10 @@
                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                     <span th:text="${organisation.getName()}"></span>
                 </li>
+                <li th:each="pendingOrganisationName : ${pendingOrganisationNames}">
+                    <span th:text="${pendingOrganisationName}"></span>
+                    <small>(pending)</small>
+                </li>
             </ul>
         </div>
 
