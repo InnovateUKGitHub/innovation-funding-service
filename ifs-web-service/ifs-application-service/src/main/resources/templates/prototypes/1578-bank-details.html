@@ -19,9 +19,9 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Bank account'})" th:remove="tag" />
 
-	<p>To enable InnovateUK to Fund your project we require a a bank account. This will allow the bank account to be verified to the organisation that has entered the organisation</p>
+	<p>In order for Innovate UK to fund your project we require your bank account details. We will then verify the bank account to the lead organisation.</p>
 
-	<p>The Bank account entered must belong to</p>
+	<p>The bank account details entered must belong to:</p>
 	
 	<div th:if="${param.status == null}">
 		<h2 class="heading-medium no-margin-bottom">Aptrans Ltd</h2>
@@ -40,7 +40,7 @@
 
 			<legend class="visuallyhidden">Account details</legend>
 
-			<p class="form-hint">Please enter the bank account account that you wish to use for during the project.</p>
+			<p class="form-hint">Please enter the bank account that you wish to use during the project.</p>
 
 			<div class="form-group extra-margin">
 				<label class="form-label" for="bank-sort-code">

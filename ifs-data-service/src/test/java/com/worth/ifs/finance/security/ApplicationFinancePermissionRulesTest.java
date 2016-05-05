@@ -2,7 +2,9 @@ package com.worth.ifs.finance.security;
 
 import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
+import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.user.domain.Role;
+import com.worth.ifs.user.domain.UserRoleType;
 import com.worth.ifs.user.resource.OrganisationResource;
 import com.worth.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -12,6 +14,7 @@ import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static com.worth.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static com.worth.ifs.user.builder.RoleBuilder.newRole;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static com.worth.ifs.user.domain.UserRoleType.*;
 import static java.util.Arrays.asList;
@@ -31,6 +34,8 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     private ApplicationFinanceResource otherApplicationFinance;
     private UserResource otherLeadApplicant;
     private OrganisationResource otherOrganisation;
+
+
 
     @Override
     protected ApplicationFinancePermissionRules supplyPermissionRulesUnderTest() {
@@ -62,6 +67,19 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(leadApplicant.getId(), getRole(LEADAPPLICANT).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaborator.getId(), getRole(COLLABORATOR).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(assessor.getId(), getRole(ASSESSOR).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
+
+            Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
+            Role collaboratorRole = newRole().withType(UserRoleType.COLLABORATOR).build();
+            Role compAdminRole = newRole().withType(UserRoleType.COMP_ADMIN).build();
+
+            ProcessRole leadApplicantProcessRole = newProcessRole().withRole(leadApplicantRole).build();
+            ProcessRole collaboratorProcessRole = newProcessRole().withRole(collaboratorRole).build();
+            ProcessRole compAdminProcessRole = newProcessRole().withRole(compAdminRole).build();
+
+            when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicant.getId(), applicationId)).thenReturn(leadApplicantProcessRole);
+            when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaborator.getId(), applicationId)).thenReturn(collaboratorProcessRole);
+            when(processRoleRepositoryMock.findByUserIdAndApplicationId(compAdmin.getId(), applicationId)).thenReturn(compAdminProcessRole);
+
         }
         {
             // Set up different users on an organisation and application to check that there is no bleed through of permissions
@@ -119,5 +137,20 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
 
         assertFalse(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
         assertFalse(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, compAdmin));
+    }
+
+    @Test
+    public void testLeadCanGetFileResourceForPartner() {
+        assertTrue(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, collaborator));
+        assertFalse(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, otherLeadApplicant));
+        assertFalse(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, compAdmin));
+    }
+
+    @Test
+    public void testCompAdminCanGetFileResourceForPartner(){
+        assertTrue(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, compAdmin));
+        assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, collaborator));
+        assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, leadApplicant));
     }
 }
