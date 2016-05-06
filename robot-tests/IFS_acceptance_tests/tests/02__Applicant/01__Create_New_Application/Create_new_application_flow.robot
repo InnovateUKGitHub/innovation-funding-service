@@ -38,7 +38,7 @@ Non registered users CH route
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    LINK=INNOVATE LTD
-    Select Checkbox    id=address-same
+    And the user selects the checkbox    id=address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details and clicks the create account    worth.email.test+1@gmail.com
@@ -64,7 +64,7 @@ The email address does not stay in the cookie
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=INNOVATE LTD
-    Select Checkbox    id=address-same
+    And the user selects the checkbox     id=address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    worth.email.test+1@gmail.com
@@ -85,7 +85,6 @@ Non registered users non CH route
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details and clicks the create account    worth.email.test+2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    # And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     And the user opens the mailbox and verifies the email from
     And the user clicks the button/link    jQuery=.button:contains("Log in")
     The guest user inserts user email & password    worth.email.test+2@gmail.com    Passw0rd123
@@ -99,8 +98,7 @@ Verify the name of the new application
     [Documentation]    INFUND-669
     ...
     ...    INFUND-1163
-    [Tags]    HappyPath    Email    Failing
-    # note that this seems to be failing due to a change in the webtest db. needs more investigation
+    [Tags]    HappyPath    Email
     [Setup]    The guest user opens the browser
     When guest user log-in    worth.email.test+1@gmail.com    Passw0rd123
     And the user edits the competition title

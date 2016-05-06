@@ -8,7 +8,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-2375: Error message needed on contributors invite if user tries to add duplicate email address
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
-Force Tags
+Force Tags        Collaboration     Invite
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../resources/variables/User_credentials.robot
@@ -58,7 +58,7 @@ Link to remove partner organisation
     When The user clicks the button/link    jquery=li:nth-child(2) button:contains('Remove')
     Then The user should not see the text in the page    Organisation name
 
-Applicant inputsshould be autosaved (in cookie)
+Applicant's inputs should be autosaved (in cookie)
     [Documentation]    INFUND-1039
     [Tags]    HappyPath
     When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')

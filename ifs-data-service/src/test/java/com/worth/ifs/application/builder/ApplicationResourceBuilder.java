@@ -37,8 +37,8 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((id, application) -> setField("id", id, application), ids);
     }
 
-    public ApplicationResourceBuilder withCompetition(Long competition) {
-        return with(application -> application.setCompetition(competition));
+    public ApplicationResourceBuilder withCompetition(Long... competitionIds) {
+        return withArray((competition, application) -> setField("competition", competition, application), competitionIds);
     }
 
     public ApplicationResourceBuilder withApplicationStatus(ApplicationStatusConstants... applicationStatus) {
