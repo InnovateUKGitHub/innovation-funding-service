@@ -12,9 +12,9 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import com.worth.ifs.BaseControllerMockMVCTest;
 import com.worth.ifs.application.resource.FundingDecision;
+import com.worth.ifs.util.MapFunctions;
 
 public class ApplicationFundingDecisionControllerTest extends BaseControllerMockMVCTest<ApplicationFundingDecisionController> {
 
@@ -26,9 +26,9 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
     @Test
     public void applicationFundingDecisionControllerShouldReturnAppropriateStatusCode() throws Exception {
         Long competitionId = 1L;
-        Map<Long, FundingDecision> decision = ImmutableMap.of(1L, FundingDecision.FUNDED, 2L, FundingDecision.NOT_FUNDED);
+        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.NOT_FUNDED);
 
-        when(applicationFundingService.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess(null));
+        when(applicationFundingServiceMock.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/applicationfunding/1")
         			.contentType(MediaType.APPLICATION_JSON)
