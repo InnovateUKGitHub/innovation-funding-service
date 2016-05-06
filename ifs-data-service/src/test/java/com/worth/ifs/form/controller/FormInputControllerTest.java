@@ -28,7 +28,7 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
 
         FormInputResource testFormInputResource1 = newFormInputResource().withId(1L).withFormInputTypeTitle("testFormInputTypeTitle").build();
 
-        when(formInputService.findByQuestionId(testFormInputResource1.getId())).thenReturn(serviceSuccess(asList(testFormInputResource1)));
+        when(formInputServiceMock.findByQuestionId(testFormInputResource1.getId())).thenReturn(serviceSuccess(asList(testFormInputResource1)));
 
         mockMvc.perform(get("/forminput/findByQuestionId/{id}", questionId))
                 .andExpect(status().isOk())

@@ -1,11 +1,21 @@
 package com.worth.ifs;
 
+import org.junit.Before;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import com.worth.ifs.address.repository.AddressRepository;
 import com.worth.ifs.address.transactional.AddressLookupService;
 import com.worth.ifs.address.transactional.AddressService;
 import com.worth.ifs.application.mapper.ApplicationMapper;
 import com.worth.ifs.application.mapper.QuestionMapper;
-import com.worth.ifs.application.repository.*;
+import com.worth.ifs.application.repository.ApplicationRepository;
+import com.worth.ifs.application.repository.ApplicationStatusRepository;
+import com.worth.ifs.application.repository.QuestionRepository;
+import com.worth.ifs.application.repository.QuestionStatusRepository;
+import com.worth.ifs.application.repository.ResponseRepository;
+import com.worth.ifs.application.repository.SectionRepository;
+import com.worth.ifs.application.transactional.ApplicationFundingService;
 import com.worth.ifs.application.transactional.ApplicationService;
 import com.worth.ifs.application.transactional.QuestionService;
 import com.worth.ifs.application.transactional.ResponseService;
@@ -26,13 +36,14 @@ import com.worth.ifs.organisation.transactional.OrganisationService;
 import com.worth.ifs.token.repository.TokenRepository;
 import com.worth.ifs.token.transactional.TokenService;
 import com.worth.ifs.user.mapper.UserMapper;
-import com.worth.ifs.user.repository.*;
+import com.worth.ifs.user.repository.CompAdminEmailRepository;
+import com.worth.ifs.user.repository.OrganisationRepository;
+import com.worth.ifs.user.repository.ProcessRoleRepository;
+import com.worth.ifs.user.repository.RoleRepository;
+import com.worth.ifs.user.repository.UserRepository;
 import com.worth.ifs.user.transactional.PasswordPolicyValidator;
 import com.worth.ifs.user.transactional.RegistrationService;
 import com.worth.ifs.user.transactional.UserService;
-import org.junit.Before;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 /**
  * This is a convenience subclass for all tests that require Mockito support.  At its simplest this class is simply a
@@ -43,7 +54,7 @@ import org.mockito.MockitoAnnotations;
 public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
-    protected ResponseService responseService;
+    protected ResponseService responseServiceMock;
 
     @Mock
     protected AddressRepository addressRepositoryMock;
@@ -55,7 +66,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationMapper applicationMapperMock;
 
     @Mock
-    protected ApplicationFinanceRepository applicationFinanceRepository;
+    protected ApplicationFinanceRepository applicationFinanceRepositoryMock;
 
     @Mock
     protected FormInputResponseRepository formInputResponseRepositoryMock;
@@ -91,16 +102,16 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SectionRepository sectionRepositoryMock;
 
     @Mock
-    protected ApplicationService applicationService;
+    protected ApplicationService applicationServiceMock;
 
     @Mock
     protected QuestionService questionServiceMock;
 
     @Mock
-    protected QuestionRepository questionRepository;
+    protected QuestionRepository questionRepositoryMock;
 
     @Mock
-    protected QuestionStatusRepository questionStatusRepository;
+    protected QuestionStatusRepository questionStatusRepositoryMock;
 
     @Mock
     protected QuestionMapper questionMapperMock;
@@ -157,7 +168,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected PasswordPolicyValidator passwordPolicyValidatorMock;
 
     @Mock
-    protected FormInputService formInputService;
+    protected FormInputService formInputServiceMock;
+    
+    @Mock
+    protected ApplicationFundingService applicationFundingServiceMock;
 
     @Before
     public void setupMockInjection() {
