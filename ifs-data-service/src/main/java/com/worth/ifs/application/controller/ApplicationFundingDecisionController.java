@@ -13,6 +13,9 @@ import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.application.transactional.ApplicationFundingService;
 import com.worth.ifs.commons.rest.RestResult;
 
+/**
+ * Responsible for receiving calls to set the funding decision for all applications for a given competition.
+ */
 @RestController
 @RequestMapping("/applicationfunding")
 public class ApplicationFundingDecisionController {

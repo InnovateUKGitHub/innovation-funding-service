@@ -28,7 +28,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         Long competitionId = 1L;
         Map<Long, FundingDecision> decision = ImmutableMap.of(1L, FundingDecision.FUNDED, 2L, FundingDecision.NOT_FUNDED);
 
-        when(applicationFundingService.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess(null));
+        when(applicationFundingServiceMock.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/applicationfunding/1")
         			.contentType(MediaType.APPLICATION_JSON)

@@ -99,10 +99,17 @@
     <div class="modal-publish-funding-decision" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag" />
 
-        <div>
-            <form  method="post" >
-                <button class="button button-warning large" name="publish" value="publish" type="submit">Publish</button>
-            </form>
+		<h2 class="heading-medium no-margin">Notify applicants</h2>
+		<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
+		<p>This step cannot be undone.</p>
+		<hr/>
+		<div class="grid-row extra-margin">
+           	<div class="column-half">
+           		<button class="js-close button buttonlink large">Cancel</button>
+           	</div>
+           	<div class="column-half alignright-button">
+           		<button class="button button-warning large" name="publish" value="publish" type="submit">Notify applicants</button>
+           	</div>
         </div>
     </div>
 </div>

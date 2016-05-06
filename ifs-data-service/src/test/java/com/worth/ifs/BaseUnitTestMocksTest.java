@@ -54,7 +54,7 @@ import com.worth.ifs.user.transactional.UserService;
 public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
-    protected ResponseService responseService;
+    protected ResponseService responseServiceMock;
 
     @Mock
     protected AddressRepository addressRepositoryMock;
@@ -66,7 +66,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationMapper applicationMapperMock;
 
     @Mock
-    protected ApplicationFinanceRepository applicationFinanceRepository;
+    protected ApplicationFinanceRepository applicationFinanceRepositoryMock;
 
     @Mock
     protected FormInputResponseRepository formInputResponseRepositoryMock;
@@ -102,16 +102,16 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SectionRepository sectionRepositoryMock;
 
     @Mock
-    protected ApplicationService applicationService;
+    protected ApplicationService applicationServiceMock;
 
     @Mock
     protected QuestionService questionServiceMock;
 
     @Mock
-    protected QuestionRepository questionRepository;
+    protected QuestionRepository questionRepositoryMock;
 
     @Mock
-    protected QuestionStatusRepository questionStatusRepository;
+    protected QuestionStatusRepository questionStatusRepositoryMock;
 
     @Mock
     protected QuestionMapper questionMapperMock;
@@ -168,10 +168,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected PasswordPolicyValidator passwordPolicyValidatorMock;
 
     @Mock
-    protected FormInputService formInputService;
+    protected FormInputService formInputServiceMock;
     
     @Mock
-    protected ApplicationFundingService applicationFundingService;
+    protected ApplicationFundingService applicationFundingServiceMock;
 
     @Before
     public void setupMockInjection() {

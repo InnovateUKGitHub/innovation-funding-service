@@ -72,7 +72,6 @@ public class CompetitionManagementController {
 		model.addAttribute("activeSortField", sort);
 		model.addAttribute("activeTab", "allApplications");
 
-        LOG.warn("Show open competition info");
         return "comp-mgt-open";
 	}
 
@@ -85,7 +84,6 @@ public class CompetitionManagementController {
 			populateSubmittedModel(model, competitionId, queryForm, bindingResult);
 		}
 		
-        LOG.warn("Show in assessment competition info");
         return "comp-mgt-in-assessment";
 	}
 	
@@ -97,8 +95,6 @@ public class CompetitionManagementController {
 		} else {
 			populateSubmittedModel(model, competitionId, queryForm, bindingResult);
 		}
-		
-		LOG.warn("Show in assessment competition info");
 		
 		return "comp-mgt-funders-panel";
 	}
