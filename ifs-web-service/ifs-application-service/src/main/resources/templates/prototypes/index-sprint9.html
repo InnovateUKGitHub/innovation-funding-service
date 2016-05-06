@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint9'"  th:remove="tag" />
+
+	
+	<section class="grid-row">
+		<div class="row">
+			<h1 class="heading-large">Sprint 9</h1>
+
+			<section>
+				
+				<h2 class="heading-medium">Project setup</h2>
+
+				<ul class="list-bullet">
+					<li>
+						<h3 class="heading-small">INFUND-1590</h3> 
+						<p>As a lead partner I need to provide various documents to begin the project, including collaboration agreement, exploitation plan</p>
+						
+						<ul class="list-bullet">
+							<li>
+								<a href="/prototypes/1590-document-upload">INFUND-2677</a> Create a view that allows the lead to upload required documents, and provide supporting documentation.
+							</li>
+							<li>
+								<a href="/prototypes/1590-document-upload?user=nonLead">INFUND-2680</a> Create a view that allows partners to download other documents provided by the lead
+							</li>
+							<li>
+								<a href="/prototypes/1590-document-upload?status=submitted">INFUND-2681</a> Create a view that allows all partners to download files after they have been submitted to innovate by the lead
+							</li>
+						</ul>
+					</li>
+					<li>
+						<h3 class="heading-small">INFUND-1578</h3>
+						<ul class="list-bullet">
+							<li><a href="/prototypes/1578-bank-details-submitted?status=review">INFUND-2803</a> Create a view allowing viewing of bank details after submission, before being accepted</li>
+							<li><a href="/prototypes/1578-bank-details-submitted">INFUND-2804</a>Create a view of the bank Details after they have been accepted by Innovate</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+
+			
+		</div>
+	</section>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>
