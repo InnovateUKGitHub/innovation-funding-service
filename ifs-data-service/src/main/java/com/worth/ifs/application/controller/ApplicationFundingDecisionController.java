@@ -25,6 +25,6 @@ public class ApplicationFundingDecisionController {
 
     @RequestMapping(value="/{competitionId}", method=RequestMethod.POST)
     public RestResult<Void> makeFundingDecision(@PathVariable("competitionId") final Long competitionId, @RequestBody Map<Long, FundingDecision> applicationFundingDecisions) {
-        return applicationFundingService.makeFundingDecision(competitionId, applicationFundingDecisions).toGetResponse();
+        return applicationFundingService.makeFundingDecision(competitionId, applicationFundingDecisions).toPostResponse();
     }
 }

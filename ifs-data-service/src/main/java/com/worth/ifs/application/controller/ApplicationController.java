@@ -50,7 +50,7 @@ public class ApplicationController {
     public RestResult<Void> saveApplicationDetails(@PathVariable("id") final Long id,
                                                    @RequestBody ApplicationResource application) {
 
-        return applicationService.saveApplicationDetails(id, application).toPostUpdateResponse();
+        return applicationService.saveApplicationDetails(id, application).toPostResponse();
     }
 
     @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")

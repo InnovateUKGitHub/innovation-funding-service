@@ -12,7 +12,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableMap;
 import com.worth.ifs.BaseServiceUnitTest;
 import com.worth.ifs.application.builder.ApplicationBuilder;
 import com.worth.ifs.application.builder.ApplicationStatusBuilder;
@@ -21,6 +20,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.util.MapFunctions;
 
 public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<ApplicationFundingService> {
 
@@ -47,7 +47,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	Application application2 = ApplicationBuilder.newApplication().withId(2L).build();
     	when(applicationRepositoryMock.findByCompetitionId(123L)).thenReturn(Arrays.asList(application1, application2));
     	
-    	Map<Long, FundingDecision> decision = ImmutableMap.of(1L, FundingDecision.FUNDED);
+    	Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED);
     	
     	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
     	
@@ -63,7 +63,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	Application application2 = ApplicationBuilder.newApplication().withId(2L).build();
     	when(applicationRepositoryMock.findByCompetitionId(123L)).thenReturn(Arrays.asList(application1, application2));
     	
-    	Map<Long, FundingDecision> decision = ImmutableMap.of(1L, FundingDecision.FUNDED, 2L, FundingDecision.NOT_FUNDED);
+    	Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.NOT_FUNDED);
     	
     	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
     	
