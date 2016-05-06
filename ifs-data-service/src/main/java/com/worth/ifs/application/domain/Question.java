@@ -37,12 +37,6 @@ public class Question{
     @Column(length=5000)
     private String description;
 
-    @Column(length=5000)
-    private String guidanceQuestion;
-
-    @Column(length=5000)
-    private String guidanceAnswer;
-
     private Boolean markAsCompletedEnabled = false;
 
     private Boolean assignEnabled = true;
@@ -107,14 +101,6 @@ public class Question{
 
     public Long getId() {
         return id;
-    }
-
-    public String getGuidanceAnswer() {
-        return guidanceAnswer;
-    }
-
-    public String getGuidanceQuestion() {
-        return guidanceQuestion;
     }
 
     public String getDescription() {
@@ -230,14 +216,6 @@ public class Question{
         this.description = description;
     }
 
-    public void setGuidanceQuestion(String guidanceQuestion) {
-        this.guidanceQuestion = guidanceQuestion;
-    }
-
-    public void setGuidanceAnswer(String guidanceAnswer) {
-        this.guidanceAnswer = guidanceAnswer;
-    }
-
     public void setMarkAsCompletedEnabled(Boolean markAsCompletedEnabled) {
         this.markAsCompletedEnabled = markAsCompletedEnabled;
     }
@@ -290,8 +268,6 @@ public class Question{
             .append(id, question.id)
             .append(name, question.name)
             .append(description, question.description)
-            .append(guidanceQuestion, question.guidanceQuestion)
-            .append(guidanceAnswer, question.guidanceAnswer)
             .append(markAsCompletedEnabled, question.markAsCompletedEnabled)
             .append(assignEnabled, question.assignEnabled)
             .append(multipleStatuses, question.multipleStatuses)
@@ -314,8 +290,6 @@ public class Question{
             .append(id)
             .append(name)
             .append(description)
-            .append(guidanceQuestion)
-            .append(guidanceAnswer)
             .append(markAsCompletedEnabled)
             .append(assignEnabled)
             .append(multipleStatuses)
