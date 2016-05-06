@@ -16,6 +16,7 @@ ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 ${download_link}        ${SERVER}/application/1/form/question/8/forminput/18/download
+${virus_scanning_warning}   This file is awaiting virus scanning
 
 
 *** Test Cases ***
@@ -30,6 +31,7 @@ Lead applicant can view a file
     [Documentation]     INFUND-2720
     [Tags]  Collaboration   Upload
     Given the user should see the text in the page  ${valid_pdf}
+    And the file has been scanned for viruses
     When the user clicks the button/link        link=${valid_pdf}
     Then the user should see the text in the page   ${valid_pdf_excerpt}
     [Teardown]  The user navigates to the page  ${technical_approach_url}
@@ -72,11 +74,13 @@ Collaborators cannot remove a file if not assigned to them
     When the user should see the text in the page    ${valid_pdf}
     Then the user should not see the text in the page    Remove
 
+
+
 Questions can be assigned with appendices to the collaborator
     [Documentation]    INFUND-832
     ...    INFUND-409
     [Tags]    Collaboration    Upload
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    [Setup]     Guest user log-in   &{lead_applicant_credentials}
     Given the user navigates to the page    ${technical_approach_url}
     And the user should see the text in the page    ${valid_pdf}
     When the user assigns the question to the collaborator    Jessica Doe
@@ -190,5 +194,8 @@ the file should be downloaded
     [Arguments]     ${filename}
     File Should Exist   ${filename}
     File Should Not Be Empty    ${filename}
+
+the file has been scanned for viruses
+    Sleep   5s
 
 

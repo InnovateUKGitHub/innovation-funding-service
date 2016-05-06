@@ -17,7 +17,9 @@ Resource          ../../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
+${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 ${text_file}      testing.txt
+${too_large_pdf}    large.pdf
 
 *** Test Cases ***
 Academic finances should be editable when lead marks finances as complete
@@ -46,22 +48,100 @@ Academic finance calculations
     When the academic partner fills the finances
     Then the calculations should be correct and the totals rounded to the second decimal
 
-Academic invalid upload
+
+Large pdf upload not allowed
+    [Documentation]     INFUND-2720
+    [Tags]
+    When the academic partner uploads a file    ${too_large_pdf}
+    Then the user should get an error page      ${too_large_pdf_validation_error}
+
+
+Non pdf uploads not allowed
+    [Documentation]     INFUND-2720
+    [Tags]
+    [Setup]     The user navigates to the page  ${your_finances_url}
     When the academic partner uploads a file    ${text_file}
-    Then the user should see the element    css=.error-summary
-    And the user should see the text in the page    No file currently uploaded
+    Then the user should get an error page      ${wrong_filetype_validation_error}
+
+Lead applicant can't upload a JeS file
+    [Documentation]     INFUND-2720
+    [Tags]
+    [Setup]     Guest user log-in   &{lead_applicant_credentials}
+    When the user navigates to the page        ${your_finances_url}
+    Then the user should not see the element  name=jes-upload
+
+
+Non-academic collaborator can't upload a JeS file
+    [Documentation]     INFUND-2720
+    [Tags]
+    [Setup]     Guest user log-in   &{collaborator1_credentials}
+    When the user navigates to the page        ${your_finances_url}
+    Then the user should not see the element  name=jes-upload
+
 
 Academics upload
     [Documentation]    INFUND-917
     [Tags]
+    [Setup]     Guest user log-in   &{collaborator2_credentials}
+    Given the user navigates to the page    ${your_finances_url}
     When the academic partner uploads a file    ${valid_pdf}
     Then the user should not see the text in the page    No file currently uploaded
     And the user should see the element    link=testing.pdf
 
+Academic collaborator can view the file on the finances page
+    [Documentation]    INFUND-917
+    [Tags]
+    [Setup]     Guest user log-in    &{collaborator2_credentials}
+    Given the user navigates to the page    ${your_finances_url}
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should see the text in the page   ${valid_pdf_excerpt}
+
+Academic collaborator can view the file on the finances overview page
+    [Documentation]    INFUND-917
+    [Tags]
+    Given the user navigates to the page    ${finances_overview_url}
+    When the user clicks the button/link    link=testing.pdf
+    Then the user should see the text in the page       ${valid_pdf_excerpt}
+
+
+Lead applicant can't view the file on the finances page
+    [Documentation]    INFUND-917
+    [Tags]
+    [Setup]     Guest user log-in   &{lead_applicant_credentials}
+    When the user navigates to the page         ${your_finances_url}
+    Then the user should not see the text in the page   ${valid_pdf}
+
+Lead applicant can view the file on the finances overview page
+    [Documentation]    INFUND-917
+    [Tags]
+    Given the user navigates to the page         ${finances_overview_url}
+    And the user should see the text in the page   ${valid_pdf}
+    When the user clicks the button/link        link=${valid_pdf}
+    Then the user should see the text in the page       ${valid_pdf_excerpt}
+
+
+Non-academic collaborator can't view the file on the finances page
+    [Documentation]    INFUND-917
+    [Tags]
+    [Setup]     Guest user log-in   &{collaborator1_credentials}
+    When the user navigates to the page         ${your_finances_url}
+    Then the user should not see the text in the page   ${valid_pdf}
+
+Non-academic collaborator can view the file on the finances overview page
+    [Documentation]    INFUND-917
+    [Tags]
+    Given the user navigates to the page         ${finances_overview_url}
+    And the user should see the text in the page   ${valid_pdf}
+    When the user clicks the button/link        link=${valid_pdf}
+    Then the user should see the text in the page       ${valid_pdf_excerpt}
+
+
 Academic finances JeS link showing
     [Documentation]    INFUND-2402
     [Tags]    Academic
-    When the user can see the link for more JeS details
+    [Setup]     Guest user log-in   &{collaborator2_credentials}
+    When the user navigates to the page         ${your_finances_url}
+    Then the user can see the link for more JeS details
 
 Mark all as complete
     [Documentation]    INFUND-918
