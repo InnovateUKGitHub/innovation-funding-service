@@ -2,6 +2,8 @@ package com.worth.ifs.util;
 
 import org.junit.Test;
 
+import java.util.List;
+
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -93,5 +95,18 @@ public class FileFunctionsTest {
     public void testPathElementsToFileWithNullStringElements() {
         assertEquals("path" + separator + "null" + separator + "file",
                 FileFunctions.pathElementsToFile(asList("path", null, "file")).getPath());
+    }
+
+
+    @Test
+    public void testPathElementsToAbsolutePathElements() {
+        List<String> absolutePath = FileFunctions.pathElementsToAbsolutePathElements(asList("path", "to", "file"), "/");
+        assertEquals(asList("/path", "to", "file"), absolutePath);
+    }
+
+    @Test
+    public void testPathElementsToAbsolutePathElementsButAlreadyAbsolute() {
+        List<String> absolutePath = FileFunctions.pathElementsToAbsolutePathElements(asList("/path", "to", "file"), "/");
+        assertEquals(asList("/path", "to", "file"), absolutePath);
     }
 }

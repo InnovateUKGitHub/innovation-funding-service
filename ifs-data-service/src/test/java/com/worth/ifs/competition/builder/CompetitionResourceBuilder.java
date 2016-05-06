@@ -2,6 +2,7 @@ package com.worth.ifs.competition.builder;
 
 import com.worth.ifs.BaseBuilder;
 import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.resource.CompetitionResource.Status;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -63,6 +64,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withAcademicGrantClaimPercentage(Integer... grantClaimPercentages) {
         return withArray((grantClaimPercentage, object) -> setField("academicGrantPercentage", grantClaimPercentage, object), grantClaimPercentages);
+    }
+    
+    public CompetitionResourceBuilder withCompetitionStatus(Status... statuses) {
+    	return withArray((status, object) -> setField("competitionStatus", status, object), statuses);
     }
 
     @Override

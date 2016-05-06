@@ -159,3 +159,13 @@
 		</label>
 	</div>
 </div>
+
+<!-- =========================== Element: Competition status warning ================ -->
+<div th:fragment="competition-status-warning (application, competition)">
+	<div th:if="${(application.applicationStatusName == 'created' or application.applicationStatusName == 'open') and competition.competitionStatus.name() != 'OPEN'}" th:remove="tag">
+		<div class="warning-alert">
+	        <h2 class="heading-small no-margin">Application not submitted</h2>
+	        <p>This application has not been entered into the competition <span th:text="${competition.name}" th:remove="tag"/> as it was not submitted before the competition deadline.</p>
+	    </div>
+    </div>
+</div>

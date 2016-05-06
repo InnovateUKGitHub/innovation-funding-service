@@ -58,9 +58,9 @@
 				<input class="form-control width-medium" id="bank-sort-code" name="bank-sort-code" value="" type="text" />
 			</div>
 
-			<h2 class="heading-large">Organisation address</h2>
+			<h2 class="heading-large">Bank account address</h2>
 
-			<p class="form-hint">Please select your organisation's address.</p>
+			<p class="form-hint">Please select the account that the bank account is registered to, this is not the address of the bank.</p>
 
 			<div th:include="prototypes/fragments/project-setup :: prototype-select-address" th:with="address='bankDetails'" th:remove="tag" />
 
