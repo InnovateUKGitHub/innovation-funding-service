@@ -162,8 +162,9 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     private boolean costTypeSupportedByHandler(CostType costType) {
 		return !(CostType.YOUR_FINANCE.equals(costType) || CostType.ACADEMIC.equals(costType));
 	}
-    
-    private CostHandler getCostHandler(CostType costType) {
+
+    @Override
+    public CostHandler getCostHandler(CostType costType) {
         switch(costType) {
             case LABOUR:
                 return new LabourCostHandler();

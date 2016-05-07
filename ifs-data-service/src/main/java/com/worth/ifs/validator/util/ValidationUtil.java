@@ -4,6 +4,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.Question;
 import com.worth.ifs.application.domain.Section;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.finance.handler.item.CostHandler;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
 import com.worth.ifs.form.domain.FormInput;
@@ -34,9 +35,11 @@ public class ValidationUtil {
     private AcademicValidator academicValidator;
     private MinRowCountValidator minRowCountValidator;
 
+
     @Autowired
     @Lazy
-    private ValidationUtil(ValidatorService validatorService, @Qualifier("basicValidator") Validator validator,
+    private ValidationUtil(ValidatorService validatorService,
+                           @Qualifier("basicValidator") Validator validator,
                            GrantClaimValidator grantClaimValidator,
                            OtherFundingValidator otherFundingValidator,
                            AcademicValidator academicValidator,
@@ -175,9 +178,7 @@ public class ValidationUtil {
 
     public ValidationMessages validateCostItem(CostItem costItem) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
-        ValidationUtils.invokeValidator(validator, costItem, bindingResult);
-
-        invokeExtraValidator(costItem, bindingResult);
+        invokeValidator(costItem, bindingResult);
 
         if (bindingResult.hasErrors()) {
             if(LOG.isDebugEnabled()){
@@ -193,8 +194,11 @@ public class ValidationUtil {
 
     }
 
-    private void invokeExtraValidator(CostItem costItem, BeanPropertyBindingResult bindingResult) {
+    private void invokeValidator(CostItem costItem, BeanPropertyBindingResult bindingResult) {
         Validator extraValidator = null;
+        CostHandler costHandler = validatorService.getCostHandler(costItem);
+        costHandler.validate(costItem, bindingResult);
+
         switch(costItem.getCostType()){
             case FINANCE:
                 extraValidator = grantClaimValidator;
@@ -206,6 +210,7 @@ public class ValidationUtil {
                 extraValidator = academicValidator;
                 break;
         }
+
         if(extraValidator != null){
             LOG.info("invoke extra validator: "+ extraValidator.getClass().toString());
             ValidationUtils.invokeValidator(extraValidator, costItem, bindingResult);

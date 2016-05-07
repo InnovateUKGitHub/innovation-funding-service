@@ -16,7 +16,6 @@ import java.util.List;
 public class OtherFundingHandler extends CostHandler {
     public static final String COST_KEY = "other-funding";
 
-    @Override
     public Cost toCost(CostItem costItem) {
         Cost cost = null;
         if (costItem instanceof OtherFunding) {

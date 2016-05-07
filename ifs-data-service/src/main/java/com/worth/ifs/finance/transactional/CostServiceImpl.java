@@ -13,7 +13,9 @@ import com.worth.ifs.finance.domain.CostValue;
 import com.worth.ifs.finance.handler.ApplicationFinanceHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceDelegate;
 import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
+import com.worth.ifs.finance.handler.item.CostHandler;
 import com.worth.ifs.finance.mapper.CostFieldMapper;
+import com.worth.ifs.finance.mapper.CostMapper;
 import com.worth.ifs.finance.repository.ApplicationFinanceRepository;
 import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
@@ -49,6 +51,8 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
     FileEntryRepository fileEntryRepository;
     @Autowired
     private CostFieldMapper costFieldMapper;
+    @Autowired
+    private CostMapper costMapper;
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
@@ -321,5 +325,14 @@ public class CostServiceImpl extends BaseTransactionalService implements CostSer
         for (CostType costType : CostType.values()) {
             organisationFinanceHandler.initialiseCostType(applicationFinance, costType);
         }
+    }
+
+    @Override
+    public CostHandler getCostHandler(CostItem costItem){
+        Cost cost = costMapper.mapIdToDomain(costItem.getId());
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(cost.getApplicationFinance().getOrganisation().getOrganisationType().getName());
+        CostItem costItem2 = organisationFinanceHandler.costToCostItem(cost);
+        CostHandler costHandler = organisationFinanceHandler.getCostHandler(costItem2.getCostType());
+        return costHandler;
     }
 }

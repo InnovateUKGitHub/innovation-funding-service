@@ -4,7 +4,12 @@ import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.resource.category.LabourCostCategory;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.LabourCost;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.validation.BindingResult;
 
+import javax.validation.groups.Default;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +18,18 @@ import java.util.List;
  * or for sending it over.
  */
 public class LabourCostHandler extends CostHandler {
+    private static final Log LOG = LogFactory.getLog(LabourCostHandler.class);
     public static final String COST_KEY = "labour";
+
+    @Override
+    public void validate(CostItem costItem, BindingResult bindingResult) {
+        LabourCost labourCost = (LabourCost) costItem;
+        if(StringUtils.isNotEmpty(labourCost.getName()) && labourCost.getName().equals(LabourCostCategory.WORKING_DAYS_KEY)){
+            super.validate(costItem, bindingResult, LabourCost.YearlyWorkingDays.class);
+        }else{
+            super.validate(costItem, bindingResult, Default.class);
+        }
+    }
 
     @Override
     public Cost toCost(CostItem costItem) {
