@@ -32,23 +32,23 @@ The correct columns show for the submitted applications
 
 Summary of the applications submitted
     [Documentation]    INFUND-2307
-    Then The calculations should be correct    css=.info-area p:nth-child(2) span
-    And Both calculations in the page should show the same    css=.info-area p:nth-child(2) span
+    Then the calculations should be correct    css=.info-area p:nth-child(2) span
+    And both calculations in the page should show the same    css=.info-area p:nth-child(2) span
 
 Sort by Lead
     [Documentation]    INFUND-2307
-    When The application list is sorted by    Lead
-    Then The applications should be sorted by column    3
+    When the application list is sorted by    Lead
+    Then the applications should be sorted by column    3
 
 Sort by Grant requested
     [Documentation]    INFUND-2411
-    When The application list is sorted by    Grant requested
-    Then The applications should be sorted by column    5
+    When the application list is sorted by    Grant requested
+    Then the applications should be sorted by column    5
 
 Sort by Total project cost
     [Documentation]    INFUND-2411
-    When The application list is sorted by    Total project cost
-    Then The applications should be sorted by column    6
+    When the application list is sorted by    Total project cost
+    Then the applications should be sorted by column    6
 
 Finances are showing in the list
     [Documentation]    INFUND-2411
@@ -63,7 +63,7 @@ Submitted applications from a different competition should not be visible
     [Documentation]    INFUND-2311
     Then the user should not see the element    link=00000005
 
-The correct columns show for the not submitted applications
+The correct columns show for not submitted applications
     [Documentation]    INFUND-2307
     When the user clicks the button/link    link=Applications not submitted
     Then the user should see the text in the page    Application no
@@ -73,13 +73,13 @@ The correct columns show for the not submitted applications
 
 Summary of the applications not submitted
     [Documentation]    INFUND-2307
-    Then The calculations should be correct    css=.info-area p:nth-child(3) span
-    And Both calculations in the page should show the same    css=.info-area p:nth-child(3) span
+    Then the calculations should be correct    css=.info-area p:nth-child(3) span
+    And both calculations in the page should show the same    css=.info-area p:nth-child(3) span
 
 The applications can be sorted by percentage
     [Documentation]    INFUND-2307
-    When The application list is sorted by    Project title
-    Then The applications should be sorted by column    2
+    When the application list is sorted by    Project title
+    Then the applications should be sorted by column    2
 
 Not submitted applications from different competitions should not be visible
     [Documentation]    INFUND-2311
