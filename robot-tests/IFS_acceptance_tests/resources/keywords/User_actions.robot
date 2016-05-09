@@ -51,6 +51,18 @@ The user should be redirected to the correct page
     Location Should Contain    ${URL}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Wait Until Element Is Visible    id=global-header
+    Page Should Contain    BETA
+
+the user should be redirected to the correct page without the usual headers
+    [Arguments]    ${URL}
+    Sleep    500ms
+    Location Should Contain    ${URL}
+    Page Should Not Contain    error
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
 
 the user reloads the page
     Reload Page
@@ -63,10 +75,39 @@ the user reloads the page
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
 
-Applicant edits the 'Project Summary' question
+the user selects the checkbox
+    [Arguments]    ${checkbox}
+    Select Checkbox    ${checkbox}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
+the user unselects the checkbox
+    [Arguments]    ${checkbox}
+    Unselect Checkbox    ${checkbox}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
+the user selects the radio button
+    [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
+    Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
+
+the user edits the 'Project Summary' question
     focus    css=#form-input-11 .editor
     Clear Element Text    css=#form-input-11 .editor
     Input Text    css=#form-input-11 .editor    I am a robot
+    sleep    1s
 
 Question should be editable
     [Arguments]    ${Mark_question_as_incomplete}
@@ -98,6 +139,11 @@ The user clicks the button/link
 The user should see the text in the page
     [Arguments]    ${VISIBLE_TEXT}
     wait until page contains    ${VISIBLE_TEXT}
+    Page Should Not Contain    Error
+    Page Should Not Contain    error
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    Page Should Not Contain    something went wrong
 
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
@@ -113,7 +159,7 @@ the user should not see an error in the page
 The user should see an error
     [Arguments]    ${ERROR_TEXT}
     Page should contain element    css=.error-message
-    Page should contain    ${ERROR_TEXT}
+    Wait Until Page Contains    ${ERROR_TEXT}
 
 the guest user enters the log in credentials
     [Arguments]    ${USER_NAME}    ${PASSWORD}
@@ -177,10 +223,6 @@ the user can remove the uploaded file
     Page Should Contain    Upload
     Page Should Not Contain    ${file_name}
 
-the user cannot remove the uploaded file
-    [Arguments]    ${file_name}
-    Page Should Not Contain    Remove
-
 the user clicks the link from the appropriate email sender
     Run keyword if    '${RUNNING_ON_DEV}' == ''    the user opens the mailbox and verifies the email sent from a developer machine
     Run keyword if    '${RUNNING_ON_DEV}' != ''    the user opens the mailbox and verifies the official innovate email
@@ -229,7 +271,7 @@ Delete the emails from the test mailbox
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
     Wait Until Page Contains Element    link=terms and conditions
-    Page Should Contain Element     xpath=//a[contains(@href, '/info/terms-and-conditions')]
+    Page Should Contain Element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     Input Text    id=firstName    Stuart
     Input Text    id=lastName    ANDERSON
     Input Text    id=phoneNumber    23232323
@@ -275,7 +317,7 @@ the user cannot see a validation error in the page
 
 the user submits their information
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Select Checkbox    termsAndConditions
+    Focus    name=termsAndConditions
     Select Checkbox    termsAndConditions
     Submit Form
 

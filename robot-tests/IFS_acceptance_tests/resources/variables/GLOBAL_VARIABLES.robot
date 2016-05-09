@@ -42,9 +42,9 @@ ${YOUR_FINANCES_URL_APPLICATION_2}    ${SERVER}/application/2/form/section/7
 ${FINANCES_OVERVIEW_URL}    ${SERVER}/application/1/form/section/8
 ${FINANCES_OVERVIEW_URL_APPLICATION_2}    ${SERVER}/application/2/form/section/8
 ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
-${ELIGIBILITY_INFO_URL}         ${SERVER}/competition/1/info/eligibility
+${ELIGIBILITY_INFO_URL}    ${SERVER}/competition/1/info/eligibility
 ${CHECK_ELIGIBILITY}    ${SERVER}/application/create/check-eligibility/1
-${SPEED_BUMP_URL}       ${SERVER}/application/create-authenticated/1
+${SPEED_BUMP_URL}    ${SERVER}/application/create-authenticated/1
 ${YOUR_DETAILS}    ${SERVER}/application/create/your-details
 ${POSTCODE_LOOKUP_URL}    ${SERVER}/organisation/create/selected-organisation/05063042#
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
@@ -52,6 +52,7 @@ ${APPLICATION_TEAM_URL}    ${SERVER}/application/1/contributors
 ${MANAGE_CONTRIBUTORS_URL}    ${SERVER}/application/1/contributors/invite
 ${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/1
 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/1/application/1
+${NEWLY_CREATED_APPLICATION_YOUR_FINANCES_URL}      ${SERVER}/application/23/form/section/7
 ${404_error_message}    Page Not Found
 ${403_error_message}    You do not have the necessary permissions for your request
 ${wrong_filetype_validation_error}    Please upload a file in .pdf format only
@@ -68,4 +69,4 @@ ${LOCAL_MAIL_SENDING_IMPLEMENTED}    'YES'
 ${COMP_ADMINISTRATOR_OPEN}    ${SERVER}/management/competition/1
 ${COMP_ADMINISTRATOR_IN_ASSESSMENT}    ${SERVER}/management/competition/2
 ${DOWNLOAD_FOLDER}    ../download_files
-${empty_field_warning_message}      This field cannot be left blank
+${empty_field_warning_message}    This field cannot be left blank

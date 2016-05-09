@@ -99,6 +99,7 @@ public class OrganisationCreationForm implements Serializable {
         this.organisationSearching = organisationSearching;
     }
 
+    @JsonIgnore
     public List<OrganisationSearchResult> getOrganisationSearchResults() {
         return organisationSearchResults;
     }

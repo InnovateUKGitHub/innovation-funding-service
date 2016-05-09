@@ -45,7 +45,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         if(applicationFinanceResource.getGrantClaim()!=null) {
             model.addAttribute("organisationGrantClaimPercentage", applicationFinanceResource.getGrantClaim().getGrantClaimPercentage());
             model.addAttribute("organisationgrantClaimPercentageId", applicationFinanceResource.getGrantClaim().getId());
-            String formInputKey = "finance-grantclaim-" + applicationFinanceResource.getGrantClaim();
+            String formInputKey = "finance-grantclaimpercentage-" + applicationFinanceResource.getGrantClaim();
             String formInputValue = applicationFinanceResource.getGrantClaimPercentage() != null ? applicationFinanceResource.getGrantClaimPercentage().toString() : "";
             form.addFormInput(formInputKey, formInputValue);
         }

@@ -3,6 +3,9 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...
 ...
 ...               INFUND-918: As an academic partner i want to be able to mark my finances as complete, so that the lead partner can have confidence in my finances
+...
+...
+...               INFUND-2399: As a Academic partner I want to be able to add my finances including decimals for accurate recording of my finances
 Suite Setup       Guest user log-in    &{collaborator2_credentials}
 Suite Teardown    User closes the browser
 Force Tags        Finances    HappyPath
@@ -14,7 +17,9 @@ Resource          ../../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
+${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 ${text_file}      testing.txt
+${too_large_pdf}    large.pdf
 
 *** Test Cases ***
 Academic finances should be editable when lead marks finances as complete
@@ -26,28 +31,111 @@ Academic finances should be editable when lead marks finances as complete
     Then the user should not see the element    css=#incurred-staff[readonly]
     [Teardown]    Lead applicant marks the finances as incomplete
 
+Academic validations
+    [Documentation]    INFUND-2399
+    When the user navigates to the page    ${YOUR_FINANCES_URL}
+    And the applicant enters invalid inputs
+    Mark academic finances as complete
+    Then the user should see an error    This field should be 0 or higher
+    Then the user should see an error    This field cannot be left blank
+    And the user should see the element    css=.error-summary-list
+    And the field should not contain the currency symbol
+
 Academic finance calculations
     [Documentation]    INFUND-917
+    ...
+    ...    INFUND-2399
     When the user navigates to the page    ${YOUR_FINANCES_URL}
     When the academic partner fills the finances
-    Then the calculations should be correct
+    Then the calculations should be correct and the totals rounded to the second decimal
 
-Academic invalid upload
+Large pdf upload not allowed
+    [Documentation]    INFUND-2720
+    [Tags]
+    When the academic partner uploads a file    ${too_large_pdf}
+    Then the user should get an error page    ${too_large_pdf_validation_error}
+
+Non pdf uploads not allowed
+    [Documentation]    INFUND-2720
+    [Tags]
+    [Setup]    The user navigates to the page    ${your_finances_url}
     When the academic partner uploads a file    ${text_file}
-    Then the user should see the element    css=.error-summary
-    And the user should see the text in the page    No file currently uploaded
+    Then the user should get an error page    ${wrong_filetype_validation_error}
+
+Lead applicant can't upload a JeS file
+    [Documentation]    INFUND-2720
+    [Tags]
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    When the user navigates to the page    ${your_finances_url}
+    Then the user should not see the element    name=jes-upload
+
+Non-academic collaborator can't upload a JeS file
+    [Documentation]    INFUND-2720
+    [Tags]
+    [Setup]    Guest user log-in    &{collaborator1_credentials}
+    When the user navigates to the page    ${your_finances_url}
+    Then the user should not see the element    name=jes-upload
 
 Academics upload
     [Documentation]    INFUND-917
     [Tags]
+    [Setup]    Guest user log-in    &{collaborator2_credentials}
+    Given the user navigates to the page    ${your_finances_url}
     When the academic partner uploads a file    ${valid_pdf}
     Then the user should not see the text in the page    No file currently uploaded
     And the user should see the element    link=testing.pdf
 
+Academic collaborator can view the file on the finances page
+    [Documentation]    INFUND-917
+    [Tags]
+    [Setup]    Guest user log-in    &{collaborator2_credentials}
+    Given the user navigates to the page    ${your_finances_url}
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should see the text in the page    ${valid_pdf_excerpt}
+
+Academic collaborator can view the file on the finances overview page
+    [Documentation]    INFUND-917
+    [Tags]
+    Given the user navigates to the page    ${finances_overview_url}
+    When the user clicks the button/link    link=testing.pdf
+    Then the user should see the text in the page    ${valid_pdf_excerpt}
+
+Lead applicant can't view the file on the finances page
+    [Documentation]    INFUND-917
+    [Tags]
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    When the user navigates to the page    ${your_finances_url}
+    Then the user should not see the text in the page    ${valid_pdf}
+
+Lead applicant can view the file on the finances overview page
+    [Documentation]    INFUND-917
+    [Tags]
+    Given the user navigates to the page    ${finances_overview_url}
+    And the user should see the text in the page    ${valid_pdf}
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should see the text in the page    ${valid_pdf_excerpt}
+
+Non-academic collaborator can't view the file on the finances page
+    [Documentation]    INFUND-917
+    [Tags]
+    [Setup]    Guest user log-in    &{collaborator1_credentials}
+    When the user navigates to the page    ${your_finances_url}
+    Then the user should not see the text in the page    ${valid_pdf}
+
+Non-academic collaborator can view the file on the finances overview page
+    [Documentation]    INFUND-917
+    [Tags]
+    Given the user navigates to the page    ${finances_overview_url}
+    And the user should see the text in the page    ${valid_pdf}
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should see the text in the page    ${valid_pdf_excerpt}
+
 Academic finances JeS link showing
     [Documentation]    INFUND-2402
     [Tags]    Academic
-    When the user can see the link for more JeS details
+    [Setup]    Guest user log-in    &{collaborator2_credentials}
+    When the user navigates to the page    ${your_finances_url}
+    Then the user can see the link for more JeS details
 
 Mark all as complete
     [Documentation]    INFUND-918
@@ -57,8 +145,17 @@ Mark all as complete
     And the user navigates to the page    ${FINANCES_OVERVIEW_URL}
     And the user should see the element    css=.finance-summary tr:nth-of-type(3) img[src="/images/field/tick-icon.png
 
+File upload/delete should not be allowed when marked as complete
+    [Documentation]    INFUND-2437
+    [Tags]    Pending
+    # Pending due to 2202 so once it is ready to test please test the acceptance test
+    Then the user cannot see the option to upload a file on the page    ${YOUR_FINANCES_URL}
+    And the user cannot remove the uploaded file
+
 Academic finance overview
     [Documentation]    INFUND-917
+    ...
+    ...    INFUND-2399
     [Tags]
     Given the user navigates to the page    ${FINANCES_OVERVIEW_URL}
     Then the finance table should be correct
@@ -67,18 +164,19 @@ Academic finance overview
 
 *** Keywords ***
 the academic partner fills the finances
-    Input Text    id=incurred-staff    1000
-    Input Text    id=travel    1000
-    Input Text    id=other    1000
-    Input Text    id=investigators    1000
-    Input Text    id=estates    1000
-    Input Text    id=other-direct    1000
-    Input Text    id=indirect    1000
-    Input Text    id=exceptions-staff    1000
-    Input Text    id=exceptions-other-direct    1000
+    [Documentation]    INFUND-2399
+    Input Text    id=incurred-staff    999.999
+    Input Text    id=travel    999.999
+    Input Text    id=other    999.999
+    Input Text    id=investigators    999.999
+    Input Text    id=estates    999.999
+    Input Text    id=other-direct    999.999
+    Input Text    id=indirect    999.999
+    Input Text    id=exceptions-staff    999.999
+    Input Text    id=exceptions-other-direct    999.999
     Input Text    id=tsb-ref    123123
 
-the calculations should be correct
+the calculations should be correct and the totals rounded to the second decimal
     Textfield Value Should Be    id=subtotal-directly-allocated    £ 3,000
     Textfield Value Should Be    id=subtotal-exceptions    £ 2,000
     Textfield Value Should Be    id=total    £ 9,000
@@ -117,3 +215,22 @@ the user reloads the page
 the user can see the link for more JeS details
     Element Should Be Visible    link=Je-S website
     Page Should Contain Element    xpath=//a[contains(@href,'https://je-s.rcuk.ac.uk')]
+
+the applicant enters invalid inputs
+    Input Text    id=incurred-staff    100£
+    Input Text    id=travel    -89
+    Input Text    id=other    999.999
+    Input Text    id=investigators    999.999
+    Input Text    id=estates    999.999
+    Input Text    id=other-direct    999.999
+    Input Text    id=indirect    999.999
+    Input Text    id=exceptions-staff    999.999
+    Input Text    id=exceptions-other-direct    999.999
+    Input Text    id=tsb-ref    ${EMPTY}
+
+the field should not contain the currency symbol
+    Textfield Value Should Be    id=incurred-staff    100
+
+Mark academic finances as complete
+    Focus    jQuery=.button:contains("Mark all as complete")
+    And the user clicks the button/link    jQuery=.button:contains("Mark all as complete")

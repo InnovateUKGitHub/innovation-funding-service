@@ -60,7 +60,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         Long application1Id = 1L;
         ApplicationResource testApplicationResource1 = applicationResourceBuilder.build();
 
-        when(applicationService.getApplicationById(application1Id)).thenReturn(serviceSuccess(testApplicationResource1));
+        when(applicationServiceMock.getApplicationById(application1Id)).thenReturn(serviceSuccess(testApplicationResource1));
 
         mockMvc.perform(get("/application/{id}", application1Id))
                 .andDo(this.document.snippets(
@@ -75,7 +75,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     public void documentFindAll() throws Exception {
         int applicationNumber = 3;
         List<ApplicationResource> applications = applicationResourceBuilder.build(applicationNumber);
-        when(applicationService.findAll()).thenReturn(serviceSuccess(applications));
+        when(applicationServiceMock.findAll()).thenReturn(serviceSuccess(applications));
 
         mockMvc.perform(get("/application/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andDo(
@@ -93,7 +93,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         List<ApplicationResource> applications = applicationResourceBuilder.build(2);
 
-        when(applicationService.findByUserId(testUser1.getId())).thenReturn(serviceSuccess(applications));
+        when(applicationServiceMock.findByUserId(testUser1.getId())).thenReturn(serviceSuccess(applications));
 
         mockMvc.perform(get("/application/findByUser/{id}", userId))
                 .andDo(this.document.snippets(
@@ -112,7 +112,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         ApplicationResource testApplicationResource1 = applicationResourceBuilder.build();
 
-        when(applicationService.saveApplicationDetails(applicationId, testApplicationResource1)).thenReturn(serviceSuccess(null));
+        when(applicationServiceMock.saveApplicationDetails(applicationId, testApplicationResource1)).thenReturn(serviceSuccess(null));
 
         mockMvc.perform(post("/application/saveApplicationDetails/{id}", applicationId)
                     .contentType(APPLICATION_JSON)
@@ -133,7 +133,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         CompletedPercentageResource resource = new CompletedPercentageResource();
         resource.setCompletedPercentage(new BigDecimal("10"));
 
-        when(applicationService.getProgressPercentageByApplicationId(applicationId)).thenReturn(serviceSuccess(resource));
+        when(applicationServiceMock.getProgressPercentageByApplicationId(applicationId)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/application/getProgressPercentageByApplicationId/{applicationId}", applicationId))
                 .andDo(this.document.snippets(
@@ -153,7 +153,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         ApplicationResource applicationResource = applicationResourceBuilder.build();
 
-        when(applicationService.updateApplicationStatus(applicationId, statusId)).thenReturn(serviceSuccess(applicationResource));
+        when(applicationServiceMock.updateApplicationStatus(applicationId, statusId)).thenReturn(serviceSuccess(applicationResource));
 
         mockMvc.perform(put("/application/updateApplicationStatus?applicationId={applicationId}&statusId={statusId}", applicationId, statusId))
                 .andDo(this.document.snippets(
@@ -176,7 +176,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         node.put(RESEARCH_PARTICIPATION_VALID, true);
         node.put(ALL_SECTION_COMPLETE, true);
 
-        when(applicationService.applicationReadyForSubmit(applicationId)).thenReturn(serviceSuccess(node));
+        when(applicationServiceMock.applicationReadyForSubmit(applicationId)).thenReturn(serviceSuccess(node));
 
         mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", applicationId))
                 .andDo(this.document.snippets(
@@ -201,7 +201,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         List<ApplicationResource> applicationResources = applicationResourceBuilder.build(2);
 
-        when(applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role)).thenReturn(serviceSuccess(applicationResources));
+        when(applicationServiceMock.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role)).thenReturn(serviceSuccess(applicationResources));
 
         mockMvc.perform(get("/application/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}", competitionId, userId, role))
                 .andDo(this.document.snippets(
@@ -227,7 +227,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode applicationNameNode = mapper.createObjectNode().put("name", applicationName);
 
-        when(applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, applicationName)).thenReturn(serviceSuccess(applicationResource));
+        when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(competitionId, userId, applicationName)).thenReturn(serviceSuccess(applicationResource));
 
         mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}", competitionId, userId, "json")
                 .contentType(APPLICATION_JSON)

@@ -1,14 +1,17 @@
 package com.worth.ifs.user.builder;
 
-import com.worth.ifs.BaseBuilder;
-import com.worth.ifs.user.resource.OrganisationSize;
-import com.worth.ifs.user.resource.OrganisationResource;
+import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
+import static com.worth.ifs.BuilderAmendFunctions.setField;
+import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static java.util.Collections.emptyList;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.*;
-import static java.util.Collections.emptyList;
+import com.worth.ifs.BaseBuilder;
+import com.worth.ifs.organisation.resource.OrganisationAddressResource;
+import com.worth.ifs.user.domain.OrganisationSize;
+import com.worth.ifs.user.resource.OrganisationResource;
 
 /**
  * Builder for OrganisationResource entities.
@@ -61,6 +64,10 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
 
     public OrganisationResourceBuilder withOrganisationSize(OrganisationSize... size) {
         return withArray((organisationSize, organisation) -> organisation.setOrganisationSize(organisationSize), size);
+    }
+    
+    public OrganisationResourceBuilder withAddress(List<OrganisationAddressResource>... organisationAddressResource) {
+    	return withArray((orgAddress, organisation) -> setField("addresses", orgAddress, organisation), organisationAddressResource);
     }
 
     @Override

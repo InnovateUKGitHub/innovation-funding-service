@@ -87,7 +87,11 @@ IFS.financeSpecifics = (function(){
                   var formGroup = funingLevelEl.closest('.form-group');
                   formGroup.removeClass('error');
                   formGroup.find('.error-message').remove();
-                  funingLevelEl.trigger('change');
+                  setTimeout(function () {
+                   // delay, so the orgSize is saved, before the funding level validation is executed.
+                    funingLevelEl.trigger('change');
+                  }, 1000);
+
             }
         });
       }

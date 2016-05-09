@@ -14,6 +14,7 @@ Resource          ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
+${valid_pdf_excerpt}    Adobe PDF is an ideal format for electronic document distribution
 
 *** Test Cases ***
 Comp admin can open the view mode of the application
@@ -24,15 +25,16 @@ Comp admin can open the view mode of the application
     ...    INFUND-2435
     [Tags]    Competition management
     [Setup]    Run keywords    Log in as user    &{lead_applicant_credentials}
-    ...    AND    the user can see the option to upload a file on the page    ${project_team_url}
-    ...    AND    the user uploads the file to the 'project team' question    ${valid_pdf}
+    ...    AND    the user can see the option to upload a file on the page    ${technical_approach_url}
+    ...    AND    the user uploads the file to the 'technical approach' question    ${valid_pdf}
+
     Given log in as user    &{Comp_admin1_credentials}
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
     When the user clicks the button/link    link=00000001
     Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
-    And the user should see the element    Link=Print application
+    And the user should see the element    link=Print application
     And the user should see the text in the page    A novel solution to an old problem
-    And the user can see the upload for the 'Technical approach' question
+    And the user should see the text in the page   ${valid_pdf}
     And the user can view this file without any errors
 
 Comp admin should not be able to edit the finances
@@ -42,20 +44,17 @@ Comp admin should not be able to edit the finances
     Then the user should not see the element    link=your finances
 
 *** Keywords ***
-the user uploads the file to the 'project team' question
+the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
-    Choose File    name=formInput[18]    ${UPLOAD_FOLDER}/${file_name}
+    Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
     Sleep    500ms
 
 the user can see the option to upload a file on the page
     [Arguments]    ${url}
     The user navigates to the page    ${url}
-    Page Should Contain    Upload
+    the user should see the text in the page        Upload
 
-the user can see the upload for the 'Technical approach' question
-    the user clicks the button/link    css=[aria-controls="collapsible-8"]
-    the user should see the text in the page    ${valid_pdf}
 
 the user can view this file without any errors
-    the user clicks the button/link    xpath=//a[contains(@href, 'download')]
-    the user should not see an error in the page
+    the user clicks the button/link         link=testing.pdf(7 KB)
+    the user should see the text in the page    ${valid_pdf_excerpt}

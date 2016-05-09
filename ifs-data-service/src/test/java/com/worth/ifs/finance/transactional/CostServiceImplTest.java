@@ -54,6 +54,11 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
         Application application = newApplication().build();
 
         ApplicationFinance existingFinance = newApplicationFinance().withOrganisation(organisation).withApplication(application).build();
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(123L, 456L)).thenReturn(existingFinance);
+
+        ServiceResult<ApplicationFinanceResource> result = service.findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L);
+        assertTrue(result.isSuccess());
+
         ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().
                 with(id(existingFinance.getId())).
                 withOrganisation(organisation.getId()).
@@ -75,6 +80,11 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
         Application application = newApplication().build();
 
         ApplicationFinance existingFinance = newApplicationFinance().withOrganisation(organisation).withApplication(application).build();
+        when(applicationFinanceRepositoryMock.findByApplicationId(123L)).thenReturn(singletonList(existingFinance));
+
+        ServiceResult<List<ApplicationFinanceResource>> result = service.findApplicationFinanceByApplication(123L);
+        assertTrue(result.isSuccess());
+
         ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().
                 with(id(existingFinance.getId())).
                 withOrganisation(organisation.getId()).
@@ -106,6 +116,11 @@ public class CostServiceImplTest extends BaseServiceUnitTest<CostServiceImpl> {
             assertEquals(organisation, finance.getOrganisation());
             return true;
         }));
+
+        when(applicationFinanceRepositoryMock.save(newFinanceExpectations)).thenReturn(newFinance);
+
+        ServiceResult<ApplicationFinanceResource> result = service.addCost(new ApplicationFinanceResourceId(123L, 456L));
+        assertTrue(result.isSuccess());
 
         ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().
                 with(id(newFinance.getId())).

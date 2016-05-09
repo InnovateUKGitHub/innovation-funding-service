@@ -7,6 +7,7 @@ Documentation     INFUND-399: As a client, I would like to demo the system with 
 ...
 ...               INFUND-2130: As a competition administrator I want to be able to log into IFS so that I can access the system with appropriate permissions for my role
 Suite Teardown    TestTeardown User closes the browser
+Force Tags        Guest
 Resource          ../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../resources/variables/User_credentials.robot
@@ -15,20 +16,20 @@ Resource          ../../resources/keywords/User_actions.robot
 
 *** Test Cases ***
 Log-out
-    [Tags]    Guest    HappyPath
+    [Tags]    HappyPath
     [Setup]    Guest user log-in    &{lead_applicant_credentials}
     Given the Applicant is logged-in
     Logout as user
 
 Invalid Login
-    [Tags]    Guest
+    [Tags]
     Given the user is not logged-in
     When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd2
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
 
 Valid login as Applicant
-    [Tags]    Guest    HappyPath
+    [Tags]    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -37,7 +38,7 @@ Valid login as Applicant
     [Teardown]    Logout as user
 
 Valid login as Collaborator
-    [Tags]    Guest    HappyPath
+    [Tags]    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${collaborator1_credentials["email"]}    ${collaborator1_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -47,7 +48,7 @@ Valid login as Collaborator
 
 Valid login as Assessor
     [Documentation]    INFUND-286
-    [Tags]    Assessor    Guest    HappyPath
+    [Tags]    Assessor    HappyPath
     Given the user is not logged-in
     When the guest user enters the log in credentials    ${assessor_credentials["email"]}    ${assessor_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
@@ -67,8 +68,7 @@ Valid login as Comp Admin
 
 Reset password (psw does not match)
     [Documentation]    INFUND-1889
-    [Tags]    Email     Pending
-    # Pending due to INFUND-2649
+    [Tags]    Email
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the button/link    link=Forgot your password?
@@ -86,8 +86,7 @@ Reset password (psw does not match)
 
 Reset password
     [Documentation]    INFUND-1889
-    [Tags]    Email    HappyPath        Pending
-    # Pending due to INFUND-2649
+    [Tags]    Email    HappyPath
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the button/link    link=Forgot your password?
@@ -123,7 +122,7 @@ the Applicant is logged-in
     Wait Until Element Is Visible    link=Logout
 
 the user should be logged-in as an Assessor
-    Title Should Be    Innovation Funding Service - Assessor Dashboard
+    Title Should Be    Assessor Dashboard - Innovation Funding Service
 
 the user opens the mailbox and clicks the reset link
     Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1

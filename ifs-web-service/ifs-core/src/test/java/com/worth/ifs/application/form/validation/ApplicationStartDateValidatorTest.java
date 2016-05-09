@@ -1,18 +1,15 @@
 package com.worth.ifs.application.form.validation;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.validation.Errors;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 public class ApplicationStartDateValidatorTest {
 
@@ -40,7 +37,7 @@ public class ApplicationStartDateValidatorTest {
 		
 		validator.validate(request, errors);
 		
-		verify(errors).reject("application.startDate.past", "Please enter a future date.");
+		verify(errors).reject("application.startDate", "Please enter a future date.");
 	}
 	
 	@Test
@@ -50,7 +47,7 @@ public class ApplicationStartDateValidatorTest {
 		
 		validator.validate(request, errors);
 		
-		verify(errors).reject("application.startDate.invalid", "Please enter a valid date.");
+		verify(errors).reject("application.startDate", "Please enter a valid date.");
 	}
 	
 	@Test
@@ -60,7 +57,7 @@ public class ApplicationStartDateValidatorTest {
 		
 		validator.validate(request, errors);
 		
-		verify(errors).reject("application.startDate.invalid", "Please enter a valid date.");
+		verify(errors).reject("application.startDate", "Please enter a valid date.");
 	}
 	
 	@Test
@@ -90,7 +87,7 @@ public class ApplicationStartDateValidatorTest {
 		
 		validator.validate(request, errors);
 		
-		verify(errors).reject("application.startDate.invalid", "Please enter a valid date.");
+		verify(errors).reject("application.startDate", "Please enter a valid date.");
 	}
 	
 	@Test

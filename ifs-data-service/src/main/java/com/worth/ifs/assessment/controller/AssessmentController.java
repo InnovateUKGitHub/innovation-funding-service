@@ -65,7 +65,7 @@ public class AssessmentController {
         //unpacks all the response form data fields
         ArrayNode assessmentsIds = (ArrayNode) formData.get("assessmentsToSubmit");
         Set<Long> assessments = fromArrayNodeToSet(assessmentsIds);
-        return assessorService.submitAssessments(assessments).toPostUpdateResponse();
+        return assessorService.submitAssessments(assessments).toPostResponse();
     }
 
     @RequestMapping(value = "/saveAssessmentSummary", method = RequestMethod.POST)
@@ -77,7 +77,7 @@ public class AssessmentController {
         String suitableFeedback =  HtmlUtils.htmlUnescape(formData.get("suitableFeedback").asText());
         String comments =  HtmlUtils.htmlUnescape(formData.get("comments").textValue());
 
-        return assessorService.submitAssessment(assessorId, applicationId, suitableValue, suitableFeedback, comments).toPostUpdateResponse();
+        return assessorService.submitAssessment(assessorId, applicationId, suitableValue, suitableFeedback, comments).toPostResponse();
     }
 
     @RequestMapping(value = "{assessmentId}/score")

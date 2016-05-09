@@ -30,6 +30,8 @@ public interface FailingOrSucceedingResult<SuccessType, FailureType> {
 
     <R> FailingOrSucceedingResult<R, FailureType> andOnSuccessReturn(ExceptionThrowingFunction<? super SuccessType, R> successHandler);
 
+    <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Supplier<FailingOrSucceedingResult<R, FailureType>> failureHandler);
+
     <R> R handleSuccessOrFailure(ExceptionThrowingFunction<? super FailureType, ? extends R> failureHandler, ExceptionThrowingFunction<? super SuccessType, ? extends R> successHandler);
 
     Optional<SuccessType> getOptionalSuccessObject();

@@ -19,7 +19,6 @@ public class AssessmentResource {
     private LocalDate endDate;
     protected List<Long> processOutcomes = new ArrayList<>();
     Long processRole;
-    protected ProcessOutc
 
     public Long getId() {
         return id;

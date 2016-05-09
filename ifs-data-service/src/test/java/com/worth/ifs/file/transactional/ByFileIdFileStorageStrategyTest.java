@@ -1,31 +1,33 @@
 package com.worth.ifs.file.transactional;
 
+import com.google.common.io.Files;
+import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.file.domain.FileEntry;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.file.domain.builders.FileEntryBuilder.newFileEntry;
 import static com.worth.ifs.util.CollectionFunctions.combineLists;
-import static com.worth.ifs.util.CollectionFunctions.simpleJoiner;
-import static java.io.File.separator;
-import static java.util.Arrays.asList;
+import static com.worth.ifs.util.FileFunctions.pathElementsToFile;
+import static java.nio.charset.Charset.defaultCharset;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the storage strategy of ByFileIdFileStorageStrategy
  */
-public class ByFileIdFileStorageStrategyTest {
-
-    private List<String> tempFolderPathSegments = asList("path", "to");
-    private List<String> tempFolderPathSegmentsWithBaseFolder = asList("path", "to", "BaseFolder");
-    private String fullPathToTempFolder = simpleJoiner(tempFolderPathSegments, separator);
+public class ByFileIdFileStorageStrategyTest extends BaseFileStorageStrategyTest {
 
     @Test
     public void testGetFilePathAndName() {
 
-        ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy(fullPathToTempFolder, "BaseFolder");
+        ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
 
         assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, "000000000_999999999", "000000_999999", "000_999"), strategy.getFilePathAndName(0L).getKey());
         assertEquals("0", strategy.getFilePathAndName(0L).getValue());
@@ -34,7 +36,7 @@ public class ByFileIdFileStorageStrategyTest {
     @Test
     public void testGetAbsoluteFilePathAndName() {
 
-        ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy(fullPathToTempFolder, "BaseFolder");
+        ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
 
         FileEntry fileEntry = newFileEntry().with(id(123L)).build();
         assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, "000000000_999999999", "000000_999999", "000_999"), strategy.getAbsoluteFilePathAndName(fileEntry).getKey());
@@ -44,7 +46,7 @@ public class ByFileIdFileStorageStrategyTest {
     @Test
     public void testGetFilePathAndNameForMoreComplexNumber() {
 
-        ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy(fullPathToTempFolder, "BaseFolder");
+        ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
 
         // test a number that is within the middle of the deepest set of partitions
         assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, "000000000_999999999", "000000_999999", "5000_5999"), strategy.getFilePathAndName(5123L).getKey());
@@ -62,7 +64,7 @@ public class ByFileIdFileStorageStrategyTest {
     @Test
     public void testEachPartitionLevelCanOnlyContainMaximumOf1000Entries() {
 
-        ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy(fullPathToTempFolder, "BaseFolder");
+        ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
 
         List<String> folderPaths = strategy.getFilePathAndName(5526359849L).getKey();
         assertEquals(combineLists(tempFolderPathSegmentsWithBaseFolder, "5000000000_5999999999", "5526000000_5526999999", "5526359000_5526359999"), folderPaths);
@@ -91,20 +93,57 @@ public class ByFileIdFileStorageStrategyTest {
     }
 
     @Test
-    public void testGetFullPathToFileUploadFolderWithUnixSeparator() {
+    public void testCreateFileWithTwoSameNamesInDifferentFolders() throws IOException {
 
-        ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy("/tmp/path/to/containing/folder", "BaseFolder");
+        FileStorageStrategy strategy = new ByFileIdFileStorageStrategy(tempFolderPathAsString, "BaseFolder");
 
-        List<String> fullPathToFileUploadFolder = strategy.getAbsolutePathToFileUploadFolder("/");
-        assertEquals(asList("/tmp", "path", "to", "containing", "folder", "BaseFolder"), fullPathToFileUploadFolder);
+        File tempFileWithContents1 = File.createTempFile("tempfilefortesting1", "suffix", tempFolder);
+        File tempFileWithContents2 = File.createTempFile("tempfilefortesting2", "suffix", tempFolder);
+
+        FileEntry fileEntry1 = newFileEntry().with(id(1L)).build();
+        FileEntry fileEntry2 = newFileEntry().with(id(1001L)).build();
+
+        try {
+            Files.write("Original content 1", tempFileWithContents1, defaultCharset());
+            Files.write("Original content 2", tempFileWithContents2, defaultCharset());
+
+            ServiceResult<File> createdFile1Result = strategy.createFile(fileEntry1, tempFileWithContents1);
+            assertTrue(createdFile1Result.isSuccess());
+
+            ServiceResult<File> createdFile2Result = strategy.createFile(fileEntry2, tempFileWithContents2);
+            assertTrue(createdFile2Result.isSuccess());
+
+            File createdFile1 = createdFile1Result.getSuccessObject();
+            File createdFile2 = createdFile2Result.getSuccessObject();
+
+            assertTrue(createdFile1.exists());
+            assertTrue(createdFile2.exists());
+            assertNotEquals(createdFile1.getParent(), createdFile2.getParent());
+
+            assertEquals("Original content 1", Files.readFirstLine(createdFile1, defaultCharset()));
+            assertEquals("Original content 2", Files.readFirstLine(createdFile2, defaultCharset()));
+
+        } finally {
+            FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
+            tempFileWithContents1.delete();
+            tempFileWithContents2.delete();
+        }
     }
 
     @Test
-    public void testGetFullPathToFileUploadFolderWithWindowsSeparator() {
+    public void testCreateFile() throws IOException {
+        FileEntry fileEntry = newFileEntry().with(id(123L)).build();
+        doTestCreateFile(fileEntry, combineLists(tempFolderPathSegmentsWithBaseFolder, "000000000_999999999", "000000_999999", "000_999", "123"));
+    }
 
-        ByFileIdFileStorageStrategy strategy = new ByFileIdFileStorageStrategy("c:\\tmp\\path\\to\\containing\\folder", "BaseFolder");
+    @Test
+    public void testMoveFile() throws IOException {
+        FileEntry fileEntry = newFileEntry().with(id(123L)).build();
+        doTestMoveFile(fileEntry, combineLists(tempFolderPathSegmentsWithBaseFolder, "000000000_999999999", "000000_999999", "000_999", "123"));
+    }
 
-        List<String> fullPathToFileUploadFolder = strategy.getAbsolutePathToFileUploadFolder("\\");
-        assertEquals(asList("c:", "tmp", "path", "to", "containing", "folder", "BaseFolder"), fullPathToFileUploadFolder);
+    @Override
+    protected BaseFileStorageStrategy createFileStorageStrategy(String pathToStorageBase, String containingFolder) {
+        return new ByFileIdFileStorageStrategy(pathToStorageBase, containingFolder);
     }
 }

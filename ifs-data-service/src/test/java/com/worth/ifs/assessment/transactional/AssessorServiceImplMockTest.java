@@ -198,7 +198,7 @@ public class AssessorServiceImplMockTest extends BaseServiceUnitTest<AssessorSer
         Assessment assessment = newAssessment().withProcessRole(processRole).build();
 
         when(assessmentRepositoryMock.findById(123L)).thenReturn(assessment);
-        when(responseService.findResponsesByApplication(application.getId())).thenReturn(serviceSuccess(newResponse().build(2)));
+        when(responseServiceMock.findResponsesByApplication(application.getId())).thenReturn(serviceSuccess(newResponse().build(2)));
 
         ServiceResult<Score> result = service.getScore(123L);
 
