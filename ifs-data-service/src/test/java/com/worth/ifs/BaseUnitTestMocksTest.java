@@ -1,5 +1,6 @@
 package com.worth.ifs;
 
+import com.worth.ifs.notifications.resource.SystemNotificationSource;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -172,6 +173,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     
     @Mock
     protected ApplicationFundingService applicationFundingServiceMock;
+
+    @Mock
+    protected SystemNotificationSource systemNotificationSourceMock;
 
     @Before
     public void setupMockInjection() {

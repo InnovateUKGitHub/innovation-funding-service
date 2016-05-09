@@ -44,7 +44,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
 	@Autowired
 	private SystemNotificationSource systemNotificationSource;
 
-    private enum Notifications {
+	enum Notifications {
         FUNDED_APPLICATION,
         UNFUNDED_APPLICATION,
     }
