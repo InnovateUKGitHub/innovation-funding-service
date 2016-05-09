@@ -68,10 +68,10 @@ Empty company name field
 
 *** Keywords ***
 the search criteria should be displayed
-    Page Should Contain    05493105 - Incorporated on 28 June 2005
-    Click Link    INNOVATE LTD
-    Page Should Contain    Business
-    Page Should Contain    Business name
+    the user should see the text in the page    05493105 - Incorporated on 28 June 2005
+    the user clicks the button/link    INNOVATE LTD
+    the user should see the text in the page    Business
+    the user should see the text in the page    Business name
     Element Should Contain    css=.form-block p:nth-child(2)    INNOVATE LTD
-    Page Should Contain    Registration number
-    Page should contain    05493105
+    the user should see the text in the page    Registration number
+    the user should see the text in the page    05493105
