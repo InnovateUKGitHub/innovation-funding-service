@@ -37,6 +37,7 @@ Academic validations
     And the applicant enters invalid inputs
     Mark academic finances as complete
     Then the user should see an error    This field should be 0 or higher
+    Then the user should see an error    This field cannot be left blank
     And the user should see the element    css=.error-summary-list
     And the field should not contain the currency symbol
 
@@ -48,41 +49,37 @@ Academic finance calculations
     When the academic partner fills the finances
     Then the calculations should be correct and the totals rounded to the second decimal
 
-
 Large pdf upload not allowed
-    [Documentation]     INFUND-2720
+    [Documentation]    INFUND-2720
     [Tags]
     When the academic partner uploads a file    ${too_large_pdf}
-    Then the user should get an error page      ${too_large_pdf_validation_error}
-
+    Then the user should get an error page    ${too_large_pdf_validation_error}
 
 Non pdf uploads not allowed
-    [Documentation]     INFUND-2720
+    [Documentation]    INFUND-2720
     [Tags]
-    [Setup]     The user navigates to the page  ${your_finances_url}
+    [Setup]    The user navigates to the page    ${your_finances_url}
     When the academic partner uploads a file    ${text_file}
-    Then the user should get an error page      ${wrong_filetype_validation_error}
+    Then the user should get an error page    ${wrong_filetype_validation_error}
 
 Lead applicant can't upload a JeS file
-    [Documentation]     INFUND-2720
+    [Documentation]    INFUND-2720
     [Tags]
-    [Setup]     Guest user log-in   &{lead_applicant_credentials}
-    When the user navigates to the page        ${your_finances_url}
-    Then the user should not see the element  name=jes-upload
-
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    When the user navigates to the page    ${your_finances_url}
+    Then the user should not see the element    name=jes-upload
 
 Non-academic collaborator can't upload a JeS file
-    [Documentation]     INFUND-2720
+    [Documentation]    INFUND-2720
     [Tags]
-    [Setup]     Guest user log-in   &{collaborator1_credentials}
-    When the user navigates to the page        ${your_finances_url}
-    Then the user should not see the element  name=jes-upload
-
+    [Setup]    Guest user log-in    &{collaborator1_credentials}
+    When the user navigates to the page    ${your_finances_url}
+    Then the user should not see the element    name=jes-upload
 
 Academics upload
     [Documentation]    INFUND-917
     [Tags]
-    [Setup]     Guest user log-in   &{collaborator2_credentials}
+    [Setup]    Guest user log-in    &{collaborator2_credentials}
     Given the user navigates to the page    ${your_finances_url}
     When the academic partner uploads a file    ${valid_pdf}
     Then the user should not see the text in the page    No file currently uploaded
@@ -91,56 +88,53 @@ Academics upload
 Academic collaborator can view the file on the finances page
     [Documentation]    INFUND-917
     [Tags]
-    [Setup]     Guest user log-in    &{collaborator2_credentials}
+    [Setup]    Guest user log-in    &{collaborator2_credentials}
     Given the user navigates to the page    ${your_finances_url}
     When the user clicks the button/link    link=${valid_pdf}
-    Then the user should see the text in the page   ${valid_pdf_excerpt}
+    Then the user should see the text in the page    ${valid_pdf_excerpt}
 
 Academic collaborator can view the file on the finances overview page
     [Documentation]    INFUND-917
     [Tags]
     Given the user navigates to the page    ${finances_overview_url}
     When the user clicks the button/link    link=testing.pdf
-    Then the user should see the text in the page       ${valid_pdf_excerpt}
-
+    Then the user should see the text in the page    ${valid_pdf_excerpt}
 
 Lead applicant can't view the file on the finances page
     [Documentation]    INFUND-917
     [Tags]
-    [Setup]     Guest user log-in   &{lead_applicant_credentials}
-    When the user navigates to the page         ${your_finances_url}
-    Then the user should not see the text in the page   ${valid_pdf}
+    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    When the user navigates to the page    ${your_finances_url}
+    Then the user should not see the text in the page    ${valid_pdf}
 
 Lead applicant can view the file on the finances overview page
     [Documentation]    INFUND-917
     [Tags]
-    Given the user navigates to the page         ${finances_overview_url}
-    And the user should see the text in the page   ${valid_pdf}
-    When the user clicks the button/link        link=${valid_pdf}
-    Then the user should see the text in the page       ${valid_pdf_excerpt}
-
+    Given the user navigates to the page    ${finances_overview_url}
+    And the user should see the text in the page    ${valid_pdf}
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should see the text in the page    ${valid_pdf_excerpt}
 
 Non-academic collaborator can't view the file on the finances page
     [Documentation]    INFUND-917
     [Tags]
-    [Setup]     Guest user log-in   &{collaborator1_credentials}
-    When the user navigates to the page         ${your_finances_url}
-    Then the user should not see the text in the page   ${valid_pdf}
+    [Setup]    Guest user log-in    &{collaborator1_credentials}
+    When the user navigates to the page    ${your_finances_url}
+    Then the user should not see the text in the page    ${valid_pdf}
 
 Non-academic collaborator can view the file on the finances overview page
     [Documentation]    INFUND-917
     [Tags]
-    Given the user navigates to the page         ${finances_overview_url}
-    And the user should see the text in the page   ${valid_pdf}
-    When the user clicks the button/link        link=${valid_pdf}
-    Then the user should see the text in the page       ${valid_pdf_excerpt}
-
+    Given the user navigates to the page    ${finances_overview_url}
+    And the user should see the text in the page    ${valid_pdf}
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should see the text in the page    ${valid_pdf_excerpt}
 
 Academic finances JeS link showing
     [Documentation]    INFUND-2402
     [Tags]    Academic
-    [Setup]     Guest user log-in   &{collaborator2_credentials}
-    When the user navigates to the page         ${your_finances_url}
+    [Setup]    Guest user log-in    &{collaborator2_credentials}
+    When the user navigates to the page    ${your_finances_url}
     Then the user can see the link for more JeS details
 
 Mark all as complete
@@ -232,11 +226,11 @@ the applicant enters invalid inputs
     Input Text    id=indirect    999.999
     Input Text    id=exceptions-staff    999.999
     Input Text    id=exceptions-other-direct    999.999
-    Input Text    id=tsb-ref    123123
+    Input Text    id=tsb-ref    ${EMPTY}
 
 the field should not contain the currency symbol
     Textfield Value Should Be    id=incurred-staff    100
 
 Mark academic finances as complete
-    Focus     jQuery=.button:contains("Mark all as complete")
+    Focus    jQuery=.button:contains("Mark all as complete")
     And the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
