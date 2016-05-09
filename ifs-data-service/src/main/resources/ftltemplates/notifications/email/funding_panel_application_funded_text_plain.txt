@@ -1,6 +1,6 @@
 Dear ${notificationTarget.name},
 
-We are pleased to inform you that your application ${applicationnName} has been successful in achieving funding in the competition ${competitionName}.
+We are pleased to inform you that your application ${applicationName} has been successful in achieving funding in the competition ${competitionName}.
 
 For this project to begin, we need you to provide details, documents and undergo financial checks. This process will be managed through your Innovate UK Dashboard, where you can find full details of this process.
 

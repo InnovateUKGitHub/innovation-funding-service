@@ -3,6 +3,7 @@ package com.worth.ifs.application.transactional;
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
 import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
+import com.worth.ifs.application.repository.ApplicationRepository;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.notifications.resource.Notification;
@@ -12,10 +13,12 @@ import com.worth.ifs.notifications.resource.UserNotificationTarget;
 import com.worth.ifs.notifications.service.NotificationService;
 import com.worth.ifs.transactional.BaseTransactionalService;
 import com.worth.ifs.user.domain.ProcessRole;
+import com.worth.ifs.util.EntityLookupCallbacks;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,23 +26,25 @@ import static com.worth.ifs.application.constant.ApplicationStatusConstants.APPR
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.REJECTED;
 import static com.worth.ifs.application.resource.FundingDecision.FUNDED;
 import static com.worth.ifs.application.resource.FundingDecision.NOT_FUNDED;
+import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.FUNDED_APPLICATION;
+import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.UNFUNDED_APPLICATION;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
-import static com.worth.ifs.util.CollectionFunctions.simpleFilter;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
-import static com.worth.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
+import static com.worth.ifs.util.CollectionFunctions.*;
 import static com.worth.ifs.util.MapFunctions.toListOfPairs;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
 
 @Service
-public class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
+class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
 
 	@Autowired
 	private NotificationService notificationService;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
 	@Autowired
 	private SystemNotificationSource systemNotificationSource;
@@ -79,19 +84,21 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         List<Long> fundedApplicationIds = simpleMap(fundedApplicationDecisions, Pair::getKey);
         List<Long> unfundedApplicationIds = simpleMap(unfundedApplicationDecisions, Pair::getKey);
 
-		List<ServiceResult<NotificationTarget>> fundedNotificationTargets = getLeadApplicantNotificationSources(fundedApplicationIds);
-        List<ServiceResult<NotificationTarget>> unfundedNotificationTargets = getLeadApplicantNotificationSources(unfundedApplicationIds);
+		List<ServiceResult<Pair<Long, NotificationTarget>>> fundedNotificationTargets = getLeadApplicantNotificationSources(fundedApplicationIds);
+        List<ServiceResult<Pair<Long, NotificationTarget>>> unfundedNotificationTargets = getLeadApplicantNotificationSources(unfundedApplicationIds);
 
-        ServiceResult<List<NotificationTarget>> aggregatedFundedTargets = aggregate(fundedNotificationTargets);
-        ServiceResult<List<NotificationTarget>> aggregatedUnfundedTargets = aggregate(unfundedNotificationTargets);
+        ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundedTargets = aggregate(fundedNotificationTargets);
+        ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedUnfundedTargets = aggregate(unfundedNotificationTargets);
 
         if (aggregatedFundedTargets.isSuccess() && aggregatedUnfundedTargets.isSuccess()) {
 
-            Notification fundedNotification = new Notification(systemNotificationSource, aggregatedFundedTargets.getSuccessObject(), Notifications.FUNDED_APPLICATION, emptyMap());
-            ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundedNotification, EMAIL).andOnSuccessReturnVoid();
+            ServiceResult<Notification> fundedNotification = createFundingDecisionNotification(competitionId, aggregatedFundedTargets.getSuccessObject(), FUNDED_APPLICATION);
+            ServiceResult<Void> fundedEmailSendResult = fundedNotification.andOnSuccessReturnVoid(
+                    notification -> notificationService.sendNotification(notification, EMAIL));
 
-            Notification unfundedNotification = new Notification(systemNotificationSource, aggregatedUnfundedTargets.getSuccessObject(), Notifications.UNFUNDED_APPLICATION, emptyMap());
-            ServiceResult<Void> unfundedEmailSendResult = notificationService.sendNotification(unfundedNotification, EMAIL).andOnSuccessReturnVoid();
+            ServiceResult<Notification> unfundedNotification = createFundingDecisionNotification(competitionId, aggregatedUnfundedTargets.getSuccessObject(), UNFUNDED_APPLICATION);
+            ServiceResult<Void> unfundedEmailSendResult = unfundedNotification.andOnSuccessReturnVoid(
+                    notification -> notificationService.sendNotification(notification, EMAIL));
 
             List<ServiceResult<Void>> allEmailResults = asList(fundedEmailSendResult, unfundedEmailSendResult);
             return processAnyFailuresOrSucceed(allEmailResults, serviceSuccess());
@@ -100,10 +107,35 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         }
 	}
 
-	private List<ServiceResult<NotificationTarget>> getLeadApplicantNotificationSources(List<Long> applicationIds) {
+	private ServiceResult<Notification> createFundingDecisionNotification(Long competitionId, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
+
+        return getCompetition(competitionId).andOnSuccessReturn(competition -> {
+
+            Map<String, Object> globalArguments = new HashMap<>();
+            globalArguments.put("competitionName", competition.getName());
+            globalArguments.put("dashboardUrl", "#");
+            globalArguments.put("feedbackDate", "01/02/2017");
+
+            List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(notificationTargetsByApplicationId, pair -> {
+
+                Long applicationId = pair.getKey();
+                Application application = applicationRepository.findOne(applicationId);
+
+                Map<String, Object> perNotificationTargetArguments = new HashMap<>();
+                perNotificationTargetArguments.put("applicationName", application.getName());
+                return Pair.of(pair.getValue(), perNotificationTargetArguments);
+            });
+
+            List<NotificationTarget> notificationTargets = simpleMap(notificationTargetsByApplicationId, Pair::getValue);
+            Map<NotificationTarget, Map<String, Object>> notificationTargetSpecificArguments = pairsToMap(notificationTargetSpecificArgumentList);
+            return new Notification(systemNotificationSource, notificationTargets, notificationType, globalArguments, notificationTargetSpecificArguments);
+        });
+	}
+
+	private List<ServiceResult<Pair<Long, NotificationTarget>>> getLeadApplicantNotificationSources(List<Long> applicationIds) {
 		return simpleMap(applicationIds, applicationId -> {
-			ServiceResult<ProcessRole> leadApplicantResult = getProcessRoles(applicationId, LEADAPPLICANT).andOnSuccess(roles -> getOnlyElementOrFail(roles));
-			return leadApplicantResult.andOnSuccessReturn(leadApplicant -> new UserNotificationTarget(leadApplicant.getUser()));
+			ServiceResult<ProcessRole> leadApplicantResult = getProcessRoles(applicationId, LEADAPPLICANT).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
+			return leadApplicantResult.andOnSuccessReturn(leadApplicant -> Pair.of(applicationId, new UserNotificationTarget(leadApplicant.getUser())));
 		});
 	}
 

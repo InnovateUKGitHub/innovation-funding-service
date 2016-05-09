@@ -62,15 +62,15 @@ public class EmailNotificationSender implements NotificationSender {
     }
 
     private ServiceResult<String> getSubject(Notification notification, NotificationTarget recipient) {
-        return renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "subject") + ".txt", notification.getArguments());
+        return renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "subject") + ".txt", notification.getGlobalArguments());
     }
 
     private ServiceResult<String> getPlainTextBody(Notification notification, NotificationTarget recipient) {
-        return renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "text_plain") + ".txt", notification.getArguments());
+        return renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "text_plain") + ".txt", notification.getGlobalArguments());
     }
 
     private ServiceResult<String> getHtmlBody(Notification notification, NotificationTarget recipient) {
-        return renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "text_html") + ".html", notification.getArguments());
+        return renderer.renderTemplate(notification.getFrom(), recipient, getTemplatePath(notification, "text_html") + ".html", notification.getGlobalArguments());
     }
 
     private String getTemplatePath(Notification notification, String suffix) {

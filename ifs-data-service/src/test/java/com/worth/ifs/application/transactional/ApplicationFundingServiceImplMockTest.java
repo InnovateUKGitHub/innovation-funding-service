@@ -7,6 +7,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.notifications.resource.Notification;
 import com.worth.ifs.notifications.resource.NotificationTarget;
 import com.worth.ifs.notifications.resource.UserNotificationTarget;
@@ -24,7 +25,10 @@ import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
 import static com.worth.ifs.application.resource.FundingDecision.FUNDED;
 import static com.worth.ifs.application.resource.FundingDecision.NOT_FUNDED;
+import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.FUNDED_APPLICATION;
+import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.UNFUNDED_APPLICATION;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static com.worth.ifs.user.builder.RoleBuilder.newRole;
@@ -36,6 +40,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -95,7 +100,9 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 	@Test
 	public void testNotifyLeadApplicantsOfFundingDecisions() {
 
-		Application fundedApplication1 = newApplication().build();
+        Competition competition = newCompetition().withId(111L).build();
+
+        Application fundedApplication1 = newApplication().build();
 		Application unfundedApplication2 = newApplication().build();
 		Application fundedApplication3 = newApplication().build();
 
@@ -113,31 +120,59 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
 		Map<Long, FundingDecision> decision = asMap(1L, FUNDED, 2L, NOT_FUNDED, 3L, FUNDED);
 
-		List<NotificationTarget> expectedFundedLeadApplicants = asList(new UserNotificationTarget(fundedApplication1LeadApplicant), new UserNotificationTarget(fundedApplication3LeadApplicant));
-		Notification expectedFundedNotification = new Notification(systemNotificationSourceMock, expectedFundedLeadApplicants, ApplicationFundingServiceImpl.Notifications.FUNDED_APPLICATION, emptyMap());
+        UserNotificationTarget fundedApplication1LeadApplicantTarget = new UserNotificationTarget(fundedApplication1LeadApplicant);
+        UserNotificationTarget fundedApplication3LeadApplicantTarget = new UserNotificationTarget(fundedApplication3LeadApplicant);
 
-		List<NotificationTarget> expectedUnfundedLeadApplicants = singletonList(new UserNotificationTarget(unfundedApplication2LeadApplicant));
-		Notification expectedUnfundedNotification = new Notification(systemNotificationSourceMock, expectedUnfundedLeadApplicants, ApplicationFundingServiceImpl.Notifications.UNFUNDED_APPLICATION, emptyMap());
+        Map<String, Object> expectedGlobalNotificationArguments = asMap(
+                "competitionName", competition.getName(),
+                "dashboardUrl", "#",
+                "feedbackDate", "01/02/2017");
 
-		when(roleRepositoryMock.findByName(LEADAPPLICANT.getName())).thenReturn(singletonList(leadApplicantRole));
+        List<NotificationTarget> expectedFundedLeadApplicants = asList(fundedApplication1LeadApplicantTarget, fundedApplication3LeadApplicantTarget);
+
+        Map<NotificationTarget, Map<String, Object>> expectedFundedNotificationTargetSpecificArguments = asMap(
+                fundedApplication1LeadApplicantTarget, asMap("applicationName", fundedApplication1.getName()),
+                fundedApplication3LeadApplicantTarget, asMap("applicationName", fundedApplication3.getName()));
+
+		Notification expectedFundedNotification = new Notification(systemNotificationSourceMock, expectedFundedLeadApplicants, FUNDED_APPLICATION,
+                expectedGlobalNotificationArguments, expectedFundedNotificationTargetSpecificArguments);
+
+        UserNotificationTarget unfundedApplication2LeadApplicantTarget = new UserNotificationTarget(unfundedApplication2LeadApplicant);
+        List<NotificationTarget> expectedUnfundedLeadApplicants = singletonList(unfundedApplication2LeadApplicantTarget);
+
+        Map<NotificationTarget, Map<String, Object>> expectedUnfundedNotificationTargetSpecificArguments = asMap(
+                unfundedApplication2LeadApplicantTarget, asMap("applicationName", unfundedApplication2.getName()));
+
+        Notification expectedUnfundedNotification = new Notification(systemNotificationSourceMock, expectedUnfundedLeadApplicants, UNFUNDED_APPLICATION,
+                expectedGlobalNotificationArguments, expectedUnfundedNotificationTargetSpecificArguments);
+
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+
+        when(roleRepositoryMock.findByName(LEADAPPLICANT.getName())).thenReturn(singletonList(leadApplicantRole));
 
 		leadApplicantProcessRoles.forEach(processRole ->
 				when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplication().getId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
 		);
 
-		when(notificationServiceMock.sendNotification(createNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedFundedNotification));
-		when(notificationServiceMock.sendNotification(createNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedUnfundedNotification));
+        asList(fundedApplication1, unfundedApplication2, fundedApplication3).forEach(application ->
+            when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application)
+        );
 
-		ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(123L, decision);
+		when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedFundedNotification));
+		when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedUnfundedNotification));
+
+		ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(competition.getId(), decision);
 		assertTrue(result.isSuccess());
 
-		verify(notificationServiceMock).sendNotification(createNotificationExpectations(expectedFundedNotification), eq(EMAIL));
-		verify(notificationServiceMock).sendNotification(createNotificationExpectations(expectedUnfundedNotification), eq(EMAIL));
+		verify(notificationServiceMock).sendNotification(createFullNotificationExpectations(expectedFundedNotification), eq(EMAIL));
+		verify(notificationServiceMock).sendNotification(createFullNotificationExpectations(expectedUnfundedNotification), eq(EMAIL));
 		verifyNoMoreInteractions(notificationServiceMock);
 	}
 
     @Test
     public void testNotifyLeadApplicantsOfFundingDecisionsAndJustLeadApplicants() {
+
+        Competition competition = newCompetition().withId(111L).build();
 
         Application fundedApplication1 = newApplication().build();
         Application unfundedApplication2 = newApplication().build();
@@ -160,10 +195,17 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         Map<Long, FundingDecision> decision = asMap(1L, FUNDED, 2L, NOT_FUNDED);
 
         List<NotificationTarget> expectedFundedLeadApplicants = asList(new UserNotificationTarget(fundedApplication1LeadApplicant));
-        Notification expectedFundedNotification = new Notification(systemNotificationSourceMock, expectedFundedLeadApplicants, ApplicationFundingServiceImpl.Notifications.FUNDED_APPLICATION, emptyMap());
+        Notification expectedFundedNotification =
+                new Notification(systemNotificationSourceMock, expectedFundedLeadApplicants, FUNDED_APPLICATION, emptyMap());
 
         List<NotificationTarget> expectedUnfundedLeadApplicants = singletonList(new UserNotificationTarget(unfundedApplication2LeadApplicant));
-        Notification expectedUnfundedNotification = new Notification(systemNotificationSourceMock, expectedUnfundedLeadApplicants, ApplicationFundingServiceImpl.Notifications.UNFUNDED_APPLICATION, emptyMap());
+        Notification expectedUnfundedNotification = new Notification(systemNotificationSourceMock, expectedUnfundedLeadApplicants, UNFUNDED_APPLICATION, emptyMap());
+
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+
+        asList(fundedApplication1, unfundedApplication2).forEach(application ->
+                when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application)
+        );
 
         when(roleRepositoryMock.findByName(LEADAPPLICANT.getName())).thenReturn(singletonList(leadApplicantRole));
 
@@ -171,18 +213,54 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplication().getId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
         );
 
-        when(notificationServiceMock.sendNotification(createNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedFundedNotification));
-        when(notificationServiceMock.sendNotification(createNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedUnfundedNotification));
+        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedFundedNotification));
+        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess(expectedUnfundedNotification));
 
-        ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(123L, decision);
+        ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(competition.getId(), decision);
         assertTrue(result.isSuccess());
 
-        verify(notificationServiceMock).sendNotification(createNotificationExpectations(expectedFundedNotification), eq(EMAIL));
-        verify(notificationServiceMock).sendNotification(createNotificationExpectations(expectedUnfundedNotification), eq(EMAIL));
+        verify(notificationServiceMock).sendNotification(createSimpleNotificationExpectations(expectedFundedNotification), eq(EMAIL));
+        verify(notificationServiceMock).sendNotification(createSimpleNotificationExpectations(expectedUnfundedNotification), eq(EMAIL));
         verifyNoMoreInteractions(notificationServiceMock);
     }
 
-	private Notification createNotificationExpectations(Notification expectedNotification) {
+    private Notification createFullNotificationExpectations(Notification expectedNotification) {
+
+        return createLambdaMatcher(notification -> {
+            assertEquals(expectedNotification.getFrom(), notification.getFrom());
+
+            List<String> expectedToEmailAddresses = simpleMap(expectedNotification.getTo(), NotificationTarget::getEmailAddress);
+            List<String> actualToEmailAddresses = simpleMap(notification.getTo(), NotificationTarget::getEmailAddress);
+            assertEquals(expectedToEmailAddresses, actualToEmailAddresses);
+
+            assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
+            assertEquals(expectedNotification.getGlobalArguments(), notification.getGlobalArguments());
+
+            Map<NotificationTarget, Map<String, Object>> expectedTargetSpecifics = expectedNotification.getPerNotificationTargetArguments();
+            Map<NotificationTarget, Map<String, Object>> actualTargetSpecifics = notification.getPerNotificationTargetArguments();
+
+            assertEquals(expectedTargetSpecifics.size(), actualTargetSpecifics.size());
+
+            expectedTargetSpecifics.forEach((target, expectedArguments) -> {
+
+                Map<String, Object> actualArguments = actualTargetSpecifics.get(target);
+                assertNotNull(actualArguments);
+
+                actualArguments.forEach((expectedArgName, expectedArgValue) -> {
+
+                    Object actualArgValue = actualArguments.get(expectedArgName);
+                    assertNotNull(actualArgValue);
+
+                    assertEquals(expectedArgValue, actualArgValue);
+                });
+            });
+
+            assertEquals(expectedTargetSpecifics, actualTargetSpecifics);
+            return true;
+        });
+    }
+
+	private Notification createSimpleNotificationExpectations(Notification expectedNotification) {
 
 		return createLambdaMatcher(notification -> {
 			assertEquals(expectedNotification.getFrom(), notification.getFrom());
@@ -192,7 +270,6 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 			assertEquals(expectedToEmailAddresses, actualToEmailAddresses);
 
 			assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
-			assertEquals(expectedNotification.getArguments(), notification.getArguments());
 			return true;
 		});
 	}

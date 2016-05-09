@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.emptyMap;
+
 /**
  * A DTO reporesenting a message that we wish to send out via one or more mediums.  The Notification itself holds the
  * wherewithalls with which to construct an appropriate message based on the mediums chosen to send the notification via.
@@ -23,9 +25,14 @@ public class Notification {
     private Enum<?> messageKey;
 
     /**
-     * The arguments that are available to use as replacement tokens in the message to be constructed by the end "sending" services
+     * The arguments that are applicable to all Notification Targets that are available to use as replacement tokens in the message to be constructed by the end "sending" services
      */
-    private Map<String, Object> arguments;
+    private Map<String, Object> globalArguments = emptyMap();
+
+    /**
+     * The arguments that are applicable per NotificationTarget that are available to use as replacement tokens in the message to be constructed by the end "sending" services
+     */
+    private Map<NotificationTarget, Map<String, Object>> perNotificationTargetArguments = emptyMap();
 
     /**
      * For builder use only
@@ -34,11 +41,16 @@ public class Notification {
     	// no-arg constructor
     }
 
-    public Notification(NotificationSource from, List<NotificationTarget> to, Enum<?> messageKey, Map<String, Object> arguments) {
+    public Notification(NotificationSource from, List<NotificationTarget> to, Enum<?> messageKey, Map<String, Object> globalArguments) {
         this.from = from;
         this.to = to;
         this.messageKey = messageKey;
-        this.arguments = arguments;
+        this.globalArguments = globalArguments;
+    }
+
+    public Notification(NotificationSource from, List<NotificationTarget> to, Enum<?> messageKey, Map<String, Object> globalArguments, Map<NotificationTarget, Map<String, Object>> perNotificationTargetArguments) {
+        this(from, to, messageKey, globalArguments);
+        this.perNotificationTargetArguments = perNotificationTargetArguments;
     }
 
     public NotificationSource getFrom() {
@@ -53,8 +65,12 @@ public class Notification {
         return messageKey;
     }
 
-    public Map<String, Object> getArguments() {
-        return arguments;
+    public Map<String, Object> getGlobalArguments() {
+        return globalArguments;
+    }
+
+    public Map<NotificationTarget, Map<String, Object>> getPerNotificationTargetArguments() {
+        return perNotificationTargetArguments;
     }
 
     @Override
@@ -69,7 +85,8 @@ public class Notification {
                 .append(from, that.from)
                 .append(to, that.to)
                 .append(messageKey, that.messageKey)
-                .append(arguments, that.arguments)
+                .append(globalArguments, that.globalArguments)
+                .append(perNotificationTargetArguments, that.perNotificationTargetArguments)
                 .isEquals();
     }
 
@@ -79,7 +96,8 @@ public class Notification {
                 .append(from)
                 .append(to)
                 .append(messageKey)
-                .append(arguments)
+                .append(globalArguments)
+                .append(perNotificationTargetArguments)
                 .toHashCode();
     }
 

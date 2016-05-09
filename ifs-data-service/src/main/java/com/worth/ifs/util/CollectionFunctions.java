@@ -334,7 +334,18 @@ public final class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <R, T> Collector<Pair<R, T>, ?, Map<R, T>> pairsToMap() {
+    public static <R, T> Map<R, T> pairsToMap(List<Pair<R, T>> pairs) {
+        return simpleToMap(pairs, Pair::getKey, Pair::getValue);
+    }
+
+    /**
+     * A collector that maps a collection of pairs into a andOnSuccess.
+     *
+     * @param <R>
+     * @param <T>
+     * @return
+     */
+    public static <R, T> Collector<Pair<R, T>, ?, Map<R, T>> pairsToMapCollector() {
         return toMap(Pair::getLeft, Pair::getRight);
     }
 

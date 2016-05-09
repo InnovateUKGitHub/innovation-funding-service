@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
 import static com.worth.ifs.BuilderAmendFunctions.setField;
 import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
 import static java.util.Arrays.asList;
@@ -22,7 +23,7 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     }
 
     public static ApplicationBuilder newApplication() {
-        return new ApplicationBuilder(emptyList()).with(uniqueIds());
+        return new ApplicationBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Application "));
     }
 
     @Override
