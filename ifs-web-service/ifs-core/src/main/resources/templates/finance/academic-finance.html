@@ -275,7 +275,8 @@
      th:with="currentUser=${#authentication.getDetails()},validationId='formInput[\'jes-upload\']',
          noFileUploaded=${(#strings.isEmpty(filename))},
          name='jes-upload',
-         downloadURL='/application/'+ ${currentApplication.id} + '/form/' + ${applicationFinanceId} + '/finance-download'">
+         downloadURL='/application/'+ ${currentApplication.id} + '/form/' + ${applicationFinanceId} + '/finance-download',
+         readonly=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}">
     <div th:include="question-type/types :: fileupload" th:remove="tag"/>
 </div>
 </html>
