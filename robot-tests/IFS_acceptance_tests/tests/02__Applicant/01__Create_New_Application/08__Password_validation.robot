@@ -70,9 +70,7 @@ Invalid password (no numbers)
     And the user enters text to a text field    id=email    ${valid_email2}
     And the user enters text to a text field    id=password    ${no_numbers_password}
     And the user enters text to a text field    id=retypedPassword    ${no_numbers_password}
-    Capture Page Screenshot
     And the user submits their information
-     #due to INFUND-2567    Then the user should see an error    Password must contain at least one number
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Password must contain at least one number
 
@@ -135,7 +133,6 @@ Password and re-typed password do not match
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${incorrect_password}
     And the user submits their information
-     #due to INFUND-2567    Then the user should see the text in the page    Passwords must match
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Passwords must match
 
@@ -150,7 +147,6 @@ Re-type password left blank
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${EMPTY}
     And the user submits their information
-     #due to INFUND-2567    Then the user should see an error    Please re-type your password
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Passwords must match
     And The user should see the text in the page    Please re-type your password
@@ -166,7 +162,6 @@ Password left blank
     And the user enters text to a text field    id=password    ${EMPTY}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
     And the user submits their information
-     #due to INFUND-2567    Then the user should see an error    Please enter your password
     And The user should see the text in the page    We were unable to create your account
     And The user should see the text in the page    Passwords must match
     And The user should see the text in the page    Please enter your password
