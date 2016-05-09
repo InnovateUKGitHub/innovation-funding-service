@@ -137,8 +137,8 @@ the table header matches the number of rows in the applications list table
 
 the user can see the option to upload a file on the page
     [Arguments]    ${url}
-    The user navigates to the page    ${url}
-    Page Should Contain    Upload
+    the user navigates to the page    ${url}
+     the user should see the text in the page   Upload
 
 the user uploads the file to the 'project team' question
     [Arguments]    ${file_name}
