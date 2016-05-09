@@ -59,6 +59,7 @@ Non registered users CH route (email step)
     ...
     ...    INFUND-1785
     [Tags]    HappyPath    Email
+    [Setup]    The guest user opens the browser
     Given the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Log in")
@@ -112,6 +113,7 @@ Non registered users non CH route (email step)
     ...
     ...    INFUND-1920
     [Tags]    HappyPath    Email
+    [Setup]    The guest user opens the browser
     Given the user opens the mailbox and verifies the email from
     When the user clicks the button/link    jQuery=.button:contains("Log in")
     And the guest user inserts user email & password    worth.email.test+2@gmail.com    Passw0rd123
@@ -156,11 +158,11 @@ the user clicks the Not on company house link
     the user clicks the button/link    jQuery=.button:contains("Continue")
 
 the user edits the competition title
-    the user clicks the button/link    Technology Inspired
+    the user clicks the button/link    link=Technology Inspired
     the user should see the element    link=Application details
-    the user clicks the button/link    Application details
+    the user clicks the button/link    link=Application details
     Input Text    id=application_details-title    test title
-    the user should see the button/link    jQuery=button:contains("Save and return")
+    the user clicks the button/link    jQuery=button:contains("Save and return")
 
 the progress indicator should show 0
     Element Should Contain    css=.progress-indicator    0

@@ -86,13 +86,18 @@ Reset password (psw does not match)
 
 Reset password
     [Documentation]    INFUND-1889
-    [Tags]    Email    HappyPath
+    [Tags]    HappyPath
     [Setup]    The guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the button/link    link=Forgot your password?
     And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
+
+Reset password (email step)
+    [Documentation]    INFUND-1889
+    [Tags]    Email    HappyPath
+    [Setup]    The guest user opens the browser
     And the user opens the mailbox and clicks the reset link
     And the user should see the text in the page    Password reset
     And the user enters text to a text field    id=id_password    Passw0rdnew
