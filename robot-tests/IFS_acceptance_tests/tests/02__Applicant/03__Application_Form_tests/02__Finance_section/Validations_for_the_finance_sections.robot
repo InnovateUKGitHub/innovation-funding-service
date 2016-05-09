@@ -14,7 +14,7 @@ Resource          ../../../../resources/keywords/User_actions.robot
 Labour validations
     [Documentation]    INFUND-844
     [Tags]    Pending
-    #Pending due to infund 2687, 2689
+    #Pending due to infund 2687
     Given the user clicks the button/link    jQuery=button:contains("Labour")
     When the user clicks the button/link    jQuery=button:contains('Add another role')
     And the user enters text to a text field    css=#cost-labour-1-labourDaysYearly    366
@@ -72,7 +72,7 @@ Administration costs validations (special rate)
 Materials calculations
     [Documentation]    INFUND-844
     [Tags]    Pending
-    # Pending due to NFUND-2689
+    #Pending due to infund 2687
     Given the user clicks the button/link    jQuery=button:contains("Materials")
     And the user clicks the button/link    jQuery=button:contains('Add another materials cost')
     When the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
@@ -124,7 +124,7 @@ Subcontracting costs validations
 Travel and subsistence validations
     [Documentation]    INFUND-844
     [Tags]    Pending
-    # Pending NFUND-2689
+    #Pending due to infund 2687
     Given the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
     And the user clicks the button/link    jQuery=button:contains('Add another travel cost')
     #When the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    0123456789101112131415161718192021
@@ -140,7 +140,7 @@ Travel and subsistence validations
 Other costs validations
     [Documentation]    INFUND-844
     [Tags]    Pending
-    # Pending NFUND-2689
+    #Pending due to infund 2687
     Given the user clicks the button/link    jQuery=button:contains("Other Costs")
     And the user clicks the button/link    jQuery=button:contains('Add another cost')
     When the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    -1
