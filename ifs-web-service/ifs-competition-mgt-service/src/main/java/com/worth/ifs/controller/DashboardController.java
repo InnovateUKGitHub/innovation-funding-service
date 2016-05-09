@@ -1,4 +1,4 @@
-package com.worth.ifs;
+package com.worth.ifs.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

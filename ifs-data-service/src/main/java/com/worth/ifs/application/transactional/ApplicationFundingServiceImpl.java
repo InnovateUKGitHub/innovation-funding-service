@@ -3,6 +3,7 @@ package com.worth.ifs.application.transactional;
 import static com.worth.ifs.commons.service.ServiceResult.serviceFailure;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.transactional.BaseTransactionalService;
 
 @Service
@@ -21,6 +23,11 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
 
 	@Override
 	public ServiceResult<Void> makeFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+		
+		Competition competition = competitionRepository.findOne(competitionId);
+		if(competition == null) {
+			throw new IllegalArgumentException("competition id is invalid");
+		}
 		
 		List<Application> applicationsForCompetition = applicationRepository.findByCompetitionId(competitionId);
 		
@@ -36,6 +43,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
 			app.setApplicationStatus(status);
 			applicationRepository.save(app);
 		});
+		
+		competition.setFundersPanelEndDate(LocalDateTime.now());
+		competitionRepository.save(competition);
 		
 		return serviceSuccess();
 	}

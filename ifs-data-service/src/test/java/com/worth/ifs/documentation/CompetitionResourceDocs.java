@@ -1,14 +1,14 @@
 package com.worth.ifs.documentation;
 
-import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
-import org.springframework.restdocs.payload.FieldDescriptor;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import static com.google.common.primitives.Longs.asList;
 import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+
+import java.time.LocalDateTime;
+
+import org.springframework.restdocs.payload.FieldDescriptor;
+
+import com.worth.ifs.competition.builder.CompetitionResourceBuilder;
 
 public class CompetitionResourceDocs {
     public static final FieldDescriptor[] competitionResourceFields = {
@@ -20,6 +20,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("endDate").description("date the submissions phase of the competition closes"),
             fieldWithPath("assessmentStartDate").description("date on which the assessments start"),
             fieldWithPath("assessmentEndDate").description("date on which all the assessments should be finished"),
+            fieldWithPath("fundersPanelEndDate").description("date on which the funders panel ended"),
             fieldWithPath("competitionStatus").description("the current status of the competition"),
             fieldWithPath("maxResearchRatio").description("maximum ratio of research participation"),
             fieldWithPath("academicGrantPercentage").description("grant claim percentage for the academics")

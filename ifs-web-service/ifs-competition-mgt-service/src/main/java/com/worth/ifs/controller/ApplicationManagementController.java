@@ -1,4 +1,4 @@
-package com.worth.ifs;
+package com.worth.ifs.controller;
 
 import com.worth.ifs.application.AbstractApplicationController;
 import com.worth.ifs.application.form.ApplicationForm;
@@ -74,8 +74,6 @@ public class ApplicationManagementController extends AbstractApplicationControll
         form.setAdminMode(true);
 
         List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
-//        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
-        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
 
         ApplicationResource application = applicationService.getById(applicationId);
         // so the mode is viewonly

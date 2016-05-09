@@ -1,6 +1,7 @@
 package com.worth.ifs.application.transactional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -20,6 +21,7 @@ import com.worth.ifs.application.domain.Application;
 import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
+import com.worth.ifs.competition.domain.Competition;
 import com.worth.ifs.util.MapFunctions;
 
 public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<ApplicationFundingService> {
@@ -31,6 +33,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     private ApplicationStatus approvedStatus;
     private ApplicationStatus rejectedStatus;
+    
+    private Competition competition;
 
     @Before
     public void setup() {
@@ -39,6 +43,9 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     	when(applicationStatusRepositoryMock.findOne(ApplicationStatusConstants.APPROVED.getId())).thenReturn(approvedStatus);
     	when(applicationStatusRepositoryMock.findOne(ApplicationStatusConstants.REJECTED.getId())).thenReturn(rejectedStatus);
+    	
+    	competition = new Competition();
+    	when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
     }
 
     @Test
@@ -73,6 +80,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	verify(applicationRepositoryMock).save(application2);
     	assertEquals(approvedStatus, application1.getApplicationStatus());
     	assertEquals(rejectedStatus, application2.getApplicationStatus());
+    	assertNotNull(competition.getFundersPanelEndDate());
     }
 
 }

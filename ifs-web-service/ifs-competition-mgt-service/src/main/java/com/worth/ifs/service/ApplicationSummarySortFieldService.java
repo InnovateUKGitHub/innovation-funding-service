@@ -1,4 +1,4 @@
-package com.worth.ifs;
+package com.worth.ifs.service;
 
 import org.springframework.stereotype.Service;
 

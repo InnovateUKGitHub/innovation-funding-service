@@ -1,11 +1,15 @@
 
-package com.worth.ifs;
+package com.worth.ifs.controller;
 
-import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
-import com.worth.ifs.application.resource.CompetitionSummaryResource;
-import com.worth.ifs.application.service.ApplicationSummaryService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,9 +19,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.worth.ifs.application.resource.ApplicationSummaryPageResource;
+import com.worth.ifs.application.resource.CompetitionSummaryResource;
+import com.worth.ifs.application.service.ApplicationSummaryService;
+import com.worth.ifs.application.service.CompetitionService;
+import com.worth.ifs.competition.resource.CompetitionResource.Status;
+import com.worth.ifs.controller.CompetitionManagementController;
+import com.worth.ifs.service.ApplicationSummarySortFieldService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionManagementControllerTest  {
@@ -66,7 +74,7 @@ public class CompetitionManagementControllerTest  {
     	
     	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, 0, "sortfield");
     	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
-}
+    }
     
     @Test
     public void getByCompetitionIdForOpenCompetitionProvidingPage() throws Exception {
