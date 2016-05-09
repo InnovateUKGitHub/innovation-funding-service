@@ -42,7 +42,7 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
     @Test
     public void documentFindById() throws Exception {
         FormInputResource testResource = formInputResourceBuilder.build();
-        when(formInputService.findFormInput(1L)).thenReturn(serviceSuccess(testResource));
+        when(formInputServiceMock.findFormInput(1L)).thenReturn(serviceSuccess(testResource));
 
         mockMvc.perform(get(baseURI + "/{id}", 1L))
             .andDo(this.document.snippets(
@@ -58,7 +58,7 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
     @Test
     public void documentFindByQuestionId() throws Exception {
         List<FormInputResource> testResource = formInputResourceBuilder.build(1);
-        when(formInputService.findByQuestionId(1L)).thenReturn(serviceSuccess(testResource));
+        when(formInputServiceMock.findByQuestionId(1L)).thenReturn(serviceSuccess(testResource));
 
         mockMvc.perform(get(baseURI + "/findByQuestionId/{id}", 1L))
             .andDo(this.document.snippets(
@@ -74,7 +74,7 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
     @Test
     public void documentFindByCompetitionId() throws Exception {
         List<FormInputResource> testResource = formInputResourceBuilder.build(1);
-        when(formInputService.findByCompetitionId(1L)).thenReturn(serviceSuccess(testResource));
+        when(formInputServiceMock.findByCompetitionId(1L)).thenReturn(serviceSuccess(testResource));
 
         mockMvc.perform(get(baseURI + "/findByCompetitionId/{id}", 1L))
             .andDo(this.document.snippets(

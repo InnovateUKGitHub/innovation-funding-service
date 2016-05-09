@@ -7,9 +7,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Map;
 
+/**
+ * Transactional and secure service for making the decision of what applications to fund for a given competition.
+ */
 public interface ApplicationFundingService {
 
 	@PreAuthorize("hasAuthority('comp_admin')")
+	@SecuredBySpring(value = "MAKE_FUNDING_DECISION", securedType = FundingDecision.class, description = "Comp Admins should be able to make the decision of what applications to fund for a given competition")
 	ServiceResult<Void> makeFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions);
 
 	@PreAuthorize("hasAuthority('comp_admin')")

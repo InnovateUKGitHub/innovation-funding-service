@@ -152,7 +152,7 @@ the question should contain the correct status/name
 
 the user assigns the question to Jessica Doe
     the applicant assigns the question to the collaborator    css=#form-input-6 .editor    testtest    Jessica Doe
-    reload page
+    the user reloads the page
 
 the user assigns the question to the lead applicant
     the user reloads the page

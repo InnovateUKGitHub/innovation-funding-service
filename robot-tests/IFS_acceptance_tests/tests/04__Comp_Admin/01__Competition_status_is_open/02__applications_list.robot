@@ -56,7 +56,7 @@ The applications can be sorted by project lead
 
 The applications can be sorted by percentage complete
     [Documentation]    INFUND-2300: listing of applications for an open competition
-    [Tags]    Competition management    Pending
+    [Tags]    Competition management
     # TODO EC
     When the application list is sorted by    Percentage complete
     Then the applications should be sorted in reverse order by column    5
@@ -99,18 +99,16 @@ the applications should be sorted by column
 the applications should be sorted in reverse order by column
     [Arguments]    ${column_number}
     ${row_count}=    get matching xpath count    //*[td]
-    @{sorted_column_contents}=    Create List
+    ${column_contents}=    Create List
+    ${also_column_contents}=    Create List
     : FOR    ${row}    IN RANGE    2    ${row_count}
     \    ${cell_contents}=    get table cell    css=table    ${row}    ${column_number}
-    \    convert to number    ${cell_contents}
-    \    append to list    ${sorted_column_contents}    ${cell_contents}
-    ${test_sorting_list}=    Copy List    ${sorted_column_contents}
-    Sort List    ${test_sorting_list}
-    log to console    ${test_sorting_list}
-    log to console    ${sorted_column_contents}
-    ${sorted_list}=    Reverse List    ${test_sorting_list}
-    log to console    ${sorted_list}
-    Lists Should Be Equal    ${sorted_column_contents}    ${test_sorting_list}
+    \    ${cell_contents_number}=      convert to number    ${cell_contents}
+    \    append to list    ${column_contents}    ${cell_contents_number}
+    \    append to list     ${also_column_contents}     ${cell_contents_number}
+    Sort List    ${column_contents}
+    Reverse List    ${also_column_contents}
+    Lists Should Be Equal    ${column_contents}    ${also_column_contents}
 
 The calculations should be correct
     [Arguments]    ${LIST_LOCATOR}    ${SUMMARY_LOCATOR}

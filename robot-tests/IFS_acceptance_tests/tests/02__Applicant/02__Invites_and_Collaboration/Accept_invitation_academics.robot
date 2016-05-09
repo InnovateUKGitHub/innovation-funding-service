@@ -61,6 +61,4 @@ Academic organisation (accept invitation flow)
     And the user should not see an error in the page
 
 *** Keywords ***
-the user selects the radio button
-    [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
-    Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
+

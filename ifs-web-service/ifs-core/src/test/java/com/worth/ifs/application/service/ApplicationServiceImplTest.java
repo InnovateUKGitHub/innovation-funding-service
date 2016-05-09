@@ -1,64 +1,72 @@
 package com.worth.ifs.application.service;
 
-import com.worth.ifs.BaseServiceUnitTest;
-import com.worth.ifs.application.resource.ApplicationResource;
-import com.worth.ifs.application.resource.ApplicationStatusResource;
-import com.worth.ifs.application.service.ApplicationRestService;
-import com.worth.ifs.application.service.ApplicationService;
-import com.worth.ifs.application.service.ApplicationServiceImpl;
-import com.worth.ifs.application.service.ApplicationStatusRestService;
-import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
-import org.hamcrest.Matchers;
+import static com.worth.ifs.application.service.Futures.settable;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.calls;
+import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static com.worth.ifs.commons.rest.RestResult.restSuccess;
+import static com.worth.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.util.List;
-import java.util.Map;
-
-import static com.worth.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static com.worth.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
-import static com.worth.ifs.application.service.Futures.settable;
-import static com.worth.ifs.commons.rest.RestResult.restSuccess;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.calls;
-import static org.mockito.Mockito.when;
+import com.worth.ifs.BaseServiceUnitTest;
+import com.worth.ifs.application.constant.ApplicationStatusConstants;
+import com.worth.ifs.application.resource.ApplicationResource;
+import com.worth.ifs.commons.error.exception.ObjectNotFoundException;
+import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.competition.service.CompetitionsRestService;
 
 public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationService> {
 
     @Mock
-    ApplicationRestService applicationRestService;
+    private ApplicationRestService applicationRestService;
     @Mock
-    ApplicationStatusRestService applicationStatusRestService;
+    private CompetitionsRestService competitionsRestService;
 
-    private List<ApplicationResource> applications;
     private Long userId;
-
 
     @Override
     @Before
     public void setUp() {
         super.setUp();
 
-        ApplicationStatusResource[] statuses = newApplicationStatusResource().
-                withName("created", "submitted", "something", "finished", "approved", "rejected").
-                buildArray(6, ApplicationStatusResource.class);
-
-        Long[] ids = asList(statuses).stream().map(ApplicationStatusResource::getId).toArray(size -> new Long[size]);
-
-        applications = newApplicationResource().withApplicationStatus(ids).build(6);
-
         userId = 1L;
+        
 
-        when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(restSuccess(applications));
-        when(applicationRestService.getCompleteQuestionsPercentage(applications.get(0).getId())).thenReturn(settable(restSuccess(20.5d)));
-        for(ApplicationStatusResource status : statuses) {
-            when(applicationStatusRestService.getApplicationStatusById(status.getId())).thenReturn(restSuccess(status));
-        }
+        CompetitionResource openCompetition = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.OPEN).build();
+        CompetitionResource closedCompetition = newCompetitionResource().withCompetitionStatus(CompetitionResource.Status.IN_ASSESSMENT).build();
 
+        List<ApplicationResource> applications = newApplicationResource()
+        		.withId(1L, 2L, 3L, 4L)
+        		.withApplicationStatus(ApplicationStatusConstants.CREATED.getId(),
+				        				ApplicationStatusConstants.OPEN.getId(),
+				        				ApplicationStatusConstants.OPEN.getId(),
+				        				ApplicationStatusConstants.SUBMITTED.getId())
+        		.withCompetition(openCompetition.getId(),
+		        				openCompetition.getId(),
+		        				closedCompetition.getId(),
+		        				closedCompetition.getId())
+        		.build(4);
+
+        when(competitionsRestService.getCompetitionById(openCompetition.getId())).thenReturn(restSuccess(openCompetition));
+        when(competitionsRestService.getCompetitionById(closedCompetition.getId())).thenReturn(restSuccess(closedCompetition));
+
+    	when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(restSuccess(applications));
+ 
+    	  when(applicationRestService.getCompleteQuestionsPercentage(1L)).thenReturn(settable(restSuccess(0d)));
+          when(applicationRestService.getCompleteQuestionsPercentage(2L)).thenReturn(settable(restSuccess(20.5d)));
     }
 
     @Override
@@ -68,73 +76,88 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     @Test
      public void testGetById() throws Exception {
-        Long applicationId = 1L;
-        List<ApplicationResource> applications = newApplicationResource().withId(applicationId).build(1);
-        applications.get(0).setId(applicationId);
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applications.get(0)));
+    	Long applicationId = 3L;
+
+    	ApplicationResource application = new ApplicationResource();
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
 
         ApplicationResource returnedApplication = service.getById(applicationId);
-        assertEquals(applications.get(0).getId(), returnedApplication.getId());
+        
+        assertEquals(application, returnedApplication);
     }
-    @Test(expected= ObjectNotFoundException.class)
+    
+    @Test(expected = ObjectNotFoundException.class)
     public void testGetByIdNotFound() throws Exception {
         Long applicationId = 5L;
+        
         when(applicationRestService.getApplicationById(applicationId)).thenThrow(new ObjectNotFoundException("Application not found", asList(applicationId)));
-        ApplicationResource returnedApplication = service.getById(applicationId);
-        assertEquals(null, returnedApplication);
+        
+        service.getById(applicationId);
     }
 
     @Test
     public void testGetByIdNullValue() throws Exception {
         ApplicationResource returnedApplication = service.getById(null);
+        
         assertEquals(null, returnedApplication);
     }
 
-
     @Test
-    public void testGetInProgress() throws Exception {
+    public void testGetInProgressReliesOnApplicationStatusAndCompetitionStatus() throws Exception {
         List<ApplicationResource> returnedApplications = service.getInProgress(userId);
-        returnedApplications.stream().forEach(a ->
-                assertThat(applicationStatusRestService.getApplicationStatusById(a.getApplicationStatus()).getSuccessObject().getName(), Matchers.either(Matchers.is("submitted")).or(Matchers.is("created")))
-                );
+        assertEquals(2, returnedApplications.size());
+        assertEquals(ApplicationStatusConstants.CREATED.getId(), returnedApplications.get(0).getApplicationStatus());
+        assertEquals(ApplicationStatusConstants.OPEN.getId(), returnedApplications.get(1).getApplicationStatus());
     }
 
     @Test
-    public void testGetFinished() throws Exception {
+    public void testGetFinishedReliesOnApplicationStatusAndCompetitionStatus() throws Exception {
         List<ApplicationResource> returnedApplications = service.getFinished(userId);
-        returnedApplications.stream().forEach(a ->
-                        assertThat(applicationStatusRestService.getApplicationStatusById(a.getApplicationStatus()).getSuccessObject().getName(), Matchers.either(Matchers.is("approved")).or(Matchers.is("rejected")))
-        );
+        assertEquals(2, returnedApplications.size());
+        assertEquals(ApplicationStatusConstants.OPEN.getId(), returnedApplications.get(0).getApplicationStatus());
+        assertEquals(ApplicationStatusConstants.SUBMITTED.getId(), returnedApplications.get(1).getApplicationStatus());
     }
+    
     @Test
      public void testGetProgress() throws Exception {
+    	Long applicationId = 2L;
+        
         Map<Long, Integer> progress = service.getProgress(userId);
-        assertEquals(20, progress.get(applications.get(0).getId()), 0d);
+        
+        assertEquals(20, progress.get(applicationId), 0d);
     }
+
     @Test
     public void testGetProgressNull() throws Exception {
+    	Long applicationId = 5L;
+        
         Map<Long, Integer> progress = service.getProgress(userId);
-        assertNull(progress.get(2L));
+        
+        assertNull(progress.get(applicationId));
     }
 
     @Test
     public void testUpdateStatus() throws Exception {
+    	Long applicationId = 2L;
         Long statusId = 1L;
-        service.updateStatus(applications.get(0).getId(), statusId);
-        Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).updateApplicationStatus(applications.get(0).getId(), statusId);
+        service.updateStatus(applicationId, statusId);
+        Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).updateApplicationStatus(applicationId, statusId);
     }
 
     @Test
     public void testGetCompleteQuestionsPercentage() throws Exception {
+    	Long applicationId = 3L;
+        when(applicationRestService.getCompleteQuestionsPercentage(applicationId)).thenReturn(settable(restSuccess(20.5d)));
+
         // somehow the progress is rounded, because we use a long as the return type.
-        Assert.assertEquals(20, service.getCompleteQuestionsPercentage(applications.get(0).getId()).get().intValue());
+        Assert.assertEquals(20, service.getCompleteQuestionsPercentage(applicationId).get().intValue());
     }
 
     @Test
     public void testSave() throws Exception {
-        service.save(applications.get(0));
-        Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).saveApplication(applications.get(0));
+    	ApplicationResource application = new ApplicationResource();
+        service.save(application);
+        Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).saveApplication(application);
     }
-
 
 }

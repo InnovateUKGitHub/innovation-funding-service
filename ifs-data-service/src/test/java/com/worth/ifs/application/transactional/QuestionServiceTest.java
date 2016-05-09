@@ -44,8 +44,8 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         Question nextQuestion = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 2).build();
         QuestionResource nextQuestionResource = newQuestionResource().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 2).build();
 
-        when(questionRepository.findOne(question.getId())).thenReturn(question);
-        when(questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
+        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
+        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
                 question.getCompetition().getId(), question.getSection().getId(), question.getPriority()))
                 .thenReturn(nextQuestion);
         when(questionMapperMock.mapToResource(nextQuestion)).thenReturn(nextQuestionResource);
@@ -60,8 +60,8 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         Question previousQuestion = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 1).build();
         QuestionResource previousQuestionResource = newQuestionResource().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 1).build();
 
-        when(questionRepository.findOne(question.getId())).thenReturn(question);
-        when(questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
+        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
+        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
                 question.getCompetition().getId(), question.getSection().getId(), question.getPriority()))
                 .thenReturn(previousQuestion);
         when(questionMapperMock.mapToResource(previousQuestion)).thenReturn(previousQuestionResource);
@@ -78,9 +78,9 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         Question nextQuestion = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), nextSection, 2).build();
         QuestionResource nextQuestionResource = newQuestionResource().withCompetitionAndSectionAndPriority(newCompetition().build(), nextSection, 2).build();
 
-        when(questionRepository.findOne(question.getId())).thenReturn(question);
+        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
         when(sectionService.getNextSection(any(SectionResource.class))).thenReturn(serviceSuccess(nextSectionResource));
-        when(questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
+        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
             question.getCompetition().getId(), question.getSection().getId(), question.getPriority())).thenReturn(nextQuestion);
         when(questionMapperMock.mapToResource(nextQuestion)).thenReturn(nextQuestionResource);
 
@@ -97,13 +97,13 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         Question previousQuestion = newQuestion().withCompetitionAndSectionAndPriority(competition, previousSection, 1).build();
         QuestionResource previousQuestionResource = newQuestionResource().withCompetitionAndSectionAndPriority(competition, previousSection, 1).build();
 
-        when(questionRepository.findOne(question.getId())).thenReturn(question);
+        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
         when(sectionService.getPreviousSection(any(SectionResource.class)))
                 .thenReturn(serviceSuccess(previousSectionResource));
-        when(questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(
+        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(
                 question.getCompetition().getId(), previousQuestion.getSection().getId()))
                 .thenReturn(previousQuestion);
-        when(questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
+        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
             question.getCompetition().getId(), question.getSection().getId(), question.getPriority()))
             .thenReturn(previousQuestion);
         when(questionMapperMock.mapToResource(previousQuestion)).thenReturn(previousQuestionResource);
@@ -123,7 +123,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         SectionResource previousSectionResource = newSectionResource().withQuestions(Arrays.asList(previousSectionQuestion.getId())).build();
         when(sectionService.getById(currentSection.getId())).thenReturn(serviceSuccess(currentSectionResource));
         when(sectionService.getPreviousSection(currentSectionResource)).thenReturn(serviceSuccess(previousSectionResource));
-        when(questionRepository.findOne(anyLong())).thenReturn(previousSectionQuestion);
+        when(questionRepositoryMock.findOne(anyLong())).thenReturn(previousSectionQuestion);
         // Method under test
         when(questionMapperMock.mapToResource(previousSectionQuestion)).thenReturn(previousSectionQuestionResource);
 

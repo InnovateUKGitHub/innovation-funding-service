@@ -63,12 +63,12 @@ Business organisation (accept invitation)
     [Tags]    HappyPath
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user clicks the button/link    jQuery=.button:contains("Create")
-    And user selects the radio button    organisationType    1
+    And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user enters text to a text field    id=organisationSearchName    Nomensa
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=NOMENSA LTD
-    And the user selects the same address
+    And the user selects the checkbox       id=address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Adrian    Booth
@@ -216,19 +216,11 @@ the lead applicant logs out
 the lead applicant logs back in
     guest user log-in    &{lead_applicant_credentials}
 
-user selects the radio button
-    [Arguments]    ${RADIO_BUTTON}    ${ORG_TYPE}
-    Select Radio Button    ${RADIO_BUTTON}    ${ORG_TYPE}
-
 the user can see the updated company name throughout the application
     the user navigates to the page    ${FINANCES_OVERVIEW_URL}
     the user should see the text in the page    NOMENSA LTD
     the user navigates to the page    ${APPLICATION_TEAM_URL}
     the user should see the text in the page    NOMENSA LTD
-
-the user selects the same address
-    select Checkbox    id=address-same
-
 
 the user can invite another person to their own organisation
     The user clicks the button/link     jQuery=button:contains('Add person')

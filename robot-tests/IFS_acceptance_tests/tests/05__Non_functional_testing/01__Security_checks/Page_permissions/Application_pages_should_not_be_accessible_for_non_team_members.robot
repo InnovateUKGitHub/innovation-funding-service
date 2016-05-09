@@ -18,7 +18,7 @@ Guest user can't access overview page
     When the user navigates to the page    ${APPLICATION_7_OVERVIEW_PAGE}
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
-Guest user can't be able to access application form
+Guest user can't access application form
     [Documentation]    INFUND-1683
     Given the guest user opens the browser
     When the user navigates to the page    ${APPLICATION_7_FORM}
@@ -34,7 +34,6 @@ Applicant who is not team member can't access application form page
     [Documentation]    INFUND-1683
     Given Guest user log-in    &{collaborator2_credentials}
     Then the user navigates to the page and gets a custom error message    ${APPLICATION_7_FORM}     ${403_error_message}
-
 
 Assessor can't access the overview page
     [Documentation]    INFUND-1683

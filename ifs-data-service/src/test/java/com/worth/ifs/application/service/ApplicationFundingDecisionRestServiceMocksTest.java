@@ -8,10 +8,10 @@ import java.util.Map;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
-import com.google.common.collect.ImmutableMap;
 import com.worth.ifs.BaseRestServiceUnitTest;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.rest.RestResult;
+import com.worth.ifs.util.MapFunctions;
 
 public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationFundingDecisionRestServiceImpl> {
 
@@ -28,7 +28,7 @@ public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServ
     public void testFundingDecision() {
 
     	Long competitionId = 123L;
-    	Map<Long, FundingDecision> applicationIdToFundingDecision = ImmutableMap.of(1L, FundingDecision.FUNDED, 2L, FundingDecision.NOT_FUNDED, 3L, FundingDecision.FUNDED);
+    	Map<Long, FundingDecision> applicationIdToFundingDecision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.NOT_FUNDED, 3L, FundingDecision.FUNDED);
     	
         String expectedUrl = applicationFundingDecisionRestURL + "/" + 123;
         setupPostWithRestResultExpectations(expectedUrl, applicationIdToFundingDecision, HttpStatus.OK);
