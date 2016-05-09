@@ -23,6 +23,10 @@
       </div>
   </div>
 
+    <div th:if="${fundingNotDecidedForAllApplications}" class="event-alert">
+        <p><span>A funding decision is required for all applications to the competition.</span></p>
+    </div>
+    
   <div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" th:remove="tag" />
 
     <div class="grid-row competition-data">
