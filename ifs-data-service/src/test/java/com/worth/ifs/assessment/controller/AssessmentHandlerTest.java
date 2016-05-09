@@ -93,7 +93,7 @@ public class AssessmentHandlerTest extends BaseUnitTestMocksTest {
         // Set the mocks
         //
         when(assessmentRepository.findById(assessmentId)).thenReturn(assessment);
-        when(responseService.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(allResponses));
+        when(responseServiceMock.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(allResponses));
 
         //
         // Call the method under test
@@ -143,7 +143,7 @@ public class AssessmentHandlerTest extends BaseUnitTestMocksTest {
         // Set the mocks
         //
         when(assessmentRepository.findById(assessmentId)).thenReturn(assessment);
-        when(responseService.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(responses));
+        when(responseServiceMock.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(responses));
 
         //
         // Call the method under test

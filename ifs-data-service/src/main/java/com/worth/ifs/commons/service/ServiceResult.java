@@ -131,16 +131,13 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
     }
 
     /**
-     * @deprecated should use POSTs to create new data, and PUTs to update data.
-     * <p>
-     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that is
-     * updating data (although PUTs should really be used).
-     * <p>
+     * Convenience method to convert a ServiceResult into an appropriate RestResult for a POST request that has updated
+     * data though not at the location POSTED to.
+     *
      * This will be a bodiless RestResult with a "200 - OK" response.
      */
-    @Deprecated
-    public RestResult<Void> toPostUpdateResponse() {
-        return handleSuccessOrFailure(failure -> toRestFailure(), success -> RestResult.toPostUpdateResponse());
+    public RestResult<Void> toPostResponse() {
+        return handleSuccessOrFailure(failure -> toRestFailure(), success -> RestResult.toPostResponse());
     }
 
     /**
