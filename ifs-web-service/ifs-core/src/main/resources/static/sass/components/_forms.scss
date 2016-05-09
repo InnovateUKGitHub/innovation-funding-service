@@ -220,10 +220,9 @@ table td{
 //     }
 // }
 
-select{
-    &.form-control{
-        -webkit-appearance: menulist;
-    }
+select.form-control{
+  -webkit-appearance: menulist;
+  width:auto;  
 }
 
 .feedback .textarea-wrapped textarea{
