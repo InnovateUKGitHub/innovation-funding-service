@@ -8,7 +8,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...               INFUND-2399: As a Academic partner I want to be able to add my finances including decimals for accurate recording of my finances
 Suite Setup       Guest user log-in    &{collaborator2_credentials}
 Suite Teardown    User closes the browser
-Force Tags        Finances    HappyPath
+Force Tags        Finances
 Resource          ../../../../resources/GLOBAL_LIBRARIES.robot
 Resource          ../../../../resources/variables/GLOBAL_VARIABLES.robot
 Resource          ../../../../resources/variables/User_credentials.robot
@@ -31,8 +31,9 @@ Academic finances should be editable when lead marks finances as complete
     Then the user should not see the element    css=#incurred-staff[readonly]
     [Teardown]    Lead applicant marks the finances as incomplete
 
-Academic validations
+Academic finance validations
     [Documentation]    INFUND-2399
+    [Tags]
     When the user navigates to the page    ${YOUR_FINANCES_URL}
     And the applicant enters invalid inputs
     Mark academic finances as complete
@@ -45,6 +46,7 @@ Academic finance calculations
     [Documentation]    INFUND-917
     ...
     ...    INFUND-2399
+    [Tags]
     When the user navigates to the page    ${YOUR_FINANCES_URL}
     When the academic partner fills the finances
     Then the calculations should be correct and the totals rounded to the second decimal
@@ -143,14 +145,14 @@ Mark all as complete
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
     Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
     And the user navigates to the page    ${FINANCES_OVERVIEW_URL}
-    And the user should see the element    css=.finance-summary tr:nth-of-type(3) img[src="/images/field/tick-icon.png
+    And the user should see the element    css=.finance-summary tr:nth-of-type(3) img[src="/images/field/tick-icon.png"]
 
-File upload/delete should not be allowed when marked as complete
+User should not be able to edit or upload the form
     [Documentation]    INFUND-2437
-    [Tags]    Pending
-    # Pending due to 2202 so once it is ready to test please test the acceptance test
-    Then the user cannot see the option to upload a file on the page    ${YOUR_FINANCES_URL}
-    And the user cannot remove the uploaded file
+    [Tags]
+    When the user navigates to the page    ${YOUR_FINANCES_URL}
+    Then the user should not see the element    jQuery=button:contains("Remove")
+    And the user should see the element    css=#incurred-staff[readonly]
 
 Academic finance overview
     [Documentation]    INFUND-917

@@ -82,15 +82,15 @@ Non-logged in user can log in and continue with an existing application
 *** Keywords ***
 
 The user can see this new application on their dashboard
-    The user navigates to the page    ${applicant_dashboard_url}
-    The user should see the text in the page    Technology Inspired
+    the user navigates to the page    ${applicant_dashboard_url}
+    the user should see the text in the page    Technology Inspired
 
 The project start date is blank
-    The user clicks the button/link    link=Technology Inspired
-    The user clicks the button/link    link=Application details
-    Element Should Be Visible    xpath=//*[@id="application_details-startdate_day" and @placeholder="DD"]
-    Element Should Be Visible    xpath=//*[@id="application_details-startdate_month" and @placeholder="MM"]
-    Element Should Be Visible    xpath=//*[@id="application_details-startdate_year" and @placeholder="YYYY"]
+    the user clicks the button/link    link=Technology Inspired
+    the user clicks the button/link    link=Application details
+    the user should see the element    xpath=//*[@id="application_details-startdate_day" and @placeholder="DD"]
+    the user should see the element    xpath=//*[@id="application_details-startdate_month" and @placeholder="MM"]
+    the user should see the element    xpath=//*[@id="application_details-startdate_year" and @placeholder="YYYY"]
 
 The user can save the page with the blank date
     Submit Form
