@@ -19,7 +19,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Spend profile'})" th:remove="tag" />
 
-	<p>This overview shows the progress of project partners in submitting their required information.</p>
+	<p>This overview details the spend profile status of each partner in your project</p>
 
 	<div th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
 		<h2 class="heading-medium">Profile spend</h2>
@@ -78,9 +78,9 @@
 
 	<div th:if="${param.status == null or param.status[0] != 'Submitted'}" th:remove="tag">
 
-		<p class="extra-margin">Once every partner has completed their project costs, these will then be submitted to Innovate UK for review. If changes are required, the project costs will be returned with details on the changes needed. It will then need resubmitting.</p>
+		<p class="extra-margin">When each of your partners have completed their project spend, as lead partner please review each partner's spend profile to ensure it fits the timelines of your project plan.</p>
 
-		<a href="/prototypes/1592-spend?task=reviewProject" class="button">Review and submit project profile spend</a>
+		<a href="/prototypes/1592-spend?task=reviewProject" class="button">Review and submit total project profile spend</a>
 
 	</div>
 
