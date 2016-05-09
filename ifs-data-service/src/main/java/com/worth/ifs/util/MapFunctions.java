@@ -1,8 +1,11 @@
 package com.worth.ifs.util;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.util.*;
 import java.util.function.Function;
 
+import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static com.worth.ifs.util.CollectionFunctions.simpleToMap;
 import static java.util.stream.Collectors.groupingBy;
 
@@ -64,5 +67,17 @@ public final class MapFunctions {
         LinkedHashMap<R, Integer> sortedMap = new LinkedHashMap<>();
         entries.forEach(entry -> sortedMap.put(entry.getKey(), entry.getValue()));
         return sortedMap;
+    }
+
+    /**
+     * Converts the given map's entrySet to a list of Pairs
+     *
+     * @param map
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> List<Pair<T, R>> toListOfPairs(Map<T, R> map) {
+        return simpleMap(map.entrySet(), entry -> Pair.of(entry.getKey(), entry.getValue()));
     }
 }
