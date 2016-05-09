@@ -18,7 +18,8 @@ import java.util.Set;
  */
 public interface QuestionService {
 
-    @NotSecured("Any loggedIn user can read a question")
+    // @NotSecured("Any loggedIn user can read a question")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<QuestionResource> getQuestionById(final Long id);
 
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
@@ -44,28 +45,35 @@ public interface QuestionService {
     ServiceResult<Void> updateNotification(final Long questionStatusId,
                             final Boolean notify);
 
-    @NotSecured("Any loggedIn user can get any question")
+    // @NotSecured("Any loggedIn user can get any question")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<List<QuestionResource>> findByCompetition(final Long competitionId);
 
-    @NotSecured("Any loggedIn user can get any question")
+//    @NotSecured("Any loggedIn user can get any question")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<QuestionResource> getNextQuestion(final Long questionId);
 
-    @NotSecured("Any loggedIn user can get any question")
+//    @NotSecured("Any loggedIn user can get any question")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<QuestionResource> getPreviousQuestionBySection(final Long sectionId);
 
-    @NotSecured("Any loggedIn user can get any question")
+//    @NotSecured("Any loggedIn user can get any question")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<QuestionResource> getNextQuestionBySection(final Long sectionId);
 
-    @NotSecured("Any loggedIn user can get any question")
+//    @NotSecured("Any loggedIn user can get any question")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<QuestionResource> getPreviousQuestion(final Long questionId);
 
     @PreAuthorize("hasPermission(#applicationId, 'com.worth.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Boolean> isMarkedAsComplete(Question question, Long applicationId, Long organisationId);
 
-    @NotSecured("Any loggedIn user can get any question")
+    //@NotSecured("Any loggedIn user can get any question")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<QuestionResource> getQuestionResourceByFormInputType(String formInputTypeTitle);
 
-    @NotSecured("Any loggedIn user can get any question")
+    //@NotSecured("Any loggedIn user can get any question")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Question> getQuestionByFormInputType(String formInputTypeTitle);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
