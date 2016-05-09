@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.validation.constraints.Digits;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,14 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationResource {
-    public static final String ID_PATTERN = "#00000000";
+    private static final String ID_PATTERN = "#00000000";
+    private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
     public static final DecimalFormat formatter = new DecimalFormat(ID_PATTERN);
 
     private Long id;
     private String name;
     private LocalDate startDate;
     private LocalDateTime submittedDate;
+
+    @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
+
     private List<Long> processRoles = new ArrayList<>();
     private List<Long> applicationFinances = new ArrayList<>();
     private Long applicationStatus;
