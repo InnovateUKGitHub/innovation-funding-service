@@ -123,20 +123,24 @@ Catapult search (empty, invalid & valid inputs)
 
 Catapult search (accept invitation flow)
     [Documentation]    INFUND-1230
-    [Tags]    Invite    Catapult        Email
+    [Tags]    Invite    Catapult
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Digital Catapult
     And the user should see the text in the page    Operating Address
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Thierry    Henry
-    And the user opens the mailbox and verifies the email from
+
+Catapult search (accept invitation flow with email step)
+    [Documentation]     INFUND-1230
+    [Tags]  Invite  Catapult    Email
+    Given the user opens the mailbox and verifies the email from
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-    And the user clicks the button/link    jQuery=.button:contains("Log in")
+    When the user clicks the button/link    jQuery=.button:contains("Log in")
     And guest user log-in    worth.email.test+invite1@gmail.com    Passw0rd123
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
-    When the user clicks the button/link    link=A novel solution to an old problem
+    And the user clicks the button/link    link=A novel solution to an old problem
     And the user clicks the button/link    link=Your finances
-    Then the user should see the text in the page    Digital Catapult
+    And the user should see the text in the page    Digital Catapult
 
 *** Keywords ***
 the user selects the radio button

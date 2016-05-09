@@ -155,7 +155,7 @@ The user should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
     ...
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
-    [Tags]  `   Email
+    [Tags]     Email
     [Setup]    The guest user opens the browser
     When the user opens the mailbox and accepts the invitation to collaborate
     And the user should see the text in the page    Join an application
@@ -181,7 +181,7 @@ The lead applicant should have the correct status
     the user should see the element    css=#content h2.heading-medium
     ${input_value} =    get text    css=#content h2.heading-medium
     Should Be Equal As Strings    ${input_value}    Empire Ltd (Lead organisation)
-    page should contain link    Steve Smith
+    the user should see the element    link=Steve Smith
     ${input_value} =    get text    css=.list-bullet li small
     Should Be Equal As Strings    ${input_value}    (Lead Applicant)
 
