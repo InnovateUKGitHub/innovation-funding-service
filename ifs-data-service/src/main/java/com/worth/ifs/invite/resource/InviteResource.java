@@ -162,13 +162,7 @@ public class InviteResource {
     }
 
     public String getNameConfirmed() {
-        String name = this.nameConfirmed;
-
-        if(this.nameConfirmed == null) {
-            name = this.name;
-        }
-
-        return name;
+        return this.nameConfirmed;
     }
 
     public void setNameConfirmed(String nameConfirmed) {
