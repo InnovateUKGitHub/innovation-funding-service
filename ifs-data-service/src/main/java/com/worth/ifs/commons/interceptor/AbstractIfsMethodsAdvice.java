@@ -9,6 +9,9 @@ import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import java.lang.reflect.Method;
 import java.util.function.BiFunction;
 
+/**
+ * Base class for our pointcut advisors.
+ */
 public abstract class AbstractIfsMethodsAdvice extends AbstractPointcutAdvisor {
 
 
@@ -27,12 +30,12 @@ public abstract class AbstractIfsMethodsAdvice extends AbstractPointcutAdvisor {
     }
 
     @Override
-    public Pointcut getPointcut() {
+    public final Pointcut getPointcut() {
         return this.pointcut;
     }
 
     @Override
-    public Advice getAdvice() {
+    public final Advice getAdvice() {
         return this.interceptor;
     }
 }

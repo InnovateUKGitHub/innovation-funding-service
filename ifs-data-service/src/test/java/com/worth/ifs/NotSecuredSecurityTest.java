@@ -17,6 +17,9 @@ import java.util.concurrent.*;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
 
 
+/**
+ * Tests to check that the {@link NotSecured#mustBeSecuredByOtherServices()} property will be obeyed.
+ */
 public class NotSecuredSecurityTest extends BaseIntegrationTest {
 
     @Autowired
@@ -46,13 +49,10 @@ public class NotSecuredSecurityTest extends BaseIntegrationTest {
         springWrappedTestServiceLevel1.notSecuredAndDoesNotNeedToBe(); // Should not throw
     }
 
-    @Test
+    @Test(expected = NotSecuredMethodException.class)
     public void testNotSecuredMethodsAreNotAllowedWhenMustBeSecuredByOtherServicesIsTrue() {
-        try {
-            springWrappedTestServiceLevel1.notSecuredButNeedsToBeSecuredByAMethodHigherOnTheStack();
-        } catch (NotSecuredMethodException e) {
-            // Expected
-        }
+        springWrappedTestServiceLevel1.notSecuredButNeedsToBeSecuredByAMethodHigherOnTheStack();
+
     }
 
     @Test
@@ -61,13 +61,9 @@ public class NotSecuredSecurityTest extends BaseIntegrationTest {
     }
 
 
-    @Test
+    @Test(expected = NotSecuredMethodException.class)
     public void testNotSecuredMethodsAreNotAllowedWhenMustBeSecuredByOtherServicesIsTrueAndThereIsNotASecuredMethodAboveIt() {
-        try {
-            springWrappedTestServiceLevel2.aNotSecuredMethodThatCallsAnUnsecuredMethodThatNeedsToBeSecured();
-        } catch (NotSecuredMethodException e) {
-            // Expected
-        }
+        springWrappedTestServiceLevel2.aNotSecuredMethodThatCallsAnUnsecuredMethodThatNeedsToBeSecured();
     }
 
     @Test
@@ -75,14 +71,10 @@ public class NotSecuredSecurityTest extends BaseIntegrationTest {
         springWrappedTestServiceLevel3.aSecuredMethodThatCallsASecuredMethodThatCallsAnUnsecuredMethodThatNeedsToBeSecured(); // Should not throw.
     }
 
-    @Test
+    @Test(expected = NotSecuredMethodException.class)
     public void testWhenCallingThereIsAMethodThatIsOkayAndThenOneThatIsNot() {
-        springWrappedTestServiceLevel3.aSecuredMethodThatCallsASecuredMethodThatCallsAnUnsecuredMethodThatNeedsToBeSecured(); // Should not throw.
-        try {
-            springWrappedTestServiceLevel1.notSecuredButNeedsToBeSecuredByAMethodHigherOnTheStack();
-        } catch (NotSecuredMethodException e) {
-            // Expected
-        }
+        springWrappedTestServiceLevel1.notSecuredButNeedsToBeSecuredByAMethodHigherOnTheStack();
+
     }
 
 
@@ -114,7 +106,7 @@ public class NotSecuredSecurityTest extends BaseIntegrationTest {
         Assert.assertFalse(securedMethodsInStackCountInterceptor.isStackSecured());
         try {
             springWrappedTestServiceLevel1.aSecuredMethodThatThrowsAnException();
-        } catch (Exception e){
+        } catch (Exception e) {
             // Expected but check we are not still secured.
             Assert.assertFalse(securedMethodsInStackCountInterceptor.isStackSecured());
         }
@@ -131,7 +123,7 @@ public class NotSecuredSecurityTest extends BaseIntegrationTest {
         }
 
         @PostFilter("hasPermission(filterObject, 'READ')")
-        public void aSecuredMethodThatThrowsAnException(){
+        public void aSecuredMethodThatThrowsAnException() {
             throw new RuntimeException();
         }
 
@@ -189,9 +181,7 @@ public class NotSecuredSecurityTest extends BaseIntegrationTest {
         @PostFilter("hasPermission('filterObject', READ)")
         public List<String> aSecuredMethodThatBlocks() throws Exception {
             arrivedInBlockingMethod.countDown(); // We have arrived in the blocking method.
-            System.out.println("hi there");
             blockInBlockingMethod.await(); // Block
-            System.out.println("should not see this");
             return null;
         }
     }

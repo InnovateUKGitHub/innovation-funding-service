@@ -4,14 +4,18 @@ import com.worth.ifs.BasePermissionRulesTest;
 import com.worth.ifs.application.resource.QuestionResource;
 import com.worth.ifs.security.CustomPermissionEvaluator;
 import com.worth.ifs.user.resource.UserResource;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static com.worth.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+/**
+ * Test the {@link QuestionPermissionRules}
+ */
 public class QuestionPermissionRulesTest extends BasePermissionRulesTest<QuestionPermissionRules> {
 
     private UserResource anonymousUser;
@@ -35,7 +39,7 @@ public class QuestionPermissionRulesTest extends BasePermissionRulesTest<Questio
 
     @Test
     public void testAllUsersCanSeeQuestions() {
-        Assert.assertTrue(rules.loggedInUsersCanSeeAllQuestions(questionResource, loggedInUser));
-        Assert.assertFalse(rules.loggedInUsersCanSeeAllQuestions(questionResource, anonymousUser));
+        assertTrue(rules.loggedInUsersCanSeeAllQuestions(questionResource, loggedInUser));
+        assertFalse(rules.loggedInUsersCanSeeAllQuestions(questionResource, anonymousUser));
     }
 }
