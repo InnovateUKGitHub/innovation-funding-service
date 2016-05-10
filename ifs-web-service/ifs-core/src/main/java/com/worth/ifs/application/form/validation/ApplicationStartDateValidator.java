@@ -17,17 +17,17 @@ public class ApplicationStartDateValidator implements Validator {
 	@Override
 	public void validate(Object target, Errors errors) {
 		HttpServletRequest req = (HttpServletRequest) target;
-		
+
 		String day = req.getParameter("application.startDate.dayOfMonth");
 		String month = req.getParameter("application.startDate.monthValue");
 		String year = req.getParameter("application.startDate.year");
-		
+
 		if(StringUtils.isEmpty(day) && StringUtils.isEmpty(month) && StringUtils.isEmpty(year)) {
 			return;
 		}
-		
+
 		LocalDate startDate;
-		
+
 		try {
 			startDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
 		} catch (NumberFormatException | DateTimeException e) {
@@ -41,11 +41,11 @@ public class ApplicationStartDateValidator implements Validator {
 	}
 
 	private void rejectPast(Errors errors) {
-		 errors.reject("application.startDate", "Please enter a future date.");
+		 errors.reject("application.startDate", "Please enter a future date");
 	}
-	
+
 	private void rejectInvalid(Errors errors) {
-		 errors.reject("application.startDate", "Please enter a valid date.");
+		 errors.reject("application.startDate", "Please enter a valid date");
 	}
 
 	@Override

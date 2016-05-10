@@ -407,7 +407,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project.\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project\"]}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
@@ -426,7 +426,7 @@ public class ApplicationFormControllerTest  extends BaseUnitTest {
 
         String content = result.getResponse().getContentAsString();
 
-        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project.\"]}";
+        String jsonExpectedContent = "{\"success\":\"false\",\"validation_errors\":[\"Please enter the full title of the project\"]}";
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
