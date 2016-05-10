@@ -7,8 +7,6 @@ import java.time.format.DateTimeFormatter;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -30,7 +28,6 @@ import com.worth.ifs.service.ApplicationSummarySortFieldService;
 @Controller
 @RequestMapping("/competition")
 public class CompetitionManagementController {
-    private static final Log LOG = LogFactory.getLog(CompetitionManagementController.class);
     
     @Autowired
     private CompetitionService competitionService;
@@ -61,6 +58,10 @@ public class CompetitionManagementController {
 	    		return inAssessmentCompetition(model, competitionId, queryForm, bindingResult);
 	    	case FUNDERS_PANEL:
 	    		return fundersPanelCompetition(model, competitionId, queryForm, bindingResult);
+	    	case ASSESSOR_FEEDBACK:
+	    		return assessorFeedbackCompetition(model, competitionId, queryForm, bindingResult);
+	    	case PROJECT_SETUP:
+	    		return "comp-mgt-project-setup";
 			default:
 				return "redirect:/login";
     	}
@@ -79,16 +80,33 @@ public class CompetitionManagementController {
 	}
 
 	private String inAssessmentCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
-		populateModelBasedOnTab(model, competitionId, queryForm, bindingResult);
+		populateModelBasedOnSubmittedOrNotSubmittedTab(model, competitionId, queryForm, bindingResult);
         return "comp-mgt-in-assessment";
 	}
 	
 	private String fundersPanelCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
-		populateModelBasedOnTab(model, competitionId, queryForm, bindingResult);
+		populateModelBasedOnSubmittedOrNotSubmittedTab(model, competitionId, queryForm, bindingResult);
 		return "comp-mgt-funders-panel";
 	}
+	
+	private String assessorFeedbackCompetition(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
+		populateModelBasedOnAssessorTabState(model, competitionId, queryForm, bindingResult);
+		return "comp-mgt-assessor-feedback";
+	}
 
-	private void populateModelBasedOnTab(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
+	private void populateModelBasedOnAssessorTabState(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
+		if("overview".equals(queryForm.getTab())) {
+			populateOverviewModel(model, competitionId, queryForm, bindingResult);
+		} else if("notSubmitted".equals(queryForm.getTab())) {
+			populateNotSubmittedModel(model, competitionId, queryForm, bindingResult);
+		} else if("submitted".equals(queryForm.getTab())) {
+			populateSubmittedModel(model, competitionId, queryForm, bindingResult);
+		} else {
+			populateInProjectSetupModel(model, competitionId, queryForm, bindingResult);
+		}
+	}
+
+	private void populateModelBasedOnSubmittedOrNotSubmittedTab(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
 		if("notSubmitted".equals(queryForm.getTab())) {
 			populateNotSubmittedModel(model, competitionId, queryForm, bindingResult);
 		} else {
@@ -110,6 +128,14 @@ public class CompetitionManagementController {
 		model.addAttribute("results", results);
 		model.addAttribute("activeTab", "submitted");
 		model.addAttribute("activeSortField", sort);
+	}
+	
+	private void populateInProjectSetupModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
+		model.addAttribute("activeTab", "projectsInSetup");
+	}
+
+	private void populateOverviewModel(Model model, Long competitionId, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
+		model.addAttribute("activeTab", "overview");
 	}
 
 	@RequestMapping("/{competitionId}/download")

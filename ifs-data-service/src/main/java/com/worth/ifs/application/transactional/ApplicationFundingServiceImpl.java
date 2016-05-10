@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import com.worth.ifs.application.constant.ApplicationStatusConstants;
@@ -16,20 +18,29 @@ import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.error.CommonErrors;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.transactional.BaseTransactionalService;
 
 @Service
 public class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
+
+    private static final Log LOG = LogFactory.getLog(ApplicationFundingServiceImpl.class);
 
 	@Override
 	public ServiceResult<Void> makeFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
 		
 		Competition competition = competitionRepository.findOne(competitionId);
 		if(competition == null) {
-			throw new IllegalArgumentException("competition id is invalid");
+			LOG.error("cannot make funding decision for an inexistant competition: " + competitionId);
+			throw new IllegalArgumentException("invalid competition id");
 		}
 		
-		List<Application> applicationsForCompetition = applicationRepository.findByCompetitionId(competitionId);
+		if(!CompetitionResource.Status.FUNDERS_PANEL.equals(competition.getCompetitionStatus())){
+			LOG.error("cannot make funding decision for a competition not in FUNDERS_PANEL status: " + competitionId);
+			throw new IllegalArgumentException("competition not in correct status");
+		}
+		
+		List<Application> applicationsForCompetition = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
 		
 		boolean allPresent = applicationsForCompetition.stream().noneMatch(app -> !applicationFundingDecisions.containsKey(app.getId()));
 		

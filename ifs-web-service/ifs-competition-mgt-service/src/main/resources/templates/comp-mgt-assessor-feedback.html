@@ -3,7 +3,7 @@
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
 </head>
-<body class="competition-management application-in-assessment">
+<body class="competition-management application-assessor-feedback">
 
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
@@ -23,6 +23,10 @@
       </div>
   </div>
 
+    <div th:if="${fundingNotDecidedForAllApplications}" class="event-alert">
+        <p><span>A funding decision is required for all applications to the competition.</span></p>
+    </div>
+    
   <div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" th:remove="tag" />
 
     <div class="grid-row competition-data">
@@ -33,25 +37,24 @@
           <form method="get">
               <input type="hidden" name="tab" th:if="${activeTab != null}" th:value="${activeTab}" />
 
+    <h2 class="bold-large" th:if="${activeTab == 'overview'}">Overview</h2>
     <h2 class="bold-large" th:if="${activeTab == 'submitted'}">Applications submitted</h2>
     <h2 class="bold-large" th:if="${activeTab == 'notSubmitted'}">Applications not submitted</h2>
+    <h2 class="bold-large" th:if="${activeTab == 'projectsInSetup'}">Projects in setup</h2>
 
 
     <div class="grid-row sort-by">
         <div class="column-two-thirds">
-          <h3>
-            <span class="heading-large" th:text="${results.totalElements}" /> applications
-          </h3>
         </div>
         <div class="column-third alignright">
           <div th:include="fragments/competition-management :: applications-sort(activeTab=${activeTab},activeSortField=${activeSortField})" th:remove="tag" />
         </div>
     </div>
-    
+
+
     <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
-    
-    <div th:include="fragments/competition-management :: applications-pagination(results=${results})" th:remove="tag" />
-				
+
+ 
      </form>
   </div>
 </div>

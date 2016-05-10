@@ -11,6 +11,7 @@
         <div th:remove="tag" th:case="'OPEN'">Competition open</div>
         <div th:remove="tag" th:case="'IN_ASSESSMENT'">In assessment</div>
         <div th:remove="tag" th:case="'FUNDERS_PANEL'">Funders Panel</div>
+        <div th:remove="tag" th:case="'ASSESSOR_FEEDBACK'">Assessor Feedback</div>
         <div th:remove="tag" th:case="'PROJECT_SETUP'">Project setup</div>
         <div th:remove="tag" th:case="*">test2</div>
     </h2>
@@ -32,10 +33,22 @@
         <div th:remove="tag" th:case="'FUNDERS_PANEL'">
         	<div th:include="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" th:remove="tag" />
         </div>
+        <div th:remove="tag" th:case="'ASSESSOR_FEEDBACK'">
+        	<div th:include="fragments/competition-management :: competition-mgt-menu-assessor-feedback(id=${competitionId})" th:remove="tag" />
+        </div>
         <!--/* future
         <div th:remove="tag" th:case="'PROJECT_SETUP'"></div>
         */-->
     </div>
+</div>
+
+<div th:fragment="competition-mgt-menu-assessor-feedback(id)" th:remove="tag">
+  <ul class="inline-nav extra-margin">
+    <li th:class="${activeTab == 'overview' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=overview'}">Overview</a></li>
+    <li th:class="${activeTab == 'submitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=submitted'}">Applications submitted</a></li>
+    <li th:class="${activeTab == 'notSubmitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=notSubmitted'}">Applications not submitted</a></li>
+    <li th:class="${activeTab == 'projectsInSetup' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '?tab=projectsInSetup'}">Projects in setup</a></li>
+  </ul>
 </div>
 
 <div th:fragment="competition-mgt-menu-assessment(id)" th:remove="tag">
@@ -165,7 +178,7 @@
 	           <td th:text="${result.totalProjectCost}"></td>
 	           <td th:text="${result.duration}"></td>
 	           <td scope="col" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">
-	          	 <select class="funding-decision form-control" aria-labelledby="fund-project-label" th:id="${'fund' + result.id}" name="fund">
+	          	 <select class="funding-decision form-control" aria-labelledby="fund-project-label" th:id="${'fund' + result.id}" th:name="${result.id}">
            			<option value="-">-</option>
            			<option value="Y">Yes</option>
            			<option value="N">No</option>
@@ -206,5 +219,27 @@
       </div>
       <button class="next" th:if="${results.hasNext()}" type="submit" name="page" th:value="${results.number + 2}">Next</button>
     </div>
+</div>
+
+<!-- Applications sort -->
+<div th:fragment="applications-sort(activeTab, activeSortField)" th:remove="tag">
+	<label for="sort-by">Sort by</label>
+    <select id="sort-by" name="sort" class="js-auto-submit form-control" th:if="${activeTab == 'submitted'}">
+        <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
+        <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
+        <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
+        <option value="numberOfPartners" th:selected="${(activeSortField == 'numberOfPartners')}">No. of partners</option>
+        <option value="grantRequested" th:selected="${(activeSortField == 'grantRequested')}">Grant requested</option>
+        <option value="totalProjectCost" th:selected="${(activeSortField == 'totalProjectCost')}">Total project cost</option>
+        <option value="duration" th:selected="${(activeSortField == 'duration')}">Duration</option>
+        
+    </select>
+    <select id="sort-by" name="sort" class="js-auto-submit form-control" th:if="${activeTab == 'notSubmitted'}">
+        <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
+        <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
+        <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
+        <option value="percentageComplete" th:selected="${(activeSortField == 'percentageComplete')}">Percentage complete</option>
+    </select>
+    <button type="submit" class="button no-margin">Sort</button>
 </div>
 </html>

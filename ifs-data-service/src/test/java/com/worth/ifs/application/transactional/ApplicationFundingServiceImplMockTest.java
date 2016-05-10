@@ -1,5 +1,6 @@
 package com.worth.ifs.application.transactional;
 
+import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -22,6 +23,7 @@ import com.worth.ifs.application.domain.ApplicationStatus;
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.commons.service.ServiceResult;
 import com.worth.ifs.competition.domain.Competition;
+import com.worth.ifs.competition.resource.CompetitionResource.Status;
 import com.worth.ifs.util.MapFunctions;
 
 public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<ApplicationFundingService> {
@@ -44,15 +46,32 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	when(applicationStatusRepositoryMock.findOne(ApplicationStatusConstants.APPROVED.getId())).thenReturn(approvedStatus);
     	when(applicationStatusRepositoryMock.findOne(ApplicationStatusConstants.REJECTED.getId())).thenReturn(rejectedStatus);
     	
-    	competition = new Competition();
+    	competition = newCompetition().withCompetitionStatus(Status.FUNDERS_PANEL).build();
     	when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testFailIfNoCompetitionWithGivenId() {
+    	when(competitionRepositoryMock.findOne(123L)).thenReturn(null);
+    	
+    	Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED);
+    	service.makeFundingDecision(123L, decision);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testFailIfCompetitionInWrongState() {
+    	competition = newCompetition().withCompetitionStatus(Status.IN_ASSESSMENT).build();
+    	when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
+    	
+    	Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED);
+    	service.makeFundingDecision(123L, decision);
+    }
+    
     @Test
     public void testFailIfNotAllApplicationsRepresentedInDecision() {
     	Application application1 = ApplicationBuilder.newApplication().withId(1L).build();
     	Application application2 = ApplicationBuilder.newApplication().withId(2L).build();
-    	when(applicationRepositoryMock.findByCompetitionId(123L)).thenReturn(Arrays.asList(application1, application2));
+    	when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusId(123L, ApplicationStatusConstants.SUBMITTED.getId())).thenReturn(Arrays.asList(application1, application2));
     	
     	Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED);
     	
@@ -60,7 +79,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	
     	assertTrue(result.isFailure());
     	assertEquals("not all applications represented in funding decision", result.getFailure().getErrors().get(0).getErrorMessage());
-    	verify(applicationRepositoryMock).findByCompetitionId(123L);
+    	verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusId(123L, ApplicationStatusConstants.SUBMITTED.getId());
     	verifyNoMoreInteractions(applicationRepositoryMock);
     }
     
@@ -68,14 +87,14 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     public void testSuccessAllApplicationsRepresented() {
     	Application application1 = ApplicationBuilder.newApplication().withId(1L).build();
     	Application application2 = ApplicationBuilder.newApplication().withId(2L).build();
-    	when(applicationRepositoryMock.findByCompetitionId(123L)).thenReturn(Arrays.asList(application1, application2));
+    	when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusId(123L, ApplicationStatusConstants.SUBMITTED.getId())).thenReturn(Arrays.asList(application1, application2));
     	
     	Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.NOT_FUNDED);
     	
     	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
     	
     	assertTrue(result.isSuccess());
-    	verify(applicationRepositoryMock).findByCompetitionId(123L);
+    	verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusId(123L, ApplicationStatusConstants.SUBMITTED.getId());
     	verify(applicationRepositoryMock).save(application1);
     	verify(applicationRepositoryMock).save(application2);
     	assertEquals(approvedStatus, application1.getApplicationStatus());
