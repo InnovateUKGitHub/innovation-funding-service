@@ -4,7 +4,8 @@ Thank you for submitting your application '${applicationName}' for funding to In
 
 Unfortunately Innovate UK is unable to fund ${applicationName}. This is after assessment from independent assessors and careful consideration from the Innovate UK team.
 
-Feedback will be available by 5.30 on ${feedbackDate?string["dd-MM-yyyy"]} and will be accessible from your Innovate UK account. We will send you a further email notification when your feedback is ready for you to view.
+<#assign feedbackDateIso = feedbackDate?datetime.iso>
+Feedback will be available by ${feedbackDateIso?string["h.mma"]} on ${feedbackDateIso?string["dd-MM-yyyy"]} and will be accessible from your Innovate UK account. We will send you a further email notification when your feedback is ready for you to view.
 
 We would like to take this opportunity to remind you of the Government's commitment to promote innovation and to encourage you to remain aware of opportunities offered by future competitions. Details of all future competitions are posted on the Innovate UK website www.innovateuk.gov.uk.
 
