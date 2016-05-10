@@ -50,21 +50,29 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testFailIfNoCompetitionWithGivenId() {
     	when(competitionRepositoryMock.findOne(123L)).thenReturn(null);
     	
     	Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED);
-    	service.makeFundingDecision(123L, decision);
+    	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
+    	
+    	assertTrue(result.isFailure());
+    	assertEquals("Competition not found", result.getFailure().getErrors().get(0).getErrorMessage());
+    	verifyNoMoreInteractions(applicationRepositoryMock);
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testFailIfCompetitionInWrongState() {
     	competition = newCompetition().withCompetitionStatus(Status.IN_ASSESSMENT).build();
     	when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
     	
     	Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED);
-    	service.makeFundingDecision(123L, decision);
+    	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
+    	
+    	assertTrue(result.isFailure());
+    	assertEquals("competition not in correct status", result.getFailure().getErrors().get(0).getErrorMessage());
+    	verifyNoMoreInteractions(applicationRepositoryMock);
     }
     
     @Test

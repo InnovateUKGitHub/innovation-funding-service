@@ -32,12 +32,12 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
 		Competition competition = competitionRepository.findOne(competitionId);
 		if(competition == null) {
 			LOG.error("cannot make funding decision for an inexistant competition: " + competitionId);
-			throw new IllegalArgumentException("invalid competition id");
+			return serviceFailure(CommonErrors.notFoundError(Competition.class, competitionId));
 		}
 		
 		if(!CompetitionResource.Status.FUNDERS_PANEL.equals(competition.getCompetitionStatus())){
 			LOG.error("cannot make funding decision for a competition not in FUNDERS_PANEL status: " + competitionId);
-			throw new IllegalArgumentException("competition not in correct status");
+			return serviceFailure(CommonErrors.badRequestError("competition not in correct status"));
 		}
 		
 		List<Application> applicationsForCompetition = applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
