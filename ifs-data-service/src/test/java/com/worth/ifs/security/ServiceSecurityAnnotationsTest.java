@@ -4,7 +4,6 @@ import au.com.bytecode.opencsv.CSVWriter;
 import com.worth.ifs.BaseIntegrationTest;
 import com.worth.ifs.commons.security.UidAuthenticationService;
 import com.worth.ifs.commons.service.BaseRestService;
-import com.worth.ifs.file.transactional.FileServiceImpl;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -41,8 +40,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
     List<Class<?>> excludedClasses
             = asList(
                     UidAuthenticationService.class,
-                    StatelessAuthenticationFilter.class,
-                    FileServiceImpl.class
+                    StatelessAuthenticationFilter.class
             );
 
     List<Class<? extends Annotation>> securityAnnotations
