@@ -6,12 +6,12 @@ import com.worth.ifs.security.NotSecured;
 
 public interface InviteOrganisationService {
 
-    @NotSecured("TODO")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<InviteOrganisationResource> findOne(Long id);
 
-    @NotSecured("TODO")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Iterable<InviteOrganisationResource>> findAll();
 
-    @NotSecured("TODO")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<InviteOrganisationResource> save(InviteOrganisationResource inviteOrganisationResource);
 }

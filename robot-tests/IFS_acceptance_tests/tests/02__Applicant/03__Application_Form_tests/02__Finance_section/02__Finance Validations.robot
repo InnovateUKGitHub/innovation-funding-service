@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation     INFUND-844: As an applicant I want to receive a validation error in the finance sections if I my input is invalid in a particular field so that I am informed how to correctly submit the information
+...
+...               INFUND-2214: As an applicant I want to be prevented from marking my finances as complete if I have not fully completed the Other funding section so that I can be sure I am providing all the required information
 Suite Setup       Run keywords    Guest user log-in    &{lead_applicant_credentials}
 ...               AND    Given the user navigates to the page    ${YOUR_FINANCES_URL}
 Suite Teardown    TestTeardown User closes the browser
@@ -14,7 +16,7 @@ Resource          ../../../../resources/keywords/User_actions.robot
 Labour validations
     [Documentation]    INFUND-844
     [Tags]    Pending
-    #Pending due to infund 2687, 2689
+    #Pending due to infund 2687
     Given the user clicks the button/link    jQuery=button:contains("Labour")
     When the user clicks the button/link    jQuery=button:contains('Add another role')
     And the user enters text to a text field    css=#cost-labour-1-labourDaysYearly    366
@@ -72,7 +74,7 @@ Administration costs validations (special rate)
 Materials calculations
     [Documentation]    INFUND-844
     [Tags]    Pending
-    # Pending due to NFUND-2689
+    #Pending due to infund 2687
     Given the user clicks the button/link    jQuery=button:contains("Materials")
     And the user clicks the button/link    jQuery=button:contains('Add another materials cost')
     When the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
@@ -83,7 +85,8 @@ Materials calculations
     #And the user should see an error    You must enter a value less than 20 digits
     And the user should see an error    This field should be 1 or higher
     And the user should see the element    css=.error-summary-list
-    [Teardown]    Run keywords    the user clicks the button/link    jQuery=button:contains("Remove")
+    [Teardown]    Run keywords    Focus    jQuery=button:contains("Remove")
+    ...    AND    the user clicks the button/link    jQuery=button:contains("Remove")
     ...    AND    the user clicks the button/link    jQuery=button:contains("Materials")
 
 Capital usage validations
@@ -124,7 +127,7 @@ Subcontracting costs validations
 Travel and subsistence validations
     [Documentation]    INFUND-844
     [Tags]    Pending
-    # Pending NFUND-2689
+    #Pending due to infund 2687
     Given the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
     And the user clicks the button/link    jQuery=button:contains('Add another travel cost')
     #When the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    0123456789101112131415161718192021
@@ -134,13 +137,14 @@ Travel and subsistence validations
     Then the user should see an error    This field should be 0 or higher
     #And the user should see an error    You must enter a value less than 20 digits
     And the user should see the element    css=.error-summary-list
-    [Teardown]    Run keywords    the user clicks the button/link    jQuery=button:contains("Remove")
+    [Teardown]    Run keywords    Focus    jQuery=button:contains("Remove")
+    ...    AND    the user clicks the button/link    jQuery=button:contains("Remove")
     ...    AND    the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
 
 Other costs validations
     [Documentation]    INFUND-844
     [Tags]    Pending
-    # Pending NFUND-2689
+    #Pending due to infund 2687
     Given the user clicks the button/link    jQuery=button:contains("Other Costs")
     And the user clicks the button/link    jQuery=button:contains('Add another cost')
     When the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    -1
@@ -172,12 +176,48 @@ Grand field validations
     #Then the user should see an error    This field should be 0 or higher
     #And the user should see an error    This field should be a number
 
+When the other funding row is empty mark as complete is impossible
+    [Documentation]    INFUND-2214
+    [Tags]    Pending
+    #pending 2690
+    Given the user clicks the button/link    jQuery=button:contains('Add another source of funding')
+    And the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    And the user marks the finances as complete
+    Then the user should see the element    css=.error-summary-list
+
+Other funding validations
+    [Documentation]    INFUND-2214
+    [Tags]    Pending
+    [Setup]    Wait Until Element Is Visible    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
+    And the user marks the finances as complete
+    Then the user should see an error    Funding source cannot be blank
+    And the user should see an error    Please use MM-YYYY format
+    And the user should see an error    This field should be 0 or higher
+    And the user should see the element    css=.error-summary-list
+    When the user enters invalid inputs in the other funding fields    ${EMPTY}    ${EMPTY}    ${EMPTY}
+    Then the user should see an error    Funding source cannot be blank
+    And the user should see an error    This field cannot be left blank
+    And the user should see an error    This field should be a number
+    When the user enters invalid inputs in the other funding fields    ${EMPTY}    12-2017    012345678910111213141516171819202122
+    Then the user should see an error    You must enter a value less than 20 digits
+
+When the selection is NO the user should be able to mark as complete
+    [Documentation]    INFUND-2214
+    [Tags]    Pending
+    # Pending INFUND-2690
+    Given the users selects no in the other fundings section
+    And the user marks the finances as complete
+    Then the user should be redirected to the correct page    ${APPLICATION_OVERVIEW_URL}
+    [Teardown]    Run keywords    When the user navigates to the page    ${YOUR_FINANCES_URL}
+    ...    AND    the user clicks the button/link    jQuery=button:contains("Edit")
+
 *** Keywords ***
 the user marks the finances as complete
-    Sleep    300ms
+    #Sleep    300ms
     Focus    jQuery=button:contains("Mark all as complete")
     click element    jQuery=button:contains("Mark all as complete")
-    Sleep    300ms
+    #Sleep    300ms
 
 user selects the admin costs
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
@@ -189,3 +229,14 @@ the field with the wrong input should be saved
 
 the user reloads the page with validation errors
     Reload Page
+
+the users selects no in the other fundings section
+    Select Radio button    other_funding-otherPublicFunding-35-54    No
+
+the user enters invalid inputs in the other funding fields
+    [Arguments]    ${SOURCE}    ${DATE}    ${FUNDING}
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${SOURCE}
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${DATE}
+    Input Text    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${FUNDING}
+    Mouse out    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input
+    Focus    jQuery=button:contains("Mark all as complete")

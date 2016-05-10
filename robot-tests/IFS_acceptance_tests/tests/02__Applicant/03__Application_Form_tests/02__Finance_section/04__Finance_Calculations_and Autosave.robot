@@ -2,6 +2,8 @@
 Documentation     INFUND-736: As an applicant I want to be able to add all the finance details for all the sections so I can sent in all the info necessary to apply
 ...
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
+...
+...               INFUND-45: As an applicant and I am on the application form on an open application, I expect the form to help me fill in financial details, so I can have a clear overview and less chance of making mistakes
 Suite Setup       Guest user log-in    &{lead_applicant_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        HappyPath
@@ -125,6 +127,12 @@ Other Funding
     And the applicant selects 'No' for other funding
     Then the user should not see the element    jQuery=button:contains('Add another source of funding')
     And the applicant cannot see the 'other funding' details
+
+Funding level
+    [Tags]    Applicant    Autosave    Finance    HappyPath
+    Given the user navigates to the page    ${YOUR_FINANCES_URL}
+    Then auto-save should work for the "Grant" field
+    And the grant value should be correct in the finance summary page
 
 *** Keywords ***
 the Applicant fills in the Labour costs for two rows
@@ -280,3 +288,23 @@ Admin costs total should be correct
     Wait Until Element Is Visible    ${ADMIN_TOTAL}
     Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
     Element Should Contain    jQuery=button:contains("Administration support costs")    ${ADMIN_VALUE}
+
+the grant value should be correct in the finance summary page
+    The user navigates to the page    ${FINANCES_OVERVIEW_URL}
+    Element Should Contain    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
+
+auto-save should work for the "Grant" field
+    Clear Element Text    id=cost-financegrantclaim
+    focus    jQuery= button:contains('complete')
+    Sleep    500ms
+    Reload Page
+    ${input_value} =    Get Value    id=cost-financegrantclaim
+    Should Be Equal As Strings    ${input_value}    0
+    Clear Element Text    id=cost-financegrantclaim
+    Input Text    id=cost-financegrantclaim    25
+    focus    jQuery= button:contains('complete')
+    Sleep    300ms
+    Reload Page
+    focus    jQuery= button:contains('complete')
+    ${input_value} =    Get Value    id=cost-financegrantclaim
+    Should Be Equal As Strings    ${input_value}    25
