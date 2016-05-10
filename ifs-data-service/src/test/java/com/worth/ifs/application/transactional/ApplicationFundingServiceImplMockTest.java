@@ -17,6 +17,7 @@ import com.worth.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,9 @@ import static com.worth.ifs.application.resource.FundingDecision.FUNDED;
 import static com.worth.ifs.application.resource.FundingDecision.UNFUNDED;
 import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDED;
 import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_NOT_FUNDED;
+import static com.worth.ifs.commons.error.CommonErrors.notFoundError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
 import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -39,9 +43,7 @@ import static com.worth.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<ApplicationFundingService> {
@@ -64,9 +66,37 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     }
 
     @Test
+    public void testFailIfCompetitionNotFound() {
+        when(competitionRepositoryMock.findOne(123L)).thenReturn(null);
+
+        Map<Long, FundingDecision> decision = asMap(1L, FUNDED);
+
+        ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(Competition.class, 123L)));
+    }
+
+    @Test
+    public void testFailIfCompetitionHasNoAssessorFeedbackDate() {
+        when(competitionRepositoryMock.findOne(123L)).thenReturn(newCompetition().build());
+
+        Map<Long, FundingDecision> decision = asMap(1L, FUNDED);
+
+        ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET));
+    }
+
+    @Test
     public void testFailIfNotAllApplicationsRepresentedInDecision() {
-    	Application application1 = newApplication().withId(1L).build();
-    	Application application2 = newApplication().withId(2L).build();
+
+        Competition competition = newCompetition().withAssessorFeedbackDate("01/02/2017 17:30:00").build();
+        when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
+
+        Application application1 = newApplication().withId(1L).withCompetition(competition).build();
+    	Application application2 = newApplication().withId(2L).withCompetition(competition).build();
     	when(applicationRepositoryMock.findByCompetitionId(123L)).thenReturn(asList(application1, application2));
     	
     	Map<Long, FundingDecision> decision = asMap(1L, FUNDED);
@@ -74,23 +104,23 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
     	
     	assertTrue(result.isFailure());
-    	assertEquals("not all applications represented in funding decision", result.getFailure().getErrors().get(0).getErrorMessage());
-    	verify(applicationRepositoryMock).findByCompetitionId(123L);
-    	verifyNoMoreInteractions(applicationRepositoryMock);
+        assertTrue(result.getFailure().is(FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED));
     }
     
     @Test
     public void testSuccessAllApplicationsRepresented() {
-    	Application application1 = newApplication().withId(1L).build();
-    	Application application2 = newApplication().withId(2L).build();
-    	when(applicationRepositoryMock.findByCompetitionId(123L)).thenReturn(asList(application1, application2));
+
+        Competition competition = newCompetition().withAssessorFeedbackDate("01/02/2017 17:30:00").build();
+
+        Application application1 = newApplication().withId(1L).withCompetition(competition).build();
+    	Application application2 = newApplication().withId(2L).withCompetition(competition).build();
+    	when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
     	
     	Map<Long, FundingDecision> decision = asMap(1L, FUNDED, 2L, UNFUNDED);
     	
     	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
     	
     	assertTrue(result.isSuccess());
-    	verify(applicationRepositoryMock).findByCompetitionId(123L);
     	verify(applicationRepositoryMock).save(application1);
     	verify(applicationRepositoryMock).save(application2);
     	assertEquals(approvedStatus, application1.getApplicationStatus());
@@ -100,7 +130,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 	@Test
 	public void testNotifyLeadApplicantsOfFundingDecisions() {
 
-        Competition competition = newCompetition().withId(111L).build();
+        Competition competition = newCompetition().withId(111L).withAssessorFeedbackDate(LocalDateTime.of(2017, 5, 3, 0, 0)).build();
 
         Application fundedApplication1 = newApplication().build();
 		Application unfundedApplication2 = newApplication().build();
@@ -126,7 +156,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         Map<String, Object> expectedGlobalNotificationArguments = asMap(
                 "competitionName", competition.getName(),
                 "dashboardUrl", "#",
-                "feedbackDate", "01/02/2017");
+                "feedbackDate", competition.getAssessorFeedbackDate());
 
         List<NotificationTarget> expectedFundedLeadApplicants = asList(fundedApplication1LeadApplicantTarget, fundedApplication3LeadApplicantTarget);
 

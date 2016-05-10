@@ -6,7 +6,7 @@ For this project to begin, we need you to provide details, documents and undergo
 
 This offer is conditional and subject to the satisfactory completion of a Finance Review by Innovate UK. You must not start your project until we have confirmed that all pre-start work has been completed.
 
-Feedback on your application will be available on ${feedbackDate}.
+Feedback on your application will be available on ${feedbackDate?string["dd-MM-yyyy"]}.
 
 Once again, congratulations on the successful outcome of your application.
 

@@ -28,8 +28,9 @@ import static com.worth.ifs.application.resource.FundingDecision.FUNDED;
 import static com.worth.ifs.application.resource.FundingDecision.UNFUNDED;
 import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDED;
 import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_NOT_FUNDED;
-import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
 import static com.worth.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED;
+import static com.worth.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET;
 import static com.worth.ifs.commons.service.ServiceResult.*;
 import static com.worth.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static com.worth.ifs.user.domain.UserRoleType.LEADAPPLICANT;
@@ -56,23 +57,30 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
 	@Override
 	public ServiceResult<Void> makeFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
-		
-		List<Application> applicationsForCompetition = applicationRepository.findByCompetitionId(competitionId);
-		
-		boolean allPresent = applicationsForCompetition.stream().noneMatch(app -> !applicationFundingDecisions.containsKey(app.getId()));
-		
-		if(!allPresent) {
-			return serviceFailure(badRequestError("not all applications represented in funding decision"));
-		}
-		
-		applicationsForCompetition.forEach(app -> {
-			FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
-			ApplicationStatus status = statusFromDecision(applicationFundingDecision);
-			app.setApplicationStatus(status);
-			applicationRepository.save(app);
+
+		return getCompetition(competitionId).andOnSuccess(competition -> {
+
+			if (competition.getAssessorFeedbackDate() == null) {
+				return serviceFailure(FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET);
+			}
+
+			List<Application> applicationsForCompetition = competition.getApplications();
+
+			boolean allPresent = applicationsForCompetition.stream().noneMatch(app -> !applicationFundingDecisions.containsKey(app.getId()));
+
+			if(!allPresent) {
+				return serviceFailure(FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED);
+			}
+
+			applicationsForCompetition.forEach(app -> {
+				FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
+				ApplicationStatus status = statusFromDecision(applicationFundingDecision);
+				app.setApplicationStatus(status);
+				applicationRepository.save(app);
+			});
+
+			return serviceSuccess();
 		});
-		
-		return serviceSuccess();
 	}
 
 	@Override
@@ -114,7 +122,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
             Map<String, Object> globalArguments = new HashMap<>();
             globalArguments.put("competitionName", competition.getName());
             globalArguments.put("dashboardUrl", "#");
-            globalArguments.put("feedbackDate", "01/02/2017");
+            globalArguments.put("feedbackDate", competition.getAssessorFeedbackDate());
 
             List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(notificationTargetsByApplicationId, pair -> {
 

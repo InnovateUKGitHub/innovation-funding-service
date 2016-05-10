@@ -10,9 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.worth.ifs.BuilderAmendFunctions.idBasedNames;
-import static com.worth.ifs.BuilderAmendFunctions.setField;
-import static com.worth.ifs.BuilderAmendFunctions.uniqueIds;
+import static com.worth.ifs.BuilderAmendFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -58,5 +56,20 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
 
     public ApplicationBuilder withName(String name) {
         return with(application -> application.setName(name));
+    }
+
+    @Override
+    public List<Application> build(int numberToBuild) {
+        List<Application> builtList = super.build(numberToBuild);
+
+        // add hibernate-style back refs
+        builtList.forEach(built -> {
+
+            if (built.getCompetition() != null) {
+                built.getCompetition().getApplications().add(built);
+            }
+        });
+
+        return builtList;
     }
 }
