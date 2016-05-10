@@ -11,8 +11,8 @@
                 <span class="form-hint" th:text="${question.description}" />
                 <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationgrantClaimPercentageId+'-grantClaimPercentage'})" th:remove="tag" />
             </label>
-
-            <div th:include="question-type/form-elements :: form-guidance" th:remove="tag"/>
+            
+            <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
             <input type="number"
                    min="0"
                    th:max="${organisationFinanceSize?.getMaxGrantClaimPercentage()}"
@@ -36,7 +36,7 @@
                     <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
                     <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
                 </legend>
-                <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+                <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
 
                 <label class="block-label" th:each="size : ${T(com.worth.ifs.user.domain.OrganisationSize).values()}">
                     <input type="radio"  th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
@@ -929,7 +929,7 @@
         <h2 th:text="${question.getName()}" class="heading-medium" />
         <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
         <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-guidance" th:remove="tag" />
+        <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
 
             <fieldset class="inline" id="otherFundingShowHideToggle">
                 <legend class="visuallyhidden" th:text="${question.getName()}" />

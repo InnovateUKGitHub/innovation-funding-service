@@ -15,6 +15,8 @@ public class FormInputResource {
     private Set<Long> inputValidators;
     private String description;
     private Boolean includedInApplicationSummary = false;
+    private String guidanceQuestion;
+    private String guidanceAnswer;
 
     public FormInputResource() {
         inputValidators = new LinkedHashSet<>();
@@ -114,6 +116,22 @@ public class FormInputResource {
 
     public void setQuestion(Long question) {
         this.question = question;
+    }
+
+    public String getGuidanceQuestion() {
+        return guidanceQuestion;
+    }
+
+    public void setGuidanceQuestion(final String guidanceQuestion) {
+        this.guidanceQuestion = guidanceQuestion;
+    }
+
+    public String getGuidanceAnswer() {
+        return guidanceAnswer;
+    }
+
+    public void setGuidanceAnswer(final String guidanceAnswer) {
+        this.guidanceAnswer = guidanceAnswer;
     }
 }
 

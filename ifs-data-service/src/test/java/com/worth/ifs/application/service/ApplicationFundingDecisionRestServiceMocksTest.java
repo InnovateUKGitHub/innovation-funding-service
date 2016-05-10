@@ -28,7 +28,7 @@ public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServ
     public void testFundingDecision() {
 
     	Long competitionId = 123L;
-    	Map<Long, FundingDecision> applicationIdToFundingDecision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.NOT_FUNDED, 3L, FundingDecision.FUNDED);
+    	Map<Long, FundingDecision> applicationIdToFundingDecision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.FUNDED);
     	
         String expectedUrl = applicationFundingDecisionRestURL + "/" + 123;
         setupPostWithRestResultExpectations(expectedUrl, applicationIdToFundingDecision, HttpStatus.OK);
