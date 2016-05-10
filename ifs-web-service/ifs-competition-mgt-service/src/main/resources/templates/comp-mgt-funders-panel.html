@@ -35,28 +35,29 @@
         </div>
         <div class="column-four-fifth">
           <form method="get">
-              <input type="hidden" name="tab" th:if="${activeTab != null}" th:value="${activeTab}" />
+				<input type="hidden" name="tab" th:if="${activeTab != null}" th:value="${activeTab}" />
 
-    <h2 class="bold-large" th:if="${activeTab == 'submitted'}">Applications submitted</h2>
-    <h2 class="bold-large" th:if="${activeTab == 'notSubmitted'}">Applications not submitted</h2>
+				<h2 class="bold-large" th:if="${activeTab == 'submitted'}">Applications submitted</h2>
+				<h2 class="bold-large" th:if="${activeTab == 'notSubmitted'}">Applications not submitted</h2>
 
 
-    <div class="grid-row sort-by">
-        <div class="column-two-thirds">
-          <h3>
-            <span class="heading-large" th:text="${results.totalElements}" /> applications
-          </h3>
-        </div>
-        <div class="column-third alignright">
-          <div th:include="fragments/competition-management :: applications-sort(activeTab=${activeTab},activeSortField=${activeSortField})" th:remove="tag" />
-        </div>
-    </div>
+			    <div class="grid-row sort-by">
+			        <div class="column-two-thirds">
+			          <h3>
+			            <span class="heading-large" th:text="${results.totalElements}" /> applications
+			          </h3>
+			        </div>
+			        <div class="column-third alignright">
+			          <div th:include="fragments/competition-management :: applications-sort(activeTab=${activeTab},activeSortField=${activeSortField})" th:remove="tag" />
+			        </div>
+			    </div>
 
- </form>
+			</form>
  
-    <form method="post" action="#" th:action="@{/competition/{competitionId}/fundingdecision(competitionId=${competitionSummary.getCompetitionId()})}">
+    <form method="post" action="#" id="submit-funding-decision-form" th:action="@{/competition/{competitionId}/fundingdecision(competitionId=${competitionSummary.getCompetitionId()})}">
       <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
       <div th:include="fragments/modals :: modal-publish-funding-decision" th:remove="tag" />
+      <button id="no-js-notify-applicants" type="submit" class="button no-margin">Notify Applicants</button>
     </form>
     
   </div>

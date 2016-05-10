@@ -10,22 +10,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.worth.ifs.application.resource.FundingDecision;
 import com.worth.ifs.application.service.ApplicationFundingDecisionService;
-import com.worth.ifs.application.service.CompetitionService;
-import com.worth.ifs.competition.resource.CompetitionResource;
+import com.worth.ifs.application.service.ApplicationSummaryService;
 import com.worth.ifs.filter.CookieFlashMessageFilter;
 
 @Controller
-@RequestMapping("/competition/{competitionId}/fundingdecision")
 public class FundingDecisionController {
 	
 	@Autowired
-	private CompetitionService competitionService;
+	private ApplicationSummaryService applicationSummaryService;
 	
 	@Autowired
 	private ApplicationFundingDecisionService applicationFundingDecisionService;
@@ -33,33 +32,55 @@ public class FundingDecisionController {
 	@Autowired
 	private CookieFlashMessageFilter cookieFlashMessageFilter;
 	
-	@RequestMapping(method = RequestMethod.POST)
-    public String submitFundingDecision(HttpServletRequest request, HttpServletResponse response, @PathVariable("competitionId") Long competitionId){
+	@RequestMapping(method = RequestMethod.POST, value = "/competition/{competitionId}/fundingdecision")
+    public String fundingDecisionCheck(Model model, HttpServletRequest request, HttpServletResponse response, @PathVariable("competitionId") Long competitionId){
 		
-		CompetitionResource competition = competitionService.getById(competitionId);
-		
-		List<Long> applicationIds = competition.getApplications();
+		List<Long> applicationIds = submittedApplicationIdsForCompetition(competitionId);
 
-		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationIdToFundingDecisionFromRequest(request, competition.getApplications());
-
-		Set<Long> submitedIds = applicationIdToFundingDecision.keySet();
-		
-		if(!validate(submitedIds, applicationIds)) {
+		if(!validate(request, applicationIds)) {
 			cookieFlashMessageFilter.setFlashMessage(response, "fundingNotDecidedForAllApplications");
 			return "redirect:/competition/" + competitionId;
 		}
 		
+		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationIdToFundingDecisionFromRequest(request, applicationIds);
+
+		model.addAttribute("competitionId", competitionId);
+		model.addAttribute("applicationFundingDecisions", applicationIdToFundingDecision);
+		
+		return "funding-decision-confirmation";
+    }
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/competition/{competitionId}/fundingdecisionsubmit")
+    public String submitFundingDecision(HttpServletRequest request, HttpServletResponse response, @PathVariable("competitionId") Long competitionId){
+		
+		List<Long> applicationIds = submittedApplicationIdsForCompetition(competitionId);
+
+		if(!validate(request, applicationIds)) {
+			cookieFlashMessageFilter.setFlashMessage(response, "fundingNotDecidedForAllApplications");
+			return "redirect:/competition/" + competitionId;
+		}
+		
+		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationIdToFundingDecisionFromRequest(request, applicationIds);
+
 		applicationFundingDecisionService.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision);
 
 		return "redirect:/competition/" + competitionId;
     }
 
-	private boolean validate(Set<Long> submittedIds, List<Long> applicationIds) {
+	private boolean validate(HttpServletRequest request, List<Long> applicationIds) {
+		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationIdToFundingDecisionFromRequest(request, applicationIds);
+		Set<Long> submittedIds = applicationIdToFundingDecision.keySet();
+		
 		List<Long> notSubmittedIds = applicationIds.stream()
 				.filter(e -> submittedIds.stream().noneMatch(s -> s.equals(e)))
 				.collect(Collectors.toList());
 
 		return notSubmittedIds.isEmpty();
+	}
+	
+	private List<Long> submittedApplicationIdsForCompetition(Long competitionId) {
+		return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, null, 0, Integer.MAX_VALUE).getContent()
+				.stream().map(e -> e.getId()).collect(Collectors.toList());
 	}
 
 	private Map<Long, FundingDecision> applicationIdToFundingDecisionFromRequest(HttpServletRequest request, List<Long> applicationIds) {

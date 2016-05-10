@@ -107,7 +107,7 @@
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsSubmitted}" /> Applications submitted</p>
           <p><span class="bold-medium" th:text="${competitionSummary.applicationsNotSubmitted}" /> Applications not submitted</p>
           <a th:href="'/management/competition/'+${competitionSummary.competitionId}+'/download'" class="button-secondary">Export application data (.xls)</a>
-          <a href="#" id="publish-funding-decision" class="button disabled" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
+          <a href="#" id="publish-funding-decision" class="button" data-js-modal="modal-publish-funding-decision">Notify applicants</a>
 
           <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
       </div>
