@@ -24,8 +24,8 @@ import java.util.Map;
 
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.APPROVED;
 import static com.worth.ifs.application.constant.ApplicationStatusConstants.REJECTED;
-import static com.worth.ifs.application.resource.FundingDecision.FUNDED;
-import static com.worth.ifs.application.resource.FundingDecision.NOT_FUNDED;
+import static com.worth.ifs.application.resource.FundingDecision.APPLICATION_FUNDED;
+import static com.worth.ifs.application.resource.FundingDecision.APPLICATION_NOT_FUNDED;
 import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.FUNDED_APPLICATION;
 import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.UNFUNDED_APPLICATION;
 import static com.worth.ifs.commons.error.CommonErrors.badRequestError;
@@ -79,8 +79,8 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 	public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
 
 		List<Pair<Long, FundingDecision>> decisions = toListOfPairs(applicationFundingDecisions);
-		List<Pair<Long, FundingDecision>> fundedApplicationDecisions = simpleFilter(decisions, decision -> FUNDED.equals(decision.getValue()));
-		List<Pair<Long, FundingDecision>> unfundedApplicationDecisions = simpleFilter(decisions, decision -> NOT_FUNDED.equals(decision.getValue()));
+		List<Pair<Long, FundingDecision>> fundedApplicationDecisions = simpleFilter(decisions, decision -> APPLICATION_FUNDED.equals(decision.getValue()));
+		List<Pair<Long, FundingDecision>> unfundedApplicationDecisions = simpleFilter(decisions, decision -> APPLICATION_NOT_FUNDED.equals(decision.getValue()));
         List<Long> fundedApplicationIds = simpleMap(fundedApplicationDecisions, Pair::getKey);
         List<Long> unfundedApplicationIds = simpleMap(unfundedApplicationDecisions, Pair::getKey);
 
@@ -140,7 +140,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 	}
 
 	private ApplicationStatus statusFromDecision(FundingDecision applicationFundingDecision) {
-		if(FUNDED.equals(applicationFundingDecision)) {
+		if(APPLICATION_FUNDED.equals(applicationFundingDecision)) {
 			return statusFromConstant(APPROVED);
 		} else {
 			return statusFromConstant(REJECTED);

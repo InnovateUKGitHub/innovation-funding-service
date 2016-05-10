@@ -23,8 +23,8 @@ import java.util.Map;
 import static com.worth.ifs.BuilderAmendFunctions.id;
 import static com.worth.ifs.LambdaMatcher.createLambdaMatcher;
 import static com.worth.ifs.application.builder.ApplicationBuilder.newApplication;
-import static com.worth.ifs.application.resource.FundingDecision.FUNDED;
-import static com.worth.ifs.application.resource.FundingDecision.NOT_FUNDED;
+import static com.worth.ifs.application.resource.FundingDecision.APPLICATION_FUNDED;
+import static com.worth.ifs.application.resource.FundingDecision.APPLICATION_NOT_FUNDED;
 import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.FUNDED_APPLICATION;
 import static com.worth.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.UNFUNDED_APPLICATION;
 import static com.worth.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -69,7 +69,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	Application application2 = newApplication().withId(2L).build();
     	when(applicationRepositoryMock.findByCompetitionId(123L)).thenReturn(asList(application1, application2));
     	
-    	Map<Long, FundingDecision> decision = asMap(1L, FUNDED);
+    	Map<Long, FundingDecision> decision = asMap(1L, APPLICATION_FUNDED);
     	
     	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
     	
@@ -85,7 +85,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	Application application2 = newApplication().withId(2L).build();
     	when(applicationRepositoryMock.findByCompetitionId(123L)).thenReturn(asList(application1, application2));
     	
-    	Map<Long, FundingDecision> decision = asMap(1L, FUNDED, 2L, NOT_FUNDED);
+    	Map<Long, FundingDecision> decision = asMap(1L, APPLICATION_FUNDED, 2L, APPLICATION_NOT_FUNDED);
     	
     	ServiceResult<Void> result = service.makeFundingDecision(123L, decision);
     	
@@ -118,7 +118,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 				withRole(leadApplicantRole, leadApplicantRole, leadApplicantRole).
 				build(3);
 
-		Map<Long, FundingDecision> decision = asMap(1L, FUNDED, 2L, NOT_FUNDED, 3L, FUNDED);
+		Map<Long, FundingDecision> decision = asMap(1L, APPLICATION_FUNDED, 2L, APPLICATION_NOT_FUNDED, 3L, APPLICATION_FUNDED);
 
         UserNotificationTarget fundedApplication1LeadApplicantTarget = new UserNotificationTarget(fundedApplication1LeadApplicant);
         UserNotificationTarget fundedApplication3LeadApplicantTarget = new UserNotificationTarget(fundedApplication3LeadApplicant);
@@ -192,7 +192,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 withRole(leadApplicantRole, collaboratorRole, leadApplicantRole, collaboratorRole).
                 build(3);
 
-        Map<Long, FundingDecision> decision = asMap(1L, FUNDED, 2L, NOT_FUNDED);
+        Map<Long, FundingDecision> decision = asMap(1L, APPLICATION_FUNDED, 2L, APPLICATION_NOT_FUNDED);
 
         List<NotificationTarget> expectedFundedLeadApplicants = asList(new UserNotificationTarget(fundedApplication1LeadApplicant));
         Notification expectedFundedNotification =
