@@ -61,7 +61,7 @@
 
 		<div th:include="prototypes/fragments/project-setup :: prototype-add-users('finance-contact')" th:remove="tag" />
 
-		<fieldset class="extra-margin">
+		<!-- <fieldset class="extra-margin">
 			<legend class="visuallyhidden">Organisation details</legend>
 				
 			<div class="form-group">
@@ -79,7 +79,7 @@
 				<input class="form-control width-medium" id="finance-headcount" name="finance-headcount" type="text" value="" />
 			</div>
 
-		</fieldset>
+		</fieldset> -->
 
 		<button class="button button-large extra-margin" id="finance-cta">Save</button>
 
@@ -115,7 +115,7 @@
 
 	    var userType = $_GET('user');
 
-	    if (userType == null){
+	    /*if (userType == null){
 	    	var financesTurnoverLead = decodeURIComponent(localStorage.getItem('financesTurnoverLead'));
 	    	var financesHeadcountLead = decodeURIComponent(localStorage.getItem('financesHeadcountLead'));
 
@@ -129,7 +129,7 @@
 
 	    	jQuery('#finance-turnover').val(financesTurnoverNonLead);
 	    	jQuery('#finance-headcount').val(financesHeadcountPartner);
-	    }
+	    }*/
 
 
 		jQuery('#add-finance-contact').on('click',function(e){ 

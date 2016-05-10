@@ -82,7 +82,7 @@ Display errors for invalid inputs of the Phone field
     [Tags]    Profile
     Given the user navigates to the page    ${EDIT_PROFILE_URL}
     And browser validations have been disabled
-    And the user fills in the Phone field    ${EMPTY}
+    When the user fills in the Phone field    ${EMPTY}
     Then the user should see an error    Please enter a phone number
     And browser validations have been disabled
     And the user fills in the Phone field    121212121212121212121

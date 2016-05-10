@@ -6,7 +6,7 @@ import com.worth.ifs.security.PermissionRules;
 import com.worth.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static com.worth.ifs.security.CustomPermissionEvaluator.isAnonymous;
+import static com.worth.ifs.security.SecurityRuleUtil.isAnonymous;
 
 @Component
 @PermissionRules

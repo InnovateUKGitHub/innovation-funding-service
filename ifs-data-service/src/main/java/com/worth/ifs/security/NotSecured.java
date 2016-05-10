@@ -9,4 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface NotSecured {
     String value();
+    boolean mustBeSecuredByOtherServices() default true;
 }

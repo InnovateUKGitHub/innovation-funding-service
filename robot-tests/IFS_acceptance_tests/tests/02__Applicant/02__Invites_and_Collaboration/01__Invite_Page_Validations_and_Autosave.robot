@@ -32,6 +32,7 @@ lead applicant should be able to add/remove collaborators
 
 lead applicant shouldn't be able to remove himself
     [Documentation]    INFUND-901
+    [Tags]
     Given the user navigates to the page    ${INVITE_COLLABORATORS_PAGE}
     Then the lead applicant cannot be removed
 
@@ -105,6 +106,7 @@ Link to add multiple partner organisation
 
 The user's inputs should be autosaved
     [Documentation]    INFUND-901
+    [Tags]
     When the user fills the name and email field and reloads the page    1
     Then the user's inputs should still be visible    1
     And the user navigates to the page    ${INVITE_COLLABORATORS2_PAGE}

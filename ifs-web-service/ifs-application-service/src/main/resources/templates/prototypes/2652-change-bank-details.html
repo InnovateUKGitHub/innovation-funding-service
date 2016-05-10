@@ -45,16 +45,15 @@
 
 		</form>
 
+	</div>
 
-		<div class="grid-row constrain-width extra-margin" th:unless="${param.status != null and param.status[0] == 'accepted'}">
-			<div class="column-half">
-				<a href="/prototypes/2650-review-bank-details" class="button-link">Cancel bank account changes</a>
-			</div>
-			<div class="column-half alignright">
-				<a href="/prototypes/2650-review-bank-details?status=accepted" class="button">Approve bank account details</a>
-			</div>
+	<div class="grid-row constrain-width extra-margin" th:unless="${param.status != null and param.status[0] == 'accepted'}">
+		<div class="column-half">
+			<a href="/prototypes/2650-review-bank-details" class="button-link">Cancel bank account changes</a>
 		</div>
-
+		<div class="column-half alignright">
+			<a href="/prototypes/2650-review-bank-details" class="button">Update bank account details</a>
+		</div>
 	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

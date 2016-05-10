@@ -1,6 +1,5 @@
 package com.worth.ifs.token.transactional;
 
-import com.worth.ifs.security.NotSecured;
 import com.worth.ifs.token.domain.Token;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
