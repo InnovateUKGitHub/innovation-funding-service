@@ -4,9 +4,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.worth.ifs.util.MapFunctions.combineMaps;
 import static java.util.Collections.emptyMap;
 
 /**
@@ -67,6 +69,18 @@ public class Notification {
 
     public Map<String, Object> getGlobalArguments() {
         return globalArguments;
+    }
+
+    public Map<String, Object> getTemplateArgumentsForRecipient(NotificationTarget recipient) {
+
+        Map<String, Object> templateReplacements = new HashMap<>(getGlobalArguments());
+        Map<String, Object> recipientSpecificTemplateReplacements = getPerNotificationTargetArguments().get(recipient);
+
+        if (recipientSpecificTemplateReplacements != null) {
+            return combineMaps(templateReplacements, recipientSpecificTemplateReplacements);
+        }
+
+        return templateReplacements;
     }
 
     public Map<NotificationTarget, Map<String, Object>> getPerNotificationTargetArguments() {

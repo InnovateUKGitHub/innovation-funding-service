@@ -80,4 +80,33 @@ public final class MapFunctions {
     public static <T, R> List<Pair<T, R>> toListOfPairs(Map<T, R> map) {
         return simpleMap(map.entrySet(), entry -> Pair.of(entry.getKey(), entry.getValue()));
     }
+
+    /**
+     * Given 2 maps, this method will return a non-null Map containing all the elements of both.  If however map2 contains duplicate
+     * keys with map1, the returned Map will contain map2's versions of these
+     *
+     * @param map1
+     * @param map2
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> Map<T, R> combineMaps(Map<T, R> map1, Map<T, R> map2) {
+
+        if (map1 == null && map2 == null) {
+            return new HashMap<>(0);
+        }
+
+        if (map1 == null) {
+            return new HashMap<>(map2);
+        }
+
+        if (map2 == null) {
+            return new HashMap<>(map1);
+        }
+
+        Map<T, R> combined = new HashMap<>(map1);
+        map2.forEach((key, value) -> combined.put(key, value));
+        return combined;
+    }
 }
