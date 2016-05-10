@@ -3,6 +3,7 @@ package com.worth.ifs.finance.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.worth.ifs.application.domain.Question;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -70,17 +71,17 @@ public class Cost {
 
     public String getName() {
         // Fix for sql breaking when saving string longer than the field length
-        return (name.length() > DB_MAX_STRING_LENGTH) ? name.substring(0, DB_MAX_STRING_LENGTH) : name;
+        return (StringUtils.hasText(name) && name.length() > DB_MAX_STRING_LENGTH) ? name.substring(0, DB_MAX_STRING_LENGTH) : name;
     }
 
     public String getItem() {
         // Fix for sql breaking when saving string longer than the field length
-        return (item.length() > DB_MAX_STRING_LENGTH) ? item.substring(0, DB_MAX_STRING_LENGTH) : item;
+        return (StringUtils.hasText(item) && item.length() > DB_MAX_STRING_LENGTH) ? item.substring(0, DB_MAX_STRING_LENGTH) : item;
     }
 
     public String getDescription() {
         // Fix for sql breaking when saving string longer than the field length
-        return (description.length() > DB_MAX_STRING_LENGTH) ? description.substring(0, DB_MAX_STRING_LENGTH) : description;
+        return (StringUtils.hasText(description) && description.length() > DB_MAX_STRING_LENGTH) ? description.substring(0, DB_MAX_STRING_LENGTH) : description;
     }
 
     public Integer getQuantity() {

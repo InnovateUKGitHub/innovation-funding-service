@@ -7,8 +7,8 @@ import com.worth.ifs.finance.domain.ApplicationFinance;
 import com.worth.ifs.finance.domain.Cost;
 import com.worth.ifs.finance.domain.CostField;
 import com.worth.ifs.finance.domain.CostValue;
-import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
 import com.worth.ifs.finance.handler.OrganisationFinanceDefaultHandler;
+import com.worth.ifs.finance.handler.OrganisationFinanceHandler;
 import com.worth.ifs.finance.repository.CostFieldRepository;
 import com.worth.ifs.finance.repository.CostRepository;
 import com.worth.ifs.finance.resource.category.CostCategory;
@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -35,14 +36,15 @@ import static org.mockito.Mockito.when;
 public class OrganisationFinanceHandlerTest {
     @InjectMocks
     OrganisationFinanceHandler handler = new OrganisationFinanceDefaultHandler();
-    private ApplicationFinance applicationFinance;
-
+    @Mock
+    AutowireCapableBeanFactory beanFactory;
     @Mock
     CostRepository costRepositoryMock;
     @Mock
     CostFieldRepository costFieldRepository;
     @Mock
     QuestionService questionService;
+    private ApplicationFinance applicationFinance;
     private HashMap<CostType, Question> costTypeQuestion;
     private LabourCost labour;
     private CapitalUsage capitalUsage;
@@ -55,8 +57,8 @@ public class OrganisationFinanceHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-
         MockitoAnnotations.initMocks(this);
+
         applicationFinance = newApplicationFinance().build();
         costTypeQuestion = new HashMap<CostType, Question>();
 

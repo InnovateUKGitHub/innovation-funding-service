@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.worth.ifs.security.SecuritySetter.swapOutForUser;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 @Rollback
@@ -122,20 +123,22 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
         messages.getErrors().get(0);
 
 
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "labourDays".equals(e.getErrorKey()))
-                .filter(e -> "This field should be 1 or higher".equals(e.getErrorMessage()))
-                .findAny().isPresent());
-
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "role".equals(e.getErrorKey()))
-                .filter(e -> "This field cannot be left blank".equals(e.getErrorMessage()))
-                .findAny().isPresent());
-
-        assertTrue(messages.getErrors().stream()
-                .filter(e -> "grossAnnualSalary".equals(e.getErrorKey()))
-                .filter(e -> "This field should be 1 or higher".equals(e.getErrorMessage()))
-                .findAny().isPresent());
+        assertThat(messages.getErrors(),
+                containsInAnyOrder(
+                        allOf(
+                                hasProperty("errorKey", is("labourDays")),
+                                hasProperty("errorMessage", is("This field should be 1 or higher"))
+                        ),
+                        allOf(
+                                hasProperty("errorKey", is("grossAnnualSalary")),
+                                hasProperty("errorMessage", is("This field should be 1 or higher"))
+                        ),
+                        allOf(
+                                hasProperty("errorKey", is("role")),
+                                hasProperty("errorMessage", is("This field cannot be left blank"))
+                        )
+                )
+        );
     }
 
     @Rollback
@@ -182,7 +185,7 @@ public class CostControllerIntegrationTest extends BaseControllerIntegrationTest
 
         assertTrue(messages.getErrors().stream()
                 .filter(e -> "cost".equals(e.getErrorKey()))
-                .filter(e -> "This field should be 0 or higher".equals(e.getErrorMessage()))
+                .filter(e -> "This field should be 1 or higher".equals(e.getErrorMessage()))
                 .findAny().isPresent());
     }
 
