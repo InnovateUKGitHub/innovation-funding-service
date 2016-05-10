@@ -21,6 +21,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("assessmentStartDate").description("date on which the assessments start"),
             fieldWithPath("assessmentEndDate").description("date on which all the assessments should be finished"),
             fieldWithPath("fundersPanelEndDate").description("date on which the funders panel ended"),
+            fieldWithPath("assessorFeedbackDate").description("date on which applicants can expect to receive feedback from the assessments"),
             fieldWithPath("competitionStatus").description("the current status of the competition"),
             fieldWithPath("maxResearchRatio").description("maximum ratio of research participation"),
             fieldWithPath("academicGrantPercentage").description("grant claim percentage for the academics")
@@ -35,6 +36,7 @@ public class CompetitionResourceDocs {
             .withEndDate(LocalDateTime.now().plusDays(30))
             .withAssessmentStartDate(LocalDateTime.now().plusDays(32))
             .withAssessmentEndDate(LocalDateTime.now().plusDays(44))
+            .withAssessorFeedbackDate(LocalDateTime.now().plusDays(56))
             .withMaxResearchRatio(20)
             .withAcademicGrantClaimPercentage(100);
 }
