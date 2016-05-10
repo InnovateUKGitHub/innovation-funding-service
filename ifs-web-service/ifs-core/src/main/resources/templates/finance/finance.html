@@ -88,14 +88,15 @@
     <div th:fragment="labour (complete)" th:remove="tag">
         <div th:remove="tag" th:with="formInputType=${formInput.formInputType},costCategory=${organisationFinance.get(T(com.worth.ifs.finance.resource.cost.CostType).fromString(formInput.formInputTypeTitle))},type=${formInput.formInputTypeTitle}">
             <div class="form-group" th:attr="data-repeatable-container=${question.getId()}" th:if="${costCategory!=null}">
-                <div class="form-group inline"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}')} ? 'error' : ''">
+                <div class="form-group inline"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'error' : ''">
                     <label th:for="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'}">
                         <span>Working Days per Year</span>
                         <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id})" th:remove="tag" />
+                        <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id +'-labourDays'})" th:remove="tag" />
                     </label>
                     <input type="number"
                            class="form-control"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}')} ? 'field-error' : ''"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'field-error' : ''"
                            th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'}"
                            th:name="${type + '-labourDaysYearly-' + question.id + '-' + costCategory.workingDaysPerYearCostItem?.id}"
                            th:value="${costCategory.workingDaysPerYear}"
