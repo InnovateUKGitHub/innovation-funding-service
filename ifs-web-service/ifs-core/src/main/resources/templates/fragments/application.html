@@ -1,26 +1,43 @@
 <div th:fragment="application-summary">
-  <section th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
-      <h2 th:text="${section.getName()}" class="heading-medium"/>
-      <div class="collapsible" th:each="question : ${sectionQuestions.get(section.id)}">
-          <h3>
-              <div th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" th:remove="tag"/>
-              <div th:remove="tag" th:if="${currentApplication.isOpen()}">
-                  <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">
-                      Complete
-                  </div>
-                  <div class="section-status section-incomplete"
-                       th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Incomplete
-                  </div>
-              </div>
-          </h3>
-          <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
-               th:with="formInputIndex=(${status.index}), readonly=true, appIsClosed=${!currentApplication.isOpen()}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
-               th:id="'form-input-'+${formInput.getId()}">
-              <div th:replace="question-type/types :: ${formInput.formInputTypeTitle}"
-                   th:unless='${formInput.getFormInputTypeTitle().equals("finance"}'/>
-          </div>
+  <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
+
+      <h2 th:text="${section.name}" class="heading-medium" th:unless="${section.name.equals('Project details') and !currentApplication.isOpen()}"/>
+
+      <div th:remove="tag" th:each="question : ${sectionQuestions.get(section.id)}">
+          <div class="collapsible" th:unless="${question.shortName.equals('Application details') and !currentApplication.isOpen()}">
+            <h3>
+                <div th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" th:remove="tag"/>
+                <div th:remove="tag" th:if="${currentApplication.isOpen()}">
+                    <div class="section-status section-complete" th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">
+                        Complete
+                    </div>
+                    <div class="section-status section-incomplete"
+                         th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)}">Incomplete
+                    </div>
+                </div>
+            </h3>
+            <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
+                 th:with="formInputIndex=(${status.index}), readonly=true, appIsClosed=${!currentApplication.isOpen()}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
+                 th:id="'form-input-'+${formInput.getId()}">
+                <div th:replace="question-type/types :: ${formInput.formInputTypeTitle}"
+                     th:unless='${formInput.getFormInputTypeTitle().equals("finance"}'/>
+            </div>
+        </div>
+         <div th:remove="tag" th:if="${question.shortName.equals('Application details') and !currentApplication.isOpen()}">
+             <div class="boxed extra-margin">
+               <div th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
+                    th:with="formInputIndex=(${status.index}), readonly=true, appIsClosed=${!currentApplication.isOpen()}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
+                    th:id="'form-input-'+${formInput.getId()}">
+                   <div th:replace="question-type/types :: ${formInput.formInputTypeTitle}"
+                        th:unless='${formInput.getFormInputTypeTitle().equals("finance"}'/>
+               </div>
+             </div>
+             <h2 th:text="${section.name}" class="heading-medium" />
+         </div>
       </div>
+
   </section>
+
   <section th:if="${hasFinanceSection}">
       <h2 class="heading-medium">Finance</h2>
       <div class="collapsible">

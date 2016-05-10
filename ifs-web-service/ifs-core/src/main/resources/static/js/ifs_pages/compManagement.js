@@ -21,7 +21,7 @@ IFS.competition_management = (function(){
             IFS.competition_management.getWindowWidth();
             IFS.competition_management.getMenuHeight();
             IFS.competition_management.getContainerHeight();
-            
+
             IFS.competition_management.handleFundingDecisionSelectChange();
             IFS.competition_management.handleFundingDecisionButtons();
             IFS.competition_management.alterSubmitDecisionFormAction();
@@ -106,12 +106,13 @@ IFS.competition_management = (function(){
             var button = jQuery(s.submitFundingDecisionButton);
             var modal = button.attr('data-js-modal');
             //remove the modal action and add aria-disabled and disabled styling
+            button.on('click',function(event){ event.preventDefault(); });
             button.removeAttr('data-js-modal').attr({'data-js-modal-disabled':modal, 'aria-disabled': 'true'}).addClass('disabled');
          },
          enableFundingDecisionButton : function(){
              var button = jQuery(s.submitFundingDecisionButton);
              var modal = button.attr('data-js-modal-disabled');
-             button.removeAttr('data-js-modal-disabled aria-disabled').attr('data-js-modal',modal).removeClass('disabled');
+             button.off('click').removeAttr('data-js-modal-disabled aria-disabled').attr('data-js-modal',modal).removeClass('disabled');
          },
          alterSubmitDecisionFormAction: function(){
         	 var form = jQuery(s.fundingDecisionForm);
@@ -123,7 +124,7 @@ IFS.competition_management = (function(){
         	 if(selects === null || selects === undefined || selects.length === 0) {
         		 return false;
         	 }
-        	 
+
         	 var allDecided = true;
         	 selects.each(function() {
         		 var value = jQuery(this).val();
@@ -132,7 +133,7 @@ IFS.competition_management = (function(){
         			 allDecided = false;
         		 }
         	 });
-        	 
+
         	 return allDecided;
          },
         handleFundingDecisionSelectChange: function(){
