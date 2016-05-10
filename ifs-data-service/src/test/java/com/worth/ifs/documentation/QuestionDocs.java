@@ -1,27 +1,10 @@
 package com.worth.ifs.documentation;
 
-import com.worth.ifs.application.builder.QuestionBuilder;
-
 import com.worth.ifs.application.builder.QuestionResourceBuilder;
-import com.worth.ifs.application.domain.QuestionStatus;
-import com.worth.ifs.application.resource.QuestionStatusResource;
-import com.worth.ifs.application.resource.SectionResource;
+
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
-import static com.worth.ifs.application.builder.QuestionBuilder.newQuestion;
 import static com.worth.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static com.worth.ifs.application.builder.QuestionStatusBuilder.newQuestionStatus;
-import static com.worth.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
-import static com.worth.ifs.application.builder.ResponseBuilder.newResponse;
-import static com.worth.ifs.application.builder.SectionBuilder.newSection;
-import static com.worth.ifs.application.builder.SectionResourceBuilder.newSectionResource;
-import static com.worth.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static com.worth.ifs.finance.builder.CostBuilder.newCost;
-import static com.worth.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -31,8 +14,6 @@ public class QuestionDocs {
         fieldWithPath("name").description("Question name"),
         fieldWithPath("shortName").description("short version of the question name"),
         fieldWithPath("description").description("question description"),
-        fieldWithPath("guidanceQuestion").description("guidance on the question"),
-        fieldWithPath("guidanceAnswer").description("guidance on how to answer the question"),
         fieldWithPath("markAsCompletedEnabled").description("boolean to indicate if the question can be marked as complete"),
         fieldWithPath("assignEnabled").description("boolean to indicate if the question can be assigned"),
         fieldWithPath("multipleStatuses").description("boolean to indicate if the question has multiple statuses"),
@@ -55,7 +36,6 @@ public class QuestionDocs {
             .withName("question name")
             .withShortName("name")
             .withDescription("description")
-            .withGuidanceQuestion("guidance question")
             .withPriority(1)
             .withAssessorConfirmationQuestion("confirmation question")
             .withCompetition(1L)

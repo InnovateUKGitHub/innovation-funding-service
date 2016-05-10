@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:safe="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:safe="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
 <!-- =========================== Form label =========================== -->
 <div th:fragment="form-label (name)">
@@ -30,13 +30,12 @@
 </div>
 <!-- ========================= Form Guidance =========================== -->
 
-<div th:fragment="form-guidance">
-    <details th:if="${question.getGuidanceQuestion()}">
+<div th:fragment="form-guidance (guidable)">
+    <details th:if="${guidable?.getGuidanceQuestion()}">
         <summary>
-            <span class="summary" th:text="${question.getGuidanceQuestion()}"/>
+            <span class="summary" th:text="${guidable.getGuidanceQuestion()}"/>
         </summary>
-        <div class="panel-indent" ifs:utext="${question.getGuidanceAnswer()}">
-        </div>
+        <div class="panel-indent" ifs:utext="${guidable.getGuidanceAnswer()}"/>
     </details>
 </div>
 <!-- ========================= input field type text =========================== -->
