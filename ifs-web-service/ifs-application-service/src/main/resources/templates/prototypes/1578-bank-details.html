@@ -34,37 +34,7 @@
 	
 	<form action="#">
 
-		<fieldset>
-			
-			<h2 class="heading-medium no-margin-bottom">Account details</h2>
-
-			<legend class="visuallyhidden">Account details</legend>
-
-			<p class="form-hint">Please enter the bank account that you wish to use during the project.</p>
-
-			<div class="form-group extra-margin">
-				<label class="form-label" for="bank-sort-code">
-					<span class="form-label-bold">Account number</span>
-				</label>
-				<p class="form-hint">For example: 1548965</p>
-				<input class="form-control" id="bank-acc-number" name="bank-acc-number" value="" type="text" />
-			</div>
-
-			<div class="form-group ">
-				<label class="form-label" for="bank-sort-code">
-					<span class="form-label-bold">Sort code</span>
-				</label>
-				<p class="form-hint">For example: 311212</p>
-				<input class="form-control width-medium" id="bank-sort-code" name="bank-sort-code" value="" type="text" />
-			</div>
-
-			<h2 class="heading-large">Bank account address</h2>
-
-			<p class="form-hint">Please select the account that the bank account is registered to, this is not the address of the bank.</p>
-
-			<div th:include="prototypes/fragments/project-setup :: prototype-select-address" th:with="address='bankDetails'" th:remove="tag" />
-
-		</fieldset>
+		<div th:include="prototypes/fragments/project-setup :: prototype-bank-details" th:remove="tag" />
 
 		<div class="extra-margin">
 			<a href="#" class="button" data-js-modal="modal-bank">Submit bank account details</a>
