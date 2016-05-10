@@ -7,6 +7,8 @@ import com.worth.ifs.application.finance.view.item.*;
 import com.worth.ifs.commons.error.Error;
 import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
+import com.worth.ifs.exception.BigDecimalNumberFormatException;
+import com.worth.ifs.exception.IntegerNumberFormatException;
 import com.worth.ifs.finance.resource.ApplicationFinanceResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
 import com.worth.ifs.finance.resource.cost.CostType;
@@ -234,6 +236,11 @@ public class DefaultFinanceFormHandler implements FinanceFormHandler {
         List<Error> errors = new ArrayList<>();
         ArrayList<Object> args = new ArrayList<Object>();
         args.add(e.getMessage());
+        if(e.getClass().equals(IntegerNumberFormatException.class)){
+            errors.add(new Error("", messageSource.getMessage(e.getMessage(), args.toArray(), Locale.UK), args, HttpStatus.INTERNAL_SERVER_ERROR));
+        }else if(e.getClass().equals(BigDecimalNumberFormatException.class)){
+            errors.add(new Error("", messageSource.getMessage(e.getMessage(), args.toArray(), Locale.UK), args, HttpStatus.INTERNAL_SERVER_ERROR));
+        }
         errors.add(new Error("", messageSource.getMessage("field.value.not.valid", args.toArray(), Locale.UK), args, HttpStatus.INTERNAL_SERVER_ERROR));
         validationMessages.setErrors(errors);
         return validationMessages;

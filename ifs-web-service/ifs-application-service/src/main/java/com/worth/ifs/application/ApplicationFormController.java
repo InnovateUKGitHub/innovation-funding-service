@@ -15,6 +15,8 @@ import com.worth.ifs.commons.rest.RestResult;
 import com.worth.ifs.commons.rest.ValidationMessages;
 import com.worth.ifs.competition.resource.CompetitionResource;
 import com.worth.ifs.exception.AutosaveElementException;
+import com.worth.ifs.exception.BigDecimalNumberFormatException;
+import com.worth.ifs.exception.IntegerNumberFormatException;
 import com.worth.ifs.exception.UnableToReadUploadedFile;
 import com.worth.ifs.file.resource.FileEntryResource;
 import com.worth.ifs.finance.resource.cost.CostItem;
@@ -759,7 +761,16 @@ public class ApplicationFormController extends AbstractApplicationController {
                 e.printStackTrace();
             }
             AutosaveElementException ex = new AutosaveElementException(inputIdentifier, value, applicationId, e);
-            errors.add(ex.getErrorMessage());
+            List<Object> args = new ArrayList<>();
+            args.add(ex.getErrorMessage());
+            if(e.getClass().equals(IntegerNumberFormatException.class)){
+                errors.add(messageSource.getMessage(e.getMessage(), args.toArray(), Locale.UK));
+            }else if(e.getClass().equals(BigDecimalNumberFormatException.class)){
+                errors.add(messageSource.getMessage(e.getMessage(), args.toArray(), Locale.UK));
+            }else{
+                errors.add(ex.getErrorMessage());
+            }
+
             return this.createJsonObjectNode(false, errors);
         }
     }
