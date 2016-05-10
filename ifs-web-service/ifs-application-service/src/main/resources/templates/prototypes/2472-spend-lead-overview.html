@@ -19,13 +19,13 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Spend profile'})" th:remove="tag" />
 
-	<p>This overview details the spend profile status of each partner in your project</p>
+	<p>This overview details the spend profile status of each partner in your project.</p>
 
 	<div th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
 		<h2 class="heading-medium">Profile spend</h2>
-		<p>All Spend Profiles have been submitted to InnovateUK and the Monitoring Officer assigned to this application, though it is still possible to view submitted Spend Profiles.</p>
+		<p>All Spend Profiles have been submitted to Innovate UK and the Monitoring officer assigned to this application. You may view the submitted spend profiles.</p>
 		
-		<a href="/prototypes/1592-spend?task=reviewProject&#38;status=Submitted">Technology inspired profile spend</a>
+		<a href="/prototypes/1592-spend?task=reviewProject&#38;status=Submitted">Total project profile spend</a>
 
 	</div>
 
@@ -50,7 +50,7 @@
 						In progress
 					</td>
 					<td th:unless="${param.status == null or param.status[0] != 'Submitted'}">
-						<span class="yes">Complete</span>
+						<span class="yes">Submitted</span>
 					</td>
 				</tr>
 				<tr>
@@ -58,7 +58,7 @@
 						<a href="/prototypes/1592-spend?status=Submitted&#38;user=nonLead&#38;task=reviewPartner">Biotech Corp</a>
 					</td>
 					<td>
-						<span class="yes">Complete</span>
+						<span class="yes">Submitted</span>
 					</td>
 				</tr>
 				<tr>
@@ -69,7 +69,7 @@
 						In progress
 					</td>
 					<td th:unless="${param.status == null or param.status[0] != 'Submitted'}">
-						<span class="yes">Complete</span>
+						<span class="yes">Submitted</span>
 					</td>
 				</tr>
 			</tbody>
