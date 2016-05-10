@@ -16,6 +16,7 @@ import com.worth.ifs.user.domain.ProcessRole;
 import com.worth.ifs.util.EntityLookupCallbacks;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -49,6 +50,9 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
 	@Autowired
 	private SystemNotificationSource systemNotificationSource;
+
+	@Value("${ifs.web.baseURL}")
+	private String webBaseUrl;
 
 	enum Notifications {
 		APPLICATION_FUNDED,
@@ -121,7 +125,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
             Map<String, Object> globalArguments = new HashMap<>();
             globalArguments.put("competitionName", competition.getName());
-            globalArguments.put("dashboardUrl", "#");
+            globalArguments.put("dashboardUrl", webBaseUrl);
             globalArguments.put("feedbackDate", competition.getAssessorFeedbackDate());
 
             List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(notificationTargetsByApplicationId, pair -> {

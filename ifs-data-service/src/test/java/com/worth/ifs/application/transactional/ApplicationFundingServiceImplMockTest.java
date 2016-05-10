@@ -16,6 +16,7 @@ import com.worth.ifs.user.domain.Role;
 import com.worth.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,13 +49,17 @@ import static org.mockito.Mockito.*;
 
 public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<ApplicationFundingService> {
 
-    @Override
-    protected ApplicationFundingService supplyServiceUnderTest() {
-        return new ApplicationFundingServiceImpl();
-    }
+    private static final String webBaseUrl = "http://ifs-local-dev";
 
     private ApplicationStatus approvedStatus;
     private ApplicationStatus rejectedStatus;
+
+    @Override
+    protected ApplicationFundingService supplyServiceUnderTest() {
+        ApplicationFundingServiceImpl service = new ApplicationFundingServiceImpl();
+        ReflectionTestUtils.setField(service, "webBaseUrl", webBaseUrl);
+        return service;
+    }
 
     @Before
     public void setup() {
@@ -155,7 +160,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
         Map<String, Object> expectedGlobalNotificationArguments = asMap(
                 "competitionName", competition.getName(),
-                "dashboardUrl", "#",
+                "dashboardUrl", webBaseUrl,
                 "feedbackDate", competition.getAssessorFeedbackDate());
 
         List<NotificationTarget> expectedFundedLeadApplicants = asList(fundedApplication1LeadApplicantTarget, fundedApplication3LeadApplicantTarget);
@@ -272,17 +277,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
             assertEquals(expectedTargetSpecifics.size(), actualTargetSpecifics.size());
 
             expectedTargetSpecifics.forEach((target, expectedArguments) -> {
-
                 Map<String, Object> actualArguments = actualTargetSpecifics.get(target);
-                assertNotNull(actualArguments);
-
-                actualArguments.forEach((expectedArgName, expectedArgValue) -> {
-
-                    Object actualArgValue = actualArguments.get(expectedArgName);
-                    assertNotNull(actualArgValue);
-
-                    assertEquals(expectedArgValue, actualArgValue);
-                });
+                assertEquals(expectedArguments, actualArguments);
             });
 
             assertEquals(expectedTargetSpecifics, actualTargetSpecifics);

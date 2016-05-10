@@ -75,7 +75,7 @@
                         <p style="margin: 0 0 1em 0;">We are pleased to inform you that your application <b>${applicationName}</b> has been successful in achieving funding in the competition <b>${competitionName}</b>.</p>
                         <p style="margin: 0 0 1em 0;">For this project to begin, we need you to provide details, documents and undergo financial checks. This process will be managed through your <a href="${dashboardUrl}">Innovate UK Dashboard</a>, where you can find full details of this process.</p>
                         <p style="margin: 0 0 1em 0;">This offer is conditional and subject to the satisfactory completion of a Finance Review by Innovate UK. You must not start your project until we have confirmed that all pre-start work has been completed.</p>
-                        <p style="margin: 0 0 1em 0;">Feedback on your application will be available on ${feedbackDate?string["dd-MM-yyyy"]}.</p>
+                        <p style="margin: 0 0 1em 0;">Feedback on your application will be available on <#assign feedbackDateIso = feedbackDate?datetime.iso>${feedbackDateIso?string["dd-MM-yyyy"]}.</p>
                         <p style="margin: 0 0 1em 0;">Once again, congratulations on the successful outcome of your application.</p>
                         <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
                         <p style="margin: 1em 0 1em 0;">
